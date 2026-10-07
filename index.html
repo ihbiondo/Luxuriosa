@@ -1,447 +1,1068 @@
 <!doctype html>
 <html lang="pt-BR">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Luxuriosa — Lingerie & Sexshop em Bauru | Entrega discreta</title>
-<meta name="description" content="Luxuriosa: lingerie e sexshop em Bauru e região. Pronta entrega, atendimento reservado e entrega discreta. Sinta-se ainda mais você.">
-<meta property="og:title" content="Luxuriosa — Lingerie & Sexshop">
-<meta property="og:description" content="Pronta entrega, atendimento reservado e entrega discreta em Bauru e região.">
-<meta property="og:type" content="website">
-<meta property="og:url" content="https://luxuriosa.com.br">
-<meta name="theme-color" content="#0B0B0B">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%238B1E3F'/%3E%3Cpath d='M12 46 L16 20 L27 31 L32 14 L37 31 L48 20 L52 46 Z' fill='none' stroke='%23D4AF7C' stroke-width='3' stroke-linejoin='round'/%3E%3C/svg%3E">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600&family=Playfair+Display:wght@400;500&display=swap" rel="stylesheet">
-<script type="application/ld+json">
-{"@context":"https://schema.org","@type":"Store","name":"Luxuriosa","description":"Lingerie e sexshop com entrega discreta em Bauru e região.","url":"https://luxuriosa.com.br","areaServed":"Bauru, SP","address":{"@type":"PostalAddress","addressLocality":"Bauru","addressRegion":"SP","addressCountry":"BR"}}
-</script>
-<style>
-:root{
-  --wine:#8B1E3F; --black:#0B0B0B; --gold:#D4AF7C; --blush:#F7D7D9;
-  --surface:#150d10; --surface2:#1d1015; --line:rgba(212,175,124,.22);
-  --muted:#c9b3b6; --text:#fbf1f1;
-  --serif:"Playfair Display",Georgia,serif; --sans:Montserrat,system-ui,sans-serif;
-}
-*{box-sizing:border-box}
-html{scroll-behavior:smooth;scroll-padding-top:84px}
-body{margin:0;background:var(--black);color:var(--text);font-family:var(--sans);font-weight:300;line-height:1.6}
-a{color:inherit;text-decoration:none}
-button{font:inherit}
-img{max-width:100%;display:block}
-.container{width:min(1160px,92%);margin:auto}
-.kicker{color:var(--gold);text-transform:uppercase;letter-spacing:.32em;font-size:11px;font-weight:500;margin-bottom:14px}
-h1,h2,h3{font-family:var(--serif);font-weight:400;margin:0}
-.gold{color:var(--gold)}
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
 
-header{position:sticky;top:0;z-index:20;background:rgba(11,11,11,.92);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
-.nav{height:76px;display:flex;align-items:center;justify-content:space-between;gap:20px}
-.logo{font-family:var(--serif);font-size:28px;letter-spacing:.04em;color:var(--gold);display:flex;align-items:center;gap:10px}
-.logo svg{width:22px;height:18px}
-.navlinks{display:flex;gap:28px;color:var(--muted);font-size:12px;letter-spacing:.18em;text-transform:uppercase}
-.navlinks a:hover{color:var(--gold)}
-.nav-right{display:flex;align-items:center;gap:10px}
-.burger{display:none;width:42px;height:42px;border:1px solid var(--line);background:transparent;color:var(--gold);border-radius:50%;cursor:pointer;font-size:18px;align-items:center;justify-content:center}
-.btn{display:inline-block;border:0;border-radius:999px;padding:14px 26px;font-size:12px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;cursor:pointer;transition:.2s;text-align:center}
-.btn.primary{background:linear-gradient(135deg,var(--gold),#b98f5c);color:#2a0d17}
-.btn.primary:hover{filter:brightness(1.1);transform:translateY(-1px)}
-.btn.ghost{background:transparent;border:1px solid var(--gold);color:var(--gold)}
-.btn.ghost:hover{background:rgba(212,175,124,.1)}
-.btn.small{padding:10px 18px;font-size:11px}
+  <title>Luxuriosa — Lingerie & Sexshop em Bauru | Entrega discreta</title>
 
-.hero{padding:90px 0 80px;background:
-  radial-gradient(ellipse at 75% 20%,rgba(139,30,63,.55),transparent 55%),
-  radial-gradient(ellipse at 10% 90%,rgba(139,30,63,.25),transparent 50%),var(--black)}
-.hero-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:50px;align-items:center}
-h1{font-size:clamp(46px,7vw,84px);line-height:1;letter-spacing:-.02em;margin-bottom:24px}
-h1 em{font-style:italic;color:var(--gold)}
-.hero p{color:var(--muted);font-size:17px;max-width:540px}
-.pills{display:flex;flex-wrap:wrap;gap:10px;margin:22px 0 0;padding:0;list-style:none}
-.pills li{border:1px solid var(--line);border-radius:999px;padding:7px 14px;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--blush)}
-.buttons{display:flex;gap:12px;flex-wrap:wrap;margin-top:32px}
-.hero-card{min-height:440px;border-radius:28px;border:1px solid var(--line);position:relative;overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:30px;
-  background:linear-gradient(160deg,#5a1229 0%,#2a0a15 55%,#0B0B0B 100%);box-shadow:0 30px 80px rgba(0,0,0,.5)}
-.hero-card:before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(115deg,rgba(255,255,255,.025) 0 2px,transparent 2px 22px)}
-.crest{position:relative;width:74px;margin-bottom:18px}
-.hero-card .wordmark{position:relative;font-family:var(--serif);font-size:44px;color:var(--gold);letter-spacing:.04em}
-.hero-card small{position:relative;display:block;margin-top:8px;letter-spacing:.35em;font-size:10px;color:var(--blush);text-transform:uppercase}
-.hero-card .slogan{position:relative;margin-top:34px;letter-spacing:.3em;font-size:10px;color:var(--gold);text-transform:uppercase}
+  <meta
+    name="description"
+    content="Luxuriosa: lingerie e sexshop em Bauru e região. Pronta entrega, atendimento reservado e entrega discreta."
+  >
 
-.section{padding:72px 0}
-.section.alt{background:var(--surface)}
-.section-head{display:flex;align-items:end;justify-content:space-between;gap:24px;margin-bottom:32px;flex-wrap:wrap}
-.section h2{font-size:clamp(30px,4vw,42px)}
-.section-head p{color:var(--muted);margin:0;max-width:460px;font-size:14px}
-.categories{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
-.cat{padding:28px 22px;min-height:160px;border-radius:20px;border:1px solid var(--line);background:linear-gradient(150deg,#2a0f19,var(--surface));cursor:pointer;transition:.25s;display:flex;flex-direction:column;justify-content:flex-end;text-align:left;color:inherit}
-.cat:hover{transform:translateY(-4px);border-color:var(--gold)}
-.cat b{font-family:var(--serif);font-weight:400;font-size:26px;color:var(--blush)}
-.cat span{color:var(--muted);font-size:13px;margin-top:6px}
+  <meta name="robots" content="index,follow">
+  <meta name="author" content="Luxuriosa">
+  <meta name="theme-color" content="#0B0B0B">
 
-.chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px}
-.chip{border:1px solid var(--line);background:transparent;color:var(--muted);border-radius:999px;padding:9px 18px;font-size:11px;letter-spacing:.16em;text-transform:uppercase;cursor:pointer;transition:.2s}
-.chip:hover{border-color:var(--gold);color:var(--gold)}
-.chip.active{background:var(--gold);border-color:var(--gold);color:#2a0d17;font-weight:600}
-.products{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
-.product{background:var(--surface2);border:1px solid var(--line);border-radius:20px;overflow:hidden;transition:.25s;display:flex;flex-direction:column;cursor:pointer}
-.product:hover{border-color:var(--gold);transform:translateY(-3px)}
-.product-img{position:relative;aspect-ratio:1/1;display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:54px;color:rgba(212,175,124,.8);background:radial-gradient(circle at 50% 30%,#7a1a38,#2a0a15 70%,#150d10);overflow:hidden}
-.product-img img{width:100%;height:100%;object-fit:cover}
-.badges{position:absolute;top:10px;left:10px;display:flex;gap:6px;flex-wrap:wrap}
-.badge{background:rgba(11,11,11,.8);border:1px solid var(--gold);color:var(--gold);font-family:var(--sans);font-size:9px;letter-spacing:.18em;text-transform:uppercase;padding:4px 9px;border-radius:999px}
-.badge.sold{border-color:#8a6a6e;color:#c9b3b6}
-.product.out .product-img img,.product.out .product-img>span{opacity:.45}
-.product-body{padding:16px;display:flex;flex-direction:column;flex:1}
-.tag{font-size:10px;text-transform:uppercase;letter-spacing:.25em;color:var(--gold)}
-.product h3{margin:8px 0 6px;font-size:19px;line-height:1.25}
-.price{color:var(--blush);font-size:15px;margin-top:auto;padding-bottom:12px}
-.price s{color:var(--muted);font-size:12px;margin-left:8px}
-.product .btn{width:100%}
-.empty{grid-column:1/-1;text-align:center;color:var(--muted);padding:40px 10px;border:1px dashed var(--line);border-radius:20px}
+  <link rel="canonical" href="https://luxuriosa.com.br/">
 
-.banner{margin-top:32px;padding:34px;border-radius:24px;border:1px solid var(--line);background:linear-gradient(105deg,#5a1229,#1d0a10);display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap}
-.banner h3{font-size:28px;margin-bottom:6px}.banner p{margin:0;color:var(--blush)}
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="pt_BR">
+  <meta property="og:title" content="Luxuriosa — Lingerie & Sexshop">
+  <meta
+    property="og:description"
+    content="Lingerie, produtos de intimidade e entrega discreta em Bauru e região."
+  >
+  <meta property="og:url" content="https://luxuriosa.com.br/">
+  <meta property="og:site_name" content="Luxuriosa">
 
-.cols3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
-.card{padding:28px;border:1px solid var(--line);border-radius:20px;background:var(--surface2)}
-.card strong{font-family:var(--serif);font-weight:400;font-size:22px;color:var(--gold);display:block;margin-bottom:8px}
-.card p{margin:0;color:var(--muted);font-size:14px}
-.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;counter-reset:s}
-.step{padding:24px;border-top:1px solid var(--gold);counter-increment:s}
-.step:before{content:"0" counter(s);font-family:var(--serif);font-size:34px;color:var(--gold);display:block;margin-bottom:6px}
-.step b{display:block;font-weight:500;margin-bottom:4px}
-.step p{margin:0;color:var(--muted);font-size:13px}
-.about{max-width:760px}
-.about p{color:var(--muted);font-size:16px}
+  <!-- Favicon -->
+  <link
+    rel="icon"
+    href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%238B1E3F'/%3E%3Cpath d='M12 46 L16 20 L27 31 L32 14 L37 31 L48 20 L52 46 Z' fill='none' stroke='%23D4AF7C' stroke-width='3' stroke-linejoin='round'/%3E%3C/svg%3E"
+  >
 
-footer{border-top:1px solid var(--line);padding:40px 0 50px;color:var(--muted);font-size:12px;background:#080808}
-.footer-grid{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap}
-.footer-logo{font-family:var(--serif);font-size:24px;color:var(--gold)}
-.age{margin-top:22px;font-size:11px;letter-spacing:.08em;opacity:.8}
-.whatsapp{position:fixed;right:20px;bottom:20px;z-index:30;background:linear-gradient(135deg,var(--gold),#b98f5c);color:#2a0d17;border:0;border-radius:999px;padding:14px 20px;font-weight:600;font-size:12px;letter-spacing:.14em;text-transform:uppercase;box-shadow:0 12px 30px rgba(0,0,0,.5);cursor:pointer}
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-/* modal e age gate */
-.overlay{position:fixed;inset:0;z-index:50;background:rgba(5,3,4,.82);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;padding:18px}
-.overlay.open{display:flex}
-.modal{background:var(--surface2);border:1px solid var(--line);border-radius:24px;max-width:860px;width:100%;max-height:92vh;overflow:auto;display:grid;grid-template-columns:1fr 1fr;position:relative}
-.modal .m-img{aspect-ratio:1/1;background:radial-gradient(circle at 50% 30%,#7a1a38,#2a0a15 70%,#150d10);display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:80px;color:rgba(212,175,124,.8)}
-.modal .m-img img{width:100%;height:100%;object-fit:cover}
-.modal .m-body{padding:30px;display:flex;flex-direction:column;gap:10px}
-.modal h3{font-size:30px;line-height:1.15}
-.modal .m-desc{color:var(--muted);font-size:14px;white-space:pre-line}
-.modal .m-sizes{font-size:13px;color:var(--blush)}
-.close{position:absolute;top:12px;right:12px;width:38px;height:38px;border-radius:50%;border:1px solid var(--line);background:rgba(11,11,11,.7);color:var(--gold);cursor:pointer;font-size:18px;z-index:2}
-.gate{background:var(--surface2);border:1px solid var(--line);border-radius:24px;max-width:460px;padding:38px 30px;text-align:center}
-.gate h3{font-size:30px;margin-bottom:10px}
-.gate p{color:var(--muted);font-size:14px;margin:0 0 24px}
-.gate .buttons{justify-content:center;margin:0}
+  <link
+    href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600&family=Playfair+Display:wght@400;500&display=swap"
+    rel="stylesheet"
+  >
 
-@media(max-width:900px){
-  .burger{display:inline-flex}
-  .navlinks{display:none;position:absolute;top:76px;left:0;right:0;flex-direction:column;gap:18px;background:rgba(11,11,11,.97);padding:22px 4%;border-bottom:1px solid var(--line)}
-  .navlinks.open{display:flex}
-  .hero{padding:56px 0}
-  .hero-grid{grid-template-columns:1fr}
-  .hero-card{min-height:300px}
-  .categories,.products{grid-template-columns:repeat(2,1fr)}
-  .cols3{grid-template-columns:1fr}
-  .steps{grid-template-columns:repeat(2,1fr)}
-  .modal{grid-template-columns:1fr}
-}
-@media(max-width:520px){
-  .nav{height:66px}.navlinks{top:66px}.logo{font-size:23px}
-  .nav-right .btn{display:none}
-  .categories,.products{gap:10px}
-  .cat{min-height:130px;padding:18px 14px}.cat b{font-size:21px}
-  .product-body{padding:12px}.product h3{font-size:16px}
-  .section{padding:52px 0}
-  .steps{grid-template-columns:1fr}
-  .banner{padding:24px}
-  .modal .m-body{padding:22px}
-}
-</style>
+  <!-- CSS -->
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/responsive.css">
+
+  <!-- Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Store",
+    "name": "Luxuriosa",
+    "description": "Lingerie e sexshop com entrega discreta em Bauru e região.",
+    "url": "https://luxuriosa.com.br/",
+    "areaServed": {
+      "@type": "City",
+      "name": "Bauru"
+    },
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "Bauru",
+      "addressRegion": "SP",
+      "addressCountry": "BR"
+    }
+  }
+  </script>
 </head>
+
 <body>
 
-<div class="overlay" id="gate" role="dialog" aria-modal="true" aria-labelledby="gateTitle">
-  <div class="gate">
-    <h3 id="gateTitle">Conteúdo para maiores de 18</h3>
-    <p>A Luxuriosa vende lingerie e produtos de intimidade para adultos. Você tem 18 anos ou mais?</p>
-    <div class="buttons">
-      <button class="btn primary" id="gateYes">Sim, tenho 18+</button>
-      <a class="btn ghost" href="https://www.google.com.br">Sair</a>
+  <!-- =========================================================
+       GATE 18+
+  ========================================================== -->
+
+  <div
+    class="overlay"
+    id="gate"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="gateTitle"
+  >
+
+    <div class="gate">
+
+      <div class="gate-icon" aria-hidden="true">
+        ♡
+      </div>
+
+      <div class="kicker">
+        Luxuriosa
+      </div>
+
+      <h3 id="gateTitle">
+        Conteúdo para maiores de 18
+      </h3>
+
+      <p>
+        A Luxuriosa vende lingerie e produtos de intimidade
+        destinados exclusivamente a adultos.
+      </p>
+
+      <p>
+        Você tem 18 anos ou mais?
+      </p>
+
+      <div class="buttons">
+
+        <button
+          class="btn primary"
+          id="gateYes"
+          type="button"
+        >
+          Sim, tenho 18+
+        </button>
+
+        <a
+          class="btn ghost"
+          href="https://www.google.com.br"
+        >
+          Sair
+        </a>
+
+      </div>
+
     </div>
-  </div>
-</div>
 
-<div class="overlay" id="modal" role="dialog" aria-modal="true" aria-labelledby="mNome">
-  <div class="modal">
-    <button class="close" id="mClose" aria-label="Fechar">✕</button>
-    <div class="m-img" id="mImg"></div>
-    <div class="m-body">
-      <span class="tag" id="mCat"></span>
-      <h3 id="mNome"></h3>
-      <div class="price" id="mPreco" style="padding:0"></div>
-      <div class="m-desc" id="mDesc"></div>
-      <div class="m-sizes" id="mSizes"></div>
-      <button class="btn primary" id="mBtn" style="margin-top:auto">Pedir pelo WhatsApp</button>
+  </div>
+
+
+  <!-- =========================================================
+       MODAL DO PRODUTO
+  ========================================================== -->
+
+  <div
+    class="overlay"
+    id="modal"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="mNome"
+  >
+
+    <div class="modal">
+
+      <button
+        class="close"
+        id="mClose"
+        type="button"
+        aria-label="Fechar"
+      >
+        ×
+      </button>
+
+      <div
+        class="m-img"
+        id="mImg"
+      ></div>
+
+      <div class="m-body">
+
+        <span
+          class="tag"
+          id="mCat"
+        ></span>
+
+        <h3 id="mNome"></h3>
+
+        <div
+          class="price"
+          id="mPreco"
+        ></div>
+
+        <div
+          class="m-desc"
+          id="mDesc"
+        ></div>
+
+        <div
+          class="m-sizes"
+          id="mSizes"
+        ></div>
+
+        <button
+          class="btn primary"
+          id="mBtn"
+          type="button"
+        >
+          Adicionar ao carrinho
+        </button>
+
+      </div>
+
     </div>
-  </div>
-</div>
 
-<header><div class="container nav">
-  <a class="logo" href="#inicio" aria-label="Luxuriosa — início">
-    <svg viewBox="0 0 24 20" fill="none" stroke="#D4AF7C" stroke-width="1.4" stroke-linejoin="round" aria-hidden="true"><path d="M2 17 L4 6 L9 11 L12 3 L15 11 L20 6 L22 17 Z"/></svg>
-    LUXURIOSA
-  </a>
-  <nav class="navlinks" id="navlinks" aria-label="Principal">
-    <a href="#categorias">Categorias</a><a href="#catalogo">Produtos</a><a href="#experiencia">Experiência</a><a href="#entrega">Entrega</a><a href="#sobre">Sobre</a>
-  </nav>
-  <div class="nav-right">
-    <button class="btn ghost small" data-wa>WhatsApp</button>
-    <button class="burger" id="burger" aria-label="Abrir menu">☰</button>
   </div>
-</div></header>
 
-<main>
-<section class="hero" id="inicio"><div class="container hero-grid">
-  <div>
-    <div class="kicker">Lingerie • Sexshop • Bauru e região</div>
-    <h1>Sinta-se ainda<br><em>mais você.</em></h1>
-    <p>Uma experiência elegante, íntima e reservada. Produtos selecionados, pronta entrega e atendimento próximo — do primeiro contato à porta da sua casa.</p>
-    <ul class="pills"><li>Pronta entrega</li><li>Atendimento discreto</li><li>Entrega reservada</li></ul>
-    <div class="buttons">
-      <a class="btn primary" href="#catalogo">Ver produtos</a>
-      <button class="btn ghost" data-wa>Falar no WhatsApp</button>
+
+  <!-- =========================================================
+       HEADER
+  ========================================================== -->
+
+  <header>
+
+    <div class="container nav">
+
+      <a
+        class="logo"
+        href="#inicio"
+        aria-label="Luxuriosa — início"
+      >
+
+        <svg
+          viewBox="0 0 24 20"
+          fill="none"
+          stroke="#D4AF7C"
+          stroke-width="1.4"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <path d="M2 17 L4 6 L9 11 L12 3 L15 11 L20 6 L22 17 Z"/>
+        </svg>
+
+        LUXURIOSA
+
+      </a>
+
+
+      <nav
+        class="navlinks"
+        id="navlinks"
+        aria-label="Principal"
+      >
+
+        <a href="#categorias">
+          Categorias
+        </a>
+
+        <a href="#catalogo">
+          Produtos
+        </a>
+
+        <a href="#experiencia">
+          Experiência
+        </a>
+
+        <a href="#entrega">
+          Entrega
+        </a>
+
+        <a href="#sobre">
+          Sobre
+        </a>
+
+      </nav>
+
+
+      <div class="nav-right">
+
+        <!-- CARRINHO -->
+
+        <button
+          class="cart-trigger"
+          id="cartOpen"
+          type="button"
+          aria-label="Abrir carrinho"
+        >
+
+          <span
+            class="cart-icon"
+            aria-hidden="true"
+          >
+            🛍
+          </span>
+
+          <span class="cart-label">
+            Carrinho
+          </span>
+
+          <span
+            class="cart-count"
+            id="cartCount"
+            hidden
+          >
+            0
+          </span>
+
+        </button>
+
+
+        <!-- WHATSAPP -->
+
+        <button
+          class="btn ghost small"
+          type="button"
+          data-wa
+        >
+          WhatsApp
+        </button>
+
+
+        <!-- MENU MOBILE -->
+
+        <button
+          class="burger"
+          id="burger"
+          type="button"
+          aria-label="Abrir menu"
+          aria-expanded="false"
+          aria-controls="navlinks"
+        >
+          ☰
+        </button>
+
+      </div>
+
     </div>
-  </div>
-  <div class="hero-card" aria-hidden="true">
-    <svg class="crest" viewBox="0 0 24 20" fill="none" stroke="#D4AF7C" stroke-width="1" stroke-linejoin="round"><path d="M2 17 L4 6 L9 11 L12 3 L15 11 L20 6 L22 17 Z"/></svg>
-    <div class="wordmark">LUXURI<span style="position:relative">O<svg viewBox="0 0 24 24" style="position:absolute;left:50%;top:52%;width:.42em;transform:translate(-50%,-50%)" fill="#D4AF7C"><path d="M12 21s-8-5.2-8-11a4.5 4.5 0 0 1 8-2.8A4.5 4.5 0 0 1 20 10c0 5.800-8 11-8 11z"/></svg></span>SA</div>
-    <small>Lingerie &amp; Sexshop</small>
-    <div class="slogan">Sinta-se ainda mais você</div>
-  </div>
-</div></section>
 
-<section class="section" id="categorias"><div class="container">
-  <div class="section-head"><div><div class="kicker">Explore</div><h2>Escolha seu desejo</h2></div><p>Uma seleção enxuta, pensada para tornar a compra simples, confortável e sem exposição.</p></div>
-  <div class="categories">
-    <button class="cat" data-filtro="Lingerie"><b>Lingerie</b><span>Conjuntos, bodys e peças especiais</span></button>
-    <button class="cat" data-filtro="Intimidade"><b>Intimidade</b><span>Produtos para explorar a dois ou a sós</span></button>
-    <button class="cat" data-filtro="Kits"><b>Kits</b><span>Combinações para presentear</span></button>
-    <button class="cat" data-filtro="Ofertas"><b>Ofertas</b><span>Oportunidades selecionadas</span></button>
-  </div>
-</div></section>
+  </header>
 
-<section class="section alt" id="catalogo"><div class="container">
-  <div class="section-head"><div><div class="kicker">Catálogo</div><h2>Nossos produtos</h2></div><p>Toque em um produto para ver detalhes e pedir pelo WhatsApp.</p></div>
-  <div class="chips" id="chips" role="tablist" aria-label="Filtrar por categoria"></div>
-  <div class="products" id="grid"><div class="empty">Carregando produtos…</div></div>
-  <div class="banner">
-    <div><h3>Não achou o que procurava?</h3><p>Chame no WhatsApp: consultamos disponibilidade, valores e entrega para você.</p></div>
-    <button class="btn primary" data-wa>Chamar no WhatsApp</button>
-  </div>
-</div></section>
 
-<section class="section" id="experiencia"><div class="container">
-  <div class="section-head"><div><div class="kicker">A experiência Luxuriosa</div><h2>Mais que comprar.</h2></div><p>Três pilares sustentam a marca: discrição, curadoria e proximidade.</p></div>
-  <div class="cols3">
-    <div class="card"><strong>01 · Discrição</strong><p>Embalagem externa neutra, comunicação reservada e entrega discreta. Sua privacidade é parte da experiência.</p></div>
-    <div class="card"><strong>02 · Curadoria</strong><p>Menos produtos aleatórios, mais seleção: itens bonitos, de qualidade e pensados para quem valoriza o que compra.</p></div>
-    <div class="card"><strong>03 · Proximidade</strong><p>Atendimento humano e rápido em Bauru e região. Existe uma empresa real do outro lado da conversa.</p></div>
-  </div>
-</div></section>
+  <!-- =========================================================
+       CONTEÚDO
+  ========================================================== -->
 
-<section class="section alt" id="entrega"><div class="container">
-  <div class="section-head"><div><div class="kicker">Entrega</div><h2>Simples e reservada</h2></div><p>Do pedido à entrega, tudo pensado para ser rápido, previsível e discreto.</p></div>
-  <div class="steps">
-    <div class="step"><b>Escolha</b><p>Veja o catálogo e toque em “Tenho interesse”.</p></div>
-    <div class="step"><b>Converse</b><p>Atendimento reservado pelo WhatsApp: tamanhos, valores e dúvidas.</p></div>
-    <div class="step"><b>Pague</b><p>Combine a forma de pagamento com o atendimento.</p></div>
-    <div class="step"><b>Receba</b><p>Entrega discreta em Bauru e região, em embalagem neutra por fora.</p></div>
-  </div>
-</div></section>
+  <main>
 
-<section class="section" id="sobre"><div class="container about">
-  <div class="kicker">Sobre</div>
-  <h2 style="margin-bottom:18px">Sensual, elegante, <em class="gold">sem exageros.</em></h2>
-  <p>A Luxuriosa nasceu em Bauru para oferecer lingerie e produtos de intimidade com a elegância e o cuidado que o assunto merece. Sem vulgaridade, sem aparência de loja genérica: curadoria, atendimento próximo e a certeza de que a sua privacidade vem em primeiro lugar.</p>
-</div></section>
-</main>
+    <!-- =======================================================
+         HERO
+    ======================================================== -->
 
-<footer><div class="container">
-  <div class="footer-grid">
-    <div><div class="footer-logo">Luxuriosa</div><div>Lingerie &amp; Sexshop · © 2026 · Bauru/SP</div></div>
-    <div>Instagram · WhatsApp · Atendimento discreto<br>luxuriosa.com.br</div>
-  </div>
-  <div class="age">Produtos destinados exclusivamente a maiores de 18 anos.</div>
-</div></footer>
+    <section
+      class="hero"
+      id="inicio"
+    >
 
-<button class="whatsapp" data-wa>WhatsApp</button>
+      <div class="container hero-grid">
 
-<script>
-(function(){
-  var FALLBACK_WA = '5514999999999';
-  var CATS = ['Todos','Lingerie','Intimidade','Kits','Ofertas'];
-  var cfg = { whatsapp: FALLBACK_WA };
-  var produtos = [];
-  var filtro = 'Todos';
-  var $ = function(id){ return document.getElementById(id); };
+        <div>
 
-  function el(tag, cls, text){
-    var e = document.createElement(tag);
-    if(cls) e.className = cls;
-    if(text != null) e.textContent = text;
-    return e;
-  }
-  function brl(n){ return n.toLocaleString('pt-BR',{style:'currency',currency:'BRL'}); }
-  function zap(msg){
-    var n = String(cfg.whatsapp || FALLBACK_WA).replace(/\D/g,'');
-    var t = msg || 'Olá! Conheci a Luxuriosa pelo site e gostaria de saber mais.';
-    window.open('https://wa.me/'+n+'?text='+encodeURIComponent(t),'_blank','noopener');
-  }
-  function msgProduto(p){
-    var m = 'Olá! Tenho interesse em: '+p.nome;
-    if(typeof p.preco === 'number') m += ' ('+brl(p.preco)+')';
-    return m;
-  }
-  function isOferta(p){ return typeof p.precoAntigo === 'number' && typeof p.preco === 'number' && p.precoAntigo > p.preco; }
+          <div class="kicker">
+            Lingerie • Sexshop • Bauru e região
+          </div>
 
-  function fillPreco(box, p){
-    box.textContent = '';
-    if(typeof p.preco === 'number'){
-      box.appendChild(document.createTextNode(brl(p.preco)));
-      if(isOferta(p)){ var s = el('s', null, brl(p.precoAntigo)); box.appendChild(s); }
-    } else {
-      box.textContent = 'Consulte valores';
-    }
-  }
-  function fillImg(box, p, big){
-    box.textContent = '';
-    if(p.imagem){
-      var im = el('img'); im.src = p.imagem; im.alt = p.nome; im.loading = 'lazy';
-      box.appendChild(im);
-    } else {
-      box.appendChild(el('span', null, p.categoria === 'Intimidade' ? '♡' : p.categoria === 'Kits' ? '✦' : 'L'));
-    }
-  }
+          <h1>
+            Sinta-se ainda
+            <br>
+            <em>mais você.</em>
+          </h1>
 
-  function lista(){
-    var l = produtos.filter(function(p){
-      if(filtro === 'Todos') return true;
-      if(filtro === 'Ofertas') return isOferta(p) || p.categoria === 'Ofertas';
-      return p.categoria === filtro;
-    });
-    // destaques primeiro, mantendo a ordem do cadastro
-    return l.map(function(p,i){ return {p:p,i:i}; })
-      .sort(function(a,b){ return (b.p.destaque?1:0)-(a.p.destaque?1:0) || a.i-b.i; })
-      .map(function(x){ return x.p; });
-  }
+          <p>
+            Uma experiência elegante, íntima e reservada.
+            Produtos selecionados, pronta entrega e atendimento
+            próximo — do primeiro contato à porta da sua casa.
+          </p>
 
-  function renderChips(){
-    var box = $('chips'); box.textContent = '';
-    CATS.forEach(function(c){
-      var b = el('button','chip'+(c===filtro?' active':''),c);
-      b.type = 'button';
-      b.addEventListener('click',function(){ filtro = c; renderChips(); renderGrid(); });
-      box.appendChild(b);
-    });
-  }
+          <ul class="pills">
 
-  function renderGrid(){
-    var g = $('grid'); g.textContent = '';
-    var l = lista();
-    if(!l.length){
-      var e = el('div','empty');
-      e.appendChild(document.createTextNode(produtos.length ? 'Nenhum produto nesta categoria por enquanto. ' : 'Catálogo em montagem. '));
-      var a = el('button','btn ghost small','Perguntar no WhatsApp');
-      a.type='button'; a.addEventListener('click',function(){ zap(); });
-      e.appendChild(el('br')); e.appendChild(a);
-      g.appendChild(e); return;
-    }
-    l.forEach(function(p){
-      var card = el('article','product'+(p.esgotado?' out':''));
-      card.tabIndex = 0;
-      var im = el('div','product-img'); fillImg(im,p);
-      var bd = el('div','badges');
-      if(p.esgotado) bd.appendChild(el('span','badge sold','Esgotado'));
-      else {
-        if(p.novo) bd.appendChild(el('span','badge','Novo'));
-        if(isOferta(p)) bd.appendChild(el('span','badge','Oferta'));
-      }
-      if(bd.children.length) im.appendChild(bd);
-      var body = el('div','product-body');
-      body.appendChild(el('span','tag',p.categoria));
-      body.appendChild(el('h3',null,p.nome));
-      var pr = el('div','price'); fillPreco(pr,p); body.appendChild(pr);
-      var btn = el('button','btn ghost small', p.esgotado ? 'Avise-me quando voltar' : 'Tenho interesse');
-      btn.type='button';
-      btn.addEventListener('click',function(ev){
-        ev.stopPropagation();
-        zap(p.esgotado ? 'Olá! Quero ser avisada quando voltar: '+p.nome : msgProduto(p));
-      });
-      body.appendChild(btn);
-      card.appendChild(im); card.appendChild(body);
-      var abrir = function(){ abrirModal(p); };
-      card.addEventListener('click',abrir);
-      card.addEventListener('keydown',function(ev){ if(ev.key==='Enter') abrir(); });
-      g.appendChild(card);
-    });
-  }
+            <li>
+              Pronta entrega
+            </li>
 
-  function abrirModal(p){
-    fillImg($('mImg'),p,true);
-    $('mCat').textContent = p.categoria;
-    $('mNome').textContent = p.nome;
-    fillPreco($('mPreco'),p);
-    $('mDesc').textContent = p.descricao || '';
-    $('mSizes').textContent = p.tamanhos ? 'Tamanhos/opções: '+p.tamanhos : '';
-    var b = $('mBtn');
-    b.textContent = p.esgotado ? 'Avise-me quando voltar' : 'Pedir pelo WhatsApp';
-    b.onclick = function(){ zap(p.esgotado ? 'Olá! Quero ser avisada quando voltar: '+p.nome : msgProduto(p)); };
-    $('modal').classList.add('open');
-  }
-  function fecharModal(){ $('modal').classList.remove('open'); }
+            <li>
+              Atendimento discreto
+            </li>
 
-  // eventos gerais
-  document.querySelectorAll('[data-wa]').forEach(function(b){ b.addEventListener('click',function(){ zap(); }); });
-  document.querySelectorAll('[data-filtro]').forEach(function(b){
-    b.addEventListener('click',function(){
-      filtro = b.getAttribute('data-filtro'); renderChips(); renderGrid();
-      $('catalogo').scrollIntoView();
-    });
-  });
-  $('mClose').addEventListener('click',fecharModal);
-  $('modal').addEventListener('click',function(e){ if(e.target === $('modal')) fecharModal(); });
-  document.addEventListener('keydown',function(e){ if(e.key==='Escape') fecharModal(); });
-  $('burger').addEventListener('click',function(){ $('navlinks').classList.toggle('open'); });
-  document.querySelectorAll('#navlinks a').forEach(function(a){ a.addEventListener('click',function(){ $('navlinks').classList.remove('open'); }); });
+            <li>
+              Entrega reservada
+            </li>
 
-  // verificação de idade (lembra neste aparelho)
-  var ok = false;
-  try { ok = localStorage.getItem('lux18') === '1'; } catch(e){}
-  if(!ok) $('gate').classList.add('open');
-  $('gateYes').addEventListener('click',function(){
-    try { localStorage.setItem('lux18','1'); } catch(e){}
-    $('gate').classList.remove('open');
-  });
+          </ul>
 
-  // carrega o catálogo
-  renderChips();
-  fetch('produtos.json',{cache:'no-cache'})
-    .then(function(r){ if(!r.ok) throw new Error(r.status); return r.json(); })
-    .then(function(d){
-      if(d.config && d.config.whatsapp) cfg.whatsapp = d.config.whatsapp;
-      produtos = Array.isArray(d.produtos) ? d.produtos : [];
-      renderGrid();
-    })
-    .catch(function(){
-      $('grid').textContent = '';
-      var e = el('div','empty','Não foi possível carregar o catálogo agora. Chame no WhatsApp e atendemos você.');
-      $('grid').appendChild(e);
-    });
-})();
-</script>
+          <div class="buttons">
+
+            <a
+              class="btn primary"
+              href="#catalogo"
+            >
+              Ver produtos
+            </a>
+
+            <button
+              class="btn ghost"
+              type="button"
+              data-wa
+            >
+              Falar no WhatsApp
+            </button>
+
+          </div>
+
+        </div>
+
+
+        <div
+          class="hero-card"
+          aria-hidden="true"
+        >
+
+          <svg
+            class="crest"
+            viewBox="0 0 24 20"
+            fill="none"
+            stroke="#D4AF7C"
+            stroke-width="1"
+            stroke-linejoin="round"
+          >
+            <path d="M2 17 L4 6 L9 11 L12 3 L15 11 L20 6 L22 17 Z"/>
+          </svg>
+
+          <div class="wordmark">
+
+            LUXURI
+
+            <span class="heart-o">
+
+              O
+
+              <svg
+                viewBox="0 0 24 24"
+                fill="#D4AF7C"
+                aria-hidden="true"
+              >
+                <path d="M12 21s-8-5.2-8-11a4.5 4.5 0 0 1 8-2.8A4.5 4.5 0 0 1 20 10c0 5.800-8 11-8 11z"/>
+              </svg>
+
+            </span>
+
+            SA
+
+          </div>
+
+          <small>
+            Lingerie &amp; Sexshop
+          </small>
+
+          <div class="slogan">
+            Sinta-se ainda mais você
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =======================================================
+         CATEGORIAS
+    ======================================================== -->
+
+    <section
+      class="section"
+      id="categorias"
+    >
+
+      <div class="container">
+
+        <div class="section-head">
+
+          <div>
+
+            <div class="kicker">
+              Explore
+            </div>
+
+            <h2>
+              Escolha seu desejo
+            </h2>
+
+          </div>
+
+          <p>
+            Uma seleção enxuta, pensada para tornar a compra
+            simples, confortável e sem exposição.
+          </p>
+
+        </div>
+
+
+        <div class="categories">
+
+          <button
+            class="cat"
+            type="button"
+            data-filtro="Lingerie"
+          >
+
+            <b>
+              Lingerie
+            </b>
+
+            <span>
+              Conjuntos, bodys e peças especiais
+            </span>
+
+          </button>
+
+
+          <button
+            class="cat"
+            type="button"
+            data-filtro="Intimidade"
+          >
+
+            <b>
+              Intimidade
+            </b>
+
+            <span>
+              Produtos para explorar a dois ou a sós
+            </span>
+
+          </button>
+
+
+          <button
+            class="cat"
+            type="button"
+            data-filtro="Kits"
+          >
+
+            <b>
+              Kits
+            </b>
+
+            <span>
+              Combinações para presentear
+            </span>
+
+          </button>
+
+
+          <button
+            class="cat"
+            type="button"
+            data-filtro="Ofertas"
+          >
+
+            <b>
+              Ofertas
+            </b>
+
+            <span>
+              Oportunidades selecionadas
+            </span>
+
+          </button>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =======================================================
+         CATÁLOGO
+    ======================================================== -->
+
+    <section
+      class="section alt"
+      id="catalogo"
+    >
+
+      <div class="container">
+
+        <div class="section-head">
+
+          <div>
+
+            <div class="kicker">
+              Catálogo
+            </div>
+
+            <h2>
+              Nossos produtos
+            </h2>
+
+          </div>
+
+          <p>
+            Toque em um produto para ver detalhes,
+            adicione seus favoritos ao carrinho
+            e finalize pelo WhatsApp.
+          </p>
+
+        </div>
+
+
+        <div
+          class="chips"
+          id="chips"
+          role="tablist"
+          aria-label="Filtrar por categoria"
+        ></div>
+
+
+        <div
+          class="products"
+          id="grid"
+        >
+
+          <div class="empty">
+            Carregando produtos…
+          </div>
+
+        </div>
+
+
+        <div class="banner">
+
+          <div>
+
+            <h3>
+              Não achou o que procurava?
+            </h3>
+
+            <p>
+              Chame no WhatsApp: consultamos disponibilidade,
+              valores e entrega para você.
+            </p>
+
+          </div>
+
+          <button
+            class="btn primary"
+            type="button"
+            data-wa
+          >
+            Chamar no WhatsApp
+          </button>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =======================================================
+         EXPERIÊNCIA
+    ======================================================== -->
+
+    <section
+      class="section"
+      id="experiencia"
+    >
+
+      <div class="container">
+
+        <div class="section-head">
+
+          <div>
+
+            <div class="kicker">
+              A experiência Luxuriosa
+            </div>
+
+            <h2>
+              Mais que comprar.
+            </h2>
+
+          </div>
+
+          <p>
+            Três pilares sustentam a marca:
+            discrição, curadoria e proximidade.
+          </p>
+
+        </div>
+
+
+        <div class="cols3">
+
+          <div class="card">
+
+            <strong>
+              01 · Discrição
+            </strong>
+
+            <p>
+              Embalagem externa neutra, comunicação reservada
+              e entrega discreta. Sua privacidade é parte
+              da experiência.
+            </p>
+
+          </div>
+
+
+          <div class="card">
+
+            <strong>
+              02 · Curadoria
+            </strong>
+
+            <p>
+              Menos produtos aleatórios, mais seleção:
+              itens bonitos, de qualidade e pensados para
+              quem valoriza o que compra.
+            </p>
+
+          </div>
+
+
+          <div class="card">
+
+            <strong>
+              03 · Proximidade
+            </strong>
+
+            <p>
+              Atendimento humano e rápido em Bauru e região.
+              Existe uma empresa real do outro lado da conversa.
+            </p>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =======================================================
+         ENTREGA
+    ======================================================== -->
+
+    <section
+      class="section alt"
+      id="entrega"
+    >
+
+      <div class="container">
+
+        <div class="section-head">
+
+          <div>
+
+            <div class="kicker">
+              Entrega
+            </div>
+
+            <h2>
+              Simples e reservada
+            </h2>
+
+          </div>
+
+          <p>
+            Do pedido à entrega, tudo pensado para ser rápido,
+            previsível e discreto.
+          </p>
+
+        </div>
+
+
+        <div class="steps">
+
+          <div class="step">
+
+            <b>
+              Escolha
+            </b>
+
+            <p>
+              Veja o catálogo, escolha seus produtos
+              e adicione ao carrinho.
+            </p>
+
+          </div>
+
+
+          <div class="step">
+
+            <b>
+              Converse
+            </b>
+
+            <p>
+              Atendimento reservado pelo WhatsApp:
+              tamanhos, valores e dúvidas.
+            </p>
+
+          </div>
+
+
+          <div class="step">
+
+            <b>
+              Pague
+            </b>
+
+            <p>
+              Combine a forma de pagamento
+              com o atendimento.
+            </p>
+
+          </div>
+
+
+          <div class="step">
+
+            <b>
+              Receba
+            </b>
+
+            <p>
+              Entrega discreta em Bauru e região,
+              em embalagem neutra por fora.
+            </p>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =======================================================
+         SOBRE
+    ======================================================== -->
+
+    <section
+      class="section"
+      id="sobre"
+    >
+
+      <div class="container about">
+
+        <div class="kicker">
+          Sobre
+        </div>
+
+        <h2>
+          Sensual, elegante,
+          <em class="gold">
+            sem exageros.
+          </em>
+        </h2>
+
+        <p>
+          A Luxuriosa nasceu em Bauru para oferecer lingerie
+          e produtos de intimidade com a elegância e o cuidado
+          que o assunto merece. Sem vulgaridade, sem aparência
+          de loja genérica: curadoria, atendimento próximo
+          e a certeza de que a sua privacidade vem em primeiro lugar.
+        </p>
+
+      </div>
+
+    </section>
+
+  </main>
+
+
+  <!-- =========================================================
+       CARRINHO
+  ========================================================== -->
+
+  <div
+    class="cart-overlay"
+    id="cartOverlay"
+    aria-hidden="true"
+  ></div>
+
+
+  <aside
+    class="cart"
+    id="cart"
+    aria-label="Carrinho de compras"
+    aria-hidden="true"
+  >
+
+    <div class="cart-header">
+
+      <div>
+
+        <span class="cart-kicker">
+          LUXURIOSA
+        </span>
+
+        <h2>
+          Seu carrinho
+        </h2>
+
+      </div>
+
+
+      <button
+        class="cart-close"
+        id="cartClose"
+        type="button"
+        aria-label="Fechar carrinho"
+      >
+        ×
+      </button>
+
+    </div>
+
+
+    <div
+      class="cart-items"
+      id="cartItems"
+    ></div>
+
+
+    <div
+      class="cart-empty"
+      id="cartEmpty"
+    >
+
+      <div
+        class="cart-empty-icon"
+        aria-hidden="true"
+      >
+        ♡
+      </div>
+
+      <h3>
+        Seu carrinho está vazio
+      </h3>
+
+      <p>
+        Escolha seus favoritos e monte
+        seu pedido.
+      </p>
+
+    </div>
+
+
+    <div
+      class="cart-footer"
+      id="cartFooter"
+      hidden
+    >
+
+      <div class="cart-total-row">
+
+        <span>
+          Total
+        </span>
+
+        <strong id="cartTotal">
+          R$ 0,00
+        </strong>
+
+      </div>
+
+
+      <button
+        class="btn primary cart-checkout"
+        id="cartCheckout"
+        type="button"
+      >
+        Finalizar pelo WhatsApp
+      </button>
+
+
+      <button
+        class="cart-clear"
+        id="cartClear"
+        type="button"
+      >
+        Limpar carrinho
+      </button>
+
+
+      <p class="cart-note">
+        O pedido será enviado pelo WhatsApp para
+        confirmar disponibilidade, tamanho e entrega.
+      </p>
+
+    </div>
+
+  </aside>
+
+
+  <!-- =========================================================
+       FOOTER
+  ========================================================== -->
+
+  <footer>
+
+    <div class="container">
+
+      <div class="footer-grid">
+
+        <div>
+
+          <div class="footer-logo">
+            Luxuriosa
+          </div>
+
+          <div>
+            Lingerie &amp; Sexshop
+            · © <span id="anoAtual">2026</span>
+            · Bauru/SP
+          </div>
+
+        </div>
+
+
+        <div class="footer-links">
+
+          <button
+            type="button"
+            data-wa
+          >
+            WhatsApp
+          </button>
+
+          <span>
+            ·
+          </span>
+
+          <a href="#inicio">
+            Voltar ao topo
+          </a>
+
+          <br>
+
+          <span>
+            luxuriosa.com.br
+          </span>
+
+        </div>
+
+      </div>
+
+
+      <div class="age">
+        Produtos destinados exclusivamente a maiores de 18 anos.
+      </div>
+
+    </div>
+
+  </footer>
+
+
+  <!-- =========================================================
+       WHATSAPP FLUTUANTE
+  ========================================================== -->
+
+  <button
+    class="whatsapp"
+    type="button"
+    data-wa
+    aria-label="Falar com a Luxuriosa pelo WhatsApp"
+  >
+    WhatsApp
+  </button>
+
+
+  <!-- =========================================================
+       JAVASCRIPT
+  ========================================================== -->
+
+  <script src="js/catalogo.js"></script>
+  <script src="js/carrinho.js"></script>
+  <script src="js/app.js"></script>
+
 </body>
 </html>
