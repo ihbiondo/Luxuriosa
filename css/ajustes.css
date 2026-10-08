@@ -1,0 +1,85 @@
+/* =========================================================
+   LOGO NO HERO
+   Carregado depois de style.css e responsive.css.
+   Substitui o cartao antigo (coroa + wordmark em SVG) pela
+   logo oficial em imagem.
+   ========================================================= */
+
+.hero-card--logo {
+  min-height: 0;
+  padding: 0;
+  display: block;
+  background: #21020a;
+  line-height: 0;
+}
+
+.hero-card--logo .hero-logo {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* Telas pequenas: logo menor e centralizada, sem esticar */
+@media (max-width: 860px) {
+  .hero-card--logo {
+    max-width: 420px;
+    margin: 0 auto;
+  }
+}
+
+
+/* =========================================================
+   CABECALHO EM NOTEBOOKS (1024px a 1360px)
+   O menu completo nao cabia: a pagina ganhava rolagem
+   horizontal e o botao WhatsApp ficava cortado.
+   ========================================================= */
+
+/* 981px a 1199px: usa o menu hamburguer (mesmo visual do celular) */
+@media (min-width: 981px) and (max-width: 1199px) {
+  .nav { position: relative; }
+
+  .burger {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .navlinks {
+    display: none;
+    position: absolute;
+    top: 76px;
+    left: 0;
+    right: 0;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+    background: rgba(11, 11, 11, 0.98);
+    border-bottom: 1px solid var(--line);
+    padding: 10px 4% 18px;
+    z-index: 90;
+    box-shadow: 0 18px 35px rgba(0, 0, 0, 0.35);
+  }
+
+  .navlinks.open { display: flex; }
+
+  .navlinks a {
+    display: block;
+    padding: 14px 4px;
+    border-bottom: 1px solid rgba(212, 175, 124, 0.08);
+  }
+
+  .navlinks a:last-child { border-bottom: 0; }
+}
+
+/* 1200px a 1360px: menu completo, so mais compacto */
+@media (min-width: 1200px) and (max-width: 1360px) {
+  .nav { gap: 14px; }
+
+  .navlinks {
+    gap: 16px;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+  }
+
+  .cart-label { display: none; }
+}
