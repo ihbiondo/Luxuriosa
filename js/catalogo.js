@@ -176,7 +176,8 @@
 
   function preencherImagem(
     container,
-    produto
+    produto,
+    permitirGaleria
   ) {
 
     if (!container) {
@@ -185,80 +186,130 @@
 
     container.textContent = "";
 
+    /*
+     * Compatibilidade:
+     * - produto.imagem continua sendo a imagem principal.
+     * - produto.imagens pode conter uma galeria.
+     * A galeria só aparece no modal, para manter os cards limpos.
+     */
 
-    if (produto.imagem) {
+    var imagens = [];
 
-      var imagem =
-        criarElemento("img");
+    if (Array.isArray(produto.imagens)) {
+      imagens = produto.imagens.filter(function (caminho) {
+        return typeof caminho === "string" && caminho.trim();
+      });
+    }
 
-      imagem.src =
-        produto.imagem;
+    if (produto.imagem && imagens.indexOf(produto.imagem) === -1) {
+      imagens.unshift(produto.imagem);
+    }
 
-      imagem.alt =
-        produto.nome ||
-        "Produto Luxuriosa";
+    if (!imagens.length && produto.imagem) {
+      imagens = [produto.imagem];
+    }
 
-      imagem.loading =
-        "lazy";
-
-
-      imagem.onerror =
-        function () {
-
-          this.style.display =
-            "none";
-
-
-          /*
-           * Evita criar vários fallbacks
-           * caso o navegador dispare
-           * o evento mais de uma vez.
-           */
-
-          if (
-            container.querySelector(
-              ".image-fallback"
-            )
-          ) {
-            return;
-          }
-
-
-          var fallback =
-            criarElemento(
-              "span",
-              "image-fallback",
-              obterSimboloProduto(
-                produto
-              )
-            );
-
-
-          container.appendChild(
-            fallback
-          );
-        };
-
-
+    if (!imagens.length) {
       container.appendChild(
-        imagem
+        criarElemento(
+          "span",
+          "image-fallback",
+          obterSimboloProduto(produto)
+        )
       );
-
       return;
     }
 
+    var imagemPrincipal = criarElemento("img");
+    imagemPrincipal.src = imagens[0];
+    imagemPrincipal.alt = produto.nome || "Produto Luxuriosa";
+    imagemPrincipal.loading = "lazy";
+    imagemPrincipal.style.maxWidth = "100%";
+    imagemPrincipal.style.height = "auto";
+    imagemPrincipal.style.objectFit = "contain";
 
-    container.appendChild(
-      criarElemento(
-        "span",
-        "image-fallback",
-        obterSimboloProduto(
-          produto
-        )
-      )
-    );
+    imagemPrincipal.onerror = function () {
+      this.style.display = "none";
+
+      if (!container.querySelector(".image-fallback")) {
+        container.appendChild(
+          criarElemento(
+            "span",
+            "image-fallback",
+            obterSimboloProduto(produto)
+          )
+        );
+      }
+    };
+
+    container.appendChild(imagemPrincipal);
+
+    if (!permitirGaleria || imagens.length < 2) {
+      return;
+    }
+
+    var miniaturas = criarElemento("div", "product-gallery-thumbnails");
+    miniaturas.style.display = "flex";
+    miniaturas.style.flexWrap = "wrap";
+    miniaturas.style.justifyContent = "center";
+    miniaturas.style.alignItems = "center";
+    miniaturas.style.gap = "8px";
+    miniaturas.style.marginTop = "12px";
+
+    imagens.forEach(function (caminho, indice) {
+      var botaoMiniatura = criarElemento("button", "product-gallery-thumb");
+      botaoMiniatura.type = "button";
+      botaoMiniatura.setAttribute(
+        "aria-label",
+        "Ver imagem " + (indice + 1) + " de " + (produto.nome || "produto")
+      );
+      botaoMiniatura.setAttribute("aria-pressed", indice === 0 ? "true" : "false");
+      botaoMiniatura.style.width = "64px";
+      botaoMiniatura.style.height = "64px";
+      botaoMiniatura.style.padding = "4px";
+      botaoMiniatura.style.border = indice === 0 ? "2px solid #b58a45" : "1px solid #d8d0c5";
+      botaoMiniatura.style.borderRadius = "8px";
+      botaoMiniatura.style.background = "#fff";
+      botaoMiniatura.style.cursor = "pointer";
+      botaoMiniatura.style.overflow = "hidden";
+
+      var miniatura = criarElemento("img");
+      miniatura.src = caminho;
+      miniatura.alt = "";
+      miniatura.loading = "lazy";
+      miniatura.style.width = "100%";
+      miniatura.style.height = "100%";
+      miniatura.style.objectFit = "contain";
+
+      miniatura.onerror = function () {
+        botaoMiniatura.style.display = "none";
+      };
+
+      botaoMiniatura.appendChild(miniatura);
+
+      botaoMiniatura.addEventListener("click", function (evento) {
+        evento.stopPropagation();
+        imagemPrincipal.src = caminho;
+        imagemPrincipal.alt = (produto.nome || "Produto Luxuriosa") +
+          " — imagem " + (indice + 1);
+
+        Array.prototype.forEach.call(
+          miniaturas.querySelectorAll("button"),
+          function (outroBotao) {
+            outroBotao.style.border = "1px solid #d8d0c5";
+            outroBotao.setAttribute("aria-pressed", "false");
+          }
+        );
+
+        botaoMiniatura.style.border = "2px solid #b58a45";
+        botaoMiniatura.setAttribute("aria-pressed", "true");
+      });
+
+      miniaturas.appendChild(botaoMiniatura);
+    });
+
+    container.appendChild(miniaturas);
   }
-
 
   function obterSimboloProduto(
     produto
@@ -973,7 +1024,8 @@
 
     preencherImagem(
       $("mImg"),
-      produto
+      produto,
+      true
     );
 
 
