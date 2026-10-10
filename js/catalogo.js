@@ -987,6 +987,7 @@
     if (categoria) {
 
       categoria.textContent =
+        produto.subcategoria ||
         produto.categoria ||
         "Produto";
     }
