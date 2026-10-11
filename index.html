@@ -480,7 +480,7 @@
 
               <p>
                 Bem-vinda(o) à Luxuriosa: 5% de desconto
-                no seu primeiro pedido*.
+                no seu primeiro pedido.
               </p>
 
               <div class="coupon-code">
@@ -560,12 +560,8 @@
 
 
         <p class="coupon-note">
-			* Cupons não cumulativos. O cupom PRIMEIRA vale apenas para o primeiro pedido.
+          Cupons não cumulativos. O cupom PRIMEIRA5 vale apenas para o primeiro pedido.
         </p>
-		<p class="coupon-note">
-			* Compras acima de R$ 50,00 
-        </p>
-		*
 
       </div>
 
@@ -1306,6 +1302,135 @@
 
 
   <!-- =========================================================
+       DADOS DO CLIENTE / REVISÃO DO PEDIDO
+       Os dados só são persistidos se o cliente marcar a opção.
+  ========================================================== -->
+  <div class="customer-overlay" id="customerOverlay" hidden>
+    <section class="customer-dialog" role="dialog" aria-modal="true"
+      aria-labelledby="customerTitle" aria-describedby="customerIntro" tabindex="-1">
+      <div class="customer-dialog-header">
+        <div>
+          <span class="cart-kicker">LUXURIOSA</span>
+          <h2 id="customerTitle">Dados para seu pedido</h2>
+        </div>
+        <button class="cart-close" id="customerClose" type="button" aria-label="Fechar cadastro">×</button>
+      </div>
+
+      <p id="customerIntro" class="customer-intro">Preencha os dados necessários para organizar o atendimento e a entrega. Você não precisa criar uma conta.</p>
+      <p class="customer-privacy-note">Seus dados serão usados para atender este pedido. <a href="privacidade.html" target="_blank" rel="noopener">Leia a Política de Privacidade</a>.</p>
+      <div id="customerStatus" class="customer-status" role="status" aria-live="polite" hidden></div>
+
+      <form id="customerForm" novalidate>
+        <fieldset class="customer-fieldset">
+          <legend>Dados pessoais</legend>
+          <div class="customer-grid">
+            <div class="customer-field customer-span-2">
+              <label for="customerName">Nome completo <span aria-hidden="true">*</span></label>
+              <input id="customerName" name="name" autocomplete="name" required maxlength="120">
+            </div>
+            <div class="customer-field">
+              <label for="customerPhone">Telefone/WhatsApp <span aria-hidden="true">*</span></label>
+              <input id="customerPhone" name="phone" type="tel" inputmode="tel" autocomplete="tel" required maxlength="25" placeholder="(14) 99999-9999">
+            </div>
+            <div class="customer-field">
+              <label for="customerEmail">E-mail <span class="optional">(opcional)</span></label>
+              <input id="customerEmail" name="email" type="email" autocomplete="email" maxlength="160">
+            </div>
+            <div class="customer-field">
+              <label for="customerBirthday">Data de nascimento <span class="optional">(opcional)</span></label>
+              <input id="customerBirthday" name="birthday" type="date" autocomplete="bday">
+            </div>
+          </div>
+        </fieldset>
+
+        <fieldset class="customer-fieldset">
+          <legend>Endereço de entrega</legend>
+          <div class="customer-grid">
+            <div class="customer-field">
+              <label for="customerZip">CEP <span class="optional">(opcional)</span></label>
+              <input id="customerZip" name="zip" autocomplete="postal-code" inputmode="numeric" maxlength="9" placeholder="00000-000">
+            </div>
+            <div class="customer-field">
+              <label for="customerAddressType">Tipo de endereço</label>
+              <select id="customerAddressType" name="addressType">
+                <option value="residencial">Residencial</option>
+                <option value="comercial">Comercial</option>
+                <option value="outro">Outro</option>
+              </select>
+            </div>
+            <div class="customer-field customer-span-2">
+              <label for="customerStreet">Rua ou avenida <span aria-hidden="true">*</span></label>
+              <input id="customerStreet" name="street" autocomplete="address-line1" maxlength="160">
+            </div>
+            <div class="customer-field">
+              <label for="customerNumber">Número <span aria-hidden="true">*</span></label>
+              <input id="customerNumber" name="number" autocomplete="address-line2" maxlength="30">
+            </div>
+            <div class="customer-field">
+              <label for="customerComplement">Complemento <span class="optional">(opcional)</span></label>
+              <input id="customerComplement" name="complement" maxlength="100">
+            </div>
+            <div class="customer-field">
+              <label for="customerDistrict">Bairro <span aria-hidden="true">*</span></label>
+              <input id="customerDistrict" name="district" autocomplete="address-level3" maxlength="100">
+            </div>
+            <div class="customer-field">
+              <label for="customerCity">Cidade <span aria-hidden="true">*</span></label>
+              <input id="customerCity" name="city" autocomplete="address-level2" maxlength="100" value="Bauru">
+            </div>
+            <div class="customer-field">
+              <label for="customerState">Estado (UF) <span aria-hidden="true">*</span></label>
+              <input id="customerState" name="state" autocomplete="address-level1" maxlength="2" value="SP">
+            </div>
+            <div class="customer-field customer-span-2">
+              <label for="customerReference">Referência para entrega <span class="optional">(opcional)</span></label>
+              <input id="customerReference" name="reference" maxlength="180" placeholder="Ex.: portão ao lado da farmácia">
+            </div>
+          </div>
+        </fieldset>
+
+        <fieldset class="customer-fieldset customer-consents">
+          <legend>Suas escolhas</legend>
+          <label class="customer-check">
+            <input id="customerSave" name="saveData" type="checkbox">
+            <span><strong>Quero salvar meus dados neste dispositivo para facilitar minhas próximas compras.</strong><small>Desmarcado por padrão. Os dados ficam apenas neste navegador/dispositivo e podem ser apagados por você.</small></span>
+          </label>
+          <label class="customer-check">
+            <input id="customerMarketing" name="marketing" type="checkbox">
+            <span><strong>Aceito receber ofertas, novidades e mensagens promocionais da Luxuriosa.</strong><small>Opcional e independente da compra. Não marcamos esta opção por você.</small></span>
+          </label>
+          <label class="customer-check">
+            <input id="customerIncludeAddress" name="includeAddress" type="checkbox">
+            <span><strong>Incluir meu endereço na mensagem que será preparada para o WhatsApp.</strong><small>Se deixar desmarcado, você poderá informar o endereço diretamente na conversa.</small></span>
+          </label>
+        </fieldset>
+
+        <div class="customer-storage-actions">
+          <button class="btn secondary" id="customerSaveButton" type="button">Salvar cadastro neste dispositivo</button>
+          <button class="customer-delete" id="customerDeleteButton" type="button" hidden>Apagar dados salvos</button>
+        </div>
+        <p class="customer-storage-help">Salvar é opcional. Limpar os dados do navegador ou trocar de dispositivo pode apagar ou tornar inacessíveis os dados salvos. O armazenamento local não é uma conta e não sincroniza seus dados.</p>
+
+        <div class="customer-actions">
+          <button class="btn secondary" id="customerCancel" type="button">Voltar ao carrinho</button>
+          <button class="btn primary" id="customerReviewButton" type="submit">Revisar pedido</button>
+        </div>
+      </form>
+
+      <section id="customerReview" class="customer-review" hidden aria-labelledby="customerReviewTitle">
+        <h3 id="customerReviewTitle">Revise antes de abrir o WhatsApp</h3>
+        <p>Confira os produtos, os valores calculados pelo carrinho e os dados que serão compartilhados.</p>
+        <pre id="customerMessagePreview" class="customer-message-preview"></pre>
+        <div class="customer-actions">
+          <button class="btn secondary" id="customerEditButton" type="button">Editar dados</button>
+          <button class="btn primary" id="customerWhatsAppButton" type="button">Continuar no WhatsApp</button>
+        </div>
+        <p class="customer-storage-help">O WhatsApp abrirá somente depois que você clicar no botão. Preparar a mensagem não confirma o pedido nem processa pagamento.</p>
+      </section>
+    </section>
+  </div>
+
+  <!-- =========================================================
        FOOTER
   ========================================================== -->
 
@@ -1395,6 +1520,7 @@
 
   <script src="js/catalogo.js"></script>
   <script src="js/carrinho.js"></script>
+  <script src="js/clientes.js"></script>
   <script src="js/app.js"></script>
 
 </body>
