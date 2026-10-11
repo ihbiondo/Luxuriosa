@@ -1261,6 +1261,15 @@
     }
 
 
+    /* O cadastro assume o fluxo apenas quando o módulo está disponível. */
+    if (
+      window.LuxuriosaClientes &&
+      typeof window.LuxuriosaClientes.iniciarFinalizacao === "function"
+    ) {
+      window.LuxuriosaClientes.iniciarFinalizacao();
+      return;
+    }
+
     var mensagem =
       montarMensagemPedido();
 

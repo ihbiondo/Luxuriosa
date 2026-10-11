@@ -1,0 +1,58 @@
+LUXURIOSA — MERGE DO CADASTRO DE CLIENTES (ARQUIVOS ATUALIZADOS)
+
+Este pacote foi montado usando os arquivos atuais enviados nesta conversa:
+- index.html
+- carrinho.js
+- ajustes.css
+- privacidade.html
+
+Arquivos incluídos no pacote:
+- index.html
+- js/carrinho.js
+- js/clientes.js (novo)
+- css/ajustes.css
+- privacidade.html
+- LEIA-ME.txt
+
+O que foi preservado:
+- Os produtos e o catálogo não foram alterados.
+- O arquivo data/produtos.json não foi incluído nem modificado.
+- Os preços, o conteúdo do carrinho e os cálculos existentes não foram reescritos.
+- O número de WhatsApp existente no projeto foi mantido.
+- O CSS já existente em ajustes.css foi mantido; os estilos do cadastro foram acrescentados ao final.
+- O index.html foi mesclado a partir do arquivo enviado, preservando o conteúdo existente. Não foram aplicadas as alterações de cupons que existiam no pacote-base antigo.
+
+Como aplicar:
+1. Faça uma cópia de segurança dos arquivos atuais.
+2. Extraia este ZIP na raiz do projeto Luxuriosa-site, mantendo as pastas. Autorize substituir apenas os arquivos incluídos:
+   index.html
+   carrinho.js (destino: js/carrinho.js)
+   clientes.js (destino: js/clientes.js)
+   ajustes.css (destino: css/ajustes.css)
+   privacidade.html
+3. Não substitua data/produtos.json, js/catalogo.js, css/style.css, css/responsive.css ou imagens.
+4. Abra index.html localmente por um servidor local (por exemplo, VS Code Live Server) e faça os testes abaixo.
+
+Testes manuais recomendados:
+- Adicione produtos ao carrinho e confira itens, quantidades, preços, descontos e total.
+- Clique em finalizar: deve abrir o cadastro no próprio site.
+- Tente continuar sem nome ou telefone: deve mostrar validação.
+- Preencha dados básicos e revise; confira a prévia dos itens/valores antes de abrir o WhatsApp.
+- Confira que o WhatsApp só abre depois de clicar em “Continuar no WhatsApp”; isso não confirma automaticamente a venda.
+- Teste com endereço incluído e sem endereço incluído.
+- Marque “salvar dados neste dispositivo”, conclua/feche e inicie outro pedido; confira se os dados foram recuperados.
+- Use “Apagar dados salvos” e confirme que foram removidos.
+- Deixe marketing desmarcado e confirme que não é selecionado automaticamente.
+- Teste em celular e computador.
+- Confira o link da Política de Privacidade.
+
+Validações técnicas executadas neste pacote:
+- `node --check` passou para js/carrinho.js e js/clientes.js.
+- Verificação básica do HTML encontrou IDs únicos e os elementos essenciais do cadastro.
+- Não foi executado teste de ponta a ponta em navegador real; os testes manuais acima ainda são necessários.
+
+Limitações importantes:
+- Cadastro opcional salvo somente no localStorage deste navegador/dispositivo; não há conta, login, banco de dados ou sincronização.
+- A preferência de marketing é separada e desmarcada por padrão. Este site estático não registra consentimento em uma base central nem inscreve automaticamente clientes em uma lista.
+- Dados pessoais e de endereço só entram na mensagem do WhatsApp conforme as opções selecionadas no fluxo; revise a mensagem antes de continuar.
+- Não publique no GitHub Pages antes de revisar e testar localmente. Este pacote não publica nada automaticamente.
