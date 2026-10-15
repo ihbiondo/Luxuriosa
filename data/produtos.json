@@ -99,13 +99,13 @@
       "categoria": "Intimidade",
       "subcategoria": "Géis e cremes íntimos",
       "marca": "Hot Flowers",
-      "preco": 29.9,
+      "preco": 34.9,
       "precoAntigo": null,
       "descricao": "Descrição em atualização.",
       "tamanhos": "",
       "imagem": "img/produtos/luxuriosa-gel-total-virgem-hamamelis.png",
       "novo": false,
-      "destaque": false,
+      "destaque": true,
       "esgotado": false
     },
     {
@@ -150,7 +150,7 @@
       "tamanhos": "",
       "imagem": "img/produtos/luxuriosa-kit-xana-loka-ku-loko-gel.png",
       "novo": false,
-      "destaque": false,
+      "destaque": true,
       "esgotado": false
     },
     {
@@ -165,7 +165,7 @@
       "tamanhos": "",
       "imagem": "img/produtos/luxuriosa-xana-loka-hotball.png",
       "novo": false,
-      "destaque": false,
+      "destaque": true,
       "esgotado": false
     },
     {
@@ -255,7 +255,7 @@
       "tamanhos": "",
       "imagem": "img/produtos/luxuriosa-vibrador-golfinho-rosa.png",
       "novo": false,
-      "destaque": false,
+      "destaque": true,
       "esgotado": false
     },
     {

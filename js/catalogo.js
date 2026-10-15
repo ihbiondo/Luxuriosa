@@ -909,6 +909,38 @@
      RENDERIZAÇÃO DO CATÁLOGO
      ======================================================= */
 
+  function renderizarColecao(idGrid, propriedade) {
+
+    var grid = $(idGrid);
+
+    if (!grid) {
+      return;
+    }
+
+    grid.textContent = "";
+
+    var lista = produtos.filter(function (produto) {
+      return produto[propriedade] === true;
+    });
+
+    if (!lista.length) {
+      var vazio = criarElemento(
+        "div",
+        "empty",
+        propriedade === "destaque"
+          ? "Estamos preparando nossa seleção especial."
+          : "Nossa seleção de mais vendidos será atualizada em breve."
+      );
+
+      grid.appendChild(vazio);
+      return;
+    }
+
+    lista.forEach(function (produto) {
+      grid.appendChild(criarCardProduto(produto));
+    });
+  }
+
   function renderizarProdutos() {
 
     var grid =
@@ -1480,6 +1512,8 @@
 
 
           renderizarProdutos();
+          renderizarColecao("destaques-grid", "destaque");
+          renderizarColecao("mais-vendidos-grid", "maisVendido");
         }
       )
 
