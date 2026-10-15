@@ -141,7 +141,7 @@
     {
       "id": 10,
       "nome": "Kit Gel Funcional — Xana Loka + Ku Loko",
-      "categoria": "Intimidade",
+      "categoria": "Kits",
       "subcategoria": "Kits e combos",
       "marca": "Hot Flowers",
       "preco": 64.9,
@@ -324,7 +324,8 @@
       "novo": false,
       "destaque": false,
       "esgotado": false,
-      "sobConsulta": true
+      "sobConsulta": true,
+      "imagem": "img/produtos/luxuriosa-kit-essencial-hetero.png"
     },
     {
       "id": 22,
@@ -339,7 +340,8 @@
       "novo": false,
       "destaque": false,
       "esgotado": false,
-      "sobConsulta": true
+      "sobConsulta": true,
+      "imagem": "img/produtos/luxuriosa-kit-essencial-lesbica.png"
     },
     {
       "id": 23,
@@ -354,7 +356,8 @@
       "novo": false,
       "destaque": false,
       "esgotado": false,
-      "sobConsulta": true
+      "sobConsulta": true,
+      "imagem": "img/produtos/luxuriosa-kit-essencial-gay.png"
     },
     {
       "id": 24,
@@ -369,7 +372,8 @@
       "novo": false,
       "destaque": false,
       "esgotado": false,
-      "sobConsulta": true
+      "sobConsulta": true,
+      "imagem": "img/produtos/luxuriosa-kit-intense-hereto.png"
     },
     {
       "id": 25,
@@ -384,7 +388,8 @@
       "novo": false,
       "destaque": false,
       "esgotado": false,
-      "sobConsulta": true
+      "sobConsulta": true,
+      "imagem": "img/produtos/luxuriosa-kit-intense-lesbica.png"
     },
     {
       "id": 26,
@@ -399,7 +404,8 @@
       "novo": false,
       "destaque": false,
       "esgotado": false,
-      "sobConsulta": true
+      "sobConsulta": true,
+      "imagem": "img/produtos/luxuriosa-kit-intense-gay.png"
     },
     {
       "id": 27,
@@ -414,7 +420,8 @@
       "novo": false,
       "destaque": false,
       "esgotado": false,
-      "sobConsulta": true
+      "sobConsulta": true,
+      "imagem": "img/produtos/luxuriosa-kit-secrets-hetero.png"
     },
     {
       "id": 28,
@@ -429,7 +436,8 @@
       "novo": false,
       "destaque": false,
       "esgotado": false,
-      "sobConsulta": true
+      "sobConsulta": true,
+      "imagem": "img/produtos/luxuriosa-kit-secrets-lesbica.png"
     },
     {
       "id": 29,
@@ -444,7 +452,8 @@
       "novo": false,
       "destaque": false,
       "esgotado": false,
-      "sobConsulta": true
+      "sobConsulta": true,
+      "imagem": "img/produtos/luxuriosa-kit-secrets-gay.png"
     },
     {
       "id": 30,
@@ -459,7 +468,8 @@
       "novo": false,
       "destaque": false,
       "esgotado": false,
-      "sobConsulta": true
+      "sobConsulta": true,
+      "imagem": "img/produtos/luxuriosa-kit-privilege-hetero.png"
     },
     {
       "id": 31,
@@ -474,7 +484,8 @@
       "novo": false,
       "destaque": false,
       "esgotado": false,
-      "sobConsulta": true
+      "sobConsulta": true,
+      "imagem": "img/produtos/luxuriosa-kit-privilege-lesbica.png"
     },
     {
       "id": 32,
@@ -489,7 +500,8 @@
       "novo": false,
       "destaque": false,
       "esgotado": false,
-      "sobConsulta": true
+      "sobConsulta": true,
+      "imagem": "img/produtos/luxuriosa-kit-privilege-gay.png"
     }
   ]
 }
