@@ -126,6 +126,13 @@
   }
 
 
+  function mensagemConsulta(produto) {
+    return "Olá! Tenho interesse em " +
+      produto.nome +
+      ". Poderiam me informar a composição, o preço e a disponibilidade?";
+  }
+
+
   /* =======================================================
      CARRINHO
      ======================================================= */
@@ -769,7 +776,9 @@
     var textoBotao =
       produto.esgotado
         ? "Avise-me quando voltar"
-        : "Adicionar ao carrinho";
+        : produto.sobConsulta
+          ? "Consultar no WhatsApp"
+          : "Adicionar ao carrinho";
 
 
     var botao =
@@ -787,12 +796,10 @@
     botao.setAttribute(
       "aria-label",
       produto.esgotado
-        ? "Avise-me quando " +
-          "voltar: " +
-          produto.nome
-        : "Adicionar " +
-          produto.nome +
-          " ao carrinho"
+        ? "Avise-me quando voltar: " + produto.nome
+        : produto.sobConsulta
+          ? "Consultar no WhatsApp sobre " + produto.nome
+          : "Adicionar " + produto.nome + " ao carrinho"
     );
 
 
@@ -818,6 +825,12 @@
             produto.nome
           );
 
+          return;
+        }
+
+
+        if (produto.sobConsulta) {
+          abrirWhatsApp(mensagemConsulta(produto));
           return;
         }
 
@@ -1108,7 +1121,9 @@
       botao.textContent =
         produto.esgotado
           ? "Avise-me quando voltar"
-          : "Adicionar ao carrinho";
+          : produto.sobConsulta
+            ? "Consultar no WhatsApp"
+            : "Adicionar ao carrinho";
 
 
       botao.onclick =
@@ -1123,6 +1138,12 @@
               produto.nome
             );
 
+            return;
+          }
+
+          if (produto.sobConsulta) {
+            fecharModal();
+            abrirWhatsApp(mensagemConsulta(produto));
             return;
           }
 
