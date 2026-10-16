@@ -111,7 +111,7 @@
       "tamanhos": "",
       "imagem": "img/produtos/luxuriosa-gel-total-virgem-hamamelis.png",
       "novo": false,
-      "destaque": true,
+      "destaque": false,
       "esgotado": false,
       "maisVendido": true
     },
@@ -127,7 +127,7 @@
       "tamanhos": "",
       "imagem": "img/produtos/luxuriosa-egg-masturbador.png",
       "novo": false,
-      "destaque": false,
+      "destaque": true,
       "esgotado": false,
       "maisVendido": false
     },
@@ -143,7 +143,7 @@
       "tamanhos": "",
       "imagem": "img/produtos/luxuriosa-pura-luxuria-pele-clara.png",
       "novo": false,
-      "destaque": false,
+      "destaque": true,
       "esgotado": false,
       "maisVendido": false
     },
@@ -175,7 +175,7 @@
       "tamanhos": "",
       "imagem": "img/produtos/luxuriosa-xana-loka-hotball.png",
       "novo": false,
-      "destaque": true,
+      "destaque": false,
       "esgotado": false,
       "maisVendido": true
     },
@@ -271,7 +271,7 @@
       "tamanhos": "",
       "imagem": "img/produtos/luxuriosa-vibrador-golfinho-rosa.png",
       "novo": false,
-      "destaque": true,
+      "destaque": false,
       "esgotado": false,
       "maisVendido": true
     },
@@ -303,7 +303,7 @@
       "tamanhos": "",
       "imagem": "img/produtos/luxuriosa-plug-lite-rosa.png",
       "novo": false,
-      "destaque": false,
+      "destaque": true,
       "esgotado": false,
       "imagens": [
         "img/produtos/luxuriosa-plug-lite-rosa.png",
