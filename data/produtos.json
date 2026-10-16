@@ -16,7 +16,8 @@
       "imagem": "img/produtos/luxuriosa-dado-jogo-do-prazer-homem-x-homem.png",
       "novo": false,
       "destaque": false,
-      "esgotado": false
+      "esgotado": false,
+      "maisVendido": false
     },
     {
       "id": 2,
@@ -31,7 +32,8 @@
       "imagem": "img/produtos/luxuriosa-dado-jogo-do-prazer-homem-x-mulher.png",
       "novo": false,
       "destaque": false,
-      "esgotado": false
+      "esgotado": false,
+      "maisVendido": false
     },
     {
       "id": 3,
@@ -46,7 +48,8 @@
       "imagem": "img/produtos/luxuriosa-dado-jogo-do-prazer-mulher-x-mulher.png",
       "novo": false,
       "destaque": false,
-      "esgotado": false
+      "esgotado": false,
+      "maisVendido": false
     },
     {
       "id": 4,
@@ -61,7 +64,8 @@
       "imagem": "img/produtos/luxuriosa-anel-peniano-com-vibro.png",
       "novo": false,
       "destaque": false,
-      "esgotado": false
+      "esgotado": false,
+      "maisVendido": false
     },
     {
       "id": 5,
@@ -76,7 +80,8 @@
       "imagem": "img/produtos/luxuriosa-anel-peniano-sem-vibro.png",
       "novo": false,
       "destaque": false,
-      "esgotado": false
+      "esgotado": false,
+      "maisVendido": false
     },
     {
       "id": 6,
@@ -91,7 +96,8 @@
       "imagem": "img/produtos/luxuriosa-ducha-higienica-azul.png",
       "novo": false,
       "destaque": false,
-      "esgotado": false
+      "esgotado": false,
+      "maisVendido": false
     },
     {
       "id": 7,
@@ -99,14 +105,15 @@
       "categoria": "Intimidade",
       "subcategoria": "Géis e cremes íntimos",
       "marca": "Hot Flowers",
-      "preco": 29.9,
+      "preco": 34.9,
       "precoAntigo": null,
       "descricao": "Descrição em atualização.",
       "tamanhos": "",
       "imagem": "img/produtos/luxuriosa-gel-total-virgem-hamamelis.png",
       "novo": false,
-      "destaque": false,
-      "esgotado": false
+      "destaque": true,
+      "esgotado": false,
+      "maisVendido": true
     },
     {
       "id": 8,
@@ -121,7 +128,8 @@
       "imagem": "img/produtos/luxuriosa-egg-masturbador.png",
       "novo": false,
       "destaque": false,
-      "esgotado": false
+      "esgotado": false,
+      "maisVendido": false
     },
     {
       "id": 9,
@@ -136,12 +144,13 @@
       "imagem": "img/produtos/luxuriosa-pura-luxuria-pele-clara.png",
       "novo": false,
       "destaque": false,
-      "esgotado": false
+      "esgotado": false,
+      "maisVendido": false
     },
     {
       "id": 10,
       "nome": "Kit Gel Funcional — Xana Loka + Ku Loko",
-      "categoria": "Intimidade",
+      "categoria": "Kits",
       "subcategoria": "Kits e combos",
       "marca": "Hot Flowers",
       "preco": 64.9,
@@ -150,8 +159,9 @@
       "tamanhos": "",
       "imagem": "img/produtos/luxuriosa-kit-xana-loka-ku-loko-gel.png",
       "novo": false,
-      "destaque": false,
-      "esgotado": false
+      "destaque": true,
+      "esgotado": false,
+      "maisVendido": true
     },
     {
       "id": 11,
@@ -165,8 +175,9 @@
       "tamanhos": "",
       "imagem": "img/produtos/luxuriosa-xana-loka-hotball.png",
       "novo": false,
-      "destaque": false,
-      "esgotado": false
+      "destaque": true,
+      "esgotado": false,
+      "maisVendido": true
     },
     {
       "id": 12,
@@ -181,7 +192,8 @@
       "imagem": "img/produtos/luxuriosa-xana-loka-gel.png",
       "novo": false,
       "destaque": false,
-      "esgotado": false
+      "esgotado": false,
+      "maisVendido": false
     },
     {
       "id": 13,
@@ -196,7 +208,8 @@
       "imagem": "img/produtos/luxuriosa-ku-loko-gel.png",
       "novo": false,
       "destaque": false,
-      "esgotado": false
+      "esgotado": false,
+      "maisVendido": false
     },
     {
       "id": 14,
@@ -211,7 +224,8 @@
       "imagem": "img/produtos/luxuriosa-tesao-de-vaca-gotas-k-lab.png",
       "novo": false,
       "destaque": false,
-      "esgotado": false
+      "esgotado": false,
+      "maisVendido": false
     },
     {
       "id": 15,
@@ -226,7 +240,8 @@
       "imagem": "img/produtos/luxuriosa-tesao-de-touro-gotas-k-lab.png",
       "novo": false,
       "destaque": false,
-      "esgotado": false
+      "esgotado": false,
+      "maisVendido": false
     },
     {
       "id": 16,
@@ -241,7 +256,8 @@
       "imagem": "img/produtos/luxuriosa-perfume-sensual-melancia-apinil.png",
       "novo": false,
       "destaque": false,
-      "esgotado": false
+      "esgotado": false,
+      "maisVendido": false
     },
     {
       "id": 17,
@@ -255,8 +271,9 @@
       "tamanhos": "",
       "imagem": "img/produtos/luxuriosa-vibrador-golfinho-rosa.png",
       "novo": false,
-      "destaque": false,
-      "esgotado": false
+      "destaque": true,
+      "esgotado": false,
+      "maisVendido": true
     },
     {
       "id": 18,
@@ -271,7 +288,8 @@
       "imagem": "img/produtos/luxuriosa-vibrador-golfinho-preto.png",
       "novo": false,
       "destaque": false,
-      "esgotado": false
+      "esgotado": false,
+      "maisVendido": false
     },
     {
       "id": 19,
@@ -290,7 +308,8 @@
       "imagens": [
         "img/produtos/luxuriosa-plug-lite-rosa.png",
         "img/produtos/luxuriosa-plug-lite-rosa-caixa.png"
-      ]
+      ],
+      "maisVendido": false
     },
     {
       "id": 20,
@@ -309,11 +328,11 @@
       "imagens": [
         "img/produtos/luxuriosa-plug-lite-vermelho.png",
         "img/produtos/luxuriosa-plug-lite-vermelho-caixa.png"
-      ]
+      ],
+      "maisVendido": false
     },
     {
-      "id": "kit-a1",
-      "refKit": "A1",
+      "id": 21,
       "nome": "Luxuriosa Essencial — Hétero",
       "categoria": "Kits",
       "subcategoria": "Kit Essencial · Hétero",
@@ -322,19 +341,21 @@
       "precoAntigo": null,
       "descricao": "Uma seleção de entrada para explorar a intimidade com leveza. Reúne jogo de dados, perfume sensual, elixires afrodisíacos e Hot Ball em uma combinação acessível para novas descobertas.",
       "tamanhos": "",
+      "novo": false,
+      "destaque": false,
+      "esgotado": false,
+      "sobConsulta": true,
+      "imagem": "img/produtos/luxuriosa-kit-essencial-hetero.png",
       "itens": [
         "1 × Dado do Prazer — Hétero",
         "1 × Perfume Sensual — Melancia",
         "4 × Elixir Afrodisíaco — Tesão de Vaca e/ou Tesão de Touro",
         "1 × Hot Ball — Xana Loka"
       ],
-      "novo": false,
-      "destaque": false,
-      "esgotado": false
+      "maisVendido": false
     },
     {
-      "id": "kit-a2",
-      "refKit": "A2",
+      "id": 22,
       "nome": "Luxuriosa Essencial — Lésbica",
       "categoria": "Kits",
       "subcategoria": "Kit Essencial · Lésbica",
@@ -343,19 +364,21 @@
       "precoAntigo": null,
       "descricao": "Uma combinação acessível para renovar os momentos de intimidade, com jogo de dados, perfume sensual, elixires afrodisíacos de Tesão de Vaca e Hot Ball.",
       "tamanhos": "",
+      "novo": false,
+      "destaque": false,
+      "esgotado": false,
+      "sobConsulta": true,
+      "imagem": "img/produtos/luxuriosa-kit-essencial-lesbica.png",
       "itens": [
         "1 × Dado do Prazer — Lésbico",
         "1 × Perfume Sensual — Melancia",
         "4 × Elixir Afrodisíaco — Tesão de Vaca",
         "1 × Hot Ball — Xana Loka"
       ],
-      "novo": false,
-      "destaque": false,
-      "esgotado": false
+      "maisVendido": false
     },
     {
-      "id": "kit-a3",
-      "refKit": "A3",
+      "id": 23,
       "nome": "Luxuriosa Essencial — Gay",
       "categoria": "Kits",
       "subcategoria": "Kit Essencial · Gay",
@@ -364,6 +387,11 @@
       "precoAntigo": null,
       "descricao": "Uma seleção de entrada com jogo de dados, perfume sensual, elixires afrodisíacos, Egg masturbador e anel peniano com vibro para explorar diferentes possibilidades.",
       "tamanhos": "",
+      "novo": false,
+      "destaque": false,
+      "esgotado": false,
+      "sobConsulta": true,
+      "imagem": "img/produtos/luxuriosa-kit-essencial-gay.png",
       "itens": [
         "1 × Dado do Prazer — Gay",
         "1 × Perfume Sensual — Melancia",
@@ -371,13 +399,10 @@
         "1 × Egg Masturbador",
         "1 × Anel Peniano com Vibro"
       ],
-      "novo": false,
-      "destaque": false,
-      "esgotado": false
+      "maisVendido": false
     },
     {
-      "id": "kit-b1",
-      "refKit": "B1",
+      "id": 24,
       "nome": "Luxuriosa Intense — Hétero",
       "categoria": "Kits",
       "subcategoria": "Kit Intense · Hétero",
@@ -386,6 +411,11 @@
       "precoAntigo": null,
       "descricao": "Uma combinação intensa de géis funcionais, vibrador Golfinho, Hot Ball, perfume sensual e elixires afrodisíacos para variar a experiência e sair da rotina.",
       "tamanhos": "",
+      "novo": false,
+      "destaque": false,
+      "esgotado": false,
+      "sobConsulta": true,
+      "imagem": "img/produtos/luxuriosa-kit-intense-hereto.png",
       "itens": [
         "2 × Géis funcionais: Xana Loka e Ku Loko (1 de cada)",
         "1 × Vibrador Golfinho",
@@ -393,13 +423,10 @@
         "1 × Perfume Sensual — Melancia",
         "2 × Elixires afrodisíacos: Tesão de Vaca e Tesão de Touro (1 de cada)"
       ],
-      "novo": false,
-      "destaque": false,
-      "esgotado": false
+      "maisVendido": false
     },
     {
-      "id": "kit-b2",
-      "refKit": "B2",
+      "id": 25,
       "nome": "Luxuriosa Intense — Lésbica",
       "categoria": "Kits",
       "subcategoria": "Kit Intense · Lésbica",
@@ -408,6 +435,11 @@
       "precoAntigo": null,
       "descricao": "Uma seleção ousada com géis funcionais Xana Loka, vibrador Golfinho, Hot Ball, perfume sensual e elixires afrodisíacos para momentos de descoberta.",
       "tamanhos": "",
+      "novo": false,
+      "destaque": false,
+      "esgotado": false,
+      "sobConsulta": true,
+      "imagem": "img/produtos/luxuriosa-kit-intense-lesbica.png",
       "itens": [
         "2 × Gel Funcional — Xana Loka",
         "1 × Vibrador Golfinho",
@@ -415,13 +447,10 @@
         "1 × Perfume Sensual — Melancia",
         "2 × Elixires afrodisíacos — Tesão de Vaca"
       ],
-      "novo": false,
-      "destaque": false,
-      "esgotado": false
+      "maisVendido": false
     },
     {
-      "id": "kit-b3",
-      "refKit": "B3",
+      "id": 26,
       "nome": "Luxuriosa Intense — Gay",
       "categoria": "Kits",
       "subcategoria": "Kit Intense · Gay",
@@ -430,6 +459,11 @@
       "precoAntigo": null,
       "descricao": "Uma combinação marcante com gel funcional Ku Loko, Eggs masturbadores, anéis penianos com vibro, perfume sensual e elixires afrodisíacos.",
       "tamanhos": "",
+      "novo": false,
+      "destaque": false,
+      "esgotado": false,
+      "sobConsulta": true,
+      "imagem": "img/produtos/luxuriosa-kit-intense-gay.png",
       "itens": [
         "2 × Gel Funcional Anal — Ku Loko",
         "2 × Egg Masturbador",
@@ -437,13 +471,10 @@
         "1 × Perfume Sensual — Melancia",
         "2 × Elixires afrodisíacos — Tesão de Touro"
       ],
-      "novo": false,
-      "destaque": false,
-      "esgotado": false
+      "maisVendido": false
     },
     {
-      "id": "kit-c1",
-      "refKit": "C1",
+      "id": 27,
       "nome": "Luxuriosa Secrets — Hétero",
       "categoria": "Kits",
       "subcategoria": "Kit Secrets · Hétero",
@@ -452,6 +483,11 @@
       "precoAntigo": null,
       "descricao": "Uma experiência para explorar novas possibilidades, reunindo géis funcionais, gel Virgem Total, Hot Balls, plug anal tamanho P e vibrador Golfinho.",
       "tamanhos": "",
+      "novo": false,
+      "destaque": false,
+      "esgotado": false,
+      "sobConsulta": true,
+      "imagem": "img/produtos/luxuriosa-kit-secrets-hetero.png",
       "itens": [
         "2 × Géis funcionais: Xana Loka e Ku Loko (1 de cada)",
         "1 × Gel Adstringente — Virgem Total",
@@ -459,13 +495,10 @@
         "1 × Plug Anal — Tamanho P",
         "1 × Vibrador Golfinho"
       ],
-      "novo": false,
-      "destaque": false,
-      "esgotado": false
+      "maisVendido": false
     },
     {
-      "id": "kit-c2",
-      "refKit": "C2",
+      "id": 28,
       "nome": "Luxuriosa Secrets — Lésbica",
       "categoria": "Kits",
       "subcategoria": "Kit Secrets · Lésbica",
@@ -474,19 +507,21 @@
       "precoAntigo": null,
       "descricao": "Uma combinação de géis funcionais, Hot Balls, plug anal tamanho P e vibradores Golfinho para criar novas possibilidades de intimidade.",
       "tamanhos": "",
+      "novo": false,
+      "destaque": false,
+      "esgotado": false,
+      "sobConsulta": true,
+      "imagem": "img/produtos/luxuriosa-kit-secrets-lesbica.png",
       "itens": [
         "2 × Gel Funcional — Xana Loka",
         "2 × Hot Ball — Xana Loka",
         "1 × Plug Anal — Tamanho P",
         "2 × Vibradores Golfinho"
       ],
-      "novo": false,
-      "destaque": false,
-      "esgotado": false
+      "maisVendido": false
     },
     {
-      "id": "kit-c3",
-      "refKit": "C3",
+      "id": 29,
       "nome": "Luxuriosa Secrets — Gay",
       "categoria": "Kits",
       "subcategoria": "Kit Secrets · Gay",
@@ -495,6 +530,11 @@
       "precoAntigo": null,
       "descricao": "Uma seleção de acessórios e géis funcionais com Ku Loko, Eggs masturbadores, anéis penianos com vibro, prótese com ventosa e ducha higiênica.",
       "tamanhos": "",
+      "novo": false,
+      "destaque": false,
+      "esgotado": false,
+      "sobConsulta": true,
+      "imagem": "img/produtos/luxuriosa-kit-secrets-gay.png",
       "itens": [
         "2 × Gel Funcional Anal — Ku Loko",
         "2 × Egg Masturbador",
@@ -502,13 +542,10 @@
         "1 × Prótese média sem vibro com ventosa",
         "1 × Ducha Higiênica"
       ],
-      "novo": false,
-      "destaque": false,
-      "esgotado": false
+      "maisVendido": false
     },
     {
-      "id": "kit-d1",
-      "refKit": "D1",
+      "id": 30,
       "nome": "Luxuriosa Privilege — Hétero",
       "categoria": "Kits",
       "subcategoria": "Kit Privilege · Hétero",
@@ -517,6 +554,11 @@
       "precoAntigo": null,
       "descricao": "Uma composição premium com jogo de dados, perfumes sensuais, elixires afrodisíacos, Hot Balls, géis funcionais, vibrador, plug anal e prótese com ventosa.",
       "tamanhos": "",
+      "novo": false,
+      "destaque": false,
+      "esgotado": false,
+      "sobConsulta": true,
+      "imagem": "img/produtos/luxuriosa-kit-privilege-hetero.png",
       "itens": [
         "1 × Dado do Prazer — Hétero",
         "2 × Perfume Sensual — Melancia",
@@ -527,13 +569,10 @@
         "1 × Plug Anal — Tamanho P",
         "1 × Prótese média sem vibro com ventosa"
       ],
-      "novo": false,
-      "destaque": false,
-      "esgotado": false
+      "maisVendido": false
     },
     {
-      "id": "kit-d2",
-      "refKit": "D2",
+      "id": 31,
       "nome": "Luxuriosa Privilege — Lésbica",
       "categoria": "Kits",
       "subcategoria": "Kit Privilege · Lésbica",
@@ -542,6 +581,11 @@
       "precoAntigo": null,
       "descricao": "Uma composição premium com jogo de dados, perfumes sensuais, elixires afrodisíacos de Tesão de Vaca, Hot Balls, gel funcional, vibrador, plug anal e prótese com ventosa.",
       "tamanhos": "",
+      "novo": false,
+      "destaque": false,
+      "esgotado": false,
+      "sobConsulta": true,
+      "imagem": "img/produtos/luxuriosa-kit-privilege-lesbica.png",
       "itens": [
         "1 × Dado do Prazer — Lésbico",
         "2 × Perfume Sensual — Melancia",
@@ -552,13 +596,10 @@
         "1 × Plug Anal — Tamanho P",
         "1 × Prótese média sem vibro com ventosa"
       ],
-      "novo": false,
-      "destaque": false,
-      "esgotado": false
+      "maisVendido": false
     },
     {
-      "id": "kit-d3",
-      "refKit": "D3",
+      "id": 32,
       "nome": "Luxuriosa Privilege — Gay",
       "categoria": "Kits",
       "subcategoria": "Kit Privilege · Gay",
@@ -567,6 +608,11 @@
       "precoAntigo": null,
       "descricao": "Uma seleção premium ampla com jogo de dados, perfumes sensuais, elixires afrodisíacos de Tesão de Touro, gel Ku Loko, duchas higiênicas, anéis com vibro, Eggs e próteses com ventosa.",
       "tamanhos": "",
+      "novo": false,
+      "destaque": false,
+      "esgotado": false,
+      "sobConsulta": true,
+      "imagem": "img/produtos/luxuriosa-kit-privilege-gay.png",
       "itens": [
         "1 × Dado do Prazer — Gay",
         "2 × Perfume Sensual — Melancia",
@@ -577,9 +623,7 @@
         "2 × Eggs Masturbadores",
         "2 × Próteses médias sem vibro com ventosa"
       ],
-      "novo": false,
-      "destaque": false,
-      "esgotado": false
+      "maisVendido": false
     }
   ]
 }
