@@ -54,36 +54,26 @@
       phone: texto("customerPhone"),
       email: texto("customerEmail"),
       birthday: texto("customerBirthday"),
-      address: {
-        zip: texto("customerZip"),
-        type: texto("customerAddressType") || "residencial",
-        street: texto("customerStreet"),
-        number: texto("customerNumber"),
-        complement: texto("customerComplement"),
-        district: texto("customerDistrict"),
-        city: texto("customerCity"),
-        state: texto("customerState").toUpperCase(),
-        reference: texto("customerReference")
-      }
+      address: texto("customerAddress")
     };
   }
 
   function preencherFormulario(data) {
     data = data || {};
-    var address = data.address || {};
+    var address = data.address || "";
+    var legacyAddress = typeof address === "object" && address ? [
+      [address.street, address.number].filter(Boolean).join(", "),
+      address.complement,
+      address.district,
+      [address.city, address.state].filter(Boolean).join("/"),
+      address.zip,
+      address.reference ? "Referência: " + address.reference : ""
+    ].filter(Boolean).join(", ") : address;
     definirValor("customerName", data.name);
     definirValor("customerPhone", data.phone);
     definirValor("customerEmail", data.email);
     definirValor("customerBirthday", data.birthday);
-    definirValor("customerZip", address.zip);
-    definirValor("customerAddressType", address.type || "residencial");
-    definirValor("customerStreet", address.street);
-    definirValor("customerNumber", address.number);
-    definirValor("customerComplement", address.complement);
-    definirValor("customerDistrict", address.district);
-    definirValor("customerCity", address.city || "Bauru");
-    definirValor("customerState", address.state || "SP");
-    definirValor("customerReference", address.reference);
+    definirValor("customerAddress", legacyAddress);
   }
 
   function validarTelefone(value) {
@@ -94,14 +84,9 @@
   function validarDados({ exigirEndereco }) {
     var data = dadosDoFormulario();
     var primeiroErro = null;
-    var required = ["customerName", "customerPhone"];
-    if (exigirEndereco) required = required.concat(["customerStreet", "customerNumber", "customerDistrict", "customerCity", "customerState"]);
+    var required = ["customerName", "customerPhone", "customerAddress"];
 
     document.querySelectorAll("#customerForm [aria-invalid='true']").forEach(function (field) { field.removeAttribute("aria-invalid"); });
-    if (exigirEndereco) {
-      var addressDetails = $("customerAddressDetails");
-      if (addressDetails) addressDetails.open = true;
-    }
     required.forEach(function (id) {
       var field = $(id);
       if (field && !String(field.value || "").trim()) {
@@ -125,14 +110,8 @@
       email.focus();
       return false;
     }
-    if (data.address.state && !/^[A-Z]{2}$/.test(data.address.state)) {
-      $("customerState").setAttribute("aria-invalid", "true");
-      avisar("Informe a sigla do estado com duas letras, por exemplo SP.", "error");
-      $("customerState").focus();
-      return false;
-    }
     if (primeiroErro) {
-      avisar(exigirEndereco ? "Preencha os campos obrigatórios para preparar a entrega." : "Informe nome completo e telefone/WhatsApp.", "error");
+      avisar("Preencha nome ou apelido, telefone/WhatsApp e endereço de entrega.", "error");
       primeiroErro.focus();
       return false;
     }
@@ -186,18 +165,7 @@
       var price = Number(item.preco) || 0;
       lines.push("• " + item.nome + " — " + quantity + "x — " + formatarPreco(price * quantity));
     });
-    lines.push("", "Total calculado pelo carrinho: " + formatarPreco(total), "", "Dados para atendimento:", "Nome: " + data.name, "Telefone/WhatsApp: " + data.phone);
-    if (marcado("customerIncludeAddress")) {
-      var a = data.address;
-      lines.push("", "Endereço de entrega (" + (a.type || "residencial") + "):");
-      if (a.zip) lines.push("CEP: " + a.zip);
-      lines.push(a.street + ", " + a.number);
-      if (a.complement) lines.push("Complemento: " + a.complement);
-      lines.push("Bairro: " + a.district, "Cidade/UF: " + a.city + "/" + a.state);
-      if (a.reference) lines.push("Referência: " + a.reference);
-    } else {
-      lines.push("", "Vou informar os dados de entrega diretamente na conversa.");
-    }
+    lines.push("", "Total calculado pelo carrinho: " + formatarPreco(total), "", "Dados para atendimento:", "Nome ou apelido: " + data.name, "Telefone/WhatsApp: " + data.phone, "Endereço de entrega: " + data.address);
     if (marcado("customerMarketing")) lines.push("", "Preferência promocional: aceito receber ofertas e novidades da Luxuriosa.");
     lines.push("", "Gostaria de confirmar disponibilidade, entrega e próximos passos. Sei que este envio não confirma o pedido nem processa pagamento.");
     return lines.join("\n");
@@ -214,10 +182,7 @@
     $("customerSave").checked = false;
     $("customerMarketing").checked = false;
     $("customerDeleteButton").hidden = !saved;
-    $("customerIncludeAddress").checked = false;
-    var addressDetails = $("customerAddressDetails");
     var moreDetails = $("customerMoreDetails");
-    if (addressDetails) addressDetails.open = false;
     if (moreDetails) moreDetails.open = false;
     overlay.hidden = false;
     document.body.classList.add("customer-open");
@@ -248,7 +213,7 @@
       avisar("Seu carrinho está vazio. Adicione um produto antes de continuar.", "error");
       return;
     }
-    if (!validarDados({ exigirEndereco: marcado("customerIncludeAddress") })) return;
+    if (!validarDados({ exigirEndereco: true })) return;
     dadosAtuais = dadosDoFormulario();
     if (marcado("customerSave")) salvarPerfil(dadosAtuais, false);
     /* A escolha de marketing vale somente para este fluxo e não é persistida localmente. */
@@ -306,7 +271,6 @@
       }
     });
     $("customerPhone").addEventListener("input", function () { this.removeAttribute("aria-invalid"); });
-    $("customerState").addEventListener("input", function () { this.value = this.value.toUpperCase().replace(/[^A-Z]/g, "").slice(0, 2); });
   }
 
   window.LuxuriosaClientes = { iniciarFinalizacao: iniciarFinalizacao };
