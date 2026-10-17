@@ -98,6 +98,10 @@
     if (exigirEndereco) required = required.concat(["customerStreet", "customerNumber", "customerDistrict", "customerCity", "customerState"]);
 
     document.querySelectorAll("#customerForm [aria-invalid='true']").forEach(function (field) { field.removeAttribute("aria-invalid"); });
+    if (exigirEndereco) {
+      var addressDetails = $("customerAddressDetails");
+      if (addressDetails) addressDetails.open = true;
+    }
     required.forEach(function (id) {
       var field = $(id);
       if (field && !String(field.value || "").trim()) {
@@ -211,6 +215,10 @@
     $("customerMarketing").checked = false;
     $("customerDeleteButton").hidden = !saved;
     $("customerIncludeAddress").checked = false;
+    var addressDetails = $("customerAddressDetails");
+    var moreDetails = $("customerMoreDetails");
+    if (addressDetails) addressDetails.open = false;
+    if (moreDetails) moreDetails.open = false;
     overlay.hidden = false;
     document.body.classList.add("customer-open");
     dialog.focus();
@@ -240,7 +248,7 @@
       avisar("Seu carrinho está vazio. Adicione um produto antes de continuar.", "error");
       return;
     }
-    if (!validarDados({ exigirEndereco: true })) return;
+    if (!validarDados({ exigirEndereco: marcado("customerIncludeAddress") })) return;
     dadosAtuais = dadosDoFormulario();
     if (marcado("customerSave")) salvarPerfil(dadosAtuais, false);
     /* A escolha de marketing vale somente para este fluxo e não é persistida localmente. */
