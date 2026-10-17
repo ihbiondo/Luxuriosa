@@ -1356,7 +1356,7 @@
         <button class="cart-close" id="customerClose" type="button" aria-label="Fechar cadastro">×</button>
       </div>
 
-      <p id="customerIntro" class="customer-intro">Só precisamos do seu nome e WhatsApp para preparar o pedido. Você não precisa criar uma conta.</p>
+      <p id="customerIntro" class="customer-intro">Só precisamos do seu nome ou apelido, WhatsApp e endereço de entrega para preparar o pedido.</p>
       <p class="customer-privacy-note">Seus dados serão usados para atender este pedido. <a href="privacidade.html" target="_blank" rel="noopener">Leia a Política de Privacidade</a>.</p>
       <div id="customerStatus" class="customer-status" role="status" aria-live="polite" hidden></div>
 
@@ -1365,7 +1365,7 @@
           <legend>Para começar</legend>
           <div class="customer-grid">
             <div class="customer-field customer-span-2">
-              <label for="customerName">Nome completo <span aria-hidden="true">*</span></label>
+              <label for="customerName">Nome ou apelido <span aria-hidden="true">*</span></label>
               <input id="customerName" name="name" autocomplete="name" required maxlength="120">
             </div>
             <div class="customer-field customer-span-2">
@@ -1375,58 +1375,16 @@
           </div>
         </fieldset>
 
-        <details class="customer-extra-section" id="customerAddressDetails">
-          <summary>Informar endereço de entrega <span>(opcional)</span></summary>
-          <p class="customer-extra-intro">Se preferir, você pode informar o endereço diretamente na conversa do WhatsApp.</p>
-          <fieldset class="customer-fieldset customer-address-fields">
-            <div class="customer-grid">
-              <div class="customer-field">
-                <label for="customerZip">CEP <span class="optional">(opcional)</span></label>
-                <input id="customerZip" name="zip" autocomplete="postal-code" inputmode="numeric" maxlength="9" placeholder="00000-000">
-              </div>
-              <div class="customer-field">
-                <label for="customerAddressType">Tipo de endereço</label>
-                <select id="customerAddressType" name="addressType">
-                  <option value="residencial">Residencial</option>
-                  <option value="comercial">Comercial</option>
-                  <option value="outro">Outro</option>
-                </select>
-              </div>
-              <div class="customer-field customer-span-2">
-                <label for="customerStreet">Rua ou avenida <span aria-hidden="true">*</span></label>
-                <input id="customerStreet" name="street" autocomplete="address-line1" maxlength="160">
-              </div>
-              <div class="customer-field">
-                <label for="customerNumber">Número <span aria-hidden="true">*</span></label>
-                <input id="customerNumber" name="number" autocomplete="address-line2" maxlength="30">
-              </div>
-              <div class="customer-field">
-                <label for="customerComplement">Complemento <span class="optional">(opcional)</span></label>
-                <input id="customerComplement" name="complement" maxlength="100">
-              </div>
-              <div class="customer-field">
-                <label for="customerDistrict">Bairro <span aria-hidden="true">*</span></label>
-                <input id="customerDistrict" name="district" autocomplete="address-level3" maxlength="100">
-              </div>
-              <div class="customer-field">
-                <label for="customerCity">Cidade <span aria-hidden="true">*</span></label>
-                <input id="customerCity" name="city" autocomplete="address-level2" maxlength="100" value="Bauru">
-              </div>
-              <div class="customer-field">
-                <label for="customerState">Estado (UF) <span aria-hidden="true">*</span></label>
-                <input id="customerState" name="state" autocomplete="address-level1" maxlength="2" value="SP">
-              </div>
-              <div class="customer-field customer-span-2">
-                <label for="customerReference">Referência para entrega <span class="optional">(opcional)</span></label>
-                <input id="customerReference" name="reference" maxlength="180" placeholder="Ex.: portão ao lado da farmácia">
-              </div>
+        <fieldset class="customer-fieldset customer-address-fields">
+          <legend>Endereço de entrega</legend>
+          <div class="customer-grid">
+            <div class="customer-field customer-span-2">
+              <label for="customerAddress">Endereço de entrega <span aria-hidden="true">*</span></label>
+              <textarea id="customerAddress" name="address" autocomplete="street-address" required maxlength="500" rows="3" placeholder="Rua, número, complemento, bairro, cidade e estado"></textarea>
+              <small>Informe os dados necessários para localizar o endereço. Você pode incluir um ponto de referência.</small>
             </div>
-          </fieldset>
-          <label class="customer-check customer-address-choice">
-            <input id="customerIncludeAddress" name="includeAddress" type="checkbox">
-            <span><strong>Incluir este endereço na mensagem do WhatsApp.</strong><small>Ao marcar, os campos de endereço obrigatórios precisam estar preenchidos.</small></span>
-          </label>
-        </details>
+          </div>
+        </fieldset>
 
         <details class="customer-extra-section" id="customerMoreDetails">
           <summary>Outras opções <span>(opcional)</span></summary>
