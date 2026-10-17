@@ -203,3 +203,79 @@ body.customer-open { overflow: hidden; }
   cursor: pointer;
 }
 .customer-dialog .btn.secondary:hover { border-color: var(--gold); }
+
+
+/* =========================================================
+   CHECKOUT MAIS ENXUTO — CAMPOS OPCIONAIS RECOLHÍVEIS
+   ========================================================= */
+.customer-extra-section {
+  margin-top: 16px;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  background: rgba(0, 0, 0, .12);
+}
+.customer-extra-section > summary {
+  padding: 13px 15px;
+  color: var(--gold);
+  font-size: 13px;
+  cursor: pointer;
+  list-style-position: inside;
+}
+.customer-extra-section > summary span {
+  color: var(--muted);
+  font-size: 11px;
+}
+.customer-extra-section[open] > summary {
+  border-bottom: 1px solid var(--line);
+}
+.customer-extra-intro {
+  margin: 12px 15px 0;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.5;
+}
+.customer-extra-section .customer-fieldset {
+  margin: 14px 15px 16px;
+}
+.customer-additional-fields {
+  margin: 14px 15px 0;
+}
+.customer-address-choice {
+  margin: 0 15px 16px;
+}
+.customer-save-choice {
+  margin: 16px 15px 0;
+}
+.customer-extra-section .customer-storage-actions {
+  margin: 12px 15px 0;
+}
+.customer-extra-section .customer-storage-help {
+  margin: 10px 15px 15px;
+}
+.customer-marketing-choice {
+  margin-top: 18px;
+  padding: 12px 13px;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+}
+.customer-essential-fields {
+  margin-top: 14px;
+}
+.customer-essential-fields .customer-grid {
+  grid-template-columns: minmax(0, 1fr);
+  gap: 12px;
+}
+.customer-essential-fields .customer-span-2 {
+  grid-column: auto;
+}
+.customer-essential-fields input {
+  min-height: 48px;
+}
+@media (max-width: 600px) {
+  .customer-additional-fields {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .customer-extra-section .customer-storage-actions .btn {
+    width: 100%;
+  }
+}
