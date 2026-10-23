@@ -1112,9 +1112,29 @@
 
     if (descricao) {
 
-      descricao.textContent =
-        produto.descricao ||
-        "";
+      descricao.textContent = "";
+      descricao.style.whiteSpace = "normal";
+
+      // Renderiza **negrito** e quebras de linha sem interpretar HTML.
+      String(produto.descricao || "").split("\n").forEach(function (linha, indiceLinha, linhas) {
+        if (indiceLinha > 0) {
+          descricao.appendChild(document.createElement("br"));
+          if (linha === "" || linhas[indiceLinha - 1] === "") {
+            descricao.appendChild(document.createElement("br"));
+          }
+        }
+
+        linha.split("**").forEach(function (parte, indiceParte) {
+          if (!parte) return;
+          if (indiceParte % 2 === 1) {
+            var forte = document.createElement("strong");
+            forte.textContent = parte;
+            descricao.appendChild(forte);
+          } else {
+            descricao.appendChild(document.createTextNode(parte));
+          }
+        });
+      });
     }
 
 
