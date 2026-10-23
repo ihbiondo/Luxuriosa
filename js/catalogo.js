@@ -1116,13 +1116,13 @@
       descricao.style.whiteSpace = "normal";
 
       // Renderiza **negrito** e quebras de linha sem interpretar HTML.
-      String(produto.descricao || "").split("\n").forEach(function (linha, indiceLinha, linhas) {
+      // Limita sequências de linhas vazias a um único espaço entre parágrafos.
+      String(produto.descricao || "").replace(/\n{3,}/g, "\n\n").split("\n").forEach(function (linha, indiceLinha) {
         if (indiceLinha > 0) {
           descricao.appendChild(document.createElement("br"));
-          if (linha === "" || linhas[indiceLinha - 1] === "") {
-            descricao.appendChild(document.createElement("br"));
-          }
         }
+
+        if (linha === "") return;
 
         linha.split("**").forEach(function (parte, indiceParte) {
           if (!parte) return;
