@@ -99,7 +99,7 @@
   }
 
   function formatarCep(value) {
-    var digits = String(value || "").replace(/\\D/g, "").slice(0, 8);
+    var digits = String(value || "").replace(/\D/g, "").slice(0, 8);
     return digits.length > 5 ? digits.slice(0, 5) + "-" + digits.slice(5) : digits;
   }
 
@@ -108,7 +108,7 @@
     var campoEndereco = $("customerAddress");
     if (!campoCep || !campoEndereco) return;
 
-    var cep = campoCep.value.replace(/\\D/g, "");
+    var cep = campoCep.value.replace(/\D/g, "");
     if (cep.length !== 8) {
       campoCep.setAttribute("aria-invalid", "true");
       mostrarStatusCep("Informe um CEP válido com 8 números.", "error");
@@ -126,7 +126,7 @@
         return response.json();
       })
       .then(function (dados) {
-        if (consultaAtual !== cepConsultaId || $("customerCep").value.replace(/\\D/g, "") !== cep) return;
+        if (consultaAtual !== cepConsultaId || $("customerCep").value.replace(/\D/g, "") !== cep) return;
         if (!dados || dados.erro) {
           mostrarStatusCep("CEP não encontrado. Confira os números ou preencha o endereço manualmente.", "error");
           return;
@@ -485,7 +485,7 @@
         mostrarStatusCep("", "info");
       });
       campoCep.addEventListener("blur", function () {
-        if (this.value.replace(/\\D/g, "").length === 8) consultarCep();
+        if (this.value.replace(/\D/g, "").length === 8) consultarCep();
       });
       campoCep.addEventListener("keydown", function (event) {
         if (event.key === "Enter") {
