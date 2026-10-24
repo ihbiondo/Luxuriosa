@@ -17,22 +17,50 @@
 
   var CATEGORIAS = [
     "Todos",
-    "Géis e estimulantes íntimos",
-    "Géis e lubrificantes íntimos",
-    "Estimulantes",
-    "Géis e cremes íntimos",
-    "Vibradores",
-    "Perfumes sensuais",
-    "Jogos eróticos",
-    "Anéis penianos",
-    "Masturbadores",
-    "Plugs anais",
-    "Higiene íntima",
-    "Próteses",
+    "Géis e estimulantes",
+    "Vibradores e acessórios",
+    "Jogos e masturbadores",
+    "Perfumes e higiene",
     "Kits",
     "Lingerie",
     "Ofertas"
   ];
+
+  var GRUPOS_CATEGORIAS = {
+    "Géis e estimulantes": [
+      "Géis e estimulantes íntimos",
+      "Géis e lubrificantes íntimos",
+      "Estimulantes",
+      "Géis e cremes íntimos"
+    ],
+    "Vibradores e acessórios": [
+      "Vibradores",
+      "Anéis penianos",
+      "Plugs anais",
+      "Próteses"
+    ],
+    "Jogos e masturbadores": [
+      "Jogos eróticos",
+      "Masturbadores"
+    ],
+    "Perfumes e higiene": [
+      "Perfumes sensuais",
+      "Higiene íntima"
+    ]
+  };
+
+  function produtoPertenceCategoria(produto, categoria) {
+    if (categoria === "Todos") return true;
+    if (categoria === "Ofertas") {
+      return produtoEmOferta(produto) || produto.categoria === "Ofertas";
+    }
+    var subcategorias = GRUPOS_CATEGORIAS[categoria];
+    if (subcategorias) {
+      return subcategorias.indexOf(produto.tipoProduto) !== -1 ||
+        subcategorias.indexOf(produto.categoria) !== -1;
+    }
+    return produto.categoria === categoria || produto.tipoProduto === categoria;
+  }
 
   var config = {
     whatsapp: FALLBACK_WHATSAPP
@@ -422,33 +450,7 @@
       produtos.filter(
         function (produto) {
 
-          if (
-            filtroAtual ===
-            "Todos"
-          ) {
-            return true;
-          }
-
-
-          if (
-            filtroAtual ===
-            "Ofertas"
-          ) {
-
-            return (
-              produtoEmOferta(
-                produto
-              ) ||
-              produto.categoria ===
-              "Ofertas"
-            );
-          }
-
-
-          return (
-            produto.categoria === filtroAtual ||
-            produto.tipoProduto === filtroAtual
-          );
+          return produtoPertenceCategoria(produto, filtroAtual);
         }
       );
 
@@ -515,14 +517,8 @@
      ======================================================= */
 
   function categoriaTemProdutos(categoria) {
-    if (categoria === "Ofertas") {
-      return produtos.some(function (produto) {
-        return produtoEmOferta(produto) || produto.categoria === "Ofertas";
-      });
-    }
-
     return produtos.some(function (produto) {
-      return produto.categoria === categoria || produto.tipoProduto === categoria;
+      return produtoPertenceCategoria(produto, categoria);
     });
   }
 
