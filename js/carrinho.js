@@ -390,17 +390,18 @@
     }
 
 
-    var id =
-      produto.id;
-
-
+    var idOriginal = produto.id;
     if (
-      id === undefined ||
-      id === null
+      (typeof idOriginal !== "string" && typeof idOriginal !== "number") ||
+      String(idOriginal).trim() === "" ||
+      (typeof idOriginal === "number" && !Number.isFinite(idOriginal))
     ) {
+      window.alert("Não foi possível identificar este produto com segurança. Atualize a página e tente novamente.");
       return;
     }
 
+    /* Mantém os IDs consistentes entre catálogo, carrinho e armazenamento local. */
+    var id = String(idOriginal).trim();
 
     quantidade =
       Number(
