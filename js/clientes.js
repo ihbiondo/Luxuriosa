@@ -52,8 +52,6 @@
     return {
       name: texto("customerName"),
       phone: texto("customerPhone"),
-      email: texto("customerEmail"),
-      birthday: texto("customerBirthday"),
       address: texto("customerAddress")
     };
   }
@@ -71,8 +69,6 @@
     ].filter(Boolean).join(", ") : address;
     definirValor("customerName", data.name);
     definirValor("customerPhone", data.phone);
-    definirValor("customerEmail", data.email);
-    definirValor("customerBirthday", data.birthday);
     definirValor("customerAddress", legacyAddress);
   }
 
@@ -105,13 +101,6 @@
       phone.focus();
       return false;
     }
-    var email = $("customerEmail");
-    if (data.email && email && !email.checkValidity()) {
-      email.setAttribute("aria-invalid", "true");
-      avisar("Confira o formato do e-mail ou deixe o campo vazio.", "error");
-      email.focus();
-      return false;
-    }
     if (primeiroErro) {
       avisar(
         exigirEndereco
@@ -133,8 +122,6 @@
         savedAt: new Date().toISOString(),
         name: data.name,
         phone: data.phone,
-        email: data.email,
-        birthday: data.birthday,
         address: data.address
       }));
       $("customerDeleteButton").hidden = false;
