@@ -2237,3 +2237,22 @@ footer {
 
   text-align: center;
 }
+
+
+/* =========================================================
+   DISPONIBILIDADE NO CARRINHO
+========================================================= */
+
+.cart-item-unavailable {
+  display: block;
+  margin-top: 6px;
+  color: #ffb7c2;
+  font-size: 0.82rem;
+  line-height: 1.45;
+}
+
+.cart-checkout:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+  filter: grayscale(0.25);
+}
