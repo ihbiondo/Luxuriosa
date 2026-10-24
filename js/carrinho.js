@@ -1392,6 +1392,54 @@
 
 
   /* =======================================================
+     SINCRONIZAÇÃO COM O CATÁLOGO ATUAL
+     Atualiza preços e nomes de itens persistidos no navegador.
+     ======================================================= */
+
+  function sincronizarCatalogo(listaProdutos) {
+    if (!Array.isArray(listaProdutos) || !listaProdutos.length || !carrinho.length) {
+      return;
+    }
+
+    var alterado = false;
+
+    carrinho.forEach(function (item) {
+      var produtoAtual = listaProdutos.find(function (produto) {
+        return produto && String(produto.id) === String(item.id);
+      });
+
+      if (!produtoAtual) return;
+
+      var precoAtual = Number(produtoAtual.preco);
+      if (!Number.isFinite(precoAtual) || precoAtual < 0) precoAtual = 0;
+
+      var nomeAtual = String(produtoAtual.nome || item.nome);
+      var imagemAtual = String(produtoAtual.imagem || item.imagem || "");
+      var categoriaAtual = String(produtoAtual.categoria || item.categoria || "");
+      var tamanhosAtual = String(produtoAtual.tamanhos || "");
+
+      if (item.nome !== nomeAtual ||
+          item.preco !== precoAtual ||
+          item.imagem !== imagemAtual ||
+          item.categoria !== categoriaAtual ||
+          item.tamanhos !== tamanhosAtual) {
+        item.nome = nomeAtual;
+        item.preco = precoAtual;
+        item.imagem = imagemAtual;
+        item.categoria = categoriaAtual;
+        item.tamanhos = tamanhosAtual;
+        alterado = true;
+      }
+    });
+
+    if (alterado) {
+      salvar();
+      renderizar();
+    }
+  }
+
+
+  /* =======================================================
      EXPOSIÇÃO PÚBLICA
      ======================================================= */
 
@@ -1426,7 +1474,10 @@
       valorTotal,
 
     obterQuantidade:
-      quantidadeTotal
+      quantidadeTotal,
+
+    sincronizarCatalogo:
+      sincronizarCatalogo
 
   };
 
