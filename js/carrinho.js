@@ -1465,14 +1465,31 @@
           item.motivoIndisponibilidade = motivo;
           alterado = true;
         }
-      } else {
-        if (item.indisponivel || item.motivoIndisponibilidade) alterado = true;
-        item.indisponivel = false;
-        item.motivoIndisponibilidade = "";
+        return;
       }
 
-      var precoAtual = Number(produtoAtual.preco);
-      if (!Number.isFinite(precoAtual) || precoAtual < 0) precoAtual = 0;
+      var precoOriginal = produtoAtual.preco;
+      var precoAtual = Number(precoOriginal);
+      var precoValido =
+        precoOriginal !== null &&
+        precoOriginal !== undefined &&
+        precoOriginal !== "" &&
+        Number.isFinite(precoAtual) &&
+        precoAtual > 0;
+
+      if (!precoValido) {
+        var motivoPrecoInvalido = "Não foi possível confirmar o preço deste produto. Remova-o e consulte o atendimento antes de continuar.";
+        if (!item.indisponivel || item.motivoIndisponibilidade !== motivoPrecoInvalido) {
+          item.indisponivel = true;
+          item.motivoIndisponibilidade = motivoPrecoInvalido;
+          alterado = true;
+        }
+        return;
+      }
+
+      if (item.indisponivel || item.motivoIndisponibilidade) alterado = true;
+      item.indisponivel = false;
+      item.motivoIndisponibilidade = "";
 
       var nomeAtual = String(produtoAtual.nome || item.nome);
       var imagemAtual = String(produtoAtual.imagem || item.imagem || "");
