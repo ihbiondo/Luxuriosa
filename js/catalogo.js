@@ -526,7 +526,7 @@
   function atualizarCategoriasVisiveis() {
     document.querySelectorAll(".categories [data-filtro]").forEach(function (botao) {
       var categoria = botao.getAttribute("data-filtro");
-      botao.hidden = !categoriaTemProdutos(categoria);
+      botao.style.display = categoriaTemProdutos(categoria) ? "" : "none";
     });
   }
 
