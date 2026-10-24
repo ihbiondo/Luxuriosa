@@ -333,22 +333,19 @@
   function obterSimboloProduto(
     produto
   ) {
+    var categoria = produto.tipoProduto || produto.categoria || "";
 
-    if (
-      produto.categoria ===
-      "Intimidade"
-    ) {
-      return "♡";
-    }
-
-
-    if (
-      produto.categoria ===
-      "Kits"
-    ) {
+    if (categoria === "Kits") {
       return "✦";
     }
 
+    if (categoria === "Lingerie") {
+      return "♛";
+    }
+
+    if (categoria && categoria !== "Ofertas") {
+      return "♡";
+    }
 
     return "L";
   }
