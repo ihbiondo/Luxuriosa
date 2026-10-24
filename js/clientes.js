@@ -266,6 +266,45 @@
     $("customerEditButton").focus();
   }
 
+  function copiarMensagem() {
+    if (!mensagemAtual) {
+      avisar("Revise o pedido antes de copiar a mensagem.", "error");
+      return;
+    }
+
+    function copiarComSelecao() {
+      var campo = document.createElement("textarea");
+      campo.value = mensagemAtual;
+      campo.setAttribute("readonly", "");
+      campo.style.position = "fixed";
+      campo.style.opacity = "0";
+      document.body.appendChild(campo);
+      campo.select();
+      campo.setSelectionRange(0, campo.value.length);
+      var copiado = false;
+      try {
+        copiado = document.execCommand("copy");
+      } catch (error) {
+        copiado = false;
+      }
+      document.body.removeChild(campo);
+      if (copiado) {
+        avisar("Mensagem copiada. Se o WhatsApp não abrir, cole o texto na conversa da Luxuriosa.", "success");
+      } else {
+        avisar("Não foi possível copiar automaticamente. Selecione e copie o texto exibido nesta revisão.", "error");
+        messagePreview.focus();
+      }
+    }
+
+    if (navigator.clipboard && typeof navigator.clipboard.writeText === "function") {
+      navigator.clipboard.writeText(mensagemAtual).then(function () {
+        avisar("Mensagem copiada. Se o WhatsApp não abrir, cole o texto na conversa da Luxuriosa.", "success");
+      }).catch(copiarComSelecao);
+      return;
+    }
+    copiarComSelecao();
+  }
+
   function continuarWhatsApp() {
     if (!mensagemAtual || !dadosAtuais) return;
     var apiCarrinho = window.LuxuriosaCarrinho;
@@ -312,6 +351,7 @@
     $("customerCancel").addEventListener("click", fechar);
     $("customerEditButton").addEventListener("click", function () { review.hidden = true; form.hidden = false; $("customerName").focus(); });
     $("customerWhatsAppButton").addEventListener("click", continuarWhatsApp);
+    $("customerCopyButton").addEventListener("click", copiarMensagem);
     overlay.addEventListener("click", function (event) { if (event.target === overlay) fechar(); });
     dialog.addEventListener("keydown", function (event) {
       if (event.key === "Escape") { event.preventDefault(); fechar(); }
