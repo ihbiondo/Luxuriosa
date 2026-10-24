@@ -172,6 +172,7 @@
       .then(function (dados) {
         if (consultaAtual !== cepConsultaId || $("customerCep").value.replace(/\D/g, "") !== cep) return;
         if (!dados || dados.erro) {
+          $("customerCep").setAttribute("aria-invalid", "true");
           mostrarStatusCep("CEP não encontrado. Confira os números ou preencha o endereço manualmente.", "error");
           return;
         }
@@ -198,6 +199,7 @@
           }
         }
 
+        $("customerCep").removeAttribute("aria-invalid");
         definirValor("customerStreet", valoresCep[0]);
         definirValor("customerDistrict", valoresCep[1]);
         definirValor("customerCity", valoresCep[2]);
