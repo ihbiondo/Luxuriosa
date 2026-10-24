@@ -179,12 +179,17 @@
 
     if (
       !item ||
-      item.id === undefined ||
-      item.id === null
+      (typeof item.id !== "string" && typeof item.id !== "number") ||
+      String(item.id).trim() === ""
     ) {
       return null;
     }
 
+    var idNormalizado = String(item.id).trim();
+    var precoNormalizado = Number(item.preco);
+    if (!Number.isFinite(precoNormalizado) || precoNormalizado <= 0) {
+      precoNormalizado = 0;
+    }
 
     var quantidade =
       Number(
@@ -213,7 +218,7 @@
 
     return {
 
-      id: item.id,
+      id: idNormalizado,
 
       nome:
         String(
@@ -222,9 +227,7 @@
         ),
 
       preco:
-        Number(
-          item.preco
-        ) || 0,
+        precoNormalizado,
 
       imagem:
         String(
@@ -296,17 +299,35 @@
       }
 
 
-      carrinho =
-        convertido
-          .map(
-            normalizarItem
-          )
-          .filter(
-            function (item) {
-              return item !== null;
-            }
-          );
+      var itensNormalizados = convertido
+        .map(normalizarItem)
+        .filter(function (item) {
+          return item !== null;
+        });
 
+      /* Consolida IDs repetidos em carrinhos antigos e limita a quantidade total por produto. */
+      carrinho = [];
+      itensNormalizados.forEach(function (item) {
+        var existente = carrinho.find(function (atual) {
+          return atual.id === item.id;
+        });
+        if (!existente) {
+          carrinho.push(item);
+          return;
+        }
+
+        existente.quantidade = Math.min(
+          existente.quantidade + item.quantidade,
+          MAX_QUANTIDADE
+        );
+        if (item.indisponivel) {
+          existente.indisponivel = true;
+          existente.motivoIndisponibilidade = item.motivoIndisponibilidade ||
+            existente.motivoIndisponibilidade;
+        }
+      });
+
+      salvar();
 
     } catch (erro) {
 
