@@ -166,15 +166,40 @@
     var items = api && typeof api.obterItens === "function" ? api.obterItens() : [];
     var total = api && typeof api.obterTotal === "function" ? api.obterTotal() : 0;
     if (!items.length) return "";
-    var lines = ["Olá! Quero preparar um pedido na Luxuriosa:", ""];
+    var lines = [
+      "Olá! Quero preparar um pedido na *Luxuriosa*.",
+      "",
+      "*RESUMO DO PEDIDO*"
+    ];
     items.forEach(function (item) {
       var quantity = Number(item.quantidade) || 0;
       var price = Number(item.preco) || 0;
       lines.push("• " + item.nome + " — " + quantity + "x — " + formatarPreco(price * quantity));
     });
-    lines.push("", "Subtotal dos produtos (sem frete ou descontos): " + formatarPreco(total), "Frete grátis em Bauru para compras acima de R$ 100,00.", "O cupom PRIMEIRA10 vale na primeira compra acima de R$ 150,00 com Pix ou dinheiro. Cupons não cumulativos.", "Frete e descontos serão confirmados no atendimento.", "", "Dados para atendimento:", "Nome ou apelido: " + data.name, "Telefone/WhatsApp: " + data.phone, "Endereço de entrega: " + data.address);
-    if (marcado("customerMarketing")) lines.push("", "Preferência promocional: aceito receber ofertas e novidades da Luxuriosa.");
-    lines.push("", "Gostaria de confirmar disponibilidade, entrega e próximos passos. Sei que este envio não confirma o pedido nem processa pagamento.");
+    lines.push(
+      "",
+      "*Subtotal dos produtos:* " + formatarPreco(total),
+      "_Frete e descontos não incluídos._",
+      "",
+      "*CONDIÇÕES COMERCIAIS*",
+      "• Frete grátis em Bauru para compras acima de R$ 100,00.",
+      "• Cupom PRIMEIRA10: primeira compra acima de R$ 150,00, com Pix ou dinheiro.",
+      "• Cupons não cumulativos; frete e descontos serão confirmados no atendimento.",
+      "",
+      "*DADOS PARA ENTREGA*",
+      "Nome ou apelido: " + data.name,
+      "Telefone/WhatsApp: " + data.phone,
+      "Endereço: " + data.address
+    );
+    if (marcado("customerMarketing")) {
+      lines.push("", "*PREFERÊNCIA PROMOCIONAL*", "Aceito receber ofertas e novidades da Luxuriosa.");
+    }
+    lines.push(
+      "",
+      "*PRÓXIMO PASSO*",
+      "Gostaria de confirmar a disponibilidade, a entrega e os próximos passos.",
+      "_O envio desta mensagem não confirma o pedido nem processa pagamento._"
+    );
     return lines.join("\n");
   }
 
