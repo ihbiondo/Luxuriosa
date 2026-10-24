@@ -1569,6 +1569,10 @@
           }
 
 
+          if (window.LuxuriosaCarrinho && typeof window.LuxuriosaCarrinho.sincronizarCatalogo === "function") {
+            window.LuxuriosaCarrinho.sincronizarCatalogo(produtos);
+          }
+
           atualizarCategoriasVisiveis();
           renderizarFiltros();
           renderizarProdutos();
