@@ -234,23 +234,36 @@ body.customer-open { overflow: hidden; }
 @media (max-width: 600px) {
   .customer-overlay {
     align-items: flex-start;
-    padding: 8px;
+    padding: 6px;
     overscroll-behavior: contain;
   }
   .customer-dialog {
-    max-height: min(96vh, 100dvh);
-    padding: 16px;
+    width: 100%;
+    max-height: min(98vh, 100dvh);
+    padding: 14px;
     border-radius: 12px;
     overscroll-behavior: contain;
     -webkit-overflow-scrolling: touch;
   }
-  .customer-grid { grid-template-columns: minmax(0, 1fr); gap: 12px; }
-  .customer-cep-row { grid-template-columns: minmax(0, 1fr); }
+  .customer-dialog-header { gap: 10px; margin-bottom: 8px; }
+  .customer-dialog-header h2 { font-size: 1.45rem; }
+  .customer-intro,
+  .customer-privacy-note { margin: 8px 0; font-size: 12px; line-height: 1.5; }
+  .customer-fieldset { margin-top: 18px; }
+  .customer-grid { grid-template-columns: minmax(0, 1fr); gap: 10px; }
+  .customer-cep-row { grid-template-columns: minmax(0, 1fr); gap: 8px; }
   .customer-cep-row .btn { width: 100%; }
   .customer-span-2 { grid-column: auto; }
-  .customer-actions { flex-direction: column-reverse; align-items: stretch; }
-  .customer-actions .btn, .customer-storage-actions .btn { width: 100%; }
-  .customer-storage-actions { align-items: flex-start; flex-direction: column; }
+  .customer-field input,
+  .customer-field select,
+  .customer-field textarea { font-size: 16px; }
+  .customer-essential-fields input { min-height: 46px; }
+  .customer-freight-info { padding: 9px 10px; font-size: 12px; }
+  .customer-actions { flex-direction: column-reverse; align-items: stretch; gap: 9px; }
+  .customer-actions .btn, .customer-storage-actions .btn { width: 100%; min-height: 46px; }
+  .customer-storage-actions { align-items: stretch; flex-direction: column; gap: 9px; }
+  .customer-extra-section > summary { padding: 12px; }
+  .customer-marketing-choice { margin-top: 14px; padding: 10px; }
 }
 
 
