@@ -84,7 +84,9 @@
   function validarDados({ exigirEndereco }) {
     var data = dadosDoFormulario();
     var primeiroErro = null;
-    var required = ["customerName", "customerPhone", "customerAddress"];
+    var required = exigirEndereco
+      ? ["customerName", "customerPhone", "customerAddress"]
+      : ["customerName", "customerPhone"];
 
     document.querySelectorAll("#customerForm [aria-invalid='true']").forEach(function (field) { field.removeAttribute("aria-invalid"); });
     required.forEach(function (id) {
@@ -111,7 +113,12 @@
       return false;
     }
     if (primeiroErro) {
-      avisar("Preencha nome ou apelido, telefone/WhatsApp e endereço de entrega.", "error");
+      avisar(
+        exigirEndereco
+          ? "Preencha nome ou apelido, telefone/WhatsApp e endereço de entrega."
+          : "Preencha nome ou apelido e telefone/WhatsApp.",
+        "error"
+      );
       primeiroErro.focus();
       return false;
     }
