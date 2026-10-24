@@ -475,3 +475,49 @@ body.customer-open { overflow: hidden; }
   font-size: 0.85rem;
   line-height: 1.5;
 }
+
+
+/* =========================================================
+   CARDS DE PRODUTO — TEXTOS LONGOS EM TELAS PEQUENAS
+   ========================================================= */
+@media (max-width: 600px) {
+  .product-body {
+    min-width: 0;
+  }
+
+  .product h3 {
+    overflow-wrap: anywhere;
+    hyphens: auto;
+  }
+
+  .price {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 4px 8px;
+    overflow-wrap: anywhere;
+  }
+
+  .price s {
+    margin-left: 0;
+  }
+
+  .product .btn {
+    min-height: 42px;
+    height: auto;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    line-height: 1.35;
+  }
+}
+
+@media (max-width: 380px) {
+  .product h3 {
+    font-size: 13px;
+  }
+
+  .product .btn {
+    font-size: 9px;
+    padding: 8px 6px;
+  }
+}
