@@ -21,6 +21,7 @@
   var MAX_QUANTIDADE = 99;
 
   var carrinho = [];
+  var catalogoSincronizado = false;
 
 
   /* =======================================================
@@ -1298,6 +1299,11 @@
       return;
     }
 
+    if (!catalogoSincronizado) {
+      window.alert("Estamos conferindo os preços e a disponibilidade dos produtos. Aguarde alguns segundos e tente novamente.");
+      return;
+    }
+
     if (carrinho.some(function (item) { return item.indisponivel; })) {
       window.alert("Há itens indisponíveis no carrinho. Remova-os antes de continuar o pedido.");
       return;
@@ -1433,7 +1439,13 @@
      ======================================================= */
 
   function sincronizarCatalogo(listaProdutos) {
-    if (!Array.isArray(listaProdutos) || !carrinho.length) {
+    if (!Array.isArray(listaProdutos)) {
+      return;
+    }
+
+    catalogoSincronizado = true;
+
+    if (!carrinho.length) {
       return;
     }
 
