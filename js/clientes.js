@@ -67,26 +67,37 @@
     return {
       name: texto("customerName"),
       phone: texto("customerPhone"),
-      address: texto("customerAddress")
+      address: {
+        zip: texto("customerCep"),
+        street: texto("customerStreet"),
+        number: texto("customerNumber"),
+        complement: texto("customerComplement"),
+        district: texto("customerDistrict"),
+        city: texto("customerCity"),
+        state: texto("customerState").toUpperCase(),
+        reference: texto("customerReference")
+      }
     };
   }
 
   function preencherFormulario(data) {
     data = data || {};
-    var address = data.address || "";
-    var legacyAddress = typeof address === "object" && address ? [
-      [address.street, address.number].filter(Boolean).join(", "),
-      address.complement,
-      address.district,
-      [address.city, address.state].filter(Boolean).join("/"),
-      address.zip,
-      address.reference ? "Referência: " + address.reference : ""
-    ].filter(Boolean).join(", ") : address;
+    var address = data.address || {};
+    if (typeof address !== "object" || !address) {
+      /* Preserva o endereço antigo para que o cliente possa reorganizá-lo nos novos campos. */
+      address = { street: String(address || "") };
+    }
     definirValor("customerName", data.name);
     definirValor("customerPhone", data.phone);
-    definirValor("customerCep", "");
-    definirValor("customerAddress", legacyAddress);
-    ultimoEnderecoViaCep = ""; 
+    definirValor("customerCep", address.zip || "");
+    definirValor("customerStreet", address.street || "");
+    definirValor("customerNumber", address.number || "");
+    definirValor("customerComplement", address.complement || "");
+    definirValor("customerDistrict", address.district || "");
+    definirValor("customerCity", address.city || "");
+    definirValor("customerState", address.state || "");
+    definirValor("customerReference", address.reference || "");
+    ultimoEnderecoViaCep = "";
     mostrarStatusCep("", "info");
   }
 
@@ -105,8 +116,7 @@
 
   function consultarCep() {
     var campoCep = $("customerCep");
-    var campoEndereco = $("customerAddress");
-    if (!campoCep || !campoEndereco) return;
+    if (!campoCep) return;
 
     var cep = campoCep.value.replace(/\D/g, "");
     if (cep.length !== 8) {
@@ -132,26 +142,38 @@
           return;
         }
 
-        var partes = [dados.logradouro, dados.bairro, [dados.localidade, dados.uf].filter(Boolean).join(" / ")]
-          .filter(function (parte) { return String(parte || "").trim(); });
-        var enderecoBase = partes.join(", ");
-        if (!enderecoBase) {
+        var valoresCep = [
+          String(dados.logradouro || "").trim(),
+          String(dados.bairro || "").trim(),
+          String(dados.localidade || "").trim(),
+          String(dados.uf || "").trim().toUpperCase()
+        ];
+        if (!valoresCep.some(Boolean)) {
           mostrarStatusCep("O CEP foi localizado, mas não retornou endereço completo. Preencha os dados manualmente.", "error");
           return;
         }
 
-        var enderecoAtual = campoEndereco.value.trim();
-        if (enderecoAtual && enderecoAtual !== ultimoEnderecoViaCep) {
-          var substituir = window.confirm("A consulta vai substituir o texto atual do endereço pelos dados encontrados. Deseja continuar?");
+        var idsEndereco = ["customerStreet", "customerDistrict", "customerCity", "customerState"];
+        var valoresAtuais = idsEndereco.map(function (id) { return texto(id); });
+        var enderecoAtual = JSON.stringify(valoresAtuais);
+        if (valoresAtuais.some(Boolean) && enderecoAtual !== ultimoEnderecoViaCep) {
+          var substituir = window.confirm("A consulta vai substituir rua, bairro, cidade e estado pelos dados encontrados. Deseja continuar?");
           if (!substituir) {
-            mostrarStatusCep("Consulta concluída. O endereço digitado foi mantido.", "info");
+            mostrarStatusCep("Consulta concluída. Os campos digitados foram mantidos.", "info");
             return;
           }
         }
-        campoEndereco.value = enderecoBase;
-        campoEndereco.removeAttribute("aria-invalid");
-        ultimoEnderecoViaCep = enderecoBase;
-        mostrarStatusCep("Endereço localizado. Confira e complete o número e o complemento antes de continuar.", "success");
+
+        definirValor("customerStreet", valoresCep[0]);
+        definirValor("customerDistrict", valoresCep[1]);
+        definirValor("customerCity", valoresCep[2]);
+        definirValor("customerState", valoresCep[3]);
+        idsEndereco.forEach(function (id) {
+          var campo = $(id);
+          if (campo) campo.removeAttribute("aria-invalid");
+        });
+        ultimoEnderecoViaCep = JSON.stringify(valoresCep);
+        mostrarStatusCep("Endereço localizado. Confira os campos e complete o número antes de continuar.", "success");
       })
       .catch(function () {
         if (consultaAtual !== cepConsultaId) return;
@@ -168,7 +190,7 @@
     var data = dadosDoFormulario();
     var primeiroErro = null;
     var required = exigirEndereco
-      ? ["customerName", "customerPhone", "customerAddress"]
+      ? ["customerName", "customerPhone", "customerStreet", "customerNumber", "customerDistrict", "customerCity", "customerState"]
       : ["customerName", "customerPhone"];
 
     document.querySelectorAll("#customerForm [aria-invalid='true']").forEach(function (field) { field.removeAttribute("aria-invalid"); });
@@ -191,7 +213,7 @@
     if (primeiroErro) {
       avisar(
         exigirEndereco
-          ? "Preencha nome ou apelido, telefone/WhatsApp e endereço de entrega."
+          ? "Preencha nome ou apelido, telefone/WhatsApp, rua, número, bairro, cidade e estado."
           : "Preencha nome ou apelido e telefone/WhatsApp.",
         "error"
       );
@@ -299,7 +321,14 @@
       "*DADOS PARA ENTREGA*",
       "Nome ou apelido: " + data.name,
       "Telefone/WhatsApp: " + data.phone,
-      "Endereço: " + data.address
+      "CEP: " + (data.address.zip || "não informado"),
+      "Rua/Avenida: " + data.address.street,
+      "Número: " + data.address.number,
+      "Complemento: " + (data.address.complement || "não informado"),
+      "Bairro: " + data.address.district,
+      "Cidade: " + data.address.city,
+      "Estado: " + data.address.state,
+      "Ponto de referência: " + (data.address.reference || "não informado")
     );
     if (marcado("customerMarketing")) {
       lines.push("", "*PREFERÊNCIA PROMOCIONAL*", "Aceito receber ofertas e novidades da Luxuriosa.");
