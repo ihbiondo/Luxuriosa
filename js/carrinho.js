@@ -244,7 +244,13 @@
         ),
 
       quantidade:
-        quantidade
+        quantidade,
+
+      indisponivel:
+        Boolean(item.indisponivel),
+
+      motivoIndisponibilidade:
+        String(item.motivoIndisponibilidade || "")
 
     };
 
@@ -852,6 +858,16 @@
           )
         );
 
+        if (item.indisponivel) {
+          info.appendChild(
+            criarElemento(
+              "span",
+              "cart-item-unavailable",
+              item.motivoIndisponibilidade || "Confirme a disponibilidade com o atendimento."
+            )
+          );
+        }
+
 
         /* =================================================
            CONTROLES
@@ -1044,6 +1060,19 @@
           valorTotal()
         );
 
+    }
+
+    var finalizar = $("cartCheckout");
+    var temIndisponivel = carrinho.some(function (item) {
+      return item.indisponivel;
+    });
+
+    if (finalizar) {
+      finalizar.disabled = temIndisponivel;
+      finalizar.setAttribute("aria-disabled", temIndisponivel ? "true" : "false");
+      finalizar.title = temIndisponivel
+        ? "Remova os itens indisponíveis para continuar."
+        : "";
     }
 
 
@@ -1254,12 +1283,14 @@
 
   function finalizarPedido() {
 
-    if (
-      !carrinho.length
-    ) {
+    if (!carrinho.length) {
       return;
     }
 
+    if (carrinho.some(function (item) { return item.indisponivel; })) {
+      window.alert("Há itens indisponíveis no carrinho. Remova-os antes de continuar o pedido.");
+      return;
+    }
 
     /* O cadastro assume o fluxo apenas quando o módulo está disponível. */
     if (
@@ -1408,7 +1439,30 @@
         return produto && String(produto.id) === String(item.id);
       });
 
-      if (!produtoAtual) return;
+      if (!produtoAtual) {
+        if (!item.indisponivel || item.motivoIndisponibilidade !== "Este produto não está mais no catálogo. Remova-o para continuar.") {
+          item.indisponivel = true;
+          item.motivoIndisponibilidade = "Este produto não está mais no catálogo. Remova-o para continuar.";
+          alterado = true;
+        }
+        return;
+      }
+
+      if (produtoAtual.esgotado || produtoAtual.sobConsulta) {
+        var motivo = produtoAtual.esgotado
+          ? "Produto marcado como esgotado. Remova-o ou confirme a reposição no WhatsApp."
+          : "Produto disponível somente sob consulta. Remova-o e consulte pelo botão do catálogo.";
+
+        if (!item.indisponivel || item.motivoIndisponibilidade !== motivo) {
+          item.indisponivel = true;
+          item.motivoIndisponibilidade = motivo;
+          alterado = true;
+        }
+      } else {
+        if (item.indisponivel || item.motivoIndisponibilidade) alterado = true;
+        item.indisponivel = false;
+        item.motivoIndisponibilidade = "";
+      }
 
       var precoAtual = Number(produtoAtual.preco);
       if (!Number.isFinite(precoAtual) || precoAtual < 0) precoAtual = 0;
