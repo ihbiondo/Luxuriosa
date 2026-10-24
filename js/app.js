@@ -302,8 +302,12 @@
             evento.preventDefault();
 
 
+            var reduzirMovimento =
+              window.matchMedia &&
+              window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
             destino.scrollIntoView({
-              behavior: "smooth",
+              behavior: reduzirMovimento ? "auto" : "smooth",
               block: "start"
             });
 
