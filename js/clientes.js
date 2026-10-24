@@ -220,6 +220,11 @@
       avisar("Seu carrinho está vazio. Adicione um produto antes de continuar.", "error");
       return;
     }
+    var itensCarrinho = window.LuxuriosaCarrinho.obterItens();
+    if (itensCarrinho.some(function (item) { return item.indisponivel; })) {
+      avisar("Há produtos indisponíveis no carrinho. Volte ao carrinho e remova esses itens antes de continuar.", "error");
+      return;
+    }
     if (!validarDados({ exigirEndereco: true })) return;
     dadosAtuais = dadosDoFormulario();
     if (marcado("customerSave")) salvarPerfil(dadosAtuais, false);
@@ -237,7 +242,23 @@
   }
 
   function continuarWhatsApp() {
-    if (!mensagemAtual) return;
+    if (!mensagemAtual || !dadosAtuais) return;
+    var apiCarrinho = window.LuxuriosaCarrinho;
+    var itensAtuais = apiCarrinho && typeof apiCarrinho.obterItens === "function" ? apiCarrinho.obterItens() : [];
+    if (!itensAtuais.length) {
+      avisar("Seu carrinho está vazio. Adicione um produto antes de continuar.", "error");
+      return;
+    }
+    if (itensAtuais.some(function (item) { return item.indisponivel; })) {
+      avisar("Há produtos indisponíveis no carrinho. Volte ao carrinho e remova esses itens antes de continuar.", "error");
+      return;
+    }
+    mensagemAtual = preencherMensagem(dadosAtuais);
+    if (!mensagemAtual) {
+      avisar("Não foi possível atualizar o resumo do pedido. Revise o carrinho e tente novamente.", "error");
+      return;
+    }
+    messagePreview.textContent = mensagemAtual;
     var config = window.LuxuriosaCatalogo && typeof window.LuxuriosaCatalogo.obterConfig === "function" ? window.LuxuriosaCatalogo.obterConfig() : null;
     var number = config && config.whatsapp ? String(config.whatsapp).replace(/\D/g, "") : "5514996355924";
     if (!number) number = "5514996355924";
