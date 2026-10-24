@@ -165,7 +165,7 @@
       var price = Number(item.preco) || 0;
       lines.push("• " + item.nome + " — " + quantity + "x — " + formatarPreco(price * quantity));
     });
-    lines.push("", "Total calculado pelo carrinho: " + formatarPreco(total), "", "Dados para atendimento:", "Nome ou apelido: " + data.name, "Telefone/WhatsApp: " + data.phone, "Endereço de entrega: " + data.address);
+    lines.push("", "Subtotal dos produtos (sem frete ou descontos): " + formatarPreco(total), "Frete grátis em Bauru para compras acima de R$ 100,00.", "O cupom PRIMEIRA10 vale na primeira compra acima de R$ 150,00 com Pix ou dinheiro. Cupons não cumulativos.", "Frete e descontos serão confirmados no atendimento.", "", "Dados para atendimento:", "Nome ou apelido: " + data.name, "Telefone/WhatsApp: " + data.phone, "Endereço de entrega: " + data.address);
     if (marcado("customerMarketing")) lines.push("", "Preferência promocional: aceito receber ofertas e novidades da Luxuriosa.");
     lines.push("", "Gostaria de confirmar disponibilidade, entrega e próximos passos. Sei que este envio não confirma o pedido nem processa pagamento.");
     return lines.join("\n");
