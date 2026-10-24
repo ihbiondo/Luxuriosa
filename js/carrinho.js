@@ -1428,13 +1428,23 @@
      ======================================================= */
 
   function sincronizarCatalogo(listaProdutos) {
-    if (!Array.isArray(listaProdutos) || !listaProdutos.length || !carrinho.length) {
+    if (!Array.isArray(listaProdutos) || !carrinho.length) {
       return;
     }
 
     var alterado = false;
 
     carrinho.forEach(function (item) {
+      if (!listaProdutos.length) {
+        var motivoCatalogoIndisponivel = "Não foi possível confirmar a disponibilidade no catálogo. Recarregue a página antes de continuar.";
+        if (!item.indisponivel || item.motivoIndisponibilidade !== motivoCatalogoIndisponivel) {
+          item.indisponivel = true;
+          item.motivoIndisponibilidade = motivoCatalogoIndisponivel;
+          alterado = true;
+        }
+        return;
+      }
+
       var produtoAtual = listaProdutos.find(function (produto) {
         return produto && String(produto.id) === String(item.id);
       });
