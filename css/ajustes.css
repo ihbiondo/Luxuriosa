@@ -168,6 +168,19 @@
   resize: vertical;
   line-height: 1.5;
 }
+.customer-cep-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 10px;
+  align-items: stretch;
+}
+.customer-cep-row .btn {
+  min-height: 44px;
+  white-space: nowrap;
+}
+.customer-cep-status[data-kind="error"] { color: #ffabb6; }
+.customer-cep-status[data-kind="success"] { color: var(--gold); }
+.customer-cep-status[hidden] { display: none !important; }
 .customer-field input:focus,
 .customer-field select:focus,
 .customer-field textarea:focus {
@@ -214,6 +227,8 @@ body.customer-open { overflow: hidden; }
     -webkit-overflow-scrolling: touch;
   }
   .customer-grid { grid-template-columns: minmax(0, 1fr); gap: 12px; }
+  .customer-cep-row { grid-template-columns: minmax(0, 1fr); }
+  .customer-cep-row .btn { width: 100%; }
   .customer-span-2 { grid-column: auto; }
   .customer-actions { flex-direction: column-reverse; align-items: stretch; }
   .customer-actions .btn, .customer-storage-actions .btn { width: 100%; }
