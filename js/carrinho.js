@@ -1242,38 +1242,35 @@
 
   function montarMensagemPedido() {
 
-    var mensagem =
-      "Olá! Quero fazer um pedido na Luxuriosa:\n\n";
+    var linhas = [
+      "Olá! Quero fazer um pedido na *Luxuriosa*.",
+      "",
+      "*RESUMO DO PEDIDO*"
+    ];
 
+    carrinho.forEach(function (item) {
+      linhas.push(
+        "• " + item.nome + " — " + item.quantidade + "x — " +
+        formatarPreco(item.preco * item.quantidade)
+      );
+    });
 
-    carrinho.forEach(
-      function (item) {
-
-        mensagem +=
-          "• " +
-          item.nome +
-          " — " +
-          item.quantidade +
-          "x — " +
-          formatarPreco(
-            item.preco *
-            item.quantidade
-          ) +
-          "\n";
-
-      }
+    linhas.push(
+      "",
+      "*Subtotal dos produtos:* " + formatarPreco(valorTotal()),
+      "_Frete e descontos não incluídos._",
+      "",
+      "*CONDIÇÕES COMERCIAIS*",
+      "• Frete grátis em Bauru para compras acima de R$ 100,00.",
+      "• Cupom PRIMEIRA10: primeira compra acima de R$ 150,00, com Pix ou dinheiro.",
+      "• Cupons não cumulativos; frete e descontos serão confirmados no atendimento.",
+      "",
+      "*PRÓXIMO PASSO*",
+      "Gostaria de confirmar a disponibilidade, os tamanhos e a entrega.",
+      "_O envio desta mensagem não confirma o pedido nem processa pagamento._"
     );
 
-
-    mensagem +=
-      "\nSubtotal dos produtos (sem frete ou descontos): " +
-      formatarPreco(
-        valorTotal()
-      );
-
-
-    mensagem +=
-      "\n\nFrete grátis em Bauru para compras acima de R$ 100,00. O cupom PRIMEIRA10 vale na primeira compra acima de R$ 150,00 com Pix ou dinheiro. Cupons não cumulativos.\nFrete e descontos serão confirmados no atendimento.\n\nGostaria de confirmar disponibilidade, tamanhos e entrega.";
+    var mensagem = linhas.join("\n");
 
 
     return mensagem;
