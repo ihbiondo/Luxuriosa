@@ -195,7 +195,7 @@
       return;
     }
 
-    var cidadeNormalizada = cidade.normalize ? cidade.normalize("NFD").replace(/[\\u0300-\\u036f]/g, "").toLowerCase() : cidade.toLowerCase();
+    var cidadeNormalizada = cidade.normalize ? cidade.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase() : cidade.toLowerCase();
     if (cidadeNormalizada === "bauru" && estado === "SP") {
       if (subtotal > 100) {
         aviso.textContent = "Entrega em Bauru-SP: seu subtotal está acima de R$ 100,00. Você pode solicitar frete grátis com o cupom FRETE; a condição será confirmada no atendimento.";
