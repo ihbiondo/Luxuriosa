@@ -704,6 +704,20 @@
         </div>
 
 
+        <form class="catalog-search" id="catalogSearchForm" role="search">
+          <label class="sr-only" for="catalogSearch">Pesquisar produtos</label>
+          <icon class="catalog-search-icon" aria-hidden="true"></icon>
+          <input
+            id="catalogSearch"
+            type="search"
+            name="q"
+            placeholder="Buscar produto, tipo ou sensação..."
+            autocomplete="off"
+            aria-controls="grid"
+          >
+          <button type="button" id="clearCatalogSearch" class="catalog-search-clear" aria-label="Limpar pesquisa" hidden>Limpar</button>
+        </form>
+
         <div
           class="chips"
           id="chips"
