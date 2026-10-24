@@ -668,17 +668,13 @@ header {
 
 .categories {
   display: grid;
-
-  grid-template-columns:
-    repeat(4, 1fr);
-
-  gap: 14px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
 }
 
 .cat {
-  padding: 28px 22px;
-
-  min-height: 160px;
+  padding: 17px 18px;
+  min-height: 82px;
 
   border-radius: 20px;
 
@@ -701,7 +697,7 @@ header {
 
   flex-direction: column;
 
-  justify-content: flex-end;
+  justify-content: center;
 
   text-align: left;
 
@@ -714,22 +710,18 @@ header {
   border-color: var(--gold);
 }
 
-.cat b {
+ .cat b {
   font-family: var(--serif);
 
   font-weight: 400;
 
-  font-size: 26px;
+  font-size: 20px;
 
   color: var(--blush);
 }
 
 .cat span {
-  color: var(--muted);
-
-  font-size: 13px;
-
-  margin-top: 6px;
+  display: none;
 }
 
 
