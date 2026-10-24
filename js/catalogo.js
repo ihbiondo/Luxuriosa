@@ -1533,6 +1533,9 @@
 
       .then(
         function (dados) {
+          if (!dados || !Array.isArray(dados.produtos) || dados.produtos.length === 0) {
+            throw new Error("O arquivo do catálogo não contém uma lista válida de produtos.");
+          }
 
           /*
            * Configuração
@@ -1598,15 +1601,19 @@
           var grid =
             $("grid");
 
+          ["destaques-grid", "mais-vendidos-grid"].forEach(function (id) {
+            var colecao = $(id);
+            if (colecao) {
+              colecao.textContent = "";
+              colecao.appendChild(criarElemento("div", "empty", "Não foi possível carregar esta seleção."));
+            }
+          });
 
           if (!grid) {
             return;
           }
 
-
-          grid.textContent =
-            "";
-
+          grid.textContent = "";
 
           var erroBox =
             criarElemento(
@@ -1617,42 +1624,28 @@
 
           erroBox.appendChild(
             document.createTextNode(
-              "Não foi possível carregar o catálogo agora. "
+              "Não foi possível carregar o catálogo agora. Tente novamente ou fale com a Luxuriosa. "
             )
           );
 
+          erroBox.appendChild(document.createElement("br"));
 
-          erroBox.appendChild(
-            document.createElement(
-              "br"
-            )
-          );
+          var tentarNovamente = criarElemento("button", "btn ghost small", "Tentar novamente");
+          tentarNovamente.type = "button";
+          tentarNovamente.addEventListener("click", function () {
+            tentarNovamente.disabled = true;
+            tentarNovamente.textContent = "Carregando…";
+            carregarCatalogo();
+          });
+          erroBox.appendChild(tentarNovamente);
 
-
-          var botao =
-            criarElemento(
-              "button",
-              "btn ghost small",
-              "Chamar no WhatsApp"
-            );
-
-
-          botao.type =
-            "button";
-
-
-          botao.addEventListener(
-            "click",
-            function () {
-
-              abrirWhatsApp();
-            }
-          );
-
-
-          erroBox.appendChild(
-            botao
-          );
+          var botao = criarElemento("button", "btn ghost small", "Chamar no WhatsApp");
+          botao.type = "button";
+          botao.style.marginLeft = "8px";
+          botao.addEventListener("click", function () {
+            abrirWhatsApp();
+          });
+          erroBox.appendChild(botao);
 
 
           grid.appendChild(
