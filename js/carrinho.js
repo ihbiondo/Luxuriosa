@@ -1237,14 +1237,14 @@
 
 
     mensagem +=
-      "\nTotal: " +
+      "\nSubtotal dos produtos (sem frete ou descontos): " +
       formatarPreco(
         valorTotal()
       );
 
 
     mensagem +=
-      "\n\nGostaria de confirmar disponibilidade, tamanhos e entrega.";
+      "\n\nFrete grátis em Bauru para compras acima de R$ 100,00. O cupom PRIMEIRA10 vale na primeira compra acima de R$ 150,00 com Pix ou dinheiro. Cupons não cumulativos.\nFrete e descontos serão confirmados no atendimento.\n\nGostaria de confirmar disponibilidade, tamanhos e entrega.";
 
 
     return mensagem;
