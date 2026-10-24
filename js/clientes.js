@@ -207,7 +207,8 @@
           if (campo) campo.removeAttribute("aria-invalid");
         });
         ultimoEnderecoViaCep = JSON.stringify(valoresCep);
-        mostrarStatusCep("Endereço localizado. Confira os campos e complete o número antes de continuar.", "success");\n        atualizarAvisoFrete();
+        mostrarStatusCep("Endereço localizado. Confira os campos e complete o número antes de continuar.", "success");
+        atualizarAvisoFrete();
       })
       .catch(function () {
         if (consultaAtual !== cepConsultaId) return;
@@ -572,7 +573,8 @@
     review = $("customerReview");
     statusBox = $("customerStatus");
     messagePreview = $("customerMessagePreview");
-    if (!overlay || !dialog || !form || !review) return;\n    atualizarAvisoFrete();
+    if (!overlay || !dialog || !form || !review) return;
+    atualizarAvisoFrete();
 
     form.addEventListener("submit", revisarPedido);
     $("customerSaveButton").addEventListener("click", salvarCadastroBasico);
@@ -600,7 +602,10 @@
         this.removeAttribute("aria-invalid");
       });
     });
-    ["customerCity", "customerState"].forEach(function (id) {\n      var field = $(id);\n      if (field) field.addEventListener("input", atualizarAvisoFrete);\n    });
+    ["customerCity", "customerState"].forEach(function (id) {
+      var field = $(id);
+      if (field) field.addEventListener("input", atualizarAvisoFrete);
+    });
     var campoEstado = $("customerState");
     if (campoEstado) {
       campoEstado.addEventListener("input", function () {
