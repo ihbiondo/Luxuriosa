@@ -119,8 +119,7 @@
      ------------------------------------------------------- */
 
   .categories {
-    grid-template-columns:
-      repeat(2, 1fr);
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
 
@@ -396,24 +395,19 @@
      ------------------------------------------------------- */
 
   .categories {
-    grid-template-columns:
-      repeat(2, 1fr);
-
-    gap: 10px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 9px;
   }
 
   .cat {
-    min-height: 130px;
-
-    padding: 18px 14px;
+    min-height: 64px;
+    padding: 12px 13px;
+    border-radius: 14px;
   }
 
   .cat b {
-    font-size: 20px;
-  }
-
-  .cat span {
-    font-size: 11px;
+    font-size: 16px;
+    line-height: 1.25;
   }
 
 
@@ -835,17 +829,16 @@
      ------------------------------------------------------- */
 
   .categories {
-    gap: 8px;
+    gap: 7px;
   }
 
   .cat {
-    min-height: 115px;
-
-    padding: 14px 10px;
+    min-height: 60px;
+    padding: 10px;
   }
 
   .cat b {
-    font-size: 17px;
+    font-size: 14px;
   }
 
 
