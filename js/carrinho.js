@@ -1303,7 +1303,7 @@
       return;
     }
 
-    /* O cadastro assume o fluxo apenas quando o módulo está disponível. */
+    /* Não contorna a revisão dos dados caso o módulo de checkout falhe. */
     if (
       window.LuxuriosaClientes &&
       typeof window.LuxuriosaClientes.iniciarFinalizacao === "function"
@@ -1312,13 +1312,7 @@
       return;
     }
 
-    var mensagem =
-      montarMensagemPedido();
-
-
-    abrirWhatsApp(
-      mensagem
-    );
+    window.alert("Não foi possível abrir a etapa de dados do pedido. Atualize a página e tente novamente. Se o problema continuar, fale com a Luxuriosa pelo botão de WhatsApp do site.");
 
   }
 
