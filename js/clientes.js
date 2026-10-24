@@ -40,6 +40,19 @@
       if (!raw) return null;
       var parsed = JSON.parse(raw);
       if (!parsed || typeof parsed !== "object" || typeof parsed.name !== "string" || typeof parsed.phone !== "string") return null;
+
+      /* Migra cadastros antigos e remove campos que deixaram de ser necessários. */
+      var tinhaDadosLegados = Object.prototype.hasOwnProperty.call(parsed, "email") ||
+        Object.prototype.hasOwnProperty.call(parsed, "birthday");
+      if (tinhaDadosLegados) {
+        delete parsed.email;
+        delete parsed.birthday;
+        try {
+          window.localStorage.setItem(PROFILE_KEY, JSON.stringify(parsed));
+        } catch (migrationError) {
+          console.warn("Luxuriosa: não foi possível atualizar o cadastro antigo neste dispositivo.");
+        }
+      }
       return parsed;
     } catch (error) {
       console.warn("Luxuriosa: não foi possível ler o cadastro salvo neste dispositivo.");
