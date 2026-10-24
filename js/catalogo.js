@@ -1590,6 +1590,10 @@
             erro
           );
 
+          /* Sem catálogo confirmado, não permitimos finalizar com preços antigos. */
+          if (window.LuxuriosaCarrinho && typeof window.LuxuriosaCarrinho.sincronizarCatalogo === "function") {
+            window.LuxuriosaCarrinho.sincronizarCatalogo([]);
+          }
 
           var grid =
             $("grid");
