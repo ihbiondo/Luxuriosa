@@ -30,6 +30,7 @@
   var produtos = [];
 
   var filtroAtual = "Todos";
+  var elementoQueAbriuModal = null;
 
 
   /* =======================================================
@@ -895,6 +896,7 @@
        ===================================================== */
 
     function abrir() {
+      elementoQueAbriuModal = card;
       abrirModalProduto(
         produto
       );
@@ -1271,6 +1273,12 @@
     document.body.classList.add(
       "modal-open"
     );
+
+    /* Leva o teclado para dentro do modal ao abrir. */
+    var botaoFechar = $("mClose");
+    if (botaoFechar) {
+      botaoFechar.focus();
+    }
   }
 
 
@@ -1284,6 +1292,8 @@
       return;
     }
 
+
+    var estavaAberto = modal.classList.contains("open");
 
     modal.classList.remove(
       "open"
@@ -1299,6 +1309,11 @@
     document.body.classList.remove(
       "modal-open"
     );
+
+    /* Devolve a navegação ao produto que abriu o modal. */
+    if (estavaAberto && elementoQueAbriuModal && document.contains(elementoQueAbriuModal)) {
+      elementoQueAbriuModal.focus();
+    }
   }
 
 
@@ -1480,7 +1495,9 @@
 
         if (
           evento.key ===
-          "Escape"
+            "Escape" &&
+          $("modal") &&
+          $("modal").classList.contains("open")
         ) {
 
           fecharModal();
