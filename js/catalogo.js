@@ -233,7 +233,7 @@
     imagemPrincipal.alt = produto.nome || "Produto Luxuriosa";
     imagemPrincipal.loading = "lazy";
     imagemPrincipal.style.maxWidth = "100%";
-    imagemPrincipal.style.height = "auto";
+    imagemPrincipal.style.height = "100%";
     imagemPrincipal.style.objectFit = "contain";
 
     imagemPrincipal.onerror = function () {
