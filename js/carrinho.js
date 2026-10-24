@@ -611,6 +611,7 @@
     }
 
 
+    var quantidadeAnterior = item.quantidade;
     item.quantidade =
       Math.min(
         Math.max(
@@ -624,6 +625,28 @@
     salvar();
 
     renderizar();
+
+    /* A lista é reconstruída a cada alteração; devolve o foco ao controle
+       equivalente para que a navegação por teclado não se perca. */
+    var linhaAtualizada = $("cartItems")
+      ? $("cartItems").querySelector('[data-product-id="' + String(id).replace(/"/g, '\\"') + '"]')
+      : null;
+    if (linhaAtualizada) {
+      var botoesQuantidade = linhaAtualizada.querySelectorAll(".cart-qty-btn");
+      var diminuirAtual = botoesQuantidade[0];
+      var aumentarAtual = botoesQuantidade[1];
+      var controlePreferido = item.quantidade > quantidadeAnterior
+        ? aumentarAtual
+        : diminuirAtual;
+      var controleAlternativo = item.quantidade > quantidadeAnterior
+        ? diminuirAtual
+        : aumentarAtual;
+      if (controlePreferido && !controlePreferido.disabled) {
+        controlePreferido.focus();
+      } else if (controleAlternativo && !controleAlternativo.disabled) {
+        controleAlternativo.focus();
+      }
+    }
 
   }
 
@@ -1011,6 +1034,8 @@
           "Quantidade: " +
           item.quantidade
         );
+        quantidade.setAttribute("aria-live", "polite");
+        quantidade.setAttribute("aria-atomic", "true");
 
 
         var aumentar =
