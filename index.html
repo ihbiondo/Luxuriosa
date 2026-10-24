@@ -1414,9 +1414,18 @@
           <legend>Endereço de entrega</legend>
           <div class="customer-grid">
             <div class="customer-field customer-span-2">
+              <label for="customerCep">CEP</label>
+              <div class="customer-cep-row">
+                <input id="customerCep" name="postalCode" type="text" inputmode="numeric" autocomplete="postal-code" maxlength="9" placeholder="00000-000" aria-describedby="customerCepHelp customerCepStatus">
+                <button class="btn secondary" id="customerCepSearch" type="button">Buscar CEP</button>
+              </div>
+              <small id="customerCepHelp">Consulte o CEP para preencher rua, bairro, cidade e estado automaticamente.</small>
+              <small id="customerCepStatus" class="customer-cep-status" role="status" aria-live="polite" hidden></small>
+            </div>
+            <div class="customer-field customer-span-2">
               <label for="customerAddress">Endereço de entrega <span aria-hidden="true">*</span></label>
               <textarea id="customerAddress" name="address" autocomplete="street-address" required maxlength="500" rows="3" placeholder="Rua, número, complemento, bairro, cidade e estado"></textarea>
-              <small>Informe os dados necessários para localizar o endereço. Você pode incluir um ponto de referência.</small>
+              <small>Confira os dados preenchidos e complete com número, complemento e ponto de referência, se necessário.</small>
             </div>
           </div>
         </fieldset>
