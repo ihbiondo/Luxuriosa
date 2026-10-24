@@ -202,6 +202,30 @@
       }
     });
 
+    var campoCep = $("customerCep");
+    var cepDigits = texto("customerCep").replace(/\D/g, "");
+    if (cepDigits && cepDigits.length !== 8) {
+      if (campoCep) {
+        campoCep.setAttribute("aria-invalid", "true");
+        primeiroErro = primeiroErro || campoCep;
+      }
+      mostrarStatusCep("Se informar o CEP, digite os 8 números completos.", "error");
+      if (campoCep) campoCep.focus();
+      return false;
+    }
+
+    var campoEstado = $("customerState");
+    var estado = texto("customerState");
+    if (exigirEndereco && estado && !/^[A-Za-z]{2}$/.test(estado)) {
+      if (campoEstado) {
+        campoEstado.setAttribute("aria-invalid", "true");
+        campoEstado.focus();
+      }
+      avisar("Informe o estado usando a sigla de duas letras, por exemplo: SP.", "error");
+      return false;
+    }
+    if (campoEstado && estado) campoEstado.value = estado.toUpperCase();
+
     var phone = $("customerPhone");
     if (data.phone && !validarTelefone(data.phone)) {
       phone.setAttribute("aria-invalid", "true");
@@ -505,6 +529,13 @@
       }
     });
     $("customerPhone").addEventListener("input", function () { this.removeAttribute("aria-invalid"); });
+    var campoEstado = $("customerState");
+    if (campoEstado) {
+      campoEstado.addEventListener("input", function () {
+        this.value = this.value.replace(/[^a-z]/gi, "").slice(0, 2).toUpperCase();
+        this.removeAttribute("aria-invalid");
+      });
+    }
     var campoCep = $("customerCep");
     var botaoCep = $("customerCepSearch");
     if (campoCep && botaoCep) {
