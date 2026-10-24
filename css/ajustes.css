@@ -466,3 +466,12 @@ body.customer-open { overflow: hidden; }
 #conteudo-principal:focus {
   outline: none;
 }
+
+
+/* Catálogo: mensagem de resultados acessível sem alterar o layout. */
+.catalogo-status {
+  margin: -12px 0 18px;
+  color: var(--muted);
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
