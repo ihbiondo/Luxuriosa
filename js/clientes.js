@@ -161,10 +161,46 @@
     }
   }
 
+  function validarIntegridadePedido(items) {
+    var api = window.LuxuriosaCarrinho;
+    if (!api || typeof api.obterTotal !== "function" || !Array.isArray(items) || !items.length) {
+      return { valido: false, motivo: "Não foi possível confirmar os itens do carrinho. Feche esta janela, atualize a página e tente novamente." };
+    }
+
+    var subtotalCalculado = 0;
+    for (var i = 0; i < items.length; i += 1) {
+      var item = items[i];
+      var preco = Number(item && item.preco);
+      var quantidade = Number(item && item.quantidade);
+      if (!item || item.indisponivel) {
+        return { valido: false, motivo: "Há produtos indisponíveis no carrinho. Volte ao carrinho e remova esses itens antes de continuar." };
+      }
+      if (item.preco === null || item.preco === undefined || item.preco === "" ||
+          !Number.isFinite(preco) || preco <= 0 ||
+          !Number.isInteger(quantidade) || quantidade < 1 || quantidade > 99) {
+        return { valido: false, motivo: "O preço ou a quantidade de um produto não pôde ser confirmado. Feche esta janela, atualize a página e revise o carrinho." };
+      }
+      subtotalCalculado += preco * quantidade;
+    }
+
+    var subtotalCarrinho = Number(api.obterTotal());
+    if (!Number.isFinite(subtotalCarrinho) || subtotalCarrinho <= 0 ||
+        Math.abs(subtotalCalculado - subtotalCarrinho) > 0.009) {
+      return { valido: false, motivo: "O subtotal do pedido não confere com os itens. Feche esta janela, atualize a página e revise o carrinho." };
+    }
+
+    return { valido: true, subtotal: subtotalCalculado };
+  }
+
   function preencherMensagem(data) {
     var api = window.LuxuriosaCarrinho;
     var items = api && typeof api.obterItens === "function" ? api.obterItens() : [];
-    var total = api && typeof api.obterTotal === "function" ? api.obterTotal() : 0;
+    var integridade = validarIntegridadePedido(items);
+    if (!integridade.valido) {
+      avisar(integridade.motivo, "error");
+      return "";
+    }
+    var total = integridade.subtotal;
     if (!items.length) return "";
     var lines = [
       "Olá! Quero preparar um pedido na *Luxuriosa*.",
@@ -246,8 +282,9 @@
       return;
     }
     var itensCarrinho = window.LuxuriosaCarrinho.obterItens();
-    if (itensCarrinho.some(function (item) { return item.indisponivel; })) {
-      avisar("Há produtos indisponíveis no carrinho. Volte ao carrinho e remova esses itens antes de continuar.", "error");
+    var integridade = validarIntegridadePedido(itensCarrinho);
+    if (!integridade.valido) {
+      avisar(integridade.motivo, "error");
       return;
     }
     if (!validarDados({ exigirEndereco: true })) return;
@@ -313,8 +350,9 @@
       avisar("Seu carrinho está vazio. Adicione um produto antes de continuar.", "error");
       return;
     }
-    if (itensAtuais.some(function (item) { return item.indisponivel; })) {
-      avisar("Há produtos indisponíveis no carrinho. Volte ao carrinho e remova esses itens antes de continuar.", "error");
+    var integridade = validarIntegridadePedido(itensAtuais);
+    if (!integridade.valido) {
+      avisar(integridade.motivo, "error");
       return;
     }
     mensagemAtual = preencherMensagem(dadosAtuais);
