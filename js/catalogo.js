@@ -69,6 +69,7 @@
   var produtos = [];
 
   var filtroAtual = "Todos";
+  var termoPesquisa = "";
   var elementoQueAbriuModal = null;
 
 
@@ -444,13 +445,39 @@
      FILTRAGEM
      ======================================================= */
 
+  function normalizarTexto(valor) {
+    return String(valor || "")
+      .normalize("NFD")
+      .replace(/[\\u0300-\\u036f]/g, "")
+      .toLocaleLowerCase("pt-BR")
+      .trim();
+  }
+
+  function produtoCombinaPesquisa(produto, termo) {
+    if (!termo) return true;
+    var campos = [
+      produto.nome,
+      produto.tipoProduto,
+      produto.categoria,
+      produto.descricao,
+      produto.marca,
+      produto.subtitulo,
+      Array.isArray(produto.tags) ? produto.tags.join(" ") : ""
+    ];
+    var texto = normalizarTexto(campos.filter(Boolean).join(" "));
+    return termo.split(/\\s+/).every(function (palavra) {
+      return texto.indexOf(palavra) !== -1;
+    });
+  }
+
   function obterProdutosFiltrados() {
 
     var lista =
       produtos.filter(
         function (produto) {
 
-          return produtoPertenceCategoria(produto, filtroAtual);
+          return produtoPertenceCategoria(produto, filtroAtual) &&
+            produtoCombinaPesquisa(produto, termoPesquisa);
         }
       );
 
@@ -993,9 +1020,13 @@
     var statusCatalogo = $("catalogoStatus");
     if (statusCatalogo) {
       statusCatalogo.textContent = lista.length
-        ? lista.length + (lista.length === 1 ? " produto encontrado." : " produtos encontrados.") + " Categoria: " + filtroAtual + "."
-        : "Nenhum produto encontrado na categoria " + filtroAtual + ".";
+        ? lista.length + (lista.length === 1 ? " produto encontrado." : " produtos encontrados.") +
+          (termoPesquisa ? " Pesquisa: " + termoPesquisa + "." : " Categoria: " + filtroAtual + ".")
+        : (termoPesquisa
+          ? "Nenhum produto encontrado para \"" + termoPesquisa + "\"."
+          : "Nenhum produto encontrado na categoria " + filtroAtual + ".");
     }
+    atualizarControlesPesquisa();
 
 
     /* =====================================================
@@ -1719,8 +1750,44 @@
      INICIALIZAÇÃO
      ======================================================= */
 
+  function configurarPesquisaCatalogo() {
+    var campo = $("catalogSearch");
+    var formulario = $("catalogSearchForm");
+    var limpar = $("clearCatalogSearch");
+    if (!campo || !formulario || !limpar) return;
+
+    campo.addEventListener("input", function () {
+      termoPesquisa = normalizarTexto(campo.value);
+      renderizarProdutos();
+    });
+
+    formulario.addEventListener("submit", function (evento) {
+      evento.preventDefault();
+      termoPesquisa = normalizarTexto(campo.value);
+      renderizarProdutos();
+      var catalogo = $("catalogo");
+      if (catalogo) catalogo.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+
+    limpar.addEventListener("click", function () {
+      campo.value = "";
+      termoPesquisa = "";
+      renderizarProdutos();
+      campo.focus();
+    });
+  }
+
+  function atualizarControlesPesquisa() {
+    var campo = $("catalogSearch");
+    var limpar = $("clearCatalogSearch");
+    if (campo && limpar) {
+      limpar.hidden = !campo.value;
+    }
+  }
+
   function iniciar() {
 
+    configurarPesquisaCatalogo();
     renderizarFiltros();
 
     configurarWhatsApp();
