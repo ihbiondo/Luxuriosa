@@ -22,6 +22,34 @@
     return Number(value || 0).toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
   }
 
+  function resumirCondicaoFrete(address, subtotal) {
+    var cidade = String(address && address.city || "").trim();
+    var estado = String(address && address.state || "").trim().toUpperCase();
+    var cidadeNormalizada = cidade.normalize
+      ? cidade.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase()
+      : cidade.toLowerCase();
+
+    if (cidadeNormalizada === "bauru" && estado === "SP") {
+      if (subtotal > 100) {
+        return [
+          "Destino: " + cidade + "/" + estado,
+          "Condição: você pode solicitar o cupom FRETE para frete grátis em compras acima de R$ 100,00.",
+          "A aplicação do cupom e a entrega serão confirmadas no atendimento."
+        ];
+      }
+      return [
+        "Destino: " + cidade + "/" + estado,
+        "Condição: o cupom FRETE é válido para compras acima de R$ 100,00.",
+        "O frete será confirmado no atendimento."
+      ];
+    }
+
+    return [
+      "Destino: " + (cidade || "cidade não informada") + (estado ? "/" + estado : ""),
+      "Condição: disponibilidade e valor do frete serão confirmados no atendimento."
+    ];
+  }
+
   function avisar(message, kind) {
     if (!statusBox) return;
     statusBox.textContent = message;
@@ -365,9 +393,13 @@
       "_Frete e descontos não incluídos._",
       "",
       "*CONDIÇÕES COMERCIAIS*",
-      "• Cupom FRETE: frete grátis em Bauru para compras acima de R$ 100,00.",
       "• Cupom PRIMEIRA10: primeira compra acima de R$ 150,00, com Pix ou dinheiro.",
-      "• Cupons não cumulativos; frete e descontos serão confirmados no atendimento.",
+      "• Cupons não cumulativos; descontos serão confirmados no atendimento.",
+      "",
+      "*ENTREGA E FRETE*"
+    );
+    lines = lines.concat(resumirCondicaoFrete(data.address, total));
+    lines.push(
       "",
       "*DADOS PARA ENTREGA*",
       "Nome ou apelido: " + data.name,
