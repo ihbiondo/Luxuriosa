@@ -1173,11 +1173,14 @@
     });
 
     if (finalizar) {
-      finalizar.disabled = temIndisponivel;
-      finalizar.setAttribute("aria-disabled", temIndisponivel ? "true" : "false");
-      finalizar.title = temIndisponivel
-        ? "Remova os itens indisponíveis para continuar."
-        : "";
+      var aguardandoCatalogo = !catalogoSincronizado;
+      finalizar.disabled = aguardandoCatalogo || temIndisponivel;
+      finalizar.setAttribute("aria-disabled", finalizar.disabled ? "true" : "false");
+      finalizar.title = aguardandoCatalogo
+        ? "Aguarde a conferência dos preços e da disponibilidade."
+        : temIndisponivel
+          ? "Remova os itens indisponíveis para continuar."
+          : "";
     }
 
 
@@ -1630,8 +1633,10 @@
 
     if (alterado) {
       salvar();
-      renderizar();
     }
+
+    /* Atualiza o botão mesmo quando os dados do carrinho já estavam corretos. */
+    renderizar();
   }
 
 
