@@ -181,6 +181,14 @@
 .customer-cep-status[data-kind="error"] { color: #ffabb6; }
 .customer-cep-status[data-kind="success"] { color: var(--gold); }
 .customer-cep-status[hidden] { display: none !important; }
+
+.cart-item-price-changed {
+  display: block;
+  margin-top: 6px;
+  color: var(--gold);
+  font-size: 0.78rem;
+  line-height: 1.45;
+}
 .customer-field input:focus,
 .customer-field select:focus,
 .customer-field textarea:focus {
