@@ -1423,9 +1423,33 @@
               <small id="customerCepStatus" class="customer-cep-status" role="status" aria-live="polite" hidden></small>
             </div>
             <div class="customer-field customer-span-2">
-              <label for="customerAddress">Endereço de entrega <span aria-hidden="true">*</span></label>
-              <textarea id="customerAddress" name="address" autocomplete="street-address" required maxlength="500" rows="3" placeholder="Rua, número, complemento, bairro, cidade e estado"></textarea>
-              <small>Confira os dados preenchidos e complete com número, complemento e ponto de referência, se necessário.</small>
+              <label for="customerStreet">Rua / Avenida <span aria-hidden="true">*</span></label>
+              <input id="customerStreet" name="street" autocomplete="address-line1" required maxlength="180" placeholder="Nome da rua ou avenida">
+            </div>
+            <div class="customer-field">
+              <label for="customerNumber">Número <span aria-hidden="true">*</span></label>
+              <input id="customerNumber" name="number" autocomplete="address-line2" required maxlength="30" placeholder="Nº ou S/N">
+            </div>
+            <div class="customer-field">
+              <label for="customerComplement">Complemento <span class="optional">(opcional)</span></label>
+              <input id="customerComplement" name="complement" autocomplete="off" maxlength="100" placeholder="Apto, bloco, casa dos fundos...">
+            </div>
+            <div class="customer-field">
+              <label for="customerDistrict">Bairro <span aria-hidden="true">*</span></label>
+              <input id="customerDistrict" name="district" autocomplete="address-level3" required maxlength="100" placeholder="Bairro">
+            </div>
+            <div class="customer-field">
+              <label for="customerCity">Cidade <span aria-hidden="true">*</span></label>
+              <input id="customerCity" name="city" autocomplete="address-level2" required maxlength="100" placeholder="Cidade">
+            </div>
+            <div class="customer-field">
+              <label for="customerState">Estado (UF) <span aria-hidden="true">*</span></label>
+              <input id="customerState" name="state" autocomplete="address-level1" required maxlength="2" pattern="[A-Za-z]{2}" placeholder="SP">
+            </div>
+            <div class="customer-field customer-span-2">
+              <label for="customerReference">Ponto de referência <span class="optional">(opcional)</span></label>
+              <input id="customerReference" name="reference" autocomplete="off" maxlength="180" placeholder="Próximo a..., portão..., cor da casa...">
+              <small>O CEP preenche rua, bairro, cidade e estado quando esses dados estão disponíveis. Confira tudo antes de revisar o pedido.</small>
             </div>
           </div>
         </fieldset>
