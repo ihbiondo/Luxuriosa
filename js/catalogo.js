@@ -1044,8 +1044,9 @@
         );
 
 
-      var mensagem =
-        produtos.length
+      var mensagem = termoPesquisa
+        ? "Tente outro termo ou limpe a pesquisa para ver todos os produtos."
+        : produtos.length
           ? "Nenhum produto nesta categoria por enquanto."
           : "Catálogo em montagem.";
 
