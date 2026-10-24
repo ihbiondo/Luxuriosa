@@ -565,21 +565,9 @@
 
         botao.type =
           "button";
-
-
-        botao.setAttribute(
-          "role",
-          "tab"
-        );
-
-
-        botao.setAttribute(
-          "aria-selected",
-          categoria ===
-          filtroAtual
-            ? "true"
-            : "false"
-        );
+        botao.setAttribute("data-categoria", categoria);
+        botao.setAttribute("aria-pressed", categoria === filtroAtual ? "true" : "false");
+        botao.setAttribute("aria-controls", "grid");
 
 
         botao.addEventListener(
@@ -593,6 +581,18 @@
             renderizarFiltros();
 
             renderizarProdutos();
+
+            /* Recriar os filtros não deve perder o foco do teclado. */
+            var filtrosAtualizados = $("chips");
+            if (filtrosAtualizados) {
+              var botoes = filtrosAtualizados.querySelectorAll("button[data-categoria]");
+              for (var i = 0; i < botoes.length; i++) {
+                if (botoes[i].getAttribute("data-categoria") === categoria) {
+                  botoes[i].focus();
+                  break;
+                }
+              }
+            }
           }
         );
 
@@ -985,6 +985,13 @@
 
     var lista =
       obterProdutosFiltrados();
+
+    var statusCatalogo = $("catalogoStatus");
+    if (statusCatalogo) {
+      statusCatalogo.textContent = lista.length
+        ? lista.length + (lista.length === 1 ? " produto encontrado." : " produtos encontrados.") + " Categoria: " + filtroAtual + "."
+        : "Nenhum produto encontrado na categoria " + filtroAtual + ".";
+    }
 
 
     /* =====================================================
