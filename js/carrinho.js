@@ -348,8 +348,22 @@
 
     if (
       !produto ||
-      produto.esgotado
+      produto.esgotado ||
+      produto.sobConsulta
     ) {
+      return;
+    }
+
+    var precoOriginal = produto.preco;
+    var precoProduto = Number(precoOriginal);
+    if (
+      precoOriginal === null ||
+      precoOriginal === undefined ||
+      precoOriginal === "" ||
+      !Number.isFinite(precoProduto) ||
+      precoProduto <= 0
+    ) {
+      window.alert("Não foi possível confirmar o preço deste produto. Atualize a página ou consulte o atendimento antes de adicioná-lo ao carrinho.");
       return;
     }
 
