@@ -437,3 +437,32 @@ body.customer-open { overflow: hidden; }
     line-height: 1.55;
   }
 }
+
+
+/* =========================================================
+   ACESSIBILIDADE — ATALHO PARA O CONTEÚDO PRINCIPAL
+   ========================================================= */
+.skip-link {
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  z-index: 10000;
+  padding: 12px 16px;
+  transform: translateY(calc(-100% - 24px));
+  border: 2px solid var(--gold);
+  border-radius: 8px;
+  background: #0B0B0B;
+  color: #FFFFFF;
+  font-weight: 700;
+  text-decoration: none;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.35);
+}
+.skip-link:focus,
+.skip-link:focus-visible {
+  transform: translateY(0);
+  outline: 3px solid #FFFFFF;
+  outline-offset: 3px;
+}
+#conteudo-principal:focus {
+  outline: none;
+}
