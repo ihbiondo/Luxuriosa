@@ -10,6 +10,8 @@
   var focusBeforeOpen = null;
   var dadosAtuais = null;
   var mensagemAtual = "";
+  var cepConsultaId = 0;
+  var ultimoEnderecoViaCep = "";
 
   function $(id) { return document.getElementById(id); }
   function texto(id) { var el = $(id); return el ? String(el.value || "").trim() : ""; }
@@ -82,7 +84,79 @@
     ].filter(Boolean).join(", ") : address;
     definirValor("customerName", data.name);
     definirValor("customerPhone", data.phone);
+    definirValor("customerCep", "");
     definirValor("customerAddress", legacyAddress);
+    ultimoEnderecoViaCep = ""; 
+    mostrarStatusCep("", "info");
+  }
+
+  function mostrarStatusCep(message, kind) {
+    var status = $("customerCepStatus");
+    if (!status) return;
+    status.textContent = message || "";
+    status.hidden = !message;
+    status.dataset.kind = kind || "info";
+  }
+
+  function formatarCep(value) {
+    var digits = String(value || "").replace(/\\D/g, "").slice(0, 8);
+    return digits.length > 5 ? digits.slice(0, 5) + "-" + digits.slice(5) : digits;
+  }
+
+  function consultarCep() {
+    var campoCep = $("customerCep");
+    var campoEndereco = $("customerAddress");
+    if (!campoCep || !campoEndereco) return;
+
+    var cep = campoCep.value.replace(/\\D/g, "");
+    if (cep.length !== 8) {
+      campoCep.setAttribute("aria-invalid", "true");
+      mostrarStatusCep("Informe um CEP válido com 8 números.", "error");
+      campoCep.focus();
+      return;
+    }
+
+    campoCep.removeAttribute("aria-invalid");
+    var consultaAtual = ++cepConsultaId;
+    mostrarStatusCep("Consultando CEP…", "info");
+
+    fetch("https://viacep.com.br/ws/" + cep + "/json/")
+      .then(function (response) {
+        if (!response.ok) throw new Error("Falha na consulta de CEP.");
+        return response.json();
+      })
+      .then(function (dados) {
+        if (consultaAtual !== cepConsultaId || $("customerCep").value.replace(/\\D/g, "") !== cep) return;
+        if (!dados || dados.erro) {
+          mostrarStatusCep("CEP não encontrado. Confira os números ou preencha o endereço manualmente.", "error");
+          return;
+        }
+
+        var partes = [dados.logradouro, dados.bairro, [dados.localidade, dados.uf].filter(Boolean).join(" / ")]
+          .filter(function (parte) { return String(parte || "").trim(); });
+        var enderecoBase = partes.join(", ");
+        if (!enderecoBase) {
+          mostrarStatusCep("O CEP foi localizado, mas não retornou endereço completo. Preencha os dados manualmente.", "error");
+          return;
+        }
+
+        var enderecoAtual = campoEndereco.value.trim();
+        if (enderecoAtual && enderecoAtual !== ultimoEnderecoViaCep) {
+          var substituir = window.confirm("A consulta vai substituir o texto atual do endereço pelos dados encontrados. Deseja continuar?");
+          if (!substituir) {
+            mostrarStatusCep("Consulta concluída. O endereço digitado foi mantido.", "info");
+            return;
+          }
+        }
+        campoEndereco.value = enderecoBase;
+        campoEndereco.removeAttribute("aria-invalid");
+        ultimoEnderecoViaCep = enderecoBase;
+        mostrarStatusCep("Endereço localizado. Confira e complete o número e o complemento antes de continuar.", "success");
+      })
+      .catch(function () {
+        if (consultaAtual !== cepConsultaId) return;
+        mostrarStatusCep("Não foi possível consultar o CEP agora. Verifique sua conexão ou preencha o endereço manualmente.", "error");
+      });
   }
 
   function validarTelefone(value) {
@@ -402,6 +476,25 @@
       }
     });
     $("customerPhone").addEventListener("input", function () { this.removeAttribute("aria-invalid"); });
+    var campoCep = $("customerCep");
+    var botaoCep = $("customerCepSearch");
+    if (campoCep && botaoCep) {
+      campoCep.addEventListener("input", function () {
+        this.value = formatarCep(this.value);
+        this.removeAttribute("aria-invalid");
+        mostrarStatusCep("", "info");
+      });
+      campoCep.addEventListener("blur", function () {
+        if (this.value.replace(/\\D/g, "").length === 8) consultarCep();
+      });
+      campoCep.addEventListener("keydown", function (event) {
+        if (event.key === "Enter") {
+          event.preventDefault();
+          consultarCep();
+        }
+      });
+      botaoCep.addEventListener("click", consultarCep);
+    }
   }
 
   window.LuxuriosaClientes = { iniciarFinalizacao: iniciarFinalizacao };
