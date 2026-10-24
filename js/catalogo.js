@@ -448,7 +448,7 @@
   function normalizarTexto(valor) {
     return String(valor || "")
       .normalize("NFD")
-      .replace(/[\\u0300-\\u036f]/g, "")
+      .replace(/[\u0300-\u036f]/g, "")
       .toLocaleLowerCase("pt-BR")
       .trim();
   }
@@ -465,7 +465,7 @@
       Array.isArray(produto.tags) ? produto.tags.join(" ") : ""
     ];
     var texto = normalizarTexto(campos.filter(Boolean).join(" "));
-    return termo.split(/\\s+/).every(function (palavra) {
+    return termo.split(/\s+/).every(function (palavra) {
       return texto.indexOf(palavra) !== -1;
     });
   }
