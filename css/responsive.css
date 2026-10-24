@@ -411,6 +411,17 @@
   }
 
 
+  .catalog-search {
+    width: 100%;
+    margin-bottom: 14px;
+    padding: 0 12px;
+  }
+
+  .catalog-search input {
+    min-height: 46px;
+    font-size: 13px;
+  }
+
   /* -------------------------------------------------------
      FILTROS
      ------------------------------------------------------- */
