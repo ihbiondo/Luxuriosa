@@ -6,7 +6,7 @@
     {
       "id": 1,
       "nome": "Dado do Prazer — Gay",
-      "categoria": "Intimidade",
+      "categoria": "Jogos eróticos",
       "subcategoria": "Jogos eróticos",
       "marca": "Diversão ao Cubo",
       "preco": 9.9,
@@ -17,12 +17,13 @@
       "novo": false,
       "destaque": false,
       "esgotado": false,
-      "maisVendido": false
+      "maisVendido": false,
+      "tipoProduto": "Jogos eróticos"
     },
     {
       "id": 2,
       "nome": "Dado do Prazer — Hétero",
-      "categoria": "Intimidade",
+      "categoria": "Jogos eróticos",
       "subcategoria": "Jogos eróticos",
       "marca": "Diversão ao Cubo",
       "preco": 9.9,
@@ -33,12 +34,13 @@
       "novo": false,
       "destaque": false,
       "esgotado": false,
-      "maisVendido": false
+      "maisVendido": false,
+      "tipoProduto": "Jogos eróticos"
     },
     {
       "id": 3,
       "nome": "Dado do Prazer — Lésbico",
-      "categoria": "Intimidade",
+      "categoria": "Jogos eróticos",
       "subcategoria": "Jogos eróticos",
       "marca": "Diversão ao Cubo",
       "preco": 9.9,
@@ -49,12 +51,13 @@
       "novo": false,
       "destaque": false,
       "esgotado": false,
-      "maisVendido": false
+      "maisVendido": false,
+      "tipoProduto": "Jogos eróticos"
     },
     {
       "id": 4,
       "nome": "Anel Peniano com Vibro",
-      "categoria": "Intimidade",
+      "categoria": "Anéis penianos",
       "subcategoria": "Anéis penianos",
       "marca": "Mega Import",
       "preco": 9.9,
@@ -65,12 +68,13 @@
       "novo": false,
       "destaque": false,
       "esgotado": false,
-      "maisVendido": false
+      "maisVendido": false,
+      "tipoProduto": "Anéis penianos"
     },
     {
       "id": 5,
       "nome": "Anel Peniano Comum",
-      "categoria": "Intimidade",
+      "categoria": "Anéis penianos",
       "subcategoria": "Anéis penianos",
       "marca": "Diversão ao Cubo",
       "preco": 4.9,
@@ -81,12 +85,13 @@
       "novo": false,
       "destaque": false,
       "esgotado": false,
-      "maisVendido": false
+      "maisVendido": false,
+      "tipoProduto": "Anéis penianos"
     },
     {
       "id": 6,
       "nome": "Ducha Higiênica — Unissex",
-      "categoria": "Intimidade",
+      "categoria": "Higiene íntima",
       "subcategoria": "Higiene íntima",
       "marca": "Mega Import",
       "preco": 34.9,
@@ -97,12 +102,13 @@
       "novo": false,
       "destaque": false,
       "esgotado": false,
-      "maisVendido": false
+      "maisVendido": false,
+      "tipoProduto": "Higiene íntima"
     },
     {
       "id": 7,
       "nome": "Gel Adstringente — Virgem Total",
-      "categoria": "Intimidade",
+      "categoria": "Géis e cremes íntimos",
       "subcategoria": "Géis e cremes íntimos",
       "marca": "Hot Flowers",
       "preco": 34.9,
@@ -113,12 +119,13 @@
       "novo": false,
       "destaque": false,
       "esgotado": false,
-      "maisVendido": true
+      "maisVendido": true,
+      "tipoProduto": "Géis e cremes íntimos"
     },
     {
       "id": 8,
       "nome": "Egg Masturbador",
-      "categoria": "Intimidade",
+      "categoria": "Masturbadores",
       "subcategoria": "Masturbadores",
       "marca": "Mega Import",
       "preco": 17.9,
@@ -129,12 +136,13 @@
       "novo": false,
       "destaque": true,
       "esgotado": false,
-      "maisVendido": false
+      "maisVendido": false,
+      "tipoProduto": "Masturbadores"
     },
     {
       "id": 9,
       "nome": "Prótese sem Vibro com Ventosa — Tamanho M",
-      "categoria": "Intimidade",
+      "categoria": "Próteses",
       "subcategoria": "Próteses",
       "marca": "Sexy Fantasy",
       "preco": 69.9,
@@ -145,7 +153,8 @@
       "novo": false,
       "destaque": true,
       "esgotado": false,
-      "maisVendido": false
+      "maisVendido": false,
+      "tipoProduto": "Próteses"
     },
     {
       "id": 10,
@@ -161,12 +170,13 @@
       "novo": false,
       "destaque": true,
       "esgotado": false,
-      "maisVendido": true
+      "maisVendido": true,
+      "tipoProduto": "Kits"
     },
     {
       "id": 11,
       "nome": "Hot Ball — Xana Loka",
-      "categoria": "Intimidade",
+      "categoria": "Estimulantes",
       "subcategoria": "Géis e estimulantes íntimos",
       "marca": "Hot Flowers",
       "preco": 29.9,
@@ -177,12 +187,13 @@
       "novo": false,
       "destaque": false,
       "esgotado": false,
-      "maisVendido": true
+      "maisVendido": true,
+      "tipoProduto": "Estimulantes"
     },
     {
       "id": 12,
       "nome": "Gel Funcional — Xana Loka",
-      "categoria": "Intimidade",
+      "categoria": "Géis e estimulantes íntimos",
       "subcategoria": "Géis e lubrificantes íntimos",
       "marca": "Hot Flowers",
       "preco": 34.9,
@@ -193,12 +204,13 @@
       "novo": false,
       "destaque": false,
       "esgotado": false,
-      "maisVendido": false
+      "maisVendido": false,
+      "tipoProduto": "Géis e estimulantes íntimos"
     },
     {
       "id": 13,
       "nome": "Gel Funcional Anal — Ku Loko",
-      "categoria": "Intimidade",
+      "categoria": "Géis e lubrificantes íntimos",
       "subcategoria": "Géis e lubrificantes íntimos",
       "marca": "Hot Flowers",
       "preco": 34.9,
@@ -209,12 +221,13 @@
       "novo": false,
       "destaque": false,
       "esgotado": false,
-      "maisVendido": false
+      "maisVendido": false,
+      "tipoProduto": "Géis e lubrificantes íntimos"
     },
     {
       "id": 14,
       "nome": "Elixir Afrodisíaco — Tesão de Vaca",
-      "categoria": "Intimidade",
+      "categoria": "Estimulantes",
       "subcategoria": "Estimulantes",
       "marca": "Klab",
       "preco": 5.9,
@@ -225,12 +238,13 @@
       "novo": false,
       "destaque": false,
       "esgotado": false,
-      "maisVendido": false
+      "maisVendido": false,
+      "tipoProduto": "Estimulantes"
     },
     {
       "id": 15,
       "nome": "Elixir Afrodisíaco — Tesão de Touro",
-      "categoria": "Intimidade",
+      "categoria": "Estimulantes",
       "subcategoria": "Estimulantes",
       "marca": "Klab",
       "preco": 5.9,
@@ -241,12 +255,13 @@
       "novo": false,
       "destaque": false,
       "esgotado": false,
-      "maisVendido": false
+      "maisVendido": false,
+      "tipoProduto": "Estimulantes"
     },
     {
       "id": 16,
       "nome": "Perfume Sensual — Melancia",
-      "categoria": "Intimidade",
+      "categoria": "Perfumes sensuais",
       "subcategoria": "Perfumes sensuais",
       "marca": "Apinil",
       "preco": 9.9,
@@ -257,12 +272,13 @@
       "novo": false,
       "destaque": false,
       "esgotado": false,
-      "maisVendido": false
+      "maisVendido": false,
+      "tipoProduto": "Perfumes sensuais"
     },
     {
       "id": 17,
       "nome": "Vibrador Golfinho — Tamanho P — Rosa",
-      "categoria": "Intimidade",
+      "categoria": "Vibradores",
       "subcategoria": "Vibradores",
       "marca": "Mega Import",
       "preco": 29.9,
@@ -273,12 +289,13 @@
       "novo": false,
       "destaque": false,
       "esgotado": false,
-      "maisVendido": true
+      "maisVendido": true,
+      "tipoProduto": "Vibradores"
     },
     {
       "id": 18,
       "nome": "Vibrador Golfinho — Tamanho P — Preto",
-      "categoria": "Intimidade",
+      "categoria": "Vibradores",
       "subcategoria": "Vibradores",
       "marca": "Mega Import",
       "preco": 29.9,
@@ -289,12 +306,13 @@
       "novo": false,
       "destaque": false,
       "esgotado": false,
-      "maisVendido": false
+      "maisVendido": false,
+      "tipoProduto": "Vibradores"
     },
     {
       "id": 19,
       "nome": "Plug Anal com Pedra — Tamanho P — Rosa",
-      "categoria": "Intimidade",
+      "categoria": "Plugs anais",
       "subcategoria": "Plugs anais",
       "marca": "Sexy Fantasy",
       "preco": 49.9,
@@ -309,12 +327,13 @@
         "img/produtos/luxuriosa-plug-lite-rosa.png",
         "img/produtos/luxuriosa-plug-lite-rosa-caixa.png"
       ],
-      "maisVendido": false
+      "maisVendido": false,
+      "tipoProduto": "Plugs anais"
     },
     {
       "id": 20,
       "nome": "Plug Anal com Pedra — Tamanho P — Vermelho",
-      "categoria": "Intimidade",
+      "categoria": "Plugs anais",
       "subcategoria": "Plugs anais",
       "marca": "Sexy Fantasy",
       "preco": 49.9,
@@ -329,7 +348,8 @@
         "img/produtos/luxuriosa-plug-lite-vermelho.png",
         "img/produtos/luxuriosa-plug-lite-vermelho-caixa.png"
       ],
-      "maisVendido": false
+      "maisVendido": false,
+      "tipoProduto": "Plugs anais"
     }
   ]
 }
