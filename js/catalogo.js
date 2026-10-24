@@ -505,6 +505,31 @@
      FILTROS
      ======================================================= */
 
+  function categoriaTemProdutos(categoria) {
+    if (categoria === "Ofertas") {
+      return produtos.some(function (produto) {
+        return produtoEmOferta(produto) || produto.categoria === "Ofertas";
+      });
+    }
+
+    return produtos.some(function (produto) {
+      return produto.categoria === categoria;
+    });
+  }
+
+  function obterCategoriasDisponiveis() {
+    return CATEGORIAS.filter(function (categoria) {
+      return categoria === "Todos" || categoriaTemProdutos(categoria);
+    });
+  }
+
+  function atualizarCategoriasVisiveis() {
+    document.querySelectorAll(".categories [data-filtro]").forEach(function (botao) {
+      var categoria = botao.getAttribute("data-filtro");
+      botao.hidden = !categoriaTemProdutos(categoria);
+    });
+  }
+
   function renderizarFiltros() {
 
     var container =
@@ -520,7 +545,7 @@
       "";
 
 
-    CATEGORIAS.forEach(
+    obterCategoriasDisponiveis().forEach(
       function (categoria) {
 
         var botao =
@@ -1365,7 +1390,7 @@
 
 
               if (
-                CATEGORIAS.indexOf(
+                obterCategoriasDisponiveis().indexOf(
                   filtro
                 ) === -1
               ) {
@@ -1544,6 +1569,8 @@
           }
 
 
+          atualizarCategoriasVisiveis();
+          renderizarFiltros();
           renderizarProdutos();
           renderizarColecao("destaques-grid", "destaque");
           renderizarColecao("mais-vendidos-grid", "maisVendido");
