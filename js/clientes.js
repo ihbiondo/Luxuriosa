@@ -173,12 +173,39 @@
           if (campo) campo.removeAttribute("aria-invalid");
         });
         ultimoEnderecoViaCep = JSON.stringify(valoresCep);
-        mostrarStatusCep("Endereço localizado. Confira os campos e complete o número antes de continuar.", "success");
+        mostrarStatusCep("Endereço localizado. Confira os campos e complete o número antes de continuar.", "success");\n        atualizarAvisoFrete();
       })
       .catch(function () {
         if (consultaAtual !== cepConsultaId) return;
         mostrarStatusCep("Não foi possível consultar o CEP agora. Verifique sua conexão ou preencha o endereço manualmente.", "error");
       });
+  }
+
+  function atualizarAvisoFrete() {
+    var aviso = $("customerFreightInfo");
+    if (!aviso) return;
+
+    var cidade = texto("customerCity");
+    var estado = texto("customerState").toUpperCase();
+    var api = window.LuxuriosaCarrinho;
+    var subtotal = api && typeof api.obterTotal === "function" ? Number(api.obterTotal()) : 0;
+
+    if (!cidade || !estado) {
+      aviso.textContent = "Informe a cidade e o estado para consultar as condições de entrega. O frete será confirmado no atendimento.";
+      return;
+    }
+
+    var cidadeNormalizada = cidade.normalize ? cidade.normalize("NFD").replace(/[\\u0300-\\u036f]/g, "").toLowerCase() : cidade.toLowerCase();
+    if (cidadeNormalizada === "bauru" && estado === "SP") {
+      if (subtotal > 100) {
+        aviso.textContent = "Entrega em Bauru-SP: seu subtotal está acima de R$ 100,00. Você pode solicitar frete grátis com o cupom FRETE; a condição será confirmada no atendimento.";
+      } else {
+        aviso.textContent = "Entrega em Bauru-SP: o cupom FRETE dá direito a solicitar frete grátis em compras acima de R$ 100,00. O frete será confirmado no atendimento.";
+      }
+      return;
+    }
+
+    aviso.textContent = "Entrega para " + cidade + "/" + estado + ": disponibilidade e valor do frete serão confirmados no atendimento.";
   }
 
   function validarTelefone(value) {
@@ -507,7 +534,7 @@
     review = $("customerReview");
     statusBox = $("customerStatus");
     messagePreview = $("customerMessagePreview");
-    if (!overlay || !dialog || !form || !review) return;
+    if (!overlay || !dialog || !form || !review) return;\n    atualizarAvisoFrete();
 
     form.addEventListener("submit", revisarPedido);
     $("customerSaveButton").addEventListener("click", salvarCadastroBasico);
@@ -528,7 +555,7 @@
         else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
       }
     });
-    $("customerPhone").addEventListener("input", function () { this.removeAttribute("aria-invalid"); });
+    $("customerPhone").addEventListener("input", function () { this.removeAttribute("aria-invalid"); });\n    ["customerCity", "customerState"].forEach(function (id) {\n      var field = $(id);\n      if (field) field.addEventListener("input", atualizarAvisoFrete);\n    });
     var campoEstado = $("customerState");
     if (campoEstado) {
       campoEstado.addEventListener("input", function () {
