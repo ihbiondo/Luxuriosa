@@ -182,7 +182,7 @@
       "_Frete e descontos não incluídos._",
       "",
       "*CONDIÇÕES COMERCIAIS*",
-      "• Frete grátis em Bauru para compras acima de R$ 100,00.",
+      "• Cupom FRETE: frete grátis em Bauru para compras acima de R$ 100,00.",
       "• Cupom PRIMEIRA10: primeira compra acima de R$ 150,00, com Pix ou dinheiro.",
       "• Cupons não cumulativos; frete e descontos serão confirmados no atendimento.",
       "",
