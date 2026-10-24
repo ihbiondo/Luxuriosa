@@ -17,9 +17,20 @@
 
   var CATEGORIAS = [
     "Todos",
-    "Lingerie",
-    "Intimidade",
+    "Géis e estimulantes íntimos",
+    "Géis e lubrificantes íntimos",
+    "Estimulantes",
+    "Géis e cremes íntimos",
+    "Vibradores",
+    "Perfumes sensuais",
+    "Jogos eróticos",
+    "Anéis penianos",
+    "Masturbadores",
+    "Plugs anais",
+    "Higiene íntima",
+    "Próteses",
     "Kits",
+    "Lingerie",
     "Ofertas"
   ];
 
@@ -438,8 +449,8 @@
 
 
           return (
-            produto.categoria ===
-            filtroAtual
+            produto.categoria === filtroAtual ||
+            produto.tipoProduto === filtroAtual
           );
         }
       );
@@ -514,7 +525,7 @@
     }
 
     return produtos.some(function (produto) {
-      return produto.categoria === categoria;
+      return produto.categoria === categoria || produto.tipoProduto === categoria;
     });
   }
 
