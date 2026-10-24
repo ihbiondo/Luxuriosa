@@ -1504,6 +1504,8 @@ footer {
 
   width: min(430px, 100vw);
 
+  height: 100vh;
+
   height: 100dvh;
 
   display: flex;
