@@ -178,6 +178,16 @@
   min-height: 44px;
   white-space: nowrap;
 }
+.customer-freight-info {
+  margin: 8px 0 0;
+  padding: 10px 12px;
+  color: var(--muted);
+  background: rgba(212, 175, 124, .07);
+  border-left: 2px solid var(--gold);
+  border-radius: 0 6px 6px 0;
+  font-size: 12px;
+  line-height: 1.55;
+}
 .customer-cep-status[data-kind="error"] { color: #ffabb6; }
 .customer-cep-status[data-kind="success"] { color: var(--gold); }
 .customer-cep-status[hidden] { display: none !important; }
