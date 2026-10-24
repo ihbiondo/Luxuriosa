@@ -52,8 +52,11 @@
 
   function avisar(message, kind) {
     if (!statusBox) return;
+    var tipo = kind || "info";
     statusBox.textContent = message;
-    statusBox.dataset.kind = kind || "info";
+    statusBox.dataset.kind = tipo;
+    statusBox.setAttribute("role", tipo === "error" ? "alert" : "status");
+    statusBox.setAttribute("aria-live", tipo === "error" ? "assertive" : "polite");
     statusBox.hidden = false;
   }
 
@@ -132,9 +135,12 @@
   function mostrarStatusCep(message, kind) {
     var status = $("customerCepStatus");
     if (!status) return;
+    var tipo = kind || "info";
     status.textContent = message || "";
     status.hidden = !message;
-    status.dataset.kind = kind || "info";
+    status.dataset.kind = tipo;
+    status.setAttribute("role", tipo === "error" ? "alert" : "status");
+    status.setAttribute("aria-live", tipo === "error" ? "assertive" : "polite");
   }
 
   function formatarCep(value) {
@@ -587,7 +593,14 @@
         else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
       }
     });
-    $("customerPhone").addEventListener("input", function () { this.removeAttribute("aria-invalid"); });\n    ["customerCity", "customerState"].forEach(function (id) {\n      var field = $(id);\n      if (field) field.addEventListener("input", atualizarAvisoFrete);\n    });
+    ["customerName", "customerPhone", "customerStreet", "customerNumber", "customerDistrict", "customerCity", "customerState"].forEach(function (id) {
+      var campo = $(id);
+      if (!campo) return;
+      campo.addEventListener("input", function () {
+        this.removeAttribute("aria-invalid");
+      });
+    });
+    ["customerCity", "customerState"].forEach(function (id) {\n      var field = $(id);\n      if (field) field.addEventListener("input", atualizarAvisoFrete);\n    });
     var campoEstado = $("customerState");
     if (campoEstado) {
       campoEstado.addEventListener("input", function () {
