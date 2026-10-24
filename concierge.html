@@ -17,6 +17,10 @@
   <header class="cc-header">
     <a class="cc-brand" href="index.html" aria-label="Luxuriosa — página inicial"><span class="cc-crown" aria-hidden="true">♛</span><span>LUXURIOSA</span></a>
     <nav aria-label="Navegação principal"><a href="index.html">Loja</a><a href="#como-funciona">Como funciona</a><a href="#investimento">Investimento</a><a href="#duvidas">Dúvidas</a></nav>
+    <details class="cc-mobile-nav">
+      <summary aria-label="Abrir menu de navegação"><span class="cc-menu-label">Menu</span><span class="cc-menu-icon" aria-hidden="true">☰</span></summary>
+      <nav aria-label="Navegação móvel"><a href="index.html">Loja</a><a href="#como-funciona">Como funciona</a><a href="#investimento">Investimento</a><a href="#duvidas">Dúvidas</a></nav>
+    </details>
     <a class="cc-button cc-button--outline cc-header-cta" href="https://wa.me/5514996355924?text=Ol%C3%A1%21%20Quero%20saber%20mais%20sobre%20o%20Luxuriosa%20Concierge." target="_blank" rel="noopener">Conversar</a>
   </header>
 
@@ -91,5 +95,24 @@
   </main>
 
   <footer class="cc-footer"><a class="cc-brand" href="index.html"><span class="cc-crown" aria-hidden="true">♛</span><span>LUXURIOSA</span></a><p>Concierge. Curadoria, intimidade e confiança.</p><small>Conteúdo destinado exclusivamente a maiores de 18 anos.</small></footer>
+
+  <script>
+    (function () {
+      var menu = document.querySelector(".cc-mobile-nav");
+      if (!menu) return;
+      var summary = menu.querySelector("summary");
+      menu.querySelectorAll('a[href^="#"]').forEach(function (link) {
+        link.addEventListener("click", function () {
+          menu.open = false;
+        });
+      });
+      menu.addEventListener("keydown", function (event) {
+        if (event.key === "Escape" && menu.open) {
+          menu.open = false;
+          summary.focus();
+        }
+      });
+    }());
+  </script>
 </body>
 </html>
