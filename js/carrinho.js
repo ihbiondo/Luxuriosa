@@ -508,9 +508,28 @@
   }
 
 
+  function focarAposRemocao(indiceAnterior) {
+    var botoesRemover = $("cartItems")
+      ? $("cartItems").querySelectorAll(".cart-remove")
+      : [];
+
+    if (botoesRemover.length) {
+      botoesRemover[Math.min(indiceAnterior, botoesRemover.length - 1)].focus();
+      return;
+    }
+
+    var tituloVazio = $("cartEmpty") ? $("cartEmpty").querySelector("h3") : null;
+    if (tituloVazio) tituloVazio.focus();
+  }
+
+
   function remover(
     id
   ) {
+
+    var indiceAnterior = carrinho.findIndex(function (item) {
+      return String(item.id) === String(id);
+    });
 
     carrinho =
       carrinho.filter(
@@ -530,6 +549,7 @@
     salvar();
 
     renderizar();
+    focarAposRemocao(Math.max(0, indiceAnterior));
 
   }
 
@@ -615,6 +635,9 @@
     salvar();
 
     renderizar();
+
+    var tituloVazio = $("cartEmpty") ? $("cartEmpty").querySelector("h3") : null;
+    if (tituloVazio) tituloVazio.focus();
 
   }
 
