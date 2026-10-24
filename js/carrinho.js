@@ -254,7 +254,16 @@
         Boolean(item.indisponivel),
 
       motivoIndisponibilidade:
-        String(item.motivoIndisponibilidade || "")
+        String(item.motivoIndisponibilidade || ""),
+
+      avisoPrecoAlterado:
+        Boolean(item.avisoPrecoAlterado),
+
+      precoAnteriorCatalogo:
+        Number.isFinite(Number(item.precoAnteriorCatalogo)) &&
+        Number(item.precoAnteriorCatalogo) > 0
+          ? Number(item.precoAnteriorCatalogo)
+          : null
 
     };
 
@@ -894,6 +903,17 @@
             )
           )
         );
+
+        if (item.avisoPrecoAlterado && Number(item.precoAnteriorCatalogo) > 0) {
+          info.appendChild(
+            criarElemento(
+              "span",
+              "cart-item-price-changed",
+              "Preço atualizado de " + formatarPreco(item.precoAnteriorCatalogo) +
+                " para " + formatarPreco(item.preco) + "."
+            )
+          );
+        }
 
         if (item.indisponivel) {
           info.appendChild(
@@ -1537,6 +1557,14 @@
       var imagemAtual = String(produtoAtual.imagem || item.imagem || "");
       var categoriaAtual = String(produtoAtual.categoria || item.categoria || "");
       var tamanhosAtual = String(produtoAtual.tamanhos || "");
+
+      if (item.preco !== precoAtual &&
+          Number.isFinite(Number(item.preco)) &&
+          Number(item.preco) > 0) {
+        item.precoAnteriorCatalogo = Number(item.preco);
+        item.avisoPrecoAlterado = true;
+        alterado = true;
+      }
 
       if (item.nome !== nomeAtual ||
           item.preco !== precoAtual ||
