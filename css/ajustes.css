@@ -151,15 +151,35 @@
 .customer-field label > span[aria-hidden="true"] { color: var(--gold); }
 .customer-field .optional { color: var(--muted); }
 .customer-field input,
-.customer-field select {
-  width: 100%; min-height: 44px; padding: 10px 12px;
-  color: var(--text); background: var(--black);
-  border: 1px solid rgba(212, 175, 124, .35); border-radius: 7px;
-  font: inherit; font-size: 14px;
+.customer-field select,
+.customer-field textarea {
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 12px;
+  color: var(--text);
+  background: var(--black);
+  border: 1px solid rgba(212, 175, 124, .35);
+  border-radius: 7px;
+  font: inherit;
+  font-size: 14px;
+}
+.customer-field textarea {
+  min-height: 104px;
+  resize: vertical;
+  line-height: 1.5;
 }
 .customer-field input:focus,
-.customer-field select:focus { outline: 2px solid var(--gold); outline-offset: 2px; }
-.customer-field input[aria-invalid="true"] { border-color: #ff8c9c; }
+.customer-field select:focus,
+.customer-field textarea:focus {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+}
+.customer-field input[aria-invalid="true"],
+.customer-field select[aria-invalid="true"],
+.customer-field textarea[aria-invalid="true"] {
+  border-color: #ff8c9c;
+  box-shadow: 0 0 0 1px rgba(255, 140, 156, .16);
+}
 .customer-consents { display: grid; gap: 14px; }
 .customer-check { display: flex; align-items: flex-start; gap: 10px; cursor: pointer; }
 .customer-check input { flex: 0 0 auto; width: 17px; height: 17px; margin-top: 3px; accent-color: var(--wine); }
@@ -181,8 +201,18 @@
 body.customer-open { overflow: hidden; }
 
 @media (max-width: 600px) {
-  .customer-overlay { align-items: flex-start; padding: 8px; }
-  .customer-dialog { max-height: 96vh; padding: 16px; border-radius: 12px; }
+  .customer-overlay {
+    align-items: flex-start;
+    padding: 8px;
+    overscroll-behavior: contain;
+  }
+  .customer-dialog {
+    max-height: min(96vh, 100dvh);
+    padding: 16px;
+    border-radius: 12px;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+  }
   .customer-grid { grid-template-columns: minmax(0, 1fr); gap: 12px; }
   .customer-span-2 { grid-column: auto; }
   .customer-actions { flex-direction: column-reverse; align-items: stretch; }
