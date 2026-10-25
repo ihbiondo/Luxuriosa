@@ -1440,24 +1440,11 @@
           </div>
         </fieldset>
 
-        <details class="customer-extra-section" id="customerMoreDetails">
-          <summary>Outras opções <span>(opcional)</span></summary>
-          <p class="customer-extra-intro">Você pode comprar sem preencher estes dados adicionais.</p>
-          <label class="customer-check customer-save-choice">
-            <input id="customerSave" name="saveData" type="checkbox">
-            <span><strong>Salvar meus dados neste dispositivo para facilitar próximas compras.</strong><small>Opcional. Os dados ficam apenas neste navegador e não são sincronizados.</small></span>
-          </label>
-          <div class="customer-storage-actions">
-            <button class="btn secondary" id="customerSaveButton" type="button">Salvar cadastro neste dispositivo</button>
-            <button class="customer-delete" id="customerDeleteButton" type="button" hidden>Apagar dados salvos</button>
-          </div>
-          <p class="customer-storage-help">Você pode apagar os dados salvos a qualquer momento por este formulário.</p>
-        </details>
-
-        <label class="customer-check customer-marketing-choice">
-          <input id="customerMarketing" name="marketing" type="checkbox">
-          <span><strong>Quero receber ofertas e novidades da Luxuriosa.</strong><small>Opcional e independente da compra.</small></span>
-        </label>
+        <div class="customer-field customer-coupon-field">
+          <label for="customerCoupon">Cupom de desconto <span class="optional">(opcional)</span></label>
+          <input id="customerCoupon" name="coupon" type="text" maxlength="40" autocomplete="off" autocapitalize="characters" placeholder="Digite seu cupom">
+          <small>Informe PRIMEIRA10 ou FRETE. A aplicação será confirmada no atendimento.</small>
+        </div>
 
         <div class="customer-actions">
           <button class="btn secondary" id="customerCancel" type="button">Voltar ao carrinho</button>
