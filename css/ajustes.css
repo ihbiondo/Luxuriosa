@@ -232,6 +232,7 @@
 .customer-review { margin-top: 22px; }
 .customer-review h3 { font-family: var(--serif); font-weight: 400; }
 .customer-message-preview { white-space: pre-wrap; overflow-wrap: anywhere; max-height: 300px; overflow: auto; padding: 14px; color: var(--text); background: var(--black); border: 1px solid var(--line); border-radius: 8px; font: 12px/1.6 var(--sans); }
+.customer-message-preview:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
 body.customer-open { overflow: hidden; }
 
 @media (max-width: 600px) {
