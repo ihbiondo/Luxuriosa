@@ -43,6 +43,12 @@
     .product-detail-note { color: var(--muted); font-size: .86rem; }
     .product-status { color: var(--blush); margin: 12px 0; }
     @media (max-width: 760px) { .product-detail-layout { grid-template-columns: 1fr; } .product-detail-image img { max-height: 380px; } }
+
+    .product-related { margin-top: 36px; padding: 24px; background: var(--surface); border: 1px solid var(--line); border-radius: 16px; }
+    .product-related h2 { margin-top: 0; }
+    .product-related p { color: var(--muted); }
+    .product-related ul { display: flex; flex-wrap: wrap; gap: 10px 22px; padding-left: 20px; }
+    .product-related a { color: var(--gold); text-decoration: underline; text-underline-offset: 3px; }
   </style>
   <script type="application/ld+json">
   {
@@ -149,6 +155,17 @@
         </div>
       </article>
     </div>
+    
+      <section class="product-related" aria-labelledby="relatedTitle">
+        <h2 id="relatedTitle">Explore também</h2>
+        <p>Conheça outros produtos selecionados pela Luxuriosa que podem complementar sua escolha.</p>
+        <ul>
+        <li><a href="../produtos/7-gel-adstringente-virgem-total.html">Gel Adstringente — Virgem Total</a></li>
+        <li><a href="../produtos/12-gel-funcional-xana-loka.html">Gel Funcional — Xana Loka</a></li>
+        <li><a href="../produtos/13-gel-funcional-anal-ku-loko.html">Gel Funcional Anal — Ku Loko</a></li>
+        </ul>
+        <p><a href="../index.html#catalogo">Ver todos os produtos do catálogo</a></p>
+      </section>
   </main>
   <footer>
     <div class="container">
