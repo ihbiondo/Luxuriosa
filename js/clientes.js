@@ -5,7 +5,6 @@
 (function () {
   "use strict";
 
-  var PROFILE_KEY = "luxuriosa_cliente_v1";
   var overlay, dialog, form, review, statusBox, messagePreview;
   var focusBeforeOpen = null;
   var dadosAtuais = null;
@@ -15,7 +14,6 @@
 
   function $(id) { return document.getElementById(id); }
   function texto(id) { var el = $(id); return el ? String(el.value || "").trim() : ""; }
-  function marcado(id) { var el = $(id); return !!(el && el.checked); }
   function definirValor(id, value) { var el = $(id); if (el) el.value = value == null ? "" : String(value); }
 
   function formatarPreco(value) {
@@ -66,33 +64,6 @@
     statusBox.hidden = true;
     delete statusBox.dataset.kind;
   }
-
-  function lerPerfilSalvo() {
-    try {
-      var raw = window.localStorage.getItem(PROFILE_KEY);
-      if (!raw) return null;
-      var parsed = JSON.parse(raw);
-      if (!parsed || typeof parsed !== "object" || typeof parsed.name !== "string" || typeof parsed.phone !== "string") return null;
-
-      /* Migra cadastros antigos e remove campos que deixaram de ser necessários. */
-      var tinhaDadosLegados = Object.prototype.hasOwnProperty.call(parsed, "email") ||
-        Object.prototype.hasOwnProperty.call(parsed, "birthday");
-      if (tinhaDadosLegados) {
-        delete parsed.email;
-        delete parsed.birthday;
-        try {
-          window.localStorage.setItem(PROFILE_KEY, JSON.stringify(parsed));
-        } catch (migrationError) {
-          console.warn("Luxuriosa: não foi possível atualizar o cadastro antigo neste dispositivo.");
-        }
-      }
-      return parsed;
-    } catch (error) {
-      console.warn("Luxuriosa: não foi possível ler o cadastro salvo neste dispositivo.");
-      return null;
-    }
-  }
-
 
   function dadosDoFormulario() {
     return {
@@ -312,39 +283,6 @@
     return true;
   }
 
-  function salvarPerfil(data, mostrarMensagem) {
-    try {
-      window.localStorage.setItem(PROFILE_KEY, JSON.stringify({
-        version: 1,
-        savedAt: new Date().toISOString(),
-        name: data.name,
-        phone: data.phone,
-        address: data.address
-      }));
-      $("customerDeleteButton").hidden = false;
-      if (mostrarMensagem) avisar("Cadastro salvo neste dispositivo. Ele não é sincronizado com outros aparelhos.", "success");
-      return true;
-    } catch (error) {
-      console.warn("Luxuriosa: não foi possível salvar o cadastro neste dispositivo.");
-      if (mostrarMensagem) avisar("Não foi possível salvar neste navegador. Você ainda pode continuar sem salvar os dados.", "error");
-      return false;
-    }
-  }
-
-  function apagarPerfil() {
-    if (!window.confirm("Apagar os dados de cliente salvos neste dispositivo? Esta ação não pode ser desfeita.")) return;
-    try {
-      window.localStorage.removeItem(PROFILE_KEY);
-      preencherFormulario(null);
-      $("customerSave").checked = false;
-      $("customerMarketing").checked = false;
-      $("customerDeleteButton").hidden = true;
-      avisar("Os dados salvos neste dispositivo foram apagados.", "success");
-    } catch (error) {
-      avisar("Não foi possível apagar os dados salvos neste navegador. Tente novamente nas configurações do navegador.", "error");
-    }
-  }
-
   function validarIntegridadePedido(items) {
     var api = window.LuxuriosaCarrinho;
     if (!api || typeof api.obterTotal !== "function" || !Array.isArray(items) || !items.length) {
@@ -396,9 +334,11 @@
       var price = Number(item.preco) || 0;
       lines.push("• " + item.nome + " — " + quantity + "x — " + formatarPreco(price * quantity));
     });
+    var cupomInformado = texto("customerCoupon").toUpperCase();
     lines.push(
       "",
       "*Subtotal dos produtos:* " + formatarPreco(total),
+      "*Cupom informado:* " + (cupomInformado || "nenhum"),
       "_Frete e descontos não incluídos._",
       "",
       "*CONDIÇÕES COMERCIAIS*",
@@ -422,9 +362,6 @@
       "Estado: " + data.address.state,
       "Ponto de referência: " + (data.address.reference || "não informado")
     );
-    if (marcado("customerMarketing")) {
-      lines.push("", "*PREFERÊNCIA PROMOCIONAL*", "Aceito receber ofertas e novidades da Luxuriosa.");
-    }
     lines.push(
       "",
       "*PRÓXIMO PASSO*",
@@ -440,13 +377,8 @@
     limparAviso();
     review.hidden = true;
     form.hidden = false;
-    var saved = lerPerfilSalvo();
-    preencherFormulario(saved || null);
-    $("customerSave").checked = false;
-    $("customerMarketing").checked = false;
-    $("customerDeleteButton").hidden = !saved;
-    var moreDetails = $("customerMoreDetails");
-    if (moreDetails) moreDetails.open = false;
+    preencherFormulario(null);
+    definirValor("customerCoupon", "");
     overlay.hidden = false;
     document.body.classList.add("customer-open");
     dialog.focus();
@@ -458,16 +390,6 @@
     overlay.hidden = true;
     document.body.classList.remove("customer-open");
     if (focusBeforeOpen && typeof focusBeforeOpen.focus === "function") focusBeforeOpen.focus();
-  }
-
-  function salvarCadastroBasico() {
-    if (!validarDados({ exigirEndereco: false })) return;
-    if (!marcado("customerSave")) {
-      avisar("Para salvar no dispositivo, marque primeiro a opção de salvar seus dados. Caso prefira, continue sem salvar.", "error");
-      $("customerSave").focus();
-      return;
-    }
-    salvarPerfil(dadosDoFormulario(), true);
   }
 
   function revisarPedido(event) {
@@ -484,8 +406,6 @@
     }
     if (!validarDados({ exigirEndereco: true })) return;
     dadosAtuais = dadosDoFormulario();
-    if (marcado("customerSave")) salvarPerfil(dadosAtuais, false);
-    /* A escolha de marketing vale somente para este fluxo e não é persistida localmente. */
     mensagemAtual = preencherMensagem(dadosAtuais);
     if (!mensagemAtual) {
       avisar("Não foi possível montar o pedido. Confira se ainda há produtos no carrinho.", "error");
@@ -579,8 +499,6 @@
     atualizarAvisoFrete();
 
     form.addEventListener("submit", revisarPedido);
-    $("customerSaveButton").addEventListener("click", salvarCadastroBasico);
-    $("customerDeleteButton").addEventListener("click", apagarPerfil);
     $("customerClose").addEventListener("click", fechar);
     $("customerCancel").addEventListener("click", fechar);
     $("customerEditButton").addEventListener("click", function () { review.hidden = true; form.hidden = false; $("customerName").focus(); });
