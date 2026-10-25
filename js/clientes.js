@@ -494,10 +494,30 @@
   }
 
   function copiarMensagem() {
-    if (!mensagemAtual) {
+    if (!mensagemAtual || !dadosAtuais) {
       avisar("Revise o pedido antes de copiar a mensagem.", "error");
       return;
     }
+
+    var apiCarrinho = window.LuxuriosaCarrinho;
+    var itensAtuais = apiCarrinho && typeof apiCarrinho.obterItens === "function" ? apiCarrinho.obterItens() : [];
+    if (!itensAtuais.length) {
+      avisar("Seu carrinho está vazio. Adicione um produto antes de copiar a mensagem.", "error");
+      return;
+    }
+
+    var integridade = validarIntegridadePedido(itensAtuais);
+    if (!integridade.valido) {
+      avisar(integridade.motivo, "error");
+      return;
+    }
+
+    mensagemAtual = preencherMensagem(dadosAtuais);
+    if (!mensagemAtual) {
+      avisar("Não foi possível atualizar o resumo do pedido. Revise o carrinho e tente novamente.", "error");
+      return;
+    }
+    messagePreview.textContent = mensagemAtual;
 
     function copiarComSelecao() {
       var campo = document.createElement("textarea");
