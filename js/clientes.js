@@ -207,9 +207,9 @@
     var cidadeNormalizada = cidade.normalize ? cidade.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase() : cidade.toLowerCase();
     if (cidadeNormalizada === "bauru" && estado === "SP") {
       if (subtotal > 100) {
-        aviso.textContent = "Entrega em Bauru-SP: seu subtotal está acima de R$ 100,00. Você pode solicitar frete grátis com o cupom FRETE; a condição será confirmada no atendimento.";
+        aviso.textContent = "Entrega em Bauru-SP: acima de R$ 100,00, digite FRETE no campo de cupom para aplicar o frete grátis.";
       } else {
-        aviso.textContent = "Entrega em Bauru-SP: o cupom FRETE dá direito a solicitar frete grátis em compras acima de R$ 100,00. O frete será confirmado no atendimento.";
+        aviso.textContent = "Entrega em Bauru-SP: o cupom FRETE exige subtotal acima de R$ 100,00 para aplicar o frete grátis.";
       }
       return;
     }
@@ -337,7 +337,7 @@
       }
       resultado.desconto = Math.round(subtotal * 0.10 * 100) / 100;
       resultado.valido = true;
-      resultado.mensagem = "Desconto de 10% calculado: " + formatarPreco(resultado.desconto) + ". Válido na primeira compra com pagamento via Pix ou dinheiro; essas condições ainda precisam ser confirmadas.";
+      resultado.mensagem = "Desconto de 10% calculado: " + formatarPreco(resultado.desconto) + ". Total dos produtos após cupom: " + formatarPreco(Math.round((subtotal - resultado.desconto) * 100) / 100) + ". Válido na primeira compra com pagamento via Pix ou dinheiro; essas condições ainda precisam ser confirmadas.";
       return resultado;
     }
 
@@ -352,7 +352,7 @@
       }
       resultado.freteGratis = true;
       resultado.valido = true;
-      resultado.mensagem = "Frete grátis aplicado para Bauru/SP. O valor do frete não é somado ao subtotal dos produtos.";
+      resultado.mensagem = "Frete grátis aplicado para Bauru/SP. Total dos produtos: " + formatarPreco(subtotal) + ". O valor do frete não é somado ao subtotal dos produtos.";
       return resultado;
     }
 
