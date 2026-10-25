@@ -396,7 +396,7 @@
     if (cupom.desconto > 0) {
       lines.push("*Desconto PRIMEIRA10 (10%):* - " + formatarPreco(cupom.desconto));
     }
-    lines.push("*Total estimado dos produtos após cupom:* " + formatarPreco(totalProdutos));
+    lines.push((cupom.desconto > 0 ? "*Total estimado dos produtos após desconto:* " : "*Total estimado dos produtos, sem desconto aplicado:* ") + formatarPreco(totalProdutos));
 
     if (cupom.freteGratis) {
       lines.push("*Frete:* condição de frete grátis solicitada para Bauru/SP, sujeita à confirmação no atendimento.");
