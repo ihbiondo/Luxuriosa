@@ -352,7 +352,7 @@
       }
       resultado.freteGratis = true;
       resultado.valido = true;
-      resultado.mensagem = "Frete grátis aplicado para Bauru/SP. Total dos produtos: " + formatarPreco(subtotal) + ". O valor do frete não é somado ao subtotal dos produtos.";
+      resultado.mensagem = "Prévia: condição de frete grátis solicitada para Bauru/SP. A elegibilidade será confirmada no atendimento; o valor do frete não está incluído no subtotal dos produtos.";
       return resultado;
     }
 
