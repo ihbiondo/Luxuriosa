@@ -165,13 +165,45 @@
     if (autorizado) {
 
       gate.classList.remove("open");
+      gate.setAttribute("aria-hidden", "true");
 
     } else {
 
       gate.classList.add("open");
+      gate.setAttribute("aria-hidden", "false");
+
+      /* Mantém o foco dentro da confirmação de idade enquanto estiver aberta. */
+      window.requestAnimationFrame(function () {
+        botaoSim.focus();
+      });
 
     }
 
+    gate.addEventListener("keydown", function (evento) {
+      if (evento.key !== "Tab" || !gate.classList.contains("open")) return;
+
+      var focaveis = Array.prototype.slice.call(
+        gate.querySelectorAll('a[href], button:not([disabled]), input:not([disabled]), [tabindex]:not([tabindex="-1"])')
+      ).filter(function (elemento) {
+        return !elemento.hidden && elemento.offsetParent !== null;
+      });
+
+      if (!focaveis.length) {
+        evento.preventDefault();
+        return;
+      }
+
+      var primeiro = focaveis[0];
+      var ultimo = focaveis[focaveis.length - 1];
+
+      if (evento.shiftKey && document.activeElement === primeiro) {
+        evento.preventDefault();
+        ultimo.focus();
+      } else if (!evento.shiftKey && document.activeElement === ultimo) {
+        evento.preventDefault();
+        primeiro.focus();
+      }
+    });
 
     botaoSim.addEventListener(
       "click",
@@ -194,6 +226,7 @@
         }
 
         gate.classList.remove("open");
+        gate.setAttribute("aria-hidden", "true");
 
       }
     );
