@@ -22,6 +22,7 @@
 
   var carrinho = [];
   var catalogoSincronizado = false;
+  var focoAnteriorCarrinho = null;
 
 
   /* =======================================================
@@ -1245,6 +1246,10 @@
     }
 
 
+    if (!elemento.classList.contains("open")) {
+      focoAnteriorCarrinho = document.activeElement;
+    }
+
     elemento.classList.add(
       "open"
     );
@@ -1340,6 +1345,11 @@
     document.body.classList.remove(
       "cart-open"
     );
+
+    if (focoAnteriorCarrinho && typeof focoAnteriorCarrinho.focus === "function") {
+      focoAnteriorCarrinho.focus();
+    }
+    focoAnteriorCarrinho = null;
 
   }
 
@@ -1457,6 +1467,47 @@
 
     }
 
+
+    var painelCarrinho = $("cart");
+    if (painelCarrinho) {
+      painelCarrinho.addEventListener("keydown", function (event) {
+        if (!painelCarrinho.classList.contains("open")) return;
+
+        if (event.key === "Escape") {
+          event.preventDefault();
+          fecharCarrinho();
+          return;
+        }
+
+        if (event.key !== "Tab") return;
+
+        var focaveis = Array.prototype.slice.call(
+          painelCarrinho.querySelectorAll(
+            'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+          )
+        ).filter(function (el) {
+          return !el.hidden && el.getAttribute("aria-hidden") !== "true" && el.offsetParent !== null;
+        });
+
+        if (!focaveis.length) {
+          event.preventDefault();
+          painelCarrinho.setAttribute("tabindex", "-1");
+          painelCarrinho.focus();
+          return;
+        }
+
+        var primeiro = focaveis[0];
+        var ultimo = focaveis[focaveis.length - 1];
+
+        if (event.shiftKey && (document.activeElement === primeiro || !painelCarrinho.contains(document.activeElement))) {
+          event.preventDefault();
+          ultimo.focus();
+        } else if (!event.shiftKey && (document.activeElement === ultimo || !painelCarrinho.contains(document.activeElement))) {
+          event.preventDefault();
+          primeiro.focus();
+        }
+      });
+    }
 
     if (overlay) {
 
