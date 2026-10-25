@@ -314,6 +314,61 @@
     return { valido: true, subtotal: subtotalCalculado };
   }
 
+  function avaliarCupom(subtotal, address) {
+    var codigo = texto("customerCoupon").toUpperCase().replace(/\s+/g, "");
+    var endereco = address || {};
+    var cidade = String(endereco.city || "").trim();
+    var estado = String(endereco.state || "").trim().toUpperCase();
+    var cidadeNormalizada = cidade.normalize
+      ? cidade.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase()
+      : cidade.toLowerCase();
+    var resultado = { codigo: codigo, desconto: 0, freteGratis: false, valido: false, mensagem: "" };
+
+    if (!codigo) {
+      resultado.mensagem = "Digite PRIMEIRA10 ou FRETE para conferir as condições.";
+      return resultado;
+    }
+
+    if (codigo === "PRIMEIRA10") {
+      if (subtotal <= 150) {
+        resultado.mensagem = "PRIMEIRA10 exige subtotal dos produtos acima de R$ 150,00.";
+        return resultado;
+      }
+      resultado.desconto = Math.round(subtotal * 0.10 * 100) / 100;
+      resultado.valido = true;
+      resultado.mensagem = "Desconto de 10% calculado: " + formatarPreco(resultado.desconto) + ". Válido na primeira compra com pagamento via Pix ou dinheiro; essas condições ainda precisam ser confirmadas.";
+      return resultado;
+    }
+
+    if (codigo === "FRETE") {
+      if (subtotal <= 100) {
+        resultado.mensagem = "FRETE exige subtotal dos produtos acima de R$ 100,00.";
+        return resultado;
+      }
+      if (cidadeNormalizada !== "bauru" || estado !== "SP") {
+        resultado.mensagem = "FRETE é válido para entregas em Bauru/SP acima de R$ 100,00. Para outros destinos, o frete será confirmado no atendimento.";
+        return resultado;
+      }
+      resultado.freteGratis = true;
+      resultado.valido = true;
+      resultado.mensagem = "Frete grátis aplicado para Bauru/SP. O valor do frete não é somado ao subtotal dos produtos.";
+      return resultado;
+    }
+
+    resultado.mensagem = "Cupom não reconhecido. Confira se digitou PRIMEIRA10 ou FRETE.";
+    return resultado;
+  }
+
+  function atualizarStatusCupom() {
+    var status = $("customerCouponStatus");
+    if (!status) return;
+    var api = window.LuxuriosaCarrinho;
+    var subtotal = api && typeof api.obterTotal === "function" ? Number(api.obterTotal()) : 0;
+    var aplicacao = avaliarCupom(subtotal, dadosDoFormulario().address);
+    status.textContent = aplicacao.mensagem;
+    status.dataset.kind = aplicacao.valido ? "success" : (aplicacao.codigo ? "error" : "info");
+  }
+
   function preencherMensagem(data) {
     var api = window.LuxuriosaCarrinho;
     var items = api && typeof api.obterItens === "function" ? api.obterItens() : [];
@@ -322,8 +377,10 @@
       avisar(integridade.motivo, "error");
       return "";
     }
-    var total = integridade.subtotal;
+    var subtotal = integridade.subtotal;
     if (!items.length) return "";
+    var cupom = avaliarCupom(subtotal, data.address);
+    var totalProdutos = Math.max(0, Math.round((subtotal - cupom.desconto) * 100) / 100);
     var lines = [
       "Olá! Quero preparar um pedido na *Luxuriosa*.",
       "",
@@ -334,20 +391,36 @@
       var price = Number(item.preco) || 0;
       lines.push("• " + item.nome + " — " + quantity + "x — " + formatarPreco(price * quantity));
     });
-    var cupomInformado = texto("customerCoupon").toUpperCase();
+    lines.push("", "*Subtotal dos produtos:* " + formatarPreco(subtotal));
+    if (cupom.desconto > 0) {
+      lines.push("*Desconto PRIMEIRA10 (10%):* - " + formatarPreco(cupom.desconto));
+    }
+    lines.push("*Total estimado dos produtos após cupom:* " + formatarPreco(totalProdutos));
+
+    if (cupom.freteGratis) {
+      lines.push("*Frete:* grátis — cupom FRETE aplicado para Bauru/SP.");
+    } else {
+      lines.push("*Frete:* não incluído no total acima; será confirmado conforme o destino.");
+    }
+
+    if (!cupom.codigo) {
+      lines.push("*Cupom:* nenhum");
+    } else if (cupom.valido) {
+      lines.push("*Cupom aplicado:* " + cupom.codigo);
+    } else {
+      lines.push("*Cupom informado, não aplicado:* " + cupom.codigo + " — " + cupom.mensagem);
+    }
+
     lines.push(
       "",
-      "*Subtotal dos produtos:* " + formatarPreco(total),
-      "*Cupom informado:* " + (cupomInformado || "nenhum"),
-      "_Frete e descontos não incluídos._",
-      "",
       "*CONDIÇÕES COMERCIAIS*",
-      "• Cupom PRIMEIRA10: primeira compra acima de R$ 150,00, com Pix ou dinheiro.",
-      "• Cupons não cumulativos; descontos serão confirmados no atendimento.",
+      "• PRIMEIRA10: desconto calculado para subtotal acima de R$ 150,00; depende de ser a primeira compra e do pagamento via Pix ou dinheiro.",
+      "• FRETE: frete grátis para Bauru/SP em compras acima de R$ 100,00.",
+      "• O desconto PRIMEIRA10 e a condição comercial serão confirmados antes da conclusão do pedido.",
       "",
       "*ENTREGA E FRETE*"
     );
-    lines = lines.concat(resumirCondicaoFrete(data.address, total));
+    lines = lines.concat(resumirCondicaoFrete(data.address, subtotal));
     lines.push(
       "",
       "*DADOS PARA ENTREGA*",
@@ -366,7 +439,7 @@
       "",
       "*PRÓXIMO PASSO*",
       "Gostaria de confirmar a disponibilidade, a entrega e os próximos passos.",
-      "_O envio desta mensagem não confirma o pedido nem processa pagamento._"
+      "_Os valores com cupom são uma prévia comercial; as condições elegíveis serão confirmadas no atendimento. O envio desta mensagem não confirma o pedido nem processa pagamento._"
     );
     return lines.join("\n");
   }
@@ -379,6 +452,7 @@
     form.hidden = false;
     preencherFormulario(null);
     definirValor("customerCoupon", "");
+    atualizarStatusCupom();
     overlay.hidden = false;
     document.body.classList.add("customer-open");
     dialog.focus();
@@ -497,6 +571,7 @@
     messagePreview = $("customerMessagePreview");
     if (!overlay || !dialog || !form || !review) return;
     atualizarAvisoFrete();
+    atualizarStatusCupom();
 
     form.addEventListener("submit", revisarPedido);
     $("customerClose").addEventListener("click", fechar);
@@ -524,8 +599,19 @@
     });
     ["customerCity", "customerState"].forEach(function (id) {
       var field = $(id);
-      if (field) field.addEventListener("input", atualizarAvisoFrete);
+      if (field) field.addEventListener("input", function () {
+        atualizarAvisoFrete();
+        atualizarStatusCupom();
+      });
     });
+    var campoCupom = $("customerCoupon");
+    if (campoCupom) {
+      campoCupom.addEventListener("input", function () {
+        this.value = this.value.toUpperCase();
+        atualizarStatusCupom();
+      });
+      campoCupom.addEventListener("change", atualizarStatusCupom);
+    }
     var campoEstado = $("customerState");
     if (campoEstado) {
       campoEstado.addEventListener("input", function () {
