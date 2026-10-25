@@ -18,7 +18,8 @@
       "destaque": false,
       "esgotado": false,
       "maisVendido": false,
-      "tipoProduto": "Jogos eróticos"
+      "tipoProduto": "Jogos eróticos",
+      "pagina": "produtos/1-dado-do-prazer-gay.html"
     },
     {
       "id": 2,
@@ -35,7 +36,8 @@
       "destaque": false,
       "esgotado": false,
       "maisVendido": false,
-      "tipoProduto": "Jogos eróticos"
+      "tipoProduto": "Jogos eróticos",
+      "pagina": "produtos/2-dado-do-prazer-hetero.html"
     },
     {
       "id": 3,
@@ -52,7 +54,8 @@
       "destaque": false,
       "esgotado": false,
       "maisVendido": false,
-      "tipoProduto": "Jogos eróticos"
+      "tipoProduto": "Jogos eróticos",
+      "pagina": "produtos/3-dado-do-prazer-lesbico.html"
     },
     {
       "id": 4,
@@ -69,7 +72,8 @@
       "destaque": false,
       "esgotado": false,
       "maisVendido": false,
-      "tipoProduto": "Anéis penianos"
+      "tipoProduto": "Anéis penianos",
+      "pagina": "produtos/4-anel-peniano-com-vibro.html"
     },
     {
       "id": 5,
@@ -86,7 +90,8 @@
       "destaque": false,
       "esgotado": false,
       "maisVendido": false,
-      "tipoProduto": "Anéis penianos"
+      "tipoProduto": "Anéis penianos",
+      "pagina": "produtos/5-anel-peniano-comum.html"
     },
     {
       "id": 6,
@@ -103,7 +108,8 @@
       "destaque": false,
       "esgotado": false,
       "maisVendido": false,
-      "tipoProduto": "Higiene íntima"
+      "tipoProduto": "Higiene íntima",
+      "pagina": "produtos/6-ducha-higienica-unissex.html"
     },
     {
       "id": 7,
@@ -120,7 +126,8 @@
       "destaque": false,
       "esgotado": false,
       "maisVendido": true,
-      "tipoProduto": "Géis e cremes íntimos"
+      "tipoProduto": "Géis e cremes íntimos",
+      "pagina": "produtos/7-gel-adstringente-virgem-total.html"
     },
     {
       "id": 8,
@@ -137,7 +144,8 @@
       "destaque": true,
       "esgotado": false,
       "maisVendido": false,
-      "tipoProduto": "Masturbadores"
+      "tipoProduto": "Masturbadores",
+      "pagina": "produtos/8-egg-masturbador.html"
     },
     {
       "id": 9,
@@ -154,7 +162,8 @@
       "destaque": true,
       "esgotado": false,
       "maisVendido": false,
-      "tipoProduto": "Próteses"
+      "tipoProduto": "Próteses",
+      "pagina": "produtos/9-protese-sem-vibro-com-ventosa-tamanho-m.html"
     },
     {
       "id": 10,
@@ -171,7 +180,8 @@
       "destaque": true,
       "esgotado": false,
       "maisVendido": true,
-      "tipoProduto": "Kits"
+      "tipoProduto": "Kits",
+      "pagina": "produtos/10-kit-gel-funcional-xana-loka-ku-loko.html"
     },
     {
       "id": 11,
@@ -188,7 +198,8 @@
       "destaque": false,
       "esgotado": false,
       "maisVendido": true,
-      "tipoProduto": "Estimulantes"
+      "tipoProduto": "Estimulantes",
+      "pagina": "produtos/11-hot-ball-xana-loka.html"
     },
     {
       "id": 12,
@@ -205,7 +216,8 @@
       "destaque": false,
       "esgotado": false,
       "maisVendido": false,
-      "tipoProduto": "Géis e estimulantes íntimos"
+      "tipoProduto": "Géis e estimulantes íntimos",
+      "pagina": "produtos/12-gel-funcional-xana-loka.html"
     },
     {
       "id": 13,
@@ -222,7 +234,8 @@
       "destaque": false,
       "esgotado": false,
       "maisVendido": false,
-      "tipoProduto": "Géis e lubrificantes íntimos"
+      "tipoProduto": "Géis e lubrificantes íntimos",
+      "pagina": "produtos/13-gel-funcional-anal-ku-loko.html"
     },
     {
       "id": 14,
@@ -239,7 +252,8 @@
       "destaque": false,
       "esgotado": false,
       "maisVendido": false,
-      "tipoProduto": "Estimulantes"
+      "tipoProduto": "Estimulantes",
+      "pagina": "produtos/14-elixir-afrodisiaco-tesao-de-vaca.html"
     },
     {
       "id": 15,
@@ -256,7 +270,8 @@
       "destaque": false,
       "esgotado": false,
       "maisVendido": false,
-      "tipoProduto": "Estimulantes"
+      "tipoProduto": "Estimulantes",
+      "pagina": "produtos/15-elixir-afrodisiaco-tesao-de-touro.html"
     },
     {
       "id": 16,
@@ -273,7 +288,8 @@
       "destaque": false,
       "esgotado": false,
       "maisVendido": false,
-      "tipoProduto": "Perfumes sensuais"
+      "tipoProduto": "Perfumes sensuais",
+      "pagina": "produtos/16-perfume-sensual-melancia.html"
     },
     {
       "id": 17,
@@ -290,7 +306,8 @@
       "destaque": false,
       "esgotado": false,
       "maisVendido": true,
-      "tipoProduto": "Vibradores"
+      "tipoProduto": "Vibradores",
+      "pagina": "produtos/17-vibrador-golfinho-tamanho-p-rosa.html"
     },
     {
       "id": 18,
@@ -307,7 +324,8 @@
       "destaque": false,
       "esgotado": false,
       "maisVendido": false,
-      "tipoProduto": "Vibradores"
+      "tipoProduto": "Vibradores",
+      "pagina": "produtos/18-vibrador-golfinho-tamanho-p-preto.html"
     },
     {
       "id": 19,
@@ -328,7 +346,8 @@
         "img/produtos/luxuriosa-plug-lite-rosa-caixa.png"
       ],
       "maisVendido": false,
-      "tipoProduto": "Plugs anais"
+      "tipoProduto": "Plugs anais",
+      "pagina": "produtos/19-plug-anal-com-pedra-tamanho-p-rosa.html"
     },
     {
       "id": 20,
@@ -349,7 +368,8 @@
         "img/produtos/luxuriosa-plug-lite-vermelho-caixa.png"
       ],
       "maisVendido": false,
-      "tipoProduto": "Plugs anais"
+      "tipoProduto": "Plugs anais",
+      "pagina": "produtos/20-plug-anal-com-pedra-tamanho-p-vermelho.html"
     }
   ]
 }
