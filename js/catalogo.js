@@ -272,6 +272,7 @@
     imagemPrincipal.src = imagens[0];
     imagemPrincipal.alt = produto.nome || "Produto Luxuriosa";
     imagemPrincipal.loading = "lazy";
+    imagemPrincipal.decoding = "async";
     imagemPrincipal.style.maxWidth = "100%";
     imagemPrincipal.style.height = "100%";
     imagemPrincipal.style.objectFit = "contain";
