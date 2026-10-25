@@ -2360,3 +2360,48 @@ footer {
   outline: 2px solid var(--gold);
   outline-offset: 3px;
 }
+
+
+/* Preço e ação de compra agrupados para evitar espaços vazios nos cards */
+.product .price {
+  margin-top: 8px;
+  padding-bottom: 0;
+  line-height: 1.4;
+}
+
+.product-purchase-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: auto;
+  padding-top: 18px;
+}
+
+.product-purchase-row .price {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+}
+
+.product .product-purchase-row .btn {
+  width: auto;
+  flex: 0 0 auto;
+}
+
+.product .product-purchase-row .product-cart-button {
+  width: 48px;
+  min-width: 48px;
+  height: 48px;
+  min-height: 48px;
+  margin: 0;
+  padding: 0;
+}
+
+.product-purchase-row .btn:not(.product-cart-button) {
+  max-width: 100%;
+  padding-left: 14px;
+  padding-right: 14px;
+  font-size: 9px;
+  letter-spacing: 0.1em;
+}
