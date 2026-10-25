@@ -879,6 +879,21 @@
     padding: 8px;
   }
 
+  .product-detail-link {
+    min-height: 34px;
+    padding: 7px 12px;
+    margin-bottom: 12px;
+    font-size: 9px;
+  }
+
+  .product-cart-button {
+    width: 44px;
+    min-width: 44px;
+    min-height: 44px;
+    padding: 0;
+  }
+
+
 
   /* -------------------------------------------------------
      SEÇÕES

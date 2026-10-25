@@ -2321,3 +2321,42 @@ footer {
   opacity: 0.55;
   filter: grayscale(0.25);
 }
+
+
+/* Ações compactas nos cards de produto */
+.product-detail-link {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 36px;
+  padding: 8px 16px;
+  margin: 4px 0 14px;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+}
+
+.product-cart-button {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  min-width: 48px;
+  min-height: 48px;
+  padding: 0;
+  margin-top: 2px;
+  border-radius: 999px;
+}
+
+.product-cart-button svg {
+  display: block;
+  width: 21px;
+  height: 21px;
+}
+
+.product-cart-button:focus-visible,
+.product-detail-link:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 3px;
+}
