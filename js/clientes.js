@@ -31,8 +31,8 @@
       if (subtotal > 100) {
         return [
           "Destino: " + cidade + "/" + estado,
-          "Condição: você pode solicitar o cupom FRETE para frete grátis em compras acima de R$ 100,00.",
-          "A aplicação do cupom e a entrega serão confirmadas no atendimento."
+          "Condição: o cupom FRETE concede frete grátis em compras acima de R$ 100,00 para Bauru/SP.",
+          "A elegibilidade do cupom será confirmada no atendimento."
         ];
       }
       return [
@@ -182,6 +182,7 @@
         ultimoEnderecoViaCep = JSON.stringify(valoresCep);
         mostrarStatusCep("Endereço localizado. Confira os campos e complete o número antes de continuar.", "success");
         atualizarAvisoFrete();
+        atualizarStatusCupom();
       })
       .catch(function () {
         if (consultaAtual !== cepConsultaId) return;
