@@ -337,7 +337,7 @@
       }
       resultado.desconto = Math.round(subtotal * 0.10 * 100) / 100;
       resultado.valido = true;
-      resultado.mensagem = "Desconto de 10% calculado: " + formatarPreco(resultado.desconto) + ". Total dos produtos após cupom: " + formatarPreco(Math.round((subtotal - resultado.desconto) * 100) / 100) + ". Válido na primeira compra com pagamento via Pix ou dinheiro; essas condições ainda precisam ser confirmadas.";
+      resultado.mensagem = "Prévia: desconto de 10% calculado (" + formatarPreco(resultado.desconto) + "). Total estimado dos produtos após cupom: " + formatarPreco(Math.round((subtotal - resultado.desconto) * 100) / 100) + ". A aplicação depende de ser a primeira compra e do pagamento via Pix ou dinheiro; confirme as condições no atendimento.";
       return resultado;
     }
 
@@ -367,7 +367,7 @@
     var subtotal = api && typeof api.obterTotal === "function" ? Number(api.obterTotal()) : 0;
     var aplicacao = avaliarCupom(subtotal, dadosDoFormulario().address);
     status.textContent = aplicacao.mensagem;
-    status.dataset.kind = aplicacao.valido ? "success" : (aplicacao.codigo ? "error" : "info");
+    status.dataset.kind = !aplicacao.codigo ? "info" : (!aplicacao.valido ? "error" : (aplicacao.codigo === "PRIMEIRA10" ? "info" : "success"));
   }
 
   function preencherMensagem(data) {
