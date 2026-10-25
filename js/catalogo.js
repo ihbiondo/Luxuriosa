@@ -803,7 +803,7 @@
     );
 
     if (produto.pagina) {
-      var linkDetalhes = criarElemento("a", "btn ghost small product-detail-link", "Ver detalhes completos");
+      var linkDetalhes = criarElemento("a", "btn ghost small product-detail-link", "Mais detalhes");
       linkDetalhes.href = produto.pagina;
       linkDetalhes.setAttribute("aria-label", "Ver detalhes de " + (produto.nome || "produto"));
       linkDetalhes.addEventListener("click", function (evento) {
@@ -845,16 +845,42 @@
           : "Adicionar ao carrinho";
 
 
-    var botao =
-      criarElemento(
-        "button",
-        "btn ghost small",
-        textoBotao
-      );
+    var botao = criarElemento(
+      "button",
+      "btn ghost small" + (!produto.esgotado && !produto.sobConsulta ? " product-cart-button" : ""),
+      !produto.esgotado && !produto.sobConsulta ? "" : textoBotao
+    );
 
+    botao.type = "button";
 
-    botao.type =
-      "button";
+    /* Ícone compacto para adicionar ao carrinho; outros estados mantêm texto. */
+    if (!produto.esgotado && !produto.sobConsulta) {
+      var iconeCarrinho = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+      iconeCarrinho.setAttribute("viewBox", "0 0 24 24");
+      iconeCarrinho.setAttribute("width", "22");
+      iconeCarrinho.setAttribute("height", "22");
+      iconeCarrinho.setAttribute("aria-hidden", "true");
+      iconeCarrinho.setAttribute("focusable", "false");
+      iconeCarrinho.setAttribute("fill", "none");
+      iconeCarrinho.setAttribute("stroke", "currentColor");
+      iconeCarrinho.setAttribute("stroke-width", "1.7");
+      iconeCarrinho.setAttribute("stroke-linecap", "round");
+      iconeCarrinho.setAttribute("stroke-linejoin", "round");
+
+      [
+        { tag: "circle", attrs: { cx: "9", cy: "21", r: "1" } },
+        { tag: "circle", attrs: { cx: "20", cy: "21", r: "1" } },
+        { tag: "path", attrs: { d: "M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" } }
+      ].forEach(function (item) {
+        var forma = document.createElementNS("http://www.w3.org/2000/svg", item.tag);
+        Object.keys(item.attrs).forEach(function (chave) {
+          forma.setAttribute(chave, item.attrs[chave]);
+        });
+        iconeCarrinho.appendChild(forma);
+      });
+
+      botao.appendChild(iconeCarrinho);
+    }
 
 
     botao.setAttribute(
