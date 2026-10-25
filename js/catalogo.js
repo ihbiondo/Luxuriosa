@@ -828,9 +828,9 @@
     );
 
 
-    corpo.appendChild(
-      preco
-    );
+    /* A linha de compra mantém preço e ação visualmente juntos. */
+    var linhaCompra = criarElemento("div", "product-purchase-row");
+    linhaCompra.appendChild(preco);
 
 
     /* =====================================================
@@ -937,9 +937,8 @@
     );
 
 
-    corpo.appendChild(
-      botao
-    );
+    linhaCompra.appendChild(botao);
+    corpo.appendChild(linhaCompra);
 
 
     /* =====================================================
