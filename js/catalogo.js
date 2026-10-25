@@ -732,10 +732,7 @@
       0;
 
 
-    card.setAttribute(
-      "role",
-      "button"
-    );
+    /* O card abre o modal, mas links e botões internos continuam independentes. */
 
 
     card.setAttribute(
@@ -804,6 +801,16 @@
         "Produto Luxuriosa"
       )
     );
+
+    if (produto.pagina) {
+      var linkDetalhes = criarElemento("a", "btn ghost small product-detail-link", "Ver detalhes completos");
+      linkDetalhes.href = produto.pagina;
+      linkDetalhes.setAttribute("aria-label", "Ver detalhes de " + (produto.nome || "produto"));
+      linkDetalhes.addEventListener("click", function (evento) {
+        evento.stopPropagation();
+      });
+      corpo.appendChild(linkDetalhes);
+    }
 
 
     /* PREÇO */
@@ -943,6 +950,10 @@
     card.addEventListener(
       "keydown",
       function (evento) {
+
+        if (evento.target !== card) {
+          return;
+        }
 
         if (
           evento.key ===
