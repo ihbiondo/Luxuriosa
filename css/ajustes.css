@@ -191,6 +191,9 @@
 .customer-cep-status[data-kind="error"] { color: #ffabb6; }
 .customer-cep-status[data-kind="success"] { color: var(--gold); }
 .customer-cep-status[hidden] { display: none !important; }
+.customer-coupon-status { margin-top: 2px; color: var(--muted); font-size: 12px; line-height: 1.5; }
+.customer-coupon-status[data-kind="success"] { color: var(--gold); }
+.customer-coupon-status[data-kind="error"] { color: #ffabb6; }
 
 .cart-item-price-changed {
   display: block;
