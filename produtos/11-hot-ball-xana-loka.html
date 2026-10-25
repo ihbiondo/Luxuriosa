@@ -69,6 +69,17 @@
   </script>
 </head>
 <body>
+<div class="overlay" id="gate" role="dialog" aria-modal="true" aria-labelledby="gateTitle">
+  <div class="gate">
+    <div class="gate-icon" aria-hidden="true">♡</div>
+    <div class="kicker">Luxuriosa</div>
+    <h3 id="gateTitle">Conteúdo para maiores de 18</h3>
+    <p>A Luxuriosa é um sexshop com produtos para intimidade e prazer, além de lingerie selecionada. Nossos produtos são destinados exclusivamente a adultos.</p>
+    <p>Você tem 18 anos ou mais?</p>
+    <div class="buttons"><button class="btn primary" id="gateYes" type="button">Sim, tenho 18+</button><a class="btn ghost" href="https://www.google.com.br">Sair</a></div>
+  </div>
+</div>
+
   <header>
     <div class="container nav">
       <a class="logo" href="../index.html" aria-label="Luxuriosa — início">LUXURIOSA</a>
@@ -127,5 +138,9 @@
       <p><a href="../privacidade.html">Política de privacidade</a> · <a href="../index.html#atendimento">Atendimento</a></p>
     </div>
   </footer>
+
+<script>
+(function () { var gate = document.getElementById("gate"); var botaoSim = document.getElementById("gateYes"); if (!gate || !botaoSim) return; var autorizado = false; try { autorizado = localStorage.getItem("lux18") === "1"; } catch (erro) {} if (autorizado) gate.classList.remove("open"); else gate.classList.add("open"); botaoSim.addEventListener("click", function () { try { localStorage.setItem("lux18", "1"); } catch (erro) {} gate.classList.remove("open"); }); })();
+</script>
 </body>
 </html>

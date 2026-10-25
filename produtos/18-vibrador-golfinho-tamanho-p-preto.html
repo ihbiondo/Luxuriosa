@@ -20,7 +20,22 @@
     "itemCondition": "https://schema.org/NewCondition"
   }
 }</script></head>
-<body><header><div class="container nav"><a class="logo" href="../index.html" aria-label="Luxuriosa — início">LUXURIOSA</a><nav class="navlinks" aria-label="Navegação da página"><a href="../index.html#catalogo">Catálogo</a><a href="../index.html#atendimento">Atendimento</a><a href="../index.html#entrega">Entrega</a></nav></div></header>
+<body>
+<div class="overlay" id="gate" role="dialog" aria-modal="true" aria-labelledby="gateTitle">
+  <div class="gate">
+    <div class="gate-icon" aria-hidden="true">♡</div>
+    <div class="kicker">Luxuriosa</div>
+    <h3 id="gateTitle">Conteúdo para maiores de 18</h3>
+    <p>A Luxuriosa é um sexshop com produtos para intimidade e prazer, além de lingerie selecionada. Nossos produtos são destinados exclusivamente a adultos.</p>
+    <p>Você tem 18 anos ou mais?</p>
+    <div class="buttons"><button class="btn primary" id="gateYes" type="button">Sim, tenho 18+</button><a class="btn ghost" href="https://www.google.com.br">Sair</a></div>
+  </div>
+</div>
+<header><div class="container nav"><a class="logo" href="../index.html" aria-label="Luxuriosa — início">LUXURIOSA</a><nav class="navlinks" aria-label="Navegação da página"><a href="../index.html#catalogo">Catálogo</a><a href="../index.html#atendimento">Atendimento</a><a href="../index.html#entrega">Entrega</a></nav></div></header>
 <main class="product-detail-page"><div class="container"><nav class="product-breadcrumb" aria-label="Caminho de navegação"><a href="../index.html">Início</a> / <a href="../index.html#catalogo">Sexshop</a> / Vibrador Golfinho — Tamanho P — Preto</nav><article class="product-detail-layout"><div class="product-detail-image"><img src="../img/produtos/luxuriosa-vibrador-golfinho-preto.png" alt="Vibrador Golfinho — Tamanho P — Preto" width="720" height="720" fetchpriority="high"></div><div class="product-detail-copy"><div class="kicker">Luxuriosa • Sexshop em Bauru</div><span class="tag">Vibradores</span><h1>Vibrador Golfinho — Tamanho P — Preto</h1><p class="product-detail-note">Marca: Mega Import</p><div class="product-detail-price">R$ 29,90</div><p>Produto de intimidade selecionado pela Luxuriosa. Atendimento reservado e entrega discreta e agendada em Bauru e região.</p><div class="product-detail-actions"><a class="btn primary" href="https://wa.me/5514996355924?text=Ol%C3%A1!%20Tenho%20interesse%20em%3A%20Vibrador%20Golfinho%20%E2%80%94%20Tamanho%20P%20%E2%80%94%20Preto" target="_blank" rel="noopener noreferrer">Consultar pelo WhatsApp</a><a class="btn ghost" href="../index.html#catalogo">Voltar ao catálogo</a></div><p class="product-detail-note">Conteúdo destinado exclusivamente a maiores de 18 anos. Consulte as orientações do fabricante antes de utilizar o produto.</p><div class="product-detail-description"><h2>Sobre este produto</h2><p><strong>Vibrador Golfinho — Preto</strong></p>
 <p>Moderno e discreto, o <strong>Vibrador Golfinho Preto</strong> traz um formato diferenciado para quem deseja explorar novas possibilidades de estimulação íntima. Seu visual compacto é uma alternativa para quem procura um acessório prático e fácil de guardar.</p>
-<p>Confira as informações da embalagem sobre funcionamento, alimentação, higienização e uso antes de utilizar.</p></div></div></article></div></main><footer><div class="container"><p>Luxuriosa — Sexshop &amp; Lingerie · Bauru/SP</p><p><a href="../privacidade.html">Política de privacidade</a> · <a href="../index.html#atendimento">Atendimento</a></p></div></footer></body></html>
+<p>Confira as informações da embalagem sobre funcionamento, alimentação, higienização e uso antes de utilizar.</p></div></div></article></div></main><footer><div class="container"><p>Luxuriosa — Sexshop &amp; Lingerie · Bauru/SP</p><p><a href="../privacidade.html">Política de privacidade</a> · <a href="../index.html#atendimento">Atendimento</a></p></div></footer>
+<script>
+(function () { var gate = document.getElementById("gate"); var botaoSim = document.getElementById("gateYes"); if (!gate || !botaoSim) return; var autorizado = false; try { autorizado = localStorage.getItem("lux18") === "1"; } catch (erro) {} if (autorizado) gate.classList.remove("open"); else gate.classList.add("open"); botaoSim.addEventListener("click", function () { try { localStorage.setItem("lux18", "1"); } catch (erro) {} gate.classList.remove("open"); }); })();
+</script>
+</body></html>
