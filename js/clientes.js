@@ -31,7 +31,7 @@
       if (subtotal > 100) {
         return [
           "Destino: " + cidade + "/" + estado,
-          "Condição: o cupom FRETE concede frete grátis em compras acima de R$ 100,00 para Bauru/SP.",
+          "Condição: o cupom FRETE permite solicitar frete grátis em compras acima de R$ 100,00 para Bauru/SP.",
           "A elegibilidade do cupom será confirmada no atendimento."
         ];
       }
@@ -352,7 +352,7 @@
       }
       resultado.freteGratis = true;
       resultado.valido = true;
-      resultado.mensagem = "Frete grátis aplicado para Bauru/SP. Total dos produtos: " + formatarPreco(subtotal) + ". O valor do frete não é somado ao subtotal dos produtos.";
+      resultado.mensagem = "Prévia: condição de frete grátis solicitada para Bauru/SP. A elegibilidade será confirmada no atendimento; o valor do frete não está incluído no subtotal dos produtos.";
       return resultado;
     }
 
@@ -367,7 +367,7 @@
     var subtotal = api && typeof api.obterTotal === "function" ? Number(api.obterTotal()) : 0;
     var aplicacao = avaliarCupom(subtotal, dadosDoFormulario().address);
     status.textContent = aplicacao.mensagem;
-    status.dataset.kind = !aplicacao.codigo ? "info" : (!aplicacao.valido ? "error" : (aplicacao.codigo === "PRIMEIRA10" ? "info" : "success"));
+    status.dataset.kind = !aplicacao.codigo ? "info" : (!aplicacao.valido ? "error" : "info");
   }
 
   function preencherMensagem(data) {
@@ -399,7 +399,7 @@
     lines.push("*Total estimado dos produtos após cupom:* " + formatarPreco(totalProdutos));
 
     if (cupom.freteGratis) {
-      lines.push("*Frete:* grátis — cupom FRETE aplicado para Bauru/SP.");
+      lines.push("*Frete:* condição de frete grátis solicitada para Bauru/SP, sujeita à confirmação no atendimento.");
     } else {
       lines.push("*Frete:* não incluído no total acima; será confirmado conforme o destino.");
     }
@@ -407,7 +407,7 @@
     if (!cupom.codigo) {
       lines.push("*Cupom:* nenhum");
     } else if (cupom.valido) {
-      lines.push("*Cupom aplicado:* " + cupom.codigo);
+      lines.push("*Cupom informado:* " + cupom.codigo + (cupom.codigo === "FRETE" ? " — condição sujeita à confirmação no atendimento." : ""));
     } else {
       lines.push("*Cupom informado, não aplicado:* " + cupom.codigo + " — " + cupom.mensagem);
     }
@@ -416,7 +416,7 @@
       "",
       "*CONDIÇÕES COMERCIAIS*",
       "• PRIMEIRA10: desconto calculado para subtotal acima de R$ 150,00; depende de ser a primeira compra e do pagamento via Pix ou dinheiro.",
-      "• FRETE: frete grátis para Bauru/SP em compras acima de R$ 100,00.",
+      "• FRETE: condição de frete grátis solicitada para Bauru/SP em compras acima de R$ 100,00, sujeita à confirmação no atendimento.",
       "• O desconto PRIMEIRA10 e a condição comercial serão confirmados antes da conclusão do pedido.",
       "",
       "*ENTREGA E FRETE*"
