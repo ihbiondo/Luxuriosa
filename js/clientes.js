@@ -28,18 +28,16 @@
       : cidade.toLowerCase();
 
     if (cidadeNormalizada === "bauru" && estado === "SP") {
-      if (subtotal > 100) {
-        return [
-          "Destino: " + cidade + "/" + estado,
-          "Condição: o cupom FRETE permite solicitar frete grátis em compras acima de R$ 100,00 para Bauru/SP.",
-          "A elegibilidade do cupom será confirmada no atendimento."
-        ];
-      }
-      return [
+      var condicoes = [
         "Destino: " + cidade + "/" + estado,
-        "Condição: o cupom FRETE é válido para compras acima de R$ 100,00.",
-        "O frete será confirmado no atendimento."
+        "Frete padrão fixo: R$ 15,00."
       ];
+      if (subtotal > 100) {
+        condicoes.push("Em compras acima de R$ 100,00, o cupom FRETE permite solicitar frete grátis, sujeito à confirmação no atendimento.");
+      } else {
+        condicoes.push("O cupom FRETE pode ser solicitado em compras acima de R$ 100,00.");
+      }
+      return condicoes;
     }
 
     return [
@@ -207,9 +205,9 @@
     var cidadeNormalizada = cidade.normalize ? cidade.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase() : cidade.toLowerCase();
     if (cidadeNormalizada === "bauru" && estado === "SP") {
       if (subtotal > 100) {
-        aviso.textContent = "Entrega em Bauru-SP: acima de R$ 100,00, digite FRETE para solicitar frete grátis, sujeito à confirmação no atendimento.";
+        aviso.textContent = "Entrega em Bauru-SP: frete fixo de R$ 15,00. Em compras acima de R$ 100,00, você pode informar FRETE para solicitar frete grátis, sujeito à confirmação no atendimento.";
       } else {
-        aviso.textContent = "Entrega em Bauru-SP: o cupom FRETE permite solicitar frete grátis acima de R$ 100,00, sujeito à confirmação no atendimento.";
+        aviso.textContent = "Entrega em Bauru-SP: frete fixo de R$ 15,00. O cupom FRETE pode ser solicitado em compras acima de R$ 100,00.";
       }
       return;
     }
