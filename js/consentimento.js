@@ -48,6 +48,31 @@
       page_title: "Luxuriosa - Navegação",
       page_referrer: ""
     });
+    /* Visualização genérica: não envia slug, título, query string ou nome de produto. */
+    var path = window.location.pathname || "/";
+    var pageType = path.indexOf("/produtos/") !== -1 ? "produto"
+      : (path === "/" || path.toLowerCase().endsWith("/index.html")) ? "inicio"
+      : path.indexOf("catalogo") !== -1 ? "catalogo" : "institucional";
+    window.gtag("event", "page_view", {
+      page_title: "Luxuriosa - " + pageType,
+      page_location: window.location.origin + "/navegacao/" + pageType,
+      page_path: "/navegacao/" + pageType
+    });
+    /* API interna para eventos comerciais sem parâmetros identificáveis. */
+    window.LuxuriosaMedicao = window.LuxuriosaMedicao || {};
+    window.LuxuriosaMedicao.registrar = function (nome, parametros) {
+      if (!consent || !consent.analytics || !/^[a-z][a-z0-9_]{1,39}$/.test(nome)) return;
+      var seguros = {};
+      var permitidos = ["page_type", "method", "step", "quantity"];
+      permitidos.forEach(function (chave) {
+        var valor = parametros && parametros[chave];
+        if ((typeof valor === "string" && /^[a-z0-9_-]{1,30}$/i.test(valor)) ||
+            (chave === "quantity" && Number.isInteger(valor) && valor >= 1 && valor <= 99)) {
+          seguros[chave] = valor;
+        }
+      });
+      window.gtag("event", nome, seguros);
+    };
     var script = document.createElement("script");
     script.async = true;
     script.src = "https://www.googletagmanager.com/gtag/js?id=" + GA_ID;
