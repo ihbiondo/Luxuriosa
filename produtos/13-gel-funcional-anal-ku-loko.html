@@ -100,14 +100,6 @@
     ]
   }
   </script>
-  <!-- Google Analytics 4 — Luxuriosa -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-PP3SPL55B0"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-PP3SPL55B0');
-  </script>
 </head>
 <body>
 <div class="overlay" id="gate" role="dialog" aria-modal="true" aria-labelledby="gateTitle">
@@ -185,8 +177,7 @@
 
 <script src="../js/carrinho.js"></script>
 <script src="../js/produto-detalhe.js"></script>
-<script>
-(function () { var gate = document.getElementById("gate"); var botaoSim = document.getElementById("gateYes"); if (!gate || !botaoSim) return; var autorizado = false; try { autorizado = localStorage.getItem("lux18") === "1"; } catch (erro) {} if (autorizado) gate.classList.remove("open"); else gate.classList.add("open"); botaoSim.addEventListener("click", function () { try { localStorage.setItem("lux18", "1"); } catch (erro) {} gate.classList.remove("open"); }); })();
-</script>
+
+<script src="../js/consentimento.js"></script>
 </body>
 </html>
