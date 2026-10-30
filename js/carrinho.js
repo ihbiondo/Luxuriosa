@@ -1746,6 +1746,15 @@
 
     renderizar();
 
+    /* Abre o carrinho quando o cliente chega de uma página de produto. */
+    try {
+      if (new URLSearchParams(window.location.search).get("abrirCarrinho") === "1") {
+        abrirCarrinho();
+      }
+    } catch (erro) {
+      console.warn("Luxuriosa: não foi possível interpretar a abertura automática do carrinho.", erro);
+    }
+
   }
 
 
