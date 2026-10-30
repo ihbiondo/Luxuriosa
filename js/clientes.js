@@ -485,6 +485,9 @@
       return;
     }
     messagePreview.textContent = mensagemAtual;
+    if (window.LuxuriosaMedicao && typeof window.LuxuriosaMedicao.registrar === "function") {
+      window.LuxuriosaMedicao.registrar("checkout_review", { step: "dados_validos" });
+    }
     form.hidden = true;
     review.hidden = false;
     limparAviso();
@@ -573,6 +576,9 @@
     var number = config && config.whatsapp ? String(config.whatsapp).replace(/\D/g, "") : "5514996355924";
     if (!number) number = "5514996355924";
     var url = "https://wa.me/" + number + "?text=" + encodeURIComponent(mensagemAtual);
+    if (window.LuxuriosaMedicao && typeof window.LuxuriosaMedicao.registrar === "function") {
+      window.LuxuriosaMedicao.registrar("checkout_whatsapp", { method: "whatsapp", step: "pedido_encaminhado" });
+    }
     window.open(url, "_blank", "noopener,noreferrer");
   }
 
