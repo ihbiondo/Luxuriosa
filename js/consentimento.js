@@ -98,7 +98,7 @@
     overlay.querySelector("[data-cookie-accept]").addEventListener("click", function () { saveConsent(true, true); });
     overlay.querySelector("[data-cookie-custom]").addEventListener("click", function () {
       document.getElementById("lux-cookie-save-row").hidden = false;
-      document.getElementById("lux-cookie-custom").focus();
+      document.querySelector("[data-cookie-save]").focus();
     });
     overlay.querySelector("[data-cookie-save]").addEventListener("click", function () {
       saveConsent(document.getElementById("luxAnalytics").checked, document.getElementById("luxMarketing").checked);
