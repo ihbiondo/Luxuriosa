@@ -46,14 +46,6 @@
     ]
   }
   </script>
-  <!-- Google Analytics 4 — Luxuriosa -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-PP3SPL55B0"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-PP3SPL55B0');
-  </script>
 </head>
 <body>
 <div class="overlay" id="gate" role="dialog" aria-modal="true" aria-labelledby="gateTitle">
@@ -77,7 +69,6 @@
           </div></div></article></div><section class="product-related" aria-labelledby="relatedTitle"><h2 id="relatedTitle">Explore também</h2><p>Conheça outros produtos selecionados pela Luxuriosa que podem complementar sua escolha.</p><ul><li><a href="../produtos/17-vibrador-golfinho-tamanho-p-rosa.html">Vibrador Golfinho — Tamanho P — Rosa</a></li><li><a href="../produtos/8-egg-masturbador.html">Egg Masturbador</a></li><li><a href="../produtos/9-protese-sem-vibro-com-ventosa-tamanho-m.html">Prótese sem Vibro com Ventosa — Tamanho M</a></li></ul><p><a href="../index.html#catalogo">Ver todos os produtos do catálogo</a></p></section></main><footer><div class="container"><p>Luxuriosa — Sexshop &amp; Lingerie · Bauru/SP</p><p><a href="../privacidade.html">Política de privacidade</a> · <a href="../index.html#atendimento">Atendimento</a></p></div></footer>
 <script src="../js/carrinho.js"></script>
 <script src="../js/produto-detalhe.js"></script>
-<script>
-(function () { var gate = document.getElementById("gate"); var botaoSim = document.getElementById("gateYes"); if (!gate || !botaoSim) return; var autorizado = false; try { autorizado = localStorage.getItem("lux18") === "1"; } catch (erro) {} if (autorizado) gate.classList.remove("open"); else gate.classList.add("open"); botaoSim.addEventListener("click", function () { try { localStorage.setItem("lux18", "1"); } catch (erro) {} gate.classList.remove("open"); }); })();
-</script>
+
+<script src="../js/consentimento.js"></script>
 </body></html>
