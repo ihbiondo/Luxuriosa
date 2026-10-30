@@ -11,7 +11,9 @@
     try {
       var value = JSON.parse(localStorage.getItem(CONSENT_KEY) || "null");
       if (!value || value.version !== CONSENT_VERSION || !value.updatedAt) return null;
-      if (Date.now() - new Date(value.updatedAt).getTime() > 180 * 24 * 60 * 60 * 1000) return null;
+      var updatedAt = new Date(value.updatedAt).getTime();
+      if (!Number.isFinite(updatedAt) || updatedAt > Date.now() || Date.now() - updatedAt > 180 * 24 * 60 * 60 * 1000) return null;
+      if (typeof value.analytics !== "boolean" || typeof value.marketing !== "boolean" || value.necessary !== true) return null;
       return value;
     } catch (e) { return null; }
   }
@@ -92,7 +94,7 @@
     overlay.setAttribute("role", "dialog");
     overlay.setAttribute("aria-modal", "true");
     overlay.setAttribute("aria-labelledby", "luxCookieTitle");
-    overlay.innerHTML = '<section id="lux-cookie-panel"><button class="lux-cookie-close" type="button" aria-label="Fechar preferências" data-cookie-close>×</button><h2 id="luxCookieTitle">Sua privacidade importa</h2><p>Utilizamos cookies para melhorar sua experiência e entender como a loja é utilizada. Você escolhe quais dados opcionais autoriza. Os cookies necessários permanecem ativos para o funcionamento e a segurança do site.</p><div class="lux-cookie-option"><div><strong>Necessários</strong><small>Funcionamento do site, carrinho e segurança.</small></div><span class="lux-cookie-pill">Sempre ativos</span></div><div class="lux-cookie-option"><div><strong>Estatísticas e análise</strong><small>Dados de navegação e desempenho, por meio do Google Analytics.</small></div><label class="lux-switch"><input id="luxAnalytics" type="checkbox"><span></span></label></div><div class="lux-cookie-option"><div><strong>Marketing</strong><small>Mensuração de campanhas e publicidade. Nenhuma ferramenta de marketing será ativada enquanto não estiver integrada.</small></div><label class="lux-switch"><input id="luxMarketing" type="checkbox"><span></span></label></div><p><a href="' + (location.pathname.indexOf("/produtos/") === 0 ? "../privacidade.html" : "privacidade.html") + '">Leia nossa Política de Privacidade</a></p><div class="lux-cookie-actions"><button type="button" data-cookie-reject>Rejeitar opcionais</button><button type="button" data-cookie-custom>Personalizar</button><button type="button" class="lux-primary" data-cookie-accept>Aceitar todos</button></div><div class="lux-cookie-actions" id="lux-cookie-save-row" hidden><button type="button" class="lux-primary" data-cookie-save>Salvar minhas preferências</button></div></section>';
+    overlay.innerHTML = '<section id="lux-cookie-panel"><button class="lux-cookie-close" type="button" aria-label="Fechar preferências" data-cookie-close>×</button><h2 id="luxCookieTitle">Sua privacidade importa</h2><p>Utilizamos cookies para melhorar sua experiência e entender como a loja é utilizada. Você escolhe quais dados opcionais autoriza. Os cookies necessários permanecem ativos para o funcionamento e a segurança do site.</p><div class="lux-cookie-option"><div><strong>Necessários</strong><small>Funcionamento do site, carrinho e segurança.</small></div><span class="lux-cookie-pill">Sempre ativos</span></div><div class="lux-cookie-option"><div><strong>Estatísticas e análise</strong><small>Dados de navegação e desempenho, por meio do Google Analytics.</small></div><label class="lux-switch"><input id="luxAnalytics" type="checkbox"><span></span></label></div><div class="lux-cookie-option"><div><strong>Marketing</strong><small>Mensuração de campanhas e publicidade. Nenhuma ferramenta de marketing será ativada enquanto não estiver integrada.</small></div><label class="lux-switch"><input id="luxMarketing" type="checkbox"><span></span></label></div><p><a href="' + (location.pathname.indexOf("/produtos/") !== -1 ? "../privacidade.html" : "privacidade.html") + '">Leia nossa Política de Privacidade</a></p><div class="lux-cookie-actions"><button type="button" data-cookie-reject>Rejeitar opcionais</button><button type="button" data-cookie-custom>Personalizar</button><button type="button" class="lux-primary" data-cookie-accept>Aceitar todos</button></div><div class="lux-cookie-actions" id="lux-cookie-save-row" hidden><button type="button" class="lux-primary" data-cookie-save>Salvar minhas preferências</button></div></section>';
     document.body.appendChild(overlay);
     overlay.querySelector("[data-cookie-reject]").addEventListener("click", function () { saveConsent(false, false); });
     overlay.querySelector("[data-cookie-accept]").addEventListener("click", function () { saveConsent(true, true); });
@@ -158,6 +160,7 @@
     try { authorized = localStorage.getItem("lux18") === "1"; } catch (e) {}
     var yes = document.getElementById("gateYes");
     if (authorized) {
+      document.body.classList.remove("gate-open");
       gate.classList.remove("open");
       gate.setAttribute("aria-hidden", "true");
       if (consent) applyConsent(); else openConsent();
