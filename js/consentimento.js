@@ -40,7 +40,14 @@
       ad_user_data: "denied", ad_personalization: "denied"
     });
     window.gtag("js", new Date());
-    window.gtag("config", GA_ID, { anonymize_ip: true });
+    /* Evita enviar URLs, títulos e referências que possam revelar produtos íntimos. */
+    window.gtag("config", GA_ID, {
+      anonymize_ip: true,
+      send_page_view: false,
+      page_location: window.location.origin + "/navegacao",
+      page_title: "Luxuriosa - Navegação",
+      page_referrer: ""
+    });
     var script = document.createElement("script");
     script.async = true;
     script.src = "https://www.googletagmanager.com/gtag/js?id=" + GA_ID;
