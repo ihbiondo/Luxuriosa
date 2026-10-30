@@ -140,7 +140,8 @@
 
   function addPreferencesLink() {
     var footer = document.querySelector("footer");
-    if (!footer || footer.querySelector("[data-open-cookie-preferences]")) return;
+    if (!footer) { footer = document.createElement("footer"); footer.className = "lux-cookie-fallback-footer"; document.body.appendChild(footer); }
+    if (footer.querySelector("[data-open-cookie-preferences]")) return;
     var p = document.createElement("p");
     p.className = "lux-cookie-preferences-link";
     p.innerHTML = '<a href="#" data-open-cookie-preferences>Preferências de cookies</a>';
