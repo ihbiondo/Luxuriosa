@@ -64,7 +64,7 @@
       ".lux-switch{width:44px;height:25px;flex:0 0 44px;position:relative}.lux-switch input{position:absolute;opacity:0;width:1px;height:1px}.lux-switch span{position:absolute;inset:0;background:#555;border-radius:20px;cursor:pointer;transition:.2s}.lux-switch span:before{content:'';position:absolute;width:17px;height:17px;left:4px;top:4px;border-radius:50%;background:#fff;transition:.2s}.lux-switch input:checked+span{background:#9a7040}.lux-switch input:checked+span:before{transform:translateX(19px)}.lux-switch input:focus-visible+span{outline:2px solid #e5c18e;outline-offset:3px}",
       ".lux-cookie-actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:22px}.lux-cookie-actions button{flex:1;min-width:125px;border:1px solid #8f704e;border-radius:30px;padding:13px 15px;background:transparent;color:#f5eee7;font:500 12px Montserrat,Arial;cursor:pointer}.lux-cookie-actions .lux-primary{background:linear-gradient(100deg,#d6b47e,#f0d4a2);color:#1a1010;border-color:transparent}.lux-cookie-actions button:hover{filter:brightness(1.12)}",
       "#lux-cookie-panel a{color:#d8bd91;text-decoration:underline;font-size:12px}",
-      "body.lux-consent-open{overflow:hidden}",
+      "body.lux-consent-open{overflow:hidden}",".lux-cookie-preferences-link{text-align:center;margin:14px auto;padding:8px}.lux-cookie-preferences-link a{color:#d8bd91;font-size:12px}.lux-cookie-fallback-footer{padding:16px;text-align:center;background:#10090c;border-top:1px solid rgba(212,175,124,.2)}",
       "@media(max-width:560px){#lux-cookie-panel{padding:24px 20px;border-radius:15px}.lux-cookie-actions{flex-direction:column}.lux-cookie-actions button{width:100%}}"
     ].join("\n");
     document.head.appendChild(style);
@@ -103,7 +103,7 @@
     overlay.querySelector("[data-cookie-save]").addEventListener("click", function () {
       saveConsent(document.getElementById("luxAnalytics").checked, document.getElementById("luxMarketing").checked);
     });
-    overlay.querySelector("[data-cookie-close]").addEventListener("click", function () { closeConsent(); });
+    overlay.querySelector("[data-cookie-close]").addEventListener("click", function () { saveConsent(false, false); });
     overlay.addEventListener("keydown", trapFocus);
   }
 
