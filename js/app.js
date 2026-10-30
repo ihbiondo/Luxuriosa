@@ -422,10 +422,7 @@
     configurarAcessibilidade();
 
     configurarMenu();
-
-    configurarAgeGate();
-
-    configurarAno();
+configurarAno();
 
     configurarScroll();
 
