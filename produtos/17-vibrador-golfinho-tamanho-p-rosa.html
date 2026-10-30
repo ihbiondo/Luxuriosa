@@ -149,9 +149,11 @@
           
           <p>Produto de intimidade selecionado pela Luxuriosa. Atendimento reservado e entrega discreta e agendada em Bauru e região.</p>
           <div class="product-detail-actions">
-            <a class="btn primary" href="https://wa.me/5514996355924?text=Ol%C3%A1!%20Tenho%20interesse%20em%3A%20Vibrador%20Golfinho%20%E2%80%94%20Tamanho%20P%20%E2%80%94%20Rosa" target="_blank" rel="noopener noreferrer">Consultar pelo WhatsApp</a>
+            <button class="btn primary product-detail-add-to-cart" type="button" data-add-to-cart data-product-id="17" disabled aria-disabled="true">Carregando produto…</button>
+            <a class="btn ghost" href="https://wa.me/5514996355924?text=Ol%C3%A1!%20Tenho%20interesse%20em%3A%20Vibrador%20Golfinho%20%E2%80%94%20Tamanho%20P%20%E2%80%94%20Rosa" target="_blank" rel="noopener noreferrer">Consultar pelo WhatsApp</a>
             <a class="btn ghost" href="../index.html#catalogo">Voltar ao catálogo</a>
           </div>
+          <p id="productCartStatus" class="product-detail-note" role="status" aria-live="polite">Conferindo preço e disponibilidade…</p>
           <p class="product-detail-note">Conteúdo destinado exclusivamente a maiores de 18 anos. Consulte as orientações do fabricante antes de utilizar o produto.</p>
           <div class="product-detail-description">
             <h2>Sobre este produto</h2>
@@ -183,6 +185,8 @@
     </div>
   </footer>
 
+<script src="../js/carrinho.js"></script>
+<script src="../js/produto-detalhe.js"></script>
 <script>
 (function () { var gate = document.getElementById("gate"); var botaoSim = document.getElementById("gateYes"); if (!gate || !botaoSim) return; var autorizado = false; try { autorizado = localStorage.getItem("lux18") === "1"; } catch (erro) {} if (autorizado) gate.classList.remove("open"); else gate.classList.add("open"); botaoSim.addEventListener("click", function () { try { localStorage.setItem("lux18", "1"); } catch (erro) {} gate.classList.remove("open"); }); })();
 </script>
