@@ -504,6 +504,10 @@
 
     renderizar();
 
+    if (window.LuxuriosaMedicao && typeof window.LuxuriosaMedicao.registrar === "function") {
+      window.LuxuriosaMedicao.registrar("add_to_cart", { quantity: quantidade });
+    }
+
     abrirCarrinho();
 
   }
@@ -1417,6 +1421,9 @@
       window.LuxuriosaClientes &&
       typeof window.LuxuriosaClientes.iniciarFinalizacao === "function"
     ) {
+      if (window.LuxuriosaMedicao && typeof window.LuxuriosaMedicao.registrar === "function") {
+        window.LuxuriosaMedicao.registrar("begin_checkout", { quantity: quantidadeTotal() });
+      }
       window.LuxuriosaClientes.iniciarFinalizacao();
       return;
     }
