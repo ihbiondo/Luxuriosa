@@ -140,6 +140,10 @@
       "?text=" +
       encodeURIComponent(texto);
 
+    if (window.LuxuriosaMedicao && typeof window.LuxuriosaMedicao.registrar === "function") {
+      window.LuxuriosaMedicao.registrar("whatsapp_contact", { method: "whatsapp" });
+    }
+
     window.open(
       url,
       "_blank",
