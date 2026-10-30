@@ -525,3 +525,46 @@ body.customer-open { overflow: hidden; }
     padding: 8px 6px;
   }
 }
+
+
+/* =========================================================
+   PÁGINAS DE PRODUTO — PREÇO COM MAIS DESTAQUE
+   ========================================================= */
+.product-detail-copy .product-detail-price {
+  font-size: clamp(2.05rem, 3vw, 2.4rem) !important;
+  font-weight: 650;
+  line-height: 1.15;
+  margin: 22px 0 26px;
+}
+
+.product-detail-copy .product-detail-price strong {
+  display: inline-block;
+  color: #ff4f9a;
+  font-size: clamp(2.55rem, 4vw, 3.1rem);
+  font-weight: 800;
+  line-height: 1;
+  text-shadow: 0 0 18px rgba(255, 79, 154, .22);
+}
+
+.product-detail-copy .product-detail-price s {
+  display: inline-block;
+  color: var(--muted);
+  font-size: clamp(1rem, 1.5vw, 1.2rem);
+  font-weight: 400;
+  margin-left: 10px;
+}
+
+@media (max-width: 600px) {
+  .product-detail-copy .product-detail-price {
+    font-size: 2rem !important;
+    margin: 20px 0 24px;
+  }
+
+  .product-detail-copy .product-detail-price strong {
+    font-size: 2.65rem;
+  }
+
+  .product-detail-copy .product-detail-price s {
+    font-size: 1rem;
+  }
+}
