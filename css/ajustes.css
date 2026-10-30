@@ -568,3 +568,15 @@ body.customer-open { overflow: hidden; }
     font-size: 1rem;
   }
 }
+
+
+/* Página inicial: aproxima a curadoria do bloco de destaques */
+.curation-more {
+  padding: 0 0 48px;
+}
+
+@media (max-width: 768px) {
+  .curation-more {
+    padding-bottom: 32px;
+  }
+}
