@@ -125,7 +125,7 @@
       "novo": false,
       "destaque": false,
       "esgotado": false,
-      "maisVendido": true,
+      "maisVendido": false,
       "tipoProduto": "Géis e cremes íntimos",
       "pagina": "produtos/7-gel-adstringente-virgem-total.html"
     },
@@ -179,7 +179,7 @@
       "novo": false,
       "destaque": true,
       "esgotado": false,
-      "maisVendido": true,
+      "maisVendido": false,
       "tipoProduto": "Kits",
       "pagina": "produtos/10-kit-gel-funcional-xana-loka-ku-loko.html"
     },
@@ -197,7 +197,7 @@
       "novo": false,
       "destaque": true,
       "esgotado": false,
-      "maisVendido": true,
+      "maisVendido": false,
       "tipoProduto": "Estimulantes",
       "pagina": "produtos/11-hot-ball-xana-loka.html"
     },
@@ -305,7 +305,7 @@
       "novo": false,
       "destaque": false,
       "esgotado": false,
-      "maisVendido": true,
+      "maisVendido": false,
       "tipoProduto": "Vibradores",
       "pagina": "produtos/17-vibrador-golfinho-tamanho-p-rosa.html"
     },
