@@ -376,70 +376,66 @@
       avisar(integridade.motivo, "error");
       return "";
     }
+
     var subtotal = integridade.subtotal;
     if (!items.length) return "";
+
     var cupom = avaliarCupom(subtotal, data.address);
     var totalProdutos = Math.max(0, Math.round((subtotal - cupom.desconto) * 100) / 100);
+    var cidade = String(data.address.city || "").trim();
+    var estado = String(data.address.state || "").trim().toUpperCase();
+    var cidadeNormalizada = cidade.normalize
+      ? cidade.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase()
+      : cidade.toLowerCase();
+    var emBauru = cidadeNormalizada === "bauru" && estado === "SP";
+    var frete = emBauru && !cupom.freteGratis ? 15 : 0;
+    var totalEstimado = Math.round((totalProdutos + frete) * 100) / 100;
+
     var lines = [
-      "Olá! Quero preparar um pedido na *Luxuriosa*.",
+      "Olá! Quero fazer um pedido na *Luxuriosa*. ❤️",
       "",
-      "*RESUMO DO PEDIDO*"
+      "*MEU PEDIDO*"
     ];
+
     items.forEach(function (item) {
       var quantity = Number(item.quantidade) || 0;
       var price = Number(item.preco) || 0;
       lines.push("• " + item.nome + " — " + quantity + "x — " + formatarPreco(price * quantity));
     });
-    lines.push("", "*Subtotal dos produtos:* " + formatarPreco(subtotal));
+
+    lines.push("", "*Subtotal: " + formatarPreco(subtotal) + "*");
+
     if (cupom.desconto > 0) {
-      lines.push("*Desconto PRIMEIRA10 (10%):* - " + formatarPreco(cupom.desconto));
+      lines.push("Desconto estimado (PRIMEIRA10): - " + formatarPreco(cupom.desconto));
     }
-    lines.push((cupom.desconto > 0 ? "*Total estimado dos produtos após desconto:* " : "*Total estimado dos produtos, sem desconto aplicado:* ") + formatarPreco(totalProdutos));
 
     if (cupom.freteGratis) {
-      lines.push("*Frete:* condição de frete grátis solicitada para Bauru/SP, sujeita à confirmação no atendimento.");
+      lines.push("Frete: grátis (solicitação sujeita à confirmação)");
+      lines.push("*Total estimado: " + formatarPreco(totalEstimado) + "*");
+    } else if (emBauru) {
+      lines.push("Frete: " + formatarPreco(frete));
+      lines.push("*Total estimado: " + formatarPreco(totalEstimado) + "*");
     } else {
-      lines.push("*Frete:* não incluído no total acima; será confirmado conforme o destino.");
+      lines.push("Frete: a confirmar conforme o destino");
+      lines.push("*Total estimado dos produtos: " + formatarPreco(totalProdutos) + "*");
     }
 
-    if (!cupom.codigo) {
-      lines.push("*Cupom:* nenhum");
-    } else if (cupom.valido) {
-      lines.push("*Cupom informado:* " + cupom.codigo + (cupom.codigo === "FRETE" ? " — condição sujeita à confirmação no atendimento." : ""));
-    } else {
-      lines.push("*Cupom informado, não aplicado:* " + cupom.codigo + " — " + cupom.mensagem);
-    }
+    lines.push("", "*ENTREGA*");
+    lines.push("• " + data.name + " — " + data.phone);
+
+    var endereco = data.address.street + ", " + data.address.number;
+    if (data.address.complement) endereco += " — " + data.address.complement;
+    lines.push("• " + endereco);
+    lines.push("• " + data.address.district + " — " + data.address.city + "/" + data.address.state);
+    if (data.address.zip) lines.push("• CEP: " + data.address.zip);
+    if (data.address.reference) lines.push("• Referência: " + data.address.reference);
 
     lines.push(
       "",
-      "*CONDIÇÕES COMERCIAIS*",
-      "• PRIMEIRA10: desconto calculado para subtotal acima de R$ 150,00; depende de ser a primeira compra e do pagamento via Pix ou dinheiro.",
-      "• FRETE: condição de frete grátis solicitada para Bauru/SP em compras acima de R$ 100,00, sujeita à confirmação no atendimento.",
-      "• O desconto PRIMEIRA10 e a condição comercial serão confirmados antes da conclusão do pedido.",
-      "",
-      "*ENTREGA E FRETE*"
+      "Gostaria de confirmar a disponibilidade dos produtos e combinar a entrega.",
+      "_Pedido sujeito à confirmação de disponibilidade, condições comerciais e entrega._"
     );
-    lines = lines.concat(resumirCondicaoFrete(data.address, subtotal));
-    lines.push(
-      "",
-      "*DADOS PARA ENTREGA*",
-      "Nome ou apelido: " + data.name,
-      "Telefone/WhatsApp: " + data.phone,
-      "CEP: " + (data.address.zip || "não informado"),
-      "Rua/Avenida: " + data.address.street,
-      "Número: " + data.address.number,
-      "Complemento: " + (data.address.complement || "não informado"),
-      "Bairro: " + data.address.district,
-      "Cidade: " + data.address.city,
-      "Estado: " + data.address.state,
-      "Ponto de referência: " + (data.address.reference || "não informado")
-    );
-    lines.push(
-      "",
-      "*PRÓXIMO PASSO*",
-      "Gostaria de confirmar a disponibilidade, a entrega e os próximos passos.",
-      "_Os valores com cupom são uma prévia comercial; as condições elegíveis serão confirmadas no atendimento. O envio desta mensagem não confirma o pedido nem processa pagamento._"
-    );
+
     return lines.join("\n");
   }
 
