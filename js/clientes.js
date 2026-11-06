@@ -351,8 +351,8 @@
         resultado.mensagem = "PRIMEIRA10 não é válido em pedidos que contenham kits, mesmo junto com produtos avulsos.";
         return resultado;
       }
-      if (subtotal <= 150) {
-        resultado.mensagem = "PRIMEIRA10 exige subtotal dos produtos acima de R$ 150,00.";
+      if (subtotal <= 100) {
+        resultado.mensagem = "PRIMEIRA10 exige subtotal dos produtos acima de R$ 100,00.";
         return resultado;
       }
       resultado.desconto = Math.round(subtotal * 0.10 * 100) / 100;
