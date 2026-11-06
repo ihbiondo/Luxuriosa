@@ -397,13 +397,13 @@
     },
     {
       "id": 22,
-      "nome": "Kit Básico",
+      "nome": "Kit Descoberta",
       "categoria": "Kits",
       "subcategoria": "Kits e combos",
       "marca": "Luxuriosa",
-      "preco": null,
-      "precoAntigo": null,
-      "descricao": "**Kit Básico**\n\nUma seleção especial da Luxuriosa. Entre em contato com nosso atendimento para consultar a composição, o valor e a disponibilidade deste kit.",
+      "preco": 89.9,
+      "precoAntigo": 101.4,
+      "descricao": "**Kit Descoberta**\n\nUma seleção com 6 produtos para começar a explorar novas experiências:\n\n- Perfume Sensual — Melancia\n- Energético Tesão de Touro\n- Energético Tesão de Vaca\n- Gel Funcional Xana Loka\n- Gel Funcional Anal Ku Loko\n- Dado do Prazer — versão à escolha (hétero, gay ou lésbica)\n\nA versão do Dado do Prazer pode ser escolhida conforme a preferência do cliente, mediante disponibilidade.",
       "tamanhos": "",
       "imagem": "img/produtos/novas/luxuriosa-kit-basico.jpg",
       "novo": true,
@@ -412,17 +412,17 @@
       "maisVendido": false,
       "tipoProduto": "Kits",
       "pagina": "produtos/22-kit-basico.html",
-      "sobConsulta": true
+      "sobConsulta": false
     },
     {
       "id": 23,
-      "nome": "Kit Intermediário",
+      "nome": "Kit Essência",
       "categoria": "Kits",
       "subcategoria": "Kits e combos",
       "marca": "Luxuriosa",
-      "preco": null,
-      "precoAntigo": null,
-      "descricao": "**Kit Intermediário**\n\nUma seleção especial da Luxuriosa. Entre em contato com nosso atendimento para consultar a composição, o valor e a disponibilidade deste kit.",
+      "preco": 145.9,
+      "precoAntigo": 161.2,
+      "descricao": "**Kit Essência**\n\nUma seleção com 8 produtos para ampliar as possibilidades de experiência:\n\n- Perfume Sensual — Melancia\n- Energético Tesão de Touro\n- Energético Tesão de Vaca\n- Gel Funcional Xana Loka\n- Gel Funcional Anal Ku Loko\n- Vibrador Golfinho Preto\n- Hot Ball Xana Loka\n- Dado do Prazer — versão à escolha (hétero, gay ou lésbica)\n\nA versão do Dado do Prazer pode ser escolhida conforme a preferência do cliente, mediante disponibilidade.",
       "tamanhos": "",
       "imagem": "img/produtos/novas/luxuriosa-kit-intermediario.jpg",
       "novo": true,
@@ -431,17 +431,17 @@
       "maisVendido": false,
       "tipoProduto": "Kits",
       "pagina": "produtos/23-kit-intermediario.html",
-      "sobConsulta": true
+      "sobConsulta": false
     },
     {
       "id": 24,
-      "nome": "Kit Premium",
+      "nome": "Kit Intensidade",
       "categoria": "Kits",
       "subcategoria": "Kits e combos",
       "marca": "Luxuriosa",
-      "preco": null,
-      "precoAntigo": null,
-      "descricao": "**Kit Premium**\n\nUma seleção especial da Luxuriosa. Entre em contato com nosso atendimento para consultar a composição, o valor e a disponibilidade deste kit.",
+      "preco": 199.9,
+      "precoAntigo": 221.2,
+      "descricao": "**Kit Intensidade**\n\nUma seleção premium com 8 produtos:\n\n- Perfume Sensual — Melancia\n- Energético Tesão de Touro\n- Energético Tesão de Vaca\n- Gel Funcional Xana Loka\n- Gel Funcional Anal Ku Loko\n- Dado do Prazer — versão à escolha (hétero, gay ou lésbica)\n- Plug Anal com Pedra Vermelho\n- Prótese sem Vibro com Ventosa — Tamanho M (Pura Luxúria)\n\nA versão do Dado do Prazer pode ser escolhida conforme a preferência do cliente, mediante disponibilidade.",
       "tamanhos": "",
       "imagem": "img/produtos/novas/luxuriosa-kit-premium.jpg",
       "novo": true,
@@ -450,7 +450,7 @@
       "maisVendido": false,
       "tipoProduto": "Kits",
       "pagina": "produtos/24-kit-premium.html",
-      "sobConsulta": true
+      "sobConsulta": false
     },
     {
       "id": 25,
@@ -489,6 +489,25 @@
       "tipoProduto": "Kits",
       "pagina": "produtos/26-kit-ele.html",
       "sobConsulta": true
+    },
+    {
+      "id": 27,
+      "nome": "Kit Êxtase",
+      "categoria": "Kits",
+      "subcategoria": "Kits e combos",
+      "marca": "Luxuriosa",
+      "preco": 249.9,
+      "precoAntigo": 296,
+      "descricao": "**Kit Êxtase**\n\nA experiência mais completa da linha, com 10 produtos:\n\n- Perfume Sensual — Melancia\n- Energético Tesão de Touro\n- Energético Tesão de Vaca\n- Gel Funcional Xana Loka\n- Gel Funcional Anal Ku Loko\n- Dado do Prazer — versão à escolha (hétero, gay ou lésbica)\n- Plug Anal com Pedra Vermelho\n- Prótese sem Vibro com Ventosa — Tamanho M (Pura Luxúria)\n- Vibrador Golfinho Rosa\n- Gel Adstringente Virgem Total\n\nA versão do Dado do Prazer pode ser escolhida conforme a preferência do cliente, mediante disponibilidade.",
+      "tamanhos": "",
+      "imagem": "img/produtos/novas/luxuriosa-kit-premium.jpg",
+      "novo": true,
+      "destaque": false,
+      "esgotado": false,
+      "maisVendido": false,
+      "tipoProduto": "Kits",
+      "pagina": "produtos/27-kit-extase.html",
+      "sobConsulta": false
     }
   ]
 }
