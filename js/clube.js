@@ -79,7 +79,7 @@
       row("O que deseja evitar",value("evitar")),
       row("Atendimento",value("tipo_atendimento")),
       row("Comunicação",value("comunicacao")),
-      row("Concierge",value("concierge")),
+      row("Curadoria personalizada",value("concierge")),
       row("Frequência de contato",value("frequencia"))
     ].join("");
 
@@ -90,7 +90,7 @@
       row("Política de Privacidade",checked("privacidade") ? "Aceita" : "Não aceita") +
       row("Perfil íntimo e dados sensíveis",checked("sensivel") ? "Autorizado" : "Não autorizado") +
       row("Marketing",checked("marketing") ? "Autorizado" : "Não autorizado") +
-      row("Contato futuro sobre Concierge",checked("contato_concierge") ? "Tenho interesse" : "Sem autorização") +
+      row("Informações sobre curadoria",checked("contato_concierge") ? "Tenho interesse" : "Sem autorização") +
       "</div><p class=\"club-review-warning\">Demonstração concluída. Para efetivar o cadastro, será necessário integrar um backend seguro e registrar as autorizações com suas respectivas versões e datas.</p><button type=\"button\" class=\"club-reset\" data-edit-profile>Voltar e editar</button>";
     result.querySelector("[data-edit-profile]").addEventListener("click",function(){form.scrollIntoView({behavior:"smooth",block:"start"});});
     result.scrollIntoView({behavior:"smooth",block:"start"});
