@@ -1384,7 +1384,7 @@
       "",
       "*CONDIÇÕES COMERCIAIS*",
       "• Pedidos com pelo menos um kit têm frete grátis em Bauru, inclusive quando acompanhados de produtos avulsos.",
-      "• PRIMEIRA10 não é válido em pedidos que contenham kits; nos demais, exige primeira compra acima de R$ 150,00, com Pix ou dinheiro.",
+      "• PRIMEIRA10 não é válido em pedidos que contenham kits; nos demais, exige primeira compra acima de R$ 100,00, com Pix ou dinheiro.",
       "• Cupom FRETE permite solicitar frete grátis em Bauru para pedidos sem kit acima de R$ 100,00.",
       "• Cupons não cumulativos; aplicação, frete e descontos serão confirmados no atendimento.",
       "",
