@@ -491,7 +491,22 @@
     if (!overlay) return;
     overlay.hidden = true;
     document.body.classList.remove("customer-open");
+
+    /* Limpa dados pessoais temporários ao fechar a etapa do pedido. */
+    dadosAtuais = null;
+    mensagemAtual = "";
+    ultimoEnderecoViaCep = "";
+    if (form) form.reset();
+    if (messagePreview) messagePreview.textContent = "";
+    if (review) review.hidden = true;
+    if (form) form.hidden = false;
+    limparAviso();
+    mostrarStatusCep("", "info");
+    atualizarAvisoFrete();
+    atualizarStatusCupom();
+
     if (focusBeforeOpen && typeof focusBeforeOpen.focus === "function") focusBeforeOpen.focus();
+    focusBeforeOpen = null;
   }
 
   function revisarPedido(event) {
