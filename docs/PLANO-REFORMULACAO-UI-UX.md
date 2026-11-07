@@ -287,3 +287,37 @@ A reformulação estará pronta quando a navegação for clara, a experiência m
 - As 27 páginas apresentam dados estruturados `Product` e `BreadcrumbList` em JSON-LD parseável na revisão estática.
 - Os scripts de carrinho, compra individual e consentimento estão presentes nas páginas que utilizam esse fluxo; os seis kits também carregam os scripts, respeitando a decisão de compra direta apenas para os kits 25 e 26.
 - A revisão não substitui avaliação com leitor de tela, auditoria automatizada de acessibilidade, teste visual responsivo ou validação de rich results no Google.
+
+
+## 24. Auditoria aprofundada da homepage e da Loja — revisão estática
+
+### Homepage
+- Conferida a hierarquia principal: um H1 editorial, CTAs para Loja e Atendimento, atalhos de categoria, seleção de quatro produtos em destaque e resumos de Atendimento e Sobre.
+- Os seis atalhos de categoria usam os nomes aceitos pelo mecanismo de filtros e direcionam para parâmetros de URL compatíveis com a página Loja.
+- Os quatro produtos destacados (IDs 11, 17, 22 e 24) existem no catálogo central e estão marcados como destaques.
+- A homepage não carrega o grid completo do catálogo; mantém apenas a vitrine selecionada e encaminha o usuário para a Loja, evitando duplicação de navegação e excesso de produtos na página inicial.
+- Os links de atendimento, entrega e Sobre apontam para páginas próprias. O carrinho e os scripts compartilhados permanecem integrados.
+
+### Loja e descoberta de produtos
+- A página apresenta título, descrição, canonical, Open Graph, dados estruturados `CollectionPage`, breadcrumb e navegação principal.
+- A busca considera nome, tipo, categoria, descrição, marca, subtítulo e tags; ignora diferenças de acentuação e exige que todos os termos digitados estejam presentes no conteúdo pesquisável.
+- Os parâmetros `categoria` e `q` são lidos na URL. Categorias só são aplicadas quando reconhecidas e possuem produtos; buscas são normalizadas e exibidas no campo.
+- Os filtros são gerados conforme as categorias que realmente possuem produtos. Os botões usam `aria-pressed` e `aria-controls`, e o foco é preservado após a atualização dos filtros.
+- O catálogo informa a quantidade de resultados e apresenta estado vazio com orientação para tentar outra busca ou consultar o atendimento.
+- A ordenação atual prioriza produtos marcados como destaque e mantém a ordem original dos demais itens. Não existe controle visível para ordenar por preço, nome ou novidade; fica registrado como melhoria futura, não como falha funcional.
+- No celular, os filtros passam a uma faixa horizontal rolável. A barra de rolagem é ocultada; avaliar posteriormente uma indicação visual discreta de que há mais filtros na horizontal.
+- A região de resultados é anunciada por `aria-live`. Como a busca atualiza a lista a cada digitação, recomenda-se testar com leitor de tela se a frequência de anúncios é confortável; não foi alterada sem teste assistivo.
+
+### Carrinho e integridade comercial
+- O carrinho mantém persistência local e sincroniza nome, imagem, categoria, preço e disponibilidade com o catálogo atual.
+- O checkout fica desabilitado enquanto o catálogo não foi confirmado ou quando há produto indisponível no carrinho.
+- Produto esgotado ou sob consulta não deve seguir para finalização direta; divergências de preço são sinalizadas para revisão.
+- A regra de frete exibida e calculada continua alinhada à condição comercial registrada: Bauru/SP, R$ 15,00 sem kit e frete grátis quando o pedido inclui pelo menos um kit; outras cidades têm frete a confirmar.
+- A página Loja e a homepage reutilizam os mesmos scripts e IDs funcionais, sem duplicação da lógica de catálogo, modal, carrinho ou checkout.
+
+### Resultado e limites
+- Não foi identificado, nesta leitura estática, defeito inequívoco que justifique alterar regras comerciais ou a lógica central da busca, dos filtros e do carrinho.
+- Melhorias de descoberta que podem ser avaliadas depois: ordenação explícita, indicação visual da rolagem horizontal dos filtros e teste da frequência de anúncios da busca para leitores de tela.
+- A homepage não possui um bloco independente de chamada final; os CTAs existentes em Destaques, Atendimento e Sobre já oferecem caminhos de ação. A necessidade de um CTA final separado deve ser decidida após a avaliação visual, para não acrescentar repetição desnecessária.
+- Esta auditoria foi feita por leitura dos arquivos e validações estáticas na branch `uiux-reformulacao`. Não equivale a teste visual ou funcional em navegador, teste em dispositivos reais, leitor de tela ou compra real.
+- Nenhuma alteração foi feita na branch `main`, e a reformulação não foi publicada.
