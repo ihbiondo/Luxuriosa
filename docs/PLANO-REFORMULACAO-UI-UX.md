@@ -472,3 +472,11 @@ A reformulação estará pronta quando a navegação for clara, a experiência m
 - Fluxo de compra revisado estaticamente: catálogo sincroniza disponibilidade e preço com o carrinho; checkout exige catálogo confirmado, valida itens, quantidades e subtotal, e abre WhatsApp somente após revisão pelo cliente.
 - Frete de Bauru conferido no checkout: R$ 15,00 padrão e grátis quando o pedido inclui pelo menos um kit; demais destinos permanecem sujeitos à confirmação.
 - Revisão estática; não equivale a teste real de navegador, transação, integração externa ou teste de pagamento.
+
+
+## 39. Correção do fluxo de kits sob consulta
+
+- Identificada divergência entre as páginas individuais e os cards do catálogo: os kits Descoberta (22), Essência (23), Intensidade (24) e Êxtase (27) exigem escolha da versão do Dado do Prazer (hétero, gay ou lésbica), mas estavam marcados como compra direta no JSON.
+- Campo `sobConsulta: true` definido nesses quatro produtos. O catálogo passa a exibir a ação de consulta pelo WhatsApp, em vez de adicionar ao carrinho.
+- Os kits Ela (25), Ele (26) e o Kit Gel Funcional (10) permanecem aptos à compra direta, pois têm composição definida.
+- A alteração alinha homepage, catálogo, sincronização do carrinho e orientação das páginas individuais. Preços, descrições e composições não foram alterados.
