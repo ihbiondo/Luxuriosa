@@ -259,3 +259,13 @@ A reformulação estará pronta quando a navegação for clara, a experiência m
 - Preços antigos exibidos nas páginas que apresentam comparação conferidos contra `precoAntigo`: os valores coincidem. Nos produtos 17 e 18, o catálogo possui preço antigo, mas a página exibe apenas o preço atual; isso não altera o preço de venda e fica registrado como possível melhoria de apresentação, não como divergência comercial.
 - Os 27 arquivos mantêm seus caminhos individuais; nenhuma URL de produto foi renomeada.
 - A revisão foi estática, sem navegação real, teste de compra ou validação externa dos dados estruturados em navegador. Essas verificações permanecem para a etapa final.
+
+
+## 21. Auditoria complementar das páginas de produto — imagens, dados e ações
+
+- Conferidos nas 27 páginas o nome do produto no título/H1, o nome no JSON-LD `Product`, o preço da oferta estruturada e a imagem principal: os dados conferidos coincidem com `data/produtos.json`.
+- Os 27 arquivos de imagem associados aos produtos existem no diretório `img/produtos/novas`; não foram encontrados caminhos de imagem ausentes no catálogo.
+- Conferido o identificador do botão de compra nas páginas com carrinho: os IDs correspondem ao produto da página. O produto 21 está corretamente marcado como esgotado também no JSON-LD (`OutOfStock`) e o script bloqueia a compra.
+- Os links de recomendação das 27 páginas apontam para páginas de produto existentes; cada página mantém também o retorno para a Loja.
+- **Ponto de decisão identificado:** os seis kits (IDs 22 a 27) estão marcados no catálogo como disponíveis e não estão sob consulta, portanto o catálogo permite adicioná-los ao carrinho. Entretanto, suas páginas individuais oferecem apenas contato pelo WhatsApp e não apresentam o botão de adicionar ao carrinho. Não foi alterada essa regra porque alguns kits incluem item de escolha (por exemplo, versão do Dado do Prazer) e é necessário definir se o cliente deve selecionar a opção antes de adicionar ao carrinho ou se os kits devem continuar com pedido assistido pelo WhatsApp. Essa decisão precisa ser alinhada entre catálogo e página individual antes da implementação.
+- Revisão estática concluída para nomes, imagens, preços, dados estruturados, links de recomendação e identificadores. Ainda não houve teste de navegador, compra real ou validação externa de rich results.
