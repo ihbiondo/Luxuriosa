@@ -14,6 +14,7 @@
   .shop-intro-grid { grid-template-columns:minmax(0,1fr) minmax(220px,.8fr); gap:24px; }
 
   .about-preview { gap:34px; }
+  .service-preview { gap:30px; }
   .footer-grid { gap:26px; }
 
 
@@ -219,6 +220,8 @@
 
 
   .about-preview { grid-template-columns:1fr; gap:25px; }
+  .service-preview { grid-template-columns:1fr; gap:18px; }
+  .service-preview-note { padding:21px; }
   .about-preview-visual { width:min(78%,340px); }
   .about-preview-copy { max-width:none; }
   .about-preview-copy h2 { font-size:34px; }
@@ -747,6 +750,9 @@
 
 
   .about-preview-visual { width:88%; padding:12px; }
+  .service-preview-copy h2 { font-size:30px; }
+  .service-preview-note { padding:17px; }
+  .service-preview-note strong { font-size:22px; }
   .about-preview-copy h2 { font-size:30px; }
   .footer-grid { gap:22px 12px; }
   .footer-navigation { gap:9px; }
