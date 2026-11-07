@@ -25,35 +25,44 @@
   <link rel="stylesheet" href="css/responsive.css">
   <style>
     .about-page { width:min(1080px,92%); margin:0 auto; padding:34px 0 80px; }
-    .about-page-top { display:flex; justify-content:space-between; align-items:center; gap:18px; padding:12px 0 34px; border-bottom:1px solid var(--line); }
+    .about-page-top { display:flex; justify-content:space-between; align-items:center; gap:18px; padding:12px 0 28px; border-bottom:1px solid var(--line); }
     .about-page-brand { color:var(--gold); font-family:var(--serif); font-size:25px; text-decoration:none; }
     .about-page-nav { display:flex; flex-wrap:wrap; gap:14px; }
     .about-page-nav a { color:var(--gold); font-size:11px; text-decoration:none; }
     .about-page-nav a[aria-current="page"] { color:var(--text); }
-    .about-hero { display:grid; grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr); gap:clamp(30px,7vw,82px); align-items:center; padding:62px 0 72px; }
-    .about-hero-art { display:grid; place-items:center; min-height:390px; padding:clamp(24px,4vw,42px); border:1px solid rgba(212,175,124,.32); border-radius:22px; background:radial-gradient(circle at 50% 42%,rgba(139,30,63,.3),transparent 65%),linear-gradient(145deg,#160b10,#0b0b0b); }
-    .about-brand-panel { display:flex; width:100%; min-height:300px; flex-direction:column; align-items:center; justify-content:center; text-align:center; }
-    .about-brand-overline { color:var(--gold); font-size:9px; letter-spacing:.24em; }
-    .about-brand-name { margin:13px 0 5px; color:var(--blush); font-family:var(--serif); font-size:clamp(38px,5vw,58px); line-height:1.05; }
-    .about-brand-location { color:var(--gold); font-size:9px; letter-spacing:.22em; }
-    .about-brand-rule { width:54px; height:1px; margin:24px 0 17px; background:rgba(212,175,124,.7); }
-    .about-brand-tagline { color:var(--muted); font-family:var(--serif); font-size:clamp(16px,2vw,20px); font-style:italic; }
-    .about-hero-copy h1 { margin:12px 0 18px; font-family:var(--serif); font-size:clamp(38px,5vw,58px); font-weight:400; line-height:1.08; }
-    .about-hero-copy p { color:var(--muted); font-size:15px; line-height:1.85; }
-    .about-story { max-width:780px; margin:0 auto; }
-    .about-story h2 { margin:0 0 16px; font-family:var(--serif); font-size:30px; font-weight:400; }
-    .about-story p { color:var(--muted); font-size:14px; line-height:1.9; }
-    .about-values { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin:34px 0 46px; }
-    .about-value { padding:22px; border:1px solid var(--line); border-radius:16px; background:var(--surface2); }
+    .about-hero { max-width:900px; padding:clamp(58px,9vw,112px) 0 76px; }
+    .about-hero-copy { max-width:820px; }
+    .about-hero-copy .kicker { margin-bottom:20px; }
+    .about-hero-copy h1 { max-width:790px; margin:0 0 24px; font-family:var(--serif); font-size:clamp(42px,6.5vw,76px); font-weight:400; line-height:1.06; letter-spacing:-.025em; }
+    .about-hero-copy p { max-width:650px; margin:0; color:var(--muted); font-size:clamp(14px,1.5vw,16px); line-height:1.95; }
+    .about-hero-signature { display:flex; align-items:center; gap:16px; margin-top:34px; color:var(--gold); }
+    .about-hero-monogram { display:grid; width:42px; height:42px; place-items:center; border:1px solid rgba(212,175,124,.45); border-radius:50%; font-family:var(--serif); font-size:24px; color:var(--blush); }
+    .about-hero-signature span:last-child { font-size:9px; letter-spacing:.2em; line-height:1.8; }
+    .about-story { max-width:760px; margin:0 auto; padding:48px 0 12px; border-top:1px solid var(--line); }
+    .about-story h2 { max-width:580px; margin:12px 0 22px; font-family:var(--serif); font-size:clamp(29px,4vw,38px); font-weight:400; line-height:1.2; }
+    .about-story p { color:var(--muted); font-size:14px; line-height:1.95; }
+    .about-story p + p { margin-top:16px; }
+    .about-values { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; max-width:960px; margin:54px auto 64px; }
+    .about-value { padding:24px 22px; border:1px solid var(--line); border-radius:14px; background:linear-gradient(145deg,rgba(255,255,255,.025),rgba(255,255,255,.008)); }
     .about-value span { color:var(--gold); font-size:9px; letter-spacing:.17em; }
-    .about-value h3 { margin:12px 0 7px; color:var(--blush); font-family:var(--serif); font-size:21px; font-weight:400; }
-    .about-value p { margin:0; color:var(--muted); font-size:12px; line-height:1.7; }
-    .about-signature { margin-top:36px; padding:26px; border:1px solid rgba(212,175,124,.3); border-radius:18px; background:linear-gradient(110deg,rgba(90,18,41,.42),rgba(22,12,16,.8)); text-align:center; }
-    .about-signature p { margin:0; color:var(--blush); font-family:var(--serif); font-size:25px; }
-    .about-page-footer { display:flex; justify-content:space-between; gap:18px; margin-top:54px; padding-top:20px; border-top:1px solid var(--line); color:var(--muted); font-size:10px; }
+    .about-value h3 { margin:14px 0 9px; color:var(--blush); font-family:var(--serif); font-size:22px; font-weight:400; }
+    .about-value p { margin:0; color:var(--muted); font-size:12px; line-height:1.8; }
+    .about-signature { max-width:760px; margin:0 auto; padding:30px 0; border-top:1px solid var(--line); text-align:center; }
+    .about-signature p { margin:0; color:var(--blush); font-family:var(--serif); font-size:clamp(22px,3vw,30px); }
+    .about-actions { display:flex; justify-content:center; flex-wrap:wrap; gap:10px; margin-top:24px; }
+    .about-page-footer { display:flex; justify-content:space-between; gap:18px; margin-top:58px; padding-top:20px; border-top:1px solid var(--line); color:var(--muted); font-size:10px; }
     .about-page-footer a { color:var(--gold); text-decoration:none; }
-    @media(max-width:700px) { .about-page-top { align-items:flex-start; flex-direction:column; gap:14px; } .about-page-nav { gap:10px 14px; } .about-hero { grid-template-columns:1fr; gap:26px; padding:38px 0 48px; } .about-hero-art { width:min(78%,360px); margin:auto; } .about-hero-copy h1 { font-size:39px; } .about-values { grid-template-columns:1fr; gap:10px; } .about-value { padding:18px; } .about-story h2 { font-size:26px; } }
-    @media(max-width:380px) { .about-page { width:94%; } .about-hero-art { width:88%; padding:14px; } .about-hero-copy h1 { font-size:34px; } .about-page-footer { flex-direction:column; } }
+    @media(max-width:700px) {
+      .about-page-top { align-items:flex-start; flex-direction:column; gap:14px; }
+      .about-page-nav { gap:10px 14px; }
+      .about-hero { padding:54px 0 56px; }
+      .about-hero-copy h1 { font-size:clamp(40px,10vw,56px); }
+      .about-story { padding-top:36px; }
+      .about-values { grid-template-columns:1fr; gap:10px; margin:38px auto 46px; }
+      .about-value { padding:19px; }
+      .about-page-footer { flex-direction:column; }
+    }
+    @media(max-width:380px) { .about-page { width:94%; } .about-hero-copy h1 { font-size:37px; } }
   </style>
   <script type="application/ld+json">
   {
@@ -76,19 +85,14 @@
     </div>
 
     <section class="about-hero">
-      <div class="about-hero-art" aria-label="Identidade visual da Luxuriosa">
-        <div class="about-brand-panel">
-          <span class="about-brand-overline">SEX SHOP &amp; LINGERIE</span>
-          <span class="about-brand-name">Luxuriosa</span>
-          <span class="about-brand-location">BAURU · SP</span>
-          <span class="about-brand-rule" aria-hidden="true"></span>
-          <span class="about-brand-tagline">Sinta-se ainda mais você.</span>
-        </div>
-      </div>
       <div class="about-hero-copy">
         <div class="kicker">Nossa essência</div>
         <h1>Intimidade com liberdade, respeito e <em class="gold">naturalidade.</em></h1>
         <p>A Luxuriosa nasceu da vontade de criar uma experiência de compra diferente: mais acolhedora, cuidadosa e discreta. Somos um sexshop de Bauru dedicado a produtos para intimidade, prazer e bem-estar, com lingerie selecionada.</p>
+        <div class="about-hero-signature" aria-label="Luxuriosa, Bauru, São Paulo">
+          <span class="about-hero-monogram" aria-hidden="true">L</span>
+          <span>LUXURIOSA<br>BAURU · SP</span>
+        </div>
       </div>
     </section>
 
