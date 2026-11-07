@@ -205,10 +205,6 @@
 
 
 
-  .service-options { grid-template-columns:repeat(2,minmax(0,1fr)); }
-  .service-option:last-child { grid-column:1/-1; }
-  .delivery-promise { grid-template-columns:minmax(0,1fr) 220px; }
-  .delivery-steps { grid-template-columns:repeat(2,minmax(0,1fr)); }
 @media (max-width: 600px) {
   .shop-intro { padding:25px 0 22px; }
   .shop-breadcrumb { margin-bottom:22px; }
@@ -740,10 +736,6 @@
    Até 380px
    ========================================================= */
 
-  .categories { gap:8px; }
-  .cat { min-height:108px; padding:12px; }
-  .cat b { font-size:16px; }
-  .cat .cat-note { font-size:9px; }
 @media (max-width: 380px) {
   .shop-intro h1 { font-size:33px; }
   .shop-intro-note strong { font-size:21px; }
