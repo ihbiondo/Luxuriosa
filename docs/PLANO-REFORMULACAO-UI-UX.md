@@ -164,3 +164,14 @@ A reformulação estará pronta quando a navegação for clara, a experiência m
 - Composição responsiva reorganizada para exibir a imagem antes do texto em telas menores, reduzindo o problema de a imagem ficar abaixo de uma coluna longa.
 - Logotipo institucional deixa de ocupar o papel de imagem principal do hero.
 - Esta entrega é inicial: ainda requer validação visual real em celular, tablet e desktop antes de ser considerada concluída.
+
+
+## 13. Registro de implementação — categorias e vitrine
+
+- Categorias da homepage convertidas em cartões de navegação com microdescrições e hierarquia visual mais clara.
+- Mantidas as categorias que possuem produtos correspondentes no catálogo atual; lingerie não aparece como atalho enquanto não houver produtos disponíveis nessa categoria.
+- O atalho de categoria continua aplicando o filtro correspondente e conduzindo a pessoa ao catálogo.
+- Vitrine de destaques redistribuída entre produtos individuais e kits: Hot Ball — Xana Loka, Vibrador Golfinho — Rosa, Kit Descoberta e Kit Intensidade.
+- Incluído CTA para acessar o catálogo completo.
+- Ajustes responsivos específicos para tablet, celular e telas estreitas.
+- A seleção de destaques usa os campos existentes no cadastro de produtos; nenhum preço ou descrição comercial foi alterado.
