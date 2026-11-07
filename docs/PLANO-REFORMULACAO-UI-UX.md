@@ -210,3 +210,14 @@ A reformulação estará pronta quando a navegação for clara, a experiência m
 - Navegação, rodapé, links de retorno, carrinho, gate 18+ e scripts de checkout foram preservados e adaptados aos caminhos da nova página.
 - Página incluída no sitemap.
 - Revisão estática e validação de caminhos/IDs pendentes; teste visual e funcional real no navegador continua necessário.
+
+
+## 17. Revisão global de navegação e páginas institucionais
+
+- Corrigidos os links da página Sobre que ainda apontavam para a antiga âncora `index.html#catalogo`; agora direcionam para `loja.html`.
+- Revisados os 27 detalhes de produto: links de retorno ao catálogo agora apontam para a nova Loja, sem depender da seção removida da homepage.
+- Revisadas as quatro páginas regionais: links para catálogo também apontam para `loja.html`; links de atendimento e entrega continuam direcionando às seções válidas da homepage.
+- FAQ e Política de Privacidade receberam navegação superior consistente com Início, Loja, Sobre, Dúvidas frequentes e Privacidade, com indicação da página atual.
+- Conferidos os links internos e âncoras das páginas principais e regionais; não foram encontrados links restantes para a antiga âncora `#catalogo` nas páginas revisadas.
+- Mantidos os links das páginas de produto, das cidades, do atendimento, da entrega, do FAQ e da política de privacidade.
+- A revisão foi estática, diretamente nos arquivos da branch. Não substitui teste real de navegação, teclado, telas e comportamento no navegador.
