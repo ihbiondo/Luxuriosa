@@ -11,6 +11,8 @@
    ========================================================= */
 
 @media (max-width: 900px) {
+  .shop-intro-grid { grid-template-columns:minmax(0,1fr) minmax(220px,.8fr); gap:24px; }
+
   .about-preview { gap:34px; }
   .footer-grid { gap:26px; }
 
@@ -207,6 +209,15 @@
   .delivery-promise { grid-template-columns:minmax(0,1fr) 220px; }
   .delivery-steps { grid-template-columns:repeat(2,minmax(0,1fr)); }
 @media (max-width: 600px) {
+  .shop-intro { padding:25px 0 22px; }
+  .shop-breadcrumb { margin-bottom:22px; }
+  .shop-intro-grid { grid-template-columns:1fr; gap:18px; }
+  .shop-intro h1 { max-width:520px; font-size:38px; }
+  .shop-intro-note { padding:17px; }
+  .shop-page #catalogo { padding-top:24px; }
+  .shop-page #catalogo .section-head { gap:10px; }
+
+
   .about-preview { grid-template-columns:1fr; gap:25px; }
   .about-preview-visual { width:min(78%,340px); }
   .about-preview-copy { max-width:none; }
@@ -731,6 +742,10 @@
   .cat b { font-size:16px; }
   .cat .cat-note { font-size:9px; }
 @media (max-width: 380px) {
+  .shop-intro h1 { font-size:33px; }
+  .shop-intro-note strong { font-size:21px; }
+
+
   .about-preview-visual { width:88%; padding:12px; }
   .about-preview-copy h2 { font-size:30px; }
   .footer-grid { gap:22px 12px; }
