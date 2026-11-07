@@ -372,3 +372,15 @@ A reformulação estará pronta quando a navegação for clara, a experiência m
 - Arquivos alterados nesta etapa: `index.html` e `css/style.css`. O breakpoint mobile existente foi revisado e já contemplava duas colunas.
 - Limite: ajustes estáticos de HTML/CSS; os recortes precisam ser conferidos no navegador em diferentes larguras antes da aprovação. As imagens dos kits serão substituídas por fotografias reais quando o usuário as produzir.
 - Nenhuma alteração na branch `main`; nenhuma publicação.
+
+
+## 29. Padronização visual das páginas individuais de produto
+
+- Criada a folha compartilhada `css/produto.css`, aplicada às 27 páginas individuais de produto.
+- Refinada a apresentação da página: área de imagem com fundo editorial discreto, melhor hierarquia de título/categoria/marca/preço, ações de compra mais organizadas e bloco de descrição separado visualmente.
+- A imagem permanece em `object-fit: contain`, sem alteração dos arquivos ou dos recortes originais.
+- A área de recomendações recebeu acabamento visual alinhado à identidade vinho, preto e dourado.
+- No mobile, a imagem aparece antes das informações, os botões ocupam a largura disponível e o layout passa a uma coluna.
+- Não foram alterados nomes, descrições, preços, disponibilidade, IDs, dados estruturados, URLs, estoque, regras de compra ou mensagens de WhatsApp.
+- A alteração é exclusivamente visual. A validação visual em navegador das páginas individuais ainda precisa ser feita pelo usuário em desktop e mobile.
+- Nenhuma alteração na branch `main`; nenhuma publicação.
