@@ -216,10 +216,10 @@ A reformulação estará pronta quando a navegação for clara, a experiência m
 
 - Corrigidos os links da página Sobre que ainda apontavam para a antiga âncora `index.html#catalogo`; agora direcionam para `loja.html`.
 - Revisados os 27 detalhes de produto: links de retorno ao catálogo agora apontam para a nova Loja, sem depender da seção removida da homepage.
-- Revisadas as quatro páginas regionais: links para catálogo também apontam para `loja.html`; links de atendimento e entrega continuam direcionando às seções válidas da homepage.
+- Revisadas as quatro páginas regionais: links para catálogo também apontam para `loja.html`; links de atendimento e entrega foram direcionados à nova página independente `atendimento.html`, preservando as âncoras de entrega.
 - FAQ e Política de Privacidade receberam navegação superior consistente com Início, Loja, Sobre, Dúvidas frequentes e Privacidade, com indicação da página atual.
 - Conferidos os links internos e âncoras das páginas principais e regionais; não foram encontrados links restantes para a antiga âncora `#catalogo` nas páginas revisadas.
-- Mantidos os links das páginas de produto, das cidades, do atendimento, da entrega, do FAQ e da política de privacidade.
+- Mantidos os links das páginas de produto, das cidades, da nova página de atendimento e entrega, do FAQ e da política de privacidade.
 - A revisão foi estática, diretamente nos arquivos da branch. Não substitui teste real de navegação, teclado, telas e comportamento no navegador.
 
 
@@ -231,6 +231,6 @@ A reformulação estará pronta quando a navegação for clara, a experiência m
 - Mantida a alternativa de apresentação neutra, conforme a escolha do cliente no atendimento.
 - Condições de frete, prazos, municípios, distritos e links regionais foram transferidos sem alterar os valores e referências existentes.
 - A homepage passa a apresentar apenas um resumo da experiência e direciona para a página completa.
-- Navegação, rodapés, FAQ, páginas institucionais e links regionais/produtos estão sendo atualizados para a nova página.
+- Navegação, rodapés, FAQ, páginas institucionais e links das 27 páginas de produto e quatro páginas regionais foram atualizados para a nova página.
 - Página adicionada ao sitemap com canonical, Open Graph e dados estruturados próprios.
 - A revisão desta etapa é estática; testes visuais e funcionais reais no navegador continuam pendentes.
