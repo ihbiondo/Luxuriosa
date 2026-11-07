@@ -1567,16 +1567,19 @@
     document.addEventListener(
       "keydown",
       function (evento) {
+        if (evento.key !== "Escape") return;
 
-        if (
-          evento.key ===
-          "Escape"
-        ) {
+        /* Se a revisão do pedido estiver aberta, o Esc pertence a ela.
+           Não fecha também o carrinho que está por trás do diálogo. */
+        var cadastroAberto = $("customerOverlay") &&
+          !$("customerOverlay").hidden;
 
+        var carrinhoAberto = $("cart") &&
+          $("cart").classList.contains("open");
+
+        if (carrinhoAberto && !cadastroAberto) {
           fecharCarrinho();
-
         }
-
       }
     );
 
