@@ -234,4 +234,5 @@ A reformulação estará pronta quando a navegação for clara, a experiência m
 - Navegação, rodapés, FAQ, páginas institucionais e links das 27 páginas de produto e quatro páginas regionais foram atualizados para a nova página.
 - Página adicionada ao sitemap com canonical, Open Graph e dados estruturados próprios.
 - A nova página carrega também `js/consentimento.js`, aplicando a confirmação de maioridade e o painel de preferências de privacidade, no mesmo padrão das páginas comerciais do site.
+- Na auditoria responsiva, foram removidas oito regras que estavam fora dos respectivos breakpoints e poderiam alterar indevidamente o layout desktop de categorias, atendimento e entrega. A folha responsiva foi revalidada: regras agrupadas em media queries e chaves balanceadas.
 - A revisão desta etapa é estática; testes visuais e funcionais reais no navegador continuam pendentes.
