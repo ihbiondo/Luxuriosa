@@ -1386,7 +1386,6 @@
       "• Em Bauru, pedidos que incluam pelo menos um kit têm frete grátis.",
       "• Para os demais pedidos em Bauru, o frete padrão é R$ 15,00.",
       "• Para outras cidades, disponibilidade e valor serão confirmados no atendimento.",
-,
       "*PRÓXIMO PASSO*",
       "Gostaria de confirmar a disponibilidade, os tamanhos e a entrega.",
       "_O envio desta mensagem não confirma o pedido nem processa pagamento._"
