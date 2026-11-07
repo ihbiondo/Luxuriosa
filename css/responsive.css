@@ -96,7 +96,7 @@
   .hero { padding:42px 0 50px; }
   .hero-grid { grid-template-columns:1fr; gap:22px; }
   .hero-visual { order:-1; min-height:0; width:100%; max-width:520px; margin:0 auto; padding:4px 0 30px; }
-  .hero-image-main { width:min(82%,340px); aspect-ratio:4/5; border-radius:18px; }
+  .hero-image-main { width:min(90%,400px); aspect-ratio:1/1; border-radius:18px; }
   .hero-visual-note { right:4%; bottom:0; font-size:14px; }
   .hero-copy { max-width:none; }
   .hero h1 { max-width:620px; font-size:clamp(38px,8vw,56px); }
