@@ -2147,24 +2147,74 @@ footer {
 .service-preview-note a { color:var(--gold); font-size:11px; text-decoration:underline; text-underline-offset:4px; }
 
 
-/* Hero de marca: prioriza a logo original, sem recorte de fotografia de produto. */
+/* Painel editorial da marca: identidade horizontal, sem encaixar a logo quadrada no hero. */
 .hero-visual--brand { align-items:center; }
-.hero-image-main--brand {
+.hero-brand-panel {
+  position:relative;
+  isolation:isolate;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
   width:min(100%,520px);
-  aspect-ratio:1 / 1;
-  display:grid;
-  place-items:center;
-  padding:clamp(24px,5vw,54px);
-  border:1px solid rgba(212,175,124,.28);
+  min-height:440px;
+  padding:clamp(34px,6vw,64px);
+  overflow:hidden;
+  text-align:center;
+  border:1px solid rgba(212,175,124,.30);
   border-radius:28px;
-  background:radial-gradient(ellipse at center,rgba(139,30,63,.20),rgba(11,11,11,.96) 72%);
+  background:
+    radial-gradient(ellipse at 50% 38%,rgba(139,30,63,.34),transparent 58%),
+    linear-gradient(145deg,#1b0c12 0%,#100b0e 58%,#090909 100%);
   box-shadow:0 28px 70px rgba(0,0,0,.36);
 }
-.hero-image-main--brand img {
-  width:100%;
-  height:100%;
-  object-fit:contain;
-  object-position:center;
+.hero-brand-panel::before,
+.hero-brand-panel::after {
+  position:absolute;
+  z-index:-1;
+  content:"";
+  border:1px solid rgba(212,175,124,.12);
+  border-radius:50%;
+  pointer-events:none;
+}
+.hero-brand-panel::before { width:78%; aspect-ratio:1; }
+.hero-brand-panel::after { width:92%; aspect-ratio:1; border-color:rgba(212,175,124,.07); }
+.brand-panel-overline {
+  color:var(--blush);
+  font-size:9px;
+  font-weight:500;
+  letter-spacing:.34em;
+}
+.brand-panel-wordmark {
+  margin:22px 0 18px;
+  color:var(--gold);
+  font-family:var(--serif);
+  font-size:clamp(40px,5.2vw,66px);
+  font-weight:400;
+  letter-spacing:.075em;
+  line-height:1;
+  white-space:nowrap;
+}
+.brand-panel-rule { width:64px; height:1px; background:var(--gold); opacity:.75; }
+.brand-panel-description {
+  margin-top:22px;
+  color:var(--text);
+  font-family:var(--serif);
+  font-size:clamp(18px,2vw,23px);
+  line-height:1.55;
+}
+.brand-panel-slogan {
+  margin-top:30px;
+  color:var(--gold);
+  font-family:var(--serif);
+  font-size:clamp(15px,1.7vw,19px);
+  font-style:italic;
+}
+.brand-panel-location {
+  margin-top:28px;
+  color:var(--muted);
+  font-size:9px;
+  letter-spacing:.25em;
 }
 
 

@@ -1011,11 +1011,20 @@
 
 
 @media (max-width: 700px) {
-  .hero-image-main--brand {
-    width:min(88%,360px);
-    aspect-ratio:1 / 1;
-    padding:24px;
+  .hero-brand-panel {
+    width:min(88%,420px);
+    min-height:310px;
+    padding:28px 20px;
+    border-radius:20px;
   }
+  .brand-panel-wordmark {
+    margin:18px 0 15px;
+    font-size:clamp(36px,10vw,52px);
+    letter-spacing:.045em;
+  }
+  .brand-panel-description { margin-top:18px; font-size:18px; }
+  .brand-panel-slogan { margin-top:22px; font-size:16px; }
+  .brand-panel-location { margin-top:20px; font-size:8px; }
   .product h3 {
     font-size:15px;
     line-height:1.32;
