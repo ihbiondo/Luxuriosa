@@ -170,7 +170,7 @@ A reformulação estará pronta quando a navegação for clara, a experiência m
 
 - Categorias da homepage convertidas em cartões de navegação com microdescrições e hierarquia visual mais clara.
 - Mantidas as categorias que possuem produtos correspondentes no catálogo atual; lingerie não aparece como atalho enquanto não houver produtos disponíveis nessa categoria.
-- O atalho de categoria continua aplicando o filtro correspondente e conduzindo a pessoa ao catálogo.
+- Os cartões de categoria direcionam à Loja com o filtro correspondente pré-selecionado.
 - Vitrine de destaques redistribuída entre produtos individuais e kits: Hot Ball — Xana Loka, Vibrador Golfinho — Rosa, Kit Descoberta e Kit Intensidade.
 - Incluído CTA para acessar o catálogo completo.
 - Ajustes responsivos específicos para tablet, celular e telas estreitas.
@@ -202,7 +202,7 @@ A reformulação estará pronta quando a navegação for clara, a experiência m
 
 ## 16. Registro de implementação — página Loja
 
-- Criada a página independente `loja.html), com título, descrição, canonical e dados estruturados próprios.
+- Criada a página independente `loja.html`, com título, descrição, canonical e dados estruturados próprios.
 - Catálogo, busca, filtros, cards, modal de detalhes e carrinho foram reaproveitados com os mesmos IDs e scripts da homepage, preservando a lógica existente.
 - A homepage deixa de carregar o catálogo completo e passa a direcionar a compra para a página Loja.
 - Os seis atalhos de categoria da homepage agora abrem a Loja com o filtro correspondente pré-selecionado.
