@@ -334,3 +334,16 @@ A reformulação estará pronta quando a navegação for clara, a experiência m
 - Mantidas as condições comerciais existentes. Não foram alterados preços, frete, prazos operacionais, política de embalagem ou formas de pagamento.
 - Não foi feita análise jurídica da política de trocas/devoluções nem validação da operação real de entrega; esses temas exigem confirmação operacional e, se necessário, orientação profissional específica.
 - Revisão estática dos textos e funções da branch `uiux-reformulacao`; não houve teste de compra real, navegação em navegador ou alteração na branch `main`.
+
+
+## 26. Auditoria final estática de acessibilidade, SEO técnico e desempenho
+
+- Revisadas as seis páginas principais (Início, Loja, Atendimento, Sobre, FAQ e Privacidade), as 27 páginas individuais de produto e as quatro páginas regionais.
+- Nas 31 páginas de produto e região, todas apresentam título, descrição, canonical, Open Graph e exatamente um H1. As 27 páginas de produto possuem texto alternativo nas imagens principais; a galeria do Egg Masturbador também possui alts. Os blocos JSON-LD verificados nas páginas individuais e regionais são JSON válido.
+- Nas páginas principais, títulos, descrições, canonical e hierarquia H1 foram encontrados. A página de Privacidade era a exceção na padronização de Open Graph e ícones; metadados Open Graph/Twitter e favicons foram adicionados.
+- Identificado e corrigido erro de digitação no CSS responsivo mobile: a propriedade min-height do cabeçalho do carrinho estava dividida em dois tokens (8 e 2px) e, portanto, inválida. Valor corrigido para 82px.
+- As imagens de catálogo em uso referenciam a pasta img/produtos/novas/, com arquivos JPG geralmente na faixa aproximada de 190–295 KB. O repositório ainda contém PNGs antigos de aproximadamente 1,2–2,4 MB; não foram excluídos nem substituídos porque não são necessários para corrigir a experiência e a remoção de ativos exige confirmação de que não há uso externo.
+- Os scripts das páginas individuais são carregados no final do body, depois do conteúdo principal; não foi aplicada alteração indiscriminada para defer, evitando mudanças desnecessárias na ordem de inicialização.
+- robots.txt permite rastreamento e aponta para o sitemap. O sitemap contém 37 URLs únicas; as URLs listadas correspondem a arquivos existentes na branch.
+- Limites: revisão estática de marcação, referências, tamanhos informados pelo GitHub e sintaxe; não houve Lighthouse, medição de Core Web Vitals, teste com teclado/leitor de tela, validação de contraste automatizada, teste visual em navegador ou compra real.
+- Nenhuma alteração na branch main; nenhuma publicação foi realizada.
