@@ -324,26 +324,11 @@
   .hero-image-secondary { width:94px; }
   .hero-visual-note { font-size:12px; }
 
-  /* -------------------------------------------------------
-     CATEGORIAS
-     ------------------------------------------------------- */
-
-  .categories {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 9px;
-  }
-
-  .cat {
-    min-height: 64px;
-    padding: 12px 13px;
-    border-radius: 14px;
-  }
-
-  .cat b {
-    font-size: 16px;
-    line-height: 1.25;
-  }
-
+  /* CATEGORIAS */
+  .categories { grid-template-columns:repeat(2,minmax(0,1fr)); gap:9px; }
+  .cat { min-height:116px; padding:15px; border-radius:14px; }
+  .cat b { font-size:18px; line-height:1.2; }
+  .cat .cat-note { font-size:10px; }
 
   .catalog-search {
     width: 100%;
