@@ -83,7 +83,7 @@
           window.LuxuriosaCarrinho.adicionar(produto, 1);
           botao.textContent = "Adicionado!";
           informar("Produto adicionado. Abrindo seu carrinho…");
-          window.location.href = "../index.html?abrirCarrinho=1#catalogo";
+          window.location.href = "../loja.html?abrirCarrinho=1#catalogo";
         } catch (erro) {
           botao.disabled = false;
           botao.textContent = "Tentar novamente";
