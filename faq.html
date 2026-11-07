@@ -29,42 +29,55 @@
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/responsive.css">
   <style>
-    .faq-page { max-width: 900px; margin: 0 auto; padding: 48px 16px 80px; }
-    .faq-page .back { display: inline-block; margin-bottom: 20px; color: var(--gold); }
-    .page-nav { display:flex !important; flex-wrap:wrap; gap:16px; }
-    .page-nav a { color:var(--gold); text-decoration:none; font-size:12px; }
-    .page-nav a[aria-current="page"] { color:var(--text); }
-    .faq-page h1 { margin: 8px 0 12px; }
-    .faq-intro { color: var(--muted); max-width: 720px; margin-bottom: 32px; }
-    .faq-group { margin-top: 34px; }
-    .faq-group h2 { font-size: 22px; margin: 0 0 14px; }
-    .faq-item { border: 1px solid var(--line); border-radius: 12px; background: var(--surface); margin: 10px 0; overflow: hidden; }
-    .faq-item summary { cursor: pointer; padding: 16px 18px; font-weight: 500; color: var(--text); }
-    .faq-item summary::marker { color: var(--gold); }
-    .faq-answer { padding: 0 18px 16px; color: var(--muted); }
-    .faq-answer p { margin: 0 0 12px; }
-    .faq-answer p:last-child { margin-bottom: 0; }
-    .faq-answer a { color: var(--gold); text-decoration: underline; text-underline-offset: 3px; }
-    .faq-contact { margin-top: 36px; padding: 22px; border: 1px solid var(--line); border-radius: 14px; background: var(--surface2); }
-    .faq-contact p { color: var(--muted); }
-    .faq-contact .btn { display: inline-flex; margin-top: 6px; }
-    @media (max-width: 600px) {
-      .faq-page { padding-top: 32px; }
-      .faq-group h2 { font-size: 20px; }
-      .faq-item summary { padding: 14px; }
-      .faq-answer { padding: 0 14px 14px; }
+    .faq-page { width:min(1080px,92%); margin:0 auto; padding:34px 0 80px; }
+    .faq-page .back { display:flex; flex-wrap:wrap; gap:18px; margin:12px 0 0; padding:0 0 22px; border-bottom:1px solid var(--line); }
+    .page-nav a { color:var(--gold); text-decoration:none; font-size:11px; transition:color .2s ease; }
+    .page-nav a:hover,.page-nav a[aria-current="page"] { color:var(--blush); }
+    .faq-hero { margin:34px 0 48px; padding:clamp(34px,6vw,62px); border:1px solid rgba(212,175,124,.24); border-radius:22px; background:radial-gradient(ellipse at 88% 8%,rgba(139,30,63,.42),transparent 52%),linear-gradient(125deg,#241019,#100c0e 72%); }
+    .faq-page h1 { max-width:720px; margin:10px 0 16px; font-family:var(--serif); font-size:clamp(40px,6vw,64px); font-weight:400; line-height:1.08; }
+    .faq-intro { max-width:680px; margin:0; color:var(--muted); font-size:14px; line-height:1.9; }
+    .faq-group { margin:0 auto 34px; max-width:900px; padding:26px 28px; border:1px solid rgba(212,175,124,.16); border-radius:18px; background:linear-gradient(140deg,rgba(65,26,40,.34),rgba(20,16,18,.76)); }
+    .faq-group h2 { margin:0 0 18px; color:var(--blush); font-family:var(--serif); font-size:27px; font-weight:400; }
+    .faq-item { margin:10px 0; overflow:hidden; border:1px solid rgba(212,175,124,.17); border-radius:12px; background:rgba(9,9,10,.42); transition:border-color .2s ease,background .2s ease; }
+    .faq-item[open] { border-color:rgba(212,175,124,.42); background:rgba(139,30,63,.10); }
+    .faq-item summary { position:relative; cursor:pointer; padding:17px 48px 17px 18px; color:var(--text); font-size:13px; font-weight:500; line-height:1.6; list-style:none; }
+    .faq-item summary::-webkit-details-marker { display:none; }
+    .faq-item summary::after { content:"+"; position:absolute; top:50%; right:18px; transform:translateY(-50%); color:var(--gold); font-size:21px; font-weight:300; }
+    .faq-item[open] summary::after { content:"−"; }
+    .faq-item summary:focus-visible { outline:2px solid var(--gold); outline-offset:-3px; border-radius:10px; }
+    .faq-answer { padding:0 18px 18px; color:var(--muted); font-size:13px; line-height:1.85; }
+    .faq-answer p { margin:0 0 12px; }
+    .faq-answer p:last-child { margin-bottom:0; }
+    .faq-answer a { color:var(--gold); text-decoration:underline; text-underline-offset:3px; }
+    .faq-contact { max-width:900px; margin:44px auto 0; padding:30px; border:1px solid rgba(212,175,124,.3); border-radius:18px; background:radial-gradient(ellipse at 85% 10%,rgba(139,30,63,.34),transparent 55%),linear-gradient(120deg,#321321,#160e12); }
+    .faq-contact h2 { color:var(--blush); font-family:var(--serif); font-size:28px; font-weight:400; }
+    .faq-contact p { max-width:600px; color:var(--muted); font-size:13px; line-height:1.8; }
+    .faq-contact .btn { display:inline-flex; margin-top:6px; }
+    @media(max-width:700px) {
+      .faq-page { padding:24px 0 56px; }
+      .faq-page .back { gap:12px 16px; }
+      .faq-hero { margin:24px 0 32px; padding:30px 22px; }
+      .faq-page h1 { font-size:clamp(38px,10vw,50px); }
+      .faq-group { margin-bottom:18px; padding:20px 14px; }
+      .faq-group h2 { font-size:24px; }
+      .faq-item summary { padding:15px 42px 15px 14px; }
+      .faq-answer { padding:0 14px 15px; }
+      .faq-contact { margin-top:28px; padding:24px 20px; }
     }
   </style>
 </head>
 <body>
   <main class="faq-page">
     <nav class="back page-nav" aria-label="Navegação principal"><a href="index.html">Início</a><a href="loja.html">Loja</a><a href="sobre.html">Sobre</a><a href="atendimento.html">Atendimento</a><a href="faq.html" aria-current="page">Dúvidas frequentes</a><a href="privacidade.html">Privacidade</a></nav>
+
+    <section class="faq-hero" aria-labelledby="faq-title">
     <div class="kicker">Estamos aqui para ajudar</div>
-    <h1>Dúvidas frequentes</h1>
+    <h1 id="faq-title">Dúvidas frequentes</h1>
     <p class="faq-intro">
       Reunimos respostas para você comprar com mais tranquilidade, privacidade e clareza.
       Se sua dúvida não estiver aqui, nosso atendimento pode ajudar pelo WhatsApp.
     </p>
+    </section>
 
     <section class="faq-group" aria-labelledby="faq-pedidos">
       <h2 id="faq-pedidos">Pedidos e produtos</h2>
