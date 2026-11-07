@@ -233,4 +233,5 @@ A reformulação estará pronta quando a navegação for clara, a experiência m
 - A homepage passa a apresentar apenas um resumo da experiência e direciona para a página completa.
 - Navegação, rodapés, FAQ, páginas institucionais e links das 27 páginas de produto e quatro páginas regionais foram atualizados para a nova página.
 - Página adicionada ao sitemap com canonical, Open Graph e dados estruturados próprios.
+- A nova página carrega também `js/consentimento.js`, aplicando a confirmação de maioridade e o painel de preferências de privacidade, no mesmo padrão das páginas comerciais do site.
 - A revisão desta etapa é estática; testes visuais e funcionais reais no navegador continuam pendentes.
