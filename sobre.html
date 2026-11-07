@@ -27,7 +27,9 @@
     .about-page { width:min(1080px,92%); margin:0 auto; padding:34px 0 80px; }
     .about-page-top { display:flex; justify-content:space-between; align-items:center; gap:18px; padding:12px 0 34px; border-bottom:1px solid var(--line); }
     .about-page-brand { color:var(--gold); font-family:var(--serif); font-size:25px; text-decoration:none; }
-    .about-page-back { color:var(--gold); font-size:11px; text-decoration:none; }
+    .about-page-nav { display:flex; flex-wrap:wrap; gap:14px; }
+    .about-page-nav a { color:var(--gold); font-size:11px; text-decoration:none; }
+    .about-page-nav a[aria-current="page"] { color:var(--text); }
     .about-hero { display:grid; grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr); gap:clamp(30px,7vw,82px); align-items:center; padding:62px 0 72px; }
     .about-hero-art { padding:22px; border:1px solid rgba(212,175,124,.32); border-radius:22px; background:radial-gradient(circle at 50% 42%,rgba(139,30,63,.25),transparent 65%),#10090c; }
     .about-hero-art img { display:block; width:100%; aspect-ratio:1; object-fit:contain; }
@@ -45,7 +47,7 @@
     .about-signature p { margin:0; color:var(--blush); font-family:var(--serif); font-size:25px; }
     .about-page-footer { display:flex; justify-content:space-between; gap:18px; margin-top:54px; padding-top:20px; border-top:1px solid var(--line); color:var(--muted); font-size:10px; }
     .about-page-footer a { color:var(--gold); text-decoration:none; }
-    @media(max-width:700px) { .about-hero { grid-template-columns:1fr; gap:26px; padding:38px 0 48px; } .about-hero-art { width:min(78%,360px); margin:auto; } .about-hero-copy h1 { font-size:39px; } .about-values { grid-template-columns:1fr; gap:10px; } .about-value { padding:18px; } .about-story h2 { font-size:26px; } }
+    @media(max-width:700px) { .about-page-top { align-items:flex-start; flex-direction:column; gap:14px; } .about-page-nav { gap:10px 14px; } .about-hero { grid-template-columns:1fr; gap:26px; padding:38px 0 48px; } .about-hero-art { width:min(78%,360px); margin:auto; } .about-hero-copy h1 { font-size:39px; } .about-values { grid-template-columns:1fr; gap:10px; } .about-value { padding:18px; } .about-story h2 { font-size:26px; } }
     @media(max-width:380px) { .about-page { width:94%; } .about-hero-art { width:88%; padding:14px; } .about-hero-copy h1 { font-size:34px; } .about-page-footer { flex-direction:column; } }
   </style>
   <script type="application/ld+json">
@@ -63,7 +65,9 @@
   <main class="about-page">
     <div class="about-page-top">
       <a class="about-page-brand" href="index.html">Luxuriosa</a>
-      <a class="about-page-back" href="loja.html">← Ir para a loja</a>
+      <nav class="about-page-nav" aria-label="Navegação principal">
+        <a href="index.html">Início</a><a href="loja.html">Loja</a><a href="sobre.html" aria-current="page">Sobre</a><a href="atendimento.html">Atendimento</a><a href="faq.html">Dúvidas frequentes</a><a href="privacidade.html">Privacidade</a>
+      </nav>
     </div>
 
     <section class="about-hero">
