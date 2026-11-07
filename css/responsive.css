@@ -1018,9 +1018,10 @@
     border-radius:20px;
   }
   .brand-panel-logo {
-    width:min(100%,310px);
-    max-height:125px;
-    margin:15px 0 17px;
+    width:160px;
+    height:160px;
+    max-width:100%;
+    margin:10px 0 14px;
   }
   .brand-panel-description { margin-top:18px; font-size:18px; }
   .brand-panel-slogan { margin-top:22px; font-size:16px; }
