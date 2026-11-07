@@ -269,3 +269,12 @@ A reformulação estará pronta quando a navegação for clara, a experiência m
 - Os links de recomendação das 27 páginas apontam para páginas de produto existentes; cada página mantém também o retorno para a Loja.
 - **Ponto de decisão identificado:** os seis kits (IDs 22 a 27) estão marcados no catálogo como disponíveis e não estão sob consulta, portanto o catálogo permite adicioná-los ao carrinho. Entretanto, suas páginas individuais oferecem apenas contato pelo WhatsApp e não apresentam o botão de adicionar ao carrinho. Não foi alterada essa regra porque alguns kits incluem item de escolha (por exemplo, versão do Dado do Prazer) e é necessário definir se o cliente deve selecionar a opção antes de adicionar ao carrinho ou se os kits devem continuar com pedido assistido pelo WhatsApp. Essa decisão precisa ser alinhada entre catálogo e página individual antes da implementação.
 - Revisão estática concluída para nomes, imagens, preços, dados estruturados, links de recomendação e identificadores. Ainda não houve teste de navegador, compra real ou validação externa de rich results.
+
+
+## 22. Padronização das ações dos kits nas páginas individuais
+
+- Aplicada a decisão comercial para os seis kits: os kits de composição fixa **Kit Ela (ID 25)** e **Kit Ele (ID 26)** agora têm botão de adicionar ao carrinho, integrado ao fluxo oficial de sincronização de catálogo e carrinho, além do contato pelo WhatsApp.
+- Os kits **Descoberta (ID 22)**, **Essência (ID 23)**, **Intensidade (ID 24)** e **Êxtase (ID 27)** permanecem com atendimento pelo WhatsApp, pois incluem a escolha da versão do Dado do Prazer.
+- Mantido o botão de retorno ao catálogo nas seis páginas.
+- Verificação estática confirmou que as páginas 25 e 26 carregam os scripts de carrinho e compra de produto, usam os IDs corretos e mantêm o contato pelo WhatsApp. As outras quatro páginas não receberam botão de compra direta.
+- Não houve teste real em navegador; a validação funcional do clique, inclusão e abertura automática do carrinho permanece para a etapa de testes locais.
