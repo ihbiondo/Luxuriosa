@@ -347,3 +347,14 @@ A reformulação estará pronta quando a navegação for clara, a experiência m
 - robots.txt permite rastreamento e aponta para o sitemap. O sitemap contém 37 URLs únicas; as URLs listadas correspondem a arquivos existentes na branch.
 - Limites: revisão estática de marcação, referências, tamanhos informados pelo GitHub e sintaxe; não houve Lighthouse, medição de Core Web Vitals, teste com teclado/leitor de tela, validação de contraste automatizada, teste visual em navegador ou compra real.
 - Nenhuma alteração na branch main; nenhuma publicação foi realizada.
+
+
+## 27. Refinamento inicial da direção de arte — homepage
+
+- Removida a composição de três fotografias sobrepostas e inclinadas no hero. A homepage passa a apresentar uma única imagem principal, reduzindo a sensação de produtos flutuando e evitando recortes conflitantes.
+- A imagem principal do hero passou a usar proporção vertical 4:5 e `object-fit: contain`, preservando a composição original e evitando cortes do kit. O enquadramento foi ajustado também no breakpoint mobile.
+- A imagem quadrada da marca foi retirada da seção de apresentação Sobre na homepage. Em seu lugar, foi criado um painel tipográfico responsivo com o nome Luxuriosa, assinatura “Sex Shop & Lingerie” e localização, integrado ao fundo escuro da identidade visual. Isso evita a aparência de uma fotografia quadrada encaixada no layout.
+- O cabeçalho mantém o wordmark textual existente, que se adapta melhor a larguras menores; não foi criada uma nova versão raster da logo nem alterados favicons, imagens de perfil ou OG.
+- As imagens de kits e produtos do catálogo não foram substituídas por imagens artificiais. A seleção final de fotografias reais será feita após o usuário fotografar os kits físicos.
+- Arquivos alterados: `index.html`, `css/style.css` e `css/responsive.css`.
+- Limite desta etapa: alteração estática de HTML/CSS; ainda é necessário validar visualmente em desktop e celular no navegador local. Nenhuma alteração na branch `main` e nenhuma publicação.
