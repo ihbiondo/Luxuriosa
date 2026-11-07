@@ -186,7 +186,8 @@
       "esgotado": false,
       "maisVendido": false,
       "tipoProduto": "Kits",
-      "pagina": "produtos/10-kit-gel-funcional-xana-loka-ku-loko.html"
+      "pagina": "produtos/10-kit-gel-funcional-xana-loka-ku-loko.html",
+      "sobConsulta": false
     },
     {
       "id": 11,
@@ -200,7 +201,7 @@
       "tamanhos": "",
       "imagem": "img/produtos/novas/luxuriosa-xana-loka-hotball.jpg",
       "novo": false,
-      "destaque": true,
+      "destaque": false,
       "esgotado": false,
       "maisVendido": false,
       "tipoProduto": "Estimulantes",
@@ -412,7 +413,7 @@
       "maisVendido": false,
       "tipoProduto": "Kits",
       "pagina": "produtos/22-kit-basico.html",
-      "sobConsulta": true
+      "sobConsulta": false
     },
     {
       "id": 23,
@@ -431,7 +432,7 @@
       "maisVendido": false,
       "tipoProduto": "Kits",
       "pagina": "produtos/23-kit-intermediario.html",
-      "sobConsulta": true
+      "sobConsulta": false
     },
     {
       "id": 24,
@@ -450,7 +451,7 @@
       "maisVendido": false,
       "tipoProduto": "Kits",
       "pagina": "produtos/24-kit-premium.html",
-      "sobConsulta": true
+      "sobConsulta": false
     },
     {
       "id": 25,
@@ -507,7 +508,7 @@
       "maisVendido": false,
       "tipoProduto": "Kits",
       "pagina": "produtos/27-kit-extase.html",
-      "sobConsulta": true
+      "sobConsulta": false
     },
     {
       "id": 28,
