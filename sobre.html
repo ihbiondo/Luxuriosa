@@ -31,8 +31,13 @@
     .about-page-nav a { color:var(--gold); font-size:11px; text-decoration:none; }
     .about-page-nav a[aria-current="page"] { color:var(--text); }
     .about-hero { display:grid; grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr); gap:clamp(30px,7vw,82px); align-items:center; padding:62px 0 72px; }
-    .about-hero-art { padding:22px; border:1px solid rgba(212,175,124,.32); border-radius:22px; background:radial-gradient(circle at 50% 42%,rgba(139,30,63,.25),transparent 65%),#10090c; }
-    .about-hero-art img { display:block; width:100%; aspect-ratio:1; object-fit:contain; }
+    .about-hero-art { display:grid; place-items:center; min-height:390px; padding:clamp(24px,4vw,42px); border:1px solid rgba(212,175,124,.32); border-radius:22px; background:radial-gradient(circle at 50% 42%,rgba(139,30,63,.3),transparent 65%),linear-gradient(145deg,#160b10,#0b0b0b); }
+    .about-brand-panel { display:flex; width:100%; min-height:300px; flex-direction:column; align-items:center; justify-content:center; text-align:center; }
+    .about-brand-overline { color:var(--gold); font-size:9px; letter-spacing:.24em; }
+    .about-brand-name { margin:13px 0 5px; color:var(--blush); font-family:var(--serif); font-size:clamp(38px,5vw,58px); line-height:1.05; }
+    .about-brand-location { color:var(--gold); font-size:9px; letter-spacing:.22em; }
+    .about-brand-rule { width:54px; height:1px; margin:24px 0 17px; background:rgba(212,175,124,.7); }
+    .about-brand-tagline { color:var(--muted); font-family:var(--serif); font-size:clamp(16px,2vw,20px); font-style:italic; }
     .about-hero-copy h1 { margin:12px 0 18px; font-family:var(--serif); font-size:clamp(38px,5vw,58px); font-weight:400; line-height:1.08; }
     .about-hero-copy p { color:var(--muted); font-size:15px; line-height:1.85; }
     .about-story { max-width:780px; margin:0 auto; }
@@ -71,8 +76,14 @@
     </div>
 
     <section class="about-hero">
-      <div class="about-hero-art">
-        <img src="img/site/logo-hero.webp" alt="Identidade visual da Luxuriosa" width="640" height="640">
+      <div class="about-hero-art" aria-label="Identidade visual da Luxuriosa">
+        <div class="about-brand-panel">
+          <span class="about-brand-overline">SEX SHOP &amp; LINGERIE</span>
+          <span class="about-brand-name">Luxuriosa</span>
+          <span class="about-brand-location">BAURU · SP</span>
+          <span class="about-brand-rule" aria-hidden="true"></span>
+          <span class="about-brand-tagline">Sinta-se ainda mais você.</span>
+        </div>
       </div>
       <div class="about-hero-copy">
         <div class="kicker">Nossa essência</div>
