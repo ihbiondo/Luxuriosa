@@ -458,3 +458,17 @@ A reformulação estará pronta quando a navegação for clara, a experiência m
 - A branch `uiux-reformulacao` ainda não contém esse commit e está um commit atrás de `main`.
 - Antes de qualquer publicação, integrar esse único commit da prévia sem removê-la, revisar o diff final e solicitar aprovação explícita.
 - Nenhum merge, publicação ou alteração adicional na branch `main` foi realizado nesta etapa.
+
+
+## 38. Auditoria final de catálogo, produtos e indexação
+
+- Catálogo JSON validado: 27 produtos, IDs de 1 a 27 sem duplicidade, nomes, páginas, imagens e preços numéricos presentes.
+- Todas as páginas de produto referenciadas no catálogo existem na branch.
+- Todas as imagens principais e galerias referenciadas no catálogo existem no repositório.
+- Sitemap conferido: 37 URLs únicas, todas correspondentes a arquivos existentes; inclui 27 páginas de produto, quatro páginas regionais e as páginas públicas principais. A página administrativa do Clube permanece fora do sitemap.
+- Durante a revisão, foi identificada a ausência da folha compartilhada `css/produto.css` nas páginas de produto 18, 19 e 20. A referência foi adicionada após os estilos locais para aplicar a mesma camada visual usada nas demais páginas, sem alterar conteúdo, preço ou compra.
+- As 27 páginas individuais agora referenciam a folha compartilhada de produto.
+- Fluxo de kits revisado: kits 25 e 26 mantêm compra pelo carrinho; kits 22, 23, 24 e 27 seguem para consulta pelo WhatsApp, conforme composição/versão a confirmar.
+- Fluxo de compra revisado estaticamente: catálogo sincroniza disponibilidade e preço com o carrinho; checkout exige catálogo confirmado, valida itens, quantidades e subtotal, e abre WhatsApp somente após revisão pelo cliente.
+- Frete de Bauru conferido no checkout: R$ 15,00 padrão e grátis quando o pedido inclui pelo menos um kit; demais destinos permanecem sujeitos à confirmação.
+- Revisão estática; não equivale a teste real de navegador, transação, integração externa ou teste de pagamento.
