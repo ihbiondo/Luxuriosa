@@ -195,6 +195,29 @@
    Até 600px
    ========================================================= */
 
+
+  .service-heading { margin-bottom:24px; }
+  .service-options { grid-template-columns:1fr; gap:10px; }
+  .service-option,.service-option:last-child { grid-column:auto; padding:20px; }
+  .service-option h3 { margin:14px 0 8px; font-size:23px; }
+  .service-option p { margin-bottom:16px; }
+  .service-option .btn { width:100%; }
+  .privacy-strip { align-items:flex-start; gap:12px; padding:17px; }
+  .privacy-mark { flex-basis:36px; width:36px; height:36px; }
+  .delivery-promise { grid-template-columns:1fr; gap:18px; padding:22px; }
+  .delivery-price { padding:17px 0 0; border-left:0; border-top:1px solid rgba(212,175,124,.28); }
+  .delivery-price > strong { font-size:32px; }
+  .delivery-steps { grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; margin-top:24px; }
+  .delivery-step { padding:16px 12px; }
+  .delivery-conditions { grid-template-columns:1fr; gap:9px; margin-top:16px; }
+  .delivery-condition { padding:15px; }
+  .delivery-cta { align-items:stretch; flex-direction:column; gap:16px; padding:21px; }
+  .delivery-cta .btn { width:100%; }
+
+  .service-options { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .service-option:last-child { grid-column:1/-1; }
+  .delivery-promise { grid-template-columns:minmax(0,1fr) 220px; }
+  .delivery-steps { grid-template-columns:repeat(2,minmax(0,1fr)); }
 @media (max-width: 600px) {
 
   .categories-section { padding-top:42px; padding-bottom:48px; }
@@ -592,7 +615,18 @@
   }
 
   .cart-header {
-    min-height: 82px;
+    min-height: 8
+  .service-option { padding:17px; }
+  .privacy-strip { padding:14px; }
+  .delivery-promise { padding:18px; }
+  .delivery-steps { gap:7px; }
+  .delivery-step { padding:14px 10px; }
+  .delivery-step h3 { font-size:17px; }
+  .delivery-step p { font-size:10px; }
+  .delivery-area summary { padding:15px; }
+  .delivery-area-content { padding:0 15px 15px; }
+  .delivery-cta { padding:18px; }
+2px;
 
     padding:
       18px 18px 16px;
