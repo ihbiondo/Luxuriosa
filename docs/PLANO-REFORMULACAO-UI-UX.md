@@ -480,3 +480,11 @@ A reformulação estará pronta quando a navegação for clara, a experiência m
 - Campo `sobConsulta: true` definido nesses quatro produtos. O catálogo passa a exibir a ação de consulta pelo WhatsApp, em vez de adicionar ao carrinho.
 - Os kits Ela (25), Ele (26) e o Kit Gel Funcional (10) permanecem aptos à compra direta, pois têm composição definida.
 - A alteração alinha homepage, catálogo, sincronização do carrinho e orientação das páginas individuais. Preços, descrições e composições não foram alterados.
+
+
+## 40. Consistência de preços e dados estruturados
+
+- Comparados os preços dos 27 produtos no `data/produtos.json` com os preços publicados no bloco Schema.org `Product/Offer` de cada página individual.
+- Os 27 valores coincidem, com moeda BRL e duas casas decimais.
+- Os dados estruturados continuam presentes nas páginas individuais junto com os breadcrumbs.
+- Nenhum preço comercial foi modificado nesta auditoria.
