@@ -29,6 +29,10 @@
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/responsive.css">
   <style>
+    .skip-link { position:fixed; top:12px; left:12px; z-index:10000; padding:12px 16px; transform:translateY(calc(-100% - 24px)); border:2px solid var(--gold); border-radius:8px; background:#0B0B0B; color:#fff; font-weight:700; text-decoration:none; box-shadow:0 4px 18px rgba(0,0,0,.35); }
+    .skip-link:focus,.skip-link:focus-visible { transform:translateY(0); outline:3px solid #fff; outline-offset:3px; }
+    #conteudo-principal:focus { outline:none; }
+
     .service-page-intro{padding:48px 0 42px;background:radial-gradient(ellipse at 78% 0%,rgba(139,30,63,.42),transparent 52%),linear-gradient(125deg,#1c0d13 0%,#0b0b0b 76%)}
     .service-page-intro .container{max-width:1080px}
     .service-page-breadcrumb{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:24px;color:var(--muted);font-size:11px}
