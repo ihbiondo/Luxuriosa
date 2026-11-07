@@ -283,7 +283,7 @@
         aria-label="Principal"
       >
         <a href="#categorias">Categorias</a>
-        <a href="#catalogo">Produtos</a>
+        <a href="loja.html">Loja</a>
         <a href="#atendimento">Atendimento</a>
         <a href="sobre.html">Sobre</a>
       </nav>
@@ -371,7 +371,7 @@
           <h1>Intimidade no seu tempo. <em>Do seu jeito.</em></h1>
           <p>Descubra produtos selecionados para explorar novas possibilidades com conforto, liberdade e discrição.</p>
           <div class="hero-actions">
-            <a class="btn primary" href="#catalogo">Conhecer a loja</a>
+            <a class="btn primary" href="loja.html">Conhecer a loja</a>
             <a class="btn ghost" href="#atendimento">Como funciona</a>
           </div>
           <ul class="hero-benefits" aria-label="Benefícios da Luxuriosa">
@@ -403,12 +403,12 @@
           <p>Escolha uma categoria e descubra opções selecionadas para diferentes momentos e preferências.</p>
         </div>
         <div class="categories" aria-label="Explore por categoria">
-          <button class="cat" type="button" data-filtro="Géis e estimulantes"><span class="cat-index" aria-hidden="true">01</span><b>Géis e estimulantes</b><span class="cat-note">Sensações e descobertas</span></button>
-          <button class="cat" type="button" data-filtro="Vibradores e acessórios"><span class="cat-index" aria-hidden="true">02</span><b>Vibradores e acessórios</b><span class="cat-note">Explore novas possibilidades</span></button>
-          <button class="cat" type="button" data-filtro="Jogos e masturbadores"><span class="cat-index" aria-hidden="true">03</span><b>Jogos e masturbadores</b><span class="cat-note">Diversão sem roteiro</span></button>
-          <button class="cat" type="button" data-filtro="Perfumes e higiene"><span class="cat-index" aria-hidden="true">04</span><b>Perfumes e higiene</b><span class="cat-note">Cuidado e atmosfera</span></button>
-          <button class="cat cat--featured" type="button" data-filtro="Kits"><span class="cat-index" aria-hidden="true">05</span><b>Kits especiais</b><span class="cat-note">Combinações selecionadas</span></button>
-          <button class="cat" type="button" data-filtro="Ofertas"><span class="cat-index" aria-hidden="true">06</span><b>Oportunidades</b><span class="cat-note">Preços especiais</span></button>
+          <a class="cat" href="loja.html?categoria=G%C3%A9is%20e%20estimulantes"><span class="cat-index" aria-hidden="true">01</span><b>Géis e estimulantes</b><span class="cat-note">Sensações e descobertas</span></a>
+          <a class="cat" href="loja.html?categoria=Vibradores%20e%20acess%C3%B3rios"><span class="cat-index" aria-hidden="true">02</span><b>Vibradores e acessórios</b><span class="cat-note">Explore novas possibilidades</span></a>
+          <a class="cat" href="loja.html?categoria=Jogos%20e%20masturbadores"><span class="cat-index" aria-hidden="true">03</span><b>Jogos e masturbadores</b><span class="cat-note">Diversão sem roteiro</span></a>
+          <a class="cat" href="loja.html?categoria=Perfumes%20e%20higiene"><span class="cat-index" aria-hidden="true">04</span><b>Perfumes e higiene</b><span class="cat-note">Cuidado e atmosfera</span></a>
+          <a class="cat cat--featured" href="loja.html?categoria=Kits"><span class="cat-index" aria-hidden="true">05</span><b>Kits especiais</b><span class="cat-note">Combinações selecionadas</span></a>
+          <a class="cat" href="loja.html?categoria=Ofertas"><span class="cat-index" aria-hidden="true">06</span><b>Oportunidades</b><span class="cat-note">Preços especiais</span></a>
         </div>
       </div>
     </section>
@@ -424,99 +424,7 @@
       </div>
     </section>
 
-    <section
-      class="section alt"
-      id="catalogo"
-    >
-
-      <div class="container">
-
-        <div class="section-head">
-
-          <div>
-
-            <div class="kicker">
-              Catálogo
-            </div>
-
-            <h2>
-              Nossos produtos
-            </h2>
-
-          </div>
-
-          <p>
-            Toque em um produto para ver detalhes,
-            adicione seus favoritos ao carrinho
-            e finalize pelo WhatsApp.
-          </p>
-
-        </div>
-
-
-        <form class="catalog-search" id="catalogSearchForm" role="search">
-          <label class="sr-only" for="catalogSearch">Pesquisar produtos</label>
-          <span class="catalog-search-icon" aria-hidden="true">⌕</span>
-          <input
-            id="catalogSearch"
-            type="search"
-            name="q"
-            placeholder="Buscar produto, tipo ou sensação..."
-            autocomplete="off"
-            aria-controls="grid"
-          >
-          <button type="button" id="clearCatalogSearch" class="catalog-search-clear" aria-label="Limpar pesquisa" hidden>Limpar</button>
-        </form>
-
-        <div
-          class="chips"
-          id="chips"
-          role="group"
-          aria-label="Filtrar por categoria"
-        ></div>
-
-        <p class="catalogo-status" id="catalogoStatus" role="status" aria-live="polite" aria-atomic="true"></p>
-
-        <div
-          class="products"
-          id="grid"
-        >
-
-          <div class="empty">
-            Carregando produtos…
-          </div>
-
-        </div>
-
-
-        <div class="banner">
-
-          <div>
-
-            <h3>
-              Não achou o que procurava?
-            </h3>
-
-            <p>
-              Chame no WhatsApp: consultamos disponibilidade,
-              valores e entrega para você.
-            </p>
-
-          </div>
-
-          <button
-            class="btn primary"
-            type="button"
-            data-wa
-          >
-            Chamar no WhatsApp
-          </button>
-
-        </div>
-
-      </div>
-
-    </section>
+    
 
 
 <!-- =======================================================
