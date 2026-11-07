@@ -25,12 +25,15 @@
     .legal th, .legal td { text-align: left; vertical-align: top; padding: 10px 12px; border-bottom: 1px solid var(--line); color: var(--muted); }
     .legal th { color: var(--gold); font-weight: 500; }
     .legal .back { display: inline-block; margin-bottom: 12px; }
+    .page-nav { display:flex !important; flex-wrap:wrap; gap:16px; }
+    .page-nav a { color:var(--gold); text-decoration:none; font-size:12px; }
+    .page-nav a[aria-current="page"] { color:var(--text); }
   </style>
 </head>
 <body>
 <main class="legal">
 
-  <a class="back" href="index.html">← Voltar ao site</a>
+  <nav class="back page-nav" aria-label="Navegação principal"><a href="index.html">Início</a><a href="loja.html">Loja</a><a href="sobre.html">Sobre</a><a href="faq.html">Dúvidas frequentes</a><a href="privacidade.html" aria-current="page">Privacidade</a></nav>
 
   <div class="kicker">Privacidade</div>
   <h1>Política de Privacidade</h1>
