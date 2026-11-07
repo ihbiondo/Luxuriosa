@@ -31,6 +31,9 @@
   <style>
     .faq-page { max-width: 900px; margin: 0 auto; padding: 48px 16px 80px; }
     .faq-page .back { display: inline-block; margin-bottom: 20px; color: var(--gold); }
+    .page-nav { display:flex !important; flex-wrap:wrap; gap:16px; }
+    .page-nav a { color:var(--gold); text-decoration:none; font-size:12px; }
+    .page-nav a[aria-current="page"] { color:var(--text); }
     .faq-page h1 { margin: 8px 0 12px; }
     .faq-intro { color: var(--muted); max-width: 720px; margin-bottom: 32px; }
     .faq-group { margin-top: 34px; }
@@ -55,7 +58,7 @@
 </head>
 <body>
   <main class="faq-page">
-    <a class="back" href="index.html">← Voltar ao site</a>
+    <nav class="back page-nav" aria-label="Navegação principal"><a href="index.html">Início</a><a href="loja.html">Loja</a><a href="sobre.html">Sobre</a><a href="faq.html" aria-current="page">Dúvidas frequentes</a><a href="privacidade.html">Privacidade</a></nav>
     <div class="kicker">Estamos aqui para ajudar</div>
     <h1>Dúvidas frequentes</h1>
     <p class="faq-intro">
