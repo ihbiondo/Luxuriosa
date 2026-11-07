@@ -248,3 +248,14 @@ A reformulação estará pronta quando a navegação for clara, a experiência m
 - Esta etapa foi uma auditoria estática dos arquivos da branch. O comportamento real em navegador, especialmente em dispositivos móveis, ainda precisa ser testado no fechamento do projeto.
 
 - Na auditoria do catálogo, foi identificado que a homepage oferecia o atalho “Oportunidades” para a categoria `Ofertas`, mas não há produtos nessa categoria. O cartão foi convertido em “Ver todo o catálogo”, apontando para `loja.html`, evitando um filtro vazio e uma promessa comercial sem conteúdo.
+
+
+## 20. Auditoria das páginas individuais de produto — revisão estática
+
+- Revisadas as 27 páginas individuais em relação ao catálogo central `data/produtos.json`.
+- Corrigido, nas 27 páginas, o endereço do item intermediário do `BreadcrumbList` em JSON-LD: de `https://luxuriosa.com.br/#catalogo` para `https://luxuriosa.com.br/loja.html`, alinhando os dados estruturados ao breadcrumb visual e à arquitetura atual.
+- Canonicals conferidos: cada página mantém seu próprio endereço individual de produto.
+- Preços atuais exibidos nas páginas conferidos contra o campo `preco` do catálogo: os 27 valores coincidem.
+- Preços antigos exibidos nas páginas que apresentam comparação conferidos contra `precoAntigo`: os valores coincidem. Nos produtos 17 e 18, o catálogo possui preço antigo, mas a página exibe apenas o preço atual; isso não altera o preço de venda e fica registrado como possível melhoria de apresentação, não como divergência comercial.
+- Os 27 arquivos mantêm seus caminhos individuais; nenhuma URL de produto foi renomeada.
+- A revisão foi estática, sem navegação real, teste de compra ou validação externa dos dados estruturados em navegador. Essas verificações permanecem para a etapa final.
