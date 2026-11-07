@@ -439,3 +439,14 @@ A reformulação estará pronta quando a navegação for clara, a experiência m
 - Preservados os cartões de preferência de atendimento, embalagem, condições de frete, prazos, cidades e links.
 - Nenhuma condição comercial ou prazo foi alterado.
 - Todas as mudanças institucionais desta rodada estão na branch `uiux-reformulacao`; nenhuma alteração na branch `main` e nenhuma publicação.
+
+
+## 36. Revisão técnica das páginas institucionais
+
+- Revisadas as páginas Sobre, Atendimento, Dúvidas frequentes e Política de Privacidade.
+- Verificados: um H1 por página, IDs sem duplicidade, title, description, canonical e destinos dos links internos HTML.
+- Links internos das quatro páginas institucionais conferidos contra os arquivos presentes na branch; nenhum destino HTML ausente foi encontrado.
+- Atalho “Pular para o conteúdo” incluído e estilizado com foco visível por teclado nas quatro páginas.
+- Acordeões da FAQ mantêm o elemento nativo `details/summary`; tabela da política permanece acessível por rolagem horizontal em telas estreitas.
+- Conteúdo comercial, prazos, valores, lista de cidades e texto jurídico preservados.
+- Revisão estática; não representa teste em navegador, auditoria automatizada de contraste, teste com leitor de tela ou validação jurídica.
