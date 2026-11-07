@@ -442,225 +442,28 @@ header {
 
 
 /* =========================================================
-   HERO
+   HERO EDITORIAL
 ========================================================= */
-
-.hero {
-  padding: 90px 0 80px;
-
-  background:
-    radial-gradient(
-      ellipse at 75% 20%,
-      rgba(139, 30, 63, 0.55),
-      transparent 55%
-    ),
-    radial-gradient(
-      ellipse at 10% 90%,
-      rgba(139, 30, 63, 0.25),
-      transparent 50%
-    ),
-    var(--black);
-}
-
-.hero-grid {
-  display: grid;
-
-  grid-template-columns:
-    1.15fr
-    0.85fr;
-
-  gap: 50px;
-
-  align-items: center;
-}
-
-.hero h1 {
-  font-size: clamp(46px, 7vw, 84px);
-
-  line-height: 1;
-
-  letter-spacing: -0.02em;
-
-  margin-bottom: 24px;
-}
-
-.hero h1 em {
-  font-style: italic;
-
-  color: var(--gold);
-}
-
-.hero p {
-  color: var(--muted);
-
-  font-size: 17px;
-
-  max-width: 540px;
-}
-
-.pills {
-  display: flex;
-
-  flex-wrap: wrap;
-
-  gap: 10px;
-
-  margin: 22px 0 0;
-
-  padding: 0;
-
-  list-style: none;
-}
-
-.pills li {
-  border: 1px solid var(--line);
-
-  border-radius: 999px;
-
-  padding: 7px 14px;
-
-  font-size: 11px;
-
-  letter-spacing: 0.14em;
-
-  text-transform: uppercase;
-
-  color: var(--blush);
-}
-
-.buttons {
-  display: flex;
-
-  gap: 12px;
-
-  flex-wrap: wrap;
-
-  margin-top: 32px;
-}
-
-
-/* =========================================================
-   HERO CARD / MARCA
-========================================================= */
-
-.hero-card {
-  min-height: 440px;
-
-  border-radius: 28px;
-
-  border: 1px solid var(--line);
-
-  position: relative;
-
-  overflow: hidden;
-
-  display: flex;
-
-  flex-direction: column;
-
-  align-items: center;
-
-  justify-content: center;
-
-  text-align: center;
-
-  padding: 30px;
-
-  background:
-    linear-gradient(
-      160deg,
-      #5A1229 0%,
-      #2A0A15 55%,
-      #0B0B0B 100%
-    );
-
-  box-shadow:
-    0 30px 80px rgba(0, 0, 0, 0.5);
-}
-
-.hero-card::before {
-  content: "";
-
-  position: absolute;
-
-  inset: 0;
-
-  background:
-    repeating-linear-gradient(
-      115deg,
-      rgba(255, 255, 255, 0.025) 0 2px,
-      transparent 2px 22px
-    );
-}
-
-.crest {
-  position: relative;
-
-  width: 74px;
-
-  margin-bottom: 18px;
-}
-
-.hero-card .wordmark {
-  position: relative;
-
-  font-family: var(--serif);
-
-  font-size: 44px;
-
-  color: var(--gold);
-
-  letter-spacing: 0.04em;
-}
-
-.hero-card small {
-  position: relative;
-
-  display: block;
-
-  margin-top: 8px;
-
-  letter-spacing: 0.35em;
-
-  font-size: 10px;
-
-  color: var(--blush);
-
-  text-transform: uppercase;
-}
-
-.hero-card .slogan {
-  position: relative;
-
-  margin-top: 34px;
-
-  letter-spacing: 0.3em;
-
-  font-size: 10px;
-
-  color: var(--gold);
-
-  text-transform: uppercase;
-}
-
-.heart-o {
-  position: relative;
-
-  display: inline-block;
-}
-
-.heart-o svg {
-  position: absolute;
-
-  left: 50%;
-
-  top: 52%;
-
-  width: 0.42em;
-
-  transform: translate(-50%, -50%);
-}
-
+.hero { position:relative; overflow:hidden; padding:clamp(54px,7vw,92px) 0; background:radial-gradient(ellipse at 78% 42%,rgba(139,30,63,.34),transparent 48%),linear-gradient(120deg,#0b0b0b 0%,#16090e 58%,#210b13 100%); }
+.hero-grid { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,.94fr); gap:clamp(34px,5vw,76px); align-items:center; }
+.hero-copy { position:relative; z-index:1; max-width:590px; }
+.hero .kicker { margin-bottom:18px; }
+.hero h1 { max-width:650px; margin:0 0 22px; font-size:clamp(42px,5.6vw,72px); line-height:1.02; letter-spacing:-.035em; }
+.hero h1 em { display:block; color:var(--gold); font-style:italic; }
+.hero-copy > p { max-width:490px; margin:0; color:var(--muted); font-size:clamp(15px,1.35vw,17px); line-height:1.75; }
+.hero-actions { display:flex; flex-wrap:wrap; gap:12px; margin-top:28px; }
+.hero-actions .btn { min-height:48px; display:inline-flex; align-items:center; justify-content:center; }
+.hero-benefits { display:flex; flex-wrap:wrap; gap:10px 18px; margin:26px 0 0; padding:0; list-style:none; color:var(--blush); font-size:11px; letter-spacing:.04em; }
+.hero-benefits li { display:inline-flex; align-items:center; gap:7px; }
+.hero-benefits li span { color:var(--gold); font-size:14px; }
+.hero-visual { position:relative; min-height:440px; isolation:isolate; display:grid; place-items:center; }
+.hero-image-main { position:relative; z-index:1; width:min(76%,390px); aspect-ratio:1/1.08; overflow:hidden; border:1px solid rgba(212,175,124,.38); border-radius:46% 46% 22px 22px; background:#f6f0ed; box-shadow:0 28px 70px rgba(0,0,0,.42); }
+.hero-image-main img,.hero-image-secondary img { display:block; width:100%; height:100%; object-fit:cover; }
+.hero-image-caption { position:absolute; left:14px; bottom:14px; padding:8px 12px; border:1px solid rgba(212,175,124,.45); border-radius:999px; background:rgba(11,11,11,.82); color:var(--gold); font-size:10px; letter-spacing:.12em; text-transform:uppercase; }
+.hero-image-secondary { position:absolute; z-index:2; width:clamp(108px,16vw,168px); aspect-ratio:1; overflow:hidden; border:5px solid #16090e; border-radius:18px; background:#f6f0ed; box-shadow:0 16px 38px rgba(0,0,0,.38); }
+.hero-image-secondary--top { top:7%; right:0; transform:rotate(7deg); }
+.hero-image-secondary--bottom { bottom:5%; left:0; transform:rotate(-7deg); }
+.hero-visual-note { position:absolute; right:3%; bottom:0; color:rgba(247,215,217,.72); font-family:var(--serif); font-size:clamp(14px,1.4vw,18px); font-style:italic; letter-spacing:.03em; }
 
 /* =========================================================
    CATEGORIAS
