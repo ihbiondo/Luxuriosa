@@ -2071,3 +2071,28 @@ footer {
 .delivery-cta { display:flex; align-items:center; justify-content:space-between; gap:22px; margin-top:22px; padding:25px 28px; border-radius:18px; background:linear-gradient(105deg,#5A1229,#1D0A10); }
 .delivery-cta h3 { margin:7px 0 5px; color:var(--blush); font-family:var(--serif); font-size:25px; font-weight:400; }
 .delivery-cta p { margin:0; color:var(--blush); font-size:12px; }
+
+
+/* =========================================================
+   SOBRE — APRESENTAÇÃO NA HOMEPAGE
+========================================================= */
+.about-preview-section { background:linear-gradient(180deg,#10090c,#0b0b0b); }
+.about-preview { display:grid; grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr); align-items:center; gap:clamp(32px,7vw,88px); }
+.about-preview-visual { position:relative; max-width:430px; margin:auto; padding:18px; border:1px solid rgba(212,175,124,.3); border-radius:22px; background:radial-gradient(circle at 50% 42%,rgba(139,30,63,.23),transparent 65%),#10090c; }
+.about-preview-visual img { display:block; width:100%; aspect-ratio:1; object-fit:contain; border-radius:12px; }
+.about-preview-caption { display:block; padding:13px 4px 0; color:var(--gold); text-align:center; font-size:9px; letter-spacing:.2em; }
+.about-preview-copy { max-width:560px; }
+.about-preview-copy h2 { margin:13px 0 18px; font-family:var(--serif); font-size:clamp(34px,4vw,48px); font-weight:400; line-height:1.12; }
+.about-preview-copy p { color:var(--muted); font-size:14px; line-height:1.8; }
+.about-preview-copy .btn { margin-top:12px; }
+
+.footer-grid { display:grid; grid-template-columns:1.4fr 1fr 1fr; gap:40px; padding-bottom:30px; }
+.footer-brand .footer-logo { display:inline-block; text-decoration:none; font-size:29px; }
+.footer-brand p { margin:3px 0 9px; color:var(--blush); }
+.footer-brand > span { color:var(--muted); font-size:10px; }
+.footer-navigation { display:flex; flex-direction:column; align-items:flex-start; gap:10px; }
+.footer-navigation strong { margin-bottom:4px; color:var(--blush); font-family:var(--serif); font-size:17px; font-weight:400; }
+.footer-navigation a,.footer-navigation button { padding:0; border:0; background:none; color:var(--muted); font:inherit; font-size:11px; text-decoration:none; cursor:pointer; }
+.footer-navigation a:hover,.footer-navigation button:hover { color:var(--gold); }
+.footer-bottom { display:flex; justify-content:space-between; align-items:center; gap:20px; padding-top:20px; border-top:1px solid var(--line); color:var(--muted); font-size:10px; }
+.footer-bottom .age { margin:0; letter-spacing:.08em; opacity:.85; }
