@@ -412,7 +412,7 @@
       "maisVendido": false,
       "tipoProduto": "Kits",
       "pagina": "produtos/22-kit-basico.html",
-      "sobConsulta": false
+      "sobConsulta": true
     },
     {
       "id": 23,
@@ -431,7 +431,7 @@
       "maisVendido": false,
       "tipoProduto": "Kits",
       "pagina": "produtos/23-kit-intermediario.html",
-      "sobConsulta": false
+      "sobConsulta": true
     },
     {
       "id": 24,
@@ -450,7 +450,7 @@
       "maisVendido": false,
       "tipoProduto": "Kits",
       "pagina": "produtos/24-kit-premium.html",
-      "sobConsulta": false
+      "sobConsulta": true
     },
     {
       "id": 25,
@@ -507,7 +507,7 @@
       "maisVendido": false,
       "tipoProduto": "Kits",
       "pagina": "produtos/27-kit-extase.html",
-      "sobConsulta": false
+      "sobConsulta": true
     }
   ]
 }
