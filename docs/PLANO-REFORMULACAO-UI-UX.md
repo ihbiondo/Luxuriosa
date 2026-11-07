@@ -3,7 +3,7 @@
 **Repositório:** `ihbiondo/Luxuriosa`  
 **Branch de trabalho:** `uiux-reformulacao`  
 **Direção visual aprovada:** híbrida — base minimalista premium com linguagem editorial (aprox. 70% minimalista / 30% editorial).  
-**Status:** planejamento; nenhuma alteração de interface implementada.
+**Status:** implementação iniciada na branch `uiux-reformulacao`; homepage em evolução. A `main` e o site publicado permanecem fora desta etapa.
 
 ---
 
@@ -97,7 +97,7 @@ Na primeira entrega, as categorias serão filtros e pontos de entrada dentro da 
 - Carrinho, persistência e cálculo/indicação de valores.
 - Checkout, revisão do pedido e encaminhamento ao WhatsApp.
 - Consulta de CEP e dados necessários à entrega.
-- Cupons e regras comerciais.
+- Regras comerciais de frete e disponibilidade.
 - Atendimento com preferências disponíveis.
 - Acessibilidade, SEO, canonical, Open Graph, sitemap e páginas locais.
 
@@ -139,7 +139,7 @@ Não alterar regras comerciais com base apenas em divergências técnicas.
 ### Etapa D — Validação
 - Testar 360, 390, 440, tablet e desktop.
 - Verificar ausência de rolagem horizontal e sobreposição.
-- Testar maioridade, consentimento, busca, filtros, produto, carrinho, cupom, CEP e checkout.
+- Testar maioridade, consentimento, busca, filtros, produto, carrinho, CEP e checkout.
 - Revisar SEO, links, console e carregamento.
 - Conferir diff e registrar alterações.
 
@@ -153,3 +153,14 @@ Não alterar regras comerciais com base apenas em divergências técnicas.
 ## 11. Critério de conclusão
 
 A reformulação estará pronta quando a navegação for clara, a experiência mobile estiver resolvida, as páginas tiverem propósitos distintos, os fluxos comerciais estiverem preservados e todos os testes forem aprovados. Beleza visual isolada não é critério suficiente.
+
+
+## 12. Registro de implementação — primeira entrega
+
+- Hero antigo com logotipo como imagem principal removido da homepage.
+- Nova composição editorial com fotografias reais de kits já cadastrados no catálogo.
+- Mensagem e CTAs simplificados: entrada na Loja e explicação do Atendimento.
+- Benefícios de privacidade resumidos em uma linha de leitura rápida.
+- Composição responsiva reorganizada para exibir a imagem antes do texto em telas menores, reduzindo o problema de a imagem ficar abaixo de uma coluna longa.
+- Logotipo institucional deixa de ocupar o papel de imagem principal do hero.
+- Esta entrega é inicial: ainda requer validação visual real em celular, tablet e desktop antes de ser considerada concluída.
