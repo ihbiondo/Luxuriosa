@@ -466,68 +466,20 @@ header {
 .hero-visual-note { position:absolute; right:3%; bottom:0; color:rgba(247,215,217,.72); font-family:var(--serif); font-size:clamp(14px,1.4vw,18px); font-style:italic; letter-spacing:.03em; }
 
 /* =========================================================
-   CATEGORIAS
+   CATEGORIAS — ATALHOS VISUAIS
 ========================================================= */
-
-.categories {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 12px;
-}
-
-.cat {
-  padding: 17px 18px;
-  min-height: 82px;
-
-  border-radius: 20px;
-
-  border: 1px solid var(--line);
-
-  background:
-    linear-gradient(
-      150deg,
-      #2A0F19,
-      var(--surface)
-    );
-
-  cursor: pointer;
-
-  transition:
-    transform 0.25s ease,
-    border-color 0.25s ease;
-
-  display: flex;
-
-  flex-direction: column;
-
-  justify-content: center;
-
-  text-align: left;
-
-  color: inherit;
-}
-
-.cat:hover {
-  transform: translateY(-4px);
-
-  border-color: var(--gold);
-}
-
- .cat b {
-  font-family: var(--serif);
-
-  font-weight: 400;
-
-  font-size: 20px;
-
-  color: var(--blush);
-}
-
-.cat span {
-  display: none;
-}
-
-
+.categories-section { padding-top:58px; padding-bottom:68px; }
+.categories { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:14px; }
+.cat { position:relative; min-width:0; min-height:142px; overflow:hidden; padding:19px 20px; border:1px solid var(--line); border-radius:16px; background:linear-gradient(145deg,rgba(90,18,41,.52),rgba(20,12,15,.96)); color:inherit; cursor:pointer; text-align:left; display:flex; flex-direction:column; align-items:flex-start; justify-content:flex-end; gap:8px; transition:border-color .2s ease,transform .2s ease,background .2s ease; }
+.cat::after { content:""; position:absolute; width:110px; height:110px; right:-42px; top:-48px; border:1px solid rgba(212,175,124,.16); border-radius:50%; box-shadow:0 0 0 14px rgba(212,175,124,.025),0 0 0 29px rgba(212,175,124,.018); pointer-events:none; }
+.cat:hover,.cat:focus-visible { transform:translateY(-3px); border-color:var(--gold); outline:none; }
+.cat-index { color:var(--gold); font-size:10px; letter-spacing:.2em; }
+.cat b { max-width:100%; color:var(--blush); font-family:var(--serif); font-size:clamp(17px,1.8vw,22px); font-weight:400; line-height:1.15; }
+.cat .cat-note { display:block; color:var(--muted); font-size:11px; line-height:1.4; }
+.cat--featured { border-color:rgba(212,175,124,.42); background:linear-gradient(145deg,rgba(139,30,63,.55),rgba(35,13,21,.98)); }
+.featured-section { padding-top:64px; }
+.featured-footer { display:flex; justify-content:center; margin-top:30px; }
+.featured-footer .btn { min-width:220px; text-align:center; }
 
 /* PESQUISA DO CATÁLOGO */
 .catalog-search {
