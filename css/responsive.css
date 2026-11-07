@@ -195,16 +195,15 @@
    Até 600px
    ========================================================= */
 
-  .categories { grid-template-columns:repeat(2,minmax(0,1fr)); }
-  .cat { min-height:128px; }
+@media (max-width: 600px) {
+
   .categories-section { padding-top:42px; padding-bottom:48px; }
-  .categories { gap:10px; }
+  .categories { grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; }
   .cat { min-height:116px; padding:15px; border-radius:14px; }
   .cat b { font-size:18px; }
   .cat .cat-note { font-size:10px; }
   .featured-section { padding-top:46px; }
   .featured-footer { margin-top:22px; }
-@media (max-width: 600px) {
 
   /* -------------------------------------------------------
      BASE
@@ -744,22 +743,11 @@
   .hero-visual { min-height:190px; }
   .hero-image-secondary { width:82px; }
 
-  /* -------------------------------------------------------
-     CATEGORIAS
-     ------------------------------------------------------- */
-
-  .categories {
-    gap: 7px;
-  }
-
-  .cat {
-    min-height: 60px;
-    padding: 10px;
-  }
-
-  .cat b {
-    font-size: 14px;
-  }
+  /* CATEGORIAS */
+  .categories { gap:8px; }
+  .cat { min-height:108px; padding:12px; }
+  .cat b { font-size:16px; }
+  .cat .cat-note { font-size:9px; }
 
 
   /* -------------------------------------------------------
