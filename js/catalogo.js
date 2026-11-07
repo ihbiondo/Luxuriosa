@@ -1673,6 +1673,21 @@
           }
 
 
+          /* Permite abrir a loja já com uma categoria ou busca selecionada. */
+          var parametrosLoja = new URLSearchParams(window.location.search);
+          var categoriaSolicitada = parametrosLoja.get("categoria");
+          if (categoriaSolicitada && CATEGORIAS.indexOf(categoriaSolicitada) !== -1 &&
+              categoriaTemProdutos(categoriaSolicitada)) {
+            filtroAtual = categoriaSolicitada;
+          }
+
+          var buscaSolicitada = parametrosLoja.get("q");
+          if (buscaSolicitada) {
+            termoPesquisa = normalizarTexto(buscaSolicitada);
+            var campoPesquisa = $("catalogSearch");
+            if (campoPesquisa) campoPesquisa.value = buscaSolicitada;
+          }
+
           if (window.LuxuriosaCarrinho && typeof window.LuxuriosaCarrinho.sincronizarCatalogo === "function") {
             window.LuxuriosaCarrinho.sincronizarCatalogo(produtos);
           }
