@@ -406,13 +406,13 @@
       "number"
     ) {
 
-      container.appendChild(
-        document.createTextNode(
-          formatarPreco(
-            produto.preco
-          )
-        )
+      var precoAtual = criarElemento(
+        "span",
+        "price-current",
+        formatarPreco(produto.preco)
       );
+
+      container.appendChild(precoAtual);
 
 
       if (
