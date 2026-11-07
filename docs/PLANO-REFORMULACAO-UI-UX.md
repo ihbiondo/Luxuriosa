@@ -278,3 +278,12 @@ A reformulação estará pronta quando a navegação for clara, a experiência m
 - Mantido o botão de retorno ao catálogo nas seis páginas.
 - Verificação estática confirmou que as páginas 25 e 26 carregam os scripts de carrinho e compra de produto, usam os IDs corretos e mantêm o contato pelo WhatsApp. As outras quatro páginas não receberam botão de compra direta.
 - Não houve teste real em navegador; a validação funcional do clique, inclusão e abertura automática do carrinho permanece para a etapa de testes locais.
+
+
+## 23. Auditoria de metadados e acessibilidade das páginas de produto
+
+- As 27 páginas individuais possuem título, meta description, canonical próprio e metadados Open Graph de título, descrição e imagem.
+- As imagens principais possuem texto alternativo descritivo. A página do Egg Masturbador também possui textos alternativos próprios para as três imagens adicionais da galeria.
+- As 27 páginas apresentam dados estruturados `Product` e `BreadcrumbList` em JSON-LD parseável na revisão estática.
+- Os scripts de carrinho, compra individual e consentimento estão presentes nas páginas que utilizam esse fluxo; os seis kits também carregam os scripts, respeitando a decisão de compra direta apenas para os kits 25 e 26.
+- A revisão não substitui avaliação com leitor de tela, auditoria automatizada de acessibilidade, teste visual responsivo ou validação de rich results no Google.
