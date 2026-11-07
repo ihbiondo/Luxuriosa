@@ -640,9 +640,7 @@
   }
 
   .cart-header {
-    min-height: 8
-
-2px;
+    min-height: 82px;
 
     padding:
       18px 18px 16px;
