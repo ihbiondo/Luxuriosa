@@ -384,3 +384,12 @@ A reformulação estará pronta quando a navegação for clara, a experiência m
 - Não foram alterados nomes, descrições, preços, disponibilidade, IDs, dados estruturados, URLs, estoque, regras de compra ou mensagens de WhatsApp.
 - A alteração é exclusivamente visual. A validação visual em navegador das páginas individuais ainda precisa ser feita pelo usuário em desktop e mobile.
 - Nenhuma alteração na branch `main`; nenhuma publicação.
+
+
+## 30. Refinamento da página Sobre — painel de identidade visual
+
+- Substituída a imagem quadrada antiga da logo no hero da página Sobre por um painel tipográfico construído em HTML e CSS, seguindo a solução já aprovada na homepage.
+- O painel apresenta a assinatura Luxuriosa, a identificação “Sex Shop & Lingerie”, a localização Bauru · SP e o slogan “Sinta-se ainda mais você.”
+- A composição é responsiva e não depende de uma nova imagem; o arquivo original foi preservado no repositório.
+- Não foram alterados o texto institucional, os princípios da marca, os metadados SEO, os links ou os demais conteúdos da página.
+- Alteração visual estática na branch uiux-reformulacao; requer validação do usuário em desktop e mobile. Nenhuma alteração na branch main e nenhuma publicação.
