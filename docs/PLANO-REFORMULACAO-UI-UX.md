@@ -236,3 +236,13 @@ A reformulação estará pronta quando a navegação for clara, a experiência m
 - A nova página carrega também `js/consentimento.js`, aplicando a confirmação de maioridade e o painel de preferências de privacidade, no mesmo padrão das páginas comerciais do site.
 - Na auditoria responsiva, foram removidas oito regras que estavam fora dos respectivos breakpoints e poderiam alterar indevidamente o layout desktop de categorias, atendimento e entrega. A folha responsiva foi revalidada: regras agrupadas em media queries e chaves balanceadas.
 - A revisão desta etapa é estática; testes visuais e funcionais reais no navegador continuam pendentes.
+
+## 19. Auditoria do fluxo de compra — primeira revisão
+
+- Revisado o fluxo entre catálogo, carrinho, dados do cliente, revisão do pedido e encaminhamento ao WhatsApp.
+- Confirmado que o carrinho é persistido no navegador e sincroniza os itens com o catálogo atual, sinalizando indisponibilidade e alteração de preço antes da finalização.
+- Confirmado que a regra de frete grátis por inclusão de kit está alinhada à categoria real `Kits` do catálogo e se aplica somente a Bauru/SP; para outras cidades, o valor permanece sujeito à confirmação.
+- Corrigido o retorno das páginas individuais de produto: após adicionar um item, o cliente agora é direcionado para `loja.html?abrirCarrinho=1#catalogo`, onde o carrinho é reaberto automaticamente. Antes, o redirecionamento levava à homepage.
+- A revisão do checkout confirmou validação de telefone, endereço, integridade dos preços e quantidades, além de prévia da mensagem antes de abrir o WhatsApp.
+- O CEP continua opcional; quando informado, precisa ter oito dígitos. Rua, número, bairro, cidade e estado são exigidos para preparar a entrega.
+- Esta etapa foi uma auditoria estática dos arquivos da branch. O comportamento real em navegador, especialmente em dispositivos móveis, ainda precisa ser testado no fechamento do projeto.
