@@ -105,13 +105,20 @@ Antes de mover scripts ou componentes, mapear dependências e testar fluxos comp
 
 ## 8. Pendências comerciais para validar antes de alterar textos ou regras
 
-1. O cupom `PRIMEIRA10` aparece na interface com mínimo de R$ 150, mas a validação JavaScript observada usa mínimo de R$ 100. Confirmar o valor correto.
-2. A lógica atual indica frete grátis automático para determinados pedidos com kits em Bauru. Confirmar quais kits e condições devem receber o benefício e como comunicá-lo.
+1. **Cupons removidos por decisão comercial:** eliminar `PRIMEIRA10`, `FRETE`, seção promocional, campo de cupom, validações, mensagens e estilos associados.
+2. **Benefício mantido:** pedidos que incluam pelo menos um kit têm frete grátis em Bauru, inclusive quando acompanhados de produtos avulsos. Os demais pedidos em Bauru têm frete padrão de R$ 15,00. Para outras cidades, disponibilidade e valor são confirmados no atendimento.
 3. Confirmar se as categorias e produtos atualmente cadastrados refletem o mix comercial que deve aparecer na homepage.
 
 Não alterar regras comerciais com base apenas em divergências técnicas.
 
-## 9. Etapas de execução
+## 9. Decisões comerciais registradas
+
+- Não utilizar cupons promocionais nesta fase.
+- Priorizar preços transparentes, kits com vantagem real e benefícios simples de entender.
+- Manter frete grátis automático em Bauru quando o pedido incluir pelo menos um kit.
+- Não reintroduzir campos ou regras de cupom sem nova decisão explícita.
+
+## 10. Etapas de execução
 
 ### Etapa A — Preparação
 - Confirmar inventário de arquivos, rotas e dependências.
@@ -143,6 +150,6 @@ Não alterar regras comerciais com base apenas em divergências técnicas.
 
 ---
 
-## 10. Critério de conclusão
+## 11. Critério de conclusão
 
 A reformulação estará pronta quando a navegação for clara, a experiência mobile estiver resolvida, as páginas tiverem propósitos distintos, os fluxos comerciais estiverem preservados e todos os testes forem aprovados. Beleza visual isolada não é critério suficiente.
