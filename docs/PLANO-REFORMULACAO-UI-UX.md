@@ -415,3 +415,27 @@ A reformulação estará pronta quando a navegação for clara, a experiência m
 - Fechamento com slogan ganhou fundo vinho mais evidente, mantendo os CTAs existentes.
 - Ajustes responsivos preservados; conteúdo, SEO, JSON-LD, navegação e links não foram alterados.
 - Alteração está na branch `uiux-reformulacao`, pendente de validação visual do usuário. Nenhuma alteração na branch `main` e nenhuma publicação.
+
+
+## 33. Página de dúvidas frequentes
+
+- Navegação superior reorganizada com hierarquia e espaçamento consistentes com as páginas institucionais.
+- Criado hero editorial em vinho/marsala, mantendo o texto introdutório.
+- Grupos de perguntas receberam painéis discretos e acordeões com estados aberto/fechado mais claros.
+- Indicadores de expansão, foco visível por teclado e espaçamento responsivo adicionados.
+- Conteúdo das respostas e links preservados; incluído atalho para pular ao conteúdo principal.
+
+## 34. Política de privacidade
+
+- Criado cabeçalho editorial em vinho, mantendo a data e o texto introdutório.
+- Conteúdo jurídico organizado em painel de leitura com hierarquia de títulos, espaçamento e contraste.
+- Tabela de tratamento de dados recebeu cabeçalho destacado, bordas suaves e rolagem horizontal em telas estreitas.
+- Links, contatos, texto legal e metadados preservados; incluído atalho para pular ao conteúdo principal.
+- Nenhuma alteração de interpretação ou promessa jurídica foi feita.
+
+## 35. Harmonização da página Atendimento
+
+- Hero e fundos das seções receberam variações mais perceptíveis de vinho e marsala.
+- Preservados os cartões de preferência de atendimento, embalagem, condições de frete, prazos, cidades e links.
+- Nenhuma condição comercial ou prazo foi alterado.
+- Todas as mudanças institucionais desta rodada estão na branch `uiux-reformulacao`; nenhuma alteração na branch `main` e nenhuma publicação.
