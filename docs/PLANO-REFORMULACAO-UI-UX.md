@@ -175,3 +175,15 @@ A reformulação estará pronta quando a navegação for clara, a experiência m
 - Incluído CTA para acessar o catálogo completo.
 - Ajustes responsivos específicos para tablet, celular e telas estreitas.
 - A seleção de destaques usa os campos existentes no cadastro de produtos; nenhum preço ou descrição comercial foi alterado.
+
+
+## 14. Registro de implementação — atendimento e entrega
+
+- Atendimento reorganizado em três opções de preferência de atendente, mantendo os textos e mensagens de WhatsApp existentes.
+- Reforçada a comunicação de privacidade, agendamento presencial em Bauru e escolha de embalagem neutra ou personalizada.
+- Entrega apresentada em bloco próprio, com destaque para o frete padrão de Bauru e a condição de frete grátis em pedidos com kit.
+- Fluxo de compra e entrega reorganizado em quatro etapas.
+- Prazos, condições, municípios e distritos preservados; a lista de localidades foi agrupada em painel expansível para reduzir a altura da página.
+- Links das páginas locais preservados.
+- CTA de entrega direciona ao WhatsApp com mensagem de consulta de disponibilidade.
+- Implementação ainda depende de validação visual e funcional em navegador.
