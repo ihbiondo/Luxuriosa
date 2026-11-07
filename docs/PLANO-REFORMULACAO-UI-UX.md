@@ -198,3 +198,15 @@ A reformulação estará pronta quando a navegação for clara, a experiência m
 - Mantidos links para FAQ, privacidade, atendimento, entrega e WhatsApp; removidos e-mails de RH e contatos setoriais do rodapé para reduzir ruído na navegação principal.
 - Ajustes responsivos para tablet, celular e telas estreitas.
 - Verificação visual em navegador ainda pendente.
+
+
+## 16. Registro de implementação — página Loja
+
+- Criada a página independente `loja.html), com título, descrição, canonical e dados estruturados próprios.
+- Catálogo, busca, filtros, cards, modal de detalhes e carrinho foram reaproveitados com os mesmos IDs e scripts da homepage, preservando a lógica existente.
+- A homepage deixa de carregar o catálogo completo e passa a direcionar a compra para a página Loja.
+- Os seis atalhos de categoria da homepage agora abrem a Loja com o filtro correspondente pré-selecionado.
+- A página Loja aceita parâmetros `categoria` e `q` na URL para abrir uma categoria ou pesquisa específica.
+- Navegação, rodapé, links de retorno, carrinho, gate 18+ e scripts de checkout foram preservados e adaptados aos caminhos da nova página.
+- Página incluída no sitemap.
+- Revisão estática e validação de caminhos/IDs pendentes; teste visual e funcional real no navegador continua necessário.
