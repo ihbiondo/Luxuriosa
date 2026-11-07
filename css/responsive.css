@@ -1008,3 +1008,24 @@
 
 }
 
+
+
+@media (max-width: 700px) {
+  .hero-image-main--brand {
+    width:min(88%,360px);
+    aspect-ratio:1 / 1;
+    padding:24px;
+  }
+  .product h3 {
+    font-size:15px;
+    line-height:1.32;
+    text-wrap:pretty;
+    overflow-wrap:normal;
+    word-break:normal;
+    hyphens:none;
+  }
+}
+@media (max-width: 420px) {
+  .product-body { padding:12px; }
+  .product h3 { font-size:14px; }
+}
