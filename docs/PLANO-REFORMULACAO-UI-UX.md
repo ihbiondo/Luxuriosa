@@ -393,3 +393,15 @@ A reformulação estará pronta quando a navegação for clara, a experiência m
 - A composição é responsiva e não depende de uma nova imagem; o arquivo original foi preservado no repositório.
 - Não foram alterados o texto institucional, os princípios da marca, os metadados SEO, os links ou os demais conteúdos da página.
 - Alteração visual estática na branch uiux-reformulacao; requer validação do usuário em desktop e mobile. Nenhuma alteração na branch main e nenhuma publicação.
+
+
+## 31. Refinamento editorial da página Sobre
+
+- Removido o painel tipográfico grande do hero, que repetia a assinatura visual da homepage e competia com a história da marca.
+- Hero reorganizado em uma composição editorial simples, com título em destaque, texto introdutório e assinatura discreta da marca.
+- História mantida integralmente e apresentada em uma coluna de leitura confortável.
+- Princípios de respeito, cuidado e privacidade mantidos em cartões mais leves.
+- Slogan e chamadas para Loja e Atendimento concentrados no fechamento da página.
+- Preservados conteúdo institucional, metadados SEO, JSON-LD, navegação e links existentes.
+- Nenhuma imagem genérica foi adicionada; a página fica preparada para receber fotografia própria no futuro, caso faça sentido.
+- Alteração visual estática na branch `uiux-reformulacao`; depende de validação do usuário em desktop e mobile. Nenhuma alteração na branch `main` e nenhuma publicação.
