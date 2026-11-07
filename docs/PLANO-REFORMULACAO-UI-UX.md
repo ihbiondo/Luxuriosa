@@ -321,3 +321,16 @@ A reformulação estará pronta quando a navegação for clara, a experiência m
 - A homepage não possui um bloco independente de chamada final; os CTAs existentes em Destaques, Atendimento e Sobre já oferecem caminhos de ação. A necessidade de um CTA final separado deve ser decidida após a avaliação visual, para não acrescentar repetição desnecessária.
 - Esta auditoria foi feita por leitura dos arquivos e validações estáticas na branch `uiux-reformulacao`. Não equivale a teste visual ou funcional em navegador, teste em dispositivos reais, leitor de tela ou compra real.
 - Nenhuma alteração foi feita na branch `main`, e a reformulação não foi publicada.
+
+
+## 25. Auditoria de conversão e consistência comercial — revisão estática
+
+- Revisadas as mensagens comerciais da homepage, Loja, Atendimento, FAQ e checkout, com foco em preços, frete, prazo, disponibilidade, pagamento, embalagem e conclusão do pedido.
+- Confirmada a consistência da regra de entrega em Bauru: frete padrão de R$ 15,00 e gratuidade para pedidos que incluam pelo menos um kit. Para outras cidades, valor e disponibilidade permanecem sujeitos à confirmação.
+- Confirmado que o subtotal exibido no carrinho se refere aos produtos e não inclui o frete; o checkout informa o custo aplicável a Bauru ou deixa o destino externo sujeito à confirmação.
+- Ajustada a resposta do FAQ sobre prazo para deixar explícito que os prazos informados (até 30 minutos em Bauru e previsão de até 2 horas nas demais cidades atendidas) dependem de disponibilidade e validação do endereço/destino, em linha com a página Atendimento.
+- Removida a repetição literal na resposta do FAQ sobre formas de pagamento; a mensagem agora informa de forma direta que as opções serão confirmadas no atendimento antes da conclusão.
+- Reconfirmado que o envio da mensagem pelo WhatsApp não confirma automaticamente a compra nem processa o pagamento; disponibilidade, valores e condições finais são confirmados pelo atendimento.
+- Mantidas as condições comerciais existentes. Não foram alterados preços, frete, prazos operacionais, política de embalagem ou formas de pagamento.
+- Não foi feita análise jurídica da política de trocas/devoluções nem validação da operação real de entrega; esses temas exigem confirmação operacional e, se necessário, orientação profissional específica.
+- Revisão estática dos textos e funções da branch `uiux-reformulacao`; não houve teste de compra real, navegação em navegador ou alteração na branch `main`.
