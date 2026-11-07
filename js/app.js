@@ -356,67 +356,6 @@
      INICIALIZAÇÃO
      ======================================================= */
 
-  /* =======================================================
-     COPIAR CUPOM
-     ======================================================= */
-
-  function configurarCupons() {
-
-    document
-      .querySelectorAll("[data-copy]")
-      .forEach(function (botao) {
-
-        var original = botao.textContent;
-
-        botao.addEventListener(
-          "click",
-          function () {
-
-            var codigo =
-              botao.getAttribute("data-copy");
-
-            function avisar() {
-
-              botao.textContent = "Copiado!";
-
-              setTimeout(function () {
-                botao.textContent = original;
-              }, 1800);
-            }
-
-            if (
-              navigator.clipboard &&
-              navigator.clipboard.writeText
-            ) {
-
-              navigator.clipboard
-                .writeText(codigo)
-                .then(avisar, function () {});
-
-            } else {
-
-              var campo =
-                document.createElement("textarea");
-
-              campo.value = codigo;
-
-              document.body.appendChild(campo);
-
-              campo.select();
-
-              try {
-                document.execCommand("copy");
-                avisar();
-              } catch (e) {}
-
-              document.body.removeChild(campo);
-            }
-          }
-        );
-      });
-  }
-
-
   function iniciar() {
 
     configurarAcessibilidade();
@@ -425,10 +364,7 @@
 configurarAno();
 
     configurarScroll();
-
-    configurarCupons();
-
-  }
+}
 
 
   /* =======================================================
