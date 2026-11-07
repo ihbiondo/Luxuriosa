@@ -1039,3 +1039,58 @@
   .product-body { padding:12px; }
   .product h3 { font-size:14px; }
 }
+
+
+/* =========================================================
+   NAVEGAÇÃO DAS PÁGINAS INDIVIDUAIS DE PRODUTO
+   Essas páginas não usam o menu recolhível da loja.
+========================================================= */
+
+@media (max-width: 900px) {
+  header:has(+ main.product-detail-page) .navlinks {
+    display: flex;
+    position: static;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 8px 16px;
+    padding: 0;
+    background: transparent;
+    border: 0;
+    box-shadow: none;
+    z-index: auto;
+    font-size: 10px;
+    letter-spacing: .12em;
+  }
+
+  header:has(+ main.product-detail-page) .navlinks a {
+    display: inline-flex;
+    padding: 8px 0;
+    border: 0;
+    white-space: nowrap;
+  }
+}
+
+@media (max-width: 600px) {
+  header:has(+ main.product-detail-page) .nav {
+    height: auto;
+    min-height: 66px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    flex-wrap: wrap;
+    gap: 4px 12px;
+  }
+
+  header:has(+ main.product-detail-page) .navlinks {
+    flex: 1 1 100%;
+    order: 2;
+    justify-content: space-between;
+    gap: 6px 12px;
+    font-size: 9px;
+  }
+
+  header:has(+ main.product-detail-page) .navlinks a {
+    padding: 7px 0;
+  }
+}
