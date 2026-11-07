@@ -405,3 +405,13 @@ A reformulação estará pronta quando a navegação for clara, a experiência m
 - Preservados conteúdo institucional, metadados SEO, JSON-LD, navegação e links existentes.
 - Nenhuma imagem genérica foi adicionada; a página fica preparada para receber fotografia própria no futuro, caso faça sentido.
 - Alteração visual estática na branch `uiux-reformulacao`; depende de validação do usuário em desktop e mobile. Nenhuma alteração na branch `main` e nenhuma publicação.
+
+
+## 32. Contraste e profundidade de cor na página Sobre
+
+- Hero recebeu fundo em degradê vinho profundo com brilho marsala discreto, borda dourada sutil e mais presença visual.
+- História ganhou uma superfície própria em tons quentes de vinho/grafite para se separar do fundo geral.
+- Cartões de princípios receberam variações coordenadas de marsala e bordas douradas suaves.
+- Fechamento com slogan ganhou fundo vinho mais evidente, mantendo os CTAs existentes.
+- Ajustes responsivos preservados; conteúdo, SEO, JSON-LD, navegação e links não foram alterados.
+- Alteração está na branch `uiux-reformulacao`, pendente de validação visual do usuário. Nenhuma alteração na branch `main` e nenhuma publicação.
