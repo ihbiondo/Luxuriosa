@@ -246,3 +246,5 @@ A reformulação estará pronta quando a navegação for clara, a experiência m
 - A revisão do checkout confirmou validação de telefone, endereço, integridade dos preços e quantidades, além de prévia da mensagem antes de abrir o WhatsApp.
 - O CEP continua opcional; quando informado, precisa ter oito dígitos. Rua, número, bairro, cidade e estado são exigidos para preparar a entrega.
 - Esta etapa foi uma auditoria estática dos arquivos da branch. O comportamento real em navegador, especialmente em dispositivos móveis, ainda precisa ser testado no fechamento do projeto.
+
+- Na auditoria do catálogo, foi identificado que a homepage oferecia o atalho “Oportunidades” para a categoria `Ofertas`, mas não há produtos nessa categoria. O cartão foi convertido em “Ver todo o catálogo”, apontando para `loja.html`, evitando um filtro vazio e uma promessa comercial sem conteúdo.
