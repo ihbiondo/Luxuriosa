@@ -1,0 +1,549 @@
+/* =========================================================
+   CABECALHO EM NOTEBOOKS (1024px a 1360px)
+   O menu completo nao cabia: a pagina ganhava rolagem
+   horizontal e o botao WhatsApp ficava cortado.
+   ========================================================= */
+
+/* 981px a 1199px: usa o menu hamburguer (mesmo visual do celular) */
+@media (min-width: 981px) and (max-width: 1199px) {
+  .nav { position: relative; }
+
+  .burger {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .navlinks {
+    display: none;
+    position: absolute;
+    top: 76px;
+    left: 0;
+    right: 0;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+    background: rgba(11, 11, 11, 0.98);
+    border-bottom: 1px solid var(--line);
+    padding: 10px 4% 18px;
+    z-index: 90;
+    box-shadow: 0 18px 35px rgba(0, 0, 0, 0.35);
+  }
+
+  .navlinks.open { display: flex; }
+
+  .navlinks a {
+    display: block;
+    padding: 14px 4px;
+    border-bottom: 1px solid rgba(212, 175, 124, 0.08);
+  }
+
+  .navlinks a:last-child { border-bottom: 0; }
+}
+
+/* 1200px a 1360px: menu completo, so mais compacto */
+@media (min-width: 1200px) and (max-width: 1360px) {
+  .nav { gap: 14px; }
+
+  .navlinks {
+    gap: 16px;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+  }
+
+  .cart-label { display: none; }
+}
+
+
+/* =========================================================
+   CADASTRO LOCAL E REVISÃO DO PEDIDO
+   ========================================================= */
+.customer-overlay[hidden],
+.customer-review[hidden],
+.customer-status[hidden],
+.customer-delete[hidden] { display: none !important; }
+
+.customer-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+  background: rgba(0, 0, 0, .82);
+  overflow-y: auto;
+}
+
+.customer-dialog {
+  width: min(100%, 820px);
+  max-height: min(92vh, 1000px);
+  overflow-y: auto;
+  padding: clamp(18px, 4vw, 34px);
+  color: var(--text);
+  background: var(--surface2);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, .55);
+  outline: none;
+}
+
+.customer-dialog-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+  margin-bottom: 10px;
+}
+
+.customer-dialog-header h2 {
+  margin: 4px 0 0;
+  font-family: var(--serif);
+  font-weight: 400;
+  line-height: 1.2;
+}
+
+.customer-intro,
+.customer-privacy-note,
+.customer-storage-help,
+.customer-review > p {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.customer-privacy-note a { color: var(--gold); text-decoration: underline; text-underline-offset: 3px; }
+.customer-fieldset { min-width: 0; margin: 24px 0 0; padding: 0; border: 0; }
+.customer-fieldset legend { width: 100%; margin-bottom: 12px; padding-bottom: 8px; color: var(--gold); border-bottom: 1px solid var(--line); font-size: 14px; letter-spacing: .04em; }
+.customer-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+.customer-field { min-width: 0; display: flex; flex-direction: column; gap: 6px; }
+.customer-span-2 { grid-column: 1 / -1; }
+.customer-field label { font-size: 12px; color: var(--text); }
+.customer-field label > span[aria-hidden="true"] { color: var(--gold); }
+.customer-field .optional { color: var(--muted); }
+.customer-field input,
+.customer-field select,
+.customer-field textarea {
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 12px;
+  color: var(--text);
+  background: var(--black);
+  border: 1px solid rgba(212, 175, 124, .35);
+  border-radius: 7px;
+  font: inherit;
+  font-size: 14px;
+}
+.customer-field textarea {
+  min-height: 104px;
+  resize: vertical;
+  line-height: 1.5;
+}
+.customer-cep-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 10px;
+  align-items: stretch;
+}
+.customer-cep-row .btn {
+  min-height: 44px;
+  white-space: nowrap;
+}
+.customer-freight-info {
+  margin: 8px 0 0;
+  padding: 10px 12px;
+  color: var(--muted);
+  background: rgba(212, 175, 124, .07);
+  border-left: 2px solid var(--gold);
+  border-radius: 0 6px 6px 0;
+  font-size: 12px;
+  line-height: 1.55;
+}
+.customer-cep-status[data-kind="error"] { color: #ffabb6; }
+.customer-cep-status[data-kind="success"] { color: var(--gold); }
+.customer-cep-status[hidden] { display: none !important; }
+
+.cart-item-price-changed {
+  display: block;
+  margin-top: 6px;
+  color: var(--gold);
+  font-size: 0.78rem;
+  line-height: 1.45;
+}
+.customer-field input:focus,
+.customer-field select:focus,
+.customer-field textarea:focus {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+}
+.customer-field input[aria-invalid="true"],
+.customer-field select[aria-invalid="true"],
+.customer-field textarea[aria-invalid="true"] {
+  border-color: #ff8c9c;
+  box-shadow: 0 0 0 1px rgba(255, 140, 156, .16);
+}
+.customer-consents { display: grid; gap: 14px; }
+.customer-check { display: flex; align-items: flex-start; gap: 10px; cursor: pointer; }
+.customer-check input { flex: 0 0 auto; width: 17px; height: 17px; margin-top: 3px; accent-color: var(--wine); }
+.customer-check span { display: grid; gap: 4px; }
+.customer-check strong { font-size: 12px; font-weight: 500; }
+.customer-check small { color: var(--muted); font-size: 11px; line-height: 1.5; }
+.customer-storage-actions,
+.customer-actions { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-top: 20px; }
+.customer-actions { justify-content: flex-end; padding-top: 16px; border-top: 1px solid var(--line); }
+.customer-storage-actions .btn,
+.customer-actions .btn { min-height: 42px; }
+.customer-delete { padding: 8px 0; border: 0; color: #ffabb6; background: transparent; font: inherit; font-size: 12px; text-decoration: underline; cursor: pointer; }
+.customer-status { margin: 14px 0; padding: 10px 12px; border: 1px solid var(--line); border-radius: 7px; color: var(--text); font-size: 12px; }
+.customer-status[data-kind="error"] { border-color: #ff8c9c; }
+.customer-status[data-kind="success"] { border-color: var(--gold); }
+.customer-review { margin-top: 22px; }
+.customer-review h3 { font-family: var(--serif); font-weight: 400; }
+.customer-message-preview { white-space: pre-wrap; overflow-wrap: anywhere; max-height: 300px; overflow: auto; padding: 14px; color: var(--text); background: var(--black); border: 1px solid var(--line); border-radius: 8px; font: 12px/1.6 var(--sans); }
+.customer-message-preview:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
+body.customer-open { overflow: hidden; }
+
+@media (max-width: 600px) {
+  .customer-overlay {
+    align-items: flex-start;
+    padding: 6px;
+    overscroll-behavior: contain;
+  }
+  .customer-dialog {
+    width: 100%;
+    max-height: min(98vh, 100dvh);
+    padding: 14px;
+    border-radius: 12px;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+  }
+  .customer-dialog-header { gap: 10px; margin-bottom: 8px; }
+  .customer-dialog-header h2 { font-size: 1.45rem; }
+  .customer-intro,
+  .customer-privacy-note { margin: 8px 0; font-size: 12px; line-height: 1.5; }
+  .customer-fieldset { margin-top: 18px; }
+  .customer-grid { grid-template-columns: minmax(0, 1fr); gap: 10px; }
+  .customer-cep-row { grid-template-columns: minmax(0, 1fr); gap: 8px; }
+  .customer-cep-row .btn { width: 100%; }
+  .customer-span-2 { grid-column: auto; }
+  .customer-field input,
+  .customer-field select,
+  .customer-field textarea { font-size: 16px; }
+  .customer-essential-fields input { min-height: 46px; }
+  .customer-freight-info { padding: 9px 10px; font-size: 12px; }
+  .customer-actions { flex-direction: column-reverse; align-items: stretch; gap: 9px; }
+  .customer-actions .btn, .customer-storage-actions .btn { width: 100%; min-height: 46px; }
+  .customer-storage-actions { align-items: stretch; flex-direction: column; gap: 9px; }
+  .customer-extra-section > summary { padding: 12px; }
+  .customer-marketing-choice { margin-top: 14px; padding: 10px; }
+}
+
+
+.customer-dialog .btn.secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 11px 16px;
+  color: var(--gold);
+  background: transparent;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  cursor: pointer;
+}
+.customer-dialog .btn.secondary:hover { border-color: var(--gold); }
+
+
+/* =========================================================
+   CHECKOUT MAIS ENXUTO — CAMPOS OPCIONAIS RECOLHÍVEIS
+   ========================================================= */
+.customer-extra-section {
+  margin-top: 16px;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  background: rgba(0, 0, 0, .12);
+}
+.customer-extra-section > summary {
+  padding: 13px 15px;
+  color: var(--gold);
+  font-size: 13px;
+  cursor: pointer;
+  list-style-position: inside;
+}
+.customer-extra-section > summary span {
+  color: var(--muted);
+  font-size: 11px;
+}
+.customer-extra-section[open] > summary {
+  border-bottom: 1px solid var(--line);
+}
+.customer-extra-intro {
+  margin: 12px 15px 0;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.5;
+}
+.customer-extra-section .customer-fieldset {
+  margin: 14px 15px 16px;
+}
+.customer-additional-fields {
+  margin: 14px 15px 0;
+}
+.customer-address-choice {
+  margin: 0 15px 16px;
+}
+.customer-save-choice {
+  margin: 16px 15px 0;
+}
+.customer-extra-section .customer-storage-actions {
+  margin: 12px 15px 0;
+}
+.customer-extra-section .customer-storage-help {
+  margin: 10px 15px 15px;
+}
+.customer-marketing-choice {
+  margin-top: 18px;
+  padding: 12px 13px;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+}
+.customer-essential-fields {
+  margin-top: 14px;
+}
+.customer-essential-fields .customer-grid {
+  grid-template-columns: minmax(0, 1fr);
+  gap: 12px;
+}
+.customer-essential-fields .customer-span-2 {
+  grid-column: auto;
+}
+.customer-essential-fields input {
+  min-height: 48px;
+}
+@media (max-width: 600px) {
+  .customer-additional-fields {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .customer-extra-section .customer-storage-actions .btn {
+    width: 100%;
+  }
+}
+
+
+/* =========================================================
+   CARRINHO — CONTROLES MAIS CONFORTÁVEIS
+   ========================================================= */
+.cart-qty-btn {
+  width: 40px;
+  height: 40px;
+  flex: 0 0 40px;
+  font-size: 18px;
+}
+
+.cart-remove {
+  min-height: 40px;
+  padding: 8px 10px;
+  border-radius: 6px;
+  font-size: 11px;
+}
+
+.cart-qty-btn:focus-visible,
+.cart-remove:focus-visible,
+.cart-clear:focus-visible,
+.cart-checkout:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 3px;
+}
+
+.cart-clear {
+  min-height: 42px;
+}
+
+@media (max-width: 600px) {
+  .cart-items {
+    padding: 4px 14px 16px;
+  }
+
+  .cart-item {
+    grid-template-columns: 60px minmax(0, 1fr);
+    gap: 10px;
+    padding: 13px 0;
+  }
+
+  .cart-item-img {
+    width: 60px;
+    height: 60px;
+  }
+
+  .cart-item-name {
+    font-size: 16px;
+    overflow-wrap: anywhere;
+  }
+
+  .cart-item-controls {
+    gap: 8px;
+    margin-top: 4px;
+  }
+
+  .cart-remove {
+    justify-self: end;
+    align-self: center;
+    white-space: nowrap;
+  }
+
+  .cart-footer {
+    padding: 14px 14px 16px;
+  }
+
+  .cart-total-row {
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+
+  .cart-total-row strong {
+    font-size: 22px;
+    white-space: nowrap;
+  }
+
+  .cart-note {
+    font-size: 10px;
+    line-height: 1.55;
+  }
+}
+
+
+/* =========================================================
+   ACESSIBILIDADE — ATALHO PARA O CONTEÚDO PRINCIPAL
+   ========================================================= */
+.skip-link {
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  z-index: 10000;
+  padding: 12px 16px;
+  transform: translateY(calc(-100% - 24px));
+  border: 2px solid var(--gold);
+  border-radius: 8px;
+  background: #0B0B0B;
+  color: #FFFFFF;
+  font-weight: 700;
+  text-decoration: none;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.35);
+}
+.skip-link:focus,
+.skip-link:focus-visible {
+  transform: translateY(0);
+  outline: 3px solid #FFFFFF;
+  outline-offset: 3px;
+}
+#conteudo-principal:focus {
+  outline: none;
+}
+
+
+/* Catálogo: mensagem de resultados acessível sem alterar o layout. */
+.catalogo-status {
+  margin: -12px 0 18px;
+  color: var(--muted);
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+
+
+/* =========================================================
+   CARDS DE PRODUTO — TEXTOS LONGOS EM TELAS PEQUENAS
+   ========================================================= */
+@media (max-width: 600px) {
+  .product-body {
+    min-width: 0;
+  }
+
+  .product h3 {
+    overflow-wrap: anywhere;
+    hyphens: auto;
+  }
+
+  .price {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 4px 8px;
+    overflow-wrap: anywhere;
+  }
+
+  .price s {
+    margin-left: 0;
+  }
+
+  .product .btn {
+    min-height: 42px;
+    height: auto;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    line-height: 1.35;
+  }
+}
+
+@media (max-width: 380px) {
+  .product h3 {
+    font-size: 13px;
+  }
+
+  .product .btn {
+    font-size: 9px;
+    padding: 8px 6px;
+  }
+}
+
+
+/* =========================================================
+   PÁGINAS DE PRODUTO — PREÇO COM MAIS DESTAQUE
+   ========================================================= */
+.product-detail-copy .product-detail-price {
+  font-size: clamp(2.05rem, 3vw, 2.4rem) !important;
+  font-weight: 650;
+  line-height: 1.15;
+  margin: 22px 0 26px;
+}
+
+.product-detail-copy .product-detail-price strong {
+  display: inline-block;
+  color: #ff4f9a;
+  font-size: clamp(2.55rem, 4vw, 3.1rem);
+  font-weight: 800;
+  line-height: 1;
+  text-shadow: 0 0 18px rgba(255, 79, 154, .22);
+}
+
+.product-detail-copy .product-detail-price s {
+  display: inline-block;
+  color: var(--muted);
+  font-size: clamp(1rem, 1.5vw, 1.2rem);
+  font-weight: 400;
+  margin-left: 10px;
+}
+
+@media (max-width: 600px) {
+  .product-detail-copy .product-detail-price {
+    font-size: 2rem !important;
+    margin: 20px 0 24px;
+  }
+
+  .product-detail-copy .product-detail-price strong {
+    font-size: 2.65rem;
+  }
+
+  .product-detail-copy .product-detail-price s {
+    font-size: 1rem;
+  }
+}
+
+
+/* Página inicial: aproxima a curadoria do bloco de destaques */
+.curation-more {
+  padding: 0 0 48px;
+}
+
+@media (max-width: 768px) {
+  .curation-more {
+    padding-bottom: 32px;
+  }
+}
