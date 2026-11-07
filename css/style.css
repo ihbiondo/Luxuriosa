@@ -2116,3 +2116,18 @@ footer {
 .shop-page .catalog-search { max-width:100%; }
 .shop-page .chips { margin-top:18px; }
 .shop-page .products { scroll-margin-top:100px; }
+
+
+/* =========================================================
+   HOMEPAGE — RESUMO DE ATENDIMENTO
+========================================================= */
+.service-preview-section { background:linear-gradient(180deg,#10090c,#0b0b0b); }
+.service-preview { display:grid; grid-template-columns:minmax(0,1.1fr) minmax(260px,.9fr); gap:clamp(28px,6vw,76px); align-items:center; }
+.service-preview-copy { max-width:620px; }
+.service-preview-copy h2 { margin:13px 0 16px; font-family:var(--serif); font-size:clamp(34px,4vw,48px); font-weight:400; line-height:1.12; }
+.service-preview-copy p { color:var(--muted); font-size:14px; line-height:1.8; }
+.service-preview-copy .btn { margin-top:12px; }
+.service-preview-note { padding:28px; border:1px solid rgba(212,175,124,.3); border-radius:18px; background:linear-gradient(140deg,rgba(139,30,63,.24),rgba(20,12,15,.92)); }
+.service-preview-note span { color:var(--gold); font-size:9px; letter-spacing:.17em; }
+.service-preview-note strong { display:block; margin:12px 0 18px; color:var(--blush); font-family:var(--serif); font-size:25px; font-weight:400; line-height:1.2; }
+.service-preview-note a { color:var(--gold); font-size:11px; text-decoration:underline; text-underline-offset:4px; }
