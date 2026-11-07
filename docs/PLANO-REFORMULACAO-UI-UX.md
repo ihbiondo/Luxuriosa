@@ -187,3 +187,14 @@ A reformulação estará pronta quando a navegação for clara, a experiência m
 - Links das páginas locais preservados.
 - CTA de entrega direciona ao WhatsApp com mensagem de consulta de disponibilidade.
 - Implementação ainda depende de validação visual e funcional em navegador.
+
+
+## 15. Registro de implementação — Sobre e rodapé
+
+- Homepage passou a apresentar uma introdução curta à marca, com a identidade visual anteriormente usada no hero e link para a página Sobre.
+- Criada a página independente `sobre.html`, com história, propósito, posicionamento e identidade da Luxuriosa.
+- Navegação principal direciona para a página Sobre.
+- Rodapé reorganizado em três grupos: marca, exploração e informações.
+- Mantidos links para FAQ, privacidade, atendimento, entrega e WhatsApp; removidos e-mails de RH e contatos setoriais do rodapé para reduzir ruído na navegação principal.
+- Ajustes responsivos para tablet, celular e telas estreitas.
+- Verificação visual em navegador ainda pendente.
