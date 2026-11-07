@@ -221,3 +221,16 @@ A reformulação estará pronta quando a navegação for clara, a experiência m
 - Conferidos os links internos e âncoras das páginas principais e regionais; não foram encontrados links restantes para a antiga âncora `#catalogo` nas páginas revisadas.
 - Mantidos os links das páginas de produto, das cidades, do atendimento, da entrega, do FAQ e da política de privacidade.
 - A revisão foi estática, diretamente nos arquivos da branch. Não substitui teste real de navegação, teclado, telas e comportamento no navegador.
+
+
+## 18. Página independente de Atendimento e entrega
+
+- Criada a página `atendimento.html`, reunindo atendimento personalizado, privacidade, embalagem e entrega.
+- As três opções de preferência de atendente foram preservadas, com links diretos para o WhatsApp e mensagens pré-preenchidas.
+- A embalagem personalizada foi descrita conforme a operação informada: papel kraft marsala, adesivo Luxuriosa e fragrância própria.
+- Mantida a alternativa de apresentação neutra, conforme a escolha do cliente no atendimento.
+- Condições de frete, prazos, municípios, distritos e links regionais foram transferidos sem alterar os valores e referências existentes.
+- A homepage passa a apresentar apenas um resumo da experiência e direciona para a página completa.
+- Navegação, rodapés, FAQ, páginas institucionais e links regionais/produtos estão sendo atualizados para a nova página.
+- Página adicionada ao sitemap com canonical, Open Graph e dados estruturados próprios.
+- A revisão desta etapa é estática; testes visuais e funcionais reais no navegador continuam pendentes.
