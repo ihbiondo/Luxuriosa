@@ -450,3 +450,11 @@ A reformulação estará pronta quando a navegação for clara, a experiência m
 - Acordeões da FAQ mantêm o elemento nativo `details/summary`; tabela da política permanece acessível por rolagem horizontal em telas estreitas.
 - Conteúdo comercial, prazos, valores, lista de cidades e texto jurídico preservados.
 - Revisão estática; não representa teste em navegador, auditoria automatizada de contraste, teste com leitor de tela ou validação jurídica.
+
+
+## 37. Observação para integração e publicação
+
+- A branch `main` contém o commit isolado `f490388b`, que adicionou somente `previa/index.html` para a prévia visual autorizada.
+- A branch `uiux-reformulacao` ainda não contém esse commit e está um commit atrás de `main`.
+- Antes de qualquer publicação, integrar esse único commit da prévia sem removê-la, revisar o diff final e solicitar aprovação explícita.
+- Nenhum merge, publicação ou alteração adicional na branch `main` foi realizado nesta etapa.
