@@ -358,3 +358,17 @@ A reformulação estará pronta quando a navegação for clara, a experiência m
 - As imagens de kits e produtos do catálogo não foram substituídas por imagens artificiais. A seleção final de fotografias reais será feita após o usuário fotografar os kits físicos.
 - Arquivos alterados: `index.html`, `css/style.css` e `css/responsive.css`.
 - Limite desta etapa: alteração estática de HTML/CSS; ainda é necessário validar visualmente em desktop e celular no navegador local. Nenhuma alteração na branch `main` e nenhuma publicação.
+
+
+## 28. Direção visual das categorias e enquadramento dos cards
+
+- As quatro categorias com fotografia passaram a usar imagens de produtos individuais já existentes: gel Xana Loka, vibrador Golfinho rosa, Dado do Prazer e Perfume Sensual Melancia. Os arquivos são decorativos nos links e usam `alt=""` para não duplicar os nomes acessíveis.
+- Os cartões usam camada de contraste em degradê para manter os títulos legíveis sobre as fotografias. As categorias Kits especiais e Ver todo o catálogo receberam tratamento tipográfico/editorial sem foto de kit, evitando destacar montagens antigas nas quais alguns itens parecem suspensos.
+- O recorte das imagens das categorias foi ajustado para priorizar o produto e reduzir a repetição da marca impressa no topo dos arquivos verticais.
+- O enquadramento das imagens dos cards de produto também passou a priorizar a região central/inferior da fotografia, reduzindo a presença da marca repetida e mantendo o produto como foco.
+- A fotografia do hero passou a usar preenchimento com recorte vertical controlado, priorizando a região do kit em vez da assinatura repetida no alto da arte. O arquivo original permanece intacto.
+- Mantido o layout mobile em duas colunas para categorias, com dimensões compactas já definidas no breakpoint de 600px.
+- Não foram alterados nomes, preços, descrições, estoque, IDs, links de categoria ou regras de compra.
+- Arquivos alterados nesta etapa: `index.html` e `css/style.css`. O breakpoint mobile existente foi revisado e já contemplava duas colunas.
+- Limite: ajustes estáticos de HTML/CSS; os recortes precisam ser conferidos no navegador em diferentes larguras antes da aprovação. As imagens dos kits serão substituídas por fotografias reais quando o usuário as produzir.
+- Nenhuma alteração na branch `main`; nenhuma publicação.
