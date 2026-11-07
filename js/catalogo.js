@@ -279,7 +279,7 @@
     imagemPrincipal.decoding = "async";
     imagemPrincipal.style.maxWidth = "100%";
     imagemPrincipal.style.height = "100%";
-    imagemPrincipal.style.objectFit = permitirGaleria ? "contain" : "fill";
+    imagemPrincipal.style.objectFit = "contain";
 
     imagemPrincipal.onerror = function () {
       this.style.display = "none";

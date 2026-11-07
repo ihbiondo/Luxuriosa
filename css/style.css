@@ -697,7 +697,7 @@ header {
 
   height: 100%;
 
-  object-fit: fill;
+  object-fit: contain;
 }
 
 .product.out .product-img img,
