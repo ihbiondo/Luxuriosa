@@ -1045,32 +1045,3 @@
 
 }
 
-/* CUPONS */
-
-@media (max-width: 860px) {
-  .coupon-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-@media (max-width: 480px) {
-  .coupon {
-    flex-direction: column;
-  }
-
-  .coupon-value {
-    flex: none;
-
-    flex-direction: row;
-
-    gap: 10px;
-
-    border-right: 0;
-
-    border-bottom: 1px dashed var(--gold);
-  }
-
-  .coupon-value small {
-    margin-top: 0;
-  }
-}
