@@ -201,7 +201,7 @@
       "tamanhos": "",
       "imagem": "img/produtos/novas/luxuriosa-xana-loka-hotball.jpg",
       "novo": false,
-      "destaque": true,
+      "destaque": false,
       "esgotado": false,
       "maisVendido": false,
       "tipoProduto": "Estimulantes",
