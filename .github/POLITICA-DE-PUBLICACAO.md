@@ -32,9 +32,9 @@ O site público deve apresentar somente páginas, ofertas e funcionalidades que 
 
 ## Arquivamento atual
 
-O Clube Luxuriosa e a Biblioteca Luxuriosa são projetos futuros. Seus arquivos foram preservados na branch `arquivo-futuro-clube-biblioteca` e retirados da branch pública `main`, junto com suas folhas de estilo exclusivas.
+O protótipo do Clube Luxuriosa foi preservado na branch `arquivo-prototipo-clube-2026-11` e removido da branch pública `main`, incluindo HTML, CSS e JavaScript exclusivos. A página não deve ser considerada uma área de membros ou serviço ativo.
 
-As páginas não devem ser consideradas produtos disponíveis, áreas de membros ou serviços ativos. O conteúdo poderá ser retomado futuramente, revisado e publicado somente após definição e implementação das funcionalidades.
+A branch `main` publica somente a experiência comercial aprovada. Protótipos e funcionalidades futuras permanecem em branches de trabalho/arquivo até que estejam implementados, testados e aprovados para publicação.
 
 ## Checklist antes de publicar
 
