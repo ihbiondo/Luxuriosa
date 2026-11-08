@@ -32,7 +32,7 @@
         "Destino: " + cidade + "/" + estado,
         "Frete padrão fixo: R$ 15,00."
       ];
-      condicoes.push("Pedidos que incluam pelo menos um kit têm frete grátis em Bauru.");
+      condicoes.push("Pedidos que incluam pelo menos um kit promocional têm frete grátis exclusivamente em Bauru.");
       return condicoes;
     }
 
@@ -203,8 +203,8 @@
       var items = api && typeof api.obterItens === "function" ? api.obterItens() : [];
       var temKit = pedidoContemKit(items);
       aviso.textContent = temKit
-        ? "Entrega em Bauru-SP: seu pedido inclui um kit e tem frete grátis. Os demais pedidos têm frete de R$ 15,00."
-        : "Entrega em Bauru-SP: frete fixo de R$ 15,00. Pedidos que incluam pelo menos um kit têm frete grátis.";
+        ? "Entrega em Bauru-SP: seu pedido inclui um kit promocional e tem frete grátis. Os demais pedidos têm frete de R$ 15,00."
+        : "Entrega em Bauru-SP: frete fixo de R$ 15,00. Pedidos que incluam pelo menos um kit promocional têm frete grátis.";
       return;
     }
 
