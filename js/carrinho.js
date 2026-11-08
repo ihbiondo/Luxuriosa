@@ -1383,7 +1383,7 @@
       "_Frete será confirmado conforme o destino._",
       "",
       "*CONDIÇÕES DE ENTREGA*",
-      "• Em Bauru, pedidos que incluam pelo menos um kit têm frete grátis.",
+      "• Em Bauru, pedidos que incluam pelo menos um kit promocional têm frete grátis.",
       "• Para os demais pedidos em Bauru, o frete padrão é R$ 15,00.",
       "• Para outras cidades, disponibilidade e valor serão confirmados no atendimento.",
       "*PRÓXIMO PASSO*",
