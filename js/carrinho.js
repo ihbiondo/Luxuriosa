@@ -1380,7 +1380,7 @@
     linhas.push(
       "",
       "*Subtotal dos produtos:* " + formatarPreco(valorTotal()),
-      "_Frete será confirmado conforme o destino._",
+      "_Condição do frete conforme o destino e os itens do pedido:_",
       "",
       "*CONDIÇÕES DE ENTREGA*",
       "• Em Bauru, pedidos que incluam pelo menos um kit promocional têm frete grátis.",
