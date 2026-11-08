@@ -367,7 +367,7 @@
       "tamanhos": "",
       "imagem": "img/produtos/novas/luxuriosa-plug-lite-vermelho.jpg",
       "novo": false,
-      "destaque": false,
+      "destaque": true,
       "esgotado": false,
       "imagens": [
         "img/produtos/novas/luxuriosa-plug-lite-vermelho.jpg",
