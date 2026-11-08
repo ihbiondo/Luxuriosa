@@ -42,6 +42,8 @@
         "false"
       );
 
+      botao.setAttribute("aria-label", "Abrir menu");
+
     }
 
 
@@ -59,6 +61,8 @@
         "aria-expanded",
         aberto ? "true" : "false"
       );
+
+      botao.setAttribute("aria-label", aberto ? "Fechar menu" : "Abrir menu");
 
     }
 
