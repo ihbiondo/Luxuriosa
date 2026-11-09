@@ -307,20 +307,27 @@
       $("accountGreeting").textContent = "Olá, " + displayName + "!";
     }
 
+    let loadingUserId = null;
+
     async function showSignedIn(user) {
       if (activeUserId === user.id) {
         $("accountEmail").textContent = user.email || "";
         return;
       }
-      activeUserId = user.id;
+      if (loadingUserId === user.id) return;
+      loadingUserId = user.id;
       authArea.classList.add("hidden");
       signedInArea.classList.remove("hidden");
       try {
         await syncNewAccountData(user);
         await loadAccountData(user);
+        activeUserId = user.id;
       } catch (error) {
-        message("Não foi possível carregar todos os dados da sua conta. Atualize a página ou tente novamente.", true);
+        activeUserId = null;
+        message("Não foi possível carregar todos os dados da sua conta. Atualize a página para tentar novamente.", true);
         console.error("Falha ao carregar perfil:", error);
+      } finally {
+        loadingUserId = null;
       }
     }
 
@@ -429,14 +436,22 @@
     $("backToLogin").addEventListener("click", () => showForm("login"));
 
     loginForm.addEventListener("submit", async (event) => {
-      event.preventDefault(); clearMessage(); setBusy(loginForm, true);
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email: $("loginEmail").value.trim(),
-        password: $("loginPassword").value
-      });
-      setBusy(loginForm, false);
-      if (error) return message(friendlyError(error), true);
-      await showSignedIn(data.user);
+      event.preventDefault();
+      clearMessage();
+      setBusy(loginForm, true);
+      try {
+        const { data, error } = await supabase.auth.signInWithPassword({
+          email: $("loginEmail").value.trim(),
+          password: $("loginPassword").value
+        });
+        if (error) throw error;
+        await showSignedIn(data.user);
+      } catch (error) {
+        console.error("Falha ao entrar:", error);
+        message(friendlyError(error), true);
+      } finally {
+        setBusy(loginForm, false);
+      }
     });
 
     signupForm.addEventListener("submit", async (event) => {
@@ -456,7 +471,7 @@
       const fullName = $("fullName").value.trim();
       const firstName = fullName.split(/\s+/)[0];
       const usernameBase = fullName.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, "_").replace(/^_|_$/g, "").slice(0, 20) || "cliente";
-      const username = usernameBase + "_" + Math.random().toString(36).slice(2, 8);
+      const username = usernameBase + "_" + crypto.randomUUID().replace(/-/g, "").slice(0, 8);
       const phone = $("phone").value.trim();
       const postalCode = $("postalCode").value.replace(/\D/g, "");
       if (postalCode.length !== 8) return message("Informe um CEP válido com oito dígitos.", true);
