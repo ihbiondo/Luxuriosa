@@ -71,7 +71,7 @@
               <div class="field"><label for="birthDate">Data de nascimento</label><input id="birthDate" type="date" autocomplete="bday" required></div>
               <div class="field"><label for="phone">WhatsApp</label><input id="phone" type="tel" autocomplete="tel" placeholder="(14) 99999-9999" maxlength="30" required></div>
               <div class="field full"><label for="signupEmail">E-mail</label><input id="signupEmail" type="email" autocomplete="email" placeholder="voce@exemplo.com.br" required></div>
-              <div class="field"><label for="signupPassword">Senha (mínimo 8 caracteres)</label><input id="signupPassword" type="password" autocomplete="new-password" minlength="8" required></div>
+              <div class="field"><label for="signupPassword">Senha (mínimo 8 caracteres)</label><input id="signupPassword" type="password" autocomplete="new-password" minlength="8" pattern="(?=.*[A-Za-z])(?=.*[0-9]).{8,}" title="Use pelo menos 8 caracteres, incluindo letras e números." required></div>
               <div class="field"><label for="confirmPassword">Confirme a senha</label><input id="confirmPassword" type="password" autocomplete="new-password" minlength="8" required></div>
 
               <div class="section-label">Endereço principal</div>
@@ -109,7 +109,7 @@
           <form id="newPasswordForm" class="hidden">
             <h2>Escolha uma nova senha.</h2>
             <p class="lead">Defina uma senha nova para sua conta.</p>
-            <div class="field"><label for="newPassword">Nova senha (mínimo 8 caracteres)</label><input id="newPassword" type="password" autocomplete="new-password" minlength="8" required></div>
+            <div class="field"><label for="newPassword">Nova senha (mínimo 8 caracteres)</label><input id="newPassword" type="password" autocomplete="new-password" minlength="8" pattern="(?=.*[A-Za-z])(?=.*[0-9]).{8,}" title="Use pelo menos 8 caracteres, incluindo letras e números." required></div>
             <div class="field" style="margin-top:13px"><label for="newPasswordConfirm">Confirme a nova senha</label><input id="newPasswordConfirm" type="password" autocomplete="new-password" minlength="8" required></div>
             <div class="actions"><button class="primary" type="submit">SALVAR NOVA SENHA</button></div>
           </form>
@@ -259,6 +259,7 @@
 
     signupForm.addEventListener("submit", async (event) => {
       event.preventDefault(); clearMessage();
+      if (!/(?=.*[A-Za-z])(?=.*[0-9]).{8,}/.test($("signupPassword").value)) return message("Use uma senha com pelo menos 8 caracteres, incluindo letras e números.", true);
       if ($("signupPassword").value !== $("confirmPassword").value) return message("As senhas não coincidem.", true);
       const colors = Array.from(document.querySelectorAll('input[name="favoriteColor"]:checked')).map((el) => el.value);
       if (colors.length > 3) return message("Escolha no máximo três cores favoritas.", true);
@@ -325,6 +326,7 @@
 
     newPasswordForm.addEventListener("submit", async (event) => {
       event.preventDefault(); clearMessage();
+      if (!/(?=.*[A-Za-z])(?=.*[0-9]).{8,}/.test($("newPassword").value)) return message("Use uma senha com pelo menos 8 caracteres, incluindo letras e números.", true);
       if ($("newPassword").value !== $("newPasswordConfirm").value) return message("As senhas não coincidem.", true);
       setBusy(newPasswordForm, true, "SALVANDO...");
       const { error } = await supabase.auth.updateUser({ password: $("newPassword").value });
