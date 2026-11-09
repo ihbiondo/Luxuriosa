@@ -573,8 +573,9 @@
               <input id="customerName" name="name" autocomplete="name" required maxlength="120">
             </div>
             <div class="customer-field customer-span-2">
-              <label for="customerPhone">Telefone/WhatsApp <span aria-hidden="true">*</span></label>
-              <input id="customerPhone" name="phone" type="tel" inputmode="tel" autocomplete="tel" required maxlength="25" placeholder="(14) 99999-9999">
+              <label for="customerPhone">Telefone/WhatsApp com DDD <span aria-hidden="true">*</span></label>
+              <input id="customerPhone" name="phone" type="tel" inputmode="tel" autocomplete="tel-national" required maxlength="25" placeholder="(14) 99999-9999" aria-describedby="customerPhoneHelp">
+              <small id="customerPhoneHelp">Use seu número brasileiro com DDD. A Luxuriosa envia o telefone à InfinitePay no formato internacional do Brasil (+55).</small>
             </div>
             <div class="customer-field customer-span-2">
               <label for="customerEmail">E-mail <span aria-hidden="true">*</span></label>
