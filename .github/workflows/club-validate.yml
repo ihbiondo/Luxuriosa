@@ -1,0 +1,65 @@
+name: Validacao do Clube Luxuriosa
+
+on:
+  pull_request:
+    paths:
+      - "login.html"
+      - "js/clientes.js"
+      - "js/inteligencia.js"
+      - "gestao-privada-8f2c6d.html"
+      - "supabase/migrations/**"
+      - ".github/workflows/club-validate.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  syntax:
+    name: Sintaxe e estrutura
+    runs-on: ubuntu-latest
+    steps:
+      - name: Baixar codigo
+        uses: actions/checkout@v4
+
+      - name: Configurar Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Validar scripts JavaScript
+        run: |
+          node --check js/clientes.js
+          node --check js/inteligencia.js
+
+      - name: Validar scripts de paginas HTML
+        run: |
+          node <<'NODE'
+          const fs = require("node:fs");
+          const pages = ["login.html", "gestao-privada-8f2c6d.html"];
+          for (const page of pages) {
+            const html = fs.readFileSync(page, "utf8");
+            const matches = [...html.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/gi)]
+              .filter(match => /type\s*=\s*["']module["']/i.test(match[1]));
+            if (matches.length !== 1) {
+              throw new Error(page + ": esperado exatamente um script module; encontrados " + matches.length);
+            }
+            const target = "/tmp/" + page.replace(/\.html$/i, "") + ".mjs";
+            fs.writeFileSync(target, matches[0][2]);
+            console.log("Verificando " + page);
+            require("node:child_process").execFileSync(process.execPath, ["--check", target], { stdio: "inherit" });
+          }
+          NODE
+
+      - name: Conferir identificadores e formularios
+        run: |
+          node <<'NODE'
+          const fs = require("node:fs");
+          const html = fs.readFileSync("login.html", "utf8");
+          const ids = [...html.matchAll(/\bid=["']([^"']+)["']/g)].map(match => match[1]);
+          const duplicates = ids.filter((id, index) => ids.indexOf(id) !== index);
+          if (duplicates.length) throw new Error("IDs duplicados: " + [...new Set(duplicates)].join(", "));
+          const opens = (html.match(/<form\b/gi) || []).length;
+          const closes = (html.match(/<\/form>/gi) || []).length;
+          if (opens !== closes) throw new Error("Tags form sem correspondencia: " + opens + " / " + closes);
+          console.log("Login: " + ids.length + " IDs exclusivos; " + opens + " formularios balanceados.");
+          NODE
