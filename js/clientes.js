@@ -613,11 +613,24 @@
         throw new Error(result.error || "Não foi possível preparar o pagamento. Tente novamente.");
       }
 
-      messagePreview.textContent =
-        "Pedido Luxuriosa #" + result.order_number + "\n" +
-        "Total para pagamento: " + formatarPreco(result.total_amount) + "\n\n" +
+      var paymentSummary = [
+        "Pedido Luxuriosa #" + result.order_number,
+        "Produtos: " + formatarPreco(result.subtotal_amount || 0)
+      ];
+      if (Number(result.club_discount_amount) > 0) {
+        paymentSummary.push(
+          "Desconto Clube (" + (Number(result.club_discount_percent) || 10) + "%): -" +
+          formatarPreco(result.club_discount_amount)
+        );
+      }
+      paymentSummary.push(
+        "Frete: " + formatarPreco(result.shipping_amount || 0),
+        "Total para pagamento: " + formatarPreco(result.total_amount),
+        "",
         "Você será direcionado à InfinitePay para pagar com Pix ou cartão. " +
-        "A expedição só começa depois da confirmação do pagamento.";
+        "A expedição só começa depois da confirmação do pagamento."
+      );
+      messagePreview.textContent = paymentSummary.join("\n");
       avisar("Pedido criado. Abrindo o checkout seguro da InfinitePay...", "success");
 
       window.location.assign(result.checkout_url);
