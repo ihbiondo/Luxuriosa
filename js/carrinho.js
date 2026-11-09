@@ -1404,7 +1404,8 @@
     );
 
     var mensagem = linhas.join("\n");
-    var url = "https://wa.me/5514996355924?text=" + encodeURIComponent(mensagem);
+    var numero = obterWhatsApp();
+    var url = "https://wa.me/" + numero + "?text=" + encodeURIComponent(mensagem);
     if (window.LuxuriosaMedicao && typeof window.LuxuriosaMedicao.registrar === "function") {
       window.LuxuriosaMedicao.registrar("checkout_whatsapp", {
         method: "manual_attendant",
