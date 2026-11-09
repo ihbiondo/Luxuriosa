@@ -14,10 +14,20 @@
   }
   function getSessionKey() {
     if (sessionKey) return sessionKey;
-    try { sessionKey = localStorage.getItem(STORAGE_KEY); } catch (_) {}
-    if (!sessionKey) {
+    var createdAt = 0;
+    try {
+      sessionKey = localStorage.getItem(STORAGE_KEY);
+      createdAt = Number(localStorage.getItem(STORAGE_KEY + "_created_at")) || 0;
+    } catch (_) {}
+    var validKey = typeof sessionKey === "string" &&
+      /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(sessionKey);
+    if (!validKey || !createdAt || createdAt > Date.now() ||
+        Date.now() - createdAt > 180 * 86400000) {
       sessionKey = uuid();
-      try { localStorage.setItem(STORAGE_KEY, sessionKey); } catch (_) {}
+      try {
+        localStorage.setItem(STORAGE_KEY, sessionKey);
+        localStorage.setItem(STORAGE_KEY + "_created_at", String(Date.now()));
+      } catch (_) {}
     }
     return sessionKey;
   }
