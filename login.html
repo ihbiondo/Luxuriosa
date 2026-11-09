@@ -46,13 +46,12 @@
       </section>
 
       <section class="panel" aria-label="Acesso à conta">
+        <div id="notice" class="message" role="status" aria-live="polite"></div>
         <div id="authArea">
           <div class="tabs" role="tablist" aria-label="Acesso">
             <button class="tab" id="loginTab" type="button" role="tab" aria-selected="true">ENTRAR</button>
             <button class="tab" id="signupTab" type="button" role="tab" aria-selected="false">CRIAR CONTA</button>
           </div>
-
-          <div id="notice" class="message" role="status" aria-live="polite"></div>
 
           <form id="loginForm">
             <h2>Bem-vindo de volta.</h2>
@@ -198,7 +197,7 @@
       if (profileResult.error) throw profileResult.error;
 
       const colors = Array.isArray(meta.favorite_colors) ? meta.favorite_colors.slice(0, 3) : [];
-      const preferencesResult = await supabase.from("preferences").upsert({ user_id: user.id, favorite_colors: colors });
+      const preferencesResult = await supabase.from("preferences").update({ favorite_colors: colors }).eq("user_id", user.id);
       if (preferencesResult.error) throw preferencesResult.error;
 
       const existing = await supabase.from("addresses").select("id").eq("user_id", user.id).limit(1);
@@ -261,6 +260,12 @@
       if (colors.length > 3) return message("Escolha no máximo três cores favoritas.", true);
       const birth = $("birthDate").value;
       if (!birth || new Date(birth + "T00:00:00") >= new Date()) return message("Informe uma data de nascimento válida.", true);
+      const birthDate = new Date(birth + "T00:00:00");
+      const today = new Date();
+      let age = today.getFullYear() - birthDate.getFullYear();
+      const birthdayPending = today.getMonth() < birthDate.getMonth() || (today.getMonth() === birthDate.getMonth() && today.getDate() < birthDate.getDate());
+      if (birthdayPending) age--;
+      if (age < 18) return message("O cadastro na Luxuriosa é permitido somente para maiores de 18 anos.", true);
       const fullName = $("fullName").value.trim();
       const firstName = fullName.split(/\s+/)[0];
       const usernameBase = fullName.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, "_").replace(/^_|_$/g, "").slice(0, 20) || "cliente";
