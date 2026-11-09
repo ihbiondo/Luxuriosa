@@ -24,7 +24,7 @@
     .section-label{grid-column:1/-1;margin:10px 0 -3px;padding-top:14px;border-top:1px solid rgba(212,175,124,.14);color:var(--gold);font-size:9px;font-weight:600;letter-spacing:.16em;text-transform:uppercase}
     .colors{display:flex;flex-wrap:wrap;gap:8px}.color-option{display:flex;align-items:center;gap:7px;padding:8px 10px;border:1px solid rgba(212,175,124,.18);border-radius:7px;color:var(--muted);font-size:10px}.color-option input{width:14px;height:14px;accent-color:var(--wine)}
     .actions{margin-top:22px}.primary{width:100%;min-height:48px;border:1px solid var(--wine);border-radius:7px;background:var(--wine);color:#fff;font:600 10px var(--sans);letter-spacing:.12em;cursor:pointer;transition:.2s}.primary:hover{background:#a32950}.primary:disabled{opacity:.55;cursor:wait}.text-action{display:block;margin:16px auto 0;padding:4px;border:0;background:none;color:var(--gold);font:500 11px var(--sans);text-decoration:underline;text-underline-offset:3px;cursor:pointer}.legal{margin:18px 0 0;color:#887980;font-size:9px;text-align:center}.message{display:none;margin:0 0 18px;padding:12px 14px;border:1px solid rgba(212,175,124,.25);border-radius:8px;background:rgba(212,175,124,.07);color:var(--blush);font-size:11px}.message.show{display:block}.message.error{border-color:rgba(224,100,120,.35);background:rgba(150,35,60,.12);color:#ffc3cc}
-    .hidden{display:none!important}.account-box{padding:20px;border:1px solid var(--line);border-radius:12px;background:rgba(0,0,0,.18)}.account-box p{color:var(--muted);font-size:12px}.account-email{margin:0 0 18px}.account-email strong{color:var(--blush);font-weight:600}.email-change-form{padding-bottom:18px;border-bottom:1px solid rgba(212,175,124,.14)}.email-change-help{margin:10px 0 0;color:var(--muted);font-size:11px;line-height:1.6}.email-change-form .actions{margin:14px 0 0}.email-change-form .secondary:disabled{opacity:.55;cursor:wait}.account-form .section-label{margin-top:20px}.account-form .grid{margin-top:12px}.account-form .actions{margin-bottom:22px}.account-actions{display:flex;gap:10px;flex-wrap:wrap}.secondary{min-height:42px;padding:0 16px;border:1px solid var(--line);border-radius:7px;background:transparent;color:var(--gold);font:600 10px var(--sans);cursor:pointer}
+    .hidden{display:none!important}.account-box{padding:20px;border:1px solid var(--line);border-radius:12px;background:rgba(0,0,0,.18)}.account-box p{color:var(--muted);font-size:12px}.account-email{margin:0 0 18px}.account-email strong{color:var(--blush);font-weight:600}.email-change-form{padding-bottom:18px;border-bottom:1px solid rgba(212,175,124,.14)}.email-change-help{margin:10px 0 0;color:var(--muted);font-size:11px;line-height:1.6}.email-change-form .actions{margin:14px 0 0}.email-change-form .secondary:disabled{opacity:.55;cursor:wait}.cep-status{display:block;min-height:16px;margin-top:5px;color:var(--muted);font-size:10px}.cep-status.error{color:#ffc3cc}.cep-status.success{color:var(--gold)}.account-form .section-label{margin-top:20px}.account-form .grid{margin-top:12px}.account-form .actions{margin-bottom:22px}.account-actions{display:flex;gap:10px;flex-wrap:wrap}.secondary{min-height:42px;padding:0 16px;border:1px solid var(--line);border-radius:7px;background:transparent;color:var(--gold);font:600 10px var(--sans);cursor:pointer}
     footer{padding:20px 0 28px;border-top:1px solid rgba(212,175,124,.12);color:#766970;font-size:9px;text-align:center}
     @media(max-width:800px){main{grid-template-columns:1fr;gap:30px;min-height:auto;padding-top:24px}.intro{max-width:600px}.intro h1{font-size:42px}.intro-note{display:none}.panel{justify-self:center;max-width:620px}.top{padding:20px 0}}
     @media(max-width:480px){.shell{width:min(100% - 24px,1080px)}.top{align-items:flex-start}.brand{font-size:24px}.back{padding-top:8px;font-size:10px}main{padding-top:18px}.intro h1{font-size:36px}.panel{padding:21px 16px;border-radius:15px}.grid{grid-template-columns:1fr}.field.full{grid-column:auto}.section-label{grid-column:auto}.tabs{margin-bottom:22px}h2{font-size:26px}}
@@ -75,7 +75,7 @@
               <div class="field"><label for="confirmPassword">Confirme a senha</label><input id="confirmPassword" type="password" autocomplete="new-password" minlength="8" required></div>
 
               <div class="section-label">Endereço principal</div>
-              <div class="field"><label for="postalCode">CEP</label><input id="postalCode" inputmode="numeric" autocomplete="postal-code" maxlength="9" placeholder="00000-000" required></div>
+              <div class="field"><label for="postalCode">CEP</label><input id="postalCode" inputmode="numeric" autocomplete="postal-code" maxlength="9" placeholder="00000-000" required><small class="cep-status" id="postalCodeStatus" aria-live="polite"></small></div>
               <div class="field"><label for="addressNumber">Número</label><input id="addressNumber" autocomplete="address-line2" maxlength="20" required></div>
               <div class="field full"><label for="street">Rua / Avenida</label><input id="street" autocomplete="address-line1" maxlength="160" required></div>
               <div class="field"><label for="neighborhood">Bairro</label><input id="neighborhood" autocomplete="address-level3" maxlength="100" required></div>
@@ -139,7 +139,7 @@
               </div>
               <div class="section-label">Endereço principal</div>
               <div class="grid">
-                <div class="field"><label for="accountPostalCode">CEP</label><input id="accountPostalCode" inputmode="numeric" autocomplete="postal-code" maxlength="9" required></div>
+                <div class="field"><label for="accountPostalCode">CEP</label><input id="accountPostalCode" inputmode="numeric" autocomplete="postal-code" maxlength="9" required><small class="cep-status" id="accountPostalCodeStatus" aria-live="polite"></small></div>
                 <div class="field"><label for="accountAddressNumber">Número</label><input id="accountAddressNumber" autocomplete="address-line2" maxlength="20" required></div>
                 <div class="field full"><label for="accountStreet">Rua / Avenida</label><input id="accountStreet" autocomplete="address-line1" maxlength="160" required></div>
                 <div class="field"><label for="accountNeighborhood">Bairro</label><input id="accountNeighborhood" autocomplete="address-level3" maxlength="100" required></div>
@@ -189,6 +189,78 @@
     });
 
     const $ = (id) => document.getElementById(id);
+
+    function attachCepLookup({ inputId, statusId, streetId, neighborhoodId, cityId, stateId, complementId }) {
+      const input = $(inputId);
+      const status = $(statusId);
+      let controller = null;
+      let lastRequestedCep = "";
+
+      input.addEventListener("input", () => {
+        const digits = input.value.replace(/\D/g, "").slice(0, 8);
+        input.value = digits.length > 5 ? digits.slice(0, 5) + "-" + digits.slice(5) : digits;
+        if (digits.length !== 8) {
+          controller?.abort();
+          controller = null;
+          lastRequestedCep = "";
+          status.textContent = "";
+          status.className = "cep-status";
+          return;
+        }
+        if (digits === lastRequestedCep) return;
+        lastRequestedCep = digits;
+        controller?.abort();
+        controller = new AbortController();
+        status.textContent = "Consultando endereço pelo CEP...";
+        status.className = "cep-status";
+
+        fetch("https://viacep.com.br/ws/" + digits + "/json/", { signal: controller.signal })
+          .then((response) => {
+            if (!response.ok) throw new Error("Falha na consulta do CEP.");
+            return response.json();
+          })
+          .then((address) => {
+            if (input.value.replace(/\D/g, "") !== digits) return;
+            if (address.erro) {
+              status.textContent = "CEP não encontrado. Confira o número ou preencha o endereço manualmente.";
+              status.className = "cep-status error";
+              return;
+            }
+            if (address.logradouro) $(streetId).value = address.logradouro;
+            if (address.bairro) $(neighborhoodId).value = address.bairro;
+            if (address.localidade) $(cityId).value = address.localidade;
+            if (address.uf) $(stateId).value = address.uf.toUpperCase();
+            if (complementId && address.complemento && !$(complementId).value.trim()) {
+              $(complementId).value = address.complemento;
+            }
+            status.textContent = "Endereço localizado. Confira os dados.";
+            status.className = "cep-status success";
+          })
+          .catch((error) => {
+            if (error.name === "AbortError") return;
+            if (input.value.replace(/\D/g, "") !== digits) return;
+            lastRequestedCep = "";
+            status.textContent = "Não foi possível consultar agora. Você pode preencher o endereço manualmente ou tentar novamente.";
+            status.className = "cep-status error";
+          });
+      });
+
+      input.addEventListener("change", () => {
+        if (input.value.replace(/\D/g, "").length === 8) {
+          input.dispatchEvent(new Event("input", { bubbles: true }));
+        }
+      });
+    }
+
+    attachCepLookup({
+      inputId: "postalCode", statusId: "postalCodeStatus", streetId: "street",
+      neighborhoodId: "neighborhood", cityId: "city", stateId: "state", complementId: "complement"
+    });
+    attachCepLookup({
+      inputId: "accountPostalCode", statusId: "accountPostalCodeStatus", streetId: "accountStreet",
+      neighborhoodId: "accountNeighborhood", cityId: "accountCity", stateId: "accountState",
+      complementId: "accountComplement"
+    });
     const notice = $("notice");
     const loginForm = $("loginForm");
     const signupForm = $("signupForm");
