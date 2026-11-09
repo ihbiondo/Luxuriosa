@@ -145,6 +145,27 @@ footer{padding:18px 0;border-top:1px solid var(--line);color:#766970;font-size:9
       <label class="sla-field">Frete (R$)
         <input id="slaFee" name="delivery_fee_reais" type="number" min="0" max="10000" step="0.01" value="0" required>
       </label>
+      <fieldset class="sla-field full" style="border:1px solid var(--line);border-radius:10px;padding:12px">
+        <legend>Frete por distância — rota de motocicleta</legend>
+        <label class="sla-field">CEP de saída
+          <input id="slaOriginCep" type="text" inputmode="numeric" maxlength="9" value="17030-290" required>
+        </label>
+        <div class="grid2">
+          <label class="sla-field">Imediata · até 12 km (R$)<input id="slaExpress12" type="number" min="0" step="0.01" value="15" required></label>
+          <label class="sla-field">Imediata · até 35 km (R$)<input id="slaExpress35" type="number" min="0" step="0.01" value="25" required></label>
+          <label class="sla-field">Imediata · até 55 km (R$)<input id="slaExpress55" type="number" min="0" step="0.01" value="35" required></label>
+          <label class="sla-field">Agendada · até 12 km (R$)<input id="slaScheduled12" type="number" min="0" step="0.01" value="10" required></label>
+          <label class="sla-field">Agendada · até 35 km (R$)<input id="slaScheduled35" type="number" min="0" step="0.01" value="20" required></label>
+          <label class="sla-field">Agendada · até 55 km (R$)<input id="slaScheduled55" type="number" min="0" step="0.01" value="25" required></label>
+        </div>
+        <div class="grid2">
+          <label class="sla-field">Pedido mínimo · até 12 km (R$)<input id="slaMinimum12" type="number" min="0" step="0.01" value="50" required></label>
+          <label class="sla-field">Pedido mínimo · até 35 km (R$)<input id="slaMinimum35" type="number" min="0" step="0.01" value="120" required></label>
+          <label class="sla-field">Pedido mínimo · até 55 km (R$)<input id="slaMinimum55" type="number" min="0" step="0.01" value="180" required></label>
+          <label class="sla-field">Agendamento até (horas)<input id="slaMaxAdvance" type="number" min="1" max="168" value="72" required></label>
+        </div>
+        <p class="small">O pedágio será adicionado ao preço-base quando a API conseguir estimar ida e volta. Distâncias acima de 55 km ficam fora da cobrança automática.</p>
+      </fieldset>
       <label class="sla-field">Prazo para expedir (minutos)
         <input id="slaDispatch" name="dispatch_minutes" type="number" min="1" max="10080" step="1" placeholder="Ex.: 60" required>
       </label>
@@ -417,6 +438,17 @@ function fillSlaForm(rule){
  $("slaDelivery").value=rule.delivery_minutes??"";
  $("slaDispatchTarget").value=rule.dispatch_target_minutes??"";
  $("slaDeliveryTarget").value=rule.delivery_target_minutes??"";
+ $("slaOriginCep").value=rule.freight_origin_cep||"17030290";
+ $("slaExpress12").value=(Number(rule.express_fee_up_to_12km_cents)||0)/100;
+ $("slaExpress35").value=(Number(rule.express_fee_up_to_35km_cents)||0)/100;
+ $("slaExpress55").value=(Number(rule.express_fee_up_to_55km_cents)||0)/100;
+ $("slaScheduled12").value=(Number(rule.scheduled_fee_up_to_12km_cents)||0)/100;
+ $("slaScheduled35").value=(Number(rule.scheduled_fee_up_to_35km_cents)||0)/100;
+ $("slaScheduled55").value=(Number(rule.scheduled_fee_up_to_55km_cents)||0)/100;
+ $("slaMinimum12").value=(Number(rule.minimum_order_up_to_12km_cents)||0)/100;
+ $("slaMinimum35").value=(Number(rule.minimum_order_up_to_35km_cents)||0)/100;
+ $("slaMinimum55").value=(Number(rule.minimum_order_up_to_55km_cents)||0)/100;
+ $("slaMaxAdvance").value=rule.scheduled_max_advance_hours??72;
  $("slaScheduledEnabled").checked=!!rule.scheduled_delivery_enabled;
  $("slaScheduledDiscount").value=rule.scheduled_discount_percent??0;
  $("slaWindowStart").value=rule.scheduled_window_start?String(rule.scheduled_window_start).slice(0,5):"";
@@ -440,7 +472,9 @@ function renderSlaRules(rules){
   if(rule.dispatch_target_minutes!=null&&rule.delivery_target_minutes!=null){
    meta.append(el("span","","Meta em expediente: "+formatMinutes(rule.dispatch_target_minutes+rule.delivery_target_minutes)));
   }
-  meta.append(el("span","","Frete: "+money.format((Number(rule.delivery_fee_cents)||0)/100)));
+  meta.append(el("span","","Imediata: "+money.format((Number(rule.express_fee_up_to_12km_cents)||0)/100)+" / "+money.format((Number(rule.express_fee_up_to_35km_cents)||0)/100)+" / "+money.format((Number(rule.express_fee_up_to_55km_cents)||0)/100)));
+  meta.append(el("span","","Agendada: "+money.format((Number(rule.scheduled_fee_up_to_12km_cents)||0)/100)+" / "+money.format((Number(rule.scheduled_fee_up_to_35km_cents)||0)/100)+" / "+money.format((Number(rule.scheduled_fee_up_to_55km_cents)||0)/100)));
+  meta.append(el("span","","Pedido mínimo: "+money.format((Number(rule.minimum_order_up_to_12km_cents)||0)/100)+" / "+money.format((Number(rule.minimum_order_up_to_35km_cents)||0)/100)+" / "+money.format((Number(rule.minimum_order_up_to_55km_cents)||0)/100)));
   if(rule.scheduled_delivery_enabled)meta.append(el("span","","Agendada: "+(rule.scheduled_discount_percent||0)+"% · "+(rule.scheduled_delivery_weekdays||[]).join(", ")));
   if(rule.free_delivery_if_contains_kit)meta.append(el("span","","Kit: frete grátis"));
   if(!rule.active)meta.append(el("span","","Regra inativa"));
@@ -462,7 +496,7 @@ async function loadFulfillment(){
   const handle=health.data.infinitepay_handle_configured?"InfiniteTag OK":"InfiniteTag pendente";
   const emailConfigured=health.data.email_notification_configured===true;
   const email=emailConfigured?"E-mail de avisos OK":"E-mail de avisos pendente";
-  status.textContent=api+" · "+handle+" · "+email;
+  status.textContent=api+" · "+handle+" · "+email+" · Rotas: "+(health.data.route_calculation_configured?"Google OK":"Google pendente");
   $("testEmailNotification").disabled=!emailConfigured;
   renderSlaRules(rules.data.rules||[]);
  }catch(error){
@@ -490,6 +524,17 @@ $("slaForm").addEventListener("submit",async event=>{
   dispatch_minutes:Number($("slaDispatch").value),delivery_minutes:Number($("slaDelivery").value),
   dispatch_target_minutes:$("slaDispatchTarget").value===""?null:Number($("slaDispatchTarget").value),
   delivery_target_minutes:$("slaDeliveryTarget").value===""?null:Number($("slaDeliveryTarget").value),
+  freight_origin_cep:$("slaOriginCep").value.trim().replace(/\\D/g,""),
+  express_fee_up_to_12km_reais:$("slaExpress12").value,
+  express_fee_up_to_35km_reais:$("slaExpress35").value,
+  express_fee_up_to_55km_reais:$("slaExpress55").value,
+  scheduled_fee_up_to_12km_reais:$("slaScheduled12").value,
+  scheduled_fee_up_to_35km_reais:$("slaScheduled35").value,
+  scheduled_fee_up_to_55km_reais:$("slaScheduled55").value,
+  minimum_order_up_to_12km_reais:$("slaMinimum12").value,
+  minimum_order_up_to_35km_reais:$("slaMinimum35").value,
+  minimum_order_up_to_55km_reais:$("slaMinimum55").value,
+  scheduled_max_advance_hours:Number($("slaMaxAdvance").value||72),
   scheduled_delivery_enabled:$("slaScheduledEnabled").checked,
   scheduled_discount_percent:Number($("slaScheduledDiscount").value||0),
   scheduled_delivery_weekdays:Array.from(document.querySelectorAll(".slaWeekday:checked")).map(input=>Number(input.value)),
