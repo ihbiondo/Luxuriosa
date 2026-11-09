@@ -105,12 +105,18 @@
     return send({
       action: action, items: normalizeItems(items),
       customer: explicitWhatsAppOptIn ? customer : undefined
+    }).then(function (result) {
+      if (action === "checkout_started" || action === "checkout_reviewed") registrarEvento(action);
+      return result;
     });
   }
   function registrarPedido(items, customer, shippingAmount) {
     return send({
       action: "whatsapp_opened", items: normalizeItems(items),
       customer: customer, shipping_amount: shippingAmount
+    }).then(function (result) {
+      registrarEvento("whatsapp_opened");
+      return result;
     });
   }
 
