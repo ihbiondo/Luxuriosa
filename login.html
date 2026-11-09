@@ -398,7 +398,7 @@
       const container = $("accountOrders");
       container.replaceChildren();
       const { data: orders, error } = await supabase.from("orders")
-        .select("id, order_number, status, total_amount, created_at")
+        .select("id, order_number, status, subtotal, shipping_amount, total_amount, created_at")
         .eq("customer_id", user.id).order("created_at", { ascending: false }).limit(20);
       if (error) throw error;
       if (!orders || !orders.length) {
@@ -422,7 +422,7 @@
         top.append(number, status);
         const meta = document.createElement("div"); meta.className = "order-meta";
         const date = document.createElement("span"); date.textContent = new Date(order.created_at).toLocaleDateString("pt-BR");
-        const amount = document.createElement("strong"); amount.textContent = money.format(Number(order.total_amount) || 0);
+        const amount = document.createElement("strong"); amount.textContent = order.shipping_amount == null ? "Produtos: " + money.format(Number(order.subtotal) || 0) + " · frete a confirmar" : money.format(Number(order.total_amount) || 0);
         meta.append(date, amount);
         const list = document.createElement("ul"); list.className = "order-products";
         (lines || []).filter((line) => line.order_id === order.id).forEach((line) => {
