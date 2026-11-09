@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex,nofollow"><meta name="theme-color" content="#0B0B0B">
-<title>Central de gestão | Luxuriosa</title>
+<title>Central de Operações | Luxuriosa</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -65,10 +65,10 @@ footer{padding:18px 0;border-top:1px solid var(--line);color:#766970;font-size:9
 </style>
 </head>
 <body><div class="shell">
-<header class="top"><a class="brand" href="index.html">Luxuriosa<small>CENTRAL DE GESTÃO</small></a><div class="actions"><a class="btn" href="login.html" style="text-decoration:none">MINHA CONTA</a><button class="btn" id="refresh">ATUALIZAR</button><button class="btn" id="logout">SAIR</button></div></header>
+<header class="top"><a class="brand" href="index.html">Luxuriosa<small>CENTRAL DE OPERAÇÕES</small></a><div class="actions"><a class="btn" href="login.html" style="text-decoration:none">MINHA CONTA</a><button class="btn" id="refresh">ATUALIZAR</button><button class="btn" id="logout">SAIR</button></div></header>
 <main>
-<div class="hero"><div><div class="eyebrow">Área administrativa restrita</div><h1>Visão geral do negócio.</h1><p class="sub">Indicadores operacionais, consultas de pedidos e acompanhamento de clientes.</p></div><div class="period"><label for="period">Período:</label><select id="period"><option value="7">Últimos 7 dias</option><option value="30" selected>Últimos 30 dias</option><option value="90">Últimos 90 dias</option></select></div></div>
-<div id="notice" class="notice" role="status" aria-live="polite">Validando sessão administrativa...</div>
+<div class="hero"><div><div class="eyebrow">Ambiente privado · acesso autorizado</div><h1>Visão geral do negócio.</h1><p class="sub">Indicadores operacionais, consultas de pedidos e acompanhamento de clientes.</p></div><div class="period"><label for="period">Período:</label><select id="period"><option value="7">Últimos 7 dias</option><option value="30" selected>Últimos 30 dias</option><option value="90">Últimos 90 dias</option></select></div></div>
+<div id="notice" class="notice" role="status" aria-live="polite">Validando seu acesso...</div>
 <div class="section-head"><h2>Indicadores principais</h2><span class="small" id="updatedAt">—</span></div>
 <section class="metrics" aria-label="Indicadores principais">
 <div class="metric"><span>Faturamento confirmado</span><strong id="revenue">—</strong><small>Pedidos confirmados, em preparo, em entrega ou entregues</small></div>
@@ -553,7 +553,7 @@ async function load(){
  $("refresh").disabled=true;notice("Consultando os dados do negócio...");
  try{
   const {data:{session}}=await supabase.auth.getSession();
-  if(!session){notice("Faça login com sua conta administrativa.",true);setTimeout(()=>location.href="login.html",1000);return}
+  if(!session){notice("Faça login com sua conta autorizada.",true);setTimeout(()=>location.href="login.html",1000);return}
   const q=$("searchQuery").value.trim(),status=$("statusFilter").value,days=Number($("period").value)||30;
   const {data,error}=await supabase.functions.invoke("cart-orders",{body:{action:"admin_dashboard",q,status,days}});
   if(error)throw error;if(!data?.ok)throw new Error(data?.error||"Não foi possível consultar os dados.");
@@ -573,7 +573,7 @@ async function load(){
   loadFulfillment();
   loadFulfillmentQueue();
   $("updatedAt").textContent="Atualizado às "+new Date().toLocaleTimeString("pt-BR");
-  notice("Consulta concluída. Acesso administrativo validado pelo servidor.");
+  notice("Consulta concluída. Acesso validado pelo servidor.");
  }catch(e){console.error(e);notice(e.message||"Falha na consulta.",true)}
  finally{$("refresh").disabled=false}
 }
