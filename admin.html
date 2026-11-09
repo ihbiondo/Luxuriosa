@@ -129,6 +129,7 @@ footer{padding:18px 0;border-top:1px solid var(--line);color:#766970;font-size:9
   <div class="section-head" style="margin:0 0 10px">
     <div><h2>Expedição e entrega automáticas</h2><p class="hint">Os prazos começam quando a InfinitePay confirma o pagamento. Configure por cidade antes de liberar cobranças.</p></div>
     <span class="pill" id="paymentConfigStatus">Verificando InfinitePay...</span>
+    <button class="btn" id="testEmailNotification" type="button" disabled>TESTAR E-MAIL</button>
   </div>
   <div class="grid2">
     <form id="slaForm" class="sla-form">
@@ -411,14 +412,27 @@ async function loadFulfillment(){
   if(rules.error)throw rules.error;if(!rules.data?.ok)throw new Error(rules.data?.error||"Regras indisponíveis.");
   const api=health.data.infinitepay_api_key_configured?"InfinitePay: chave OK":"InfinitePay: chave pendente";
   const handle=health.data.infinitepay_handle_configured?"InfiniteTag OK":"InfiniteTag pendente";
-  const whatsapp=health.data.email_notification_configured?"E-mail de avisos OK":"E-mail de avisos pendente";
-  status.textContent=api+" · "+handle+" · "+whatsapp;
+  const emailConfigured=health.data.email_notification_configured===true;
+  const email=emailConfigured?"E-mail de avisos OK":"E-mail de avisos pendente";
+  status.textContent=api+" · "+handle+" · "+email;
+  $("testEmailNotification").disabled=!emailConfigured;
   renderSlaRules(rules.data.rules||[]);
  }catch(error){
   console.error(error);status.textContent="Configuração indisponível";
+  $("testEmailNotification").disabled=true;
   $("slaRules").replaceChildren(el("p","empty",error.message||"Não foi possível consultar as regras."));
  }
 }
+$("testEmailNotification").addEventListener("click",async()=>{
+ const button=$("testEmailNotification");
+ button.disabled=true;button.textContent="ENVIANDO...";
+ try{
+  const {data,error}=await supabase.functions.invoke("payment-admin",{body:{action:"test_email_notification"}});
+  if(error)throw error;if(!data?.ok)throw new Error(data?.error||"Não foi possível enviar o e-mail de teste.");
+  notice("E-mail de teste enviado para a conta administrativa.");
+ }catch(error){notice(error.message||"Falha ao enviar o e-mail de teste.",true)}
+ finally{button.textContent="TESTAR E-MAIL";await loadFulfillment()}
+});
 $("slaForm").addEventListener("submit",async event=>{
  event.preventDefault();
  const button=$("slaSave"),status=$("slaFormStatus");
