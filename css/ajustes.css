@@ -547,3 +547,33 @@ body.customer-open { overflow: hidden; }
     padding-bottom: 32px;
   }
 }
+
+
+/* CHECKOUT — ACESSO RÁPIDO AOS DADOS DA CONTA */
+.customer-account-assist {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 8px 14px;
+  margin: 14px 0 4px;
+  padding: 13px 14px;
+  border: 1px solid rgba(212, 175, 124, .35);
+  border-radius: 9px;
+  background: linear-gradient(110deg, rgba(139, 30, 63, .16), rgba(212, 175, 124, .05));
+}
+.customer-account-assist > div { display: grid; gap: 3px; }
+.customer-account-assist strong { color: var(--text); font-size: 13px; font-weight: 600; }
+.customer-account-assist span,
+.customer-account-assist a { color: var(--muted); font-size: 11px; }
+.customer-account-assist a { grid-column: 1 / -1; width: fit-content; color: var(--gold); text-decoration: underline; text-underline-offset: 3px; }
+.customer-account-assist .customer-account-load {
+  min-height: 42px;
+  padding: 9px 12px;
+  white-space: nowrap;
+  font-size: 12px;
+}
+.customer-account-assist .customer-account-load:disabled { opacity: .65; cursor: wait; }
+@media (max-width: 600px) {
+  .customer-account-assist { grid-template-columns: minmax(0, 1fr); gap: 9px; }
+  .customer-account-assist .customer-account-load { width: 100%; min-height: 46px; white-space: normal; }
+}
