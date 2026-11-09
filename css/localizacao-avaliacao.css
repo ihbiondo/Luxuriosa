@@ -1,0 +1,40 @@
+/* =========================================================
+   HOMEPAGE — AVALIAÇÃO E LOCALIZAÇÃO (REGIÃO, SEM ENDEREÇO EXATO)
+========================================================= */
+.localizacao-avaliacao-section {
+  background: linear-gradient(180deg, #0b0b0b, #10090c);
+}
+.localizacao-avaliacao-grid {
+  display: grid;
+  grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr);
+  gap: 22px;
+  align-items: stretch;
+}
+.review-invite,
+.location-card {
+  min-width: 0;
+  padding: clamp(22px, 3vw, 34px);
+  border: 1px solid rgba(212,175,124,.25);
+  border-radius: 18px;
+  background: linear-gradient(145deg, rgba(139,30,63,.17), rgba(20,12,15,.88));
+}
+.review-stars { display: block; margin-bottom: 20px; color: var(--gold); font-size: 22px; letter-spacing: .18em; }
+.review-invite h3,
+.location-card h3 { margin: 10px 0 12px; color: var(--blush); font-family: var(--serif); font-size: clamp(25px, 3vw, 32px); font-weight: 400; line-height: 1.2; }
+.review-invite p,
+.location-card-copy p { color: var(--muted); font-size: 13px; line-height: 1.75; }
+.review-invite .btn { margin-top: 12px; }
+.review-invite small { display: block; margin-top: 15px; color: var(--muted); font-size: 10px; line-height: 1.6; }
+.location-card { padding-bottom: 20px; }
+.location-card-copy { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; margin-bottom: 18px; }
+.location-card-copy h3 { margin-bottom: 0; }
+.location-card-copy p { margin: 0 0 4px; white-space: nowrap; }
+.location-map-wrap { overflow: hidden; border: 1px solid rgba(212,175,124,.2); border-radius: 12px; background: #171114; }
+.location-map-wrap iframe { display: block; width: 100%; height: 270px; border: 0; filter: grayscale(.35) contrast(1.02); }
+.location-map-link { display: inline-block; margin-top: 15px; color: var(--gold); font-size: 11px; text-decoration: underline; text-underline-offset: 4px; }
+@media (max-width: 760px) {
+  .localizacao-avaliacao-grid { grid-template-columns: 1fr; gap: 14px; }
+  .location-card-copy { align-items: flex-start; flex-direction: column; gap: 5px; }
+  .location-map-wrap iframe { height: 235px; }
+  .review-invite .btn { width: 100%; }
+}
