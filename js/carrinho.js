@@ -510,6 +510,9 @@
     if (window.LuxuriosaMedicao && typeof window.LuxuriosaMedicao.registrar === "function") {
       window.LuxuriosaMedicao.registrar("add_to_cart", { quantity: quantidade });
     }
+    if (window.LuxuriosaInteligencia && typeof window.LuxuriosaInteligencia.registrarEvento === "function") {
+      window.LuxuriosaInteligencia.registrarEvento("add_to_cart", { product_id: id, quantity: quantidade });
+    }
 
     abrirCarrinho();
 
