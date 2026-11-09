@@ -337,7 +337,7 @@
     });
   }
 
-  function preencherMensagem(data) {
+  function preencherMensagem(data, clubBenefit, benefitPending) {
     var api = window.LuxuriosaCarrinho;
     var items = api && typeof api.obterItens === "function" ? api.obterItens() : [];
     var integridade = validarIntegridadePedido(items);
@@ -350,7 +350,18 @@
     if (!items.length) return "";
 
     var temKit = pedidoContemKit(items);
-    var totalProdutos = subtotal;
+    var subtotalCents = Math.round(subtotal * 100);
+    var discountCents = 0;
+    var discountPercent = 0;
+    if (clubBenefit && Number(clubBenefit.club_discount_percent) === 10) {
+      var reportedDiscount = Math.round(Number(clubBenefit.club_discount_amount) * 100);
+      var maximumDiscount = Math.round(subtotalCents * 0.10);
+      if (subtotalCents > 10000 && reportedDiscount > 0 && reportedDiscount <= maximumDiscount) {
+        discountCents = reportedDiscount;
+        discountPercent = 10;
+      }
+    }
+    var totalProdutos = Math.max(0, subtotal - discountCents / 100);
     var cidade = String(data.address.city || "").trim();
     var estado = String(data.address.state || "").trim().toUpperCase();
     var cidadeNormalizada = cidade.normalize
@@ -374,6 +385,12 @@
     });
 
     lines.push("", "*Subtotal: " + formatarPreco(subtotal) + "*");
+    if (discountCents > 0) {
+      lines.push("Desconto Clube (" + discountPercent + "%): -" + formatarPreco(discountCents / 100));
+      lines.push("*Subtotal com Clube: " + formatarPreco(totalProdutos) + "*");
+    } else if (benefitPending) {
+      lines.push("Benefício do Clube: será conferido pela equipe no atendimento.");
+    }
 
     if (freteGratis) {
       lines.push("Frete: grátis (benefício automático por incluir kit)");
@@ -614,7 +631,7 @@
   }
 
 
-  function continuarWhatsApp() {
+  async function continuarWhatsApp() {
     if (!mensagemAtual || !dadosAtuais) {
       avisar("Revise o pedido antes de abrir o WhatsApp.", "error");
       return;
@@ -626,17 +643,66 @@
       if (!integridade.valido) avisar(integridade.motivo, "error");
       return;
     }
-    mensagemAtual = preencherMensagem(dadosAtuais);
-    if (!mensagemAtual) return;
-    messagePreview.textContent = mensagemAtual;
-    var url = "https://wa.me/5514996355924?text=" + encodeURIComponent(mensagemAtual);
+
+    var cidade = String(dadosAtuais.address.city || "").trim().normalize("NFD").replace(/[\\u0300-\\u036f]/g, "").toLowerCase();
+    var estado = String(dadosAtuais.address.state || "").trim().toUpperCase();
+    var emBauru = cidade === "bauru" && estado === "SP";
+    var frete = emBauru ? (pedidoContemKit(itensAtuais) ? 0 : 15) : null;
+
+    /* Reserva a janela no clique para evitar bloqueadores de pop-up durante a gravação. */
+    var janela = window.open("about:blank", "_blank");
+    if (janela) {
+      try { janela.opener = null; } catch (_) {}
+      try { janela.document.title = "Preparando atendimento Luxuriosa"; } catch (_) {}
+    }
+
+    var abrirConversa = function (beneficio, pendente) {
+      mensagemAtual = preencherMensagem(dadosAtuais, beneficio, pendente);
+      if (!mensagemAtual) {
+        if (janela && !janela.closed) janela.close();
+        avisar("Não foi possível montar a mensagem. Confira o pedido e tente novamente.", "error");
+        return;
+      }
+      messagePreview.textContent = mensagemAtual;
+      var url = "https://wa.me/5514996355924?text=" + encodeURIComponent(mensagemAtual);
+      if (janela && !janela.closed) {
+        janela.location.replace(url);
+      } else {
+        window.location.assign(url);
+      }
+    };
+
     if (window.LuxuriosaMedicao && typeof window.LuxuriosaMedicao.registrar === "function") {
-      window.LuxuriosaMedicao.registrar("checkout_whatsapp", { method: "whatsapp", step: "pedido_encaminhado" });
+      try {
+        var metric = window.LuxuriosaMedicao.registrar("checkout_whatsapp", { method: "whatsapp", step: "pedido_encaminhado" });
+        if (metric && typeof metric.catch === "function") metric.catch(function () {});
+      } catch (_) {}
     }
-    if (window.LuxuriosaInteligencia && typeof window.LuxuriosaInteligencia.registrarEtapa === "function") {
-      window.LuxuriosaInteligencia.registrarEtapa("whatsapp_opened", itensAtuais, dadosAtuais).catch(function () {});
+
+    var inteligencia = window.LuxuriosaInteligencia;
+    if (!inteligencia || typeof inteligencia.registrarPedido !== "function") {
+      abrirConversa(null, true);
+      avisar("Não foi possível registrar o pedido agora. O atendimento será aberto; a equipe poderá conferir o benefício do Clube.", "info");
+      return;
     }
-    window.open(url, "_blank", "noopener,noreferrer");
+
+    avisar("Registrando seu pedido e conferindo o benefício do Clube...", "info");
+    try {
+      var resultado = await inteligencia.registrarPedido(itensAtuais, dadosAtuais, frete);
+      if (!resultado || resultado.ok !== true) throw new Error("O servidor não confirmou o registro do pedido.");
+      abrirConversa(resultado, false);
+      var desconto = Number(resultado.club_discount_amount) || 0;
+      avisar(
+        desconto > 0
+          ? "Pedido registrado. Seu desconto de " + (Number(resultado.club_discount_percent) || 10) + "% foi aplicado."
+          : "Pedido registrado. A conversa com a equipe será aberta no WhatsApp.",
+        "success"
+      );
+    } catch (erro) {
+      console.warn("Não foi possível registrar o pedido assistido:", erro);
+      abrirConversa(null, true);
+      avisar("O WhatsApp será aberto, mas não foi possível confirmar o registro ou o desconto agora. A equipe poderá conferir seu benefício no atendimento.", "info");
+    }
   }
 
 
