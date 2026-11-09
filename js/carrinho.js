@@ -161,6 +161,9 @@
           carrinho
         )
       );
+      if (window.LuxuriosaInteligencia && typeof window.LuxuriosaInteligencia.registrarCarrinho === "function") {
+        window.LuxuriosaInteligencia.registrarCarrinho(carrinho);
+      }
 
     } catch (erro) {
 
