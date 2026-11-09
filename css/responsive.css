@@ -318,6 +318,26 @@
   }
 
 
+  /* Acesso à conta compacto ao lado do carrinho */
+  .account-trigger {
+    width: 40px;
+    min-width: 40px;
+    min-height: 40px;
+    height: 40px;
+    padding: 0;
+    border-radius: 50%;
+  }
+
+  .account-trigger svg {
+    width: 19px;
+    height: 19px;
+  }
+
+  .account-trigger-label {
+    display: none;
+  }
+
+
   /* Carrinho compacto */
 
   .cart-trigger {

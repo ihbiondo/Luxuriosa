@@ -368,6 +368,8 @@
       showForm("newPassword");
     } else if (sessionData.session?.user) {
       await showSignedIn(sessionData.session.user);
+    } else if (new URLSearchParams(window.location.search).get("cadastro") === "1") {
+      showForm("signup");
     } else {
       showForm("login");
     }

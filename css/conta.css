@@ -1,0 +1,91 @@
+/* =========================================================
+   CONTA E CONVITE DE CADASTRO — HOMEPAGE
+   ========================================================= */
+.account-promo-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1300;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(0, 0, 0, .82);
+  backdrop-filter: blur(5px);
+}
+.account-promo-overlay.open { display: flex; }
+.account-promo {
+  position: relative;
+  width: min(100%, 510px);
+  padding: clamp(28px, 5vw, 48px);
+  border: 1px solid rgba(212, 175, 124, .42);
+  border-radius: 18px;
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(139, 30, 63, .28), transparent 58%),
+    linear-gradient(145deg, #1b0c12, #100b0e 70%, #0b0b0b);
+  box-shadow: 0 28px 90px rgba(0, 0, 0, .58);
+  text-align: center;
+  outline: none;
+}
+.account-promo-close {
+  position: absolute;
+  top: 12px;
+  right: 14px;
+  width: 38px;
+  height: 38px;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: transparent;
+  color: var(--muted);
+  font-size: 24px;
+  cursor: pointer;
+}
+.account-promo-kicker {
+  color: var(--gold);
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: .2em;
+}
+.account-promo h2 {
+  margin: 18px 0 13px;
+  color: var(--blush);
+  font: 400 clamp(29px, 5vw, 40px)/1.16 var(--serif);
+}
+.account-promo h2 em { color: var(--gold); }
+.account-promo p {
+  max-width: 390px;
+  margin: 0 auto;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.8;
+}
+.account-promo-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  margin-top: 25px;
+  padding: 0 28px;
+  text-decoration: none;
+}
+.account-promo-later {
+  display: block;
+  margin: 14px auto 0;
+  padding: 8px 12px;
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  font: 11px var(--sans);
+  cursor: pointer;
+}
+.account-promo-close:focus-visible,
+.account-promo-later:focus-visible,
+.account-promo-action:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 3px;
+}
+body.account-promo-open { overflow: hidden; }
+@media (max-width: 480px) {
+  .account-promo-overlay { padding: 12px; }
+  .account-promo { padding: 36px 22px 26px; border-radius: 14px; }
+  .account-promo h2 { font-size: 30px; }
+}
