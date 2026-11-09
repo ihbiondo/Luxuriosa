@@ -603,6 +603,33 @@
     }
   }
 
+
+  function continuarWhatsApp() {
+    if (!mensagemAtual || !dadosAtuais) {
+      avisar("Revise o pedido antes de abrir o WhatsApp.", "error");
+      return;
+    }
+    var apiCarrinho = window.LuxuriosaCarrinho;
+    var itensAtuais = apiCarrinho && typeof apiCarrinho.obterItens === "function" ? apiCarrinho.obterItens() : [];
+    var integridade = validarIntegridadePedido(itensAtuais);
+    if (!integridade.valido || !validarDados({ exigirEndereco: true })) {
+      if (!integridade.valido) avisar(integridade.motivo, "error");
+      return;
+    }
+    mensagemAtual = preencherMensagem(dadosAtuais);
+    if (!mensagemAtual) return;
+    messagePreview.textContent = mensagemAtual;
+    var url = "https://wa.me/5514996355924?text=" + encodeURIComponent(mensagemAtual);
+    if (window.LuxuriosaMedicao && typeof window.LuxuriosaMedicao.registrar === "function") {
+      window.LuxuriosaMedicao.registrar("checkout_whatsapp", { method: "whatsapp", step: "pedido_encaminhado" });
+    }
+    if (window.LuxuriosaInteligencia && typeof window.LuxuriosaInteligencia.registrarEtapa === "function") {
+      window.LuxuriosaInteligencia.registrarEtapa("whatsapp_opened", itensAtuais, dadosAtuais).catch(function () {});
+    }
+    window.open(url, "_blank", "noopener,noreferrer");
+  }
+
+
   var accountLoadId = 0;
   var accountSupabasePromise = null;
 
@@ -713,8 +740,12 @@
     if (accountLoadButton) accountLoadButton.addEventListener("click", carregarDadosDaConta);
     $("customerCancel").addEventListener("click", fechar);
     $("customerEditButton").addEventListener("click", function () { review.hidden = true; form.hidden = false; $("customerName").focus(); });
-    $("customerPaymentButton").addEventListener("click", continuarPagamento);
-    $("customerCopyButton").addEventListener("click", copiarMensagem);
+    var paymentButton = $("customerPaymentButton");
+    if (paymentButton) paymentButton.addEventListener("click", continuarPagamento);
+    var whatsappButton = $("customerWhatsAppButton");
+    if (whatsappButton) whatsappButton.addEventListener("click", continuarWhatsApp);
+    var copyButton = $("customerCopyButton");
+    if (copyButton) copyButton.addEventListener("click", copiarMensagem);
     overlay.addEventListener("click", function (event) { if (event.target === overlay) fechar(); });
     dialog.addEventListener("keydown", function (event) {
       if (event.key === "Escape") { event.preventDefault(); fechar(); }
