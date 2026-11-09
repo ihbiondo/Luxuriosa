@@ -1,6 +1,16 @@
 name: Validacao do Clube Luxuriosa
 
 on:
+  push:
+    branches:
+      - "clube-vantagens-perfil-progressivo"
+    paths:
+      - "login.html"
+      - "js/clientes.js"
+      - "js/inteligencia.js"
+      - "gestao-privada-8f2c6d.html"
+      - "supabase/migrations/**"
+      - ".github/workflows/club-validate.yml"
   pull_request:
     paths:
       - "login.html"
