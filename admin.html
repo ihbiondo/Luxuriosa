@@ -34,6 +34,21 @@ main{padding:20px 0 50px}.hero{display:flex;justify-content:space-between;align-
 .detail-block ul{margin:0;padding-left:16px}
 .detail-footer{display:flex;gap:9px;align-items:center;flex-wrap:wrap;margin-top:12px;padding-top:10px;border-top:1px solid var(--line)}
 @media(max-width:700px){.detail-grid{grid-template-columns:1fr 1fr}}
+
+.sla-form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;align-content:start}
+.sla-field{display:grid;gap:5px;min-width:0;color:var(--muted);font-size:10px}
+.sla-field input,.sla-field select{width:100%;min-width:0}
+.sla-field.full{grid-column:1/-1}
+.sla-checks{display:flex;gap:14px;flex-wrap:wrap;grid-column:1/-1;padding:8px 0;color:var(--muted);font-size:10px}
+.sla-checks label{display:flex;align-items:center;gap:7px}
+.sla-checks input{accent-color:var(--wine)}
+.sla-rule{display:grid;gap:7px;padding:10px 11px;border:1px solid rgba(212,175,124,.13);border-radius:7px;background:#100d0f}
+.sla-rule-head{display:flex;justify-content:space-between;gap:10px;align-items:center}
+.sla-rule-meta{display:flex;gap:12px;flex-wrap:wrap;color:var(--muted);font-size:10px}
+.sla-rule-actions{display:flex;gap:7px;flex-wrap:wrap}
+.sla-rule-actions .btn{padding:7px 10px}
+@media(max-width:560px){.sla-form{grid-template-columns:1fr}.sla-field.full,.sla-checks{grid-column:auto}}
+
 footer{padding:18px 0;border-top:1px solid var(--line);color:#766970;font-size:9px;text-align:center}
 @media(max-width:1000px){.metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.grid2{grid-template-columns:1fr}}@media(max-width:560px){.shell{width:calc(100% - 22px)}.top{align-items:flex-start}.brand{font-size:23px}.metrics{gap:8px}.metric{padding:13px;min-height:88px}.metric strong{font-size:25px}.panel{padding:14px}.searchbar{grid-template-columns:1fr 1fr}.searchbar input{grid-column:1/-1}.searchbar button{grid-column:1/-1}.bar-row{grid-template-columns:65px 1fr 65px}}
 </style>
@@ -80,6 +95,50 @@ footer{padding:18px 0;border-top:1px solid var(--line);color:#766970;font-size:9
 </div>
 <p class="small" id="iaFootnote" style="margin:12px 0 0">Os dados desta área são armazenados no Supabase e não incluem nome, telefone ou endereço nos eventos analíticos.</p>
 </section>
+
+<section class="panel" id="fulfillmentPanel" style="margin:18px 0">
+  <div class="section-head" style="margin:0 0 10px">
+    <div><h2>Expedição e entrega automáticas</h2><p class="hint">Os prazos começam quando a InfinitePay confirma o pagamento. Configure por cidade antes de liberar cobranças.</p></div>
+    <span class="pill" id="paymentConfigStatus">Verificando InfinitePay...</span>
+  </div>
+  <div class="grid2">
+    <form id="slaForm" class="sla-form">
+      <label class="sla-field">Cidade
+        <input id="slaCity" name="city" maxlength="100" placeholder="Ex.: Bauru" required>
+      </label>
+      <label class="sla-field">Estado (UF)
+        <input id="slaState" name="state" maxlength="2" placeholder="SP" required>
+      </label>
+      <label class="sla-field">Modalidade
+        <select id="slaMode" name="fulfillment_mode"><option value="delivery">Entrega</option><option value="pickup">Retirada</option></select>
+      </label>
+      <label class="sla-field">Frete (R$)
+        <input id="slaFee" name="delivery_fee_reais" type="number" min="0" max="10000" step="0.01" value="0" required>
+      </label>
+      <label class="sla-field">Prazo para expedir (minutos)
+        <input id="slaDispatch" name="dispatch_minutes" type="number" min="1" max="10080" step="1" placeholder="Ex.: 60" required>
+      </label>
+      <label class="sla-field">Prazo de entrega (minutos)
+        <input id="slaDelivery" name="delivery_minutes" type="number" min="0" max="10080" step="1" placeholder="Ex.: 120" required>
+      </label>
+      <div class="sla-checks">
+        <label><input id="slaFreeKit" type="checkbox"> Frete grátis se incluir kit</label>
+        <label><input id="slaAutomatic" type="checkbox"> Liberar pagamento automático</label>
+        <label><input id="slaActive" type="checkbox" checked> Regra ativa</label>
+      </div>
+      <div class="sla-field full">
+        <button class="btn primary" id="slaSave" type="submit">SALVAR REGRA DE PRAZO</button>
+        <p class="small" id="slaFormStatus">Valores em minutos. Ex.: 90 = 1h30. Pagamento automático permanece bloqueado até que a API Key e a InfiniteTag estejam configuradas.</p>
+      </div>
+    </form>
+    <div>
+      <h2 style="font-size:19px">Regiões configuradas</h2>
+      <p class="hint">Pedidos automáticos só são aceitos em regiões com regra ativa e pagamento habilitado.</p>
+      <div class="list" id="slaRules"><p class="empty">Carregando regras...</p></div>
+    </div>
+  </div>
+</section>
+
 <div class="section-head"><div><h2>Consultas de pedidos e clientes</h2><p class="sub">Pesquise por nome, telefone ou número do pedido e filtre pelo status.</p></div></div>
 <section class="panel">
 <form id="searchForm" class="searchbar">
@@ -188,6 +247,82 @@ async function updateOrderStatus(order,select,button){
  }catch(e){notice(e.message||"Falha ao atualizar pedido.",true);button.disabled=false;button.textContent="SALVAR STATUS"}
 }
 const pageLabels={home:"Início",catalog:"Catálogo",product:"Produto",checkout:"Checkout",institutional:"Institucional",other:"Outras páginas"};
+
+function formatMinutes(value){
+ const n=Math.max(0,Number(value)||0),h=Math.floor(n/60),m=n%60;
+ if(h&&m)return h+"h "+m+"min";
+ if(h)return h+"h";
+ return m+"min";
+}
+function fillSlaForm(rule){
+ $("slaCity").value=rule.city_normalized||"";
+ $("slaState").value=rule.state||"";
+ $("slaMode").value=rule.fulfillment_mode||"delivery";
+ $("slaFee").value=(Number(rule.delivery_fee_cents)||0)/100;
+ $("slaDispatch").value=rule.dispatch_minutes??"";
+ $("slaDelivery").value=rule.delivery_minutes??"";
+ $("slaFreeKit").checked=!!rule.free_delivery_if_contains_kit;
+ $("slaAutomatic").checked=!!rule.automatic_payment_enabled;
+ $("slaActive").checked=!!rule.active;
+ $("slaCity").focus();
+}
+function renderSlaRules(rules){
+ const box=$("slaRules");box.replaceChildren();
+ if(!rules.length){box.append(el("p","empty","Nenhuma região configurada. O pagamento automático permanece bloqueado."));return}
+ rules.forEach(rule=>{
+  const card=el("article","sla-rule"),head=el("div","sla-rule-head");
+  head.append(el("strong","",rule.city_normalized.toLocaleUpperCase("pt-BR")+"/"+rule.state));
+  head.append(el("span","pill",rule.automatic_payment_enabled&&rule.active?"Pagamento liberado":"Pagamento bloqueado"));
+  const meta=el("div","sla-rule-meta");
+  meta.append(el("span","","Expedição: "+formatMinutes(rule.dispatch_minutes)));
+  meta.append(el("span","","Entrega: "+formatMinutes(rule.delivery_minutes)));
+  meta.append(el("span","","Frete: "+money.format((Number(rule.delivery_fee_cents)||0)/100)));
+  if(rule.free_delivery_if_contains_kit)meta.append(el("span","","Kit: frete grátis"));
+  if(!rule.active)meta.append(el("span","","Regra inativa"));
+  const actions=el("div","sla-rule-actions"),edit=el("button","btn","EDITAR");
+  edit.type="button";edit.addEventListener("click",()=>fillSlaForm(rule));
+  actions.append(edit);card.append(head,meta,actions);box.append(card);
+ });
+}
+async function loadFulfillment(){
+ const status=$("paymentConfigStatus");
+ try{
+  const [health,rules]=await Promise.all([
+   supabase.functions.invoke("payment-admin",{body:{action:"status"}}),
+   supabase.functions.invoke("payment-admin",{body:{action:"list"}})
+  ]);
+  if(health.error)throw health.error;if(!health.data?.ok)throw new Error(health.data?.error||"Configuração indisponível.");
+  if(rules.error)throw rules.error;if(!rules.data?.ok)throw new Error(rules.data?.error||"Regras indisponíveis.");
+  const api=health.data.infinitepay_api_key_configured?"API Key OK":"API Key pendente";
+  const handle=health.data.infinitepay_handle_configured?"InfiniteTag OK":"InfiniteTag pendente";
+  status.textContent=api+" · "+handle;
+  renderSlaRules(rules.data.rules||[]);
+ }catch(error){
+  console.error(error);status.textContent="Configuração indisponível";
+  $("slaRules").replaceChildren(el("p","empty",error.message||"Não foi possível consultar as regras."));
+ }
+}
+$("slaForm").addEventListener("submit",async event=>{
+ event.preventDefault();
+ const button=$("slaSave"),status=$("slaFormStatus");
+ const payload={
+  action:"save",city:$("slaCity").value.trim(),state:$("slaState").value.trim().toUpperCase(),
+  fulfillment_mode:$("slaMode").value,delivery_fee_reais:$("slaFee").value,
+  dispatch_minutes:Number($("slaDispatch").value),delivery_minutes:Number($("slaDelivery").value),
+  free_delivery_if_contains_kit:$("slaFreeKit").checked,
+  automatic_payment_enabled:$("slaAutomatic").checked,active:$("slaActive").checked
+ };
+ button.disabled=true;button.textContent="SALVANDO...";
+ try{
+  const {data,error}=await supabase.functions.invoke("payment-admin",{body:payload});
+  if(error)throw error;if(!data?.ok)throw new Error(data?.error||"Não foi possível salvar a regra.");
+  status.textContent="Regra salva para "+data.rule.city_normalized.toLocaleUpperCase("pt-BR")+"/"+data.rule.state+".";
+  $("slaForm").reset();$("slaActive").checked=true;
+  await loadFulfillment();
+ }catch(error){status.textContent=error.message||"Falha ao salvar.";notice(status.textContent,true)}
+ finally{button.disabled=false;button.textContent="SALVAR REGRA DE PRAZO"}
+});
+
 const eventNumber=value=>new Intl.NumberFormat("pt-BR").format(Number(value)||0);
 let productNames=null;
 async function getProductNames(){
@@ -271,6 +406,7 @@ async function load(){
   renderBars("topProducts",(data.top_products||[]).map(x=>({label:x.name,value:x.quantity})),"label","value",v=>String(v)+" un.");
   renderOrders(data.orders||[]);renderCarts(data.carts||[]);
   loadIntelligence(days);
+  loadFulfillment();
   $("updatedAt").textContent="Atualizado às "+new Date().toLocaleTimeString("pt-BR");
   notice("Consulta concluída. Acesso administrativo validado pelo servidor.");
  }catch(e){console.error(e);notice(e.message||"Falha na consulta.",true)}
