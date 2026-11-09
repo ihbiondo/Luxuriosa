@@ -1057,49 +1057,20 @@
 
         const wantsIntimateProfile = $("clubIntimateConsent").checked;
         if (wantsIntimateProfile) {
-          if (!clubIntimateConsentActive) {
-            const { error: consentError } = await supabase.from("club_intimate_consent_events").insert({
-              user_id: user.id,
-              granted: true,
-              consent_version: CLUB_INTIMATE_CONSENT_VERSION,
-              source: "account_settings",
-              event_key: crypto.randomUUID()
-            });
-            if (consentError) throw consentError;
-          }
-
-          const profile = {
-            user_id: user.id,
-            experience_level: $("clubExperienceLevel").value ? Number($("clubExperienceLevel").value) : null,
-            novelty_code: $("clubNovelty").value ? Number($("clubNovelty").value) : null,
-            context_code: $("clubContext").value ? Number($("clubContext").value) : null,
-            intensity_code: $("clubIntensity").value ? Number($("clubIntensity").value) : null,
-            recommendation_tone_code: 1,
-            desired_codes: desired,
-            category_codes: categories,
-            sensation_codes: sensations,
-            avoid_codes: avoided,
-            consent_version: CLUB_INTIMATE_CONSENT_VERSION,
-            consented_at: new Date().toISOString(),
-            updated_at: new Date().toISOString()
-          };
-          const { error: intimateError } = await supabase.from("club_intimate_preferences").upsert(
-            profile,
-            { onConflict: "user_id" }
-          );
+          const { error: intimateError } = await supabase.rpc("save_club_intimate_preferences", {
+            p_experience_level: $("clubExperienceLevel").value ? Number($("clubExperienceLevel").value) : null,
+            p_novelty_code: $("clubNovelty").value ? Number($("clubNovelty").value) : null,
+            p_context_code: $("clubContext").value ? Number($("clubContext").value) : null,
+            p_intensity_code: $("clubIntensity").value ? Number($("clubIntensity").value) : null,
+            p_desired_codes: desired,
+            p_category_codes: categories,
+            p_sensation_codes: sensations,
+            p_avoid_codes: avoided
+          });
           if (intimateError) throw intimateError;
           clubIntimateConsentActive = true;
         } else if (clubIntimateConsentActive) {
-          const { error: deleteError } = await supabase.from("club_intimate_preferences")
-            .delete().eq("user_id", user.id);
-          if (deleteError) throw deleteError;
-          const { error: revokeError } = await supabase.from("club_intimate_consent_events").insert({
-            user_id: user.id,
-            granted: false,
-            consent_version: CLUB_INTIMATE_CONSENT_VERSION,
-            source: "account_settings",
-            event_key: crypto.randomUUID()
-          });
+          const { error: revokeError } = await supabase.rpc("revoke_club_intimate_preferences");
           if (revokeError) throw revokeError;
           clubIntimateConsentActive = false;
           setClubIntimateForm(null);
