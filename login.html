@@ -24,7 +24,7 @@
     .section-label{grid-column:1/-1;margin:10px 0 -3px;padding-top:14px;border-top:1px solid rgba(212,175,124,.14);color:var(--gold);font-size:9px;font-weight:600;letter-spacing:.16em;text-transform:uppercase}
     .colors{display:flex;flex-wrap:wrap;gap:8px}.color-option{display:flex;align-items:center;gap:7px;padding:8px 10px;border:1px solid rgba(212,175,124,.18);border-radius:7px;color:var(--muted);font-size:10px}.color-option input{width:14px;height:14px;accent-color:var(--wine)}
     .actions{margin-top:22px}.primary{width:100%;min-height:48px;border:1px solid var(--wine);border-radius:7px;background:var(--wine);color:#fff;font:600 10px var(--sans);letter-spacing:.12em;cursor:pointer;transition:.2s}.primary:hover{background:#a32950}.primary:disabled{opacity:.55;cursor:wait}.text-action{display:block;margin:16px auto 0;padding:4px;border:0;background:none;color:var(--gold);font:500 11px var(--sans);text-decoration:underline;text-underline-offset:3px;cursor:pointer}.legal{margin:18px 0 0;color:#887980;font-size:9px;text-align:center}.message{display:none;margin:0 0 18px;padding:12px 14px;border:1px solid rgba(212,175,124,.25);border-radius:8px;background:rgba(212,175,124,.07);color:var(--blush);font-size:11px}.message.show{display:block}.message.error{border-color:rgba(224,100,120,.35);background:rgba(150,35,60,.12);color:#ffc3cc}
-    .hidden{display:none!important}.account-box{padding:20px;border:1px solid var(--line);border-radius:12px;background:rgba(0,0,0,.18)}.account-box p{color:var(--muted);font-size:12px}.account-actions{display:flex;gap:10px;flex-wrap:wrap}.secondary{min-height:42px;padding:0 16px;border:1px solid var(--line);border-radius:7px;background:transparent;color:var(--gold);font:600 10px var(--sans);cursor:pointer}
+    .hidden{display:none!important}.account-box{padding:20px;border:1px solid var(--line);border-radius:12px;background:rgba(0,0,0,.18)}.account-box p{color:var(--muted);font-size:12px}.account-email{margin:0 0 18px}.account-email strong{color:var(--blush);font-weight:600}.account-form .section-label{margin-top:20px}.account-form .grid{margin-top:12px}.account-form .actions{margin-bottom:22px}.account-actions{display:flex;gap:10px;flex-wrap:wrap}.secondary{min-height:42px;padding:0 16px;border:1px solid var(--line);border-radius:7px;background:transparent;color:var(--gold);font:600 10px var(--sans);cursor:pointer}
     footer{padding:20px 0 28px;border-top:1px solid rgba(212,175,124,.12);color:#766970;font-size:9px;text-align:center}
     @media(max-width:800px){main{grid-template-columns:1fr;gap:30px;min-height:auto;padding-top:24px}.intro{max-width:600px}.intro h1{font-size:42px}.intro-note{display:none}.panel{justify-self:center;max-width:620px}.top{padding:20px 0}}
     @media(max-width:480px){.shell{width:min(100% - 24px,1080px)}.top{align-items:flex-start}.brand{font-size:24px}.back{padding-top:8px;font-size:10px}main{padding-top:18px}.intro h1{font-size:36px}.panel{padding:21px 16px;border-radius:15px}.grid{grid-template-columns:1fr}.field.full{grid-column:auto}.section-label{grid-column:auto}.tabs{margin-bottom:22px}h2{font-size:26px}}
@@ -118,8 +118,42 @@
         <div id="signedInArea" class="hidden">
           <span class="eyebrow">Área da sua conta</span>
           <h2 id="accountGreeting">Olá!</h2>
-          <p class="lead">Você está conectado à sua conta Luxuriosa.</p>
-          <div class="account-box"><p>Seu acesso está ativo. Em breve, você poderá consultar e atualizar seus dados e preferências por aqui.</p><div class="account-actions"><button class="secondary" id="signOutButton" type="button">SAIR DA CONTA</button></div></div>
+          <p class="lead">Consulte e mantenha seus dados atualizados.</p>
+          <div class="account-box">
+            <p class="account-email">Conta vinculada a <strong id="accountEmail"></strong></p>
+            <form id="accountForm" class="account-form">
+              <div class="section-label">Dados pessoais</div>
+              <div class="grid">
+                <div class="field full"><label for="accountFullName">Nome completo</label><input id="accountFullName" autocomplete="name" maxlength="160" required></div>
+                <div class="field"><label for="accountBirthDate">Data de nascimento</label><input id="accountBirthDate" type="date" autocomplete="bday" required></div>
+                <div class="field"><label for="accountPhone">WhatsApp</label><input id="accountPhone" type="tel" autocomplete="tel" maxlength="30" required></div>
+              </div>
+              <div class="section-label">Endereço principal</div>
+              <div class="grid">
+                <div class="field"><label for="accountPostalCode">CEP</label><input id="accountPostalCode" inputmode="numeric" autocomplete="postal-code" maxlength="9" required></div>
+                <div class="field"><label for="accountAddressNumber">Número</label><input id="accountAddressNumber" autocomplete="address-line2" maxlength="20" required></div>
+                <div class="field full"><label for="accountStreet">Rua / Avenida</label><input id="accountStreet" autocomplete="address-line1" maxlength="160" required></div>
+                <div class="field"><label for="accountNeighborhood">Bairro</label><input id="accountNeighborhood" autocomplete="address-level3" maxlength="100" required></div>
+                <div class="field"><label for="accountComplement">Complemento (opcional)</label><input id="accountComplement" maxlength="100"></div>
+                <div class="field"><label for="accountCity">Cidade</label><input id="accountCity" autocomplete="address-level2" maxlength="100" required></div>
+                <div class="field"><label for="accountState">UF</label><input id="accountState" autocomplete="address-level1" maxlength="2" pattern="[A-Za-z]{2}" required></div>
+              </div>
+              <div class="section-label">Preferências</div>
+              <div class="field">
+                <label>Cores favoritas — escolha até 3</label>
+                <div class="colors">
+                  <label class="color-option"><input type="checkbox" name="accountFavoriteColor" value="Preto"> Preto</label>
+                  <label class="color-option"><input type="checkbox" name="accountFavoriteColor" value="Vermelho"> Vermelho</label>
+                  <label class="color-option"><input type="checkbox" name="accountFavoriteColor" value="Rosa"> Rosa</label>
+                  <label class="color-option"><input type="checkbox" name="accountFavoriteColor" value="Vinho"> Vinho</label>
+                  <label class="color-option"><input type="checkbox" name="accountFavoriteColor" value="Branco"> Branco</label>
+                  <label class="color-option"><input type="checkbox" name="accountFavoriteColor" value="Outra"> Outra</label>
+                </div>
+              </div>
+              <div class="actions"><button class="primary" id="saveAccountButton" type="submit">SALVAR ALTERAÇÕES</button></div>
+            </form>
+            <div class="account-actions"><button class="secondary" id="signOutButton" type="button">SAIR DA CONTA</button></div>
+          </div>
         </div>
       </section>
     </main>
@@ -224,19 +258,114 @@
       if (metadataResult.error) throw metadataResult.error;
     }
 
+    async function loadAccountData(user) {
+      const [profileResult, addressResult, preferencesResult] = await Promise.all([
+        supabase.from("profiles").select("full_name, display_name, phone, birth_date").eq("id", user.id).maybeSingle(),
+        supabase.from("addresses").select("id, postal_code, street, number, complement, neighborhood, city, state").eq("user_id", user.id).eq("is_default", true).maybeSingle(),
+        supabase.from("preferences").select("favorite_colors").eq("user_id", user.id).maybeSingle()
+      ]);
+      if (profileResult.error) throw profileResult.error;
+      if (addressResult.error) throw addressResult.error;
+      if (preferencesResult.error) throw preferencesResult.error;
+      const profile = profileResult.data || {};
+      const address = addressResult.data || {};
+      const colors = preferencesResult.data?.favorite_colors || [];
+      $("accountEmail").textContent = user.email || "";
+      $("accountFullName").value = profile.full_name || user.user_metadata?.full_name || "";
+      $("accountBirthDate").value = profile.birth_date || user.user_metadata?.birth_date || "";
+      $("accountPhone").value = profile.phone || user.user_metadata?.phone || "";
+      $("accountPostalCode").value = address.postal_code || "";
+      $("accountStreet").value = address.street || "";
+      $("accountAddressNumber").value = address.number || "";
+      $("accountComplement").value = address.complement || "";
+      $("accountNeighborhood").value = address.neighborhood || "";
+      $("accountCity").value = address.city || "";
+      $("accountState").value = address.state || "";
+      document.querySelectorAll('input[name="accountFavoriteColor"]').forEach((input) => {
+        input.checked = colors.includes(input.value);
+      });
+      const displayName = profile.display_name || profile.full_name?.trim().split(/\s+/)[0] || user.user_metadata?.display_name || user.email || "cliente";
+      $("accountGreeting").textContent = "Olá, " + displayName + "!";
+    }
+
     async function showSignedIn(user) {
       if (activeUserId === user.id) return;
       activeUserId = user.id;
       authArea.classList.add("hidden");
       signedInArea.classList.remove("hidden");
-      $("accountGreeting").textContent = "Olá, " + (user.user_metadata?.display_name || user.email || "cliente") + "!";
       try {
         await syncNewAccountData(user);
+        await loadAccountData(user);
       } catch (error) {
-        message("Sua conta foi ativada, mas não conseguimos concluir o salvamento de todos os dados do perfil. Entre novamente ou contate o atendimento.", true);
-        console.error("Falha ao sincronizar perfil:", error);
+        message("Não foi possível carregar todos os dados da sua conta. Atualize a página ou tente novamente.", true);
+        console.error("Falha ao carregar perfil:", error);
       }
     }
+
+    $("accountForm").addEventListener("submit", async (event) => {
+      event.preventDefault();
+      clearMessage();
+      const fullName = $("accountFullName").value.trim();
+      const birth = $("accountBirthDate").value;
+      const birthDate = birth ? new Date(birth + "T00:00:00") : null;
+      if (!fullName) return message("Informe seu nome completo.", true);
+      if (!birthDate || Number.isNaN(birthDate.getTime()) || birthDate >= new Date()) return message("Informe uma data de nascimento válida.", true);
+      const today = new Date();
+      let age = today.getFullYear() - birthDate.getFullYear();
+      if (today.getMonth() < birthDate.getMonth() || (today.getMonth() === birthDate.getMonth() && today.getDate() < birthDate.getDate())) age--;
+      if (age < 18) return message("A conta Luxuriosa é permitida somente para maiores de 18 anos.", true);
+      const postalCode = $("accountPostalCode").value.replace(/\D/g, "");
+      if (postalCode.length !== 8) return message("Informe um CEP válido com oito dígitos.", true);
+      const state = $("accountState").value.trim().toUpperCase();
+      if (!/^[A-Z]{2}$/.test(state)) return message("Informe uma UF válida com duas letras.", true);
+      const colors = Array.from(document.querySelectorAll('input[name="accountFavoriteColor"]:checked')).map((input) => input.value);
+      if (colors.length > 3) return message("Escolha no máximo três cores favoritas.", true);
+      const button = $("saveAccountButton");
+      button.disabled = true;
+      button.textContent = "SALVANDO...";
+      try {
+        const user = (await supabase.auth.getUser()).data.user;
+        if (!user) throw new Error("Sua sessão expirou. Entre novamente.");
+        const profileResult = await supabase.from("profiles").update({
+          full_name: fullName,
+          display_name: fullName.split(/\s+/)[0],
+          phone: $("accountPhone").value.trim(),
+          birth_date: birth
+        }).eq("id", user.id).select("id").maybeSingle();
+        if (profileResult.error) throw profileResult.error;
+        if (!profileResult.data) throw new Error("Não foi possível localizar seu perfil para atualizar.");
+        const preferencesResult = await supabase.from("preferences").update({ favorite_colors: colors }).eq("user_id", user.id).select("user_id").maybeSingle();
+        if (preferencesResult.error) throw preferencesResult.error;
+        if (!preferencesResult.data) throw new Error("Não foi possível localizar suas preferências para atualizar.");
+        const address = {
+          recipient_name: fullName,
+          postal_code: postalCode,
+          street: $("accountStreet").value.trim(),
+          number: $("accountAddressNumber").value.trim(),
+          complement: $("accountComplement").value.trim() || null,
+          neighborhood: $("accountNeighborhood").value.trim() || null,
+          city: $("accountCity").value.trim(),
+          state,
+          country: "Brasil",
+          is_default: true
+        };
+        const currentAddress = await supabase.from("addresses").select("id").eq("user_id", user.id).eq("is_default", true).maybeSingle();
+        if (currentAddress.error) throw currentAddress.error;
+        const addressResult = currentAddress.data
+          ? await supabase.from("addresses").update(address).eq("id", currentAddress.data.id).eq("user_id", user.id).select("id").maybeSingle()
+          : await supabase.from("addresses").insert({ ...address, user_id: user.id, label: "Principal" }).select("id").maybeSingle();
+        if (addressResult.error) throw addressResult.error;
+        if (!addressResult.data) throw new Error("Não foi possível salvar o endereço principal.");
+        await loadAccountData(user);
+        message("Seus dados foram atualizados com sucesso.");
+      } catch (error) {
+        console.error("Falha ao atualizar conta:", error);
+        message("Não foi possível salvar todas as alterações. " + friendlyError(error), true);
+      } finally {
+        button.disabled = false;
+        button.textContent = "SALVAR ALTERAÇÕES";
+      }
+    });
 
     $("loginTab").addEventListener("click", () => showForm("login"));
     $("signupTab").addEventListener("click", () => showForm("signup"));
