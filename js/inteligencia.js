@@ -71,9 +71,14 @@
       });
     }, 900);
   }
-  function registrarEtapa(action, items) {
-    if (!marketingConsentGranted()) return Promise.resolve({ skipped: true });
-    return send({ action: action, items: normalizeItems(items) });
+  function registrarEtapa(action, items, customer) {
+    var explicitWhatsAppOptIn = action === "checkout_reviewed" && customer && customer.marketingWhatsappOptIn === true;
+    if (!marketingConsentGranted() && !explicitWhatsAppOptIn) return Promise.resolve({ skipped: true });
+    return send({
+      action: action,
+      items: normalizeItems(items),
+      customer: explicitWhatsAppOptIn ? customer : undefined
+    });
   }
   function registrarPedido(items, customer, shippingAmount) {
     return send({
