@@ -390,9 +390,10 @@ async function loadFulfillment(){
   ]);
   if(health.error)throw health.error;if(!health.data?.ok)throw new Error(health.data?.error||"Configuração indisponível.");
   if(rules.error)throw rules.error;if(!rules.data?.ok)throw new Error(rules.data?.error||"Regras indisponíveis.");
-  const api=health.data.infinitepay_api_key_configured?"API Key OK":"API Key pendente";
+  const api=health.data.infinitepay_api_key_configured?"InfinitePay: chave OK":"InfinitePay: chave pendente";
   const handle=health.data.infinitepay_handle_configured?"InfiniteTag OK":"InfiniteTag pendente";
-  status.textContent=api+" · "+handle;
+  const whatsapp=health.data.whatsapp_configured?"WhatsApp interno OK":"WhatsApp interno pendente";
+  status.textContent=api+" · "+handle+" · "+whatsapp;
   renderSlaRules(rules.data.rules||[]);
  }catch(error){
   console.error(error);status.textContent="Configuração indisponível";
