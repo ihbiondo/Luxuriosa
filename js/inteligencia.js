@@ -21,6 +21,12 @@
     }
     return sessionKey;
   }
+  function marketingConsentGranted() {
+    try {
+      var consent = JSON.parse(localStorage.getItem("lux_cookie_consent_v1") || "null");
+      return !!(consent && consent.version === 1 && consent.marketing === true);
+    } catch (_) { return false; }
+  }
   function getAccessToken() {
     try {
       var raw = localStorage.getItem("sb-byiykxfugvxuowueuxca-auth-token");
@@ -56,6 +62,7 @@
     });
   }
   function registrarCarrinho(items) {
+    if (!marketingConsentGranted()) return;
     clearTimeout(pendingTimer);
     var snapshot = normalizeItems(items);
     pendingTimer = setTimeout(function () {
@@ -65,6 +72,7 @@
     }, 900);
   }
   function registrarEtapa(action, items) {
+    if (!marketingConsentGranted()) return Promise.resolve({ skipped: true });
     return send({ action: action, items: normalizeItems(items) });
   }
   function registrarPedido(items, customer, shippingAmount) {
