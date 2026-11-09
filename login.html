@@ -162,6 +162,16 @@
               <div class="actions"><button class="primary" id="saveAccountButton" type="submit">SALVAR ALTERAÇÕES</button></div>
             </form>
             <div class="account-actions"><button class="secondary" id="signOutButton" type="button">SAIR DA CONTA</button></div>
+
+            <form id="deleteAccountForm" class="account-form danger-zone" hidden>
+              <div class="section-label">Encerrar conta</div>
+              <p class="danger-help">A exclusão remove seu acesso e os dados pessoais do perfil, endereço e preferências. Essa ação é permanente. Registros que venham a ser necessários para obrigações legais poderão receber tratamento de retenção ou anonimização, conforme a legislação aplicável.</p>
+              <div class="grid">
+                <div class="field full"><label for="deleteAccountPassword">Confirme sua senha atual</label><input id="deleteAccountPassword" type="password" autocomplete="current-password" minlength="8" required></div>
+                <div class="field full"><label for="deleteAccountConfirmation">Digite EXCLUIR para confirmar</label><input id="deleteAccountConfirmation" type="text" autocomplete="off" maxlength="7" required></div>
+              </div>
+              <div class="actions"><button class="secondary danger-button" id="deleteAccountButton" type="submit">EXCLUIR MINHA CONTA</button></div>
+            </form>
           </div>
         </div>
       </section>
@@ -297,20 +307,27 @@
       $("accountGreeting").textContent = "Olá, " + displayName + "!";
     }
 
+    let loadingUserId = null;
+
     async function showSignedIn(user) {
       if (activeUserId === user.id) {
         $("accountEmail").textContent = user.email || "";
         return;
       }
-      activeUserId = user.id;
+      if (loadingUserId === user.id) return;
+      loadingUserId = user.id;
       authArea.classList.add("hidden");
       signedInArea.classList.remove("hidden");
       try {
         await syncNewAccountData(user);
         await loadAccountData(user);
+        activeUserId = user.id;
       } catch (error) {
-        message("Não foi possível carregar todos os dados da sua conta. Atualize a página ou tente novamente.", true);
+        activeUserId = null;
+        message("Não foi possível carregar todos os dados da sua conta. Atualize a página para tentar novamente.", true);
         console.error("Falha ao carregar perfil:", error);
+      } finally {
+        loadingUserId = null;
       }
     }
 
@@ -367,39 +384,24 @@
       button.disabled = true;
       button.textContent = "SALVANDO...";
       try {
-        const user = (await supabase.auth.getUser()).data.user;
-        if (!user) throw new Error("Sua sessão expirou. Entre novamente.");
-        const profileResult = await supabase.from("profiles").update({
-          full_name: fullName,
-          display_name: fullName.split(/\s+/)[0],
-          phone: $("accountPhone").value.trim(),
-          birth_date: birth
-        }).eq("id", user.id).select("id").maybeSingle();
-        if (profileResult.error) throw profileResult.error;
-        if (!profileResult.data) throw new Error("Não foi possível localizar seu perfil para atualizar.");
-        const preferencesResult = await supabase.from("preferences").update({ favorite_colors: colors }).eq("user_id", user.id).select("user_id").maybeSingle();
-        if (preferencesResult.error) throw preferencesResult.error;
-        if (!preferencesResult.data) throw new Error("Não foi possível localizar suas preferências para atualizar.");
-        const address = {
-          recipient_name: fullName,
-          postal_code: postalCode,
-          street: $("accountStreet").value.trim(),
-          number: $("accountAddressNumber").value.trim(),
-          complement: $("accountComplement").value.trim() || null,
-          neighborhood: $("accountNeighborhood").value.trim() || null,
-          city: $("accountCity").value.trim(),
-          state,
-          country: "Brasil",
-          is_default: true
-        };
-        const currentAddress = await supabase.from("addresses").select("id").eq("user_id", user.id).eq("is_default", true).maybeSingle();
-        if (currentAddress.error) throw currentAddress.error;
-        const addressResult = currentAddress.data
-          ? await supabase.from("addresses").update(address).eq("id", currentAddress.data.id).eq("user_id", user.id).select("id").maybeSingle()
-          : await supabase.from("addresses").insert({ ...address, user_id: user.id, label: "Principal" }).select("id").maybeSingle();
-        if (addressResult.error) throw addressResult.error;
-        if (!addressResult.data) throw new Error("Não foi possível salvar o endereço principal.");
-        await loadAccountData(user);
+        const { error } = await supabase.rpc("update_account_data", {
+          p_full_name: fullName,
+          p_birth_date: birth,
+          p_phone: $("accountPhone").value.trim(),
+          p_favorite_colors: colors,
+          p_postal_code: postalCode,
+          p_street: $("accountStreet").value.trim(),
+          p_number: $("accountAddressNumber").value.trim(),
+          p_complement: $("accountComplement").value.trim(),
+          p_neighborhood: $("accountNeighborhood").value.trim(),
+          p_city: $("accountCity").value.trim(),
+          p_state: state
+        });
+        if (error) throw error;
+        const { data: userData, error: userError } = await supabase.auth.getUser();
+        if (userError) throw userError;
+        if (!userData.user) throw new Error("Sua sessão expirou. Entre novamente.");
+        await loadAccountData(userData.user);
         message("Seus dados foram atualizados com sucesso.");
       } catch (error) {
         console.error("Falha ao atualizar conta:", error);
@@ -419,14 +421,22 @@
     $("backToLogin").addEventListener("click", () => showForm("login"));
 
     loginForm.addEventListener("submit", async (event) => {
-      event.preventDefault(); clearMessage(); setBusy(loginForm, true);
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email: $("loginEmail").value.trim(),
-        password: $("loginPassword").value
-      });
-      setBusy(loginForm, false);
-      if (error) return message(friendlyError(error), true);
-      await showSignedIn(data.user);
+      event.preventDefault();
+      clearMessage();
+      setBusy(loginForm, true);
+      try {
+        const { data, error } = await supabase.auth.signInWithPassword({
+          email: $("loginEmail").value.trim(),
+          password: $("loginPassword").value
+        });
+        if (error) throw error;
+        await showSignedIn(data.user);
+      } catch (error) {
+        console.error("Falha ao entrar:", error);
+        message(friendlyError(error), true);
+      } finally {
+        setBusy(loginForm, false);
+      }
     });
 
     signupForm.addEventListener("submit", async (event) => {
@@ -446,34 +456,43 @@
       const fullName = $("fullName").value.trim();
       const firstName = fullName.split(/\s+/)[0];
       const usernameBase = fullName.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, "_").replace(/^_|_$/g, "").slice(0, 20) || "cliente";
-      const username = usernameBase + "_" + Math.random().toString(36).slice(2, 8);
+      const username = usernameBase + "_" + crypto.randomUUID().replace(/-/g, "").slice(0, 8);
       const phone = $("phone").value.trim();
       const postalCode = $("postalCode").value.replace(/\D/g, "");
       if (postalCode.length !== 8) return message("Informe um CEP válido com oito dígitos.", true);
       setBusy(signupForm, true, "CRIANDO SUA CONTA...");
-      const { data, error } = await supabase.auth.signUp({
-        email: $("signupEmail").value.trim(),
-        password: $("signupPassword").value,
-        options: {
-          emailRedirectTo: window.location.origin + window.location.pathname,
-          data: {
-            username,
-            display_name: firstName,
-            full_name: fullName,
-            phone,
-            birth_date: birth,
-            favorite_colors: colors,
-            address_postal_code: postalCode,
-            address_street: $("street").value.trim(),
-            address_number: $("addressNumber").value.trim(),
-            address_complement: $("complement").value.trim(),
-            address_neighborhood: $("neighborhood").value.trim(),
-            address_city: $("city").value.trim(),
-            address_state: $("state").value.trim().toUpperCase()
+      let signupResult;
+      try {
+        signupResult = await supabase.auth.signUp({
+          email: $("signupEmail").value.trim(),
+          password: $("signupPassword").value,
+          options: {
+            emailRedirectTo: window.location.origin + window.location.pathname,
+            data: {
+              username,
+              display_name: firstName,
+              full_name: fullName,
+              phone,
+              birth_date: birth,
+              favorite_colors: colors,
+              address_postal_code: postalCode,
+              address_street: $("street").value.trim(),
+              address_number: $("addressNumber").value.trim(),
+              address_complement: $("complement").value.trim(),
+              address_neighborhood: $("neighborhood").value.trim(),
+              address_city: $("city").value.trim(),
+              address_state: $("state").value.trim().toUpperCase()
+            }
           }
-        }
-      });
-      setBusy(signupForm, false);
+        });
+      } catch (error) {
+        console.error("Falha ao criar conta:", error);
+        message(friendlyError(error), true);
+        return;
+      } finally {
+        setBusy(signupForm, false);
+      }
+      const { data, error } = signupResult;
       if (error) return message(friendlyError(error), true);
       if (data.session && data.user) {
         await showSignedIn(data.user);
@@ -487,37 +506,102 @@
     });
 
     resetForm.addEventListener("submit", async (event) => {
-      event.preventDefault(); clearMessage(); setBusy(resetForm, true, "ENVIANDO...");
-      const { error } = await supabase.auth.resetPasswordForEmail($("resetEmail").value.trim(), {
-        redirectTo: window.location.origin + window.location.pathname
-      });
-      setBusy(resetForm, false);
-      if (error) return message(friendlyError(error), true);
-      message("Se houver uma conta associada a esse endereço, enviaremos um link para redefinir a senha. Confira sua caixa de entrada.");
+      event.preventDefault();
+      clearMessage();
+      setBusy(resetForm, true, "ENVIANDO...");
+      try {
+        const { error } = await supabase.auth.resetPasswordForEmail($("resetEmail").value.trim(), {
+          redirectTo: window.location.origin + window.location.pathname
+        });
+        if (error) throw error;
+        message("Se houver uma conta associada a esse endereço, enviaremos um link para redefinir a senha. Confira sua caixa de entrada.");
+      } catch (error) {
+        console.error("Falha ao solicitar redefinição de senha:", error);
+        message(friendlyError(error), true);
+      } finally {
+        setBusy(resetForm, false);
+      }
     });
 
     newPasswordForm.addEventListener("submit", async (event) => {
-      event.preventDefault(); clearMessage();
+      event.preventDefault();
+      clearMessage();
       if (!/(?=.*[A-Za-z])(?=.*[0-9]).{8,}/.test($("newPassword").value)) return message("Use uma senha com pelo menos 8 caracteres, incluindo letras e números.", true);
       if ($("newPassword").value !== $("newPasswordConfirm").value) return message("As senhas não coincidem.", true);
       setBusy(newPasswordForm, true, "SALVANDO...");
-      const { error } = await supabase.auth.updateUser({ password: $("newPassword").value });
-      setBusy(newPasswordForm, false);
-      if (error) return message(friendlyError(error), true);
-      newPasswordForm.reset();
-      showForm("login");
-      message("Senha alterada com sucesso. Entre com sua nova senha.");
-      await supabase.auth.signOut();
+      try {
+        const { error } = await supabase.auth.updateUser({ password: $("newPassword").value });
+        if (error) throw error;
+        newPasswordForm.reset();
+        showForm("login");
+        message("Senha alterada com sucesso. Entre com sua nova senha.");
+        await supabase.auth.signOut();
+      } catch (error) {
+        console.error("Falha ao redefinir senha:", error);
+        message(friendlyError(error), true);
+      } finally {
+        setBusy(newPasswordForm, false);
+      }
+    });
+
+
+    $("deleteAccountForm").addEventListener("submit", async (event) => {
+      event.preventDefault();
+      clearMessage();
+      if ($("deleteAccountConfirmation").value.trim() !== "EXCLUIR") {
+        return message("Digite EXCLUIR exatamente como aparece para confirmar a exclusão.", true);
+      }
+      const password = $("deleteAccountPassword").value;
+      if (!password) return message("Informe sua senha atual para confirmar sua identidade.", true);
+      const button = $("deleteAccountButton");
+      button.disabled = true;
+      button.textContent = "EXCLUINDO CONTA...";
+      try {
+        const { data: current, error: currentError } = await supabase.auth.getUser();
+        if (currentError) throw currentError;
+        if (!current.user?.email) throw new Error("Sua sessão expirou. Entre novamente.");
+        const { data, error } = await supabase.functions.invoke("delete-account", {
+          body: { password }
+        });
+        if (error) throw error;
+        if (!data?.success) throw new Error("A exclusão não foi confirmada pelo servidor.");
+        try {
+          await supabase.auth.signOut({ scope: "local" });
+        } catch (signOutError) {
+          console.warn("A conta foi excluída, mas a limpeza local da sessão falhou:", signOutError);
+        }
+        activeUserId = null;
+        $("deleteAccountForm").reset();
+        signedInArea.classList.add("hidden");
+        authArea.classList.remove("hidden");
+        showForm("login");
+        message("Sua conta foi excluída com segurança.");
+      } catch (error) {
+        console.error("Falha ao excluir conta:", error);
+        message("Não foi possível excluir sua conta. " + friendlyError(error), true);
+      } finally {
+        button.disabled = false;
+        button.textContent = "EXCLUIR MINHA CONTA";
+      }
     });
 
     $("signOutButton").addEventListener("click", async () => {
-      const { error } = await supabase.auth.signOut();
-      if (error) return message(friendlyError(error), true);
-      activeUserId = null;
-      signedInArea.classList.add("hidden");
-      authArea.classList.remove("hidden");
-      showForm("login");
-      message("Você saiu da sua conta.");
+      const button = $("signOutButton");
+      button.disabled = true;
+      try {
+        const { error } = await supabase.auth.signOut();
+        if (error) throw error;
+        activeUserId = null;
+        signedInArea.classList.add("hidden");
+        authArea.classList.remove("hidden");
+        showForm("login");
+        message("Você saiu da sua conta.");
+      } catch (error) {
+        console.error("Falha ao sair da conta:", error);
+        message(friendlyError(error), true);
+      } finally {
+        button.disabled = false;
+      }
     });
 
     supabase.auth.onAuthStateChange((event, session) => {
