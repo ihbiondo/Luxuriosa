@@ -657,7 +657,7 @@
       return;
     }
 
-    var cidade = String(dadosAtuais.address.city || "").trim().normalize("NFD").replace(/[\\u0300-\\u036f]/g, "").toLowerCase();
+    var cidade = String(dadosAtuais.address.city || "").trim().normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
     var estado = String(dadosAtuais.address.state || "").trim().toUpperCase();
     var emBauru = cidade === "bauru" && estado === "SP";
     var frete = emBauru ? (pedidoContemKit(itensAtuais) ? 0 : 15) : null;
