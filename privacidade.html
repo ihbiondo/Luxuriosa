@@ -235,20 +235,23 @@
     passa para a área de transferência do seu dispositivo e você decide onde colá-lo.
   </p>
   <p>
-    A Meta trata os dados transmitidos na abertura do link conforme seus próprios termos
-    e políticas. A abertura do WhatsApp não significa que a mensagem foi enviada ao
-    atendimento, não confirma a compra nem processa pagamento. O site não mantém um
-    histórico centralizado de pedidos em servidor próprio. Quando necessário, informações
-    da venda podem ser registradas nos controles internos da loja para atendimento, gestão
-    e cumprimento de obrigações legais.
+    Antes de abrir o WhatsApp, ao clicar em continuar, os dados necessários à solicitação
+    (nome ou apelido, telefone, endereço, itens, quantidades, valores e frete) são enviados
+    ao ambiente administrativo da Luxuriosa, hospedado no Supabase, para registrar e consultar
+    o pedido, evitar duplicidades e permitir o atendimento. O pedido fica inicialmente com
+    status de aguardando confirmação; isso não significa pagamento aprovado nem compra
+    concluída. O WhatsApp recebe os dados incluídos na mensagem pré-preenchida conforme
+    descrito acima. Os registros são acessíveis somente à administração autorizada e podem
+    ser conservados pelo tempo necessário ao atendimento, à gestão e ao cumprimento de
+    obrigações legais ou ao exercício regular de direitos.
   </p>
 
   <h2>6. Com quem compartilhamos</h2>
   <ul>
     <li><strong>WhatsApp (Meta):</strong> recebe os dados incluídos na URL quando você escolhe abrir o link com a mensagem pré-preenchida. O envio da conversa ao atendimento da Luxuriosa depende de confirmação sua dentro do aplicativo. O tratamento pela Meta está sujeito aos termos e às políticas do serviço.</li>
     <li><strong>ViaCEP:</strong> se você consultar o CEP no formulário, o número informado é enviado ao serviço ViaCEP para buscar dados públicos de endereço. Nome, telefone, produtos e demais campos do pedido não são enviados nessa consulta. Consulte a <a href="https://viacep.com.br/" target="_blank" rel="noopener noreferrer">página do ViaCEP</a>.</li>
-    <li><strong>Google Analytics 4 (Google):</strong> é carregado somente se você autorizar estatísticas no aviso de cookies. Nesse caso, recebe informações técnicas e eventos genéricos de navegação. A configuração procura não transmitir nomes de produtos, conteúdo do carrinho, dados do formulário, URLs específicas ou termos digitados; os eventos comerciais usam apenas parâmetros limitados, como etapa, método e quantidade. O IP é configurado com anonimização. Saiba mais na <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">Política de Privacidade do Google</a>.</li>
-    <li><strong>Supabase:</strong> fornece os serviços de autenticação e banco de dados usados pela área da conta. Processa o e-mail, credenciais de autenticação e os dados de perfil, endereço e preferências necessários ao cadastro e à manutenção da conta. O serviço pode processar dados técnicos, registros de segurança e cópias de segurança conforme sua operação e seus prazos próprios. Consulte a <a href="https://supabase.com/privacy" target="_blank" rel="noopener noreferrer">Política de Privacidade do Supabase</a>.</li>
+    <li><strong>Google Analytics 4 (Google):</strong> é carregado somente se você autorizar estatísticas no aviso de cookies. Nesse caso, recebe informações técnicas e eventos genéricos de navegação. A configuração procura não transmitir nomes ou identificadores de produtos, conteúdo do carrinho, dados do formulário, URLs específicas ou termos digitados; os eventos comerciais usam apenas parâmetros limitados, como etapa, método e quantidade. O IP é configurado com anonimização. Saiba mais na <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">Política de Privacidade do Google</a>.</li>
+    <li><strong>Supabase:</strong> fornece autenticação e banco de dados para a área da conta e para a operação da loja. Processa dados de perfil e autenticação, solicitações de pedido, itens, quantidades, valores, dados de entrega e, quando você autoriza estatísticas, eventos pseudonimizados de navegação. Esses eventos podem incluir identificador interno do produto, tipo de página, tipo de ação, quantidade e data/hora; não incluem nome, telefone, endereço ou texto de conversas. Os eventos analíticos são retidos por até 180 dias e ficam acessíveis somente à administração autorizada. O serviço também pode processar dados técnicos, registros de segurança e cópias de segurança conforme seus prazos próprios. Consulte a <a href="https://supabase.com/privacy" target="_blank" rel="noopener noreferrer">Política de Privacidade do Supabase</a>.</li>
     <li><strong>GitHub Pages (GitHub):</strong> hospeda e entrega os arquivos estáticos do site. Como outros serviços de hospedagem, pode processar dados técnicos de conexão e acesso, como endereço IP, página solicitada e informações do navegador, necessários à disponibilização, segurança e funcionamento das páginas.</li>
     <li><strong>Google Fonts (Google):</strong> algumas páginas carregam fontes tipográficas hospedadas pelo Google. Ao acessar essas páginas, o navegador solicita os arquivos de fonte aos servidores do Google, que podem receber dados técnicos da conexão, como o endereço IP. Consulte a <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">Política de Privacidade do Google</a>.</li>
     <li><strong>Serviços de pagamento, entregadores e autoridades:</strong> somente os dados necessários à confirmação do pagamento, realização da entrega ou cumprimento de obrigação legal ou ordem válida.</li>
@@ -257,8 +260,15 @@
 
   <h2>7. Marketing e preferências de cookies</h2>
   <p>
-    O aviso de privacidade permite escolher separadamente estatísticas e marketing. As
-    estatísticas, realizadas pelo Google Analytics 4, só são ativadas após autorização.
+    O aviso de privacidade permite escolher separadamente estatísticas e marketing.
+    Quando você autoriza estatísticas, são ativados o Google Analytics 4 e a medição interna
+    da Luxuriosa. A medição interna registra eventos como visualização de página, abertura
+    de produto, adição ao carrinho, início/revisão do checkout e abertura do WhatsApp,
+    associados a um identificador aleatório pseudônimo do navegador. O identificador não
+    revela diretamente sua identidade, mas pode ser relacionado a eventos e identificadores
+    internos de produtos. Esses registros ficam no Supabase por até 180 dias e são usados
+    para compreender o desempenho da loja e melhorar a experiência. Você pode rejeitar ou
+    revogar essa medição nas preferências de cookies.
     A opção de marketing fica disponível para registrar sua preferência, mas nenhuma
     ferramenta de publicidade ou marketing está integrada nesta versão do site; marcar
     essa opção não inscreve você em uma lista, não inicia campanhas e não autoriza o envio
