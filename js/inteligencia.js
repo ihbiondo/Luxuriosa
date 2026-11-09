@@ -76,7 +76,7 @@
     if (path === "/" || /index\.html$/i.test(path)) return "home";
     if (/loja\.html$/i.test(path)) return "catalog";
     if (/checkout|pedido/i.test(path)) return "checkout";
-    if (/atendimento|sobre|privacidade|faq/i.test(path)) return "institutional";
+    if (/atendimento|sobre|privacidade|faq|cidades\//i.test(path)) return "institutional";
     return "other";
   }
   function registrarEvento(eventName, options) {
