@@ -133,10 +133,10 @@
         <td>O carrinho pode permanecer no armazenamento local do navegador até ser removido ou substituído. Se o pedido for enviado e concluído, os registros necessários poderão ser mantidos pelo prazo legal aplicável.</td>
       </tr>
       <tr>
-        <td>Informações sobre pagamento</td>
-        <td>Confirmar o recebimento e registrar a venda, quando essas informações forem fornecidas durante o atendimento.</td>
-        <td>Execução de contrato e cumprimento de obrigação legal ou regulatória, conforme o caso (art. 7º, V e II).</td>
-        <td>Pelo prazo necessário à operação e às obrigações legais aplicáveis.</td>
+        <td>Referências da transação, valor, forma de pagamento, status e comprovante</td>
+        <td>Gerar a cobrança, confirmar o pagamento, registrar a venda e organizar a expedição e entrega.</td>
+        <td>Procedimentos preliminares e execução de contrato (art. 7º, V), além de cumprimento de obrigação legal ou regulatória quando aplicável (art. 7º, II).</td>
+        <td>Pelo prazo necessário à operação, conciliação e obrigações legais aplicáveis. Dados de cartão são coletados e processados diretamente pela InfinitePay.</td>
       </tr>
       <tr>
         <td>E-mail e credenciais de acesso</td>
@@ -226,46 +226,58 @@
     contato promocional exige consentimento específico e válido.
   </p>
 
-  <h2>5. Pedidos, formulário e WhatsApp</h2>
+  <h2>5. Pedidos, pagamento e WhatsApp</h2>
   <p>
     Ao preencher o formulário, você informa nome ou apelido, telefone/WhatsApp e endereço
     de entrega (CEP, rua, número, complemento, bairro, cidade, estado e ponto de referência,
-    quando aplicável). Os dados são usados
-    para montar uma prévia do pedido, que mostra os produtos, quantidades, valores e dados
-    de entrega antes de qualquer compartilhamento.
+    quando aplicável). Antes de pagar, o site permite revisar os itens do carrinho, quantidades,
+    endereço e condições de entrega.
   </p>
   <p>
-    Ao clicar em continuar, o site abre uma URL do WhatsApp com uma mensagem
-    pré-preenchida. Essa mensagem pode incluir produtos e quantidades, subtotal e condição de frete, nome ou apelido, telefone e endereço informado. Como
-    esses dados integram o endereço eletrônico aberto, eles são transmitidos à infraestrutura
-    do WhatsApp/Meta durante a abertura do link, mesmo que você ainda não confirme o envio
-    da conversa. A mensagem só é enviada ao atendimento da Luxuriosa quando você confirma
-    o envio dentro do WhatsApp. Links de contato em páginas de produtos ou de cidades
-    também podem abrir o WhatsApp com o nome do produto ou a localidade no texto
-    pré-preenchido. Se preferir, você também pode copiar a mensagem; nesse caso, o conteúdo
-    passa para a área de transferência do seu dispositivo e você decide onde colá-lo.
+    Ao clicar em pagar, os dados necessários à criação do pedido (nome ou apelido, telefone,
+    endereço, identificadores e nomes dos produtos, quantidades, preços e frete) são enviados
+    ao ambiente administrativo da Luxuriosa, hospedado no Supabase. O servidor valida os
+    produtos e preços do catálogo, calcula o frete conforme a regra do destino e registra o
+    pedido com status de pagamento pendente. Esses registros permitem consultar o pedido,
+    evitar cobranças duplicadas e organizar a operação. O acesso é restrito à administração
+    autorizada e os dados são conservados pelo tempo necessário à operação e às obrigações
+    legais aplicáveis.
   </p>
   <p>
-    Antes de abrir o WhatsApp, ao clicar em continuar, os dados necessários à solicitação
-    (nome ou apelido, telefone, endereço, itens, quantidades, valores e frete) são enviados
-    ao ambiente administrativo da Luxuriosa, hospedado no Supabase, para registrar e consultar
-    o pedido, evitar duplicidades e permitir o atendimento. O pedido fica inicialmente com
-    status de aguardando confirmação; isso não significa pagamento aprovado nem compra
-    concluída. O WhatsApp recebe os dados incluídos na mensagem pré-preenchida conforme
-    descrito acima. Os registros são acessíveis somente à administração autorizada e podem
-    ser conservados pelo tempo necessário ao atendimento, à gestão e ao cumprimento de
-    obrigações legais ou ao exercício regular de direitos.
+    Para concluir o pagamento, o servidor cria uma cobrança única na InfinitePay e direciona
+    você ao checkout hospedado pela própria InfinitePay. Para preencher o checkout e identificar
+    a compra, compartilhamos com esse prestador os itens e valores do pedido, seu nome,
+    telefone, endereço de entrega e uma referência técnica da transação. Os dados de cartão,
+    código de segurança e credenciais de pagamento são informados diretamente à InfinitePay;
+    a Luxuriosa não recebe nem armazena o número do cartão ou o código de segurança. O
+    pagamento é confirmado no servidor por notificação do provedor e consulta de verificação.
+    O simples retorno do navegador à Luxuriosa não é considerado prova de pagamento.
+  </p>
+  <p>
+    Após a confirmação, o pedido recebe o status de pago e o sistema calcula os prazos de
+    expedição e entrega a partir do horário da aprovação. Quando a notificação interna por
+    WhatsApp estiver configurada, o sistema envia ao número administrativo apenas o número
+    do pedido, valor, forma de pagamento, cidade e prazos operacionais. Essa mensagem interna
+    não inclui nome, telefone, endereço completo ou lista de produtos do comprador.
+  </p>
+  <p>
+    Links de contato da loja ainda podem abrir o WhatsApp com uma mensagem pré-preenchida.
+    Nesses casos, o texto pode incluir o nome de um produto ou localidade e é transmitido à
+    infraestrutura do WhatsApp/Meta ao abrir o link. A mensagem só é enviada ao atendimento
+    da Luxuriosa quando você confirma o envio dentro do aplicativo. Você também pode optar
+    por copiar o texto; nesse caso, ele passa para a área de transferência do seu dispositivo.
   </p>
 
   <h2>6. Com quem compartilhamos</h2>
   <ul>
-    <li><strong>WhatsApp (Meta):</strong> recebe os dados incluídos na URL quando você escolhe abrir o link com a mensagem pré-preenchida. O envio da conversa ao atendimento da Luxuriosa depende de confirmação sua dentro do aplicativo. O tratamento pela Meta está sujeito aos termos e às políticas do serviço.</li>
+    <li><strong>WhatsApp (Meta):</strong> recebe os dados incluídos na URL quando você escolhe abrir um link de contato com mensagem pré-preenchida. Se a notificação administrativa interna estiver habilitada, a Plataforma WhatsApp Business também processa dados limitados do pedido (número, valor, forma de pagamento, cidade e prazos) para enviar o alerta operacional ao número autorizado da loja. O alerta não inclui nome, telefone, endereço completo ou produtos do comprador. O tratamento pela Meta está sujeito aos termos e às políticas do serviço.</li>
     <li><strong>ViaCEP:</strong> se você consultar o CEP no formulário, o número informado é enviado ao serviço ViaCEP para buscar dados públicos de endereço. Nome, telefone, produtos e demais campos do pedido não são enviados nessa consulta. Consulte a <a href="https://viacep.com.br/" target="_blank" rel="noopener noreferrer">página do ViaCEP</a>.</li>
     <li><strong>Google Analytics 4 (Google):</strong> é carregado somente se você autorizar estatísticas no aviso de cookies. Nesse caso, recebe informações técnicas e eventos genéricos de navegação. A configuração procura não transmitir nomes ou identificadores de produtos, conteúdo do carrinho, dados do formulário, URLs específicas ou termos digitados; os eventos comerciais usam apenas parâmetros limitados, como etapa, método e quantidade. O IP é configurado com anonimização. Saiba mais na <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">Política de Privacidade do Google</a>.</li>
     <li><strong>Supabase:</strong> fornece autenticação e banco de dados para a área da conta e para a operação da loja. Processa dados de perfil e autenticação, solicitações de pedido, itens, quantidades, valores, dados de entrega e, quando você autoriza estatísticas, eventos pseudonimizados de navegação. Esses eventos podem incluir identificador interno do produto, tipo de página, tipo de ação, quantidade e data/hora; não incluem nome, telefone, endereço ou texto de conversas. Os eventos analíticos são retidos por até 180 dias e ficam acessíveis somente à administração autorizada. O serviço também pode processar dados técnicos, registros de segurança e cópias de segurança conforme seus prazos próprios. Consulte a <a href="https://supabase.com/privacy" target="_blank" rel="noopener noreferrer">Política de Privacidade do Supabase</a>.</li>
     <li><strong>GitHub Pages (GitHub):</strong> hospeda e entrega os arquivos estáticos do site. Como outros serviços de hospedagem, pode processar dados técnicos de conexão e acesso, como endereço IP, página solicitada e informações do navegador, necessários à disponibilização, segurança e funcionamento das páginas.</li>
     <li><strong>Google Fonts (Google):</strong> algumas páginas carregam fontes tipográficas hospedadas pelo Google. Ao acessar essas páginas, o navegador solicita os arquivos de fonte aos servidores do Google, que podem receber dados técnicos da conexão, como o endereço IP. Consulte a <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">Política de Privacidade do Google</a>.</li>
-    <li><strong>Serviços de pagamento, entregadores e autoridades:</strong> somente os dados necessários à confirmação do pagamento, realização da entrega ou cumprimento de obrigação legal ou ordem válida.</li>
+    <li><strong>InfinitePay:</strong> processa o checkout e o pagamento. Recebe os itens, quantidades, valores, dados de contato e endereço de entrega necessários à cobrança e identificação da compra. Os dados do cartão são fornecidos diretamente à InfinitePay e não ficam disponíveis à Luxuriosa.</li>
+    <li><strong>Entregadores e autoridades:</strong> recebem somente os dados necessários à realização da entrega ou ao cumprimento de obrigação legal ou ordem válida.</li>
   </ul>
   <p>Não vendemos nem alugamos dados pessoais.</p>
 
