@@ -557,6 +557,7 @@ function renderFulfillmentQueue(orders){
    if(Number(order.scheduled_discount_amount)>0)meta.append(el("span","","Desconto: "+money.format(Number(order.scheduled_discount_amount))));
   }
   meta.append(el("span","","Pago em: "+fmtDate(order.paid_at)));
+  if(Number(order.club_discount_amount_cents)>0)meta.append(el("span","order-discount-admin","Clube "+(Number(order.club_discount_percent)||10)+"%: -"+money.format(Number(order.club_discount_amount_cents)/100)));
   meta.append(el("span","","Total: "+money.format(Number(order.total_amount)||0)));
   meta.append(el("span","", "Expedição: "+deadlineStatus(order.dispatch_due_at)+" · "+fmtDate(order.dispatch_due_at)));
   meta.append(el("span","", "Entrega: "+deadlineStatus(order.delivery_due_at)+" · "+fmtDate(order.delivery_due_at)));
