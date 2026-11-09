@@ -190,7 +190,8 @@ h2{font-size:22px;color:#3c3a40}
  .workspace-tab{min-width:69px}
  .nav-copy strong{font-size:8px}
 }
-</style>
+    .order-discount-admin{color:var(--gold);font-weight:600}
+  </style>
 </head>
 <body>
 <aside class="workspace-sidebar" aria-label="Menu principal">
@@ -483,7 +484,12 @@ function renderOrders(orders){
   row.append(el("td","num","#"+o.order_number));
   const customer=el("td","customer");customer.append(el("strong","",o.customer_name||"Cliente"));customer.append(el("div","muted-cell",o.customer_phone||"Sem telefone"));row.append(customer);
   row.append(el("td","muted-cell",fmtDate(o.created_at)));
-  row.append(el("td","amount",money.format(Number(o.total_amount)||0)));
+  const amountCell=el("td","amount");
+  amountCell.append(el("strong","",money.format(Number(o.total_amount)||0)));
+  if(Number(o.club_discount_amount_cents)>0){
+   amountCell.append(el("div","muted-cell","Clube "+(Number(o.club_discount_percent)||10)+"% · -"+money.format(Number(o.club_discount_amount_cents)/100)));
+  }
+  row.append(amountCell);
   const statusCell=el("td");statusCell.append(el("span","pill",statusTag(o.status)));row.append(statusCell);
   const actionCell=el("td"),toggle=el("button","btn details-toggle","VER DETALHES");toggle.type="button";actionCell.append(toggle);row.append(actionCell);
   const detailRow=el("tr","detail-row");detailRow.hidden=true;const detailCell=el("td");detailCell.colSpan=6;
@@ -494,7 +500,12 @@ function renderOrders(orders){
   const itemsBlock=el("div","detail-block");itemsBlock.append(el("strong","","Itens do pedido"));
   if(o.items?.length){const ul=el("ul");o.items.forEach(i=>ul.append(el("li","",(i.quantity||1)+"x "+i.product_name+" · "+money.format(Number(i.unit_price)||0))));itemsBlock.append(ul)}
   else itemsBlock.append(el("div","","Itens não disponíveis."));
-  grid.append(customerBlock,addressBlock,itemsBlock);detailCell.append(grid);
+  const totalsBlock=el("div","detail-block");totalsBlock.append(el("strong","","Resumo financeiro"));
+  totalsBlock.append(el("div","","Produtos: "+money.format(Number(o.subtotal)||0)));
+  if(Number(o.club_discount_amount_cents)>0)totalsBlock.append(el("div","order-discount-admin","Clube "+(Number(o.club_discount_percent)||10)+"%: -"+money.format(Number(o.club_discount_amount_cents)/100)));
+  totalsBlock.append(el("div","","Frete: "+(o.shipping_amount==null?"A confirmar":money.format(Number(o.shipping_amount)||0))));
+  totalsBlock.append(el("div","","Total: "+money.format(Number(o.total_amount)||0)));
+  grid.append(customerBlock,addressBlock,itemsBlock,totalsBlock);detailCell.append(grid);
   const footer=el("div","detail-footer");
   if(o.customer_phone){const phone=String(o.customer_phone).replace(/\D/g,"");const link=el("a","btn","CONTATO DO PEDIDO");link.href="https://wa.me/"+phone;link.target="_blank";link.rel="noopener";link.style.textDecoration="none";footer.append(link)}
   const controls=el("div","order-actions"),select=el("select"),save=el("button","btn primary","SALVAR STATUS");
