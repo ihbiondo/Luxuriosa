@@ -20,6 +20,8 @@ on:
       - "js/inteligencia.js"
       - "gestao-privada-8f2c6d.html"
       - "supabase/migrations/**"
+      - "supabase/functions/cart-orders/**"
+      - ".github/scripts/**"
       - ".github/workflows/club-validate.yml"
 
 permissions:
