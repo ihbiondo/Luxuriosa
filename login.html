@@ -327,8 +327,39 @@
       return text;
     }
 
+    const ACCOUNT_CONSENT_VERSION = "luxuriosa-account-data-v1-2026-11";
+
+    async function syncSignupConsents(user) {
+      const meta = user?.user_metadata || {};
+      if (meta.account_data_consents_recorded === true ||
+          meta.account_consent_version !== ACCOUNT_CONSENT_VERSION ||
+          typeof meta.account_experience_consent !== "boolean" ||
+          typeof meta.account_aggregated_consent !== "boolean") return;
+      const results = await Promise.all([
+        supabase.rpc("record_account_data_consent", {
+          p_purpose: "experience_personalization",
+          p_granted: meta.account_experience_consent,
+          p_source: "signup",
+          p_event_key: meta.account_experience_consent_event_key,
+          p_text_version: ACCOUNT_CONSENT_VERSION
+        }),
+        supabase.rpc("record_account_data_consent", {
+          p_purpose: "aggregated_insights_sharing",
+          p_granted: meta.account_aggregated_consent,
+          p_source: "signup",
+          p_event_key: meta.account_aggregated_consent_event_key,
+          p_text_version: ACCOUNT_CONSENT_VERSION
+        })
+      ]);
+      const failure = results.find(result => result.error);
+      if (failure) throw failure.error;
+      const { error } = await supabase.auth.updateUser({ data: { account_data_consents_recorded: true } });
+      if (error) throw error;
+    }
+
     async function syncNewAccountData(user) {
       const meta = user?.user_metadata || {};
+      await syncSignupConsents(user);
       if (meta.account_setup_completed || !meta.address_postal_code) return;
       const profile = {
         full_name: meta.full_name || null,
@@ -366,14 +397,25 @@
     }
 
     async function loadAccountData(user) {
-      const [profileResult, addressResult, preferencesResult] = await Promise.all([
+      const [profileResult, addressResult, preferencesResult, consentResult] = await Promise.all([
         supabase.from("profiles").select("full_name, display_name, phone, birth_date").eq("id", user.id).maybeSingle(),
         supabase.from("addresses").select("id, postal_code, street, number, complement, neighborhood, city, state").eq("user_id", user.id).eq("is_default", true).maybeSingle(),
-        supabase.from("preferences").select("favorite_colors").eq("user_id", user.id).maybeSingle()
+        supabase.from("preferences").select("favorite_colors").eq("user_id", user.id).maybeSingle(),
+        supabase.from("account_data_consents").select("purpose, granted, created_at").eq("user_id", user.id).order("created_at", { ascending: false }).limit(20)
       ]);
       if (profileResult.error) throw profileResult.error;
       if (addressResult.error) throw addressResult.error;
       if (preferencesResult.error) throw preferencesResult.error;
+      if (consentResult.error) throw consentResult.error;
+      const latestConsent = new Map();
+      (consentResult.data || []).forEach(row => {
+        if (!latestConsent.has(row.purpose)) latestConsent.set(row.purpose, row);
+      });
+      $("accountExperienceConsent").checked = latestConsent.get("experience_personalization")?.granted === true;
+      $("accountAggregatedConsent").checked = latestConsent.get("aggregated_insights_sharing")?.granted === true;
+      $("accountConsentStatus").textContent = consentResult.data?.length
+        ? "Preferências registradas. Última atualização: " + new Date(consentResult.data[0].created_at).toLocaleString("pt-BR") + "."
+        : "Nenhuma autorização opcional ativa. Os recursos essenciais da conta continuam funcionando.";
       const profile = profileResult.data || {};
       const address = addressResult.data || {};
       const colors = preferencesResult.data?.favorite_colors || [];
@@ -501,6 +543,42 @@
       }
     });
 
+    $("accountDataConsentForm").addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const button = $("saveAccountDataConsentButton");
+      button.disabled = true;
+      button.textContent = "SALVANDO...";
+      try {
+        const results = await Promise.all([
+          supabase.rpc("record_account_data_consent", {
+            p_purpose: "experience_personalization",
+            p_granted: $("accountExperienceConsent").checked,
+            p_source: "account_settings",
+            p_event_key: crypto.randomUUID(),
+            p_text_version: ACCOUNT_CONSENT_VERSION
+          }),
+          supabase.rpc("record_account_data_consent", {
+            p_purpose: "aggregated_insights_sharing",
+            p_granted: $("accountAggregatedConsent").checked,
+            p_source: "account_settings",
+            p_event_key: crypto.randomUUID(),
+            p_text_version: ACCOUNT_CONSENT_VERSION
+          })
+        ]);
+        const failure = results.find(result => result.error);
+        if (failure) throw failure.error;
+        message("Suas autorizações opcionais foram atualizadas. A revogação vale para usos futuros baseados nessas autorizações.");
+        const { data } = await supabase.auth.getUser();
+        if (data.user) await loadAccountData(data.user);
+      } catch (error) {
+        console.error("Falha ao salvar autorizações:", error);
+        message("Não foi possível atualizar suas autorizações. " + friendlyError(error), true);
+      } finally {
+        button.disabled = false;
+        button.textContent = "SALVAR AUTORIZAÇÕES";
+      }
+    });
+
     $("accountForm").addEventListener("submit", async (event) => {
       event.preventDefault();
       clearMessage();
@@ -620,7 +698,13 @@
               address_complement: $("complement").value.trim(),
               address_neighborhood: $("neighborhood").value.trim(),
               address_city: $("city").value.trim(),
-              address_state: $("state").value.trim().toUpperCase()
+              address_state: $("state").value.trim().toUpperCase(),
+              account_experience_consent: $("signupExperienceConsent").checked,
+              account_aggregated_consent: $("signupAggregatedConsent").checked,
+              account_consent_version: ACCOUNT_CONSENT_VERSION,
+              account_experience_consent_event_key: crypto.randomUUID(),
+              account_aggregated_consent_event_key: crypto.randomUUID(),
+              account_data_consents_recorded: false
             }
           }
         });
