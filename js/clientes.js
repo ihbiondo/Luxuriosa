@@ -63,6 +63,7 @@
     return {
       name: texto("customerName"),
       phone: texto("customerPhone"),
+      email: texto("customerEmail").toLowerCase(),
       address: {
         zip: texto("customerCep"),
         street: texto("customerStreet"),
@@ -86,6 +87,7 @@
     }
     definirValor("customerName", data.name);
     definirValor("customerPhone", formatarTelefone(data.phone));
+    definirValor("customerEmail", data.email || "");
     definirValor("customerCep", address.zip || "");
     definirValor("customerStreet", address.street || "");
     definirValor("customerNumber", address.number || "");
@@ -232,8 +234,8 @@
     var data = dadosDoFormulario();
     var primeiroErro = null;
     var required = exigirEndereco
-      ? ["customerName", "customerPhone", "customerStreet", "customerNumber", "customerDistrict", "customerCity", "customerState"]
-      : ["customerName", "customerPhone"];
+      ? ["customerName", "customerPhone", "customerEmail", "customerStreet", "customerNumber", "customerDistrict", "customerCity", "customerState"]
+      : ["customerName", "customerPhone", "customerEmail"];
 
     document.querySelectorAll("#customerForm [aria-invalid='true']").forEach(function (field) { field.removeAttribute("aria-invalid"); });
     required.forEach(function (id) {
@@ -268,6 +270,14 @@
     }
     if (campoEstado && estado) campoEstado.value = estado.toUpperCase();
 
+    var email = $("customerEmail");
+    if (data.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) {
+      email.setAttribute("aria-invalid", "true");
+      avisar("Informe um e-mail válido para receber os dados do pagamento.", "error");
+      email.focus();
+      return false;
+    }
+
     var phone = $("customerPhone");
     if (data.phone && !validarTelefone(data.phone)) {
       phone.setAttribute("aria-invalid", "true");
@@ -280,7 +290,7 @@
       avisar(
         exigirEndereco
           ? "Preencha nome ou apelido, telefone/WhatsApp, rua, número, bairro, cidade e estado."
-          : "Preencha nome ou apelido e telefone/WhatsApp.",
+          : "Preencha nome, telefone/WhatsApp e e-mail.",
         "error"
       );
       primeiroErro.focus();
@@ -695,6 +705,7 @@
       preencherFormulario({
         name: profile.full_name || "",
         phone: profile.phone || "",
+        email: authResult.data.user.email || "",
         address: {
           zip: address.postal_code || "",
           street: address.street || "",
