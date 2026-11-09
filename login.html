@@ -586,13 +586,22 @@
     });
 
     $("signOutButton").addEventListener("click", async () => {
-      const { error } = await supabase.auth.signOut();
-      if (error) return message(friendlyError(error), true);
-      activeUserId = null;
-      signedInArea.classList.add("hidden");
-      authArea.classList.remove("hidden");
-      showForm("login");
-      message("Você saiu da sua conta.");
+      const button = $("signOutButton");
+      button.disabled = true;
+      try {
+        const { error } = await supabase.auth.signOut();
+        if (error) throw error;
+        activeUserId = null;
+        signedInArea.classList.add("hidden");
+        authArea.classList.remove("hidden");
+        showForm("login");
+        message("Você saiu da sua conta.");
+      } catch (error) {
+        console.error("Falha ao sair da conta:", error);
+        message(friendlyError(error), true);
+      } finally {
+        button.disabled = false;
+      }
     });
 
     supabase.auth.onAuthStateChange((event, session) => {
