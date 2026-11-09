@@ -328,9 +328,8 @@
     border-radius: 50%;
   }
 
-  .account-trigger svg {
-    width: 19px;
-    height: 19px;
+  .account-trigger-icon {
+    font-size: 21px;
   }
 
   .account-trigger-label {
