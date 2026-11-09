@@ -47,6 +47,16 @@ main{padding:20px 0 50px}.hero{display:flex;justify-content:space-between;align-
 .sla-rule-meta{display:flex;gap:12px;flex-wrap:wrap;color:var(--muted);font-size:10px}
 .sla-rule-actions{display:flex;gap:7px;flex-wrap:wrap}
 .sla-rule-actions .btn{padding:7px 10px}
+.fulfillment-card{padding:12px;border:1px solid rgba(212,175,124,.16);border-radius:8px;background:#100d0f;margin:9px 0}
+.fulfillment-head{display:flex;justify-content:space-between;align-items:center;gap:9px;flex-wrap:wrap}
+.fulfillment-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:9px 0}
+.fulfillment-block{min-width:0}.fulfillment-block strong{display:block;color:var(--gold);font-size:9px;letter-spacing:.07em;text-transform:uppercase;margin-bottom:4px}
+.fulfillment-block div,.fulfillment-block li{color:#e6dadd;font-size:10px;overflow-wrap:anywhere}
+.fulfillment-block ul{margin:0;padding-left:17px}
+.fulfillment-meta{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0;color:var(--muted);font-size:10px}
+.fulfillment-actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px;padding-top:9px;border-top:1px solid var(--line)}
+.fulfillment-actions .btn{padding:8px 10px}
+@media(max-width:560px){.fulfillment-grid{grid-template-columns:1fr}}
 @media(max-width:560px){.sla-form{grid-template-columns:1fr}.sla-field.full,.sla-checks{grid-column:auto}}
 
 footer{padding:18px 0;border-top:1px solid var(--line);color:#766970;font-size:9px;text-align:center}
@@ -128,7 +138,7 @@ footer{padding:18px 0;border-top:1px solid var(--line);color:#766970;font-size:9
       </div>
       <div class="sla-field full">
         <button class="btn primary" id="slaSave" type="submit">SALVAR REGRA DE PRAZO</button>
-        <p class="small" id="slaFormStatus">Valores em minutos. Ex.: 90 = 1h30. Pagamento automático permanece bloqueado até que a API Key e a InfiniteTag estejam configuradas.</p>
+        <p class="small" id="slaFormStatus">Valores em minutos. Ex.: 90 = 1h30. Pagamento automático só pode ser liberado com InfinitePay e notificação WhatsApp interna configuradas. Os prazos são contados após a aprovação do pagamento.</p>
       </div>
     </form>
     <div>
@@ -139,6 +149,13 @@ footer{padding:18px 0;border-top:1px solid var(--line);color:#766970;font-size:9
   </div>
 </section>
 
+<section class="panel" id="dispatchQueuePanel" style="margin:18px 0">
+  <div class="section-head" style="margin:0 0 10px">
+    <div><h2>Fila de expedição</h2><p class="hint">Somente pedidos com pagamento confirmado aparecem aqui. Avance cada etapa quando ela realmente acontecer.</p></div>
+    <div class="actions"><span class="pill" id="dispatchQueueCount">0 pedidos</span><button class="btn" id="refreshDispatchQueue" type="button">ATUALIZAR FILA</button></div>
+  </div>
+  <div id="dispatchQueue"><p class="empty">Carregando pedidos pagos...</p></div>
+</section>
 <div class="section-head"><div><h2>Consultas de pedidos e clientes</h2><p class="sub">Pesquise por nome, telefone ou número do pedido e filtre pelo status.</p></div></div>
 <section class="panel">
 <form id="searchForm" class="searchbar">
@@ -248,6 +265,86 @@ async function updateOrderStatus(order,select,button){
 }
 const pageLabels={home:"Início",catalog:"Catálogo",product:"Produto",checkout:"Checkout",institutional:"Institucional",other:"Outras páginas"};
 
+function deadlineStatus(value){
+ if(!value)return "Prazo não definido";
+ const diff=new Date(value).getTime()-Date.now();
+ if(diff<0)return "Atrasado";
+ if(diff<30*60000)return "Próximo do limite";
+ return "No prazo";
+}
+function renderFulfillmentQueue(orders){
+ const box=$("dispatchQueue");box.replaceChildren();
+ $("dispatchQueueCount").textContent=orders.length+" pedido(s)";
+ if(!orders.length){box.append(el("p","empty","Nenhum pedido pago aguardando expedição ou entrega."));return}
+ orders.forEach(order=>{
+  const card=el("article","fulfillment-card"),head=el("div","fulfillment-head");
+  head.append(el("strong","","Pedido #"+order.order_number+" · "+statusTag(order.status)));
+  head.append(el("span","pill",order.payment_method==="pix"?"Pix":"Cartão"));
+  card.append(head);
+  const meta=el("div","fulfillment-meta");
+  meta.append(el("span","","Pago em: "+fmtDate(order.paid_at)));
+  meta.append(el("span","","Total: "+money.format(Number(order.total_amount)||0)));
+  meta.append(el("span","", "Expedição: "+deadlineStatus(order.dispatch_due_at)+" · "+fmtDate(order.dispatch_due_at)));
+  meta.append(el("span","", "Entrega: "+deadlineStatus(order.delivery_due_at)+" · "+fmtDate(order.delivery_due_at)));
+  card.append(meta);
+  const grid=el("div","fulfillment-grid");
+  const customer=el("div","fulfillment-block");customer.append(el("strong","","Cliente e destino"));
+  customer.append(el("div","",order.customer_name||"Cliente"));
+  customer.append(el("div","",order.customer_phone||"Telefone não informado"));
+  const address=order.delivery_address||{};
+  const addressLine=[address.street,address.number,address.complement,address.district,address.city,address.state,address.zip].filter(Boolean).join(", ");
+  customer.append(el("div","",addressLine||"Endereço não informado"));
+  const itemsBlock=el("div","fulfillment-block");itemsBlock.append(el("strong","","Itens para separar"));
+  if(order.items?.length){
+   const ul=el("ul");
+   order.items.forEach(item=>ul.append(el("li","",(item.quantity||1)+"x "+item.product_name+" · "+money.format(Number(item.line_total??(item.quantity*item.unit_price))||0))));
+   itemsBlock.append(ul);
+  }else itemsBlock.append(el("div","","Itens não disponíveis."));
+  grid.append(customer,itemsBlock);card.append(grid);
+  const notification=order.notification||{};
+  const notificationText=notification.whatsapp_notification_status==="sent"?"WhatsApp enviado":
+   notification.whatsapp_notification_status==="failed"?"Falha no WhatsApp":
+   notification.whatsapp_notification_status==="not_configured"?"WhatsApp não configurado":
+   notification.whatsapp_notification_status==="pending"?"WhatsApp pendente":"Sem status de notificação";
+  card.append(el("div","small",notificationText+(notification.whatsapp_notification_error?": "+notification.whatsapp_notification_error:"")));
+  const actions=el("div","fulfillment-actions");
+  const next=order.status==="confirmed"?"processing":order.status==="processing"?"out_for_delivery":"delivered";
+  const actionLabel=order.status==="confirmed"?"INICIAR SEPARAÇÃO":order.status==="processing"?"MARCAR SAIU PARA ENTREGA":"MARCAR ENTREGUE";
+  const advance=el("button","btn primary",actionLabel);advance.type="button";
+  advance.addEventListener("click",()=>updateFulfillment(order,next,advance));actions.append(advance);
+  if(notification.id&&notification.whatsapp_notification_status==="failed"){
+   const retry=el("button","btn","REENVIAR AVISO WHATSAPP");retry.type="button";
+   retry.addEventListener("click",()=>retryPaymentNotification(order,notification,retry));actions.append(retry);
+  }
+  card.append(actions);box.append(card);
+ });
+}
+async function loadFulfillmentQueue(){
+ const box=$("dispatchQueue");box.replaceChildren(el("p","empty","Consultando pedidos pagos..."));
+ try{
+  const {data,error}=await supabase.functions.invoke("payment-admin",{body:{action:"fulfillment_queue"}});
+  if(error)throw error;if(!data?.ok)throw new Error(data?.error||"Não foi possível carregar a fila.");
+  renderFulfillmentQueue(data.orders||[]);
+ }catch(error){console.error(error);box.replaceChildren(el("p","empty",error.message||"Falha ao carregar a fila."));}
+}
+async function updateFulfillment(order,nextStatus,button){
+ const actionLabel=nextStatus==="processing"?"iniciar a separação":nextStatus==="out_for_delivery"?"marcar como saiu para entrega":"marcar como entregue";
+ if(!confirm("Deseja "+actionLabel+" o pedido #"+order.order_number+"?"))return;
+ button.disabled=true;
+ try{
+  const {data,error}=await supabase.functions.invoke("payment-admin",{body:{action:"fulfillment_update",order_id:order.id,status:nextStatus}});
+  if(error)throw error;if(!data?.ok)throw new Error(data?.error||"Não foi possível atualizar a expedição.");
+  notice("Pedido #"+order.order_number+" atualizado.");await loadFulfillmentQueue();await load();
+ }catch(error){notice(error.message||"Falha ao atualizar a expedição.",true);button.disabled=false}
+}
+async function retryPaymentNotification(order,notification,button){
+ button.disabled=true;button.textContent="REENVIANDO...";
+ try{
+  const {data,error}=await supabase.functions.invoke("payment-admin",{body:{action:"resend_whatsapp_notification",event_id:notification.id}});
+  if(error)throw error;if(!data?.ok)throw new Error(data?.error||"Não foi possível reenviar o aviso.");
+  notice("Notificação WhatsApp reenviada para o pedido #"+order.order_number+".");await loadFulfillmentQueue();
+ }catch(error){notice(error.message||"Falha ao reenviar WhatsApp.",true);button.disabled=false;button.textContent="REENVIAR AVISO WHATSAPP"}
+}
 function formatMinutes(value){
  const n=Math.max(0,Number(value)||0),h=Math.floor(n/60),m=n%60;
  if(h&&m)return h+"h "+m+"min";
@@ -407,12 +504,14 @@ async function load(){
   renderOrders(data.orders||[]);renderCarts(data.carts||[]);
   loadIntelligence(days);
   loadFulfillment();
+  loadFulfillmentQueue();
   $("updatedAt").textContent="Atualizado às "+new Date().toLocaleTimeString("pt-BR");
   notice("Consulta concluída. Acesso administrativo validado pelo servidor.");
  }catch(e){console.error(e);notice(e.message||"Falha na consulta.",true)}
  finally{$("refresh").disabled=false}
 }
 $("refresh").addEventListener("click",load);
+$("refreshDispatchQueue").addEventListener("click",loadFulfillmentQueue);
 $("searchForm").addEventListener("submit",e=>{e.preventDefault();load()});
 $("period").addEventListener("change",load);
 $("statusFilter").addEventListener("change",load);
