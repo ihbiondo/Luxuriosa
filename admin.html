@@ -58,6 +58,22 @@ footer{padding:18px 0;border-top:1px solid var(--line);color:#766970;font-size:9
 <section class="panel"><h2>Movimento diário</h2><p class="hint">Faturamento diário dos pedidos confirmados no período.</p><div id="daily" class="bars"><p class="empty">Aguardando dados...</p></div></section>
 <section class="panel"><h2>Produtos mais vendidos</h2><p class="hint">Unidades em pedidos confirmados no período.</p><div id="topProducts" class="bars"><p class="empty">Aguardando dados...</p></div></section>
 </div>
+<section class="panel" id="intelligencePanel" style="margin:18px 0">
+<div class="section-head" style="margin:0 0 10px"><div><h2>Inteligência comercial</h2><p class="hint">Comportamento agregado de navegação, produtos e intenção de compra. Só registra atividade após autorização de análise.</p></div><span class="pill" id="intelligenceStatus">Aguardando consulta</span></div>
+<div class="metrics" style="margin-top:10px">
+<div class="metric"><span>Visualizações de páginas</span><strong id="iaViews">—</strong><small>No período selecionado</small></div>
+<div class="metric"><span>Navegadores identificados</span><strong id="iaSessions">—</strong><small>Identificador local pseudônimo; não representa pessoas únicas</small></div>
+<div class="metric"><span>Visualizações de produtos</span><strong id="iaProductViews">—</strong><small>Aberturas de detalhes de produto</small></div>
+<div class="metric"><span>Adições ao carrinho</span><strong id="iaAdds">—</strong><small>Eventos de inclusão</small></div>
+<div class="metric"><span>Checkouts iniciados</span><strong id="iaCheckout">—</strong><small>Intenção de finalizar compra</small></div>
+<div class="metric"><span>Aberturas do WhatsApp</span><strong id="iaWhatsapp">—</strong><small>Encaminhamentos para atendimento</small></div>
+</div>
+<div class="grid2">
+<div><h2 style="font-size:19px">Produtos mais observados</h2><p class="hint">Visualizações e adições ao carrinho.</p><div id="iaTopProducts" class="bars"><p class="empty">Aguardando dados...</p></div></div>
+<div><h2 style="font-size:19px">Navegação por área</h2><p class="hint">Páginas agrupadas por tipo, sem registrar URL ou título individual.</p><div id="iaPages" class="bars"><p class="empty">Aguardando dados...</p></div></div>
+</div>
+<p class="small" id="iaFootnote" style="margin:12px 0 0">Os dados desta área são armazenados no Supabase e não incluem nome, telefone ou endereço nos eventos analíticos.</p>
+</section>
 <div class="section-head"><div><h2>Consultas de pedidos e clientes</h2><p class="sub">Pesquise por nome, telefone ou número do pedido e filtre pelo status.</p></div></div>
 <section class="panel">
 <form id="searchForm" class="searchbar">
@@ -165,6 +181,53 @@ async function updateOrderStatus(order,select,button){
   await load();
  }catch(e){notice(e.message||"Falha ao atualizar pedido.",true);button.disabled=false;button.textContent="SALVAR STATUS"}
 }
+const pageLabels={home:"Início",catalog:"Catálogo",product:"Produto",checkout:"Checkout",institutional:"Institucional",other:"Outras páginas"};
+const eventNumber=value=>new Intl.NumberFormat("pt-BR").format(Number(value)||0);
+let productNames=null;
+async function getProductNames(){
+ if(productNames)return productNames;
+ try{const response=await fetch("data/produtos.json",{cache:"no-cache"});if(!response.ok)throw new Error("Catálogo indisponível");const json=await response.json();productNames=new Map((json.produtos||[]).map(p=>[String(p.id),p.nome]));}
+ catch(_){productNames=new Map()}
+ return productNames;
+}
+async function loadIntelligence(days){
+ const status=$("intelligenceStatus");
+ try{
+  status.textContent="Consultando...";
+  const [{data,error},names]=await Promise.all([
+   supabase.functions.invoke("cart-orders",{body:{action:"admin_intelligence",days}}),
+   getProductNames()
+  ]);
+  if(error)throw error;if(!data?.ok)throw new Error(data?.error||"Não foi possível consultar a inteligência comercial.");
+  const s=data.summary||{};
+  $("iaViews").textContent=eventNumber(s.visits);
+  $("iaSessions").textContent=eventNumber(s.unique_sessions);
+  $("iaProductViews").textContent=eventNumber(s.product_views);
+  $("iaAdds").textContent=eventNumber(s.add_to_cart);
+  $("iaCheckout").textContent=eventNumber(s.checkout_started);
+  $("iaWhatsapp").textContent=eventNumber(s.whatsapp_opened);
+  const products=(data.top_products||[]).map(p=>({
+   label:names.get(String(p.product_id))||("Produto #"+p.product_id),
+   value:p.views, detail:p.adds
+  }));
+  const productBox=$("iaTopProducts");productBox.replaceChildren();
+  if(!products.length)productBox.append(el("p","empty","Ainda não há visualizações registradas."));
+  else products.slice(0,8).forEach(p=>{
+   const row=el("div","bar-row"),label=el("span","",p.label);label.title=p.label;
+   const track=el("div","bar-track"),fill=el("div","bar-fill");
+   const max=Math.max(1,...products.map(x=>Number(x.value)||0));
+   fill.style.width=Math.max(1,(Number(p.value)||0)/max*100)+"%";track.append(fill);
+   row.append(label,track,el("span","bar-value",eventNumber(p.value)+" · "+eventNumber(p.detail)+" carrinho"));productBox.append(row);
+  });
+  renderBars("iaPages",(data.pages||[]).map(p=>({label:pageLabels[p.page_type]||p.page_type,value:p.count})),"label","value",eventNumber);
+  status.textContent="Atualizado";
+  $("iaFootnote").textContent=(data.truncated?"A amostra de eventos atingiu o limite de 10.000 registros; os totais individuais permanecem exatos, mas navegadores, gráficos diários e ranking podem estar incompletos. ":"")+"Período: últimos "+days+" dias. Os navegadores são identificadores pseudônimos armazenados localmente, não pessoas identificadas. Os dados só são coletados após autorização de análise.";
+ }catch(error){
+  console.error(error);status.textContent="Indisponível";
+  $("iaTopProducts").replaceChildren(el("p","empty",error.message||"Falha ao carregar dados."));
+  $("iaPages").replaceChildren(el("p","empty","Dados indisponíveis."));
+ }
+}
 function renderCarts(carts){
  const box=$("carts");box.replaceChildren();if(!carts.length){box.append(el("p","empty","Nenhum carrinho registrado."));return}
  carts.slice(0,18).forEach(c=>{
@@ -193,6 +256,7 @@ async function load(){
   renderBars("daily",daily,"label","value",v=>money.format(Number(v)||0));
   renderBars("topProducts",(data.top_products||[]).map(x=>({label:x.name,value:x.quantity})),"label","value",v=>String(v)+" un.");
   renderOrders(data.orders||[]);renderCarts(data.carts||[]);
+  loadIntelligence(days);
   $("updatedAt").textContent="Atualizado às "+new Date().toLocaleTimeString("pt-BR");
   notice("Consulta concluída. Acesso administrativo validado pelo servidor.");
  }catch(e){console.error(e);notice(e.message||"Falha na consulta.",true)}
