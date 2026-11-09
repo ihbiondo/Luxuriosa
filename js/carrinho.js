@@ -1365,6 +1365,57 @@
 
 
   /* =======================================================
+     FINALIZAÇÃO ASSISTIDA — SEM FORMULÁRIO
+     ======================================================= */
+
+  function finalizarComAtendente() {
+    if (!carrinho.length) return;
+    if (!catalogoSincronizado) {
+      window.alert("Estamos conferindo os preços e a disponibilidade. Aguarde alguns segundos e tente novamente.");
+      return;
+    }
+    if (carrinho.some(function (item) { return item.indisponivel; })) {
+      window.alert("Há itens indisponíveis no carrinho. Remova-os antes de continuar.");
+      return;
+    }
+
+    var linhas = [
+      "Olá! Quero finalizar meu pedido com ajuda de um atendente da *Luxuriosa*.",
+      "",
+      "*MINHA LISTA*"
+    ];
+    carrinho.forEach(function (item) {
+      linhas.push(
+        "• " + item.nome + " — " + item.quantidade + "x",
+        "  Unitário: " + formatarPreco(item.preco) +
+        " | Total: " + formatarPreco(item.preco * item.quantidade)
+      );
+    });
+    linhas.push(
+      "",
+      "*Subtotal dos produtos: " + formatarPreco(valorTotal()) + "*",
+      "",
+      "*Quero combinar com vocês:*",
+      "• Frete e prazo de entrega",
+      "• Forma de pagamento",
+      "",
+      "Se necessário, posso informar meu endereço e os demais dados diretamente na conversa.",
+      "_Esta mensagem é apenas uma solicitação de atendimento. O pedido só será confirmado após a equipe validar os detalhes._"
+    );
+
+    var mensagem = linhas.join("\n");
+    var url = "https://wa.me/5514996355924?text=" + encodeURIComponent(mensagem);
+    if (window.LuxuriosaMedicao && typeof window.LuxuriosaMedicao.registrar === "function") {
+      window.LuxuriosaMedicao.registrar("checkout_whatsapp", {
+        method: "manual_attendant",
+        quantity: quantidadeTotal()
+      });
+    }
+    window.open(url, "_blank", "noopener,noreferrer");
+  }
+
+
+  /* =======================================================
      WHATSAPP / PEDIDO
      ======================================================= */
 
@@ -1456,6 +1507,9 @@
     var finalizar =
       $("cartCheckout");
 
+    var finalizarComAjuda =
+      $("cartHumanCheckout");
+
     var limparCarrinho =
       $("cartClear");
 
@@ -1538,6 +1592,10 @@
         finalizarPedido
       );
 
+    }
+
+    if (finalizarComAjuda) {
+      finalizarComAjuda.addEventListener("click", finalizarComAtendente);
     }
 
 
