@@ -128,11 +128,16 @@
     obterSessao: getSessionKey
   };
 
-  if (analyticsConsentGranted()) {
+  var pageViewRecorded = false;
+  function trackPageViewIfAllowed() {
+    if (pageViewRecorded || !analyticsConsentGranted()) return;
+    pageViewRecorded = true;
     registrarEvento("page_view");
     if (pageType() === "product") {
       var productButton = document.querySelector("[data-product-id]");
       if (productButton) registrarEvento("product_view", { product_id: productButton.getAttribute("data-product-id") });
     }
   }
+  window.addEventListener("lux:consent-updated", trackPageViewIfAllowed);
+  trackPageViewIfAllowed();
 })();
