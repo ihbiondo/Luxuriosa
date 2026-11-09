@@ -174,6 +174,7 @@
             <section class="orders-panel" aria-labelledby="ordersHeading">
               <div class="section-label" id="ordersHeading">Meus pedidos</div>
               <p class="orders-intro">Acompanhe as solicitações feitas pelo site e o andamento de cada pedido. Solicitações encaminhadas ao WhatsApp ficam aguardando confirmação; a compra só é confirmada após o atendimento.</p>
+              <p id="clubSavingsSummary" class="orders-intro" aria-live="polite">Calculando sua economia com o Clube...</p>
               <div id="accountOrders" class="orders-list" aria-live="polite"><p class="orders-empty">Carregando seu histórico...</p></div>
             </section>
             <section class="club-account-panel" aria-labelledby="clubAccountTitle">
@@ -853,6 +854,20 @@
         .select("id, order_number, status, payment_status, subtotal, shipping_amount, total_amount, club_discount_amount_cents, club_discount_percent, created_at")
         .eq("customer_id", user.id).order("created_at", { ascending: false }).limit(20);
       if (error) throw error;
+      const savingsSummary = $("clubSavingsSummary");
+      const discountedOrders = (orders || []).filter(order => Number(order.club_discount_amount_cents) > 0);
+      const savingsCents = discountedOrders.reduce(
+        (total, order) => total + Math.max(0, Number(order.club_discount_amount_cents) || 0),
+        0
+      );
+      const money = new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" });
+      if (savingsSummary) {
+        savingsSummary.textContent = !orders?.length
+          ? "Sua economia com o Clube aparecerá aqui depois da primeira compra elegível."
+          : "Economia registrada nos últimos " + orders.length + " pedidos exibidos: " +
+            money.format(savingsCents / 100) + " em " + discountedOrders.length +
+            (discountedOrders.length === 1 ? " pedido com benefício." : " pedidos com benefício.");
+      }
       if (!orders || !orders.length) {
         const empty = document.createElement("p");
         empty.className = "orders-empty";
@@ -865,7 +880,6 @@
         .select("order_id, product_name, quantity").in("order_id", ids);
       if (linesError) throw linesError;
       const labels = { awaiting_confirmation: "Aguardando confirmação", confirmed: "Confirmado", processing: "Em preparação", out_for_delivery: "Saiu para entrega", delivered: "Entregue", cancelled: "Cancelado" };
-      const money = new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" });
       orders.forEach((order) => {
         const card = document.createElement("article"); card.className = "order-card";
         const top = document.createElement("div"); top.className = "order-top";
