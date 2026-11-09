@@ -25,6 +25,16 @@
     .colors{display:flex;flex-wrap:wrap;gap:8px}.color-option{display:flex;align-items:center;gap:7px;padding:8px 10px;border:1px solid rgba(212,175,124,.18);border-radius:7px;color:var(--muted);font-size:10px}.color-option input{width:14px;height:14px;accent-color:var(--wine)}
     .actions{margin-top:22px}.primary{width:100%;min-height:48px;border:1px solid var(--wine);border-radius:7px;background:var(--wine);color:#fff;font:600 10px var(--sans);letter-spacing:.12em;cursor:pointer;transition:.2s}.primary:hover{background:#a32950}.primary:disabled{opacity:.55;cursor:wait}.text-action{display:block;margin:16px auto 0;padding:4px;border:0;background:none;color:var(--gold);font:500 11px var(--sans);text-decoration:underline;text-underline-offset:3px;cursor:pointer}.legal{margin:18px 0 0;color:#887980;font-size:9px;text-align:center}.message{display:none;margin:0 0 18px;padding:12px 14px;border:1px solid rgba(212,175,124,.25);border-radius:8px;background:rgba(212,175,124,.07);color:var(--blush);font-size:11px}.message.show{display:block}.message.error{border-color:rgba(224,100,120,.35);background:rgba(150,35,60,.12);color:#ffc3cc}
     .hidden{display:none!important}.account-box{padding:20px;border:1px solid var(--line);border-radius:12px;background:rgba(0,0,0,.18)}.account-box p{color:var(--muted);font-size:12px}.account-email{margin:0 0 18px}.account-email strong{color:var(--blush);font-weight:600}.email-change-form{padding-bottom:18px;border-bottom:1px solid rgba(212,175,124,.14)}.email-change-help{margin:10px 0 0;color:var(--muted);font-size:11px;line-height:1.6}.email-change-form .actions{margin:14px 0 0}.email-change-form .secondary:disabled{opacity:.55;cursor:wait}.cep-status{display:block;min-height:16px;margin-top:5px;color:var(--muted);font-size:10px}.cep-status.error{color:#ffc3cc}.cep-status.success{color:var(--gold)}.account-form .section-label{margin-top:20px}.account-form .grid{margin-top:12px}.account-form .actions{margin-bottom:22px}.account-actions{display:flex;gap:10px;flex-wrap:wrap}.secondary{min-height:42px;padding:0 16px;border:1px solid var(--line);border-radius:7px;background:transparent;color:var(--gold);font:600 10px var(--sans);cursor:pointer}
+    .orders-panel{margin:22px 0 26px;padding:18px;border:1px solid var(--line);border-radius:13px;background:rgba(11,11,11,.34)}
+    .orders-intro{margin:6px 0 14px;color:var(--muted);font-size:12px;line-height:1.6}
+    .orders-list{display:grid;gap:10px}
+    .order-card{padding:13px;border:1px solid rgba(212,175,124,.16);border-radius:10px;background:var(--surface2)}
+    .order-top{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap}
+    .order-number{font-weight:700;color:var(--gold)}
+    .order-status{font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--blush)}
+    .order-meta{display:flex;gap:12px;flex-wrap:wrap;margin:8px 0;color:var(--muted);font-size:11px}
+    .order-products{margin:0;padding-left:17px;color:var(--text);font-size:12px;line-height:1.7}
+    .orders-empty{margin:0;color:var(--muted);font-size:12px;line-height:1.6}
     footer{padding:20px 0 28px;border-top:1px solid rgba(212,175,124,.12);color:#766970;font-size:9px;text-align:center}
     @media(max-width:800px){main{grid-template-columns:1fr;gap:30px;min-height:auto;padding-top:24px}.intro{max-width:600px}.intro h1{font-size:42px}.intro-note{display:none}.panel{justify-self:center;max-width:620px}.top{padding:20px 0}}
     @media(max-width:480px){.shell{width:min(100% - 24px,1080px)}.top{align-items:flex-start}.brand{font-size:24px}.back{padding-top:8px;font-size:10px}main{padding-top:18px}.intro h1{font-size:36px}.panel{padding:21px 16px;border-radius:15px}.grid{grid-template-columns:1fr}.field.full{grid-column:auto}.section-label{grid-column:auto}.tabs{margin-bottom:22px}h2{font-size:26px}}
@@ -121,6 +131,11 @@
           <p class="lead">Consulte e mantenha seus dados atualizados.</p>
           <div class="account-box">
             <p class="account-email">Conta vinculada a <strong id="accountEmail"></strong></p>
+            <section class="orders-panel" aria-labelledby="ordersHeading">
+              <div class="section-label" id="ordersHeading">Meus pedidos</div>
+              <p class="orders-intro">Acompanhe as solicitações feitas pelo site e o andamento de cada pedido.</p>
+              <div id="accountOrders" class="orders-list" aria-live="polite"><p class="orders-empty">Carregando seu histórico...</p></div>
+            </section>
             <form id="emailChangeForm" class="account-form email-change-form">
               <div class="section-label">E-mail de acesso</div>
               <div class="grid">
@@ -379,6 +394,44 @@
       $("accountGreeting").textContent = "Olá, " + displayName + "!";
     }
 
+    async function loadAccountOrders(user) {
+      const container = $("accountOrders");
+      container.replaceChildren();
+      const { data: orders, error } = await supabase.from("orders")
+        .select("id, order_number, status, total_amount, created_at")
+        .eq("customer_id", user.id).order("created_at", { ascending: false }).limit(20);
+      if (error) throw error;
+      if (!orders || !orders.length) {
+        const empty = document.createElement("p");
+        empty.className = "orders-empty";
+        empty.textContent = "Ainda não há pedidos vinculados à sua conta. Quando você fizer uma solicitação pelo site estando conectado, ela aparecerá aqui.";
+        container.append(empty);
+        return;
+      }
+      const ids = orders.map((order) => order.id);
+      const { data: lines, error: linesError } = await supabase.from("order_items")
+        .select("order_id, product_name, quantity").in("order_id", ids);
+      if (linesError) throw linesError;
+      const labels = { awaiting_confirmation: "Aguardando confirmação", confirmed: "Confirmado", processing: "Em preparação", out_for_delivery: "Saiu para entrega", delivered: "Entregue", cancelled: "Cancelado" };
+      const money = new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" });
+      orders.forEach((order) => {
+        const card = document.createElement("article"); card.className = "order-card";
+        const top = document.createElement("div"); top.className = "order-top";
+        const number = document.createElement("strong"); number.className = "order-number"; number.textContent = "Pedido #" + order.order_number;
+        const status = document.createElement("span"); status.className = "order-status"; status.textContent = labels[order.status] || "Em atualização";
+        top.append(number, status);
+        const meta = document.createElement("div"); meta.className = "order-meta";
+        const date = document.createElement("span"); date.textContent = new Date(order.created_at).toLocaleDateString("pt-BR");
+        const amount = document.createElement("strong"); amount.textContent = money.format(Number(order.total_amount) || 0);
+        meta.append(date, amount);
+        const list = document.createElement("ul"); list.className = "order-products";
+        (lines || []).filter((line) => line.order_id === order.id).forEach((line) => {
+          const item = document.createElement("li"); item.textContent = line.quantity + "x " + line.product_name; list.append(item);
+        });
+        card.append(top, meta, list); container.append(card);
+      });
+    }
+
     let loadingUserId = null;
 
     async function showSignedIn(user) {
@@ -393,6 +446,7 @@
       try {
         await syncNewAccountData(user);
         await loadAccountData(user);
+        await loadAccountOrders(user);
         activeUserId = user.id;
       } catch (error) {
         activeUserId = null;
