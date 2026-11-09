@@ -106,7 +106,7 @@
   <p>A Luxuriosa atende em Bauru/SP e região.</p>
 
   <h2>2. Que dados coletamos e para quê</h2>
-  <p>Os dados dependem da etapa do atendimento. O formulário do site não cria uma conta nem envia automaticamente seus dados pessoais à Luxuriosa.</p>
+  <p>Os dados tratados dependem da etapa da relação com a Luxuriosa. Além dos dados informados em pedidos e atendimentos, quem cria uma conta fornece informações para cadastro, autenticação, manutenção do perfil e gestão de preferências. O cadastro só é concluído conforme as etapas de confirmação de e-mail apresentadas no site.</p>
 
   <div class="table-wrap">
   <table>
@@ -137,6 +137,18 @@
         <td>Confirmar o recebimento e registrar a venda, quando essas informações forem fornecidas durante o atendimento.</td>
         <td>Execução de contrato e cumprimento de obrigação legal ou regulatória, conforme o caso (art. 7º, V e II).</td>
         <td>Pelo prazo necessário à operação e às obrigações legais aplicáveis.</td>
+      </tr>
+      <tr>
+        <td>E-mail e credenciais de acesso</td>
+        <td>Criar e autenticar a conta, confirmar o endereço de e-mail, permitir recuperação de senha e comunicar alterações relevantes de segurança e cadastro.</td>
+        <td>Procedimentos preliminares e execução de contrato (art. 7º, V), além de legítimo interesse e cumprimento de obrigações legais quando aplicáveis.</td>
+        <td>Enquanto a conta estiver ativa e pelo período necessário após seu encerramento para cumprir obrigações legais, resolver disputas e proteger direitos. A senha é processada pelo serviço de autenticação e não fica disponível em texto aberto para a Luxuriosa.</td>
+      </tr>
+      <tr>
+        <td>Data de nascimento, nome completo, telefone/WhatsApp, endereço e cores favoritas associados à conta</td>
+        <td>Manter o perfil, confirmar o requisito de maioridade, facilitar o atendimento e a entrega e lembrar preferências informadas pelo próprio titular.</td>
+        <td>Execução de contrato e procedimentos preliminares (art. 7º, V); cumprimento de obrigação legal, quando aplicável. As cores favoritas são opcionais e usadas como preferência de produto.</td>
+        <td>Enquanto a conta estiver ativa. Após a exclusão, os dados do perfil são removidos conforme o fluxo técnico, ressalvadas cópias de segurança, registros técnicos e informações que precisem ser conservadas por obrigação legal ou exercício regular de direitos.</td>
       </tr>
       <tr>
         <td>Dados técnicos e preferências de cookies</td>
@@ -170,11 +182,23 @@
 
   <h2>4. Informações armazenadas no navegador</h2>
   <p>
-    O site não oferece cadastro de cliente e não salva nome, telefone ou endereço preenchidos
-    no formulário de pedido. Esses campos permanecem temporariamente na memória da página
-    enquanto você prepara e revisa a mensagem. Ao fechar a etapa do pedido, o site limpa
-    os campos e a prévia da mensagem; ao atualizar ou fechar a página, os dados também
-    deixam de estar disponíveis no fluxo do formulário.
+    No formulário de pedido sem login, nome, telefone e endereço permanecem temporariamente
+    na página enquanto você prepara e revisa a mensagem, conforme descrito na seção de pedidos.
+    Já os dados enviados no cadastro ou salvos na área autenticada são armazenados nos serviços
+    necessários à operação da conta e não se confundem com o armazenamento temporário do formulário.
+  </p>
+  <p>
+    Na área da conta, a Luxuriosa utiliza o Supabase para autenticação e armazenamento dos dados
+    de perfil, preferências e endereço principal. Isso inclui nome completo, data de nascimento,
+    telefone/WhatsApp, endereço, e-mail da conta e até três cores favoritas escolhidas pelo titular.
+    O e-mail é usado para identificação e comunicações de autenticação. A senha é validada e
+    protegida pelo serviço de autenticação; a Luxuriosa não consulta nem exibe a senha em texto
+    aberto. A alteração de e-mail depende das confirmações enviadas pelo serviço.
+  </p>
+  <p>
+    O acesso à área da conta depende de autenticação. As informações do perfil são consultadas
+    e alteradas de acordo com as permissões da própria conta. Não use dispositivos compartilhados
+    sem encerrar a sessão ao terminar.
   </p>
   <p>
     Para o funcionamento, algumas informações ficam no armazenamento local do navegador
@@ -224,6 +248,7 @@
     <li><strong>WhatsApp (Meta):</strong> recebe os dados incluídos na URL quando você escolhe abrir o link com a mensagem pré-preenchida. O envio da conversa ao atendimento da Luxuriosa depende de confirmação sua dentro do aplicativo. O tratamento pela Meta está sujeito aos termos e às políticas do serviço.</li>
     <li><strong>ViaCEP:</strong> se você consultar o CEP no formulário, o número informado é enviado ao serviço ViaCEP para buscar dados públicos de endereço. Nome, telefone, produtos e demais campos do pedido não são enviados nessa consulta. Consulte a <a href="https://viacep.com.br/" target="_blank" rel="noopener noreferrer">página do ViaCEP</a>.</li>
     <li><strong>Google Analytics 4 (Google):</strong> é carregado somente se você autorizar estatísticas no aviso de cookies. Nesse caso, recebe informações técnicas e eventos genéricos de navegação. A configuração procura não transmitir nomes de produtos, conteúdo do carrinho, dados do formulário, URLs específicas ou termos digitados; os eventos comerciais usam apenas parâmetros limitados, como etapa, método e quantidade. O IP é configurado com anonimização. Saiba mais na <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">Política de Privacidade do Google</a>.</li>
+    <li><strong>Supabase:</strong> fornece os serviços de autenticação e banco de dados usados pela área da conta. Processa o e-mail, credenciais de autenticação e os dados de perfil, endereço e preferências necessários ao cadastro e à manutenção da conta. O serviço pode processar dados técnicos, registros de segurança e cópias de segurança conforme sua operação e seus prazos próprios. Consulte a <a href="https://supabase.com/privacy" target="_blank" rel="noopener noreferrer">Política de Privacidade do Supabase</a>.</li>
     <li><strong>GitHub Pages (GitHub):</strong> hospeda e entrega os arquivos estáticos do site. Como outros serviços de hospedagem, pode processar dados técnicos de conexão e acesso, como endereço IP, página solicitada e informações do navegador, necessários à disponibilização, segurança e funcionamento das páginas.</li>
     <li><strong>Google Fonts (Google):</strong> algumas páginas carregam fontes tipográficas hospedadas pelo Google. Ao acessar essas páginas, o navegador solicita os arquivos de fonte aos servidores do Google, que podem receber dados técnicos da conexão, como o endereço IP. Consulte a <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">Política de Privacidade do Google</a>.</li>
     <li><strong>Serviços de pagamento, entregadores e autoridades:</strong> somente os dados necessários à confirmação do pagamento, realização da entrega ou cumprimento de obrigação legal ou ordem válida.</li>
@@ -257,6 +282,7 @@
     <li>solicitar a anonimização, o bloqueio ou a eliminação de dados desnecessários, excessivos ou tratados em desconformidade com a lei;</li>
     <li>solicitar a portabilidade dos dados, observadas a regulamentação da ANPD e as condições legais;</li>
     <li>solicitar a eliminação dos dados tratados com base no consentimento, ressalvadas as hipóteses legais de conservação;</li>
+    <li>solicitar o encerramento da conta e a eliminação dos dados pessoais vinculados a ela, observadas as hipóteses legais de retenção, os registros necessários à defesa de direitos e os prazos técnicos de cópias de segurança;</li>
     <li>obter informações sobre as entidades públicas e privadas com as quais compartilhamos dados e sobre as consequências de não fornecer consentimento, quando ele for solicitado;</li>
     <li>revogar o consentimento, quando essa for a base legal do tratamento, sem afetar a legalidade do tratamento realizado anteriormente;</li>
     <li>solicitar revisão de decisões tomadas unicamente com base em tratamento automatizado que afetem seus interesses, quando aplicável.</li>
@@ -297,7 +323,25 @@
     serviços de terceiros.
   </p>
 
-  <h2>10. Canal de privacidade e contato do encarregado</h2>
+  <h2>10. Exclusão e encerramento da conta</h2>
+  <p>
+    A pessoa autenticada pode solicitar a exclusão da conta pela área de acesso, mediante
+    confirmação da senha atual e da ação. O servidor revalida a identidade antes de processar
+    a solicitação. Após a confirmação da exclusão, o acesso é encerrado e os dados de perfil,
+    endereço e preferências vinculados à conta são removidos pelas relações configuradas no
+    sistema. A revogação das sessões impede a renovação dos tokens; tokens de acesso já emitidos
+    podem permanecer válidos até seu vencimento.
+  </p>
+  <p>
+    A exclusão da conta não significa necessariamente a eliminação imediata de todo registro
+    relacionado a uma compra. Informações que precisem ser mantidas para cumprir obrigações
+    fiscais ou legais, prevenir fraude ou exercer regularmente direitos poderão ser conservadas
+    pelo prazo aplicável, com acesso limitado e, quando adequado, anonimização. Cópias de
+    segurança e registros técnicos dos provedores também podem seguir os ciclos próprios de
+    retenção desses serviços.
+  </p>
+
+  <h2>11. Canal de privacidade e contato do encarregado</h2>
   <p>
     O encarregado pelo tratamento de dados pessoais é Igor Biondo. Para assuntos
     de privacidade, dúvidas ou exercício dos seus direitos, entre em contato pelo e-mail
@@ -309,7 +353,7 @@
     use o link “Preferências de cookies” no rodapé.
   </p>
 
-  <h2>11. Mudanças nesta política</h2>
+  <h2>12. Mudanças nesta política</h2>
   <p>
     Se mudarmos algo importante, atualizaremos esta página e a data acima.
     Para novos usos que dependam do seu consentimento, pediremos de novo.
