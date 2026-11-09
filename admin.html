@@ -67,10 +67,16 @@ footer{padding:18px 0;border-top:1px solid var(--line);color:#766970;font-size:9
 <div class="metric"><span>Adições ao carrinho</span><strong id="iaAdds">—</strong><small>Eventos de inclusão</small></div>
 <div class="metric"><span>Checkouts iniciados</span><strong id="iaCheckout">—</strong><small>Intenção de finalizar compra</small></div>
 <div class="metric"><span>Aberturas do WhatsApp</span><strong id="iaWhatsapp">—</strong><small>Encaminhamentos para atendimento</small></div>
+<div class="metric"><span>Pedidos revisados</span><strong id="iaReviewed">—</strong><small>Revisão final antes do WhatsApp</small></div>
+<div class="metric"><span>Eventos registrados</span><strong id="iaEvents">—</strong><small>Registros analíticos no período</small></div>
 </div>
 <div class="grid2">
 <div><h2 style="font-size:19px">Produtos mais observados</h2><p class="hint">Visualizações e adições ao carrinho.</p><div id="iaTopProducts" class="bars"><p class="empty">Aguardando dados...</p></div></div>
 <div><h2 style="font-size:19px">Navegação por área</h2><p class="hint">Páginas agrupadas por tipo, sem registrar URL ou título individual.</p><div id="iaPages" class="bars"><p class="empty">Aguardando dados...</p></div></div>
+</div>
+<div class="grid2" style="margin-top:14px">
+<div><h2 style="font-size:19px">Atividade diária</h2><p class="hint">Visualizações de páginas por dia.</p><div id="iaDaily" class="bars"><p class="empty">Aguardando dados...</p></div></div>
+<div><h2 style="font-size:19px">Etapas de intenção</h2><p class="hint">Eventos registrados em cada etapa do checkout.</p><div id="iaFunnel" class="bars"><p class="empty">Aguardando dados...</p></div></div>
 </div>
 <p class="small" id="iaFootnote" style="margin:12px 0 0">Os dados desta área são armazenados no Supabase e não incluem nome, telefone ou endereço nos eventos analíticos.</p>
 </section>
@@ -206,6 +212,8 @@ async function loadIntelligence(days){
   $("iaAdds").textContent=eventNumber(s.add_to_cart);
   $("iaCheckout").textContent=eventNumber(s.checkout_started);
   $("iaWhatsapp").textContent=eventNumber(s.whatsapp_opened);
+  $("iaReviewed").textContent=eventNumber(s.checkout_reviewed);
+  $("iaEvents").textContent=eventNumber(s.total_events);
   const products=(data.top_products||[]).map(p=>({
    label:names.get(String(p.product_id))||("Produto #"+p.product_id),
    value:p.views, detail:p.adds
@@ -220,6 +228,12 @@ async function loadIntelligence(days){
    row.append(label,track,el("span","bar-value",eventNumber(p.value)+" · "+eventNumber(p.detail)+" carrinho"));productBox.append(row);
   });
   renderBars("iaPages",(data.pages||[]).map(p=>({label:pageLabels[p.page_type]||p.page_type,value:p.count})),"label","value",eventNumber);
+  renderBars("iaDaily",(data.daily||[]).slice(-10).map(d=>({label:d.date.slice(5).split("-").reverse().join("/"),value:d.visits})),"label","value",eventNumber);
+  renderBars("iaFunnel",[
+   {label:"Checkout iniciado",value:s.checkout_started},
+   {label:"Pedido revisado",value:s.checkout_reviewed},
+   {label:"WhatsApp aberto",value:s.whatsapp_opened}
+  ],"label","value",eventNumber);
   status.textContent="Atualizado";
   $("iaFootnote").textContent=(data.truncated?"A amostra de eventos atingiu o limite de 10.000 registros; os totais individuais permanecem exatos, mas navegadores, gráficos diários e ranking podem estar incompletos. ":"")+"Período: últimos "+days+" dias. Os navegadores são identificadores pseudônimos armazenados localmente, não pessoas identificadas. Os dados só são coletados após autorização de análise.";
  }catch(error){
