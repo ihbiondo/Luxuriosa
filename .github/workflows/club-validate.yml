@@ -11,6 +11,7 @@ on:
       - "gestao-privada-8f2c6d.html"
       - "supabase/migrations/**"
       - "supabase/functions/cart-orders/**"
+      - "supabase/functions/create-payment-order/**"
       - ".github/scripts/**"
       - ".github/workflows/club-validate.yml"
   pull_request:
@@ -21,6 +22,7 @@ on:
       - "gestao-privada-8f2c6d.html"
       - "supabase/migrations/**"
       - "supabase/functions/cart-orders/**"
+      - "supabase/functions/create-payment-order/**"
       - ".github/scripts/**"
       - ".github/workflows/club-validate.yml"
 
