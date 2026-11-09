@@ -464,7 +464,7 @@
       window.LuxuriosaMedicao.registrar("checkout_review", { step: "dados_validos" });
     }
     if (window.LuxuriosaInteligencia && typeof window.LuxuriosaInteligencia.registrarEtapa === "function") {
-      window.LuxuriosaInteligencia.registrarEtapa("checkout_reviewed", itensCarrinho).catch(function () {});
+      window.LuxuriosaInteligencia.registrarEtapa("checkout_reviewed", itensCarrinho, dadosAtuais).catch(function () {});
     }
     form.hidden = true;
     review.hidden = false;
