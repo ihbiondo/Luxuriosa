@@ -405,6 +405,9 @@
     form.hidden = false;
     preencherFormulario(null);
     overlay.hidden = false;
+    if (window.LuxuriosaInteligencia && typeof window.LuxuriosaInteligencia.registrarEtapa === "function") {
+      window.LuxuriosaInteligencia.registrarEtapa("checkout_started", window.LuxuriosaCarrinho.obterItens()).catch(function () {});
+    }
     document.body.classList.add("customer-open");
     dialog.focus();
     $("customerName").focus();
@@ -456,6 +459,9 @@
     messagePreview.textContent = mensagemAtual;
     if (window.LuxuriosaMedicao && typeof window.LuxuriosaMedicao.registrar === "function") {
       window.LuxuriosaMedicao.registrar("checkout_review", { step: "dados_validos" });
+    }
+    if (window.LuxuriosaInteligencia && typeof window.LuxuriosaInteligencia.registrarEtapa === "function") {
+      window.LuxuriosaInteligencia.registrarEtapa("checkout_reviewed", itensCarrinho).catch(function () {});
     }
     form.hidden = true;
     review.hidden = false;
@@ -522,7 +528,7 @@
     copiarComSelecao();
   }
 
-  function continuarWhatsApp() {
+  async function continuarWhatsApp() {
     if (!mensagemAtual || !dadosAtuais) return;
     var apiCarrinho = window.LuxuriosaCarrinho;
     var itensAtuais = apiCarrinho && typeof apiCarrinho.obterItens === "function" ? apiCarrinho.obterItens() : [];
@@ -541,6 +547,30 @@
       return;
     }
     messagePreview.textContent = mensagemAtual;
+
+    /* Abre a janela durante o clique para evitar bloqueio do navegador enquanto registramos o pedido. */
+    var whatsappWindow = window.open("about:blank", "_blank");
+    var shippingAmount = null;
+    var city = String(dadosAtuais.address.city || "").trim().normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+    var state = String(dadosAtuais.address.state || "").trim().toUpperCase();
+    if (city === "bauru" && state === "SP") {
+      shippingAmount = pedidoContemKit(itensAtuais) ? 0 : 15;
+    }
+
+    var orderNumber = null;
+    if (window.LuxuriosaInteligencia && typeof window.LuxuriosaInteligencia.registrarPedido === "function") {
+      try {
+        var savedOrder = await window.LuxuriosaInteligencia.registrarPedido(itensAtuais, dadosAtuais, shippingAmount);
+        orderNumber = savedOrder && savedOrder.order_number ? savedOrder.order_number : null;
+      } catch (error) {
+        console.warn("Luxuriosa: não foi possível registrar a solicitação antes do WhatsApp.", error);
+      }
+    }
+    if (orderNumber) {
+      mensagemAtual += "\n\n*Referência Luxuriosa: #" + orderNumber + "*";
+      messagePreview.textContent = mensagemAtual;
+    }
+
     var config = window.LuxuriosaCatalogo && typeof window.LuxuriosaCatalogo.obterConfig === "function" ? window.LuxuriosaCatalogo.obterConfig() : null;
     var number = config && config.whatsapp ? String(config.whatsapp).replace(/\D/g, "") : "5514996355924";
     if (!number) number = "5514996355924";
@@ -548,9 +578,9 @@
     if (window.LuxuriosaMedicao && typeof window.LuxuriosaMedicao.registrar === "function") {
       window.LuxuriosaMedicao.registrar("checkout_whatsapp", { method: "whatsapp", step: "pedido_encaminhado" });
     }
-    window.open(url, "_blank", "noopener,noreferrer");
+    if (whatsappWindow) whatsappWindow.location.href = url;
+    else window.location.href = url;
   }
-
 
   var accountLoadId = 0;
   var accountSupabasePromise = null;
