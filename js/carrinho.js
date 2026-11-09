@@ -104,11 +104,16 @@
       );
 
 
-    window.open(
-      url,
-      "_blank",
-      "noopener,noreferrer"
-    );
+    var janela = window.open(url, "_blank");
+
+    if (janela) {
+      janela.opener = null;
+      return true;
+    }
+
+    /* Fallback para navegadores que bloqueiam novas janelas. */
+    window.location.assign(url);
+    return false;
 
   }
 
@@ -1406,15 +1411,8 @@
     var mensagem = linhas.join("\n");
     var numero = obterWhatsApp();
     var url = "https://wa.me/" + numero + "?text=" + encodeURIComponent(mensagem);
-    /* Abre o WhatsApp primeiro, diretamente no clique do usuário. */
-    var janelaWhatsApp = window.open(url, "_blank");
-    if (janelaWhatsApp) {
-      janelaWhatsApp.opener = null;
-    } else {
-      /* Se o navegador bloquear a nova janela, mantém o atendimento acessível. */
-      window.location.assign(url);
-      return;
-    }
+    /* Abre o WhatsApp diretamente no clique, com fallback contra bloqueio. */
+    if (!abrirWhatsApp(mensagem)) return;
 
     /* Falha de telemetria nunca deve impedir o atendimento. */
     try {
