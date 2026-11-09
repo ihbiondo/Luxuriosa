@@ -85,7 +85,8 @@ function renderOrders(orders){
   if(o.customer_phone){const phone=String(o.customer_phone).replace(/\D/g,"");const link=el("a","btn","CONTATO DO PEDIDO");link.href="https://wa.me/"+phone;link.target="_blank";link.rel="noopener";link.style.display="inline-block";link.style.marginTop="10px";link.style.textDecoration="none";card.append(link)}
   const controls=el("div","order-actions"),select=el("select"),save=el("button","btn primary","SALVAR STATUS");
   select.setAttribute("aria-label","Novo status do pedido "+o.order_number);
-  [["awaiting_confirmation","Aguardando confirmação"],["confirmed","Confirmado"],["processing","Em preparação"],["out_for_delivery","Saiu para entrega"],["delivered","Entregue"],["cancelled","Cancelado"]].forEach(([value,label])=>{const option=el("option","",label);option.value=value;if(value===o.status)option.selected=true;select.append(option)});
+  const transitions={awaiting_confirmation:["confirmed","cancelled"],confirmed:["processing","cancelled"],processing:["out_for_delivery","cancelled"],out_for_delivery:["delivered"],delivered:[],cancelled:[]};
+  [o.status,...(transitions[o.status]||[])].forEach(value=>{const option=el("option","",statusTag(value));option.value=value;if(value===o.status)option.selected=true;select.append(option)});
   save.type="button";save.addEventListener("click",()=>updateOrderStatus(o,select,save));
   controls.append(select,save);card.append(controls);
   box.append(card);
@@ -93,7 +94,7 @@ function renderOrders(orders){
 }
 async function updateOrderStatus(order,select,button){
  const nextStatus=select.value;if(nextStatus===order.status){notice("O pedido já está nesse status.");return}
- if(!confirm("Alterar o pedido #"+order.order_number+" para '"+statusTag(nextStatus)+"'?"))return;
+ const extra=nextStatus==="confirmed"?"\n\nA confirmação registra o aceite do pedido, não o pagamento.":"";\n if(!confirm("Alterar o pedido #"+order.order_number+" para '"+statusTag(nextStatus)+"'?"+extra))return;
  button.disabled=true;button.textContent="SALVANDO...";
  try{
   const {data,error}=await supabase.functions.invoke("cart-orders",{body:{action:"admin_update_order_status",order_id:order.id,status:nextStatus}});
