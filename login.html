@@ -1,0 +1,363 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="theme-color" content="#0B0B0B">
+  <title>Minha conta | Luxuriosa</title>
+  <meta name="description" content="Acesse ou crie sua conta Luxuriosa.">
+  <link rel="icon" href="img/site/favicon.ico" sizes="any">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root{color-scheme:dark;--wine:#8B1E3F;--wine2:#5A1229;--black:#0B0B0B;--surface:#151114;--surface2:#1c1519;--gold:#D4AF7C;--blush:#F7D7D9;--text:#f3e9eb;--muted:#b9a9ae;--line:rgba(212,175,124,.22);--serif:"Playfair Display",Georgia,serif;--sans:"Montserrat",Arial,sans-serif}
+    *{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 50% 0%,rgba(139,30,63,.23),transparent 42%),var(--black);color:var(--text);font-family:var(--sans);font-size:14px;line-height:1.65}
+    a{color:var(--gold)}.shell{width:min(100% - 32px,1080px);margin:auto}.top{display:flex;justify-content:space-between;align-items:center;padding:26px 0}.brand{text-decoration:none;color:var(--blush);font:500 27px var(--serif);letter-spacing:.04em}.brand small{display:block;margin-top:-3px;color:var(--gold);font:500 8px var(--sans);letter-spacing:.24em;text-align:center}.back{font-size:11px;text-decoration:none;color:var(--muted)}.back:hover{color:var(--gold)}
+    main{display:grid;grid-template-columns:minmax(0,.9fr) minmax(420px,1.1fr);gap:clamp(28px,6vw,80px);align-items:center;min-height:calc(100vh - 100px);padding:28px 0 70px}
+    .intro{max-width:440px}.eyebrow{color:var(--gold);font-size:10px;font-weight:600;letter-spacing:.2em;text-transform:uppercase}.intro h1{margin:14px 0 18px;color:var(--blush);font:400 clamp(38px,5vw,58px)/1.08 var(--serif)}.intro p{max-width:390px;color:var(--muted);font-size:13px;line-height:1.9}.intro-note{display:flex;gap:12px;align-items:center;margin-top:34px;padding-top:20px;border-top:1px solid var(--line);color:var(--muted);font-size:11px}.intro-note span{color:var(--gold);font-size:20px}
+    .panel{width:100%;max-width:600px;justify-self:end;padding:clamp(22px,4vw,38px);border:1px solid var(--line);border-radius:20px;background:linear-gradient(145deg,rgba(139,30,63,.13),rgba(21,17,20,.97) 48%);box-shadow:0 28px 80px rgba(0,0,0,.28)}
+    .tabs{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:28px;padding:5px;border:1px solid rgba(255,255,255,.06);border-radius:10px;background:#0d0b0c}.tab{min-height:42px;border:0;border-radius:7px;background:transparent;color:var(--muted);font:600 11px var(--sans);cursor:pointer}.tab[aria-selected=true]{background:var(--wine);color:#fff}
+    h2{margin:0 0 8px;color:var(--blush);font:400 29px var(--serif)}.lead{margin:0 0 24px;color:var(--muted);font-size:12px}
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:13px}.field{min-width:0}.field.full{grid-column:1/-1}label{display:block;margin:0 0 6px;color:#e8d9dc;font-size:10px;font-weight:600;letter-spacing:.04em}input,select{width:100%;height:45px;padding:0 12px;border:1px solid rgba(212,175,124,.2);border-radius:7px;outline:0;background:#0d0b0c;color:var(--text);font:12px var(--sans)}input:focus,select:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(212,175,124,.1)}input::placeholder{color:#776970}
+    .section-label{grid-column:1/-1;margin:10px 0 -3px;padding-top:14px;border-top:1px solid rgba(212,175,124,.14);color:var(--gold);font-size:9px;font-weight:600;letter-spacing:.16em;text-transform:uppercase}
+    .colors{display:flex;flex-wrap:wrap;gap:8px}.color-option{display:flex;align-items:center;gap:7px;padding:8px 10px;border:1px solid rgba(212,175,124,.18);border-radius:7px;color:var(--muted);font-size:10px}.color-option input{width:14px;height:14px;accent-color:var(--wine)}
+    .actions{margin-top:22px}.primary{width:100%;min-height:48px;border:1px solid var(--wine);border-radius:7px;background:var(--wine);color:#fff;font:600 10px var(--sans);letter-spacing:.12em;cursor:pointer;transition:.2s}.primary:hover{background:#a32950}.primary:disabled{opacity:.55;cursor:wait}.text-action{display:block;margin:16px auto 0;padding:4px;border:0;background:none;color:var(--gold);font:500 11px var(--sans);text-decoration:underline;text-underline-offset:3px;cursor:pointer}.legal{margin:18px 0 0;color:#887980;font-size:9px;text-align:center}.message{display:none;margin:0 0 18px;padding:12px 14px;border:1px solid rgba(212,175,124,.25);border-radius:8px;background:rgba(212,175,124,.07);color:var(--blush);font-size:11px}.message.show{display:block}.message.error{border-color:rgba(224,100,120,.35);background:rgba(150,35,60,.12);color:#ffc3cc}
+    .hidden{display:none!important}.account-box{padding:20px;border:1px solid var(--line);border-radius:12px;background:rgba(0,0,0,.18)}.account-box p{color:var(--muted);font-size:12px}.account-actions{display:flex;gap:10px;flex-wrap:wrap}.secondary{min-height:42px;padding:0 16px;border:1px solid var(--line);border-radius:7px;background:transparent;color:var(--gold);font:600 10px var(--sans);cursor:pointer}
+    footer{padding:20px 0 28px;border-top:1px solid rgba(212,175,124,.12);color:#766970;font-size:9px;text-align:center}
+    @media(max-width:800px){main{grid-template-columns:1fr;gap:30px;min-height:auto;padding-top:24px}.intro{max-width:600px}.intro h1{font-size:42px}.intro-note{display:none}.panel{justify-self:center;max-width:620px}.top{padding:20px 0}}
+    @media(max-width:480px){.shell{width:min(100% - 24px,1080px)}.top{align-items:flex-start}.brand{font-size:24px}.back{padding-top:8px;font-size:10px}main{padding-top:18px}.intro h1{font-size:36px}.panel{padding:21px 16px;border-radius:15px}.grid{grid-template-columns:1fr}.field.full{grid-column:auto}.section-label{grid-column:auto}.tabs{margin-bottom:22px}h2{font-size:26px}}
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header class="top">
+      <a class="brand" href="index.html" aria-label="Luxuriosa — início">Luxuriosa<small>LINGERIE &amp; INTIMIDADE</small></a>
+      <a class="back" href="index.html">← Voltar à loja</a>
+    </header>
+
+    <main>
+      <section class="intro">
+        <span class="eyebrow">Sua experiência Luxuriosa</span>
+        <h1>Um espaço seu.<br><em>Do seu jeito.</em></h1>
+        <p>Entre na sua conta para acompanhar seus dados e aproveitar sua experiência com a Luxuriosa. Ainda não tem cadastro? Criar sua conta é simples e gratuito.</p>
+        <div class="intro-note"><span>✦</span><span>Seus dados são tratados com cuidado e utilizados para a gestão da sua conta e atendimento.</span></div>
+      </section>
+
+      <section class="panel" aria-label="Acesso à conta">
+        <div id="authArea">
+          <div class="tabs" role="tablist" aria-label="Acesso">
+            <button class="tab" id="loginTab" type="button" role="tab" aria-selected="true">ENTRAR</button>
+            <button class="tab" id="signupTab" type="button" role="tab" aria-selected="false">CRIAR CONTA</button>
+          </div>
+
+          <div id="notice" class="message" role="status" aria-live="polite"></div>
+
+          <form id="loginForm">
+            <h2>Bem-vindo de volta.</h2>
+            <p class="lead">Acesse sua conta com seu e-mail e senha.</p>
+            <div class="grid">
+              <div class="field full"><label for="loginEmail">E-mail</label><input id="loginEmail" type="email" autocomplete="email" placeholder="voce@exemplo.com.br" required></div>
+              <div class="field full"><label for="loginPassword">Senha</label><input id="loginPassword" type="password" autocomplete="current-password" placeholder="Sua senha" required></div>
+            </div>
+            <div class="actions"><button class="primary" type="submit">ENTRAR NA MINHA CONTA</button><button class="text-action" id="forgotButton" type="button">Esqueci minha senha</button></div>
+          </form>
+
+          <form id="signupForm" class="hidden">
+            <h2>Crie sua conta.</h2>
+            <p class="lead">É gratuito. Preencha seus dados para começar.</p>
+            <div class="grid">
+              <div class="field full"><label for="fullName">Nome completo</label><input id="fullName" autocomplete="name" maxlength="160" required></div>
+              <div class="field"><label for="birthDate">Data de nascimento</label><input id="birthDate" type="date" autocomplete="bday" required></div>
+              <div class="field"><label for="phone">WhatsApp</label><input id="phone" type="tel" autocomplete="tel" placeholder="(14) 99999-9999" maxlength="30" required></div>
+              <div class="field full"><label for="signupEmail">E-mail</label><input id="signupEmail" type="email" autocomplete="email" placeholder="voce@exemplo.com.br" required></div>
+              <div class="field"><label for="signupPassword">Senha (mínimo 8 caracteres)</label><input id="signupPassword" type="password" autocomplete="new-password" minlength="8" required></div>
+              <div class="field"><label for="confirmPassword">Confirme a senha</label><input id="confirmPassword" type="password" autocomplete="new-password" minlength="8" required></div>
+
+              <div class="section-label">Endereço principal</div>
+              <div class="field"><label for="postalCode">CEP</label><input id="postalCode" inputmode="numeric" autocomplete="postal-code" maxlength="9" placeholder="00000-000" required></div>
+              <div class="field"><label for="addressNumber">Número</label><input id="addressNumber" autocomplete="address-line2" maxlength="20" required></div>
+              <div class="field full"><label for="street">Rua / Avenida</label><input id="street" autocomplete="address-line1" maxlength="160" required></div>
+              <div class="field"><label for="neighborhood">Bairro</label><input id="neighborhood" autocomplete="address-level3" maxlength="100" required></div>
+              <div class="field"><label for="complement">Complemento (opcional)</label><input id="complement" maxlength="100"></div>
+              <div class="field"><label for="city">Cidade</label><input id="city" autocomplete="address-level2" value="Bauru" maxlength="100" required></div>
+              <div class="field"><label for="state">UF</label><input id="state" autocomplete="address-level1" value="SP" maxlength="2" pattern="[A-Za-z]{2}" required></div>
+
+              <div class="section-label">Preferências (opcional)</div>
+              <div class="field full"><label>Cores favoritas — escolha até 3</label>
+                <div class="colors">
+                  <label class="color-option"><input type="checkbox" name="favoriteColor" value="Preto"> Preto</label>
+                  <label class="color-option"><input type="checkbox" name="favoriteColor" value="Vermelho"> Vermelho</label>
+                  <label class="color-option"><input type="checkbox" name="favoriteColor" value="Rosa"> Rosa</label>
+                  <label class="color-option"><input type="checkbox" name="favoriteColor" value="Vinho"> Vinho</label>
+                  <label class="color-option"><input type="checkbox" name="favoriteColor" value="Branco"> Branco</label>
+                  <label class="color-option"><input type="checkbox" name="favoriteColor" value="Outra"> Outra</label>
+                </div>
+              </div>
+            </div>
+            <div class="actions"><button class="primary" type="submit">CRIAR MINHA CONTA</button></div>
+            <p class="legal">Ao criar sua conta, você confirma que tem 18 anos ou mais e concorda com nossa <a href="privacidade.html" target="_blank" rel="noopener">Política de Privacidade</a>.</p>
+          </form>
+
+          <form id="resetForm" class="hidden">
+            <h2>Recupere seu acesso.</h2>
+            <p class="lead">Informe seu e-mail e enviaremos um link para redefinir sua senha.</p>
+            <div class="field"><label for="resetEmail">E-mail</label><input id="resetEmail" type="email" autocomplete="email" required></div>
+            <div class="actions"><button class="primary" type="submit">ENVIAR LINK DE RECUPERAÇÃO</button><button class="text-action" id="backToLogin" type="button">Voltar para entrar</button></div>
+          </form>
+
+          <form id="newPasswordForm" class="hidden">
+            <h2>Escolha uma nova senha.</h2>
+            <p class="lead">Defina uma senha nova para sua conta.</p>
+            <div class="field"><label for="newPassword">Nova senha (mínimo 8 caracteres)</label><input id="newPassword" type="password" autocomplete="new-password" minlength="8" required></div>
+            <div class="field" style="margin-top:13px"><label for="newPasswordConfirm">Confirme a nova senha</label><input id="newPasswordConfirm" type="password" autocomplete="new-password" minlength="8" required></div>
+            <div class="actions"><button class="primary" type="submit">SALVAR NOVA SENHA</button></div>
+          </form>
+        </div>
+
+        <div id="signedInArea" class="hidden">
+          <span class="eyebrow">Área da sua conta</span>
+          <h2 id="accountGreeting">Olá!</h2>
+          <p class="lead">Você está conectado à sua conta Luxuriosa.</p>
+          <div class="account-box"><p>Seu acesso está ativo. Em breve, você poderá consultar e atualizar seus dados e preferências por aqui.</p><div class="account-actions"><button class="secondary" id="signOutButton" type="button">SAIR DA CONTA</button></div></div>
+        </div>
+      </section>
+    </main>
+    <footer>Luxuriosa | Lingerie &amp; Intimidade · Sinta-se ainda mais você.</footer>
+  </div>
+
+  <script type="module">
+    import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+
+    const SUPABASE_URL = "https://byiykxfugvxuowueuxca.supabase.co";
+    const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_LaMbeWQ1PNANEQ85SD_35Q_wDzswy8y";
+    const supabase = createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
+      auth: { autoRefreshToken: true, persistSession: true, detectSessionInUrl: true }
+    });
+
+    const $ = (id) => document.getElementById(id);
+    const notice = $("notice");
+    const loginForm = $("loginForm");
+    const signupForm = $("signupForm");
+    const resetForm = $("resetForm");
+    const newPasswordForm = $("newPasswordForm");
+    const authArea = $("authArea");
+    const signedInArea = $("signedInArea");
+
+    function message(text, error = false) {
+      notice.textContent = text;
+      notice.className = "message show" + (error ? " error" : "");
+    }
+    function clearMessage() {
+      notice.textContent = "";
+      notice.className = "message";
+    }
+    function showForm(name) {
+      [loginForm, signupForm, resetForm, newPasswordForm].forEach((form) => form.classList.add("hidden"));
+      if (name === "login") loginForm.classList.remove("hidden");
+      if (name === "signup") signupForm.classList.remove("hidden");
+      if (name === "reset") resetForm.classList.remove("hidden");
+      if (name === "newPassword") newPasswordForm.classList.remove("hidden");
+      $("loginTab").setAttribute("aria-selected", String(name === "login"));
+      $("signupTab").setAttribute("aria-selected", String(name === "signup"));
+      $("loginTab").closest(".tabs").classList.toggle("hidden", name === "reset" || name === "newPassword");
+      clearMessage();
+    }
+    function setBusy(form, busy, label) {
+      const button = form.querySelector('button[type="submit"]');
+      if (!button) return;
+      if (busy) {
+        button.dataset.originalText = button.textContent;
+        button.textContent = label || "AGUARDE...";
+        button.disabled = true;
+      } else {
+        button.textContent = button.dataset.originalText || button.textContent;
+        button.disabled = false;
+      }
+    }
+    function friendlyError(error) {
+      const text = String(error?.message || "Não foi possível concluir a operação.");
+      if (/invalid login credentials/i.test(text)) return "E-mail ou senha incorretos.";
+      if (/email not confirmed/i.test(text)) return "Confirme seu e-mail antes de entrar. Verifique sua caixa de entrada.";
+      if (/user already registered/i.test(text)) return "Este e-mail já possui cadastro. Tente entrar ou recuperar sua senha.";
+      if (/password should be at least/i.test(text)) return "A senha precisa ter pelo menos 8 caracteres.";
+      if (/username/i.test(text)) return "Não foi possível concluir o cadastro com os dados informados. Tente novamente.";
+      return text;
+    }
+
+    async function syncNewAccountData(user) {
+      const meta = user?.user_metadata || {};
+      if (meta.account_setup_completed || !meta.address_postal_code) return;
+      const profile = {
+        full_name: meta.full_name || null,
+        phone: meta.phone || null,
+        birth_date: meta.birth_date || null
+      };
+      const profileResult = await supabase.from("profiles").update(profile).eq("id", user.id);
+      if (profileResult.error) throw profileResult.error;
+
+      const colors = Array.isArray(meta.favorite_colors) ? meta.favorite_colors.slice(0, 3) : [];
+      const preferencesResult = await supabase.from("preferences").upsert({ user_id: user.id, favorite_colors: colors });
+      if (preferencesResult.error) throw preferencesResult.error;
+
+      const existing = await supabase.from("addresses").select("id").eq("user_id", user.id).limit(1);
+      if (existing.error) throw existing.error;
+      if (!existing.data.length) {
+        const addressResult = await supabase.from("addresses").insert({
+          user_id: user.id,
+          label: "Principal",
+          recipient_name: meta.full_name || meta.display_name,
+          postal_code: meta.address_postal_code,
+          street: meta.address_street,
+          number: meta.address_number,
+          complement: meta.address_complement || null,
+          neighborhood: meta.address_neighborhood || null,
+          city: meta.address_city,
+          state: String(meta.address_state || "").toUpperCase(),
+          is_default: true
+        });
+        if (addressResult.error) throw addressResult.error;
+      }
+      const metadataResult = await supabase.auth.updateUser({ data: { account_setup_completed: true } });
+      if (metadataResult.error) throw metadataResult.error;
+    }
+
+    async function showSignedIn(user) {
+      authArea.classList.add("hidden");
+      signedInArea.classList.remove("hidden");
+      $("accountGreeting").textContent = "Olá, " + (user.user_metadata?.display_name || user.email || "cliente") + "!";
+      try {
+        await syncNewAccountData(user);
+      } catch (error) {
+        message("Sua conta foi ativada, mas não conseguimos concluir o salvamento de todos os dados do perfil. Entre novamente ou contate o atendimento.", true);
+        console.error("Falha ao sincronizar perfil:", error);
+      }
+    }
+
+    $("loginTab").addEventListener("click", () => showForm("login"));
+    $("signupTab").addEventListener("click", () => showForm("signup"));
+    $("forgotButton").addEventListener("click", () => {
+      $("resetEmail").value = $("loginEmail").value;
+      showForm("reset");
+    });
+    $("backToLogin").addEventListener("click", () => showForm("login"));
+
+    loginForm.addEventListener("submit", async (event) => {
+      event.preventDefault(); clearMessage(); setBusy(loginForm, true);
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email: $("loginEmail").value.trim(),
+        password: $("loginPassword").value
+      });
+      setBusy(loginForm, false);
+      if (error) return message(friendlyError(error), true);
+      await showSignedIn(data.user);
+    });
+
+    signupForm.addEventListener("submit", async (event) => {
+      event.preventDefault(); clearMessage();
+      if ($("signupPassword").value !== $("confirmPassword").value) return message("As senhas não coincidem.", true);
+      const colors = Array.from(document.querySelectorAll('input[name="favoriteColor"]:checked')).map((el) => el.value);
+      if (colors.length > 3) return message("Escolha no máximo três cores favoritas.", true);
+      const birth = $("birthDate").value;
+      if (!birth || new Date(birth + "T00:00:00") >= new Date()) return message("Informe uma data de nascimento válida.", true);
+      const fullName = $("fullName").value.trim();
+      const firstName = fullName.split(/\s+/)[0];
+      const usernameBase = fullName.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, "_").replace(/^_|_$/g, "").slice(0, 20) || "cliente";
+      const username = usernameBase + "_" + Math.random().toString(36).slice(2, 8);
+      const phone = $("phone").value.trim();
+      const postalCode = $("postalCode").value.replace(/\D/g, "");
+      if (postalCode.length !== 8) return message("Informe um CEP válido com oito dígitos.", true);
+      setBusy(signupForm, true, "CRIANDO SUA CONTA...");
+      const { data, error } = await supabase.auth.signUp({
+        email: $("signupEmail").value.trim(),
+        password: $("signupPassword").value,
+        options: {
+          emailRedirectTo: window.location.origin + window.location.pathname,
+          data: {
+            username,
+            display_name: firstName,
+            full_name: fullName,
+            phone,
+            birth_date: birth,
+            favorite_colors: colors,
+            address_postal_code: postalCode,
+            address_street: $("street").value.trim(),
+            address_number: $("addressNumber").value.trim(),
+            address_complement: $("complement").value.trim(),
+            address_neighborhood: $("neighborhood").value.trim(),
+            address_city: $("city").value.trim(),
+            address_state: $("state").value.trim().toUpperCase()
+          }
+        }
+      });
+      setBusy(signupForm, false);
+      if (error) return message(friendlyError(error), true);
+      if (data.session && data.user) {
+        await showSignedIn(data.user);
+      } else {
+        signupForm.reset();
+        $("city").value = "Bauru";
+        $("state").value = "SP";
+        showForm("login");
+        message("Cadastro recebido! Enviamos um link de confirmação para seu e-mail. Abra a mensagem para ativar sua conta e concluir o acesso.");
+      }
+    });
+
+    resetForm.addEventListener("submit", async (event) => {
+      event.preventDefault(); clearMessage(); setBusy(resetForm, true, "ENVIANDO...");
+      const { error } = await supabase.auth.resetPasswordForEmail($("resetEmail").value.trim(), {
+        redirectTo: window.location.origin + window.location.pathname
+      });
+      setBusy(resetForm, false);
+      if (error) return message(friendlyError(error), true);
+      message("Se houver uma conta associada a esse endereço, enviaremos um link para redefinir a senha. Confira sua caixa de entrada.");
+    });
+
+    newPasswordForm.addEventListener("submit", async (event) => {
+      event.preventDefault(); clearMessage();
+      if ($("newPassword").value !== $("newPasswordConfirm").value) return message("As senhas não coincidem.", true);
+      setBusy(newPasswordForm, true, "SALVANDO...");
+      const { error } = await supabase.auth.updateUser({ password: $("newPassword").value });
+      setBusy(newPasswordForm, false);
+      if (error) return message(friendlyError(error), true);
+      newPasswordForm.reset();
+      showForm("login");
+      message("Senha alterada com sucesso. Entre com sua nova senha.");
+      await supabase.auth.signOut();
+    });
+
+    $("signOutButton").addEventListener("click", async () => {
+      const { error } = await supabase.auth.signOut();
+      if (error) return message(friendlyError(error), true);
+      signedInArea.classList.add("hidden");
+      authArea.classList.remove("hidden");
+      showForm("login");
+      message("Você saiu da sua conta.");
+    });
+
+    supabase.auth.onAuthStateChange((event, session) => {
+      if (event === "PASSWORD_RECOVERY") {
+        authArea.classList.remove("hidden");
+        signedInArea.classList.add("hidden");
+        showForm("newPassword");
+      } else if (session?.user) {
+        Promise.resolve().then(() => showSignedIn(session.user));
+      } else if (event === "SIGNED_OUT") {
+        signedInArea.classList.add("hidden");
+        authArea.classList.remove("hidden");
+      }
+    });
+
+    const { data: sessionData } = await supabase.auth.getSession();
+    const recovery = new URLSearchParams(window.location.hash.replace(/^#/, "")).get("type") === "recovery";
+    if (recovery) {
+      showForm("newPassword");
+    } else if (sessionData.session?.user) {
+      await showSignedIn(sessionData.session.user);
+    } else {
+      showForm("login");
+    }
+  </script>
+</body>
+</html>
