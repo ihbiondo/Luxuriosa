@@ -2292,7 +2292,13 @@ footer {
   background: rgba(212, 175, 124, .08);
   transform: translateY(-1px);
 }
-.account-trigger svg { flex: 0 0 auto; }
+.account-trigger-icon {
+  display: inline-block;
+  flex: 0 0 auto;
+  font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif;
+  font-size: 18px;
+  line-height: 1;
+}
 .account-trigger:focus-visible {
   outline: 2px solid var(--gold);
   outline-offset: 3px;
