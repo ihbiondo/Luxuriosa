@@ -531,7 +531,7 @@
     copiarComSelecao();
   }
 
-  async function continuarWhatsApp() {
+  async function continuarPagamento() {
     if (!mensagemAtual || !dadosAtuais) return;
     var apiCarrinho = window.LuxuriosaCarrinho;
     var itensAtuais = apiCarrinho && typeof apiCarrinho.obterItens === "function" ? apiCarrinho.obterItens() : [];
@@ -544,45 +544,66 @@
       avisar(integridade.motivo, "error");
       return;
     }
-    mensagemAtual = preencherMensagem(dadosAtuais);
-    if (!mensagemAtual) {
-      avisar("Não foi possível atualizar o resumo do pedido. Revise o carrinho e tente novamente.", "error");
-      return;
-    }
-    messagePreview.textContent = mensagemAtual;
+    if (!validarDados({ exigirEndereco: true })) return;
 
-    /* Abre a janela durante o clique para evitar bloqueio do navegador enquanto registramos o pedido. */
-    var whatsappWindow = window.open("about:blank", "_blank");
-    var shippingAmount = null;
-    var city = String(dadosAtuais.address.city || "").trim().normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
-    var state = String(dadosAtuais.address.state || "").trim().toUpperCase();
-    if (city === "bauru" && state === "SP") {
-      shippingAmount = pedidoContemKit(itensAtuais) ? 0 : 15;
+    var button = $("customerPaymentButton");
+    if (button) {
+      button.disabled = true;
+      button.textContent = "PREPARANDO PAGAMENTO...";
     }
+    avisar("Estamos validando os produtos, o frete e preparando seu pagamento.", "info");
 
-    var orderNumber = null;
-    if (window.LuxuriosaInteligencia && typeof window.LuxuriosaInteligencia.registrarPedido === "function") {
+    try {
+      var sessionKey = window.LuxuriosaInteligencia &&
+        typeof window.LuxuriosaInteligencia.obterSessao === "function"
+        ? window.LuxuriosaInteligencia.obterSessao()
+        : "";
+      if (!sessionKey) throw new Error("Não foi possível identificar seu carrinho. Atualize a página e tente novamente.");
+
+      var headers = {
+        "content-type": "application/json",
+        "apikey": "sb_publishable_LaMbeWQ1PNANEQ85SD_35Q_wDzswy8y"
+      };
       try {
-        var savedOrder = await window.LuxuriosaInteligencia.registrarPedido(itensAtuais, dadosAtuais, shippingAmount);
-        orderNumber = savedOrder && savedOrder.order_number ? savedOrder.order_number : null;
-      } catch (error) {
-        console.warn("Luxuriosa: não foi possível registrar a solicitação antes do WhatsApp.", error);
+        var rawSession = localStorage.getItem("sb-byiykxfugvxuowueuxca-auth-token");
+        var parsedSession = rawSession ? JSON.parse(rawSession) : null;
+        if (parsedSession && parsedSession.access_token) {
+          headers.authorization = "Bearer " + parsedSession.access_token;
+        }
+      } catch (_) {}
+
+      var response = await fetch("https://byiykxfugvxuowueuxca.supabase.co/functions/v1/create-payment-order", {
+        method: "POST",
+        headers: headers,
+        body: JSON.stringify({
+          session_key: sessionKey,
+          items: itensAtuais,
+          customer: dadosAtuais
+        })
+      });
+      var result = await response.json().catch(function () { return {}; });
+      if (!response.ok || !result.ok || !result.checkout_url) {
+        throw new Error(result.error || "Não foi possível preparar o pagamento. Tente novamente.");
+      }
+
+      messagePreview.textContent =
+        "Pedido Luxuriosa #" + result.order_number + "\n" +
+        "Total para pagamento: " + formatarPreco(result.total_amount) + "\n\n" +
+        "Você será direcionado à InfinitePay para pagar com Pix ou cartão. " +
+        "A expedição só começa depois da confirmação do pagamento.";
+      avisar("Pedido criado. Abrindo o checkout seguro da InfinitePay...", "success");
+
+      if (window.LuxuriosaMedicao && typeof window.LuxuriosaMedicao.registrar === "function") {
+        window.LuxuriosaMedicao.registrar("checkout_whatsapp", { method: "infinitepay", step: "payment_redirect" });
+      }
+      window.location.assign(result.checkout_url);
+    } catch (error) {
+      avisar(error && error.message ? error.message : "Não foi possível iniciar o pagamento. Tente novamente.", "error");
+      if (button) {
+        button.disabled = false;
+        button.textContent = "PAGAR COM PIX OU CARTÃO";
       }
     }
-    if (orderNumber) {
-      mensagemAtual += "\n\n*Referência Luxuriosa: #" + orderNumber + "*";
-      messagePreview.textContent = mensagemAtual;
-    }
-
-    var config = window.LuxuriosaCatalogo && typeof window.LuxuriosaCatalogo.obterConfig === "function" ? window.LuxuriosaCatalogo.obterConfig() : null;
-    var number = config && config.whatsapp ? String(config.whatsapp).replace(/\D/g, "") : "5514996355924";
-    if (!number) number = "5514996355924";
-    var url = "https://wa.me/" + number + "?text=" + encodeURIComponent(mensagemAtual);
-    if (window.LuxuriosaMedicao && typeof window.LuxuriosaMedicao.registrar === "function") {
-      window.LuxuriosaMedicao.registrar("checkout_whatsapp", { method: "whatsapp", step: "pedido_encaminhado" });
-    }
-    if (whatsappWindow) whatsappWindow.location.href = url;
-    else window.location.href = url;
   }
 
   var accountLoadId = 0;
@@ -695,7 +716,7 @@
     if (accountLoadButton) accountLoadButton.addEventListener("click", carregarDadosDaConta);
     $("customerCancel").addEventListener("click", fechar);
     $("customerEditButton").addEventListener("click", function () { review.hidden = true; form.hidden = false; $("customerName").focus(); });
-    $("customerWhatsAppButton").addEventListener("click", continuarWhatsApp);
+    $("customerPaymentButton").addEventListener("click", continuarPagamento);
     $("customerCopyButton").addEventListener("click", copiarMensagem);
     overlay.addEventListener("click", function (event) { if (event.target === overlay) fechar(); });
     dialog.addEventListener("keydown", function (event) {
