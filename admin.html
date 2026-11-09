@@ -157,6 +157,31 @@ footer{padding:18px 0;border-top:1px solid var(--line);color:#766970;font-size:9
       <label class="sla-field">Meta de entrega em horário de funcionamento (minutos)
         <input id="slaDeliveryTarget" name="delivery_target_minutes" type="number" min="0" max="10080" step="1" placeholder="Ex.: 30">
       </label>
+      <fieldset class="sla-field full" style="border:1px solid var(--line);border-radius:10px;padding:12px">
+        <legend>Entrega agendada (opcional)</legend>
+        <label><input id="slaScheduledEnabled" type="checkbox"> Disponibilizar agendamento nesta região</label>
+        <div class="grid2" style="margin-top:10px">
+          <label class="sla-field">Desconto no agendamento (%)
+            <input id="slaScheduledDiscount" type="number" min="0" max="100" step="0.5" value="0">
+          </label>
+          <label class="sla-field">Início da janela
+            <input id="slaWindowStart" type="time">
+          </label>
+          <label class="sla-field">Fim da janela
+            <input id="slaWindowEnd" type="time">
+          </label>
+        </div>
+        <div class="sla-checks" style="margin-top:8px">
+          <label><input class="slaWeekday" type="checkbox" value="1" checked> Segunda</label>
+          <label><input class="slaWeekday" type="checkbox" value="2" checked> Terça</label>
+          <label><input class="slaWeekday" type="checkbox" value="3" checked> Quarta</label>
+          <label><input class="slaWeekday" type="checkbox" value="4"> Quinta</label>
+          <label><input class="slaWeekday" type="checkbox" value="5"> Sexta</label>
+          <label><input class="slaWeekday" type="checkbox" value="6"> Sábado</label>
+          <label><input class="slaWeekday" type="checkbox" value="7"> Domingo</label>
+        </div>
+        <p class="small">Deixe desativado até definir dias, janela e desconto para a cidade.</p>
+      </fieldset>
       <div class="sla-checks">
         <label><input id="slaFreeKit" type="checkbox"> Frete grátis se incluir kit</label>
         <label><input id="slaAutomatic" type="checkbox"> Liberar pagamento automático</label>
@@ -386,6 +411,11 @@ function fillSlaForm(rule){
  $("slaDelivery").value=rule.delivery_minutes??"";
  $("slaDispatchTarget").value=rule.dispatch_target_minutes??"";
  $("slaDeliveryTarget").value=rule.delivery_target_minutes??"";
+ $("slaScheduledEnabled").checked=!!rule.scheduled_delivery_enabled;
+ $("slaScheduledDiscount").value=rule.scheduled_discount_percent??0;
+ $("slaWindowStart").value=rule.scheduled_window_start?String(rule.scheduled_window_start).slice(0,5):"";
+ $("slaWindowEnd").value=rule.scheduled_window_end?String(rule.scheduled_window_end).slice(0,5):"";
+ document.querySelectorAll(".slaWeekday").forEach(input=>{input.checked=(rule.scheduled_delivery_weekdays||[1,2,3]).includes(Number(input.value))});
  $("slaFreeKit").checked=!!rule.free_delivery_if_contains_kit;
  $("slaAutomatic").checked=!!rule.automatic_payment_enabled;
  $("slaActive").checked=!!rule.active;
@@ -405,6 +435,7 @@ function renderSlaRules(rules){
    meta.append(el("span","","Meta em expediente: "+formatMinutes(rule.dispatch_target_minutes+rule.delivery_target_minutes)));
   }
   meta.append(el("span","","Frete: "+money.format((Number(rule.delivery_fee_cents)||0)/100)));
+  if(rule.scheduled_delivery_enabled)meta.append(el("span","","Agendada: "+(rule.scheduled_discount_percent||0)+"% · "+(rule.scheduled_delivery_weekdays||[]).join(", ")));
   if(rule.free_delivery_if_contains_kit)meta.append(el("span","","Kit: frete grátis"));
   if(!rule.active)meta.append(el("span","","Regra inativa"));
   const actions=el("div","sla-rule-actions"),edit=el("button","btn","EDITAR");
@@ -453,6 +484,11 @@ $("slaForm").addEventListener("submit",async event=>{
   dispatch_minutes:Number($("slaDispatch").value),delivery_minutes:Number($("slaDelivery").value),
   dispatch_target_minutes:$("slaDispatchTarget").value===""?null:Number($("slaDispatchTarget").value),
   delivery_target_minutes:$("slaDeliveryTarget").value===""?null:Number($("slaDeliveryTarget").value),
+  scheduled_delivery_enabled:$("slaScheduledEnabled").checked,
+  scheduled_discount_percent:Number($("slaScheduledDiscount").value||0),
+  scheduled_delivery_weekdays:Array.from(document.querySelectorAll(".slaWeekday:checked")).map(input=>Number(input.value)),
+  scheduled_window_start:$("slaWindowStart").value,
+  scheduled_window_end:$("slaWindowEnd").value,
   free_delivery_if_contains_kit:$("slaFreeKit").checked,
   automatic_payment_enabled:$("slaAutomatic").checked,active:$("slaActive").checked
  };
