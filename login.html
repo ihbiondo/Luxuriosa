@@ -876,7 +876,8 @@
         const date = document.createElement("span"); date.textContent = new Date(order.created_at).toLocaleDateString("pt-BR");
         const amount = document.createElement("strong");
         amount.textContent = order.shipping_amount == null
-          ? "Produtos: " + money.format(Number(order.subtotal) || 0) + " · frete a confirmar"
+          ? (Number(order.club_discount_amount_cents) > 0 ? "Produtos com Clube: " : "Produtos: ") +
+            money.format(Number(order.total_amount) || Number(order.subtotal) || 0) + " · frete a confirmar"
           : money.format(Number(order.total_amount) || 0);
         meta.append(date, amount);
         if (Number(order.club_discount_amount_cents) > 0) {
