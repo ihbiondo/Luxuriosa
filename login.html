@@ -476,29 +476,38 @@
       const postalCode = $("postalCode").value.replace(/\D/g, "");
       if (postalCode.length !== 8) return message("Informe um CEP válido com oito dígitos.", true);
       setBusy(signupForm, true, "CRIANDO SUA CONTA...");
-      const { data, error } = await supabase.auth.signUp({
-        email: $("signupEmail").value.trim(),
-        password: $("signupPassword").value,
-        options: {
-          emailRedirectTo: window.location.origin + window.location.pathname,
-          data: {
-            username,
-            display_name: firstName,
-            full_name: fullName,
-            phone,
-            birth_date: birth,
-            favorite_colors: colors,
-            address_postal_code: postalCode,
-            address_street: $("street").value.trim(),
-            address_number: $("addressNumber").value.trim(),
-            address_complement: $("complement").value.trim(),
-            address_neighborhood: $("neighborhood").value.trim(),
-            address_city: $("city").value.trim(),
-            address_state: $("state").value.trim().toUpperCase()
+      let signupResult;
+      try {
+        signupResult = await supabase.auth.signUp({
+          email: $("signupEmail").value.trim(),
+          password: $("signupPassword").value,
+          options: {
+            emailRedirectTo: window.location.origin + window.location.pathname,
+            data: {
+              username,
+              display_name: firstName,
+              full_name: fullName,
+              phone,
+              birth_date: birth,
+              favorite_colors: colors,
+              address_postal_code: postalCode,
+              address_street: $("street").value.trim(),
+              address_number: $("addressNumber").value.trim(),
+              address_complement: $("complement").value.trim(),
+              address_neighborhood: $("neighborhood").value.trim(),
+              address_city: $("city").value.trim(),
+              address_state: $("state").value.trim().toUpperCase()
+            }
           }
-        }
-      });
-      setBusy(signupForm, false);
+        });
+      } catch (error) {
+        console.error("Falha ao criar conta:", error);
+        message(friendlyError(error), true);
+        return;
+      } finally {
+        setBusy(signupForm, false);
+      }
+      const { data, error } = signupResult;
       if (error) return message(friendlyError(error), true);
       if (data.session && data.user) {
         await showSignedIn(data.user);
