@@ -77,7 +77,7 @@ footer{padding:18px 0;border-top:1px solid var(--line);color:#766970;font-size:9
 <div class="metric"><span>Pedidos aguardando</span><strong id="pending">—</strong><small>Solicitações pelo checkout</small></div>
 <div class="metric"><span>Carrinhos ativos</span><strong id="active">—</strong><small>Atividade recente</small></div>
 <div class="metric"><span>Carrinhos abandonados</span><strong id="abandoned">—</strong><small>Sem atividade por 60 minutos ou mais</small></div>
-<div class="metric"><span>Autorizações WhatsApp</span><strong id="optin">—</strong><small>Consentimentos ativos para marketing</small></div>
+<div class="metric"><span>Permissões de contato promocional</span><strong id="optin">—</strong><small>Consentimentos ativos para marketing</small></div>
 <div class="metric"><span>Pedidos no período</span><strong id="totalOrders">—</strong><small>Inclui solicitações ainda não confirmadas</small></div>
 </section>
 <div class="grid2">
@@ -238,7 +238,7 @@ footer{padding:18px 0;border-top:1px solid var(--line);color:#766970;font-size:9
 <div id="queryResults" class="query-results"><p class="empty">Carregando pedidos recentes...</p></div>
 </section>
 <div class="grid2" style="margin-top:16px">
-<section class="panel"><h2>Carrinhos recentes</h2><p class="hint">A recuperação só fica disponível com autorização específica do cliente.</p><div class="list" id="carts"><p class="empty">Aguardando dados...</p></div></section>
+<section class="panel"><h2>Carrinhos recentes</h2><p class="hint">Mensagens promocionais só podem ser enviadas quando autorizadas pelo cliente. O atendimento de pedidos continua normalmente.</p><div class="list" id="carts"><p class="empty">Aguardando dados...</p></div></section>
 <section class="panel"><h2>Atalhos de gestão</h2><p class="hint">Acesso rápido às áreas públicas e administrativas já existentes.</p><div class="list">
 <div class="item"><div class="item-top"><strong>Loja virtual</strong><a class="btn" href="loja.html">ABRIR LOJA</a></div><div class="small">Catálogo e fluxo de pedidos.</div></div>
 <div class="item"><div class="item-top"><strong>Área do cliente</strong><a class="btn" href="login.html">ABRIR CONTAS</a></div><div class="small">Login, cadastro e histórico de compras.</div></div>
@@ -659,7 +659,7 @@ function renderCarts(carts){
   const card=el("article","item"),top=el("div","item-top");top.append(el("strong","",c.customer_name||"Visitante"),el("span","pill",statusTag(c.status)));card.append(top);
   const meta=el("div","meta");meta.append(el("span","",String(c.item_count||0)+" item(ns)"),el("span","",money.format(Number(c.subtotal)||0)),el("span","",fmtDate(c.last_activity_at)));if(c.city)meta.append(el("span","",c.city+"/"+(c.state||"")));card.append(meta);
   const items=Array.isArray(c.items_snapshot)?c.items_snapshot:[];if(items.length){const ul=el("ul","products");items.slice(0,4).forEach(i=>ul.append(el("li","",(i.quantidade||i.quantity||1)+"x "+(i.nome||i.product_name||"Produto"))));card.append(ul)}
-  if(c.recovery_allowed&&c.customer_phone){const b=el("a","btn","ABRIR WHATSAPP — AUTORIZADO");b.href="https://wa.me/"+String(c.customer_phone).replace(/\D/g,"")+"?text="+encodeURIComponent("Olá! Aqui é da Luxuriosa. Você autorizou nosso contato pelo WhatsApp. Podemos ajudar com alguma dúvida?");b.target="_blank";b.rel="noopener";b.style.display="inline-block";b.style.marginTop="9px";b.style.textDecoration="none";card.append(b)}else card.append(el("div","small","Sem autorização de marketing: recuperação não habilitada."));
+  if(c.recovery_allowed&&c.customer_phone){const b=el("a","btn","ABRIR WHATSAPP — AUTORIZADO");b.href="https://wa.me/"+String(c.customer_phone).replace(/\D/g,"")+"?text="+encodeURIComponent("Olá! Aqui é da Luxuriosa. Você autorizou nosso contato pelo WhatsApp. Podemos ajudar com alguma dúvida?");b.target="_blank";b.rel="noopener";b.style.display="inline-block";b.style.marginTop="9px";b.style.textDecoration="none";card.append(b)}else card.append(el("div","small","Contato promocional desativado para este carrinho."));
   box.append(card);
  });
 }
