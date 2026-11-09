@@ -104,9 +104,25 @@
                   <label class="color-option"><input type="checkbox" name="favoriteColor" value="Outra"> Outra</label>
                 </div>
               </div>
+              <div class="field full">
+                <div style="padding:14px;border:1px solid rgba(212,175,124,.18);border-radius:9px;background:rgba(212,175,124,.035)">
+                  <label style="display:flex;gap:10px;align-items:flex-start;font-size:11px;line-height:1.65;letter-spacing:0;cursor:pointer">
+                    <input id="signupExperienceConsent" type="checkbox" style="width:16px;height:16px;flex:0 0 16px;margin:2px 0 0;accent-color:var(--wine)">
+                    <span><strong>Quero uma experiência mais personalizada (opcional).</strong><br>Autorizo o uso das preferências que eu informar voluntariamente, como cores favoritas, para adaptar a experiência e destacar opções relevantes. Não serão criados perfis sobre minha vida íntima nem inferências a partir de compras de produtos íntimos.</span>
+                  </label>
+                </div>
+              </div>
+              <div class="field full">
+                <div style="padding:14px;border:1px solid rgba(212,175,124,.18);border-radius:9px;background:rgba(212,175,124,.035)">
+                  <label style="display:flex;gap:10px;align-items:flex-start;font-size:11px;line-height:1.65;letter-spacing:0;cursor:pointer">
+                    <input id="signupAggregatedConsent" type="checkbox" style="width:16px;height:16px;flex:0 0 16px;margin:2px 0 0;accent-color:var(--wine)">
+                    <span><strong>Quero contribuir com a melhoria da Luxuriosa (opcional).</strong><br>Autorizo o uso de indicadores limitados de navegação e experiência para gerar estatísticas agregadas e efetivamente anonimizadas. Somente resultados sem identificação individual poderão ser compartilhados com parceiros para pesquisa e melhoria de serviços. Não compartilhamos nome, contato, endereço, identificadores de conta ou histórico individual de compras. A recusa não impede o cadastro e posso revogar esta autorização na minha conta.</span>
+                  </label>
+                </div>
+              </div>
             </div>
             <div class="actions"><button class="primary" type="submit">CRIAR MINHA CONTA</button></div>
-            <p class="legal">Ao criar sua conta, você confirma que tem 18 anos ou mais e concorda com nossa <a href="privacidade.html" target="_blank" rel="noopener">Política de Privacidade</a>.</p>
+            <p class="legal">Ao criar sua conta, você confirma que tem 18 anos ou mais. Os dados essenciais são usados para administrar sua conta e atender pedidos. As autorizações adicionais acima são opcionais, independentes e não condicionam o cadastro. Consulte a <a href="privacidade.html" target="_blank" rel="noopener">Política de Privacidade</a>.</p>
           </form>
 
           <form id="resetForm" class="hidden">
@@ -145,6 +161,24 @@
               </div>
               <p class="email-change-help">Por segurança, a alteração depende da confirmação por e-mail. O endereço atual continua válido até a conclusão do processo.</p>
               <div class="actions"><button class="secondary" id="requestEmailChangeButton" type="submit">SOLICITAR ALTERAÇÃO DE E-MAIL</button></div>
+            </form>
+            <form id="accountDataConsentForm" class="account-form" style="margin:18px 0;padding:16px;border:1px solid var(--line);border-radius:10px">
+              <div class="section-label">Privacidade e uso de dados opcionais</div>
+              <p class="email-change-help">Estas escolhas não afetam sua conta, seus pedidos ou o atendimento. Você pode alterá-las gratuitamente.</p>
+              <div class="field full" style="margin:12px 0">
+                <label style="display:flex;gap:10px;align-items:flex-start;letter-spacing:0;line-height:1.6">
+                  <input id="accountExperienceConsent" type="checkbox" style="width:16px;height:16px;flex:0 0 16px;margin:2px 0 0;accent-color:var(--wine)">
+                  <span>Permitir personalização com preferências que informei voluntariamente, como cores favoritas. Não inclui criação de perfis sobre vida íntima.</span>
+                </label>
+              </div>
+              <div class="field full" style="margin:12px 0">
+                <label style="display:flex;gap:10px;align-items:flex-start;letter-spacing:0;line-height:1.6">
+                  <input id="accountAggregatedConsent" type="checkbox" style="width:16px;height:16px;flex:0 0 16px;margin:2px 0 0;accent-color:var(--wine)">
+                  <span>Permitir uso de indicadores limitados para estatísticas agregadas e anonimizadas, que podem ser compartilhadas com parceiros sem identificação individual. Não inclui nome, contato, endereço ou histórico individual de compras.</span>
+                </label>
+              </div>
+              <p id="accountConsentStatus" class="email-change-help" aria-live="polite"></p>
+              <div class="actions"><button class="secondary" id="saveAccountDataConsentButton" type="submit">SALVAR AUTORIZAÇÕES</button></div>
             </form>
             <form id="accountForm" class="account-form">
               <div class="section-label">Dados pessoais</div>
