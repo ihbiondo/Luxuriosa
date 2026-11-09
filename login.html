@@ -284,7 +284,7 @@
       document.querySelectorAll('input[name="accountFavoriteColor"]').forEach((input) => {
         input.checked = colors.includes(input.value);
       });
-      const displayName = profile.display_name || profile.full_name?.trim().split(/\\s+/)[0] || user.user_metadata?.display_name || user.email || "cliente";
+      const displayName = profile.display_name || profile.full_name?.trim().split(/\s+/)[0] || user.user_metadata?.display_name || user.email || "cliente";
       $("accountGreeting").textContent = "Olá, " + displayName + "!";
     }
 
@@ -314,7 +314,7 @@
       let age = today.getFullYear() - birthDate.getFullYear();
       if (today.getMonth() < birthDate.getMonth() || (today.getMonth() === birthDate.getMonth() && today.getDate() < birthDate.getDate())) age--;
       if (age < 18) return message("A conta Luxuriosa é permitida somente para maiores de 18 anos.", true);
-      const postalCode = $("accountPostalCode").value.replace(/\\D/g, "");
+      const postalCode = $("accountPostalCode").value.replace(/\D/g, "");
       if (postalCode.length !== 8) return message("Informe um CEP válido com oito dígitos.", true);
       const state = $("accountState").value.trim().toUpperCase();
       if (!/^[A-Z]{2}$/.test(state)) return message("Informe uma UF válida com duas letras.", true);
@@ -328,7 +328,7 @@
         if (!user) throw new Error("Sua sessão expirou. Entre novamente.");
         const profileResult = await supabase.from("profiles").update({
           full_name: fullName,
-          display_name: fullName.split(/\\s+/)[0],
+          display_name: fullName.split(/\s+/)[0],
           phone: $("accountPhone").value.trim(),
           birth_date: birth
         }).eq("id", user.id).select("id").maybeSingle();
