@@ -148,8 +148,14 @@ footer{padding:18px 0;border-top:1px solid var(--line);color:#766970;font-size:9
       <label class="sla-field">Prazo para expedir (minutos)
         <input id="slaDispatch" name="dispatch_minutes" type="number" min="1" max="10080" step="1" placeholder="Ex.: 60" required>
       </label>
-      <label class="sla-field">Prazo de entrega (minutos)
-        <input id="slaDelivery" name="delivery_minutes" type="number" min="0" max="10080" step="1" placeholder="Ex.: 120" required>
+      <label class="sla-field">Prazo de entrega — limite máximo (minutos)
+        <input id="slaDelivery" name="delivery_minutes" type="number" min="0" max="10080" step="1" placeholder="Ex.: 90" required>
+      </label>
+      <label class="sla-field">Meta de expedição em horário de funcionamento (minutos)
+        <input id="slaDispatchTarget" name="dispatch_target_minutes" type="number" min="0" max="10080" step="1" placeholder="Ex.: 10">
+      </label>
+      <label class="sla-field">Meta de entrega em horário de funcionamento (minutos)
+        <input id="slaDeliveryTarget" name="delivery_target_minutes" type="number" min="0" max="10080" step="1" placeholder="Ex.: 30">
       </label>
       <div class="sla-checks">
         <label><input id="slaFreeKit" type="checkbox"> Frete grátis se incluir kit</label>
@@ -378,6 +384,8 @@ function fillSlaForm(rule){
  $("slaFee").value=(Number(rule.delivery_fee_cents)||0)/100;
  $("slaDispatch").value=rule.dispatch_minutes??"";
  $("slaDelivery").value=rule.delivery_minutes??"";
+ $("slaDispatchTarget").value=rule.dispatch_target_minutes??"";
+ $("slaDeliveryTarget").value=rule.delivery_target_minutes??"";
  $("slaFreeKit").checked=!!rule.free_delivery_if_contains_kit;
  $("slaAutomatic").checked=!!rule.automatic_payment_enabled;
  $("slaActive").checked=!!rule.active;
@@ -392,7 +400,10 @@ function renderSlaRules(rules){
   head.append(el("span","pill",rule.automatic_payment_enabled&&rule.active?"Pagamento liberado":"Pagamento bloqueado"));
   const meta=el("div","sla-rule-meta");
   meta.append(el("span","","Expedição: "+formatMinutes(rule.dispatch_minutes)));
-  meta.append(el("span","","Entrega: "+formatMinutes(rule.delivery_minutes)));
+  meta.append(el("span","","Entrega máx.: "+formatMinutes(rule.delivery_minutes)));
+  if(rule.dispatch_target_minutes!=null&&rule.delivery_target_minutes!=null){
+   meta.append(el("span","","Meta em expediente: "+formatMinutes(rule.dispatch_target_minutes+rule.delivery_target_minutes)));
+  }
   meta.append(el("span","","Frete: "+money.format((Number(rule.delivery_fee_cents)||0)/100)));
   if(rule.free_delivery_if_contains_kit)meta.append(el("span","","Kit: frete grátis"));
   if(!rule.active)meta.append(el("span","","Regra inativa"));
@@ -440,6 +451,8 @@ $("slaForm").addEventListener("submit",async event=>{
   action:"save",city:$("slaCity").value.trim(),state:$("slaState").value.trim().toUpperCase(),
   fulfillment_mode:$("slaMode").value,delivery_fee_reais:$("slaFee").value,
   dispatch_minutes:Number($("slaDispatch").value),delivery_minutes:Number($("slaDelivery").value),
+  dispatch_target_minutes:$("slaDispatchTarget").value===""?null:Number($("slaDispatchTarget").value),
+  delivery_target_minutes:$("slaDeliveryTarget").value===""?null:Number($("slaDeliveryTarget").value),
   free_delivery_if_contains_kit:$("slaFreeKit").checked,
   automatic_payment_enabled:$("slaAutomatic").checked,active:$("slaActive").checked
  };
