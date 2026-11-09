@@ -57,6 +57,7 @@
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/responsive.css">
   <link rel="stylesheet" href="css/ajustes.css">
+  <link rel="stylesheet" href="css/conta.css">
   <style>
     .delivery-fee-note {
       margin: 0 0 28px;
@@ -179,6 +180,19 @@
 
   </div>
 
+  <!-- Convite discreto para criar uma conta -->
+  <div class="account-promo-overlay" id="accountPromo" aria-hidden="true">
+    <section class="account-promo" role="dialog" aria-modal="true"
+      aria-labelledby="accountPromoTitle" aria-describedby="accountPromoText" tabindex="-1">
+      <button class="account-promo-close" id="accountPromoClose" type="button" aria-label="Fechar convite">×</button>
+      <span class="account-promo-kicker">SUA EXPERIÊNCIA LUXURIOSA</span>
+      <h2 id="accountPromoTitle">Faça seu cadastro e aproveite <em>vantagens exclusivas.</em></h2>
+      <p id="accountPromoText">Crie sua conta gratuitamente para receber ofertas especiais, condições diferenciadas e novidades da Luxuriosa.</p>
+      <a class="btn primary account-promo-action" href="login.html?cadastro=1">Criar minha conta</a>
+      <button class="account-promo-later" id="accountPromoLater" type="button">Agora não</button>
+    </section>
+  </div>
+
 
   <!-- =========================================================
        MODAL DO PRODUTO
@@ -275,6 +289,7 @@
         <a href="loja.html">Loja</a>
         <a href="atendimento.html">Atendimento</a>
         <a href="sobre.html">Sobre</a>
+        <a href="login.html">Minha conta</a>
       </nav>
 
 
