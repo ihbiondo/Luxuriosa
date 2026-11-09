@@ -233,13 +233,14 @@
             if (complementId && address.complemento && !$(complementId).value.trim()) {
               $(complementId).value = address.complemento;
             }
-            status.textContent = "Endereço localizado. Confira os dados e informe o número.";
+            status.textContent = "Endereço localizado. Confira os dados.";
             status.className = "cep-status success";
           })
           .catch((error) => {
             if (error.name === "AbortError") return;
             if (input.value.replace(/\D/g, "") !== digits) return;
-            status.textContent = "Não foi possível consultar agora. Você pode preencher o endereço manualmente.";
+            lastRequestedCep = "";
+            status.textContent = "Não foi possível consultar agora. Você pode preencher o endereço manualmente ou tentar novamente.";
             status.className = "cep-status error";
           });
       });
