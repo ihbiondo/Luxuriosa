@@ -219,7 +219,7 @@
         });
         if (addressResult.error) throw addressResult.error;
       }
-      const metadataResult = await supabase.auth.updateUser({ data: { account_setup_completed: true } });
+      const metadataResult = await supabase.auth.updateUser({ data: { account_setup_completed: true, full_name: null, phone: null, birth_date: null, favorite_colors: null, address_postal_code: null, address_street: null, address_number: null, address_complement: null, address_neighborhood: null, address_city: null, address_state: null } });
       if (metadataResult.error) throw metadataResult.error;
     }
 
