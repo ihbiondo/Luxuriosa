@@ -1757,6 +1757,45 @@ footer {
   width: 100%;
 }
 
+.cart-attendant-option {
+  margin-top: 15px;
+  padding-top: 13px;
+  border-top: 1px solid var(--line);
+  text-align: center;
+}
+
+.cart-attendant-divider {
+  display: block;
+  margin-bottom: 10px;
+  color: var(--muted);
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: .16em;
+}
+
+.cart-attendant {
+  width: 100%;
+  min-height: 44px;
+  justify-content: center;
+  gap: 8px;
+  border-color: rgba(212,175,124,.38);
+  color: var(--blush);
+  font-size: 11px;
+}
+
+.cart-attendant:hover {
+  border-color: var(--gold);
+  color: var(--gold);
+}
+
+.cart-attendant-option p {
+  max-width: 340px;
+  margin: 8px auto 0;
+  color: var(--muted);
+  font-size: 10px;
+  line-height: 1.55;
+}
+
 .cart-clear {
   width: 100%;
 
