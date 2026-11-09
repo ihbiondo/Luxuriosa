@@ -13,7 +13,7 @@
 main{padding:30px 0 65px}.hero{display:flex;justify-content:space-between;align-items:end;gap:20px;flex-wrap:wrap}.eyebrow{font-size:9px;font-weight:700;letter-spacing:.2em;color:var(--gold);text-transform:uppercase}h1{font:400 clamp(34px,5vw,47px)/1.1 'Playfair Display',Georgia,serif;color:var(--blush);margin:8px 0}h2{font:400 24px 'Playfair Display',Georgia,serif;color:var(--blush);margin:0 0 5px}.sub{color:var(--muted);font-size:11px;margin:8px 0 20px}.notice{padding:12px 15px;border:1px solid var(--line);border-radius:8px;color:var(--muted);margin:17px 0}.notice.error{border-color:#87354a;color:#ffc3cc}
 .section-head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin:27px 0 13px}.period{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:10px}.metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:18px 0}.metric{padding:16px 18px;border:1px solid var(--line);border-radius:11px;background:linear-gradient(145deg,rgba(139,30,63,.13),var(--surface));min-height:98px}.metric span{display:block;color:var(--muted);font-size:10px}.metric strong{display:block;color:var(--gold);font:500 29px 'Playfair Display',Georgia,serif;margin-top:4px}.metric small{display:block;color:#8d7b82;font-size:9px;margin-top:2px}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:15px}.panel{min-width:0;padding:19px;border:1px solid var(--line);border-radius:12px;background:rgba(23,18,22,.88)}.panel p.hint{color:var(--muted);font-size:10px;margin:4px 0 15px}.bars{display:grid;gap:10px}.bar-row{display:grid;grid-template-columns:82px 1fr 75px;align-items:center;gap:9px;font-size:10px;color:var(--muted)}.bar-track{height:8px;background:#2b2027;border-radius:10px;overflow:hidden}.bar-fill{height:100%;background:linear-gradient(90deg,var(--wine),var(--gold));border-radius:10px;min-width:2px}.bar-value{text-align:right;color:var(--text);font-variant-numeric:tabular-nums}.list{display:grid;gap:9px}.item{padding:13px;border:1px solid rgba(212,175,124,.13);border-radius:9px;background:#100d0f}.item-top{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap}.item strong{color:var(--gold)}.meta{display:flex;gap:10px;flex-wrap:wrap;color:var(--muted);font-size:10px;margin:7px 0}.products{margin:7px 0 0;padding-left:17px;color:#e8d9dc;font-size:11px}.tag{color:var(--blush);font-size:9px;text-transform:uppercase;letter-spacing:.06em}.empty{color:var(--muted);font-size:11px;padding:12px 0}.small{font-size:10px;color:var(--muted)}
-.searchbar{display:grid;grid-template-columns:minmax(200px,1fr) 190px auto;gap:9px;margin:15px 0}.searchbar input{min-width:0}.query-results{display:grid;gap:10px}.details{display:flex;gap:8px;flex-wrap:wrap;margin-top:9px}.details span{font-size:10px;color:var(--muted)}.address{font-size:10px;color:#c8b7bd;margin-top:6px}.pill{display:inline-block;border:1px solid var(--line);border-radius:20px;padding:3px 8px;color:var(--blush);font-size:9px}
+.searchbar{display:grid;grid-template-columns:minmax(200px,1fr) 190px auto;gap:9px;margin:15px 0}.searchbar input{min-width:0}.query-results{display:grid;gap:10px}.details{display:flex;gap:8px;flex-wrap:wrap;margin-top:9px}.details span{font-size:10px;color:var(--muted)}.address{font-size:10px;color:#c8b7bd;margin-top:6px}.pill{display:inline-block;border:1px solid var(--line);border-radius:20px;padding:3px 8px;color:var(--blush);font-size:9px}.order-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:12px}.order-actions select{min-width:180px}.order-actions .btn{padding:9px 11px}
 footer{padding:18px 0;border-top:1px solid var(--line);color:#766970;font-size:9px;text-align:center}
 @media(max-width:900px){.metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.grid2{grid-template-columns:1fr}}@media(max-width:560px){.shell{width:calc(100% - 22px)}.top{align-items:flex-start}.brand{font-size:23px}.metrics{gap:8px}.metric{padding:13px;min-height:88px}.metric strong{font-size:25px}.panel{padding:14px}.searchbar{grid-template-columns:1fr 1fr}.searchbar input{grid-column:1/-1}.searchbar button{grid-column:1/-1}.bar-row{grid-template-columns:65px 1fr 65px}}
 </style>
@@ -83,8 +83,24 @@ function renderOrders(orders){
   if(addressText)card.append(el("div","address",addressText));
   if(o.items?.length){const ul=el("ul","products");o.items.forEach(i=>ul.append(el("li","",(i.quantity||1)+"x "+i.product_name+" · "+money.format(Number(i.unit_price)||0))));card.append(ul)}
   if(o.customer_phone){const phone=String(o.customer_phone).replace(/\D/g,"");const link=el("a","btn","CONTATO DO PEDIDO");link.href="https://wa.me/"+phone;link.target="_blank";link.rel="noopener";link.style.display="inline-block";link.style.marginTop="10px";link.style.textDecoration="none";card.append(link)}
+  const controls=el("div","order-actions"),select=el("select"),save=el("button","btn primary","SALVAR STATUS");
+  select.setAttribute("aria-label","Novo status do pedido "+o.order_number);
+  [["awaiting_confirmation","Aguardando confirmação"],["confirmed","Confirmado"],["processing","Em preparação"],["out_for_delivery","Saiu para entrega"],["delivered","Entregue"],["cancelled","Cancelado"]].forEach(([value,label])=>{const option=el("option","",label);option.value=value;if(value===o.status)option.selected=true;select.append(option)});
+  save.type="button";save.addEventListener("click",()=>updateOrderStatus(o,select,save));
+  controls.append(select,save);card.append(controls);
   box.append(card);
  });
+}
+async function updateOrderStatus(order,select,button){
+ const nextStatus=select.value;if(nextStatus===order.status){notice("O pedido já está nesse status.");return}
+ if(!confirm("Alterar o pedido #"+order.order_number+" para '"+statusTag(nextStatus)+"'?"))return;
+ button.disabled=true;button.textContent="SALVANDO...";
+ try{
+  const {data,error}=await supabase.functions.invoke("cart-orders",{body:{action:"admin_update_order_status",order_id:order.id,status:nextStatus}});
+  if(error)throw error;if(!data?.ok)throw new Error(data?.error||"Não foi possível atualizar o pedido.");
+  notice("Pedido #"+order.order_number+" atualizado: "+statusTag(data.order.status)+".");
+  await load();
+ }catch(e){notice(e.message||"Falha ao atualizar pedido.",true);button.disabled=false;button.textContent="SALVAR STATUS"}
 }
 function renderCarts(carts){
  const box=$("carts");box.replaceChildren();if(!carts.length){box.append(el("p","empty","Nenhum carrinho registrado."));return}
