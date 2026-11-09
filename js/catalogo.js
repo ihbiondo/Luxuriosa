@@ -1173,6 +1173,9 @@
       return;
     }
 
+    if (window.LuxuriosaInteligencia && typeof window.LuxuriosaInteligencia.registrarEvento === "function") {
+      window.LuxuriosaInteligencia.registrarEvento("product_view", { product_id: produto.id });
+    }
 
     /* =====================================================
        IMAGEM
