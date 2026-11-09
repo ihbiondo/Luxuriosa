@@ -512,27 +512,42 @@
     });
 
     resetForm.addEventListener("submit", async (event) => {
-      event.preventDefault(); clearMessage(); setBusy(resetForm, true, "ENVIANDO...");
-      const { error } = await supabase.auth.resetPasswordForEmail($("resetEmail").value.trim(), {
-        redirectTo: window.location.origin + window.location.pathname
-      });
-      setBusy(resetForm, false);
-      if (error) return message(friendlyError(error), true);
-      message("Se houver uma conta associada a esse endereço, enviaremos um link para redefinir a senha. Confira sua caixa de entrada.");
+      event.preventDefault();
+      clearMessage();
+      setBusy(resetForm, true, "ENVIANDO...");
+      try {
+        const { error } = await supabase.auth.resetPasswordForEmail($("resetEmail").value.trim(), {
+          redirectTo: window.location.origin + window.location.pathname
+        });
+        if (error) throw error;
+        message("Se houver uma conta associada a esse endereço, enviaremos um link para redefinir a senha. Confira sua caixa de entrada.");
+      } catch (error) {
+        console.error("Falha ao solicitar redefinição de senha:", error);
+        message(friendlyError(error), true);
+      } finally {
+        setBusy(resetForm, false);
+      }
     });
 
     newPasswordForm.addEventListener("submit", async (event) => {
-      event.preventDefault(); clearMessage();
+      event.preventDefault();
+      clearMessage();
       if (!/(?=.*[A-Za-z])(?=.*[0-9]).{8,}/.test($("newPassword").value)) return message("Use uma senha com pelo menos 8 caracteres, incluindo letras e números.", true);
       if ($("newPassword").value !== $("newPasswordConfirm").value) return message("As senhas não coincidem.", true);
       setBusy(newPasswordForm, true, "SALVANDO...");
-      const { error } = await supabase.auth.updateUser({ password: $("newPassword").value });
-      setBusy(newPasswordForm, false);
-      if (error) return message(friendlyError(error), true);
-      newPasswordForm.reset();
-      showForm("login");
-      message("Senha alterada com sucesso. Entre com sua nova senha.");
-      await supabase.auth.signOut();
+      try {
+        const { error } = await supabase.auth.updateUser({ password: $("newPassword").value });
+        if (error) throw error;
+        newPasswordForm.reset();
+        showForm("login");
+        message("Senha alterada com sucesso. Entre com sua nova senha.");
+        await supabase.auth.signOut();
+      } catch (error) {
+        console.error("Falha ao redefinir senha:", error);
+        message(friendlyError(error), true);
+      } finally {
+        setBusy(newPasswordForm, false);
+      }
     });
 
 
