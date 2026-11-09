@@ -3,7 +3,7 @@
   "use strict";
   var CONSENT_KEY = "lux_cookie_consent_v1";
   var CONSENT_VERSION = 1;
-  var GA_ID = "G-PP3SPL55B0";
+  var GA_ID = "G-YHDETK6FPS";
   var consent = null;
   var gaLoaded = false;
 
