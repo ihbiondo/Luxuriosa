@@ -202,7 +202,30 @@
 .customer-message-preview:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
 body.customer-open { overflow: hidden; }
 
+.customer-account-autofill {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  margin: 14px 0 4px;
+  padding: 14px 16px;
+  border: 1px solid rgba(212, 175, 124, .28);
+  border-radius: 10px;
+  background: linear-gradient(110deg, rgba(139, 30, 63, .15), rgba(0, 0, 0, .12));
+}
+.customer-account-copy { display: grid; gap: 3px; min-width: 0; }
+.customer-account-copy strong { color: var(--blush); font-size: 12px; font-weight: 600; }
+.customer-account-copy span { color: var(--muted); font-size: 11px; line-height: 1.45; }
+.customer-account-actions { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 10px; }
+.customer-account-actions .btn { min-height: 40px; padding: 8px 12px; font-size: 10px; }
+.customer-account-actions a { color: var(--gold); font-size: 11px; text-decoration: underline; text-underline-offset: 3px; }
+.customer-account-actions button:disabled { opacity: .6; cursor: wait; }
+
 @media (max-width: 600px) {
+  .customer-account-autofill { align-items: stretch; flex-direction: column; gap: 10px; padding: 12px; }
+  .customer-account-actions { align-items: stretch; flex-direction: column; }
+  .customer-account-actions .btn { width: 100%; min-height: 44px; }
+  .customer-account-actions a { text-align: center; padding: 4px; }
   .customer-overlay {
     align-items: flex-start;
     padding: 6px;
