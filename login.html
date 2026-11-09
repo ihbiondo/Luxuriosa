@@ -131,6 +131,7 @@
           <p class="lead">Consulte e mantenha seus dados atualizados.</p>
           <div class="account-box">
             <p class="account-email">Conta vinculada a <strong id="accountEmail"></strong></p>
+            <p><a id="adminDashboardLink" class="hidden" href="admin.html">Acessar painel administrativo →</a></p>
             <section class="orders-panel" aria-labelledby="ordersHeading">
               <div class="section-label" id="ordersHeading">Meus pedidos</div>
               <p class="orders-intro">Acompanhe as solicitações feitas pelo site e o andamento de cada pedido. Solicitações encaminhadas ao WhatsApp ficam aguardando confirmação; a compra só é confirmada após o atendimento.</p>
@@ -432,6 +433,17 @@
       });
     }
 
+    async function loadAdminAccess(user) {
+      const link = $("adminDashboardLink");
+      if (!link) return;
+      link.classList.add("hidden");
+      try {
+        const { data, error } = await supabase.from("user_permissions")
+          .select("role").eq("user_id", user.id).maybeSingle();
+        if (!error && data?.role === "admin") link.classList.remove("hidden");
+      } catch (_) {}
+    }
+
     let loadingUserId = null;
 
     async function showSignedIn(user) {
@@ -447,6 +459,7 @@
         await syncNewAccountData(user);
         await loadAccountData(user);
         await loadAccountOrders(user);
+        await loadAdminAccess(user);
         activeUserId = user.id;
       } catch (error) {
         activeUserId = null;
