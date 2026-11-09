@@ -157,7 +157,7 @@ footer{padding:18px 0;border-top:1px solid var(--line);color:#766970;font-size:9
       </div>
       <div class="sla-field full">
         <button class="btn primary" id="slaSave" type="submit">SALVAR REGRA DE PRAZO</button>
-        <p class="small" id="slaFormStatus">Valores em minutos. Ex.: 90 = 1h30. Pagamento automático só pode ser liberado com InfinitePay e notificação WhatsApp interna configuradas. Os prazos são contados após a aprovação do pagamento.</p>
+        <p class="small" id="slaFormStatus">Valores em minutos. Ex.: 90 = 1h30. Pagamento automático depende da InfinitePay e do e-mail de aviso configurado. Os prazos são contados após a aprovação do pagamento.</p>
       </div>
     </form>
     <div>
@@ -321,19 +321,19 @@ function renderFulfillmentQueue(orders){
   }else itemsBlock.append(el("div","","Itens não disponíveis."));
   grid.append(customer,itemsBlock);card.append(grid);
   const notification=order.notification||{};
-  const notificationText=notification.whatsapp_notification_status==="sent"?"WhatsApp enviado":
-   notification.whatsapp_notification_status==="failed"?"Falha no WhatsApp":
-   notification.whatsapp_notification_status==="not_configured"?"WhatsApp não configurado":
-   notification.whatsapp_notification_status==="pending"?"WhatsApp pendente":"Sem status de notificação";
-  card.append(el("div","small",notificationText+(notification.whatsapp_notification_error?": "+notification.whatsapp_notification_error:"")));
+  const notificationText=notification.email_notification_status==="sent"?"E-mail enviado":
+   notification.email_notification_status==="failed"?"Falha no e-mail":
+   notification.email_notification_status==="not_configured"?"E-mail não configurado":
+   notification.email_notification_status==="pending"?"E-mail pendente":"Sem status de notificação";
+  card.append(el("div","small",notificationText+(notification.email_notification_error?": "+notification.email_notification_error:"")));
   const actions=el("div","fulfillment-actions");
   const next=order.status==="confirmed"?"processing":order.status==="processing"?"out_for_delivery":"delivered";
   const actionLabel=order.status==="confirmed"?"INICIAR SEPARAÇÃO":order.status==="processing"?"MARCAR SAIU PARA ENTREGA":"MARCAR ENTREGUE";
   const advance=el("button","btn primary",actionLabel);advance.type="button";
   advance.addEventListener("click",()=>updateFulfillment(order,next,advance));actions.append(advance);
-  if(notification.id&&notification.whatsapp_notification_status==="failed"){
-   const retry=el("button","btn","REENVIAR AVISO WHATSAPP");retry.type="button";
-   retry.addEventListener("click",()=>retryPaymentNotification(order,notification,retry));actions.append(retry);
+  if(notification.id&&notification.email_notification_status==="failed"){
+   const retry=el("button","btn","REENVIAR E-MAIL");retry.type="button";
+   retry.addEventListener("click",()=>retryPaymentEmailNotification(order,notification,retry));actions.append(retry);
   }
   card.append(actions);box.append(card);
  });
@@ -356,13 +356,13 @@ async function updateFulfillment(order,nextStatus,button){
   notice("Pedido #"+order.order_number+" atualizado.");await loadFulfillmentQueue();await load();
  }catch(error){notice(error.message||"Falha ao atualizar a expedição.",true);button.disabled=false}
 }
-async function retryPaymentNotification(order,notification,button){
+async function retryPaymentEmailNotification(order,notification,button){
  button.disabled=true;button.textContent="REENVIANDO...";
  try{
-  const {data,error}=await supabase.functions.invoke("payment-admin",{body:{action:"resend_whatsapp_notification",event_id:notification.id}});
-  if(error)throw error;if(!data?.ok)throw new Error(data?.error||"Não foi possível reenviar o aviso.");
-  notice("Notificação WhatsApp reenviada para o pedido #"+order.order_number+".");await loadFulfillmentQueue();
- }catch(error){notice(error.message||"Falha ao reenviar WhatsApp.",true);button.disabled=false;button.textContent="REENVIAR AVISO WHATSAPP"}
+  const {data,error}=await supabase.functions.invoke("payment-admin",{body:{action:"resend_email_notification",event_id:notification.id}});
+  if(error)throw error;if(!data?.ok)throw new Error(data?.error||"Não foi possível reenviar o e-mail.");
+  notice("E-mail de pagamento reenviado para o pedido #"+order.order_number+".");await loadFulfillmentQueue();
+ }catch(error){notice(error.message||"Falha ao reenviar e-mail.",true);button.disabled=false;button.textContent="REENVIAR E-MAIL"}
 }
 function formatMinutes(value){
  const n=Math.max(0,Number(value)||0),h=Math.floor(n/60),m=n%60;
@@ -411,7 +411,7 @@ async function loadFulfillment(){
   if(rules.error)throw rules.error;if(!rules.data?.ok)throw new Error(rules.data?.error||"Regras indisponíveis.");
   const api=health.data.infinitepay_api_key_configured?"InfinitePay: chave OK":"InfinitePay: chave pendente";
   const handle=health.data.infinitepay_handle_configured?"InfiniteTag OK":"InfiniteTag pendente";
-  const whatsapp=health.data.whatsapp_configured?"WhatsApp interno OK":"WhatsApp interno pendente";
+  const whatsapp=health.data.email_notification_configured?"E-mail de avisos OK":"E-mail de avisos pendente";
   status.textContent=api+" · "+handle+" · "+whatsapp;
   renderSlaRules(rules.data.rules||[]);
  }catch(error){
