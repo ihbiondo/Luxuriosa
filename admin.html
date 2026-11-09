@@ -94,7 +94,8 @@ function renderOrders(orders){
 }
 async function updateOrderStatus(order,select,button){
  const nextStatus=select.value;if(nextStatus===order.status){notice("O pedido já está nesse status.");return}
- const extra=nextStatus==="confirmed"?"\n\nA confirmação registra o aceite do pedido, não o pagamento.":"";\n if(!confirm("Alterar o pedido #"+order.order_number+" para '"+statusTag(nextStatus)+"'?"+extra))return;
+ const extra=nextStatus==="confirmed"?"\n\nA confirmação registra o aceite do pedido, não o pagamento.":"";
+ if(!confirm("Alterar o pedido #"+order.order_number+" para '"+statusTag(nextStatus)+"'?"+extra))return;
  button.disabled=true;button.textContent="SALVANDO...";
  try{
   const {data,error}=await supabase.functions.invoke("cart-orders",{body:{action:"admin_update_order_status",order_id:order.id,status:nextStatus}});
