@@ -542,6 +542,10 @@
   }
 
   async function continuarPagamento() {
+    if (document.body && document.body.dataset.previewMode === "true") {
+      avisar("O pagamento está desativado nesta prévia. Use o atendimento pelo WhatsApp para validar o fluxo.", "info");
+      return;
+    }
     if (!mensagemAtual || !dadosAtuais) return;
     var apiCarrinho = window.LuxuriosaCarrinho;
     var itensAtuais = apiCarrinho && typeof apiCarrinho.obterItens === "function" ? apiCarrinho.obterItens() : [];
