@@ -24,7 +24,7 @@
     .section-label{grid-column:1/-1;margin:10px 0 -3px;padding-top:14px;border-top:1px solid rgba(212,175,124,.14);color:var(--gold);font-size:9px;font-weight:600;letter-spacing:.16em;text-transform:uppercase}
     .colors{display:flex;flex-wrap:wrap;gap:8px}.color-option{display:flex;align-items:center;gap:7px;padding:8px 10px;border:1px solid rgba(212,175,124,.18);border-radius:7px;color:var(--muted);font-size:10px}.color-option input{width:14px;height:14px;accent-color:var(--wine)}
     .actions{margin-top:22px}.primary{width:100%;min-height:48px;border:1px solid var(--wine);border-radius:7px;background:var(--wine);color:#fff;font:600 10px var(--sans);letter-spacing:.12em;cursor:pointer;transition:.2s}.primary:hover{background:#a32950}.primary:disabled{opacity:.55;cursor:wait}.text-action{display:block;margin:16px auto 0;padding:4px;border:0;background:none;color:var(--gold);font:500 11px var(--sans);text-decoration:underline;text-underline-offset:3px;cursor:pointer}.legal{margin:18px 0 0;color:#887980;font-size:9px;text-align:center}.message{display:none;margin:0 0 18px;padding:12px 14px;border:1px solid rgba(212,175,124,.25);border-radius:8px;background:rgba(212,175,124,.07);color:var(--blush);font-size:11px}.message.show{display:block}.message.error{border-color:rgba(224,100,120,.35);background:rgba(150,35,60,.12);color:#ffc3cc}
-    .hidden{display:none!important}.account-box{padding:20px;border:1px solid var(--line);border-radius:12px;background:rgba(0,0,0,.18)}.account-box p{color:var(--muted);font-size:12px}.account-email{margin:0 0 18px}.account-email strong{color:var(--blush);font-weight:600}.account-form .section-label{margin-top:20px}.account-form .grid{margin-top:12px}.account-form .actions{margin-bottom:22px}.account-actions{display:flex;gap:10px;flex-wrap:wrap}.secondary{min-height:42px;padding:0 16px;border:1px solid var(--line);border-radius:7px;background:transparent;color:var(--gold);font:600 10px var(--sans);cursor:pointer}
+    .hidden{display:none!important}.account-box{padding:20px;border:1px solid var(--line);border-radius:12px;background:rgba(0,0,0,.18)}.account-box p{color:var(--muted);font-size:12px}.account-email{margin:0 0 18px}.account-email strong{color:var(--blush);font-weight:600}.email-change-form{padding-bottom:18px;border-bottom:1px solid rgba(212,175,124,.14)}.email-change-help{margin:10px 0 0;color:var(--muted);font-size:11px;line-height:1.6}.email-change-form .actions{margin:14px 0 0}.email-change-form .secondary:disabled{opacity:.55;cursor:wait}.account-form .section-label{margin-top:20px}.account-form .grid{margin-top:12px}.account-form .actions{margin-bottom:22px}.account-actions{display:flex;gap:10px;flex-wrap:wrap}.secondary{min-height:42px;padding:0 16px;border:1px solid var(--line);border-radius:7px;background:transparent;color:var(--gold);font:600 10px var(--sans);cursor:pointer}
     footer{padding:20px 0 28px;border-top:1px solid rgba(212,175,124,.12);color:#766970;font-size:9px;text-align:center}
     @media(max-width:800px){main{grid-template-columns:1fr;gap:30px;min-height:auto;padding-top:24px}.intro{max-width:600px}.intro h1{font-size:42px}.intro-note{display:none}.panel{justify-self:center;max-width:620px}.top{padding:20px 0}}
     @media(max-width:480px){.shell{width:min(100% - 24px,1080px)}.top{align-items:flex-start}.brand{font-size:24px}.back{padding-top:8px;font-size:10px}main{padding-top:18px}.intro h1{font-size:36px}.panel{padding:21px 16px;border-radius:15px}.grid{grid-template-columns:1fr}.field.full{grid-column:auto}.section-label{grid-column:auto}.tabs{margin-bottom:22px}h2{font-size:26px}}
@@ -121,6 +121,15 @@
           <p class="lead">Consulte e mantenha seus dados atualizados.</p>
           <div class="account-box">
             <p class="account-email">Conta vinculada a <strong id="accountEmail"></strong></p>
+            <form id="emailChangeForm" class="account-form email-change-form">
+              <div class="section-label">E-mail de acesso</div>
+              <div class="grid">
+                <div class="field full"><label for="newAccountEmail">Novo e-mail</label><input id="newAccountEmail" type="email" autocomplete="email" maxlength="254" placeholder="voce@exemplo.com" required></div>
+                <div class="field full"><label for="confirmAccountEmail">Confirme o novo e-mail</label><input id="confirmAccountEmail" type="email" autocomplete="email" maxlength="254" placeholder="Digite novamente o novo e-mail" required></div>
+              </div>
+              <p class="email-change-help">Por segurança, a alteração depende da confirmação por e-mail. O endereço atual continua válido até a conclusão do processo.</p>
+              <div class="actions"><button class="secondary" id="requestEmailChangeButton" type="submit">SOLICITAR ALTERAÇÃO DE E-MAIL</button></div>
+            </form>
             <form id="accountForm" class="account-form">
               <div class="section-label">Dados pessoais</div>
               <div class="grid">
@@ -289,7 +298,10 @@
     }
 
     async function showSignedIn(user) {
-      if (activeUserId === user.id) return;
+      if (activeUserId === user.id) {
+        $("accountEmail").textContent = user.email || "";
+        return;
+      }
       activeUserId = user.id;
       authArea.classList.add("hidden");
       signedInArea.classList.remove("hidden");
@@ -301,6 +313,40 @@
         console.error("Falha ao carregar perfil:", error);
       }
     }
+
+    $("emailChangeForm").addEventListener("submit", async (event) => {
+      event.preventDefault();
+      clearMessage();
+      const newEmail = $("newAccountEmail").value.trim().toLowerCase();
+      const confirmation = $("confirmAccountEmail").value.trim().toLowerCase();
+      const currentEmail = $("accountEmail").textContent.trim().toLowerCase();
+      if (!newEmail || !/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(newEmail)) {
+        return message("Informe um endereço de e-mail válido.", true);
+      }
+      if (newEmail !== confirmation) return message("Os novos endereços de e-mail não coincidem.", true);
+      if (newEmail === currentEmail) return message("Esse já é o e-mail vinculado à sua conta.", true);
+      const button = $("requestEmailChangeButton");
+      button.disabled = true;
+      button.textContent = "ENVIANDO SOLICITAÇÃO...";
+      try {
+        const { data: userData, error: userError } = await supabase.auth.getUser();
+        if (userError) throw userError;
+        if (!userData.user) throw new Error("Sua sessão expirou. Entre novamente.");
+        const { error } = await supabase.auth.updateUser(
+          { email: newEmail },
+          { emailRedirectTo: window.location.origin + window.location.pathname }
+        );
+        if (error) throw error;
+        $("emailChangeForm").reset();
+        message("Solicitação enviada. Confira as mensagens de confirmação nos endereços de e-mail envolvidos. O endereço de acesso só será alterado depois que as confirmações exigidas forem concluídas.");
+      } catch (error) {
+        console.error("Falha ao solicitar alteração de e-mail:", error);
+        message("Não foi possível solicitar a alteração. " + friendlyError(error), true);
+      } finally {
+        button.disabled = false;
+        button.textContent = "SOLICITAR ALTERAÇÃO DE E-MAIL";
+      }
+    });
 
     $("accountForm").addEventListener("submit", async (event) => {
       event.preventDefault();
