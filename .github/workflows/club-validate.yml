@@ -10,6 +10,8 @@ on:
       - "js/inteligencia.js"
       - "gestao-privada-8f2c6d.html"
       - "supabase/migrations/**"
+      - "supabase/functions/cart-orders/**"
+      - ".github/scripts/**"
       - ".github/workflows/club-validate.yml"
   pull_request:
     paths:
@@ -59,6 +61,9 @@ jobs:
             require("node:child_process").execFileSync(process.execPath, ["--check", target], { stdio: "inherit" });
           }
           NODE
+
+      - name: Testar campos da idempotencia do pedido
+        run: node --test .github/scripts/*.test.cjs
 
       - name: Conferir identificadores e formularios
         run: |
