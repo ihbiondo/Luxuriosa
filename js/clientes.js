@@ -84,7 +84,7 @@
       address = { street: String(address || "") };
     }
     definirValor("customerName", data.name);
-    definirValor("customerPhone", data.phone);
+    definirValor("customerPhone", formatarTelefone(data.phone));
     definirValor("customerCep", address.zip || "");
     definirValor("customerStreet", address.street || "");
     definirValor("customerNumber", address.number || "");
@@ -209,6 +209,17 @@
     }
 
     aviso.textContent = "Entrega para " + cidade + "/" + estado + ": disponibilidade e valor do frete serão confirmados no atendimento.";
+  }
+
+
+  function formatarTelefone(value) {
+    var digits = String(value || "").replace(/\D/g, "");
+    if (digits.length >= 12 && digits.slice(0, 2) === "55") digits = digits.slice(2);
+    if (digits.length !== 10 && digits.length !== 11) return String(value || "");
+    return "(" + digits.slice(0, 2) + ") " +
+      (digits.length === 11
+        ? digits.slice(2, 7) + "-" + digits.slice(7)
+        : digits.slice(2, 6) + "-" + digits.slice(6));
   }
 
   function validarTelefone(value) {
@@ -663,6 +674,12 @@
         if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
         else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
       }
+    });
+    var campoTelefone = $("customerPhone");
+    if (campoTelefone) campoTelefone.addEventListener("input", function () {
+      var digits = this.value.replace(/\\D/g, "").slice(0, 13);
+      if (digits.length >= 10) this.value = formatarTelefone(digits);
+      this.removeAttribute("aria-invalid");
     });
     ["customerName", "customerPhone", "customerStreet", "customerNumber", "customerDistrict", "customerCity", "customerState"].forEach(function (id) {
       var campo = $(id);
