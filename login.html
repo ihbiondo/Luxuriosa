@@ -215,6 +215,7 @@
           neighborhood: meta.address_neighborhood || null,
           city: meta.address_city,
           state: String(meta.address_state || "").toUpperCase(),
+          country: "Brasil",
           is_default: true
         });
         if (addressResult.error) throw addressResult.error;
