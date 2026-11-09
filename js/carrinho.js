@@ -1757,6 +1757,9 @@
     configurarEventos();
 
     renderizar();
+    if (window.LuxuriosaInteligencia && typeof window.LuxuriosaInteligencia.registrarCarrinho === "function") {
+      window.LuxuriosaInteligencia.registrarCarrinho(carrinho);
+    }
 
     /* Abre o carrinho quando o cliente chega de uma página de produto. */
     try {
