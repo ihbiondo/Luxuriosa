@@ -2,7 +2,7 @@ const fs = require("node:fs");
 const assert = require("node:assert/strict");
 
 const html = fs.readFileSync("login.html", "utf8");
-const script = [...html.matchAll(/<script\\b[^>]*>([\\s\\S]*?)<\\/script>/gi)]
+const script = [...html.matchAll(/<script\b[^>]*>([\s\S]*?)<\/script>/gi)]
   .map(match => match[1])
   .find(source => source.length > 1000);
 
