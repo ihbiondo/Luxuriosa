@@ -580,7 +580,11 @@
         });
         if (error) throw error;
         if (!data?.success) throw new Error("A exclusão não foi confirmada pelo servidor.");
-        await supabase.auth.signOut({ scope: "local" });
+        try {
+          await supabase.auth.signOut({ scope: "local" });
+        } catch (signOutError) {
+          console.warn("A conta foi excluída, mas a limpeza local da sessão falhou:", signOutError);
+        }
         activeUserId = null;
         $("deleteAccountForm").reset();
         signedInArea.classList.add("hidden");
