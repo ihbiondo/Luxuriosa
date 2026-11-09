@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Entrar ou criar conta | Luxuriosa</title>
+  <meta name="description" content="Acesse sua conta Luxuriosa ou cadastre-se gratuitamente para receber descontos e ofertas exclusivas.">
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="theme-color" content="#0B0B0B">
+  <link rel="canonical" href="https://luxuriosa.com.br/login.html">
+  <link rel="icon" href="img/site/favicon.ico" sizes="any">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600&family=Playfair+Display:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/login.css">
+</head>
+<body class="auth-page">
+  <header class="auth-header">
+    <a class="auth-brand" href="index.html" aria-label="Luxuriosa — início">LUXURIOSA</a>
+    <a class="auth-back" href="loja.html">Voltar à loja</a>
+  </header>
+
+  <main class="auth-main">
+    <section class="auth-card" aria-labelledby="authTitle">
+      <span class="auth-kicker">Sua experiência Luxuriosa</span>
+      <h1 id="authTitle">Bem-vinda(o) de volta.</h1>
+      <p class="auth-lead">Entre na sua conta ou crie seu cadastro gratuito para acompanhar as vantagens e ofertas exclusivas.</p>
+
+      <div id="authStatus" class="auth-status" role="status" aria-live="polite" hidden></div>
+
+      <div id="authTabs" class="auth-tabs" role="tablist" aria-label="Acesso à conta">
+        <button class="auth-tab" id="loginTab" type="button" role="tab" aria-controls="loginPanel" aria-selected="true">Entrar</button>
+        <button class="auth-tab" id="signupTab" type="button" role="tab" aria-controls="signupPanel" aria-selected="false">Criar cadastro</button>
+      </div>
+
+      <section id="loginPanel" class="auth-panel" role="tabpanel" aria-labelledby="loginTab">
+        <form id="loginForm" class="auth-form" novalidate>
+          <div class="auth-field">
+            <label for="loginEmail">E-mail</label>
+            <input id="loginEmail" name="email" type="email" autocomplete="email" required maxlength="254" placeholder="seu@email.com">
+          </div>
+          <div class="auth-field">
+            <label for="loginPassword">Senha</label>
+            <input id="loginPassword" name="password" type="password" autocomplete="current-password" required minlength="8">
+          </div>
+          <div class="auth-inline">
+            <span></span>
+            <button class="auth-link" id="forgotPassword" type="button">Esqueci minha senha</button>
+          </div>
+          <button class="btn primary auth-submit" type="submit">Entrar na minha conta</button>
+        </form>
+      </section>
+
+      <section id="signupPanel" class="auth-panel" role="tabpanel" aria-labelledby="signupTab" hidden>
+        <form id="signupForm" class="auth-form" novalidate>
+          <div class="auth-field">
+            <label for="signupName">Como gostaria de ser chamado(a)?</label>
+            <input id="signupName" name="display_name" autocomplete="nickname" required maxlength="80" placeholder="Seu nome ou apelido">
+          </div>
+          <div class="auth-field">
+            <label for="signupUsername">Nome de usuário</label>
+            <input id="signupUsername" name="username" autocomplete="username" required minlength="3" maxlength="30" pattern="[a-zA-Z0-9_]+" placeholder="ex.: lux_ana">
+            <small>Use de 3 a 30 caracteres: letras sem acento, números e underline. Depois, o nome de usuário ficará vinculado ao seu perfil.</small>
+          </div>
+          <div class="auth-field">
+            <label for="signupEmail">E-mail</label>
+            <input id="signupEmail" name="email" type="email" autocomplete="email" required maxlength="254" placeholder="seu@email.com">
+          </div>
+          <div class="auth-field">
+            <label for="signupPassword">Crie uma senha</label>
+            <input id="signupPassword" name="password" type="password" autocomplete="new-password" required minlength="8">
+            <small>Use pelo menos 8 caracteres.</small>
+          </div>
+          <div class="auth-field">
+            <label for="signupPasswordConfirm">Confirme sua senha</label>
+            <input id="signupPasswordConfirm" name="password_confirm" type="password" autocomplete="new-password" required minlength="8">
+          </div>
+          <label class="auth-check">
+            <input id="signupAdult" type="checkbox" required>
+            <span>Confirmo que tenho 18 anos ou mais e aceito a <a class="auth-link" href="privacidade.html" target="_blank" rel="noopener">Política de Privacidade</a>.</span>
+          </label>
+          <button class="btn primary auth-submit" type="submit">Criar minha conta gratuita</button>
+        </form>
+      </section>
+
+      <section id="recoveryPanel" class="auth-panel" hidden>
+        <form id="recoveryForm" class="auth-form" novalidate>
+          <div class="auth-field">
+            <label for="newPassword">Nova senha</label>
+            <input id="newPassword" type="password" autocomplete="new-password" required minlength="8">
+          </div>
+          <div class="auth-field">
+            <label for="newPasswordConfirm">Confirme a nova senha</label>
+            <input id="newPasswordConfirm" type="password" autocomplete="new-password" required minlength="8">
+          </div>
+          <button class="btn primary auth-submit" type="submit">Salvar nova senha</button>
+        </form>
+      </section>
+
+      <section id="sessionPanel" class="auth-panel auth-session" hidden>
+        <p>Você já está conectado à sua conta Luxuriosa.</p>
+        <button class="btn ghost auth-submit" id="signOutButton" type="button">Sair da conta</button>
+        <a class="btn primary auth-submit" href="loja.html">Continuar comprando</a>
+      </section>
+
+      <p class="auth-footer">A Luxuriosa trata seus dados com discrição. Sua senha é gerenciada com segurança pelo Supabase e não é armazenada no perfil da loja.</p>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.119.0"></script>
+  <script src="js/supabase-client.js"></script>
+  <script src="js/auth.js"></script>
+</body>
+</html>
