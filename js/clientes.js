@@ -387,6 +387,7 @@
     if (!overlay) return;
     /* Invalida qualquer consulta de CEP pendente de uma etapa anterior. */
     cepConsultaId += 1;
+    accountLoadId += 1;
     focusBeforeOpen = document.activeElement;
     limparAviso();
     review.hidden = true;
@@ -402,6 +403,7 @@
     if (!overlay) return;
     /* Uma resposta atrasada do ViaCEP não deve preencher um checkout futuro. */
     cepConsultaId += 1;
+    accountLoadId += 1;
     overlay.hidden = true;
     document.body.classList.remove("customer-open");
 
@@ -538,6 +540,96 @@
     window.open(url, "_blank", "noopener,noreferrer");
   }
 
+
+  var accountLoadId = 0;
+  var accountSupabasePromise = null;
+
+  function obterClienteSupabase() {
+    if (!accountSupabasePromise) {
+      accountSupabasePromise = import("https://esm.sh/@supabase/supabase-js@2").then(function (mod) {
+        return mod.createClient(
+          "https://byiykxfugvxuowueuxca.supabase.co",
+          "sb_publishable_LaMbeWQ1PNANEQ85SD_35Q_wDzswy8y",
+          { auth: { autoRefreshToken: true, persistSession: true, detectSessionInUrl: true } }
+        );
+      });
+    }
+    return accountSupabasePromise;
+  }
+
+  async function carregarDadosDaConta() {
+    var button = $("customerAccountLoad");
+    if (!button) return;
+    var requestId = ++accountLoadId;
+    button.disabled = true;
+    button.textContent = "Carregando seus dados…";
+    try {
+      var supabase = await obterClienteSupabase();
+      var authResult = await supabase.auth.getUser();
+      if (requestId !== accountLoadId) return;
+      if (authResult.error || !authResult.data || !authResult.data.user) {
+        avisar("Entre na sua conta Luxuriosa para carregar seus dados. Você também pode preencher tudo manualmente.", "error");
+        return;
+      }
+
+      var userId = authResult.data.user.id;
+      var results = await Promise.all([
+        supabase.from("profiles").select("full_name, phone").eq("id", userId).maybeSingle(),
+        supabase.from("addresses")
+          .select("postal_code, street, number, complement, neighborhood, city, state")
+          .eq("user_id", userId)
+          .eq("is_default", true)
+          .limit(1)
+          .maybeSingle()
+      ]);
+      if (requestId !== accountLoadId) return;
+      if (results[0].error) throw results[0].error;
+      if (results[1].error) throw results[1].error;
+
+      var profile = results[0].data || {};
+      var address = results[1].data || {};
+      if (!profile.full_name && !profile.phone && !address.street) {
+        avisar("Ainda não encontramos dados cadastrados na sua conta. Você pode preencher este pedido manualmente.", "info");
+        return;
+      }
+
+      var hasCheckoutData = [
+        "customerName", "customerPhone", "customerCep", "customerStreet",
+        "customerNumber", "customerComplement", "customerDistrict",
+        "customerCity", "customerState", "customerReference"
+      ].some(function (id) { return texto(id); });
+      if (hasCheckoutData && !window.confirm("Deseja substituir os dados já preenchidos pelos dados da sua conta? Você poderá editar tudo antes de enviar o pedido.")) {
+        avisar("Seus dados atuais foram mantidos.", "info");
+        return;
+      }
+
+      preencherFormulario({
+        name: profile.full_name || "",
+        phone: profile.phone || "",
+        address: {
+          zip: address.postal_code || "",
+          street: address.street || "",
+          number: address.number || "",
+          complement: address.complement || "",
+          district: address.neighborhood || "",
+          city: address.city || "",
+          state: address.state || ""
+        }
+      });
+      atualizarAvisoFrete();
+      avisar("Dados carregados. Confira e complete o endereço; você pode editar qualquer campo antes de revisar o pedido.", "success");
+      $("customerName").focus();
+    } catch (error) {
+      if (requestId !== accountLoadId) return;
+      avisar("Não foi possível carregar seus dados agora. Você pode preencher o pedido manualmente.", "error");
+    } finally {
+      if (requestId === accountLoadId) {
+        button.disabled = false;
+        button.textContent = "👤 Usar meus dados cadastrados";
+      }
+    }
+  }
+
   function iniciarFinalizacao() {
     if (!window.LuxuriosaCarrinho || !window.LuxuriosaCarrinho.obterQuantidade()) return;
     abrir();
@@ -555,6 +647,8 @@
 
     form.addEventListener("submit", revisarPedido);
     $("customerClose").addEventListener("click", fechar);
+    var accountLoadButton = $("customerAccountLoad");
+    if (accountLoadButton) accountLoadButton.addEventListener("click", carregarDadosDaConta);
     $("customerCancel").addEventListener("click", fechar);
     $("customerEditButton").addEventListener("click", function () { review.hidden = true; form.hidden = false; $("customerName").focus(); });
     $("customerWhatsAppButton").addEventListener("click", continuarWhatsApp);
