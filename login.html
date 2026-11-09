@@ -543,6 +543,9 @@
     }
 
     const ACCOUNT_CONSENT_VERSION = "luxuriosa-account-data-v1-2026-11";
+    const CLUB_INTIMATE_CONSENT_VERSION = "luxuriosa-intimate-profile-v1-2026-11";
+    let clubIntimateConsentActive = false;
+    let clubRecommendationCatalogPromise = null;
 
     async function syncSignupConsents(user) {
       const meta = user?.user_metadata || {};
@@ -612,16 +615,18 @@
     }
 
     async function loadAccountData(user) {
-      const [profileResult, addressResult, preferencesResult, consentResult] = await Promise.all([
-        supabase.from("profiles").select("full_name, display_name, phone, birth_date").eq("id", user.id).maybeSingle(),
+      const [profileResult, addressResult, preferencesResult, consentResult, clubStyleResult, intimateResult, intimateConsentResult] = await Promise.all([
+        supabase.from("profiles").select("full_name, display_name, phone, birth_date, club_joined_at").eq("id", user.id).maybeSingle(),
         supabase.from("addresses").select("id, postal_code, street, number, complement, neighborhood, city, state").eq("user_id", user.id).eq("is_default", true).maybeSingle(),
         supabase.from("preferences").select("favorite_colors").eq("user_id", user.id).maybeSingle(),
-        supabase.from("account_data_consents").select("purpose, granted, created_at").eq("user_id", user.id).order("created_at", { ascending: false }).limit(20)
+        supabase.from("account_data_consents").select("purpose, granted, created_at").eq("user_id", user.id).order("created_at", { ascending: false }).limit(20),
+        supabase.from("club_profile_preferences").select("style_codes, communication_code").eq("user_id", user.id).maybeSingle(),
+        supabase.from("club_intimate_preferences").select("experience_level, novelty_code, context_code, intensity_code, recommendation_tone_code, desired_codes, category_codes, sensation_codes, avoid_codes").eq("user_id", user.id).maybeSingle(),
+        supabase.from("club_intimate_consent_events").select("granted, created_at").eq("user_id", user.id).order("created_at", { ascending: false }).limit(1)
       ]);
-      if (profileResult.error) throw profileResult.error;
-      if (addressResult.error) throw addressResult.error;
-      if (preferencesResult.error) throw preferencesResult.error;
-      if (consentResult.error) throw consentResult.error;
+      for (const result of [profileResult, addressResult, preferencesResult, consentResult, clubStyleResult, intimateResult, intimateConsentResult]) {
+        if (result.error) throw result.error;
+      }
       const latestConsent = new Map();
       (consentResult.data || []).forEach(row => {
         if (!latestConsent.has(row.purpose)) latestConsent.set(row.purpose, row);
@@ -634,6 +639,17 @@
       const profile = profileResult.data || {};
       const address = addressResult.data || {};
       const colors = preferencesResult.data?.favorite_colors || [];
+      const clubStyles = clubStyleResult.data?.style_codes || [];
+      const clubIntimate = intimateResult.data || null;
+      const latestIntimateConsent = intimateConsentResult.data?.[0] || null;
+      clubIntimateConsentActive = Boolean(clubIntimate || latestIntimateConsent?.granted === true);
+      $("clubIntimateConsent").checked = clubIntimateConsentActive;
+      $("clubIntimateFields").hidden = !clubIntimateConsentActive;
+      setClubChoiceValues("clubStyle", clubStyles);
+      setClubSelect("clubCommunication", clubStyleResult.data?.communication_code ?? 2);
+      setClubIntimateForm(clubIntimate);
+      renderClubProgress(profile, address, colors, clubStyles, clubStyleResult.data);
+      await renderClubRecommendations(clubIntimate);
       $("accountEmail").textContent = user.email || "";
       $("accountFullName").value = profile.full_name || user.user_metadata?.full_name || "";
       $("accountBirthDate").value = profile.birth_date || user.user_metadata?.birth_date || "";
@@ -656,7 +672,7 @@
       const container = $("accountOrders");
       container.replaceChildren();
       const { data: orders, error } = await supabase.from("orders")
-        .select("id, order_number, status, subtotal, shipping_amount, total_amount, created_at")
+        .select("id, order_number, status, payment_status, subtotal, shipping_amount, total_amount, club_discount_amount_cents, club_discount_percent, created_at")
         .eq("customer_id", user.id).order("created_at", { ascending: false }).limit(20);
       if (error) throw error;
       if (!orders || !orders.length) {
@@ -680,8 +696,24 @@
         top.append(number, status);
         const meta = document.createElement("div"); meta.className = "order-meta";
         const date = document.createElement("span"); date.textContent = new Date(order.created_at).toLocaleDateString("pt-BR");
-        const amount = document.createElement("strong"); amount.textContent = order.shipping_amount == null ? "Produtos: " + money.format(Number(order.subtotal) || 0) + " · frete a confirmar" : money.format(Number(order.total_amount) || 0);
+        const amount = document.createElement("strong");
+        amount.textContent = order.shipping_amount == null
+          ? "Produtos: " + money.format(Number(order.subtotal) || 0) + " · frete a confirmar"
+          : money.format(Number(order.total_amount) || 0);
         meta.append(date, amount);
+        if (Number(order.club_discount_amount_cents) > 0) {
+          const saving = document.createElement("span");
+          saving.className = "order-discount";
+          saving.textContent = "Clube " + (Number(order.club_discount_percent) || 10) + "%: -" + money.format(Number(order.club_discount_amount_cents) / 100);
+          meta.append(saving);
+        }
+        const paymentLabels = { paid: "Pagamento confirmado", pending: "Aguardando pagamento", failed: "Pagamento não concluído", cancelled: "Cobrança expirada/cancelada", review_required: "Pagamento em análise" };
+        if (order.payment_status && order.payment_status !== "not_required") {
+          const payment = document.createElement("span");
+          payment.className = "order-payment-status";
+          payment.textContent = paymentLabels[order.payment_status] || "Pagamento em atualização";
+          meta.append(payment);
+        }
         const list = document.createElement("ul"); list.className = "order-products";
         (lines || []).filter((line) => line.order_id === order.id).forEach((line) => {
           const item = document.createElement("li"); item.textContent = line.quantity + "x " + line.product_name; list.append(item);
