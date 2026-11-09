@@ -9,7 +9,7 @@
     if (window.crypto && typeof window.crypto.randomUUID === "function") return window.crypto.randomUUID();
     return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
       var r = Math.random() * 16 | 0;
-      return (c === "x" ? r : (r & 3 | 8)).toString(16);
+      return c === "x" ? r : (r & 3 | 8).toString(16);
     });
   }
   function getSessionKey() {
@@ -21,11 +21,22 @@
     }
     return sessionKey;
   }
-  function marketingConsentGranted() {
+  function readConsent() {
     try {
       var consent = JSON.parse(localStorage.getItem("lux_cookie_consent_v1") || "null");
-      return !!(consent && consent.version === 1 && consent.marketing === true);
-    } catch (_) { return false; }
+      if (!consent || consent.version !== 1 || !consent.updatedAt) return null;
+      var updated = new Date(consent.updatedAt).getTime();
+      if (!Number.isFinite(updated) || updated > Date.now() || Date.now() - updated > 180 * 86400000) return null;
+      return consent;
+    } catch (_) { return null; }
+  }
+  function analyticsConsentGranted() {
+    var consent = readConsent();
+    return !!(consent && consent.analytics === true);
+  }
+  function marketingConsentGranted() {
+    var consent = readConsent();
+    return !!(consent && consent.marketing === true);
   }
   function getAccessToken() {
     try {
@@ -39,8 +50,7 @@
     var token = getAccessToken();
     if (token) headers.authorization = "Bearer " + token;
     return fetch(ENDPOINT, {
-      method: "POST",
-      headers: headers,
+      method: "POST", headers: headers,
       body: JSON.stringify(Object.assign({ session_key: getSessionKey() }, payload)),
       keepalive: true
     }).then(function (response) {
@@ -50,19 +60,37 @@
       });
     });
   }
+  function pageType() {
+    var path = window.location.pathname || "/";
+    if (/\/produtos\//i.test(path)) return "product";
+    if (path === "/" || /index\.html$/i.test(path)) return "home";
+    if (/loja\.html$/i.test(path)) return "catalog";
+    if (/checkout|pedido/i.test(path)) return "checkout";
+    if (/atendimento|sobre|privacidade|faq/i.test(path)) return "institutional";
+    return "other";
+  }
+  function registrarEvento(eventName, options) {
+    if (!analyticsConsentGranted()) return Promise.resolve({ skipped: true });
+    options = options || {};
+    var payload = {
+      action: "site_event", analytics_consent: true,
+      event_name: eventName, page_type: options.page_type || pageType()
+    };
+    if (options.product_id != null) payload.product_id = String(options.product_id).slice(0, 100);
+    if (Number.isInteger(options.quantity) && options.quantity >= 1 && options.quantity <= 99) payload.quantity = options.quantity;
+    return send(payload).catch(function (error) {
+      console.warn("Luxuriosa: evento analítico não registrado.", error);
+      return { error: true };
+    });
+  }
   function normalizeItems(items) {
     return (Array.isArray(items) ? items : []).slice(0, 80).map(function (item) {
-      return {
-        id: item.id,
-        nome: String(item.nome || item.name || "Produto").slice(0, 180),
-        quantidade: Number(item.quantidade) || 1,
-        preco: Number(item.preco) || 0,
-        sku: item.sku || null
-      };
+      return { id: item.id, nome: String(item.nome || item.name || "Produto").slice(0, 180),
+        quantidade: Number(item.quantidade) || 1, preco: Number(item.preco) || 0, sku: item.sku || null };
     });
   }
   function registrarCarrinho(items) {
-    if (!marketingConsentGranted()) return;
+    if (!analyticsConsentGranted()) return;
     clearTimeout(pendingTimer);
     var snapshot = normalizeItems(items);
     pendingTimer = setTimeout(function () {
@@ -73,19 +101,16 @@
   }
   function registrarEtapa(action, items, customer) {
     var explicitWhatsAppOptIn = action === "checkout_reviewed" && customer && customer.marketingWhatsappOptIn === true;
-    if (!marketingConsentGranted() && !explicitWhatsAppOptIn) return Promise.resolve({ skipped: true });
+    if (!analyticsConsentGranted() && !explicitWhatsAppOptIn) return Promise.resolve({ skipped: true });
     return send({
-      action: action,
-      items: normalizeItems(items),
+      action: action, items: normalizeItems(items),
       customer: explicitWhatsAppOptIn ? customer : undefined
     });
   }
   function registrarPedido(items, customer, shippingAmount) {
     return send({
-      action: "whatsapp_opened",
-      items: normalizeItems(items),
-      customer: customer,
-      shipping_amount: shippingAmount
+      action: "whatsapp_opened", items: normalizeItems(items),
+      customer: customer, shipping_amount: shippingAmount
     });
   }
 
@@ -93,6 +118,15 @@
     registrarCarrinho: registrarCarrinho,
     registrarEtapa: registrarEtapa,
     registrarPedido: registrarPedido,
+    registrarEvento: registrarEvento,
     obterSessao: getSessionKey
   };
+
+  if (analyticsConsentGranted()) {
+    registrarEvento("page_view");
+    if (pageType() === "product") {
+      var productButton = document.querySelector("[data-product-id]");
+      if (productButton) registrarEvento("product_view", { product_id: productButton.getAttribute("data-product-id") });
+    }
+  }
 })();
