@@ -59,6 +59,7 @@ main{padding:20px 0 50px}.hero{display:flex;justify-content:space-between;align-
 @media(max-width:560px){.fulfillment-grid{grid-template-columns:1fr}}
 @media(max-width:560px){.sla-form{grid-template-columns:1fr}.sla-field.full,.sla-checks{grid-column:auto}}
 
+.live-event,.live-session{padding:9px 11px;border:1px solid rgba(212,175,124,.13);border-radius:7px;background:#100d0f}.live-event-head,.live-session-head{display:flex;justify-content:space-between;gap:8px;align-items:center}.live-event strong,.live-session strong{color:var(--gold);font-size:10px}.live-event small,.live-session small{color:var(--muted);font-size:9px}.live-event p,.live-session p{margin:4px 0 0;color:#e8d9dc;font-size:10px;overflow-wrap:anywhere}.live-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#72c69b;margin-right:6px;box-shadow:0 0 8px #72c69b}.live-feed-time{white-space:nowrap;color:var(--muted);font-size:9px}
 footer{padding:18px 0;border-top:1px solid var(--line);color:#766970;font-size:9px;text-align:center}
 @media(max-width:1000px){.metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.grid2{grid-template-columns:1fr}}@media(max-width:560px){.shell{width:calc(100% - 22px)}.top{align-items:flex-start}.brand{font-size:23px}.metrics{gap:8px}.metric{padding:13px;min-height:88px}.metric strong{font-size:25px}.panel{padding:14px}.searchbar{grid-template-columns:1fr 1fr}.searchbar input{grid-column:1/-1}.searchbar button{grid-column:1/-1}.bar-row{grid-template-columns:65px 1fr 65px}}
 </style>
@@ -83,6 +84,24 @@ footer{padding:18px 0;border-top:1px solid var(--line);color:#766970;font-size:9
 <section class="panel"><h2>Movimento diário</h2><p class="hint">Faturamento diário dos pedidos confirmados no período.</p><div id="daily" class="bars"><p class="empty">Aguardando dados...</p></div></section>
 <section class="panel"><h2>Produtos mais vendidos</h2><p class="hint">Unidades em pedidos confirmados no período.</p><div id="topProducts" class="bars"><p class="empty">Aguardando dados...</p></div></section>
 </div>
+<section class="panel" id="liveActivityPanel" style="margin:18px 0">
+<div class="section-head" style="margin:0 0 10px">
+ <div><h2>Monitoramento ao vivo</h2><p class="hint">Visitantes com autorização de análise e atividade recente. Atualização automática a cada 10 segundos.</p></div>
+ <div class="actions"><span class="pill" id="liveStatus">Conectando...</span><button class="btn" id="liveRefresh" type="button">ATUALIZAR AGORA</button></div>
+</div>
+<div class="metrics" style="margin-top:10px">
+ <div class="metric"><span>Visitantes ativos (5 min)</span><strong id="liveVisitors">—</strong><small>Sessões anônimas em atividade</small></div>
+ <div class="metric"><span>Ações nas últimas 24h</span><strong id="liveEventCount">—</strong><small>Eventos autorizados</small></div>
+ <div class="metric"><span>Carrinhos em andamento</span><strong id="liveCarts">—</strong><small>Sessões com itens</small></div>
+ <div class="metric"><span>Valor em carrinhos ativos</span><strong id="liveCartValue">—</strong><small>Estimativa, não faturamento</small></div>
+</div>
+<div class="grid2">
+ <div><h2 style="font-size:19px">Fluxo de atividade</h2><p class="hint">Últimas ações recebidas do site.</p><div id="liveFeed" class="list"><p class="empty">Aguardando atividade...</p></div></div>
+ <div><h2 style="font-size:19px">Visitantes em atividade</h2><p class="hint">Identificador anônimo, última página e carrinho conhecido.</p><div id="liveSessions" class="list"><p class="empty">Nenhum visitante ativo no momento.</p></div></div>
+</div>
+<p class="small" style="margin:12px 0 0">A contagem inclui apenas sessões que autorizaram análise. Não identifica pessoas nem revela dados pessoais de visitantes anônimos.</p>
+</section>
+
 <section class="panel" id="intelligencePanel" style="margin:18px 0">
 <div class="section-head" style="margin:0 0 10px"><div><h2>Inteligência comercial</h2><p class="hint">Comportamento agregado de navegação, produtos e intenção de compra. Só registra atividade após autorização de análise.</p></div><span class="pill" id="intelligenceStatus">Aguardando consulta</span></div>
 <div class="metrics" style="margin-top:10px">
@@ -429,6 +448,51 @@ async function getProductNames(){
  catch(_){productNames=new Map()}
  return productNames;
 }
+const liveEventLabels={page_view:"Abriu uma página",product_view:"Visualizou produto",add_to_cart:"Adicionou ao carrinho",checkout_started:"Iniciou checkout",checkout_reviewed:"Revisou pedido",whatsapp_opened:"Abriu atendimento no WhatsApp"};
+const livePageLabels={home:"Início",catalog:"Catálogo",product:"Produto",checkout:"Checkout",institutional:"Institucional",other:"Outras páginas"};
+let liveRefreshTimer=null;
+async function loadLiveActivity(){
+ const status=$("liveStatus");
+ try{
+  const [{data,error},names]=await Promise.all([
+   supabase.functions.invoke("cart-orders",{body:{action:"admin_live_activity"}}),
+   getProductNames()
+  ]);
+  if(error)throw error;if(!data?.ok)throw new Error(data?.error||"Falha ao consultar atividade.");
+  const sessions=data.sessions||[],events=data.events||[];
+  $("liveVisitors").textContent=eventNumber(data.active_visitors);
+  $("liveEventCount").textContent=eventNumber(events.length);
+  const carts=sessions.filter(s=>Number(s.item_count)>0);
+  $("liveCarts").textContent=eventNumber(carts.length);
+  $("liveCartValue").textContent=money.format(carts.reduce((sum,s)=>sum+Number(s.subtotal||0),0));
+  const feed=$("liveFeed");feed.replaceChildren();
+  if(!events.length)feed.append(el("p","empty","Nenhuma ação registrada nas últimas 24 horas. Para aparecer aqui, o visitante precisa autorizar análise."));
+  events.slice(0,30).forEach(event=>{
+   const card=el("article","live-event"),head=el("div","live-event-head");
+   const title=liveEventLabels[event.event_name]||event.event_name;
+   head.append(el("strong","",title),el("span","live-feed-time",fmtDate(event.created_at)));
+   card.append(head);
+   let detail=(livePageLabels[event.page_type]||event.page_type||"Página")+" · sessão "+String(event.session_key||"").slice(0,8);
+   if(event.product_id)detail+=" · "+(names.get(String(event.product_id))||("Produto #"+event.product_id));
+   if(event.event_name==="add_to_cart")detail+=" · quantidade "+(event.quantity||1);
+   card.append(el("p","",detail));feed.append(card);
+  });
+  const box=$("liveSessions");box.replaceChildren();
+  if(!sessions.length)box.append(el("p","empty","Nenhum visitante ativo nos últimos cinco minutos."));
+  sessions.slice(0,25).forEach(session=>{
+   const card=el("article","live-session"),head=el("div","live-session-head");
+   head.append(el("strong","", "Sessão "+String(session.session_key||"").slice(0,8)),el("span","live-feed-time",fmtDate(session.last_activity_at)));
+   card.append(head);
+   const items=Array.isArray(session.items_snapshot)?session.items_snapshot:[];
+   const namesList=items.slice(0,3).map(item=>(item.quantidade||item.quantity||1)+"x "+(item.nome||item.product_name||names.get(String(item.id||item.product_id))||"Produto"));
+   const detail=Number(session.item_count)>0?Number(session.item_count)+" item(ns) · "+money.format(Number(session.subtotal)||0):"Ainda sem itens no carrinho";
+   card.append(el("p","",detail));
+   if(namesList.length)card.append(el("small","",namesList.join(" · ")));
+   box.append(card);
+  });
+  status.textContent="AO VIVO · atualizado "+new Date().toLocaleTimeString("pt-BR");
+ }catch(error){console.error(error);status.textContent="Falha na atualização";$("liveFeed").replaceChildren(el("p","empty",error.message||"Não foi possível carregar o fluxo."))}
+}
 async function loadIntelligence(days){
  const status=$("intelligenceStatus");
  try{
@@ -504,6 +568,8 @@ async function load(){
   renderBars("topProducts",(data.top_products||[]).map(x=>({label:x.name,value:x.quantity})),"label","value",v=>String(v)+" un.");
   renderOrders(data.orders||[]);renderCarts(data.carts||[]);
   loadIntelligence(days);
+  loadLiveActivity();
+  if(!liveRefreshTimer)liveRefreshTimer=setInterval(loadLiveActivity,10000);
   loadFulfillment();
   loadFulfillmentQueue();
   $("updatedAt").textContent="Atualizado às "+new Date().toLocaleTimeString("pt-BR");
@@ -512,6 +578,7 @@ async function load(){
  finally{$("refresh").disabled=false}
 }
 $("refresh").addEventListener("click",load);
+$("liveRefresh").addEventListener("click",loadLiveActivity);
 $("refreshDispatchQueue").addEventListener("click",loadFulfillmentQueue);
 $("searchForm").addEventListener("submit",e=>{e.preventDefault();load()});
 $("period").addEventListener("change",load);
