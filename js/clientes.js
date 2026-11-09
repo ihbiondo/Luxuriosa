@@ -11,6 +11,7 @@
   var mensagemAtual = "";
   var cepConsultaId = 0;
   var ultimoEnderecoViaCep = "";
+  var accountLoadId = 0;
 
   function $(id) { return document.getElementById(id); }
   function texto(id) { var el = $(id); return el ? String(el.value || "").trim() : ""; }
@@ -246,6 +247,7 @@
     if (!button || button.disabled) return;
     button.disabled = true;
     var originalText = button.textContent;
+    var loadId = ++accountLoadId;
     button.textContent = "Carregando seus dados...";
 
     try {
@@ -272,6 +274,7 @@
           .maybeSingle()
       ]);
 
+      if (loadId !== accountLoadId || overlay.hidden) return;
       if (results[0].error) throw results[0].error;
       if (results[1].error) throw results[1].error;
       var profile = results[0].data || {};
@@ -505,8 +508,9 @@
 
   function fechar() {
     if (!overlay) return;
-    /* Uma resposta atrasada do ViaCEP não deve preencher um checkout futuro. */
+    /* Respostas atrasadas não devem preencher uma nova etapa de checkout. */
     cepConsultaId += 1;
+    accountLoadId += 1;
     overlay.hidden = true;
     document.body.classList.remove("customer-open");
 
