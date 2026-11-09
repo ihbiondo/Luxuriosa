@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="theme-color" content="#0B0B0B">
+  <title>Status do pagamento | Luxuriosa</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root{color-scheme:dark;--wine:#8B1E3F;--gold:#D4AF7C;--blush:#F7D7D9;--muted:#b9a9ae;font-family:Montserrat,Arial,sans-serif}
+    *{box-sizing:border-box}body{min-height:100vh;margin:0;display:grid;place-items:center;padding:22px;background:radial-gradient(ellipse at 50% 0%,rgba(139,30,63,.23),transparent 55%),#0B0B0B;color:#f3e9eb}
+    .panel{width:min(520px,100%);padding:clamp(24px,6vw,42px);border:1px solid rgba(212,175,124,.25);border-radius:16px;background:#171216;box-shadow:0 20px 70px rgba(0,0,0,.4);text-align:center}
+    .brand{font:500 32px 'Playfair Display',Georgia,serif;color:var(--blush);letter-spacing:.04em}.brand small{display:block;margin-top:3px;font:600 9px Montserrat,sans-serif;color:var(--gold);letter-spacing:.2em}
+    .symbol{width:54px;height:54px;margin:30px auto 14px;display:grid;place-items:center;border:1px solid rgba(212,175,124,.45);border-radius:50%;font-size:25px;color:var(--gold)}
+    h1{font:400 29px 'Playfair Display',Georgia,serif;color:var(--blush);margin:0 0 9px}
+    p{font-size:12px;line-height:1.8;color:var(--muted);margin:8px 0}
+    .order{margin:22px 0;padding:13px;border:1px solid rgba(212,175,124,.18);border-radius:9px;color:var(--gold);font-size:11px}
+    .times{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:15px 0}
+    .time{padding:12px;border:1px solid rgba(212,175,124,.15);border-radius:8px;text-align:left}.time span{display:block;color:var(--muted);font-size:9px}.time strong{display:block;margin-top:4px;color:var(--gold);font-size:13px}
+    .actions{display:grid;gap:9px;margin-top:22px}
+    button,a{width:100%;padding:12px 14px;border-radius:8px;border:1px solid rgba(212,175,124,.3);background:#211820;color:var(--gold);text-decoration:none;font:700 10px Montserrat,sans-serif;letter-spacing:.06em;cursor:pointer}
+    a.primary{background:var(--wine);border-color:var(--wine);color:white}
+    .hidden{display:none!important}.error{color:#ffc3cc}
+    @media(max-width:420px){.times{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <main class="panel">
+    <div class="brand">Luxuriosa<small>LINGERIE &amp; INTIMIDADE</small></div>
+    <div class="symbol" id="symbol" aria-hidden="true">…</div>
+    <h1 id="title">Consultando seu pagamento</h1>
+    <p id="message" aria-live="polite">Estamos verificando a confirmação diretamente com a Luxuriosa.</p>
+    <div class="order hidden" id="order"></div>
+    <div class="times hidden" id="times">
+      <div class="time"><span>Expedição prevista até</span><strong id="dispatch">—</strong></div>
+      <div class="time"><span>Entrega prevista até</span><strong id="delivery">—</strong></div>
+    </div>
+    <p id="note">O retorno desta página não confirma o pagamento. A confirmação depende da resposta oficial da InfinitePay.</p>
+    <div class="actions">
+      <button type="button" id="check">CONSULTAR PAGAMENTO</button>
+      <a class="primary" href="index.html">VOLTAR À LUXURIOSA</a>
+    </div>
+  </main>
+<script>
+(function(){
+  "use strict";
+  var params=new URLSearchParams(location.search);
+  var orderNsu=params.get("order")||params.get("order_nsu")||"";
+  var api="https://byiykxfugvxuowueuxca.supabase.co/functions/v1/payment-status";
+  var $=function(id){return document.getElementById(id)};
+  var formatter=new Intl.DateTimeFormat("pt-BR",{timeZone:"America/Sao_Paulo",dateStyle:"short",timeStyle:"short"});
+  function show(status,title,message,symbol){
+    $("title").textContent=title;$("message").textContent=message;$("symbol").textContent=symbol;
+    $("order").classList.toggle("hidden",!status.order_number);
+    if(status.order_number)$("order").textContent="Pedido Luxuriosa #"+status.order_number;
+    var paid=status.payment_status==="paid";
+    $("times").classList.toggle("hidden",!paid);
+    if(paid){
+      $("dispatch").textContent=status.dispatch_due_at?formatter.format(new Date(status.dispatch_due_at)):"A confirmar";
+      $("delivery").textContent=status.delivery_due_at?formatter.format(new Date(status.delivery_due_at)):"A confirmar";
+      $("note").textContent="Seu pedido já está confirmado. A equipe da Luxuriosa recebeu a informação e seguirá com a expedição.";
+      try{localStorage.removeItem("luxuriosa_carrinho")}catch(_){}
+    }
+  }
+  async function check(){
+    if(!orderNsu){show({},"Referência não encontrada","Não identificamos a referência deste pedido. Fale com a Luxuriosa pelo WhatsApp para conferir sua compra.","!");return}
+    $("check").disabled=true;$("check").textContent="CONSULTANDO...";
+    try{
+      var response=await fetch(api,{method:"POST",headers:{"content-type":"application/json","apikey":"sb_publishable_LaMbeWQ1PNANEQ85SD_35Q_wDzswy8y"},body:JSON.stringify({order_nsu:orderNsu})});
+      var data=await response.json().catch(function(){return{}});
+      if(!response.ok||!data.ok)throw new Error(data.error||"Não foi possível consultar o pagamento.");
+      if(data.payment_status==="paid"){
+        show(data,"Pagamento confirmado!","Recebemos a confirmação do pagamento. Seu pedido já pode seguir para a fila de expedição.","✓");
+      }else if(data.payment_status==="pending"){
+        show(data,"Aguardando confirmação","Ainda não recebemos a confirmação da InfinitePay. Caso você já tenha pago, aguarde alguns instantes e consulte novamente.","…");
+      }else if(data.payment_status==="review_required"){
+        show(data,"Pagamento em conferência","Identificamos uma divergência e a equipe precisa revisar a transação antes de liberar a expedição. Não faça outro pagamento agora.","!");
+      }else if(data.payment_status==="failed"||data.payment_status==="cancelled"){
+        show(data,"Pagamento não concluído","A cobrança não foi confirmada. Volte à loja ou fale com a nossa equipe para receber orientação.","!");
+      }else{
+        show(data,"Status do pedido","O pedido está com status: "+data.payment_status+". Se precisar, fale com a Luxuriosa.","i");
+      }
+    }catch(error){
+      show({},"Não foi possível consultar agora",error.message||"Tente novamente em instantes.","!");
+    }finally{$("check").disabled=false;$("check").textContent="CONSULTAR PAGAMENTO"}
+  }
+  $("check").addEventListener("click",check);
+  check();
+})();
+</script>
+</body>
+</html>
