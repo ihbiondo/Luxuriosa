@@ -614,6 +614,185 @@
       if (metadataResult.error) throw metadataResult.error;
     }
 
+    function getClubChoiceValues(name) {
+      return Array.from(document.querySelectorAll('input[name="' + name + '"]:checked')).map(input => input.value);
+    }
+
+    function setClubChoiceValues(name, values) {
+      const selected = new Set(Array.isArray(values) ? values : []);
+      document.querySelectorAll('input[name="' + name + '"]').forEach(input => {
+        input.checked = selected.has(input.value);
+      });
+    }
+
+    function setClubSelect(id, value) {
+      const field = $(id);
+      if (field) field.value = value == null ? "" : String(value);
+    }
+
+    function setClubIntimateForm(profile) {
+      setClubSelect("clubExperienceLevel", profile?.experience_level);
+      setClubSelect("clubNovelty", profile?.novelty_code);
+      setClubSelect("clubContext", profile?.context_code);
+      setClubSelect("clubIntensity", profile?.intensity_code);
+      setClubChoiceValues("clubDesired", profile?.desired_codes);
+      setClubChoiceValues("clubCategory", profile?.category_codes);
+      setClubChoiceValues("clubSensation", profile?.sensation_codes);
+      setClubChoiceValues("clubAvoid", profile?.avoid_codes);
+    }
+
+    function renderClubProgress(profile, address, colors, styles, clubPrefs) {
+      const steps = [
+        { label: "Dados pessoais", weight: 25, done: Boolean(profile.full_name && profile.birth_date && profile.phone) },
+        { label: "Endereço", weight: 25, done: Boolean(address.postal_code && address.street && address.number && address.neighborhood && address.city && address.state) },
+        { label: "Cores favoritas", weight: 15, done: Array.isArray(colors) && colors.length > 0 },
+        { label: "Seu estilo", weight: 20, done: Array.isArray(styles) && styles.length > 0 },
+        { label: "Forma de atendimento", weight: 15, done: Boolean(clubPrefs) }
+      ];
+      const percent = steps.reduce((sum, step) => sum + (step.done ? step.weight : 0), 0);
+      $("clubProgressValue").textContent = percent + "% completo";
+      $("clubProgressBar").setAttribute("aria-valuenow", String(percent));
+      $("clubProgressFill").style.width = percent + "%";
+      $("clubProgressMessage").textContent = percent === 100
+        ? "Perfil essencial completo. Suas preferências podem ser alteradas quando quiser."
+        : "Faltam: " + steps.filter(step => !step.done).map(step => step.label.toLowerCase()).join(", ") + ".";
+      const achievements = [
+        { label: "Bem-vindo ao Clube", earned: true },
+        { label: "Dados e entrega", earned: steps[0].done && steps[1].done },
+        { label: "Estilo definido", earned: steps[2].done && steps[3].done },
+        { label: "Perfil completo", earned: percent === 100 },
+        { label: "Curadoria ativada", earned: clubIntimateConsentActive }
+      ];
+      const container = $("clubAchievements");
+      container.replaceChildren();
+      achievements.forEach(item => {
+        const badge = document.createElement("span");
+        badge.className = "club-achievement" + (item.earned ? " is-earned" : "");
+        badge.textContent = (item.earned ? "✓ " : "○ ") + item.label;
+        container.append(badge);
+      });
+    }
+
+    async function loadClubCatalog() {
+      if (!clubRecommendationCatalogPromise) {
+        clubRecommendationCatalogPromise = fetch("data/produtos.json", { cache: "no-cache" })
+          .then(response => {
+            if (!response.ok) throw new Error("Não foi possível carregar o catálogo.");
+            return response.json();
+          })
+          .then(data => Array.isArray(data?.produtos) ? data.produtos : []);
+      }
+      return clubRecommendationCatalogPromise;
+    }
+
+    async function renderClubRecommendations(profile) {
+      const container = $("clubRecommendationList");
+      if (!container) return;
+      container.replaceChildren();
+      if (!clubIntimateConsentActive || !profile) {
+        const empty = document.createElement("p");
+        empty.className = "club-recommendation-empty";
+        empty.textContent = "A curadoria é opcional. Ative a ficha de afinidade e escolha suas preferências para receber sugestões compatíveis.";
+        container.append(empty);
+        return;
+      }
+
+      const categoryNames = {
+        gels: ["Géis e cremes íntimos", "Géis e estimulantes íntimos", "Géis e lubrificantes íntimos", "Estimulantes"],
+        vibradores: ["Vibradores"],
+        jogos: ["Jogos eróticos", "Jogos e masturbadores"],
+        masturbadores: ["Masturbadores"],
+        aneis: ["Anéis penianos"],
+        plugs: ["Plugs anais"],
+        proteses: ["Próteses"],
+        kits: ["Kits"],
+        perfumes: ["Perfumes sensuais"],
+        higiene: ["Higiene íntima"]
+      };
+      const goalMap = {
+        autoconhecimento: ["masturbadores", "vibradores", "gels"],
+        momentos_compartilhados: ["kits", "jogos", "vibradores", "gels"],
+        novas_sensacoes: ["vibradores", "gels", "plugs", "aneis"],
+        romance_conexao: ["kits", "jogos", "perfumes", "gels"],
+        brincadeira_jogos: ["jogos", "kits"],
+        massagem: ["perfumes", "gels", "higiene"],
+        surpresa_presente: ["kits", "perfumes"],
+        bem_estar: ["higiene", "gels", "perfumes"]
+      };
+      const sensationMap = {
+        vibracao: ["vibradores", "aneis"],
+        texturas: ["masturbadores", "plugs", "proteses"],
+        aquecimento: ["gels"],
+        refrescancia: ["gels"],
+        aroma: ["perfumes"],
+        massagem: ["perfumes", "gels"]
+      };
+      const preferred = new Set(profile.category_codes || []);
+      const avoided = new Set(profile.avoid_codes || []);
+      const desired = new Set(profile.desired_codes || []);
+      const sensations = new Set(profile.sensation_codes || []);
+      const categoryScore = new Map();
+
+      preferred.forEach(code => categoryScore.set(code, (categoryScore.get(code) || 0) + 8));
+      desired.forEach(goal => (goalMap[goal] || []).forEach(code => categoryScore.set(code, (categoryScore.get(code) || 0) + 3)));
+      sensations.forEach(sensation => (sensationMap[sensation] || []).forEach(code => categoryScore.set(code, (categoryScore.get(code) || 0) + 2)));
+
+      const candidates = [...categoryScore.entries()]
+        .filter(([code, score]) => score > 0 && !avoided.has(code));
+      if (!candidates.length) {
+        const empty = document.createElement("p");
+        empty.className = "club-recommendation-empty";
+        empty.textContent = "Selecione pelo menos um objetivo, uma categoria ou uma característica para montar sua curadoria. Categorias que você marcou para evitar não aparecem nas sugestões.";
+        container.append(empty);
+        return;
+      }
+
+      try {
+        const products = await loadClubCatalog();
+        const matches = products
+          .filter(product => product && product.esgotado !== true)
+          .map(product => {
+            const category = String(product.categoria || product.tipoProduto || "");
+            const matchingCodes = candidates.filter(([code]) => (categoryNames[code] || []).includes(category));
+            const score = matchingCodes.reduce((sum, [code, points]) => sum + points, 0);
+            return { product, score };
+          })
+          .filter(item => item.score > 0)
+          .sort((a, b) => b.score - a.score || Number(b.product.destaque === true) - Number(a.product.destaque === true))
+          .slice(0, 4);
+
+        if (!matches.length) {
+          const empty = document.createElement("p");
+          empty.className = "club-recommendation-empty";
+          empty.textContent = "Ainda não encontramos produtos disponíveis que correspondam a todas as suas escolhas. Você pode ajustar as preferências ou consultar o catálogo completo.";
+          container.append(empty);
+          return;
+        }
+
+        const money = new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" });
+        matches.forEach(({ product }) => {
+          const card = document.createElement("article");
+          card.className = "club-recommendation";
+          const name = document.createElement("strong");
+          name.textContent = String(product.nome || "Produto Luxuriosa");
+          const price = document.createElement("span");
+          price.textContent = money.format(Number(product.preco) || 0);
+          const link = document.createElement("a");
+          const target = String(product.pagina || "");
+          link.href = /^produtos\/[a-z0-9-]+\.html$/i.test(target) ? target : "loja.html";
+          link.textContent = "Ver produto";
+          card.append(name, price, link);
+          container.append(card);
+        });
+      } catch (error) {
+        console.warn("Não foi possível montar as sugestões do Clube:", error);
+        const empty = document.createElement("p");
+        empty.className = "club-recommendation-empty";
+        empty.textContent = "Não foi possível carregar a curadoria agora. Suas preferências continuam salvas.";
+        container.append(empty);
+      }
+    }
+
     async function loadAccountData(user) {
       const [profileResult, addressResult, preferencesResult, consentResult, clubStyleResult, intimateResult, intimateConsentResult] = await Promise.all([
         supabase.from("profiles").select("full_name, display_name, phone, birth_date, club_joined_at").eq("id", user.id).maybeSingle(),
