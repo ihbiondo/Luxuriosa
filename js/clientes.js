@@ -593,9 +593,6 @@
         "A expedição só começa depois da confirmação do pagamento.";
       avisar("Pedido criado. Abrindo o checkout seguro da InfinitePay...", "success");
 
-      if (window.LuxuriosaMedicao && typeof window.LuxuriosaMedicao.registrar === "function") {
-        window.LuxuriosaMedicao.registrar("checkout_whatsapp", { method: "infinitepay", step: "payment_redirect" });
-      }
       window.location.assign(result.checkout_url);
     } catch (error) {
       avisar(error && error.message ? error.message : "Não foi possível iniciar o pagamento. Tente novamente.", "error");
