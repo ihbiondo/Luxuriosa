@@ -211,6 +211,111 @@
     aviso.textContent = "Entrega para " + cidade + "/" + estado + ": disponibilidade e valor do frete serão confirmados no atendimento.";
   }
 
+  var supabaseClientPromise = null;
+  var supabaseAuthConfig = {
+    url: "https://byiykxfugvxuowueuxca.supabase.co",
+    key: "sb_publishable_LaMbeWQ1PNANEQ85SD_35Q_wDzswy8y"
+  };
+
+  function obterClienteSupabase() {
+    if (!supabaseClientPromise) {
+      supabaseClientPromise = import("https://esm.sh/@supabase/supabase-js@2")
+        .then(function (module) {
+          return module.createClient(supabaseAuthConfig.url, supabaseAuthConfig.key, {
+            auth: { autoRefreshToken: true, persistSession: true, detectSessionInUrl: true }
+          });
+        })
+        .catch(function (error) {
+          supabaseClientPromise = null;
+          throw error;
+        });
+    }
+    return supabaseClientPromise;
+  }
+
+  function formularioPossuiDados() {
+    return [
+      "customerName", "customerPhone", "customerCep", "customerStreet",
+      "customerNumber", "customerComplement", "customerDistrict",
+      "customerCity", "customerState", "customerReference"
+    ].some(function (id) { return texto(id) !== ""; });
+  }
+
+  async function carregarDadosDaConta() {
+    var button = $("customerLoadAccount");
+    if (!button || button.disabled) return;
+    button.disabled = true;
+    var originalText = button.textContent;
+    button.textContent = "Carregando seus dados...";
+
+    try {
+      var supabase = await obterClienteSupabase();
+      var authResult = await supabase.auth.getUser();
+      if (authResult.error) throw authResult.error;
+      if (!authResult.data || !authResult.data.user) {
+        avisar("Não há uma sessão ativa neste navegador. Entre na sua conta Luxuriosa e volte ao pedido para usar seus dados cadastrados.", "error");
+        return;
+      }
+
+      var userId = authResult.data.user.id;
+      var results = await Promise.all([
+        supabase.from("profiles")
+          .select("full_name, phone")
+          .eq("id", userId)
+          .maybeSingle(),
+        supabase.from("addresses")
+          .select("postal_code, street, number, complement, neighborhood, city, state")
+          .eq("user_id", userId)
+          .order("is_default", { ascending: false })
+          .order("created_at", { ascending: false })
+          .limit(1)
+          .maybeSingle()
+      ]);
+
+      if (results[0].error) throw results[0].error;
+      if (results[1].error) throw results[1].error;
+      var profile = results[0].data || {};
+      var address = results[1].data || {};
+
+      if (!profile.full_name && !profile.phone && !address.street && !address.city) {
+        avisar("Sua conta ainda não tem dados de entrega cadastrados. Você pode preencher o pedido normalmente ou atualizar seu perfil.", "info");
+        return;
+      }
+
+      if (formularioPossuiDados() && !window.confirm("Deseja substituir os dados já preenchidos pelas informações da sua conta Luxuriosa?")) {
+        avisar("Seus dados atuais foram mantidos.", "info");
+        return;
+      }
+
+      preencherFormulario({
+        name: profile.full_name || "",
+        phone: profile.phone || "",
+        address: {
+          zip: address.postal_code || "",
+          street: address.street || "",
+          number: address.number || "",
+          complement: address.complement || "",
+          district: address.neighborhood || "",
+          city: address.city || "",
+          state: address.state || ""
+        }
+      });
+      atualizarAvisoFrete();
+      avisar(
+        address.street || address.city
+          ? "Dados carregados da sua conta. Confira o endereço de entrega e ajuste o que for necessário."
+          : "Nome e telefone carregados. Complete o endereço de entrega para continuar.",
+        "success"
+      );
+    } catch (error) {
+      console.error("Falha ao carregar os dados da conta no checkout:", error);
+      avisar("Não foi possível carregar seus dados agora. Você pode preencher o pedido manualmente.", "error");
+    } finally {
+      button.disabled = false;
+      button.textContent = originalText;
+    }
+  }
+
   function validarTelefone(value) {
     var digits = value.replace(/\D/g, "");
     return digits.length >= 10 && digits.length <= 13;
@@ -552,6 +657,9 @@
     messagePreview = $("customerMessagePreview");
     if (!overlay || !dialog || !form || !review) return;
     atualizarAvisoFrete();
+
+    var carregarContaButton = $("customerLoadAccount");
+    if (carregarContaButton) carregarContaButton.addEventListener("click", carregarDadosDaConta);
 
     form.addEventListener("submit", revisarPedido);
     $("customerClose").addEventListener("click", fechar);
