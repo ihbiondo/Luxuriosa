@@ -23,6 +23,7 @@
       necessary: true, analytics: !!analytics, marketing: !!marketing };
     try { localStorage.setItem(CONSENT_KEY, JSON.stringify(consent)); } catch (e) {}
     applyConsent();
+    window.dispatchEvent(new CustomEvent("lux:consent-updated"));
     closeConsent();
   }
 
