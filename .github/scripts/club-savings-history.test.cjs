@@ -7,11 +7,11 @@ const script = [...html.matchAll(/<script\\b[^>]*>([\\s\\S]*?)<\\/script>/gi)]
   .find(source => source.length > 1000);
 
 assert.ok(script, "Script principal da conta deve existir.");
-assert.match(html, /id="clubSavingsSummary"/);
-assert.match(script, /const discountedOrders = \\(orders \\|\\| \\[\\]\\)\\.filter/);
-assert.match(script, /club_discount_amount_cents/);
-assert.match(script, /savingsCents \\/ 100/);
-assert.match(script, /Economia registrada nos últimos /);
-assert.match(script, /Sua economia com o Clube aparecerá aqui depois da primeira compra elegível/);
+assert.ok(html.includes('id="clubSavingsSummary"'));
+assert.ok(script.includes("const discountedOrders = (orders || []).filter"));
+assert.ok(script.includes("club_discount_amount_cents"));
+assert.ok(script.includes("savingsCents / 100"));
+assert.ok(script.includes("Economia registrada nos últimos "));
+assert.ok(script.includes("Sua economia com o Clube aparecerá aqui depois da primeira compra elegível"));
 
 console.log("Histórico do Clube: economia acumulada calculada em centavos e apresentada com escopo dos últimos pedidos exibidos.");
