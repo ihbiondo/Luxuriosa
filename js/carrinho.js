@@ -1406,12 +1406,19 @@
     var mensagem = linhas.join("\n");
     var numero = obterWhatsApp();
     var url = "https://wa.me/" + numero + "?text=" + encodeURIComponent(mensagem);
-    if (window.LuxuriosaMedicao && typeof window.LuxuriosaMedicao.registrar === "function") {
-      window.LuxuriosaMedicao.registrar("checkout_whatsapp", {
-        method: "manual_attendant",
-        quantity: quantidadeTotal()
-      });
+    /* Falha de telemetria não pode impedir o atendimento. */
+    try {
+      if (window.LuxuriosaMedicao && typeof window.LuxuriosaMedicao.registrar === "function") {
+        window.LuxuriosaMedicao.registrar("checkout_whatsapp", {
+          method: "manual_attendant",
+          quantity: quantidadeTotal()
+        });
+      }
+    } catch (erroMedicao) {
+      console.warn("Não foi possível registrar a métrica do atendimento manual.", erroMedicao);
     }
+
+    /* A abertura ocorre diretamente no clique para evitar bloqueio de pop-up. */
     window.open(url, "_blank", "noopener,noreferrer");
   }
 
