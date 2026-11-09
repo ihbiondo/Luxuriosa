@@ -151,6 +151,18 @@
         <td>Enquanto a conta estiver ativa. Após a exclusão, os dados do perfil são removidos conforme o fluxo técnico, ressalvadas cópias de segurança, registros técnicos e informações que precisem ser conservadas por obrigação legal ou exercício regular de direitos.</td>
       </tr>
       <tr>
+        <td>Preferências de estilo, cores e forma de atendimento no Clube</td>
+        <td>Completar o perfil opcional, ajustar a apresentação da loja e respeitar a forma de comunicação escolhida.</td>
+        <td>Consentimento para personalização opcional (art. 7º, I, da LGPD). A recusa não afeta cadastro, desconto ou pedidos.</td>
+        <td>Enquanto a conta estiver ativa ou até a exclusão das preferências pelo titular.</td>
+      </tr>
+      <tr>
+        <td>Ficha opcional de afinidade íntima: objetivos gerais, categorias, características de produtos e categorias a evitar</td>
+        <td>Filtrar recomendações exibidas somente na conta, usando exclusivamente as opções marcadas pelo próprio titular. Não inferimos preferências pelo histórico de compras.</td>
+        <td>Consentimento específico e destacado para finalidade determinada (art. 11, I, combinado com o art. 5º, II, da LGPD), quando as respostas puderem revelar aspectos da vida sexual.</td>
+        <td>Enquanto a autorização estiver ativa. Ao revogar, a ficha é excluída; registros mínimos da autorização e da revogação são mantidos para comprovação. A exclusão da conta remove também a ficha, ressalvadas cópias de segurança e obrigações legais.</td>
+      </tr>
+      <tr>
         <td>Dados técnicos e preferências de cookies</td>
         <td>Manter o funcionamento do site, lembrar a confirmação de maioridade e registrar as escolhas de privacidade; medir navegação somente quando autorizado.</td>
         <td>Legítimo interesse, quando aplicável aos recursos estritamente necessários, e consentimento para estatísticas opcionais (art. 7º, I e IX).</td>
@@ -160,19 +172,31 @@
   </table>
   </div>
 
-  <h2>3. Dados que não solicitamos e informações que podem ser inferidas</h2>
+  <h2>3. Dados que não solicitamos e informações íntimas opcionais</h2>
   <p>
-    O formulário do site não pergunta sua orientação sexual, vida sexual, condição de saúde,
-    religião ou opinião política. Também não solicita CPF ou RG, salvo se uma exigência legal
-    ou fiscal concreta tornar o dado necessário; nesse caso, explicaremos a finalidade.
+    O cadastro obrigatório não pergunta orientação sexual, identidade de gênero, práticas
+    específicas, nome de parceiros ou condição de saúde. Também não solicita CPF ou RG, salvo
+    se uma exigência legal ou fiscal concreta tornar o dado necessário; nesse caso, explicaremos
+    a finalidade.
   </p>
   <p>
-    Como a Luxuriosa comercializa produtos de intimidade, os itens escolhidos, o histórico de
-    pedidos ou o conteúdo de uma conversa podem, dependendo do contexto, permitir inferências
-    sobre a vida sexual ou outros aspectos íntimos. Por isso, não afirmamos que essas informações
-    nunca possam ser tratadas. A loja procura limitar o uso ao atendimento, à venda, à entrega e
-    às obrigações aplicáveis, sem criar perfis sobre a vida íntima dos clientes nem usar essas
-    informações para publicidade comportamental.
+    Na área autenticada existe uma ficha de afinidade íntima inteiramente opcional. Ela contém
+    apenas opções estruturadas sobre objetivos gerais, categorias de produtos, características
+    sensoriais e categorias que a pessoa prefere evitar. Não há campos de texto livre. Em razão
+    do contexto da loja, essas escolhas podem revelar informações sobre a vida sexual e recebem
+    tratamento como dados pessoais sensíveis. A ficha só é salva após uma autorização separada,
+    específica e destacada, e pode ser apagada a qualquer momento pela retirada dessa autorização.
+  </p>
+  <p>
+    A Luxuriosa não deduz desejos, orientação, práticas ou preferências íntimas a partir de
+    compras, navegação, endereço ou dados de terceiros. As sugestões da ficha usam somente
+    as opções que a própria pessoa marcou. Essas informações não são usadas para publicidade,
+    campanhas, estatísticas compartilhadas ou direcionamento de mensagens promocionais.
+  </p>
+  <p>
+    Como a loja comercializa produtos de intimidade, itens escolhidos e histórico de pedidos
+    ainda podem, dependendo do contexto, permitir inferências. Seu uso fica limitado ao
+    atendimento, à venda, à entrega, à conciliação e às obrigações aplicáveis.
   </p>
   <p>
     Não solicitamos fotos nem localização em tempo real. O site não recebe dados de cartão,
@@ -190,8 +214,10 @@
   <p>
     Na área da conta, a Luxuriosa utiliza o Supabase para autenticação e armazenamento dos dados
     de perfil, preferências e endereço principal. Isso inclui nome completo, data de nascimento,
-    telefone/WhatsApp, endereço, e-mail da conta e até três cores favoritas escolhidas pelo titular.
-    O e-mail é usado para identificação e comunicações de autenticação. A senha é validada e
+    telefone/WhatsApp, endereço, e-mail da conta, cores favoritas e preferências de estilo.
+    A ficha opcional de afinidade íntima fica em tabelas próprias, protegidas por políticas de
+    acesso por titular, e só é mantida enquanto a autorização específica estiver ativa. O e-mail
+    é usado para identificação e comunicações de autenticação. A senha é validada e
     protegida pelo serviço de autenticação; a Luxuriosa não consulta nem exibe a senha em texto
     aberto. A alteração de e-mail depende das confirmações enviadas pelo serviço.
   </p>
@@ -273,7 +299,7 @@
     <li><strong>WhatsApp (Meta):</strong> recebe os dados incluídos na URL quando você escolhe abrir um link de contato com mensagem pré-preenchida. Se a notificação administrativa interna estiver habilitada, a Plataforma WhatsApp Business também processa dados limitados do pedido (número, valor, forma de pagamento, cidade e prazos) para enviar o alerta operacional ao número autorizado da loja. O alerta não inclui nome, telefone, endereço completo ou produtos do comprador. O tratamento pela Meta está sujeito aos termos e às políticas do serviço.</li>
     <li><strong>ViaCEP:</strong> se você consultar o CEP no formulário, o número informado é enviado ao serviço ViaCEP para buscar dados públicos de endereço. Nome, telefone, produtos e demais campos do pedido não são enviados nessa consulta. Consulte a <a href="https://viacep.com.br/" target="_blank" rel="noopener noreferrer">página do ViaCEP</a>.</li>
     <li><strong>Google Analytics 4 (Google):</strong> é carregado somente se você autorizar estatísticas no aviso de cookies. Nesse caso, recebe informações técnicas e eventos genéricos de navegação. A configuração procura não transmitir nomes ou identificadores de produtos, conteúdo do carrinho, dados do formulário, URLs específicas ou termos digitados; os eventos comerciais usam apenas parâmetros limitados, como etapa, método e quantidade. O IP é configurado com anonimização. Saiba mais na <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">Política de Privacidade do Google</a>.</li>
-    <li><strong>Supabase:</strong> fornece autenticação e banco de dados para a área da conta e para a operação da loja. Processa dados de perfil e autenticação, solicitações de pedido, itens, quantidades, valores, dados de entrega e, quando você autoriza estatísticas, eventos pseudonimizados de navegação. Esses eventos podem incluir identificador interno do produto, tipo de página, tipo de ação, quantidade e data/hora; não incluem nome, telefone, endereço ou texto de conversas. Os eventos analíticos são retidos por até 180 dias e ficam acessíveis somente à administração autorizada. O serviço também pode processar dados técnicos, registros de segurança e cópias de segurança conforme seus prazos próprios. Consulte a <a href="https://supabase.com/privacy" target="_blank" rel="noopener noreferrer">Política de Privacidade do Supabase</a>.</li>
+    <li><strong>Supabase:</strong> fornece autenticação e banco de dados para a área da conta e para a operação da loja. Processa dados de perfil e autenticação, solicitações de pedido, itens, quantidades, valores, dados de entrega, preferências do Clube e, somente após autorização específica, as opções da ficha de afinidade íntima. As respostas dessa ficha ficam em tabelas separadas com acesso limitado ao titular autenticado e são usadas para filtrar sugestões dentro da conta. Quando você autoriza estatísticas, o serviço também armazena eventos pseudonimizados de navegação por até 180 dias; esses eventos não incluem nome, telefone, endereço ou texto de conversas. O serviço pode ainda processar dados técnicos, registros de segurança e cópias de segurança conforme seus prazos próprios. Consulte a <a href="https://supabase.com/privacy" target="_blank" rel="noopener noreferrer">Política de Privacidade do Supabase</a>.</li>
     <li><strong>GitHub Pages (GitHub):</strong> hospeda e entrega os arquivos estáticos do site. Como outros serviços de hospedagem, pode processar dados técnicos de conexão e acesso, como endereço IP, página solicitada e informações do navegador, necessários à disponibilização, segurança e funcionamento das páginas.</li>
     <li><strong>Google Fonts (Google):</strong> algumas páginas carregam fontes tipográficas hospedadas pelo Google. Ao acessar essas páginas, o navegador solicita os arquivos de fonte aos servidores do Google, que podem receber dados técnicos da conexão, como o endereço IP. Consulte a <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">Política de Privacidade do Google</a>.</li>
     <li><strong>InfinitePay:</strong> processa o checkout e o pagamento. Recebe os itens, quantidades, valores, dados de contato e endereço de entrega necessários à cobrança e identificação da compra. Os dados do cartão são fornecidos diretamente à InfinitePay e não ficam disponíveis à Luxuriosa.</li>
@@ -295,7 +321,8 @@
     A opção de marketing fica disponível para registrar sua preferência, mas nenhuma
     ferramenta de publicidade ou marketing está integrada nesta versão do site; marcar
     essa opção não inscreve você em uma lista, não inicia campanhas e não autoriza o envio
-    automático de mensagens promocionais.
+    automático de mensagens promocionais. As preferências do Clube e a ficha de afinidade
+    íntima não são usadas para marketing, publicidade comportamental ou seleção de público.
   </p>
   <p>
     A escolha é guardada localmente no navegador por até 180 dias. Você pode alterá-la
@@ -366,8 +393,11 @@
     podem permanecer válidos até seu vencimento.
   </p>
   <p>
-    A exclusão da conta não significa necessariamente a eliminação imediata de todo registro
-    relacionado a uma compra. Informações que precisem ser mantidas para cumprir obrigações
+    A retirada da autorização da ficha íntima pode ser feita a qualquer momento na área do
+    Clube. Nesse caso, as respostas da ficha são excluídas e o registro mínimo da concessão ou
+    revogação permanece para demonstrar a escolha do titular. A exclusão da conta também remove
+    as preferências vinculadas ao perfil. A exclusão da conta não significa necessariamente a
+    eliminação imediata de todo registro relacionado a uma compra. Informações que precisem ser mantidas para cumprir obrigações
     fiscais ou legais, prevenir fraude ou exercer regularmente direitos poderão ser conservadas
     pelo prazo aplicável, com acesso limitado e, quando adequado, anonimização. Cópias de
     segurança e registros técnicos dos provedores também podem seguir os ciclos próprios de
