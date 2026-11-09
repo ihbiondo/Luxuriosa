@@ -143,6 +143,7 @@
     const newPasswordForm = $("newPasswordForm");
     const authArea = $("authArea");
     const signedInArea = $("signedInArea");
+    let activeUserId = null;
 
     function message(text, error = false) {
       notice.textContent = text;
@@ -223,6 +224,8 @@
     }
 
     async function showSignedIn(user) {
+      if (activeUserId === user.id) return;
+      activeUserId = user.id;
       authArea.classList.add("hidden");
       signedInArea.classList.remove("hidden");
       $("accountGreeting").textContent = "Olá, " + (user.user_metadata?.display_name || user.email || "cliente") + "!";
@@ -335,6 +338,7 @@
     $("signOutButton").addEventListener("click", async () => {
       const { error } = await supabase.auth.signOut();
       if (error) return message(friendlyError(error), true);
+      activeUserId = null;
       signedInArea.classList.add("hidden");
       authArea.classList.remove("hidden");
       showForm("login");
@@ -349,6 +353,7 @@
       } else if (session?.user) {
         Promise.resolve().then(() => showSignedIn(session.user));
       } else if (event === "SIGNED_OUT") {
+        activeUserId = null;
         signedInArea.classList.add("hidden");
         authArea.classList.remove("hidden");
       }
