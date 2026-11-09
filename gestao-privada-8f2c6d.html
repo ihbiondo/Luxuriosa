@@ -121,20 +121,102 @@ input:focus,select:focus{outline:0;border-color:#986079;box-shadow:0 0 0 3px rgb
 footer{color:#81757a;border-top-color:#e4dddd}
 @media(max-width:700px){.workspace-nav{display:grid;grid-template-columns:1fr 1fr}.workspace-tab{justify-content:flex-start;padding:0 11px}.shell{width:calc(100% - 24px)}}
 @media(max-width:420px){.workspace-tab{font-size:10px;gap:6px;min-height:40px}}
+
+/* Layout de aplicação: menu lateral e área de trabalho */
+body{min-height:100vh;background:#f3f5f7;color:#252b32}
+.workspace-sidebar{position:fixed;inset:0 auto 0 0;z-index:40;display:flex;flex-direction:column;width:248px;padding:25px 15px 18px;background:#fff;border-right:1px solid #e3e7eb;box-shadow:3px 0 18px rgba(28,39,50,.035)}
+.sidebar-brand{padding:4px 12px 27px;border-bottom:1px solid #edf0f2}
+.sidebar-brand-name{display:block;color:#592b3f;font:500 29px 'Playfair Display',Georgia,serif;letter-spacing:.035em}
+.sidebar-brand-sub{display:block;margin-top:1px;color:#886a76;font:700 8px Montserrat,Arial,sans-serif;letter-spacing:.22em}
+.sidebar-caption{padding:24px 12px 11px;color:#9a9297;font-size:9px;font-weight:700;letter-spacing:.13em}
+.workspace-nav{display:grid;gap:5px;margin:0;padding:0;background:transparent;border:0;border-radius:0}
+.workspace-tab{display:flex;justify-content:flex-start;align-items:center;gap:12px;width:100%;min-height:58px;padding:8px 11px;border:1px solid transparent;border-radius:9px;background:transparent;color:#5d6269;text-align:left}
+.workspace-tab:hover{background:#f7f4f5;color:#6f2945}
+.workspace-tab.active{background:#f8eff2;border-color:#f0dfe5;color:#76243f;box-shadow:none}
+.workspace-tab .nav-symbol{display:grid;place-items:center;width:34px;height:34px;flex:0 0 34px;border-radius:9px;background:#f0edef;color:#6f5962;font-size:20px;font-weight:500}
+.workspace-tab.active .nav-symbol{background:#76243f;color:#fff}
+.nav-copy{display:grid;gap:3px;min-width:0}
+.nav-copy strong{font-size:11px;font-weight:700;color:inherit}
+.nav-copy small{font-size:9px;font-weight:500;color:#8a8388}
+.workspace-tab.active .nav-copy small{color:#856674}
+.sidebar-bottom{display:grid;grid-template-columns:10px 1fr;column-gap:8px;align-items:center;margin-top:auto;padding:13px 11px;border-top:1px solid #edf0f2;color:#626b72;font-size:9px;font-weight:600}
+.sidebar-bottom small{grid-column:2;color:#92999e;font-size:8px;font-weight:400}
+.sidebar-status-dot{width:7px;height:7px;border-radius:50%;background:#55a47b;box-shadow:0 0 0 3px #e9f5ee}
+.shell{width:auto;max-width:none;margin:0 30px 0 278px}
+.top{min-height:76px;padding:12px 0;background:rgba(243,245,247,.94);border-bottom:1px solid #e4e8ec;box-shadow:none}
+.top-heading{display:grid;gap:3px}
+.top-heading strong{color:#30343a;font-size:14px;font-weight:700}
+.top-heading small{color:#858b91;font-size:9px}
+.top .actions{gap:7px}
+.top .btn{min-height:36px;padding:8px 12px;border-radius:7px;background:#fff;border-color:#dfe4e8;color:#525b63;font-size:9px}
+.top .btn.primary{background:#76243f;border-color:#76243f;color:#fff}
+main{padding:23px 0 52px}
+.workspace-description{margin:8px 2px 17px;color:#727a82;font-size:11px}
+.workspace-view{animation:none}
+.workspace-view>.panel{margin-top:13px}
+.workspace-view>.section-head{margin-top:10px}
+.panel{padding:18px;border-radius:11px;box-shadow:0 2px 9px rgba(36,43,50,.025)}
+.metric{border-radius:10px}
+.metric strong{font-family:Montserrat,Arial,sans-serif;font-size:24px;font-weight:700}
+h1{font-size:38px;color:#34343a}
+h2{font-size:22px;color:#3c3a40}
+.section-head{margin-top:19px}
+.notice{margin:12px 0;padding:10px 13px;border-radius:8px;font-size:10px}
+.searchbar{grid-template-columns:minmax(240px,1fr) 220px auto}
+@media(max-width:900px){
+ .workspace-sidebar{width:210px}.shell{margin-left:232px;margin-right:18px}
+ .sidebar-brand-name{font-size:26px}
+}
+@media(max-width:700px){
+ .workspace-sidebar{position:sticky;top:0;inset:auto;width:auto;height:auto;padding:7px 10px 6px;border-right:0;border-bottom:1px solid #e1e5e9;box-shadow:0 2px 10px rgba(28,39,50,.04)}
+ .sidebar-brand{display:none}
+ .sidebar-caption{display:none}
+ .workspace-nav{display:flex;gap:5px;overflow-x:auto;padding:0}
+ .workspace-tab{display:grid;justify-items:center;gap:3px;width:auto;min-width:76px;min-height:55px;padding:5px 7px}
+ .workspace-tab .nav-symbol{width:23px;height:22px;flex-basis:22px;background:transparent;font-size:17px}
+ .workspace-tab.active .nav-symbol{background:transparent;color:#76243f}
+ .nav-copy{display:block}
+ .nav-copy strong{font-size:9px;white-space:nowrap}
+ .nav-copy small{display:none}
+ .sidebar-bottom{display:none}
+ .shell{width:calc(100% - 22px);margin:0 auto}
+ .top{min-height:60px;padding:9px 0}
+ main{padding-top:16px}
+}
+@media(max-width:430px){
+ .top .btn{padding:7px 9px;font-size:8px}
+ .top-heading strong{font-size:12px}
+ h1{font-size:31px}
+ .workspace-tab{min-width:69px}
+ .nav-copy strong{font-size:8px}
+}
 </style>
 </head>
-<body><div class="shell">
-<header class="top"><a class="brand" href="index.html">Luxuriosa<small>GESTÃO PRIVADA</small></a><div class="actions"><a class="btn" href="login.html" style="text-decoration:none">MINHA CONTA</a><button class="btn" id="refresh">ATUALIZAR</button><button class="btn" id="logout">SAIR</button></div></header>
+<body>
+<aside class="workspace-sidebar" aria-label="Menu principal">
+  <div class="sidebar-brand">
+    <span class="sidebar-brand-name">Luxuriosa</span>
+    <span class="sidebar-brand-sub">GESTÃO PRIVADA</span>
+  </div>
+  <div class="sidebar-caption">ÁREAS DE TRABALHO</div>
+  <nav class="workspace-nav" aria-label="Áreas da gestão">
+    <button type="button" class="workspace-tab active" data-view-target="overview" aria-current="page"><span class="nav-symbol">⌂</span><span class="nav-copy"><strong>Visão geral</strong><small>Resumo da operação</small></span></button>
+    <button type="button" class="workspace-tab" data-view-target="orders"><span class="nav-symbol">▤</span><span class="nav-copy"><strong>Pedidos e clientes</strong><small>Vendas e carrinhos</small></span></button>
+    <button type="button" class="workspace-tab" data-view-target="delivery"><span class="nav-symbol">⇢</span><span class="nav-copy"><strong>Entregas</strong><small>Fretes e expedição</small></span></button>
+    <button type="button" class="workspace-tab" data-view-target="analytics"><span class="nav-symbol">▥</span><span class="nav-copy"><strong>Análise</strong><small>Comportamento e dados</small></span></button>
+  </nav>
+  <div class="sidebar-bottom">
+    <span class="sidebar-status-dot"></span>
+    Ambiente administrativo
+    <small>Acesso protegido por conta autorizada</small>
+  </div>
+</aside>
+<div class="shell">
+<header class="top"><div class="top-heading"><strong>Gestão da loja</strong><small>Área administrativa</small></div><div class="actions"><a class="btn" href="login.html" style="text-decoration:none">MINHA CONTA</a><button class="btn" id="refresh">ATUALIZAR</button><button class="btn" id="logout">SAIR</button></div></header>
 <main>
 <div class="hero"><div><div class="eyebrow">Ambiente privado · acesso autorizado</div><h1>Gestão da loja.</h1><p class="sub">Escolha uma área para trabalhar. Cada tela reúne somente as ferramentas daquele assunto.</p></div><div class="period"><label for="period">Período:</label><select id="period"><option value="7">Últimos 7 dias</option><option value="30" selected>Últimos 30 dias</option><option value="90">Últimos 90 dias</option></select></div></div>
 <div id="notice" class="notice" role="status" aria-live="polite">Validando seu acesso...</div>
 
-<nav class="workspace-nav" aria-label="Áreas da gestão">
-  <button type="button" class="workspace-tab active" data-view-target="overview" aria-current="page"><span>01</span> Visão geral</button>
-  <button type="button" class="workspace-tab" data-view-target="orders"><span>02</span> Pedidos e clientes</button>
-  <button type="button" class="workspace-tab" data-view-target="delivery"><span>03</span> Entregas</button>
-  <button type="button" class="workspace-tab" data-view-target="analytics"><span>04</span> Análise</button>
-</nav>
 <p class="workspace-description" id="workspaceDescription">Resumo do faturamento, pedidos e movimento da loja.</p>
 <section class="workspace-view" id="view-overview" data-workspace-view="overview">
 <div class="section-head"><h2>Indicadores principais</h2><span class="small" id="updatedAt">—</span></div>
