@@ -693,7 +693,7 @@
       }
 
       var hasCheckoutData = [
-        "customerName", "customerPhone", "customerCep", "customerStreet",
+        "customerName", "customerPhone", "customerEmail", "customerCep", "customerStreet",
         "customerNumber", "customerComplement", "customerDistrict",
         "customerCity", "customerState", "customerReference"
       ].some(function (id) { return texto(id); });
