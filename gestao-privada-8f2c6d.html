@@ -1,0 +1,812 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow"><meta name="theme-color" content="#0B0B0B">
+<title>Gestão Luxuriosa | Acesso restrito</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{color-scheme:dark;--wine:#8B1E3F;--black:#0B0B0B;--surface:#171216;--gold:#D4AF7C;--blush:#F7D7D9;--text:#f3e9eb;--muted:#b9a9ae;--line:rgba(212,175,124,.2);font-family:Montserrat,Arial,sans-serif}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 50% 0%,rgba(139,30,63,.2),transparent 38%),var(--black);color:var(--text);font-size:13px;line-height:1.6}
+.shell{width:min(1560px,calc(100% - 40px));margin:auto}.top{position:sticky;top:0;z-index:20;display:flex;justify-content:space-between;align-items:center;gap:16px;padding:12px 0;border-bottom:1px solid var(--line);background:rgba(11,11,11,.94);backdrop-filter:blur(12px)}.brand{font:500 27px 'Playfair Display',Georgia,serif;color:var(--blush);text-decoration:none;letter-spacing:.04em}.brand small{display:block;text-align:center;color:var(--gold);font:600 8px Montserrat,sans-serif;letter-spacing:.22em}.actions{display:flex;gap:9px;align-items:center;flex-wrap:wrap}.btn,select,input{border:1px solid var(--line);border-radius:7px;background:#171216;color:var(--text);padding:10px 13px;font:500 11px Montserrat}.btn{color:var(--gold);font-weight:700;letter-spacing:.05em;cursor:pointer}.btn.primary{background:var(--wine);border-color:var(--wine);color:white}.btn:disabled{opacity:.5;cursor:wait}
+main{padding:20px 0 50px}.hero{display:flex;justify-content:space-between;align-items:end;gap:20px;flex-wrap:wrap}.eyebrow{font-size:9px;font-weight:700;letter-spacing:.2em;color:var(--gold);text-transform:uppercase}h1{font:400 clamp(34px,5vw,47px)/1.1 'Playfair Display',Georgia,serif;color:var(--blush);margin:8px 0}h2{font:400 24px 'Playfair Display',Georgia,serif;color:var(--blush);margin:0 0 5px}.sub{color:var(--muted);font-size:11px;margin:8px 0 20px}.notice{padding:12px 15px;border:1px solid var(--line);border-radius:8px;color:var(--muted);margin:17px 0}.notice.error{border-color:#87354a;color:#ffc3cc}
+.section-head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin:20px 0 10px}.period{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:10px}.metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;margin:13px 0}.metric{padding:11px 14px;border:1px solid var(--line);border-radius:8px;background:linear-gradient(145deg,rgba(139,30,63,.11),var(--surface));min-height:82px}.metric span{display:block;color:var(--muted);font-size:10px}.metric strong{display:block;color:var(--gold);font:500 25px 'Playfair Display',Georgia,serif;margin-top:2px;font-variant-numeric:tabular-nums}.metric small{display:block;color:#8d7b82;font-size:9px;margin-top:2px}
+.grid2{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:11px}.panel{min-width:0;padding:14px;border:1px solid var(--line);border-radius:9px;background:rgba(23,18,22,.88)}.panel p.hint{color:var(--muted);font-size:10px;margin:4px 0 15px}.bars{display:grid;gap:10px}.bar-row{display:grid;grid-template-columns:82px 1fr 75px;align-items:center;gap:9px;font-size:10px;color:var(--muted)}.bar-track{height:8px;background:#2b2027;border-radius:10px;overflow:hidden}.bar-fill{height:100%;background:linear-gradient(90deg,var(--wine),var(--gold));border-radius:10px;min-width:2px}.bar-value{text-align:right;color:var(--text);font-variant-numeric:tabular-nums}.list{display:grid;gap:9px}.item{padding:10px 12px;border:1px solid rgba(212,175,124,.13);border-radius:7px;background:#100d0f}.item-top{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap}.item strong{color:var(--gold)}.meta{display:flex;gap:10px;flex-wrap:wrap;color:var(--muted);font-size:10px;margin:7px 0}.products{margin:7px 0 0;padding-left:17px;color:#e8d9dc;font-size:11px}.tag{color:var(--blush);font-size:9px;text-transform:uppercase;letter-spacing:.06em}.empty{color:var(--muted);font-size:11px;padding:12px 0}.small{font-size:10px;color:var(--muted)}
+.searchbar{display:grid;grid-template-columns:minmax(260px,1fr) 210px auto;gap:8px;margin:10px 0}.searchbar input{min-width:0}.query-results{display:grid;gap:10px}.details{display:flex;gap:8px;flex-wrap:wrap;margin-top:9px}.details span{font-size:10px;color:var(--muted)}.address{font-size:10px;color:#c8b7bd;margin-top:6px}.pill{display:inline-block;border:1px solid var(--line);border-radius:20px;padding:3px 8px;color:var(--blush);font-size:9px}.order-actions{display:flex;gap:7px;align-items:center;flex-wrap:wrap;margin-top:9px}.order-actions select{min-width:180px}.order-actions .btn{padding:9px 11px}
+.table-wrap{overflow-x:auto;border:1px solid rgba(212,175,124,.14);border-radius:8px}
+.orders-table{width:100%;border-collapse:collapse;min-width:850px;font-size:11px}
+.orders-table th,.orders-table td{padding:11px 10px;text-align:left;border-bottom:1px solid rgba(212,175,124,.12);vertical-align:middle}
+.orders-table th{position:sticky;top:0;background:#211820;color:var(--gold);font-size:9px;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap}
+.sort-btn{border:0;background:none;color:inherit;font:inherit;letter-spacing:inherit;text-transform:inherit;padding:0;cursor:pointer}
+.sort-btn:hover{color:var(--blush)}
+.orders-table tbody tr.order-row:hover{background:rgba(139,30,63,.09)}
+.orders-table .num,.orders-table .amount{font-variant-numeric:tabular-nums;white-space:nowrap}
+.orders-table .amount{color:var(--gold);font-weight:700}
+.orders-table .customer{min-width:170px}
+.orders-table .muted-cell{color:var(--muted);font-size:10px}
+.details-toggle{padding:6px 9px;font-size:9px}
+.detail-row td{background:#100d0f;padding:13px 15px}
+.detail-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.detail-block{min-width:0}
+.detail-block strong{display:block;color:var(--gold);font-size:9px;letter-spacing:.08em;text-transform:uppercase;margin-bottom:5px}
+.detail-block div,.detail-block li{font-size:10px;color:#dfd0d4;overflow-wrap:anywhere}
+.detail-block ul{margin:0;padding-left:16px}
+.detail-footer{display:flex;gap:9px;align-items:center;flex-wrap:wrap;margin-top:12px;padding-top:10px;border-top:1px solid var(--line)}
+@media(max-width:700px){.detail-grid{grid-template-columns:1fr 1fr}}
+
+.sla-form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;align-content:start}
+.sla-field{display:grid;gap:5px;min-width:0;color:var(--muted);font-size:10px}
+.sla-field input,.sla-field select{width:100%;min-width:0}
+.sla-field.full{grid-column:1/-1}
+.sla-checks{display:flex;gap:14px;flex-wrap:wrap;grid-column:1/-1;padding:8px 0;color:var(--muted);font-size:10px}
+.sla-checks label{display:flex;align-items:center;gap:7px}
+.sla-checks input{accent-color:var(--wine)}
+.sla-rule{display:grid;gap:7px;padding:10px 11px;border:1px solid rgba(212,175,124,.13);border-radius:7px;background:#100d0f}
+.sla-rule-head{display:flex;justify-content:space-between;gap:10px;align-items:center}
+.sla-rule-meta{display:flex;gap:12px;flex-wrap:wrap;color:var(--muted);font-size:10px}
+.sla-rule-actions{display:flex;gap:7px;flex-wrap:wrap}
+.sla-rule-actions .btn{padding:7px 10px}
+.fulfillment-card{padding:12px;border:1px solid rgba(212,175,124,.16);border-radius:8px;background:#100d0f;margin:9px 0}
+.fulfillment-head{display:flex;justify-content:space-between;align-items:center;gap:9px;flex-wrap:wrap}
+.fulfillment-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:9px 0}
+.fulfillment-block{min-width:0}.fulfillment-block strong{display:block;color:var(--gold);font-size:9px;letter-spacing:.07em;text-transform:uppercase;margin-bottom:4px}
+.fulfillment-block div,.fulfillment-block li{color:#e6dadd;font-size:10px;overflow-wrap:anywhere}
+.fulfillment-block ul{margin:0;padding-left:17px}
+.fulfillment-meta{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0;color:var(--muted);font-size:10px}
+.fulfillment-actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px;padding-top:9px;border-top:1px solid var(--line)}
+.fulfillment-actions .btn{padding:8px 10px}
+@media(max-width:560px){.fulfillment-grid{grid-template-columns:1fr}}
+@media(max-width:560px){.sla-form{grid-template-columns:1fr}.sla-field.full,.sla-checks{grid-column:auto}}
+
+.live-event,.live-session{padding:9px 11px;border:1px solid rgba(212,175,124,.13);border-radius:7px;background:#100d0f}.live-event-head,.live-session-head{display:flex;justify-content:space-between;gap:8px;align-items:center}.live-event strong,.live-session strong{color:var(--gold);font-size:10px}.live-event small,.live-session small{color:var(--muted);font-size:9px}.live-event p,.live-session p{margin:4px 0 0;color:#e8d9dc;font-size:10px;overflow-wrap:anywhere}.live-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#72c69b;margin-right:6px;box-shadow:0 0 8px #72c69b}.live-feed-time{white-space:nowrap;color:var(--muted);font-size:9px}
+footer{padding:18px 0;border-top:1px solid var(--line);color:#766970;font-size:9px;text-align:center}
+@media(max-width:1000px){.metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.grid2{grid-template-columns:1fr}}@media(max-width:560px){.shell{width:calc(100% - 22px)}.top{align-items:flex-start}.brand{font-size:23px}.metrics{gap:8px}.metric{padding:13px;min-height:88px}.metric strong{font-size:25px}.panel{padding:14px}.searchbar{grid-template-columns:1fr 1fr}.searchbar input{grid-column:1/-1}.searchbar button{grid-column:1/-1}.bar-row{grid-template-columns:65px 1fr 65px}}
+
+/* Interface clara, com hierarquia simples e menos ruído visual */
+:root{
+ --wine:#76243f;--black:#f4f1ef;--surface:#ffffff;--gold:#805c35;
+ --blush:#432b35;--text:#2f292c;--muted:#6f666a;--line:rgba(75,49,61,.16);
+ color-scheme:light;
+}
+body{background:linear-gradient(180deg,#f7f4f2 0%,#f1eeec 100%);color:var(--text)}
+.shell{width:min(1480px,calc(100% - 40px))}
+.top{background:rgba(255,255,255,.94);border-bottom-color:#e7dfdf;box-shadow:0 2px 12px rgba(38,25,31,.04)}
+.brand{color:#53283a}.brand small{color:#805c35}
+h1{color:#54283c}h2{color:#50303d}
+.eyebrow{color:#805c35}
+.sub,.small,.period,.meta,.panel p.hint{color:#6f666a}
+.notice{background:#fff;border-color:#e7dfdf;color:#575055;box-shadow:0 2px 10px rgba(38,25,31,.03)}
+.notice.error{background:#fff4f5;border-color:#e3b9c1;color:#8b2943}
+.metric{background:#fff;border-color:#e9e1e1;box-shadow:0 3px 12px rgba(38,25,31,.035)}
+.metric span,.metric small{color:#70666b}.metric strong{color:#76243f}
+.panel{background:#fff;border-color:#e6dddd;box-shadow:0 3px 14px rgba(38,25,31,.035)}
+.btn,select,input{background:#fff;color:#332c30;border-color:#ded3d5}
+.btn{color:#76243f}.btn.primary{background:#76243f;border-color:#76243f;color:#fff}
+.btn:hover{background:#f8f2f4}.btn.primary:hover{background:#622036}
+input:focus,select:focus{outline:0;border-color:#986079;box-shadow:0 0 0 3px rgba(118,36,63,.10)}
+.item,.sla-rule,.fulfillment-card,.live-event,.live-session{background:#faf8f7;border-color:#e9e1e1}
+.item strong,.sla-rule strong,.live-event strong,.live-session strong{color:#76243f}
+.products{color:#463e42}.live-event p,.live-session p,.fulfillment-block div,.fulfillment-block li,.detail-block div,.detail-block li{color:#494146}
+.pill{color:#76243f;background:#faf5f6;border-color:#e3d3d8}
+.tag{color:#76243f}
+.bar-track{background:#eee8e8}.bar-fill{background:linear-gradient(90deg,#76243f,#b98572)}
+.bar-value{color:#443a3f}
+.orders-table th{background:#f4edef;color:#6b3449}
+.orders-table th,.orders-table td{border-bottom-color:#eee6e6}
+.detail-row td{background:#faf7f7}.detail-block strong{color:#76243f}
+.detail-footer{border-top-color:#e9e1e1}
+.sla-field{color:#62585d}
+.sla-field input,.sla-field select{background:#fff;color:#332c30}
+.sla-checks{color:#5e5559}
+.fulfillment-block strong{color:#76243f}
+.fulfillment-meta,.details span,.address{color:#6b6065}
+.workspace-nav{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0 8px;padding:7px;background:#eae4e3;border:1px solid #e3dada;border-radius:12px}
+.workspace-tab{display:flex;align-items:center;gap:9px;min-height:42px;padding:0 17px;border:1px solid transparent;border-radius:8px;background:transparent;color:#62565d;font:600 11px Montserrat,Arial,sans-serif;cursor:pointer;transition:background .15s,border-color .15s}
+.workspace-tab span{font-size:9px;color:#9b858e;font-weight:700}
+.workspace-tab:hover{background:#fff;color:#76243f}
+.workspace-tab.active{background:#fff;border-color:#e2d5d9;color:#76243f;box-shadow:0 2px 6px rgba(50,30,40,.06)}
+.workspace-tab.active span{color:#76243f}
+.workspace-description{margin:8px 2px 14px;color:#746970;font-size:11px}
+.workspace-view[hidden]{display:none!important}
+.workspace-view{animation:workspaceFade .16s ease-out}
+@keyframes workspaceFade{from{opacity:.72;transform:translateY(3px)}to{opacity:1;transform:translateY(0)}}
+.workspace-view>.section-head:first-child{margin-top:8px}
+.workspace-view>.panel{margin-top:14px}
+.workspace-view .panel h2{font-size:21px}
+.workspace-view .metric{min-height:88px}
+.workspace-view .metric strong{font-family:Montserrat,Arial,sans-serif;font-size:23px;font-weight:700}
+.workspace-view .empty{color:#776c72}
+.workspace-view .order-actions select{background:#fff;color:#332c30}
+footer{color:#81757a;border-top-color:#e4dddd}
+@media(max-width:700px){.workspace-nav{display:grid;grid-template-columns:1fr 1fr}.workspace-tab{justify-content:flex-start;padding:0 11px}.shell{width:calc(100% - 24px)}}
+@media(max-width:420px){.workspace-tab{font-size:10px;gap:6px;min-height:40px}}
+</style>
+</head>
+<body><div class="shell">
+<header class="top"><a class="brand" href="index.html">Luxuriosa<small>GESTÃO PRIVADA</small></a><div class="actions"><a class="btn" href="login.html" style="text-decoration:none">MINHA CONTA</a><button class="btn" id="refresh">ATUALIZAR</button><button class="btn" id="logout">SAIR</button></div></header>
+<main>
+<div class="hero"><div><div class="eyebrow">Ambiente privado · acesso autorizado</div><h1>Gestão da loja.</h1><p class="sub">Escolha uma área para trabalhar. Cada tela reúne somente as ferramentas daquele assunto.</p></div><div class="period"><label for="period">Período:</label><select id="period"><option value="7">Últimos 7 dias</option><option value="30" selected>Últimos 30 dias</option><option value="90">Últimos 90 dias</option></select></div></div>
+<div id="notice" class="notice" role="status" aria-live="polite">Validando seu acesso...</div>
+
+<nav class="workspace-nav" aria-label="Áreas da gestão">
+  <button type="button" class="workspace-tab active" data-view-target="overview" aria-current="page"><span>01</span> Visão geral</button>
+  <button type="button" class="workspace-tab" data-view-target="orders"><span>02</span> Pedidos e clientes</button>
+  <button type="button" class="workspace-tab" data-view-target="delivery"><span>03</span> Entregas</button>
+  <button type="button" class="workspace-tab" data-view-target="analytics"><span>04</span> Análise</button>
+</nav>
+<p class="workspace-description" id="workspaceDescription">Resumo do faturamento, pedidos e movimento da loja.</p>
+<section class="workspace-view" id="view-overview" data-workspace-view="overview">
+<div class="section-head"><h2>Indicadores principais</h2><span class="small" id="updatedAt">—</span></div>
+<section class="metrics" aria-label="Indicadores principais">
+<div class="metric"><span>Faturamento confirmado</span><strong id="revenue">—</strong><small>Pedidos confirmados, em preparo, em entrega ou entregues</small></div>
+<div class="metric"><span>Pedidos confirmados</span><strong id="confirmed">—</strong><small id="ordersPeriod">No período selecionado</small></div>
+<div class="metric"><span>Ticket médio</span><strong id="ticket">—</strong><small>Sobre pedidos confirmados</small></div>
+<div class="metric"><span>Pedidos aguardando</span><strong id="pending">—</strong><small>Solicitações pelo checkout</small></div>
+<div class="metric"><span>Carrinhos ativos</span><strong id="active">—</strong><small>Atividade recente</small></div>
+<div class="metric"><span>Carrinhos abandonados</span><strong id="abandoned">—</strong><small>Sem atividade por 60 minutos ou mais</small></div>
+<div class="metric"><span>Permissões de contato promocional</span><strong id="optin">—</strong><small>Consentimentos ativos para marketing</small></div>
+<div class="metric"><span>Pedidos no período</span><strong id="totalOrders">—</strong><small>Inclui solicitações ainda não confirmadas</small></div>
+</section>
+<div class="grid2">
+<section class="panel"><h2>Movimento diário</h2><p class="hint">Faturamento diário dos pedidos confirmados no período.</p><div id="daily" class="bars"><p class="empty">Aguardando dados...</p></div></section>
+<section class="panel"><h2>Produtos mais vendidos</h2><p class="hint">Unidades em pedidos confirmados no período.</p><div id="topProducts" class="bars"><p class="empty">Aguardando dados...</p></div></section>
+</div>
+</section>
+<section class="workspace-view" id="view-analytics" data-workspace-view="analytics" hidden>
+<section class="panel" id="liveActivityPanel" style="margin:18px 0">
+<div class="section-head" style="margin:0 0 10px">
+ <div><h2>Monitoramento ao vivo</h2><p class="hint">Visitantes com autorização de análise e atividade recente. Atualização automática a cada 10 segundos.</p></div>
+ <div class="actions"><span class="pill" id="liveStatus">Conectando...</span><button class="btn" id="liveRefresh" type="button">ATUALIZAR AGORA</button></div>
+</div>
+<div class="metrics" style="margin-top:10px">
+ <div class="metric"><span>Visitantes ativos (5 min)</span><strong id="liveVisitors">—</strong><small>Sessões anônimas em atividade</small></div>
+ <div class="metric"><span>Ações nas últimas 24h</span><strong id="liveEventCount">—</strong><small>Eventos autorizados</small></div>
+ <div class="metric"><span>Carrinhos em andamento</span><strong id="liveCarts">—</strong><small>Sessões com itens</small></div>
+ <div class="metric"><span>Valor em carrinhos ativos</span><strong id="liveCartValue">—</strong><small>Estimativa, não faturamento</small></div>
+</div>
+<div class="grid2">
+ <div><h2 style="font-size:19px">Fluxo de atividade</h2><p class="hint">Últimas ações recebidas do site.</p><div id="liveFeed" class="list"><p class="empty">Aguardando atividade...</p></div></div>
+ <div><h2 style="font-size:19px">Visitantes em atividade</h2><p class="hint">Identificador anônimo, última página e carrinho conhecido.</p><div id="liveSessions" class="list"><p class="empty">Nenhum visitante ativo no momento.</p></div></div>
+</div>
+<p class="small" style="margin:12px 0 0">A contagem inclui apenas sessões que autorizaram análise. Não identifica pessoas nem revela dados pessoais de visitantes anônimos.</p>
+</section>
+
+<section class="panel" id="intelligencePanel" style="margin:18px 0">
+<div class="section-head" style="margin:0 0 10px"><div><h2>Inteligência comercial</h2><p class="hint">Comportamento agregado de navegação, produtos e intenção de compra. Só registra atividade após autorização de análise.</p></div><span class="pill" id="intelligenceStatus">Aguardando consulta</span></div>
+<div class="metrics" style="margin-top:10px">
+<div class="metric"><span>Visualizações de páginas</span><strong id="iaViews">—</strong><small>No período selecionado</small></div>
+<div class="metric"><span>Navegadores identificados</span><strong id="iaSessions">—</strong><small>Identificador local pseudônimo; não representa pessoas únicas</small></div>
+<div class="metric"><span>Visualizações de produtos</span><strong id="iaProductViews">—</strong><small>Aberturas de detalhes de produto</small></div>
+<div class="metric"><span>Adições ao carrinho</span><strong id="iaAdds">—</strong><small>Eventos de inclusão</small></div>
+<div class="metric"><span>Checkouts iniciados</span><strong id="iaCheckout">—</strong><small>Intenção de finalizar compra</small></div>
+<div class="metric"><span>Aberturas do WhatsApp</span><strong id="iaWhatsapp">—</strong><small>Encaminhamentos para atendimento</small></div>
+<div class="metric"><span>Pedidos revisados</span><strong id="iaReviewed">—</strong><small>Revisão final antes do WhatsApp</small></div>
+<div class="metric"><span>Eventos registrados</span><strong id="iaEvents">—</strong><small>Registros analíticos no período</small></div>
+</div>
+<div class="grid2">
+<div><h2 style="font-size:19px">Produtos mais observados</h2><p class="hint">Visualizações e adições ao carrinho.</p><div id="iaTopProducts" class="bars"><p class="empty">Aguardando dados...</p></div></div>
+<div><h2 style="font-size:19px">Navegação por área</h2><p class="hint">Páginas agrupadas por tipo, sem registrar URL ou título individual.</p><div id="iaPages" class="bars"><p class="empty">Aguardando dados...</p></div></div>
+</div>
+<div class="grid2" style="margin-top:14px">
+<div><h2 style="font-size:19px">Atividade diária</h2><p class="hint">Visualizações de páginas por dia.</p><div id="iaDaily" class="bars"><p class="empty">Aguardando dados...</p></div></div>
+<div><h2 style="font-size:19px">Etapas de intenção</h2><p class="hint">Eventos registrados em cada etapa do checkout.</p><div id="iaFunnel" class="bars"><p class="empty">Aguardando dados...</p></div></div>
+</div>
+<p class="small" id="iaFootnote" style="margin:12px 0 0">Os dados desta área são armazenados no Supabase e não incluem nome, telefone ou endereço nos eventos analíticos.</p>
+</section>
+
+</section>
+<section class="workspace-view" id="view-delivery" data-workspace-view="delivery" hidden>
+<section class="panel" id="fulfillmentPanel" style="margin:18px 0">
+  <div class="section-head" style="margin:0 0 10px">
+    <div><h2>Expedição e entrega automáticas</h2><p class="hint">Os prazos começam quando a InfinitePay confirma o pagamento. Configure por cidade antes de liberar cobranças.</p></div>
+    <span class="pill" id="paymentConfigStatus">Verificando InfinitePay...</span>
+    <button class="btn" id="testEmailNotification" type="button" disabled>TESTAR E-MAIL</button>
+  </div>
+  <div class="grid2">
+    <form id="slaForm" class="sla-form">
+      <label class="sla-field">Cidade
+        <input id="slaCity" name="city" maxlength="100" placeholder="Ex.: Bauru" required>
+      </label>
+      <label class="sla-field">Estado (UF)
+        <input id="slaState" name="state" maxlength="2" placeholder="SP" required>
+      </label>
+      <label class="sla-field">Modalidade
+        <select id="slaMode" name="fulfillment_mode"><option value="delivery">Entrega</option><option value="pickup">Retirada</option></select>
+      </label>
+      <label class="sla-field">Frete (R$)
+        <input id="slaFee" name="delivery_fee_reais" type="number" min="0" max="10000" step="0.01" value="0" required>
+      </label>
+      <fieldset class="sla-field full" style="border:1px solid var(--line);border-radius:10px;padding:12px">
+        <legend>Frete por distância — rota de motocicleta</legend>
+        <label class="sla-field">CEP de saída
+          <input id="slaOriginCep" type="text" inputmode="numeric" maxlength="9" value="17030-290" required>
+        </label>
+        <div class="grid2">
+          <label class="sla-field">Imediata · até 12 km (R$)<input id="slaExpress12" type="number" min="0" step="0.01" value="15" required></label>
+          <label class="sla-field">Imediata · até 35 km (R$)<input id="slaExpress35" type="number" min="0" step="0.01" value="25" required></label>
+          <label class="sla-field">Imediata · até 55 km (R$)<input id="slaExpress55" type="number" min="0" step="0.01" value="35" required></label>
+          <label class="sla-field">Agendada · até 12 km (R$)<input id="slaScheduled12" type="number" min="0" step="0.01" value="10" required></label>
+          <label class="sla-field">Agendada · até 35 km (R$)<input id="slaScheduled35" type="number" min="0" step="0.01" value="20" required></label>
+          <label class="sla-field">Agendada · até 55 km (R$)<input id="slaScheduled55" type="number" min="0" step="0.01" value="25" required></label>
+        </div>
+        <div class="grid2">
+          <label class="sla-field">Pedido mínimo · até 12 km (R$)<input id="slaMinimum12" type="number" min="0" step="0.01" value="50" required></label>
+          <label class="sla-field">Pedido mínimo · até 35 km (R$)<input id="slaMinimum35" type="number" min="0" step="0.01" value="120" required></label>
+          <label class="sla-field">Pedido mínimo · até 55 km (R$)<input id="slaMinimum55" type="number" min="0" step="0.01" value="180" required></label>
+          <label class="sla-field">Agendamento até (horas)<input id="slaMaxAdvance" type="number" min="1" max="168" value="72" required></label>
+        </div>
+        <p class="small">O pedágio será adicionado ao preço-base quando a API conseguir estimar ida e volta. Distâncias acima de 55 km ficam fora da cobrança automática.</p>
+      </fieldset>
+      <label class="sla-field">Prazo para expedir (minutos)
+        <input id="slaDispatch" name="dispatch_minutes" type="number" min="1" max="10080" step="1" placeholder="Ex.: 60" required>
+      </label>
+      <label class="sla-field">Prazo de entrega — limite máximo (minutos)
+        <input id="slaDelivery" name="delivery_minutes" type="number" min="0" max="10080" step="1" placeholder="Ex.: 90" required>
+      </label>
+      <label class="sla-field">Meta de expedição em horário de funcionamento (minutos)
+        <input id="slaDispatchTarget" name="dispatch_target_minutes" type="number" min="0" max="10080" step="1" placeholder="Ex.: 10">
+      </label>
+      <label class="sla-field">Meta de entrega em horário de funcionamento (minutos)
+        <input id="slaDeliveryTarget" name="delivery_target_minutes" type="number" min="0" max="10080" step="1" placeholder="Ex.: 30">
+      </label>
+      <fieldset class="sla-field full" style="border:1px solid var(--line);border-radius:10px;padding:12px">
+        <legend>Entrega agendada (opcional)</legend>
+        <label><input id="slaScheduledEnabled" type="checkbox"> Disponibilizar agendamento nesta região</label>
+        <div class="grid2" style="margin-top:10px">
+          <label class="sla-field">Desconto no agendamento (%)
+            <input id="slaScheduledDiscount" type="number" min="0" max="100" step="0.5" value="0">
+          </label>
+          <label class="sla-field">Início da janela
+            <input id="slaWindowStart" type="time">
+          </label>
+          <label class="sla-field">Fim da janela
+            <input id="slaWindowEnd" type="time">
+          </label>
+        </div>
+        <div class="sla-checks" style="margin-top:8px">
+          <label><input class="slaWeekday" type="checkbox" value="1" checked> Segunda</label>
+          <label><input class="slaWeekday" type="checkbox" value="2" checked> Terça</label>
+          <label><input class="slaWeekday" type="checkbox" value="3" checked> Quarta</label>
+          <label><input class="slaWeekday" type="checkbox" value="4"> Quinta</label>
+          <label><input class="slaWeekday" type="checkbox" value="5"> Sexta</label>
+          <label><input class="slaWeekday" type="checkbox" value="6"> Sábado</label>
+          <label><input class="slaWeekday" type="checkbox" value="7"> Domingo</label>
+        </div>
+        <p class="small">Deixe desativado até definir dias, janela e desconto para a cidade.</p>
+      </fieldset>
+      <div class="sla-checks">
+        <label><input id="slaFreeKit" type="checkbox"> Frete grátis se incluir kit</label>
+        <label><input id="slaAutomatic" type="checkbox"> Liberar pagamento automático</label>
+        <label><input id="slaActive" type="checkbox" checked> Regra ativa</label>
+      </div>
+      <div class="sla-field full">
+        <button class="btn primary" id="slaSave" type="submit">SALVAR REGRA DE PRAZO</button>
+        <p class="small" id="slaFormStatus">Valores em minutos. Ex.: 90 = 1h30. Pagamento automático depende da InfinitePay e do e-mail de aviso configurado. Os prazos são contados após a aprovação do pagamento.</p>
+      </div>
+    </form>
+    <div>
+      <h2 style="font-size:19px">Regiões configuradas</h2>
+      <p class="hint">Pedidos automáticos só são aceitos em regiões com regra ativa e pagamento habilitado.</p>
+      <div class="list" id="slaRules"><p class="empty">Carregando regras...</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="panel" id="dispatchQueuePanel" style="margin:18px 0">
+  <div class="section-head" style="margin:0 0 10px">
+    <div><h2>Fila de expedição</h2><p class="hint">Somente pedidos com pagamento confirmado aparecem aqui. Avance cada etapa quando ela realmente acontecer.</p></div>
+    <div class="actions"><span class="pill" id="dispatchQueueCount">0 pedidos</span><button class="btn" id="refreshDispatchQueue" type="button">ATUALIZAR FILA</button></div>
+  </div>
+  <div id="dispatchQueue"><p class="empty">Carregando pedidos pagos...</p></div>
+</section>
+</section>
+<section class="workspace-view" id="view-orders" data-workspace-view="orders" hidden>
+<div class="section-head"><div><h2>Consultas de pedidos e clientes</h2><p class="sub">Pesquise por nome, telefone ou número do pedido e filtre pelo status.</p></div></div>
+<section class="panel">
+<form id="searchForm" class="searchbar">
+<input id="searchQuery" type="search" placeholder="Nome, telefone ou nº do pedido" autocomplete="off">
+<select id="statusFilter"><option value="">Todos os status</option><option value="awaiting_confirmation">Aguardando confirmação</option><option value="confirmed">Confirmado</option><option value="processing">Em preparação</option><option value="out_for_delivery">Saiu para entrega</option><option value="delivered">Entregue</option><option value="cancelled">Cancelado</option></select>
+<button class="btn primary" type="submit">CONSULTAR</button>
+</form>
+<div id="queryResults" class="query-results"><p class="empty">Carregando pedidos recentes...</p></div>
+</section>
+<div class="grid2" style="margin-top:16px">
+<section class="panel"><h2>Carrinhos recentes</h2><p class="hint">Mensagens promocionais só podem ser enviadas quando autorizadas pelo cliente. O atendimento de pedidos continua normalmente.</p><div class="list" id="carts"><p class="empty">Aguardando dados...</p></div></section>
+<section class="panel"><h2>Atalhos de gestão</h2><p class="hint">Acesso rápido às áreas públicas e administrativas já existentes.</p><div class="list">
+<div class="item"><div class="item-top"><strong>Loja virtual</strong><a class="btn" href="loja.html">ABRIR LOJA</a></div><div class="small">Catálogo e fluxo de pedidos.</div></div>
+<div class="item"><div class="item-top"><strong>Área do cliente</strong><a class="btn" href="login.html">ABRIR CONTAS</a></div><div class="small">Login, cadastro e histórico de compras.</div></div>
+<div class="item"><div class="item-top"><strong>Supabase</strong><a class="btn" href="https://supabase.com/dashboard/project/byiykxfugvxuowueuxca" target="_blank" rel="noopener">ABRIR BANCO</a></div><div class="small">Autenticação, dados e infraestrutura.</div></div>
+</div></section>
+</div>
+</section>
+</main><footer>Gestão Luxuriosa · Ambiente restrito</footer>
+</div>
+<script type="module">
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+const URL="https://byiykxfugvxuowueuxca.supabase.co";
+const KEY="sb_publishable_LaMbeWQ1PNANEQ85SD_35Q_wDzswy8y";
+const supabase=createClient(URL,KEY,{auth:{autoRefreshToken:true,persistSession:true,detectSessionInUrl:true}});
+const $=id=>document.getElementById(id);
+const workspaceDescriptions={
+ overview:"Resumo do faturamento, pedidos e movimento da loja.",
+ orders:"Consulte pedidos, veja clientes e acompanhe carrinhos recentes.",
+ delivery:"Configure frete e prazos por região e acompanhe a fila de entregas.",
+ analytics:"Acompanhe navegação e comportamento agregado, quando autorizado."
+};
+function setWorkspaceView(name){
+ const selected=workspaceDescriptions[name]?name:"overview";
+ document.querySelectorAll("[data-workspace-view]").forEach(view=>{
+  view.hidden=view.dataset.workspaceView!==selected;
+ });
+ document.querySelectorAll("[data-view-target]").forEach(button=>{
+  const active=button.dataset.viewTarget===selected;
+  button.classList.toggle("active",active);
+  if(active)button.setAttribute("aria-current","page");
+  else button.removeAttribute("aria-current");
+ });
+ const description=$("workspaceDescription");
+ if(description)description.textContent=workspaceDescriptions[selected];
+ try{sessionStorage.setItem("luxuriosa_workspace_view",selected)}catch(_){}
+}
+document.querySelectorAll("[data-view-target]").forEach(button=>{
+ button.addEventListener("click",()=>setWorkspaceView(button.dataset.viewTarget));
+});
+let initialWorkspace="overview";
+try{initialWorkspace=sessionStorage.getItem("luxuriosa_workspace_view")||"overview"}catch(_){}
+setWorkspaceView(initialWorkspace);
+
+const money=new Intl.NumberFormat("pt-BR",{style:"currency",currency:"BRL"});
+const labels={active:"Ativo",checkout_started:"Iniciou checkout",checkout_reviewed:"Revisou pedido",abandoned:"Abandonado",whatsapp_opened:"WhatsApp aberto",awaiting_confirmation:"Aguardando confirmação",confirmed:"Confirmado",processing:"Em preparação",out_for_delivery:"Saiu para entrega",delivered:"Entregue",cancelled:"Cancelado"};
+function notice(text,error=false){$("notice").textContent=text;$("notice").className="notice"+(error?" error":"")}
+function el(tag,cls,txt){const n=document.createElement(tag);if(cls)n.className=cls;if(txt!==undefined)n.textContent=txt;return n}
+function fmtDate(value){return value?new Date(value).toLocaleString("pt-BR"):"—"}
+function statusTag(value){return labels[value]||value||"—"}
+function renderBars(target,items,labelKey,valueKey,format){
+ const box=$(target);box.replaceChildren();if(!items.length){box.append(el("p","empty","Sem dados para o período selecionado."));return}
+ const max=Math.max(1,...items.map(x=>Number(x[valueKey])||0));
+ items.forEach(item=>{const row=el("div","bar-row"),label=el("span","",item[labelKey]),track=el("div","bar-track"),fill=el("div","bar-fill"),value=el("span","bar-value",format(item[valueKey]));fill.style.width=Math.max(1,(Number(item[valueKey])||0)/max*100)+"%";track.append(fill);row.append(label,track,value);box.append(row)});
+}
+let orderSort={key:"created_at",direction:"desc"};
+function renderOrders(orders){
+ const box=$("queryResults");box.replaceChildren();
+ if(!orders.length){box.append(el("p","empty","Nenhum pedido encontrado com esses critérios."));return}
+ const sorted=[...orders].sort((a,b)=>{
+  const av=a[orderSort.key],bv=b[orderSort.key];
+  let result=0;
+  if(orderSort.key==="total_amount"||orderSort.key==="order_number")result=(Number(av)||0)-(Number(bv)||0);
+  else result=String(av??"").localeCompare(String(bv??""),"pt-BR",{numeric:true,sensitivity:"base"});
+  return orderSort.direction==="asc"?result:-result;
+ });
+ const wrap=el("div","table-wrap"),table=el("table","orders-table"),thead=el("thead"),head=el("tr");
+ const columns=[["order_number","Pedido"],["customer_name","Cliente"],["created_at","Data"],["total_amount","Total"],["status","Status"],["actions","Detalhes"]];
+ columns.forEach(([key,label])=>{
+  const th=el("th"),button=el("button","sort-btn",label);
+  if(key==="actions"){th.textContent=label}
+  else{
+   button.type="button";button.setAttribute("aria-label","Ordenar por "+label);
+   button.addEventListener("click",()=>{
+    orderSort={key,direction:orderSort.key===key&&orderSort.direction==="asc"?"desc":"asc"};
+    renderOrders(orders);
+   });
+   if(orderSort.key===key)button.textContent+=orderSort.direction==="asc"?" ↑":" ↓";
+   th.append(button);
+  }
+  head.append(th);
+ });
+ thead.append(head);table.append(thead);
+ const tbody=el("tbody");
+ sorted.forEach(o=>{
+  const row=el("tr","order-row");
+  row.append(el("td","num","#"+o.order_number));
+  const customer=el("td","customer");customer.append(el("strong","",o.customer_name||"Cliente"));customer.append(el("div","muted-cell",o.customer_phone||"Sem telefone"));row.append(customer);
+  row.append(el("td","muted-cell",fmtDate(o.created_at)));
+  row.append(el("td","amount",money.format(Number(o.total_amount)||0)));
+  const statusCell=el("td");statusCell.append(el("span","pill",statusTag(o.status)));row.append(statusCell);
+  const actionCell=el("td"),toggle=el("button","btn details-toggle","VER DETALHES");toggle.type="button";actionCell.append(toggle);row.append(actionCell);
+  const detailRow=el("tr","detail-row");detailRow.hidden=true;const detailCell=el("td");detailCell.colSpan=6;
+  const grid=el("div","detail-grid");
+  const customerBlock=el("div","detail-block");customerBlock.append(el("strong","","Cliente"));customerBlock.append(el("div","",o.customer_name||"Não informado"));customerBlock.append(el("div","",o.customer_phone||"Telefone não informado"));
+  const address=o.delivery_address||{};const addressText=[address.street,address.number,address.complement,address.district,address.city,address.state,address.zip].filter(Boolean).join(", ");
+  const addressBlock=el("div","detail-block");addressBlock.append(el("strong","","Entrega"));addressBlock.append(el("div","",addressText||"Endereço não informado"));
+  const itemsBlock=el("div","detail-block");itemsBlock.append(el("strong","","Itens do pedido"));
+  if(o.items?.length){const ul=el("ul");o.items.forEach(i=>ul.append(el("li","",(i.quantity||1)+"x "+i.product_name+" · "+money.format(Number(i.unit_price)||0))));itemsBlock.append(ul)}
+  else itemsBlock.append(el("div","","Itens não disponíveis."));
+  grid.append(customerBlock,addressBlock,itemsBlock);detailCell.append(grid);
+  const footer=el("div","detail-footer");
+  if(o.customer_phone){const phone=String(o.customer_phone).replace(/\D/g,"");const link=el("a","btn","CONTATO DO PEDIDO");link.href="https://wa.me/"+phone;link.target="_blank";link.rel="noopener";link.style.textDecoration="none";footer.append(link)}
+  const controls=el("div","order-actions"),select=el("select"),save=el("button","btn primary","SALVAR STATUS");
+  select.setAttribute("aria-label","Novo status do pedido "+o.order_number);
+  const transitions={awaiting_confirmation:["confirmed","cancelled"],confirmed:["processing","cancelled"],processing:["out_for_delivery","cancelled"],out_for_delivery:["delivered"],delivered:[],cancelled:[]};
+  [o.status,...(transitions[o.status]||[])].forEach(value=>{const option=el("option","",statusTag(value));option.value=value;if(value===o.status)option.selected=true;select.append(option)});
+  save.type="button";save.disabled=true;select.addEventListener("change",()=>{save.disabled=select.value===o.status});save.addEventListener("click",()=>updateOrderStatus(o,select,save));
+  controls.append(select,save);footer.append(controls);detailCell.append(footer);detailRow.append(detailCell);
+  toggle.addEventListener("click",()=>{detailRow.hidden=!detailRow.hidden;toggle.textContent=detailRow.hidden?"VER DETALHES":"OCULTAR";});
+  tbody.append(row,detailRow);
+ });
+ table.append(tbody);wrap.append(table);box.append(wrap);
+}
+async function updateOrderStatus(order,select,button){
+ const nextStatus=select.value;if(nextStatus===order.status){notice("O pedido já está nesse status.");return}
+ const extra=nextStatus==="confirmed"?"\n\nA confirmação registra o aceite do pedido, não o pagamento.":"";
+ if(!confirm("Alterar o pedido #"+order.order_number+" para '"+statusTag(nextStatus)+"'?"+extra))return;
+ button.disabled=true;button.textContent="SALVANDO...";
+ try{
+  const {data,error}=await supabase.functions.invoke("cart-orders",{body:{action:"admin_update_order_status",order_id:order.id,status:nextStatus}});
+  if(error)throw error;if(!data?.ok)throw new Error(data?.error||"Não foi possível atualizar o pedido.");
+  notice("Pedido #"+order.order_number+" atualizado: "+statusTag(data.order.status)+".");
+  await load();
+ }catch(e){notice(e.message||"Falha ao atualizar pedido.",true);button.disabled=false;button.textContent="SALVAR STATUS"}
+}
+const pageLabels={home:"Início",catalog:"Catálogo",product:"Produto",checkout:"Checkout",institutional:"Institucional",other:"Outras páginas"};
+
+function deadlineStatus(value){
+ if(!value)return "Prazo não definido";
+ const diff=new Date(value).getTime()-Date.now();
+ if(diff<0)return "Atrasado";
+ if(diff<30*60000)return "Próximo do limite";
+ return "No prazo";
+}
+function renderFulfillmentQueue(orders){
+ const box=$("dispatchQueue");box.replaceChildren();
+ $("dispatchQueueCount").textContent=orders.length+" pedido(s)";
+ if(!orders.length){box.append(el("p","empty","Nenhum pedido pago aguardando expedição ou entrega."));return}
+ orders.forEach(order=>{
+  const card=el("article","fulfillment-card"),head=el("div","fulfillment-head");
+  head.append(el("strong","","Pedido #"+order.order_number+" · "+statusTag(order.status)));
+  head.append(el("span","pill",order.payment_method==="pix"?"Pix":"Cartão"));
+  card.append(head);
+  const meta=el("div","fulfillment-meta");
+  meta.append(el("span","","Modalidade: "+(order.fulfillment_type==="scheduled"?"Agendada":"Expressa")));
+  if(order.fulfillment_type==="scheduled"){
+   meta.append(el("span","","Data agendada: "+(order.scheduled_delivery_date||"Não informada")));
+   meta.append(el("span","","Janela: "+String(order.scheduled_window_start||"").slice(0,5)+"–"+String(order.scheduled_window_end||"").slice(0,5)));
+   if(Number(order.scheduled_discount_amount)>0)meta.append(el("span","","Desconto: "+money.format(Number(order.scheduled_discount_amount))));
+  }
+  meta.append(el("span","","Pago em: "+fmtDate(order.paid_at)));
+  meta.append(el("span","","Total: "+money.format(Number(order.total_amount)||0)));
+  meta.append(el("span","", "Expedição: "+deadlineStatus(order.dispatch_due_at)+" · "+fmtDate(order.dispatch_due_at)));
+  meta.append(el("span","", "Entrega: "+deadlineStatus(order.delivery_due_at)+" · "+fmtDate(order.delivery_due_at)));
+  card.append(meta);
+  const grid=el("div","fulfillment-grid");
+  const customer=el("div","fulfillment-block");customer.append(el("strong","","Cliente e destino"));
+  customer.append(el("div","",order.customer_name||"Cliente"));
+  customer.append(el("div","",order.customer_phone||"Telefone não informado"));
+  const address=order.delivery_address||{};
+  const addressLine=[address.street,address.number,address.complement,address.district,address.city,address.state,address.zip].filter(Boolean).join(", ");
+  customer.append(el("div","",addressLine||"Endereço não informado"));
+  const itemsBlock=el("div","fulfillment-block");itemsBlock.append(el("strong","","Itens para separar"));
+  if(order.items?.length){
+   const ul=el("ul");
+   order.items.forEach(item=>ul.append(el("li","",(item.quantity||1)+"x "+item.product_name+" · "+money.format(Number(item.line_total??(item.quantity*item.unit_price))||0))));
+   itemsBlock.append(ul);
+  }else itemsBlock.append(el("div","","Itens não disponíveis."));
+  grid.append(customer,itemsBlock);card.append(grid);
+  const notification=order.notification||{};
+  const notificationText=notification.email_notification_status==="sent"?"E-mail enviado":
+   notification.email_notification_status==="failed"?"Falha no e-mail":
+   notification.email_notification_status==="not_configured"?"E-mail não configurado":
+   notification.email_notification_status==="pending"?"E-mail pendente":"Sem status de notificação";
+  card.append(el("div","small",notificationText+(notification.email_notification_error?": "+notification.email_notification_error:"")));
+  const actions=el("div","fulfillment-actions");
+  const next=order.status==="confirmed"?"processing":order.status==="processing"?"out_for_delivery":"delivered";
+  const actionLabel=order.status==="confirmed"?"INICIAR SEPARAÇÃO":order.status==="processing"?"MARCAR SAIU PARA ENTREGA":"MARCAR ENTREGUE";
+  const advance=el("button","btn primary",actionLabel);advance.type="button";
+  advance.addEventListener("click",()=>updateFulfillment(order,next,advance));actions.append(advance);
+  if(notification.id&&notification.email_notification_status==="failed"){
+   const retry=el("button","btn","REENVIAR E-MAIL");retry.type="button";
+   retry.addEventListener("click",()=>retryPaymentEmailNotification(order,notification,retry));actions.append(retry);
+  }
+  card.append(actions);box.append(card);
+ });
+}
+async function loadFulfillmentQueue(){
+ const box=$("dispatchQueue");box.replaceChildren(el("p","empty","Consultando pedidos pagos..."));
+ try{
+  const {data,error}=await supabase.functions.invoke("payment-admin",{body:{action:"fulfillment_queue"}});
+  if(error)throw error;if(!data?.ok)throw new Error(data?.error||"Não foi possível carregar a fila.");
+  renderFulfillmentQueue(data.orders||[]);
+ }catch(error){console.error(error);box.replaceChildren(el("p","empty",error.message||"Falha ao carregar a fila."));}
+}
+async function updateFulfillment(order,nextStatus,button){
+ const actionLabel=nextStatus==="processing"?"iniciar a separação":nextStatus==="out_for_delivery"?"marcar como saiu para entrega":"marcar como entregue";
+ if(!confirm("Deseja "+actionLabel+" o pedido #"+order.order_number+"?"))return;
+ button.disabled=true;
+ try{
+  const {data,error}=await supabase.functions.invoke("payment-admin",{body:{action:"fulfillment_update",order_id:order.id,status:nextStatus}});
+  if(error)throw error;if(!data?.ok)throw new Error(data?.error||"Não foi possível atualizar a expedição.");
+  notice("Pedido #"+order.order_number+" atualizado.");await loadFulfillmentQueue();await load();
+ }catch(error){notice(error.message||"Falha ao atualizar a expedição.",true);button.disabled=false}
+}
+async function retryPaymentEmailNotification(order,notification,button){
+ button.disabled=true;button.textContent="REENVIANDO...";
+ try{
+  const {data,error}=await supabase.functions.invoke("payment-admin",{body:{action:"resend_email_notification",event_id:notification.id}});
+  if(error)throw error;if(!data?.ok)throw new Error(data?.error||"Não foi possível reenviar o e-mail.");
+  notice("E-mail de pagamento reenviado para o pedido #"+order.order_number+".");await loadFulfillmentQueue();
+ }catch(error){notice(error.message||"Falha ao reenviar e-mail.",true);button.disabled=false;button.textContent="REENVIAR E-MAIL"}
+}
+function formatMinutes(value){
+ const n=Math.max(0,Number(value)||0),h=Math.floor(n/60),m=n%60;
+ if(h&&m)return h+"h "+m+"min";
+ if(h)return h+"h";
+ return m+"min";
+}
+function fillSlaForm(rule){
+ $("slaCity").value=rule.city_normalized||"";
+ $("slaState").value=rule.state||"";
+ $("slaMode").value=rule.fulfillment_mode||"delivery";
+ $("slaFee").value=(Number(rule.delivery_fee_cents)||0)/100;
+ $("slaDispatch").value=rule.dispatch_minutes??"";
+ $("slaDelivery").value=rule.delivery_minutes??"";
+ $("slaDispatchTarget").value=rule.dispatch_target_minutes??"";
+ $("slaDeliveryTarget").value=rule.delivery_target_minutes??"";
+ $("slaOriginCep").value=rule.freight_origin_cep||"17030290";
+ $("slaExpress12").value=(Number(rule.express_fee_up_to_12km_cents)||0)/100;
+ $("slaExpress35").value=(Number(rule.express_fee_up_to_35km_cents)||0)/100;
+ $("slaExpress55").value=(Number(rule.express_fee_up_to_55km_cents)||0)/100;
+ $("slaScheduled12").value=(Number(rule.scheduled_fee_up_to_12km_cents)||0)/100;
+ $("slaScheduled35").value=(Number(rule.scheduled_fee_up_to_35km_cents)||0)/100;
+ $("slaScheduled55").value=(Number(rule.scheduled_fee_up_to_55km_cents)||0)/100;
+ $("slaMinimum12").value=(Number(rule.minimum_order_up_to_12km_cents)||0)/100;
+ $("slaMinimum35").value=(Number(rule.minimum_order_up_to_35km_cents)||0)/100;
+ $("slaMinimum55").value=(Number(rule.minimum_order_up_to_55km_cents)||0)/100;
+ $("slaMaxAdvance").value=rule.scheduled_max_advance_hours??72;
+ $("slaScheduledEnabled").checked=!!rule.scheduled_delivery_enabled;
+ $("slaScheduledDiscount").value=rule.scheduled_discount_percent??0;
+ $("slaWindowStart").value=rule.scheduled_window_start?String(rule.scheduled_window_start).slice(0,5):"";
+ $("slaWindowEnd").value=rule.scheduled_window_end?String(rule.scheduled_window_end).slice(0,5):"";
+ document.querySelectorAll(".slaWeekday").forEach(input=>{input.checked=(rule.scheduled_delivery_weekdays||[1,2,3]).includes(Number(input.value))});
+ $("slaFreeKit").checked=!!rule.free_delivery_if_contains_kit;
+ $("slaAutomatic").checked=!!rule.automatic_payment_enabled;
+ $("slaActive").checked=!!rule.active;
+ $("slaCity").focus();
+}
+function renderSlaRules(rules){
+ const box=$("slaRules");box.replaceChildren();
+ if(!rules.length){box.append(el("p","empty","Nenhuma região configurada. O pagamento automático permanece bloqueado."));return}
+ rules.forEach(rule=>{
+  const card=el("article","sla-rule"),head=el("div","sla-rule-head");
+  head.append(el("strong","",rule.city_normalized.toLocaleUpperCase("pt-BR")+"/"+rule.state));
+  head.append(el("span","pill",rule.automatic_payment_enabled&&rule.active?"Pagamento liberado":"Pagamento bloqueado"));
+  const meta=el("div","sla-rule-meta");
+  meta.append(el("span","","Expedição: "+formatMinutes(rule.dispatch_minutes)));
+  meta.append(el("span","","Entrega máx.: "+formatMinutes(rule.delivery_minutes)));
+  if(rule.dispatch_target_minutes!=null&&rule.delivery_target_minutes!=null){
+   meta.append(el("span","","Meta em expediente: "+formatMinutes(rule.dispatch_target_minutes+rule.delivery_target_minutes)));
+  }
+  meta.append(el("span","","Imediata: "+money.format((Number(rule.express_fee_up_to_12km_cents)||0)/100)+" / "+money.format((Number(rule.express_fee_up_to_35km_cents)||0)/100)+" / "+money.format((Number(rule.express_fee_up_to_55km_cents)||0)/100)));
+  meta.append(el("span","","Agendada: "+money.format((Number(rule.scheduled_fee_up_to_12km_cents)||0)/100)+" / "+money.format((Number(rule.scheduled_fee_up_to_35km_cents)||0)/100)+" / "+money.format((Number(rule.scheduled_fee_up_to_55km_cents)||0)/100)));
+  meta.append(el("span","","Pedido mínimo: "+money.format((Number(rule.minimum_order_up_to_12km_cents)||0)/100)+" / "+money.format((Number(rule.minimum_order_up_to_35km_cents)||0)/100)+" / "+money.format((Number(rule.minimum_order_up_to_55km_cents)||0)/100)));
+  if(rule.scheduled_delivery_enabled)meta.append(el("span","","Agendada: "+(rule.scheduled_discount_percent||0)+"% · "+(rule.scheduled_delivery_weekdays||[]).join(", ")));
+  if(rule.free_delivery_if_contains_kit)meta.append(el("span","","Kit: frete grátis"));
+  if(!rule.active)meta.append(el("span","","Regra inativa"));
+  const actions=el("div","sla-rule-actions"),edit=el("button","btn","EDITAR");
+  edit.type="button";edit.addEventListener("click",()=>fillSlaForm(rule));
+  actions.append(edit);card.append(head,meta,actions);box.append(card);
+ });
+}
+async function loadFulfillment(){
+ const status=$("paymentConfigStatus");
+ try{
+  const [health,rules]=await Promise.all([
+   supabase.functions.invoke("payment-admin",{body:{action:"status"}}),
+   supabase.functions.invoke("payment-admin",{body:{action:"list"}})
+  ]);
+  if(health.error)throw health.error;if(!health.data?.ok)throw new Error(health.data?.error||"Configuração indisponível.");
+  if(rules.error)throw rules.error;if(!rules.data?.ok)throw new Error(rules.data?.error||"Regras indisponíveis.");
+  const api=health.data.infinitepay_api_key_configured?"InfinitePay: chave OK":"InfinitePay: chave pendente";
+  const handle=health.data.infinitepay_handle_configured?"InfiniteTag OK":"InfiniteTag pendente";
+  const emailConfigured=health.data.email_notification_configured===true;
+  const email=emailConfigured?"E-mail de avisos OK":"E-mail de avisos pendente";
+  status.textContent=api+" · "+handle+" · "+email+" · Rotas: "+(health.data.route_calculation_configured?"Google OK":"Google pendente");
+  $("testEmailNotification").disabled=!emailConfigured;
+  renderSlaRules(rules.data.rules||[]);
+ }catch(error){
+  console.error(error);status.textContent="Configuração indisponível";
+  $("testEmailNotification").disabled=true;
+  $("slaRules").replaceChildren(el("p","empty",error.message||"Não foi possível consultar as regras."));
+ }
+}
+$("testEmailNotification").addEventListener("click",async()=>{
+ const button=$("testEmailNotification");
+ button.disabled=true;button.textContent="ENVIANDO...";
+ try{
+  const {data,error}=await supabase.functions.invoke("payment-admin",{body:{action:"test_email_notification"}});
+  if(error)throw error;if(!data?.ok)throw new Error(data?.error||"Não foi possível enviar o e-mail de teste.");
+  notice("E-mail de teste enviado para a conta administrativa.");
+ }catch(error){notice(error.message||"Falha ao enviar o e-mail de teste.",true)}
+ finally{button.textContent="TESTAR E-MAIL";await loadFulfillment()}
+});
+$("slaForm").addEventListener("submit",async event=>{
+ event.preventDefault();
+ const button=$("slaSave"),status=$("slaFormStatus");
+ const payload={
+  action:"save",city:$("slaCity").value.trim(),state:$("slaState").value.trim().toUpperCase(),
+  fulfillment_mode:$("slaMode").value,delivery_fee_reais:$("slaFee").value,
+  dispatch_minutes:Number($("slaDispatch").value),delivery_minutes:Number($("slaDelivery").value),
+  dispatch_target_minutes:$("slaDispatchTarget").value===""?null:Number($("slaDispatchTarget").value),
+  delivery_target_minutes:$("slaDeliveryTarget").value===""?null:Number($("slaDeliveryTarget").value),
+  freight_origin_cep:$("slaOriginCep").value.trim().replace(/\\D/g,""),
+  express_fee_up_to_12km_reais:$("slaExpress12").value,
+  express_fee_up_to_35km_reais:$("slaExpress35").value,
+  express_fee_up_to_55km_reais:$("slaExpress55").value,
+  scheduled_fee_up_to_12km_reais:$("slaScheduled12").value,
+  scheduled_fee_up_to_35km_reais:$("slaScheduled35").value,
+  scheduled_fee_up_to_55km_reais:$("slaScheduled55").value,
+  minimum_order_up_to_12km_reais:$("slaMinimum12").value,
+  minimum_order_up_to_35km_reais:$("slaMinimum35").value,
+  minimum_order_up_to_55km_reais:$("slaMinimum55").value,
+  scheduled_max_advance_hours:Number($("slaMaxAdvance").value||72),
+  scheduled_delivery_enabled:$("slaScheduledEnabled").checked,
+  scheduled_discount_percent:Number($("slaScheduledDiscount").value||0),
+  scheduled_delivery_weekdays:Array.from(document.querySelectorAll(".slaWeekday:checked")).map(input=>Number(input.value)),
+  scheduled_window_start:$("slaWindowStart").value,
+  scheduled_window_end:$("slaWindowEnd").value,
+  free_delivery_if_contains_kit:$("slaFreeKit").checked,
+  automatic_payment_enabled:$("slaAutomatic").checked,active:$("slaActive").checked
+ };
+ button.disabled=true;button.textContent="SALVANDO...";
+ try{
+  const {data,error}=await supabase.functions.invoke("payment-admin",{body:payload});
+  if(error)throw error;if(!data?.ok)throw new Error(data?.error||"Não foi possível salvar a regra.");
+  status.textContent="Regra salva para "+data.rule.city_normalized.toLocaleUpperCase("pt-BR")+"/"+data.rule.state+".";
+  $("slaForm").reset();$("slaActive").checked=true;
+  await loadFulfillment();
+ }catch(error){status.textContent=error.message||"Falha ao salvar.";notice(status.textContent,true)}
+ finally{button.disabled=false;button.textContent="SALVAR REGRA DE PRAZO"}
+});
+
+const eventNumber=value=>new Intl.NumberFormat("pt-BR").format(Number(value)||0);
+let productNames=null;
+async function getProductNames(){
+ if(productNames)return productNames;
+ try{const response=await fetch("data/produtos.json",{cache:"no-cache"});if(!response.ok)throw new Error("Catálogo indisponível");const json=await response.json();productNames=new Map((json.produtos||[]).map(p=>[String(p.id),p.nome]));}
+ catch(_){productNames=new Map()}
+ return productNames;
+}
+const liveEventLabels={page_view:"Abriu uma página",product_view:"Visualizou produto",add_to_cart:"Adicionou ao carrinho",checkout_started:"Iniciou checkout",checkout_reviewed:"Revisou pedido",whatsapp_opened:"Abriu atendimento no WhatsApp"};
+const livePageLabels={home:"Início",catalog:"Catálogo",product:"Produto",checkout:"Checkout",institutional:"Institucional",other:"Outras páginas"};
+let liveRefreshTimer=null;
+async function loadLiveActivity(){
+ const status=$("liveStatus");
+ try{
+  const [{data,error},names]=await Promise.all([
+   supabase.functions.invoke("cart-orders",{body:{action:"admin_live_activity"}}),
+   getProductNames()
+  ]);
+  if(error)throw error;if(!data?.ok)throw new Error(data?.error||"Falha ao consultar atividade.");
+  const sessions=data.sessions||[],events=data.events||[];
+  $("liveVisitors").textContent=eventNumber(data.active_visitors);
+  $("liveEventCount").textContent=eventNumber(events.length);
+  const carts=sessions.filter(s=>Number(s.item_count)>0);
+  $("liveCarts").textContent=eventNumber(carts.length);
+  $("liveCartValue").textContent=money.format(carts.reduce((sum,s)=>sum+Number(s.subtotal||0),0));
+  const feed=$("liveFeed");feed.replaceChildren();
+  if(!events.length)feed.append(el("p","empty","Nenhuma ação registrada nas últimas 24 horas. Para aparecer aqui, o visitante precisa autorizar análise."));
+  events.slice(0,30).forEach(event=>{
+   const card=el("article","live-event"),head=el("div","live-event-head");
+   const title=liveEventLabels[event.event_name]||event.event_name;
+   head.append(el("strong","",title),el("span","live-feed-time",fmtDate(event.created_at)));
+   card.append(head);
+   let detail=(livePageLabels[event.page_type]||event.page_type||"Página")+" · sessão "+String(event.session_key||"").slice(0,8);
+   if(event.product_id)detail+=" · "+(names.get(String(event.product_id))||("Produto #"+event.product_id));
+   if(event.event_name==="add_to_cart")detail+=" · quantidade "+(event.quantity||1);
+   card.append(el("p","",detail));feed.append(card);
+  });
+  const box=$("liveSessions");box.replaceChildren();
+  if(!sessions.length)box.append(el("p","empty","Nenhum visitante ativo nos últimos cinco minutos."));
+  sessions.slice(0,25).forEach(session=>{
+   const card=el("article","live-session"),head=el("div","live-session-head");
+   head.append(el("strong","", "Sessão "+String(session.session_key||"").slice(0,8)),el("span","live-feed-time",fmtDate(session.last_activity_at)));
+   card.append(head);
+   const items=Array.isArray(session.items_snapshot)?session.items_snapshot:[];
+   const namesList=items.slice(0,3).map(item=>(item.quantidade||item.quantity||1)+"x "+(item.nome||item.product_name||names.get(String(item.id||item.product_id))||"Produto"));
+   const detail=Number(session.item_count)>0?Number(session.item_count)+" item(ns) · "+money.format(Number(session.subtotal)||0):"Ainda sem itens no carrinho";
+   card.append(el("p","",detail));
+   if(namesList.length)card.append(el("small","",namesList.join(" · ")));
+   box.append(card);
+  });
+  status.textContent="AO VIVO · atualizado "+new Date().toLocaleTimeString("pt-BR");
+ }catch(error){console.error(error);status.textContent="Falha na atualização";$("liveFeed").replaceChildren(el("p","empty",error.message||"Não foi possível carregar o fluxo."))}
+}
+async function loadIntelligence(days){
+ const status=$("intelligenceStatus");
+ try{
+  status.textContent="Consultando...";
+  const [{data,error},names]=await Promise.all([
+   supabase.functions.invoke("cart-orders",{body:{action:"admin_intelligence",days}}),
+   getProductNames()
+  ]);
+  if(error)throw error;if(!data?.ok)throw new Error(data?.error||"Não foi possível consultar a inteligência comercial.");
+  const s=data.summary||{};
+  $("iaViews").textContent=eventNumber(s.visits);
+  $("iaSessions").textContent=eventNumber(s.unique_sessions);
+  $("iaProductViews").textContent=eventNumber(s.product_views);
+  $("iaAdds").textContent=eventNumber(s.add_to_cart);
+  $("iaCheckout").textContent=eventNumber(s.checkout_started);
+  $("iaWhatsapp").textContent=eventNumber(s.whatsapp_opened);
+  $("iaReviewed").textContent=eventNumber(s.checkout_reviewed);
+  $("iaEvents").textContent=eventNumber(s.total_events);
+  const products=(data.top_products||[]).map(p=>({
+   label:names.get(String(p.product_id))||("Produto #"+p.product_id),
+   value:p.views, detail:p.adds
+  }));
+  const productBox=$("iaTopProducts");productBox.replaceChildren();
+  if(!products.length)productBox.append(el("p","empty","Ainda não há visualizações registradas."));
+  else products.slice(0,8).forEach(p=>{
+   const row=el("div","bar-row"),label=el("span","",p.label);label.title=p.label;
+   const track=el("div","bar-track"),fill=el("div","bar-fill");
+   const max=Math.max(1,...products.map(x=>Number(x.value)||0));
+   fill.style.width=Math.max(1,(Number(p.value)||0)/max*100)+"%";track.append(fill);
+   row.append(label,track,el("span","bar-value",eventNumber(p.value)+" · "+eventNumber(p.detail)+" carrinho"));productBox.append(row);
+  });
+  renderBars("iaPages",(data.pages||[]).map(p=>({label:pageLabels[p.page_type]||p.page_type,value:p.count})),"label","value",eventNumber);
+  renderBars("iaDaily",(data.daily||[]).slice(-10).map(d=>({label:d.date.slice(5).split("-").reverse().join("/"),value:d.visits})),"label","value",eventNumber);
+  renderBars("iaFunnel",[
+   {label:"Checkout iniciado",value:s.checkout_started},
+   {label:"Pedido revisado",value:s.checkout_reviewed},
+   {label:"WhatsApp aberto",value:s.whatsapp_opened}
+  ],"label","value",eventNumber);
+  status.textContent="Atualizado";
+  $("iaFootnote").textContent=(data.truncated?"A amostra de eventos atingiu o limite de 10.000 registros; os totais individuais permanecem exatos, mas navegadores, gráficos diários e ranking podem estar incompletos. ":"")+"Período: últimos "+days+" dias. Os navegadores são identificadores pseudônimos armazenados localmente, não pessoas identificadas. Os dados só são coletados após autorização de análise.";
+ }catch(error){
+  console.error(error);status.textContent="Indisponível";
+  $("iaTopProducts").replaceChildren(el("p","empty",error.message||"Falha ao carregar dados."));
+  $("iaPages").replaceChildren(el("p","empty","Dados indisponíveis."));
+ }
+}
+function renderCarts(carts){
+ const box=$("carts");box.replaceChildren();if(!carts.length){box.append(el("p","empty","Nenhum carrinho registrado."));return}
+ carts.slice(0,18).forEach(c=>{
+  const card=el("article","item"),top=el("div","item-top");top.append(el("strong","",c.customer_name||"Visitante"),el("span","pill",statusTag(c.status)));card.append(top);
+  const meta=el("div","meta");meta.append(el("span","",String(c.item_count||0)+" item(ns)"),el("span","",money.format(Number(c.subtotal)||0)),el("span","",fmtDate(c.last_activity_at)));if(c.city)meta.append(el("span","",c.city+"/"+(c.state||"")));card.append(meta);
+  const items=Array.isArray(c.items_snapshot)?c.items_snapshot:[];if(items.length){const ul=el("ul","products");items.slice(0,4).forEach(i=>ul.append(el("li","",(i.quantidade||i.quantity||1)+"x "+(i.nome||i.product_name||"Produto"))));card.append(ul)}
+  if(c.recovery_allowed&&c.customer_phone){const b=el("a","btn","ABRIR WHATSAPP — AUTORIZADO");b.href="https://wa.me/"+String(c.customer_phone).replace(/\D/g,"")+"?text="+encodeURIComponent("Olá! Aqui é da Luxuriosa. Você autorizou nosso contato pelo WhatsApp. Podemos ajudar com alguma dúvida?");b.target="_blank";b.rel="noopener";b.style.display="inline-block";b.style.marginTop="9px";b.style.textDecoration="none";card.append(b)}else card.append(el("div","small","Contato promocional desativado para este carrinho."));
+  box.append(card);
+ });
+}
+async function load(){
+ $("refresh").disabled=true;notice("Consultando os dados do negócio...");
+ try{
+  const {data:{session}}=await supabase.auth.getSession();
+  if(!session){notice("Faça login com sua conta autorizada.",true);setTimeout(()=>location.href="login.html",1000);return}
+  const q=$("searchQuery").value.trim(),status=$("statusFilter").value,days=Number($("period").value)||30;
+  const {data,error}=await supabase.functions.invoke("cart-orders",{body:{action:"admin_dashboard",q,status,days}});
+  if(error)throw error;if(!data?.ok)throw new Error(data?.error||"Não foi possível consultar os dados.");
+  const s=data.summary||{};
+  $("revenue").textContent=money.format(Number(s.revenue_period)||0);$("confirmed").textContent=s.confirmed_orders_period||0;
+  $("ticket").textContent=money.format(Number(s.average_ticket)||0);$("pending").textContent=s.pending_orders||0;
+  $("active").textContent=s.active_carts||0;$("abandoned").textContent=s.abandoned_carts||0;
+  $("optin").textContent=s.carts_with_marketing_opt_in||0;$("totalOrders").textContent=s.orders_period||0;
+  $("ordersPeriod").textContent=(s.orders_period||0)+" solicitações no período";
+  const daily=(data.daily||[]).slice(-12).map(x=>({label:x.date.slice(5).split("-").reverse().join("/"),value:x.revenue}));
+  renderBars("daily",daily,"label","value",v=>money.format(Number(v)||0));
+  renderBars("topProducts",(data.top_products||[]).map(x=>({label:x.name,value:x.quantity})),"label","value",v=>String(v)+" un.");
+  renderOrders(data.orders||[]);renderCarts(data.carts||[]);
+  loadIntelligence(days);
+  loadLiveActivity();
+  if(!liveRefreshTimer)liveRefreshTimer=setInterval(loadLiveActivity,10000);
+  loadFulfillment();
+  loadFulfillmentQueue();
+  $("updatedAt").textContent="Atualizado às "+new Date().toLocaleTimeString("pt-BR");
+  notice("Consulta concluída. Acesso validado pelo servidor.");
+ }catch(e){console.error(e);notice(e.message||"Falha na consulta.",true)}
+ finally{$("refresh").disabled=false}
+}
+$("refresh").addEventListener("click",load);
+$("liveRefresh").addEventListener("click",loadLiveActivity);
+$("refreshDispatchQueue").addEventListener("click",loadFulfillmentQueue);
+$("searchForm").addEventListener("submit",e=>{e.preventDefault();load()});
+$("period").addEventListener("change",load);
+$("statusFilter").addEventListener("change",load);
+// Atalhos para operação rápida: / foca a busca; Esc limpa; Alt+R atualiza.
+document.addEventListener("keydown",event=>{
+ if(event.key==="/"&&!/INPUT|TEXTAREA|SELECT/.test(document.activeElement?.tagName||"")){event.preventDefault();$("searchQuery").focus()}
+ if(event.key==="Escape"&&document.activeElement===$("searchQuery")){$("searchQuery").value="";$("searchQuery").blur();load()}
+ if(event.altKey&&event.key.toLowerCase()==="r"){event.preventDefault();load()}
+});
+$("logout").addEventListener("click",async()=>{await supabase.auth.signOut();location.href="login.html"});
+supabase.auth.onAuthStateChange((event)=>{if(event==="SIGNED_OUT")location.href="login.html"});
+load();
+</script></body></html>
