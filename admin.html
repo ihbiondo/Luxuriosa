@@ -333,6 +333,12 @@ function renderFulfillmentQueue(orders){
   head.append(el("span","pill",order.payment_method==="pix"?"Pix":"Cartão"));
   card.append(head);
   const meta=el("div","fulfillment-meta");
+  meta.append(el("span","","Modalidade: "+(order.fulfillment_type==="scheduled"?"Agendada":"Expressa")));
+  if(order.fulfillment_type==="scheduled"){
+   meta.append(el("span","","Data agendada: "+(order.scheduled_delivery_date||"Não informada")));
+   meta.append(el("span","","Janela: "+String(order.scheduled_window_start||"").slice(0,5)+"–"+String(order.scheduled_window_end||"").slice(0,5)));
+   if(Number(order.scheduled_discount_amount)>0)meta.append(el("span","","Desconto: "+money.format(Number(order.scheduled_discount_amount))));
+  }
   meta.append(el("span","","Pago em: "+fmtDate(order.paid_at)));
   meta.append(el("span","","Total: "+money.format(Number(order.total_amount)||0)));
   meta.append(el("span","", "Expedição: "+deadlineStatus(order.dispatch_due_at)+" · "+fmtDate(order.dispatch_due_at)));
