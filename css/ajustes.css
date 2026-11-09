@@ -547,3 +547,28 @@ body.customer-open { overflow: hidden; }
     padding-bottom: 32px;
   }
 }
+
+
+/* =========================================================
+   CLUBE LUXURIOSA — CONVITE DE CADASTRO
+   ========================================================= */
+.lux-club-popup[hidden] { display: none !important; }
+.lux-club-popup {
+  position: fixed; inset: 0; z-index: 11000;
+  display: grid; place-items: center; padding: 20px;
+  background: rgba(0,0,0,.78); backdrop-filter: blur(5px);
+}
+.lux-club-popup__panel {
+  position: relative; width: min(100%, 470px); padding: 34px 30px;
+  border: 1px solid rgba(212,175,124,.55); border-radius: 18px;
+  background: radial-gradient(ellipse at 85% 0%,rgba(139,30,63,.28),transparent 55%),linear-gradient(145deg,#1b0b11,#090809);
+  color: var(--text); text-align: center; box-shadow: 0 24px 90px rgba(0,0,0,.65);
+}
+.lux-club-popup__eyebrow { color: var(--gold); font-size: 10px; font-weight: 600; letter-spacing: .22em; text-transform: uppercase; }
+.lux-club-popup__panel h2 { margin: 12px 0; color: var(--blush); font-family: var(--serif); font-size: clamp(27px,5vw,34px); font-weight: 400; line-height: 1.15; }
+.lux-club-popup__panel p { margin: 0 auto 22px; max-width: 350px; color: var(--muted); font-size: 13px; line-height: 1.7; }
+.lux-club-popup__actions { display: grid; gap: 10px; }
+.lux-club-popup__actions .btn { width: 100%; justify-content: center; }
+.lux-club-popup__close { position: absolute; top: 10px; right: 14px; border: 0; background: transparent; color: #d6c7c8; font-size: 28px; cursor: pointer; }
+.lux-club-popup__fine { display: block; margin-top: 15px; color: #9e8e91; font-size: 10px; }
+@media (max-width: 480px) { .lux-club-popup__panel { padding: 32px 22px 25px; } }
