@@ -677,7 +677,7 @@
     });
     var campoTelefone = $("customerPhone");
     if (campoTelefone) campoTelefone.addEventListener("input", function () {
-      var digits = this.value.replace(/\\D/g, "").slice(0, 13);
+      var digits = this.value.replace(/\D/g, "").slice(0, 13);
       if (digits.length >= 10) this.value = formatarTelefone(digits);
       this.removeAttribute("aria-invalid");
     });
