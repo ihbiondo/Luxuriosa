@@ -1009,6 +1009,117 @@
       }
     });
 
+    $("clubIntimateConsent").addEventListener("change", () => {
+      $("clubIntimateFields").hidden = !$("clubIntimateConsent").checked;
+    });
+
+    $("clubProfileForm").addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const button = $("saveClubProfileButton");
+      const status = $("clubProfileStatus");
+      button.disabled = true;
+      button.textContent = "SALVANDO...";
+      status.textContent = "Atualizando suas preferências...";
+      try {
+        const { data: authData, error: authError } = await supabase.auth.getUser();
+        if (authError) throw authError;
+        const user = authData.user;
+        if (!user) throw new Error("Sua sessão expirou. Entre novamente.");
+
+        const styles = getClubChoiceValues("clubStyle");
+        const desired = getClubChoiceValues("clubDesired");
+        const categories = getClubChoiceValues("clubCategory");
+        const sensations = getClubChoiceValues("clubSensation");
+        const avoided = getClubChoiceValues("clubAvoid");
+        const limits = [
+          [styles, 4, "Escolha até quatro estilos."],
+          [desired, 6, "Escolha até seis objetivos."],
+          [categories, 8, "Escolha até oito categorias."],
+          [sensations, 5, "Escolha até cinco características."],
+          [avoided, 10, "Você pode selecionar até dez categorias para evitar."]
+        ];
+        const invalidLimit = limits.find(([values, maximum]) => values.length > maximum);
+        if (invalidLimit) throw new Error(invalidLimit[2]);
+        if (categories.some(code => avoided.includes(code))) {
+          throw new Error("Uma categoria não pode estar marcada ao mesmo tempo como interesse e como algo a evitar.");
+        }
+
+        const communicationCode = Number($("clubCommunication").value);
+        if (![1, 2, 3].includes(communicationCode)) throw new Error("Escolha uma forma de atendimento válida.");
+
+        const { error: styleError } = await supabase.from("club_profile_preferences").upsert({
+          user_id: user.id,
+          style_codes: styles,
+          communication_code: communicationCode,
+          updated_at: new Date().toISOString()
+        }, { onConflict: "user_id" });
+        if (styleError) throw styleError;
+
+        const wantsIntimateProfile = $("clubIntimateConsent").checked;
+        if (wantsIntimateProfile) {
+          if (!clubIntimateConsentActive) {
+            const { error: consentError } = await supabase.from("club_intimate_consent_events").insert({
+              user_id: user.id,
+              granted: true,
+              consent_version: CLUB_INTIMATE_CONSENT_VERSION,
+              source: "account_settings",
+              event_key: crypto.randomUUID()
+            });
+            if (consentError) throw consentError;
+          }
+
+          const profile = {
+            user_id: user.id,
+            experience_level: $("clubExperienceLevel").value ? Number($("clubExperienceLevel").value) : null,
+            novelty_code: $("clubNovelty").value ? Number($("clubNovelty").value) : null,
+            context_code: $("clubContext").value ? Number($("clubContext").value) : null,
+            intensity_code: $("clubIntensity").value ? Number($("clubIntensity").value) : null,
+            recommendation_tone_code: 1,
+            desired_codes: desired,
+            category_codes: categories,
+            sensation_codes: sensations,
+            avoid_codes: avoided,
+            consent_version: CLUB_INTIMATE_CONSENT_VERSION,
+            consented_at: new Date().toISOString(),
+            updated_at: new Date().toISOString()
+          };
+          const { error: intimateError } = await supabase.from("club_intimate_preferences").upsert(
+            profile,
+            { onConflict: "user_id" }
+          );
+          if (intimateError) throw intimateError;
+          clubIntimateConsentActive = true;
+        } else if (clubIntimateConsentActive) {
+          const { error: deleteError } = await supabase.from("club_intimate_preferences")
+            .delete().eq("user_id", user.id);
+          if (deleteError) throw deleteError;
+          const { error: revokeError } = await supabase.from("club_intimate_consent_events").insert({
+            user_id: user.id,
+            granted: false,
+            consent_version: CLUB_INTIMATE_CONSENT_VERSION,
+            source: "account_settings",
+            event_key: crypto.randomUUID()
+          });
+          if (revokeError) throw revokeError;
+          clubIntimateConsentActive = false;
+          setClubIntimateForm(null);
+        }
+
+        await loadAccountData(user);
+        status.textContent = wantsIntimateProfile
+          ? "Perfil salvo. As recomendações usarão somente as escolhas desta ficha."
+          : "Preferências salvas. A ficha íntima permanece desativada e seus dados anteriores foram excluídos.";
+        message("Seu perfil do Clube foi atualizado.");
+      } catch (error) {
+        console.error("Falha ao salvar o perfil do Clube:", error);
+        status.textContent = "Não foi possível salvar todas as preferências.";
+        message("Não foi possível atualizar seu perfil. " + friendlyError(error), true);
+      } finally {
+        button.disabled = false;
+        button.textContent = "SALVAR PERFIL DO CLUBE";
+      }
+    });
+
     $("accountForm").addEventListener("submit", async (event) => {
       event.preventDefault();
       clearMessage();
