@@ -320,9 +320,6 @@
       const newEmail = $("newAccountEmail").value.trim().toLowerCase();
       const confirmation = $("confirmAccountEmail").value.trim().toLowerCase();
       const currentEmail = $("accountEmail").textContent.trim().toLowerCase();
-      if (!newEmail || !/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(newEmail)) {
-        return message("Informe um endereço de e-mail válido.", true);
-      }
       if (newEmail !== confirmation) return message("Os novos endereços de e-mail não coincidem.", true);
       if (newEmail === currentEmail) return message("Esse já é o e-mail vinculado à sua conta.", true);
       const button = $("requestEmailChangeButton");
