@@ -72,7 +72,8 @@
         city: texto("customerCity"),
         state: texto("customerState").toUpperCase(),
         reference: texto("customerReference")
-      }
+      },
+      marketingWhatsappOptIn: !!$("customerMarketingWhatsAppOptIn")?.checked
     };
   }
 
@@ -404,6 +405,8 @@
     review.hidden = true;
     form.hidden = false;
     preencherFormulario(null);
+    var marketingOptIn = $("customerMarketingWhatsAppOptIn");
+    if (marketingOptIn) marketingOptIn.checked = false;
     overlay.hidden = false;
     if (window.LuxuriosaInteligencia && typeof window.LuxuriosaInteligencia.registrarEtapa === "function") {
       window.LuxuriosaInteligencia.registrarEtapa("checkout_started", window.LuxuriosaCarrinho.obterItens()).catch(function () {});
