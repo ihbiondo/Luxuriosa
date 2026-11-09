@@ -1406,20 +1406,32 @@
     var mensagem = linhas.join("\n");
     var numero = obterWhatsApp();
     var url = "https://wa.me/" + numero + "?text=" + encodeURIComponent(mensagem);
-    /* Falha de telemetria não pode impedir o atendimento. */
+    /* Abre o WhatsApp primeiro, diretamente no clique do usuário. */
+    var janelaWhatsApp = window.open(url, "_blank");
+    if (janelaWhatsApp) {
+      janelaWhatsApp.opener = null;
+    } else {
+      /* Se o navegador bloquear a nova janela, mantém o atendimento acessível. */
+      window.location.assign(url);
+      return;
+    }
+
+    /* Falha de telemetria nunca deve impedir o atendimento. */
     try {
       if (window.LuxuriosaMedicao && typeof window.LuxuriosaMedicao.registrar === "function") {
-        window.LuxuriosaMedicao.registrar("checkout_whatsapp", {
+        var registro = window.LuxuriosaMedicao.registrar("checkout_whatsapp", {
           method: "manual_attendant",
           quantity: quantidadeTotal()
         });
+        if (registro && typeof registro.catch === "function") {
+          registro.catch(function (erroMedicao) {
+            console.warn("Não foi possível registrar a métrica do atendimento manual.", erroMedicao);
+          });
+        }
       }
     } catch (erroMedicao) {
       console.warn("Não foi possível registrar a métrica do atendimento manual.", erroMedicao);
     }
-
-    /* A abertura ocorre diretamente no clique para evitar bloqueio de pop-up. */
-    window.open(url, "_blank", "noopener,noreferrer");
   }
 
 
