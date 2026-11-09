@@ -18,10 +18,39 @@
     } catch (e) { return null; }
   }
 
+  function clearOptionalAnalytics() {
+    var names = document.cookie.split(";").map(function (part) {
+      return part.split("=")[0].trim();
+    }).filter(function (name) {
+      return /^(_ga|_gid|_gat|_gac|_gcl)/i.test(name);
+    });
+    var domains = ["", location.hostname, ".luxuriosa.com.br"];
+    var expired = "expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/; SameSite=Lax";
+    names.forEach(function (name) {
+      domains.forEach(function (domain) {
+        document.cookie = name + "=; " + expired + (domain ? "; domain=" + domain : "");
+      });
+    });
+    try {
+      var keys = [];
+      for (var i = 0; i < localStorage.length; i += 1) {
+        var key = localStorage.key(i);
+        if (key && /^(_ga|_gid|_gat|_gac|_gcl)/i.test(key)) keys.push(key);
+      }
+      keys.forEach(function (key) { localStorage.removeItem(key); });
+    } catch (_) {}
+    var script = document.querySelector('script[src*="googletagmanager.com/gtag/js"]');
+    if (script) script.remove();
+    gaLoaded = false;
+    try { delete window.gtag; } catch (_) { window.gtag = undefined; }
+    window.dataLayer = [];
+  }
+
   function saveConsent(analytics, marketing) {
     consent = { version: CONSENT_VERSION, updatedAt: new Date().toISOString(),
       necessary: true, analytics: !!analytics, marketing: !!marketing };
     try { localStorage.setItem(CONSENT_KEY, JSON.stringify(consent)); } catch (e) {}
+    if (!consent.analytics) clearOptionalAnalytics();
     applyConsent();
     window.dispatchEvent(new CustomEvent("lux:consent-updated"));
     closeConsent();
@@ -173,6 +202,14 @@
     openConsent();
   }
 
+  function scheduleConsentAfterAgeGate() {
+    if (consent) { applyConsent(); return; }
+    window.setTimeout(function () {
+      var gate = document.getElementById("gate");
+      if (gate && !gate.classList.contains("open") && !readConsent()) openConsent();
+    }, 10000);
+  }
+
   function addPreferencesLink() {
     var footer = document.querySelector("footer");
     if (!footer) { footer = document.createElement("footer"); footer.className = "lux-cookie-fallback-footer"; document.body.appendChild(footer); }
@@ -196,7 +233,7 @@
       document.body.classList.remove("gate-open");
       gate.classList.remove("open");
       gate.setAttribute("aria-hidden", "true");
-      if (consent) applyConsent(); else openConsent();
+      if (consent) applyConsent(); else scheduleConsentAfterAgeGate();
     } else {
       gate.classList.add("open");
       gate.setAttribute("aria-hidden", "false");
@@ -208,7 +245,7 @@
       gate.classList.remove("open");
       gate.setAttribute("aria-hidden", "true");
       document.body.classList.remove("gate-open");
-      if (consent) applyConsent(); else openConsent();
+      if (consent) applyConsent(); else scheduleConsentAfterAgeGate();
     });
     gate.addEventListener("keydown", function (event) {
       if (event.key !== "Tab" || !gate.classList.contains("open")) return;
