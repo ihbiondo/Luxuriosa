@@ -1,0 +1,32 @@
+const fs = require("node:fs");
+const assert = require("node:assert/strict");
+
+const shared = fs.readFileSync("supabase/functions/_shared/infinitepay-payment.ts", "utf8");
+const webhook = fs.readFileSync("supabase/functions/infinitepay-webhook/index.ts", "utf8");
+const status = fs.readFileSync("supabase/functions/payment-status/index.ts", "utf8");
+const migration = fs.readFileSync("supabase/migrations/20261110120000_atomic_infinitepay_payment_confirmation.sql", "utf8");
+const page = fs.readFileSync("pagamento-retorno.html", "utf8");
+const createOrder = fs.readFileSync("supabase/functions/create-payment-order/index.ts", "utf8");
+
+assert.match(shared, /api\.checkout\.infinitepay\.io\/payment_check/);
+assert.match(shared, /X-Api-Key/);
+assert.match(shared, /confirm_infinitepay_payment/);
+assert.match(shared, /AbortController/);
+assert.match(webhook, /verifyAndSettlePayment/);
+assert.match(status, /verifyAndSettlePayment/);
+assert.match(status, /transaction_nsu/);
+assert.match(status, /invoiceSlug/);
+assert.match(page, /transaction_nsu:transactionNsu/);
+assert.match(page, /slug:invoiceSlug/);
+assert.match(page, /receipt_url:receiptUrl/);
+assert.doesNotMatch(page, /payment_status\s*:\s*["']paid["']/);
+assert.match(migration, /for update/i);
+assert.match(migration, /request\.jwt\.claim\.role/);
+assert.match(migration, /payment_expires_at is not null/i);
+assert.match(migration, /v_order\.status <> 'awaiting_confirmation'/);
+assert.match(migration, /update public\.cart_sessions/i);
+assert.match(migration, /update public\.payment_provider_events/i);
+assert.match(migration, /revoke all on function/i);
+assert.match(migration, /grant execute on function[\s\S]*to service_role/i);
+assert.match(createOrder, /payment_check|checkout\.infinitepay\.io\/links/);
+console.log("Checkout InfinitePay: callback, verificação de provedor, RPC atômica, proteção de estado e fonte implantada verificados.");
