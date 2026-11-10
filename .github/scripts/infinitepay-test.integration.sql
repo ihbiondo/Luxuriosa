@@ -1,4 +1,4 @@
-\\set ON_ERROR_STOP on
+\set ON_ERROR_STOP on
 DO $$
 BEGIN
  IF NOT EXISTS(SELECT 1 FROM pg_roles WHERE rolname='anon') THEN CREATE ROLE anon NOLOGIN; END IF;
@@ -10,7 +10,7 @@ CREATE TABLE auth.users(id uuid primary key);
 INSERT INTO auth.users(id) VALUES('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa');
 GRANT USAGE ON SCHEMA auth TO service_role;
 GRANT SELECT ON auth.users TO service_role;
-\\ir ../../supabase/migrations/20261110153000_isolated_infinitepay_test_payments.sql
+\ir ../../supabase/migrations/20261110153000_isolated_infinitepay_test_payments.sql
 
 DO $$
 BEGIN
@@ -51,4 +51,4 @@ BEGIN
   RAISE EXCEPTION 'This isolated CI fixture unexpectedly includes commercial orders';
  END IF;
 END $$;
-\\echo 'Isolated R$1 test table: amount lock, admin-only data access and no commercial orders passed.'
+\echo 'Isolated R$1 test table: amount lock, admin-only data access and no commercial orders passed.'
