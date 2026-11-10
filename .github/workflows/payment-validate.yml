@@ -1,0 +1,92 @@
+name: Validacao do checkout InfinitePay
+
+on:
+  push:
+    branches:
+      - "fix/infinitepay-payment-only"
+    paths:
+      - "pagamento-retorno.html"
+      - "supabase/functions/create-payment-order/**"
+      - "supabase/functions/_shared/**"
+      - "supabase/functions/infinitepay-webhook/**"
+      - "supabase/functions/payment-status/**"
+      - "supabase/migrations/20261110120000_atomic_infinitepay_payment_confirmation.sql"
+      - ".github/scripts/payment-confirmation.*"
+      - ".github/workflows/payment-validate.yml"
+  pull_request:
+    paths:
+      - "pagamento-retorno.html"
+      - "supabase/functions/create-payment-order/**"
+      - "supabase/functions/_shared/**"
+      - "supabase/functions/infinitepay-webhook/**"
+      - "supabase/functions/payment-status/**"
+      - "supabase/migrations/20261110120000_atomic_infinitepay_payment_confirmation.sql"
+      - ".github/scripts/payment-confirmation.*"
+      - ".github/workflows/payment-validate.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    name: Validacao do checkout
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: luxuriosa_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres -d luxuriosa_test"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+
+      - name: Verificar tipos das Edge Functions
+        run: |
+          deno check supabase/functions/create-payment-order/index.ts
+          deno check supabase/functions/_shared/infinitepay-payment.ts
+          deno check supabase/functions/infinitepay-webhook/index.ts
+          deno check supabase/functions/payment-status/index.ts
+
+      - name: Instalar cliente PostgreSQL
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y postgresql-client
+
+      - name: Testar confirmação atômica no PostgreSQL 17
+        env:
+          PGPASSWORD: postgres
+        run: |
+          psql -h localhost -U postgres -d luxuriosa_test -v ON_ERROR_STOP=1 -f .github/scripts/payment-confirmation.integration.sql
+
+      - name: Testar contrato de confirmação
+        run: node --test .github/scripts/payment-confirmation.test.cjs
+
+      - name: Validar JavaScript da página de retorno
+        run: |
+          node <<'NODE'
+          const fs = require("node:fs");
+          const html = fs.readFileSync("pagamento-retorno.html", "utf8");
+          const scripts = [...html.matchAll(/<script\\b[^>]*>([\\s\\S]*?)<\\/script>/gi)];
+          if (!scripts.length) throw new Error("Nenhum script encontrado na página de retorno.");
+          scripts.forEach((match, index) => {
+            const path = "/tmp/pagamento-retorno-" + index + ".js";
+            fs.writeFileSync(path, match[1]);
+            require("node:child_process").execFileSync(process.execPath, ["--check", path], { stdio: "inherit" });
+          });
+          console.log("Scripts da página de retorno validados.");
+          NODE
