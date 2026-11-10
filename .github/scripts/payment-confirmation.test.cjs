@@ -16,6 +16,8 @@ assert.match(webhook, /verifyAndSettlePayment/);
 assert.match(status, /verifyAndSettlePayment/);
 assert.match(status, /transaction_nsu/);
 assert.match(status, /invoiceSlug/);
+assert.match(status, /payment_transaction_nsu/);
+assert.match(status, /already_paid/);
 assert.match(page, /transaction_nsu:transactionNsu/);
 assert.match(page, /slug:invoiceSlug/);
 assert.match(page, /receipt_url:receiptUrl/);
