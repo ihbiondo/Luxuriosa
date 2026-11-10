@@ -35,7 +35,7 @@ Deno.serve(async(req:Request)=>{
   const amount=Number(verified.amount),paidAmount=Number(verified.paid_amount);
   const method=verified.capture_method==="pix"||verified.capture_method==="credit_card"?verified.capture_method:null;
   const receipt=clean(body?.receipt_url,1000);
-  let safeReceipt:string|null=null;try{const u=new URL(receipt);if(u.protocol==="https:")safeReceipt=u.toString();}catch{}
+  let safeReceipt:string|null=null;try{const u=new globalThis.URL(receipt);if(u.protocol==="https:")safeReceipt=u.toString();}catch{}
   const validAmount=Number.isSafeInteger(amount)&&amount===100&&Number.isSafeInteger(paidAmount)&&paidAmount===100;
   const {error:updateError}=await admin.from("infinitepay_test_payments").update({
    status:validAmount?"paid":"review_required",provider_verified:true,transaction_nsu:transactionNsu,
