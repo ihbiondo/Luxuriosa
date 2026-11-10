@@ -78,8 +78,11 @@ Deno.serve(async (req: Request) => {
       const edgeRuntime = (globalThis as any).EdgeRuntime;
       if (typeof edgeRuntime?.waitUntil === "function") edgeRuntime.waitUntil(notificationTask);
       else await notificationTask;
-      reconciliation = "already_paid";
+      if (!salesSync) reconciliation = "already_paid";
     }
+
+    if (salesSync?.synced === true) reconciliation = "sale_synced";
+    else if (salesSync && salesSync.synced !== true) reconciliation = "sale_sync_pending";
 
     if (order.payment_status === "pending" && transactionNsu && invoiceSlug) {
       reconciliation = "pending";
