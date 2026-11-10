@@ -45,9 +45,17 @@ Deno.serve(async(req:Request)=>{
     .in("status",["pending","paid","review_required"]).order("created_at",{ascending:false}).limit(1).maybeSingle();
    if(existingError) throw existingError;
    if(existing?.status==="paid"||existing?.status==="review_required") return reply({error:"O teste anterior já foi concluído ou exige conferência. Não será criada outra cobrança."},409,origin);
-   if(existing?.status==="pending"&&existing.checkout_url) return reply({ok:true,test:true,reused:true,amount:"R$ 1,00",
-    order_nsu:existing.order_nsu,checkout_url:existing.checkout_url,
-    warning:"Já existe um único teste pendente. Nenhuma nova cobrança foi criada."},200,origin);
+   if(existing?.status==="pending"&&existing.checkout_url){
+    const createdAt=Date.parse(existing.created_at);
+    const linkExpired=Number.isFinite(createdAt)&&Date.now()>=createdAt+30*60*1000;
+    if(linkExpired) return reply({
+     error:"O link de teste de R$ 1,00 expirou. Antes de criar outra cobrança, confira em Suas vendas > Checkout integrado se esse pagamento entrou. O sistema bloqueou uma nova cobrança para evitar duplicidade.",
+     test:true,review_required:true,order_nsu:existing.order_nsu
+    },409,origin);
+    return reply({ok:true,test:true,reused:true,amount:"R$ 1,00",
+     order_nsu:existing.order_nsu,checkout_url:existing.checkout_url,
+     warning:"Já existe um único teste pendente. Nenhuma nova cobrança foi criada."},200,origin);
+   }
    const orderNsu=crypto.randomUUID();
    const expiresAt=new Date(Date.now()+30*60*1000);
    const {error:insertError}=await admin.from("infinitepay_test_payments").insert({
