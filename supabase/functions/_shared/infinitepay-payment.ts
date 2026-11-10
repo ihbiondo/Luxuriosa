@@ -98,7 +98,17 @@ export async function verifyAndSettlePayment(
 
   const verification = await verificationResponse.json().catch(() => ({}));
   if (!verificationResponse.ok) {
-    throw new Error("A InfinitePay não respondeu à consulta de pagamento.");
+    const rawProviderError = verification?.error?.code ?? verification?.error ?? verification?.code;
+    const providerCode = typeof rawProviderError === "string"
+      ? clean(rawProviderError, 100)
+      : "";
+    const hint = verificationResponse.status === 403
+      ? " Confira se a InfiniteTag e a API Key pertencem à mesma conta."
+      : "";
+    throw new Error(
+      "InfinitePay payment_check HTTP " + verificationResponse.status +
+      (providerCode ? " (" + providerCode + ")" : "") + "." + hint
+    );
   }
   if (verification?.success !== true || verification?.paid !== true) {
     return { confirmed: false, settlement: null };
