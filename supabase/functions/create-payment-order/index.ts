@@ -162,14 +162,25 @@ function freightTier(distanceKm: number, rule: any, fulfillmentType: "express" |
   return null;
 }
 
-async function loadCatalog() {
+type CatalogProduct = {
+  id: string | number;
+  esgotado?: boolean;
+  preco?: unknown;
+  nome?: unknown;
+  categoria?: unknown;
+  tipoProduto?: unknown;
+  sku?: unknown;
+};
+
+async function loadCatalog(): Promise<Map<string, CatalogProduct>> {
   const response = await fetch(CATALOG_URL + "?v=" + Date.now(), {
     headers: { "cache-control": "no-cache" }
   });
   if (!response.ok) throw new Error("Não foi possível validar o catálogo. Tente novamente.");
   const data = await response.json();
   if (!Array.isArray(data?.produtos)) throw new Error("Catálogo indisponível.");
-  return new Map(data.produtos.map((p: any) => [String(p.id), p]));
+  const products = data.produtos as CatalogProduct[];
+  return new Map<string, CatalogProduct>(products.map((product) => [String(product.id), product]));
 }
 
 Deno.serve(async (req: Request) => {
@@ -423,8 +434,11 @@ Deno.serve(async (req: Request) => {
         })).sort((a,b) => String(a.product_id).localeCompare(String(b.product_id)));
         const sameItems = JSON.stringify(expectedItems) === JSON.stringify(savedItems);
         const priorAddress = pendingOrder.delivery_address || {};
-        const sameAddress = ["zip","street","number","complement","district","city","state","reference"]
-          .every(key => String(priorAddress[key] || "") === String(deliveryAddress[key] || ""));
+        const addressKeys: Array<keyof typeof deliveryAddress> =
+          ["zip","street","number","complement","district","city","state","reference"];
+        const sameAddress = addressKeys.every(key =>
+          String(priorAddress[key] || "") === String(deliveryAddress[key] || "")
+        );
         const sameCheckoutContact =
           Number(pendingOrder.payment_checkout_payload_version) === PAYMENT_CHECKOUT_PAYLOAD_VERSION &&
           pendingOrder.customer_name === name &&
