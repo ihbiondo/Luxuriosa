@@ -122,10 +122,10 @@ Deno.serve(async (req: Request) => {
 
     const outcome = result.settlement?.outcome;
     if (outcome === "paid" || outcome === "duplicate") {
-      const notification = await sendOrderNotification(
-        admin, order.id, eventKey, result.settlement?.newly_paid === true
+      EdgeRuntime.waitUntil(
+        sendOrderNotification(admin, order.id, eventKey, result.settlement?.newly_paid === true)
       );
-      return response({ ok: true, duplicate: outcome === "duplicate", email_notification: notification.status });
+      return response({ ok: true, duplicate: outcome === "duplicate", email_notification: "queued" });
     }
     if (outcome === "review_required") {
       return response({ ok: true, review_required: true, fulfillment_released: false });
