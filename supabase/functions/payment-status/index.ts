@@ -44,7 +44,7 @@ Deno.serve(async (req: Request) => {
     const captureMethod = clean(body?.capture_method, 30);
 
     const { data: order, error: orderError } = await admin.from("orders")
-      .select("id, order_number, payment_status, paid_at, dispatch_due_at, delivery_due_at, status, source, payment_provider, payment_expires_at, payment_amount_cents, payment_transaction_nsu, dispatch_sla_minutes, delivery_sla_minutes, management_sale_id, management_sales_sync_status, management_sales_sync_error")
+      .select("id, order_number, payment_status, paid_at, dispatch_due_at, delivery_due_at, status, source, payment_provider, payment_expires_at, payment_amount_cents, payment_transaction_nsu, dispatch_sla_minutes, delivery_sla_minutes, management_sales_sync_status")
       .eq("id", orderNsu)
       .eq("payment_provider", "infinitepay")
       .maybeSingle();
@@ -127,9 +127,7 @@ Deno.serve(async (req: Request) => {
       dispatch_due_at: current.dispatch_due_at,
       delivery_due_at: current.delivery_due_at,
       fulfillment_status: current.status,
-      management_sale_id: current.management_sale_id,
       management_sales_sync_status: current.management_sales_sync_status,
-      management_sales_sync_error: current.management_sales_sync_error,
       reconciliation
     }, 200, origin);
   } catch (error) {
