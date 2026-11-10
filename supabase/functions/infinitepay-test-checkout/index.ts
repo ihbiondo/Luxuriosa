@@ -95,7 +95,7 @@ Deno.serve(async(req:Request)=>{
   if(body?.action==="status"){
    const id=clean(body?.order_nsu,40);
    const {data,error}=await admin.from("infinitepay_test_payments")
-    .select("order_nsu,amount_cents,status,checkout_url,invoice_slug,transaction_nsu,paid_amount_cents,capture_method,provider_verified,webhook_received_at,paid_at,created_at")
+    .select("order_nsu,amount_cents,status,checkout_url,invoice_slug,transaction_nsu,paid_amount_cents,capture_method,provider_verified,webhook_received_at,paid_at,created_at,last_webhook_attempt_at,last_webhook_event,last_payment_check_http_status,last_payment_check_provider_code,last_webhook_error")
     .eq("order_nsu",id).eq("created_by",user.id).maybeSingle();
    if(error) throw error;
    if(!data) return reply({error:"Teste não encontrado."},404,origin);
