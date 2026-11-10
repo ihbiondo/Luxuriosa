@@ -285,6 +285,16 @@ h2{font-size:22px;color:#3c3a40}
     <span class="pill" id="paymentConfigStatus">Verificando InfinitePay...</span>
     <button class="btn" id="testEmailNotification" type="button" disabled>TESTAR E-MAIL</button>
   </div>
+  <div class="item" style="margin:12px 0;padding:14px;border:1px solid var(--line);border-radius:12px">
+    <div class="item-top"><strong>Teste real do checkout · R$ 1,00</strong><span class="pill">Somente administração</span></div>
+    <p class="small">Gera uma cobrança única de R$ 1,00 na InfinitePay. O resultado fica isolado: não cria venda, não altera estoque e não libera entrega.</p>
+    <div class="actions" style="flex-wrap:wrap">
+      <button class="btn primary" id="createPaymentTest" type="button">GERAR TESTE DE R$ 1,00</button>
+      <button class="btn" id="checkPaymentTest" type="button" disabled>CONSULTAR RESULTADO</button>
+      <a class="btn" id="openPaymentTest" href="#" target="_blank" rel="noopener" hidden>ABRIR COBRANÇA</a>
+    </div>
+    <p class="small" id="paymentTestStatus" role="status" aria-live="polite">Nenhum teste carregado nesta sessão.</p>
+  </div>
   <div class="grid2">
     <form id="slaForm" class="sla-form">
       <label class="sla-field">Cidade
@@ -690,6 +700,41 @@ async function loadFulfillment(){
   $("slaRules").replaceChildren(el("p","empty",error.message||"Não foi possível consultar as regras."));
  }
 }
+let paymentTestOrderNsu="";
+const paymentTestStatus=$("paymentTestStatus");
+$("createPaymentTest").addEventListener("click",async()=>{
+ const button=$("createPaymentTest"),open=$("openPaymentTest"),check=$("checkPaymentTest");
+ button.disabled=true;button.textContent="PREPARANDO...";
+ paymentTestStatus.textContent="Solicitando cobrança isolada à InfinitePay...";
+ try{
+  const {data,error}=await supabase.functions.invoke("infinitepay-test-checkout",{body:{action:"create"}});
+  if(error)throw error;if(!data?.ok||!data?.checkout_url)throw new Error(data?.error||"Não foi possível gerar o link de teste.");
+  paymentTestOrderNsu=data.order_nsu;
+  const url=new globalThis.URL(data.checkout_url);
+  if(url.protocol!=="https:"||!["checkout.infinitepay.io","checkout.infinitepay.com.br"].includes(url.hostname))throw new Error("O servidor retornou um endereço de pagamento inválido.");
+  open.href=url.href;open.hidden=false;check.disabled=false;
+  paymentTestStatus.textContent=(data.reused?"Reutilizando cobrança pendente":"Cobrança criada")+
+   " · R$ 1,00 · expira em "+new Date(data.expires_at||Date.now()+30*60*1000).toLocaleString("pt-BR")+
+   ". Após pagar, clique em Consultar resultado.";
+  notice("Link de teste de R$ 1,00 preparado. Ele não cria pedido comercial.");
+ }catch(error){paymentTestStatus.textContent=error.message||"Falha ao gerar teste.";notice(paymentTestStatus.textContent,true)}
+ finally{button.disabled=false;button.textContent="GERAR TESTE DE R$ 1,00"}
+});
+$("checkPaymentTest").addEventListener("click",async()=>{
+ if(!paymentTestOrderNsu){paymentTestStatus.textContent="Gere ou recupere o link de teste primeiro.";return}
+ const button=$("checkPaymentTest");button.disabled=true;button.textContent="CONSULTANDO...";
+ try{
+  const {data,error}=await supabase.functions.invoke("infinitepay-test-checkout",{body:{action:"status",order_nsu:paymentTestOrderNsu}});
+  if(error)throw error;if(!data?.ok||!data?.payment)throw new Error(data?.error||"Não foi possível consultar o teste.");
+  const p=data.payment;
+  const labels={pending:"Aguardando pagamento",paid:"Pagamento de R$ 1,00 confirmado pela InfinitePay",review_required:"Pagamento recebido, mas exige conferência manual",failed:"Cobrança não concluída"};
+  paymentTestStatus.textContent=(labels[p.status]||p.status)+" · "+(p.capture_method||"meio não informado")+
+   " · "+(p.provider_verified?"verificação oficial OK":"aguardando verificação")+
+   " · Entrega liberada: NÃO.";
+  if(p.status==="paid")notice("Teste confirmado. Nenhum pedido ou estoque foi alterado.");
+ }catch(error){paymentTestStatus.textContent=error.message||"Falha ao consultar teste.";notice(paymentTestStatus.textContent,true)}
+ finally{button.disabled=false;button.textContent="CONSULTAR RESULTADO"}
+});
 $("testEmailNotification").addEventListener("click",async()=>{
  const button=$("testEmailNotification");
  button.disabled=true;button.textContent="ENVIANDO...";
