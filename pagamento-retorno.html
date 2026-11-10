@@ -38,7 +38,7 @@
       <div class="time"><span>Expedição prevista até</span><strong id="dispatch">—</strong></div>
       <div class="time"><span>Entrega prevista até</span><strong id="delivery">—</strong></div>
     </div>
-    <p id="note">O retorno desta página não confirma o pagamento. A confirmação depende da resposta oficial da InfinitePay.</p>
+    <p id="note">A confirmação é consultada no servidor com a InfinitePay. O retorno do navegador, sozinho, nunca libera o pedido.</p>
     <div class="actions">
       <button type="button" id="check">CONSULTAR PAGAMENTO</button>
       <a class="primary" href="index.html">VOLTAR À LUXURIOSA</a>
@@ -49,6 +49,12 @@
   "use strict";
   var params=new URLSearchParams(location.search);
   var orderNsu=params.get("order")||params.get("order_nsu")||"";
+  var transactionNsu=params.get("transaction_nsu")||"";
+  var invoiceSlug=params.get("slug")||params.get("invoice_slug")||"";
+  var receiptUrl=params.get("receipt_url")||"";
+  var captureMethod=params.get("capture_method")||"";
+  var hasProviderReturn=Boolean(transactionNsu&&invoiceSlug);
+  var automaticChecks=0;
   var api="https://byiykxfugvxuowueuxca.supabase.co/functions/v1/payment-status";
   var $=function(id){return document.getElementById(id)};
   var formatter=new Intl.DateTimeFormat("pt-BR",{timeZone:"America/Sao_Paulo",dateStyle:"short",timeStyle:"short"});
@@ -65,11 +71,11 @@
       try{localStorage.removeItem("luxuriosa_carrinho")}catch(_){}
     }
   }
-  async function check(){
+  async function check(isAutomatic){
     if(!orderNsu){show({},"Referência não encontrada","Não identificamos a referência deste pedido. Fale com a Luxuriosa pelo WhatsApp para conferir sua compra.","!");return}
     $("check").disabled=true;$("check").textContent="CONSULTANDO...";
     try{
-      var response=await fetch(api,{method:"POST",headers:{"content-type":"application/json","apikey":"sb_publishable_LaMbeWQ1PNANEQ85SD_35Q_wDzswy8y"},body:JSON.stringify({order_nsu:orderNsu})});
+      var response=await fetch(api,{method:"POST",headers:{"content-type":"application/json","apikey":"sb_publishable_LaMbeWQ1PNANEQ85SD_35Q_wDzswy8y"},body:JSON.stringify({order_nsu:orderNsu,transaction_nsu:transactionNsu,slug:invoiceSlug,receipt_url:receiptUrl,capture_method:captureMethod})});
       var data=await response.json().catch(function(){return{}});
       if(!response.ok||!data.ok)throw new Error(data.error||"Não foi possível consultar o pagamento.");
       if(data.payment_status==="paid"){
@@ -85,10 +91,16 @@
       }
     }catch(error){
       show({},"Não foi possível consultar agora",error.message||"Tente novamente em instantes.","!");
-    }finally{$("check").disabled=false;$("check").textContent="CONSULTAR PAGAMENTO"}
+    }finally{
+      $("check").disabled=false;$("check").textContent="CONSULTAR PAGAMENTO";
+      if(hasProviderReturn&&automaticChecks<2){
+        automaticChecks++;
+        window.setTimeout(function(){check(true)},4000);
+      }
+    }
   }
-  $("check").addEventListener("click",check);
-  check();
+  $("check").addEventListener("click",function(){check(false)});
+  check(true);
 })();
 </script>
 </body>

@@ -431,18 +431,9 @@ Deno.serve(async (req: Request) => {
           pendingOrder.payment_customer_phone_hash === customerPhoneHash &&
           pendingOrder.payment_customer_email_hash === customerEmailHash;
 
-        const pendingDiscountCents = Number(pendingOrder.club_discount_amount_cents || 0);
-        const pendingDiscountPercent = Number(pendingOrder.club_discount_percent || 0);
-        const pendingShippingCents = Math.round(Number(pendingOrder.shipping_amount || 0) * 100);
-        const expectedDiscountPercent = clubDiscountCents > 0 ? CLUB_DISCOUNT_PERCENT : 0;
-        const samePaymentBreakdown =
-          pendingDiscountCents === clubDiscountCents &&
-          pendingDiscountPercent === expectedDiscountPercent &&
-          pendingShippingCents === shippingCents;
-
-        if (Number(pendingOrder.payment_amount_cents) === totalCents && samePaymentBreakdown &&
-            sameItems && sameAddress && pendingOrder.fulfillment_type === fulfillmentType &&
-            sameCheckoutContact && pendingOrder.payment_checkout_url) {
+        if (Number(pendingOrder.payment_amount_cents) === totalCents && sameItems && sameAddress &&
+            pendingOrder.fulfillment_type === fulfillmentType && sameCheckoutContact &&
+            pendingOrder.payment_checkout_url) {
           return reply({
             ok: true,
             order_number: pendingOrder.order_number,
