@@ -44,7 +44,7 @@ Deno.serve(async (req: Request) => {
     const captureMethod = clean(body?.capture_method, 30);
 
     const { data: order, error: orderError } = await admin.from("orders")
-      .select("id, order_number, payment_status, paid_at, dispatch_due_at, delivery_due_at, status, payment_provider, payment_expires_at, payment_amount_cents, dispatch_sla_minutes, delivery_sla_minutes")
+      .select("id, order_number, payment_status, paid_at, dispatch_due_at, delivery_due_at, status, payment_provider, payment_expires_at, payment_amount_cents, payment_transaction_nsu, dispatch_sla_minutes, delivery_sla_minutes")
       .eq("id", orderNsu)
       .eq("payment_provider", "infinitepay")
       .maybeSingle();
@@ -52,6 +52,18 @@ Deno.serve(async (req: Request) => {
     if (!order) return reply({ error: "Pedido não encontrado." }, 404, origin);
 
     let reconciliation = "not_attempted";
+    // If the webhook already confirmed the payment but its email notification
+    // failed, a later customer return/refresh can safely retry that notification.
+    // sendOrderNotification is idempotent for sent/not-configured events.
+    if (order.payment_status === "paid" && order.payment_transaction_nsu) {
+      const eventKey = "paid:" + orderNsu + ":" + order.payment_transaction_nsu;
+      const notificationTask = sendOrderNotification(admin, order.id, eventKey, false);
+      const edgeRuntime = (globalThis as any).EdgeRuntime;
+      if (typeof edgeRuntime?.waitUntil === "function") edgeRuntime.waitUntil(notificationTask);
+      else await notificationTask;
+      reconciliation = "already_paid";
+    }
+
     if (order.payment_status === "pending" && transactionNsu && invoiceSlug) {
       reconciliation = "pending";
       const result = await verifyAndSettlePayment(admin, order, {
