@@ -14,7 +14,7 @@ const admin = createClient(SUPABASE_URL, SERVICE_ROLE_KEY, {
 const ALLOWED_ORIGINS = new Set(["https://luxuriosa.com.br", "https://www.luxuriosa.com.br"]);
 const CATALOG_URL = "https://luxuriosa.com.br/data/produtos.json";
 const CHECKOUT_URL = "https://api.checkout.infinitepay.io/links";
-const PAYMENT_CHECKOUT_PAYLOAD_VERSION = 3;
+const PAYMENT_CHECKOUT_PAYLOAD_VERSION = 4;
 const CLUB_DISCOUNT_THRESHOLD_CENTS = 10000;
 const CLUB_DISCOUNT_PERCENT = 10;
 const CLUB_DISCOUNT_RULE_VERSION = "clube-10-v1-2026-11";
@@ -605,7 +605,10 @@ Deno.serve(async (req: Request) => {
     const checkoutPayload = {
       order_nsu: orderId,
       redirect_url: RETURN_URL + "?order=" + encodeURIComponent(orderId),
-      webhook_url: WEBHOOK_URL,
+      webhook: {
+        url: WEBHOOK_URL,
+        events: ["paid", "settled", "refunded", "canceled", "payment_failed"]
+      },
       customer: checkoutCustomer,
       address: {
         cep: deliveryAddress.zip,
