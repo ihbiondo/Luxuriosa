@@ -108,7 +108,7 @@ async function load(){
   setMetric("ticket",money(c.average_paid_ticket_cents/100));setMetric("paidRate",Number(c.paid_rate_percent||0).toLocaleString("pt-BR")+"%");
   const expenseRows=expenses.data?.expenses||[];const activeExpenses=expenseRows.filter(x=>x.status==="active");
   const expenseTotal=activeExpenses.reduce((sum,x)=>sum+Number(x.amount_cents||0),0);
-  setMetric("expenses",money(expenseTotal/100));message("expenseCount",num(activeExpenses.length)+" lançamentos carregados");
+  setMetric("expenses",money(Number(c.recorded_expenses_cents||0)/100));message("expenseCount",num(c.expense_count||0)+" lançamentos no período");
   setMetric("marginBig",c.gross_margin_percent===null?"—":Number(c.gross_margin_percent).toLocaleString("pt-BR")+"%");
   message("costCoverage",num(c.costed_sales_count)+" vendas com custo · "+num(c.sales_without_cost_count)+" sem custo");
   setMetric("sessions",num(pulse.site_sessions));setMetric("events",num(pulse.site_events));
