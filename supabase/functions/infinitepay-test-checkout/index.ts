@@ -40,6 +40,14 @@ Deno.serve(async(req:Request)=>{
   const body=await req.json();
   if(body?.action==="create"){
    if(!API_KEY||!HANDLE) return reply({error:"Credenciais InfinitePay não configuradas."},503,origin);
+   const {data:existing,error:existingError}=await admin.from("infinitepay_test_payments")
+    .select("order_nsu,status,checkout_url,created_at").eq("created_by",user.id)
+    .in("status",["pending","paid"]).order("created_at",{ascending:false}).limit(1).maybeSingle();
+   if(existingError) throw existingError;
+   if(existing?.status==="paid") return reply({error:"O pagamento controlado já foi concluído. Não será criada outra cobrança."},409,origin);
+   if(existing?.status==="pending"&&existing.checkout_url) return reply({ok:true,test:true,reused:true,amount:"R$ 1,00",
+    order_nsu:existing.order_nsu,checkout_url:existing.checkout_url,
+    warning:"Já existe um único teste pendente. Nenhuma nova cobrança foi criada."},200,origin);
    const orderNsu=crypto.randomUUID();
    const expiresAt=new Date(Date.now()+30*60*1000);
    const {error:insertError}=await admin.from("infinitepay_test_payments").insert({
