@@ -65,7 +65,9 @@ Deno.serve(async (req: Request) => {
       if (result.confirmed) {
         const outcome = result.settlement?.outcome;
         if (outcome === "paid" || outcome === "duplicate") {
-          await sendOrderNotification(admin, order.id, result.settlement.event_key, result.settlement?.newly_paid === true);
+          EdgeRuntime.waitUntil(
+            sendOrderNotification(admin, order.id, result.settlement.event_key, result.settlement?.newly_paid === true)
+          );
           reconciliation = outcome;
         } else if (outcome === "review_required") {
           reconciliation = "review_required";
