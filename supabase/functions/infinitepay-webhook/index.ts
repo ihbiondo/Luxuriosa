@@ -108,10 +108,25 @@ Deno.serve(async (req: Request) => {
     }
 
     await recordEvent(order, eventKey, eventType, payload, "");
-    const result = await verifyAndSettlePayment(admin, order, {
-      orderNsu, transactionNsu, invoiceSlug, receiptUrl: receipt || undefined,
-      captureMethod: clean(payload?.capture_method, 30)
-    });
+    let result: Awaited<ReturnType<typeof verifyAndSettlePayment>>;
+    try {
+      result = await verifyAndSettlePayment(admin, order, {
+        orderNsu, transactionNsu, invoiceSlug, receiptUrl: receipt || undefined,
+        captureMethod: clean(payload?.capture_method, 30)
+      });
+    } catch (error) {
+      const processingError = clean(
+        error instanceof Error ? error.message : "Falha na consulta de confirmação da InfinitePay.",
+        300
+      );
+      const { error: auditError } = await admin.from("payment_provider_events")
+        .update({ processing_error: processingError })
+        .eq("event_key", eventKey)
+        .eq("verified", false);
+      if (auditError) console.error("Could not save payment verification diagnostic.", auditError);
+      console.error("InfinitePay payment_check failed.", { eventKey, processingError });
+      return response({ error: "Não foi possível confirmar o pagamento com a InfinitePay. O aviso poderá ser reenviado." }, 503);
+    }
 
     if (!result.confirmed) {
       await admin.from("payment_provider_events")
