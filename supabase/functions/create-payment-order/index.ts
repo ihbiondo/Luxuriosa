@@ -4,6 +4,7 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 const INFINITEPAY_API_KEY = Deno.env.get("INFINITEPAY_API_KEY") || "";
+const INFINITEPAY_HANDLE = Deno.env.get("INFINITEPAY_HANDLE") || "";
 const GOOGLE_MAPS_API_KEY = Deno.env.get("GOOGLE_MAPS_API_KEY") || "";
 const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY") || "";
 const EMAIL_FROM = Deno.env.get("EMAIL_FROM") || "";
@@ -188,7 +189,7 @@ Deno.serve(async (req: Request) => {
   if (req.method === "OPTIONS") return reply({}, 204, origin);
   if (req.method !== "POST") return reply({ error: "Método não permitido." }, 405, origin);
   if (!ALLOWED_ORIGINS.has(origin)) return reply({ error: "Origem não autorizada." }, 403, origin);
-  if (!INFINITEPAY_API_KEY) return reply({ error: "O pagamento automático ainda não está configurado no servidor." }, 503, origin);
+  if (!INFINITEPAY_API_KEY || !INFINITEPAY_HANDLE) return reply({ error: "O pagamento automático precisa da API Key e da InfiniteTag configuradas no servidor." }, 503, origin);
   
   try {
     const body = await req.json();
@@ -627,6 +628,7 @@ Deno.serve(async (req: Request) => {
     });
 
     const checkoutPayload = {
+      handle: INFINITEPAY_HANDLE,
       order_nsu: orderId,
       redirect_url: RETURN_URL + "?order=" + encodeURIComponent(orderId),
       webhook: {
@@ -681,7 +683,10 @@ Deno.serve(async (req: Request) => {
         nestedDataKeys: checkoutData?.data && typeof checkoutData.data === "object" ? Object.keys(checkoutData.data) : [],
         error: checkoutData?.message || checkoutData?.error || checkoutData?.code || "Invalid response"
       });
-      return reply({ error: "Não foi possível gerar o pagamento agora. Nenhuma cobrança foi confirmada. Tente novamente ou fale com a Luxuriosa." }, 502, origin);
+      const publicError = checkoutResponse.status === 403
+        ? "A InfinitePay recusou a configuração. Confira se a InfiniteTag e a API Key pertencem à mesma conta."
+        : "Não foi possível gerar o pagamento agora. Nenhuma cobrança foi confirmada. Tente novamente ou fale com a Luxuriosa.";
+      return reply({ error: publicError }, 502, origin);
     }
 
     const { error: saveLinkError } = await admin.from("orders").update({
