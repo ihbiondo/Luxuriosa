@@ -10,6 +10,10 @@ on:
       - "supabase/functions/_shared/**"
       - "supabase/functions/infinitepay-webhook/**"
       - "supabase/functions/payment-status/**"
+      - "supabase/functions/infinitepay-test-checkout/**"
+      - "supabase/functions/infinitepay-test-webhook/**"
+      - "supabase/migrations/20261110153000_isolated_infinitepay_test_payments.sql"
+      - ".github/scripts/infinitepay-test.integration.sql"
       - "supabase/migrations/20261110120000_atomic_infinitepay_payment_confirmation.sql"
       - ".github/scripts/payment-confirmation.*"
       - ".github/workflows/payment-validate.yml"
@@ -61,6 +65,8 @@ jobs:
           deno check supabase/functions/_shared/infinitepay-payment.ts
           deno check supabase/functions/infinitepay-webhook/index.ts
           deno check supabase/functions/payment-status/index.ts
+          deno check supabase/functions/infinitepay-test-checkout/index.ts
+          deno check supabase/functions/infinitepay-test-webhook/index.ts
 
       - name: Instalar cliente PostgreSQL
         run: |
@@ -72,6 +78,12 @@ jobs:
           PGPASSWORD: postgres
         run: |
           psql -h localhost -U postgres -d luxuriosa_test -v ON_ERROR_STOP=1 -f .github/scripts/payment-confirmation.integration.sql
+
+      - name: Testar isolamento do pagamento de R$ 1
+        env:
+          PGPASSWORD: postgres
+        run: |
+          psql -h localhost -U postgres -d luxuriosa_test -v ON_ERROR_STOP=1 -f .github/scripts/infinitepay-test.integration.sql
 
       - name: Testar contrato de confirmação
         run: node --test .github/scripts/payment-confirmation.test.cjs
