@@ -3,6 +3,7 @@ name: Validacao do checkout InfinitePay
 on:
   push:
     branches:
+      - "main"
       - "fix/infinitepay-payment-only"
     paths:
       - "pagamento-retorno.html"
