@@ -728,8 +728,15 @@ $("checkPaymentTest").addEventListener("click",async()=>{
   if(error)throw error;if(!data?.ok||!data?.payment)throw new Error(data?.error||"Não foi possível consultar o teste.");
   const p=data.payment;
   const labels={pending:"Aguardando pagamento",paid:"Pagamento de R$ 1,00 confirmado pela InfinitePay",review_required:"Pagamento recebido, mas exige conferência manual",failed:"Cobrança não concluída"};
+  const diagnostics=[];
+  if(p.last_webhook_attempt_at)diagnostics.push("último webhook "+new Date(p.last_webhook_attempt_at).toLocaleString("pt-BR"));
+  if(p.last_webhook_event)diagnostics.push("evento "+p.last_webhook_event);
+  if(p.last_payment_check_http_status)diagnostics.push("payment_check HTTP "+p.last_payment_check_http_status);
+  if(p.last_payment_check_provider_code)diagnostics.push("código "+p.last_payment_check_provider_code);
+  if(p.last_webhook_error)diagnostics.push(p.last_webhook_error);
   paymentTestStatus.textContent=(labels[p.status]||p.status)+" · "+(p.capture_method||"meio não informado")+
    " · "+(p.provider_verified?"verificação oficial OK":"aguardando verificação")+
+   " · "+(diagnostics.length?"Diagnóstico: "+diagnostics.join(" · "):"Webhook ainda não registrado")+
    " · Entrega liberada: NÃO.";
   if(p.status==="paid")notice("Teste confirmado. Nenhum pedido ou estoque foi alterado.");
  }catch(error){paymentTestStatus.textContent=error.message||"Falha ao consultar teste.";notice(paymentTestStatus.textContent,true)}
