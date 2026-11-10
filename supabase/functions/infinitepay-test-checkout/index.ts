@@ -18,7 +18,7 @@ function reply(body: unknown, status=200, origin="") {
   }});
 }
 async function requireAdmin(req: Request) {
-  const token=(req.headers.get("authorization")||"").replace(/^Bearer\\s+/i,"");
+  const token=(req.headers.get("authorization")||"").replace(/^Bearer\s+/i,"");
   if(!token) throw new Error("Faça login com a conta administrativa.");
   const {data,error}=await admin.auth.getUser(token);
   if(error||!data.user) throw new Error("Sessão inválida.");
