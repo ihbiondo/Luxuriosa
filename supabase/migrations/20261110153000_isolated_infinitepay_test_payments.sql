@@ -18,6 +18,9 @@ create table if not exists public.infinitepay_test_payments (
   updated_at timestamptz not null default now()
 );
 
+create unique index if not exists infinitepay_test_one_pending_per_admin_uidx
+  on public.infinitepay_test_payments(created_by) where status = 'pending';
+
 create unique index if not exists infinitepay_test_transaction_nsu_uidx
   on public.infinitepay_test_payments(transaction_nsu)
   where transaction_nsu is not null;
