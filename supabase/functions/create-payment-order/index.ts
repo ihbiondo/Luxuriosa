@@ -187,7 +187,7 @@ Deno.serve(async (req: Request) => {
   const origin = req.headers.get("origin") || "";
   if (req.method === "OPTIONS") return reply({}, 204, origin);
   if (req.method !== "POST") return reply({ error: "Método não permitido." }, 405, origin);
-  if (origin && !ALLOWED_ORIGINS.has(origin)) return reply({ error: "Origem não autorizada." }, 403, origin);
+  if (!ALLOWED_ORIGINS.has(origin)) return reply({ error: "Origem não autorizada." }, 403, origin);
   if (!INFINITEPAY_API_KEY) return reply({ error: "O pagamento automático ainda não está configurado no servidor." }, 503, origin);
   
   try {
@@ -326,12 +326,17 @@ Deno.serve(async (req: Request) => {
       return reply({ error: "O frete calculado ultrapassou o limite permitido. Fale com a Luxuriosa." }, 409, origin);
     }
 
+    // Checkout público aceita visitantes. Quando houver sessão, validamos o token
+    // manualmente; o gateway não pode exigir login para quem compra como visitante.
     let customerId: string | null = null;
     const token = (req.headers.get("authorization") || "").replace(/^Bearer\s+/i, "");
     if (token) {
-      const { data: userData } = await admin.auth.getUser(token);
-      customerId = userData.user?.id || null;
-      if (!customerEmail) customerEmail = textValue(userData.user?.email, 254);
+      const { data: userData, error: userAuthError } = await admin.auth.getUser(token);
+      if (userAuthError || !userData.user) {
+        return reply({ code: "invalid_session", error: "Sua sessão expirou. Atualize a página e entre novamente para continuar." }, 401, origin);
+      }
+      customerId = userData.user.id;
+      if (!customerEmail) customerEmail = textValue(userData.user.email, 254);
     }
     if (customerEmail && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(customerEmail)) {
       customerEmail = "";
@@ -493,6 +498,25 @@ Deno.serve(async (req: Request) => {
             : "Já estamos preparando a cobrança deste pedido. Aguarde alguns instantes e tente novamente."
         }, 409, origin);
       }
+    }
+
+    // Proteção básica contra geração abusiva de links. A mesma sessão com pedido
+    // pendente é reutilizada acima; novas cobranças por contato são limitadas.
+    const attemptWindowStart = new Date(now.getTime() - 60 * 60 * 1000).toISOString();
+    const [phoneAttempts, emailAttempts] = await Promise.all([
+      admin.from("orders").select("id", { count: "exact", head: true })
+        .eq("payment_provider", "infinitepay")
+        .eq("payment_customer_phone_hash", customerPhoneHash)
+        .gte("created_at", attemptWindowStart),
+      admin.from("orders").select("id", { count: "exact", head: true })
+        .eq("payment_provider", "infinitepay")
+        .eq("payment_customer_email_hash", customerEmailHash)
+        .gte("created_at", attemptWindowStart)
+    ]);
+    if (phoneAttempts.error) throw phoneAttempts.error;
+    if (emailAttempts.error) throw emailAttempts.error;
+    if ((phoneAttempts.count || 0) >= 5 || (emailAttempts.count || 0) >= 5) {
+      return reply({ error: "Muitas tentativas de pagamento para esses dados. Aguarde até uma hora ou fale com a Luxuriosa." }, 429, origin);
     }
 
     const { data: order, error: orderError } = await admin.from("orders").insert({
