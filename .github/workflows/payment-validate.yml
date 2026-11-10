@@ -6,6 +6,7 @@ on:
       - "fix/infinitepay-payment-only"
     paths:
       - "pagamento-retorno.html"
+      - "gestao-privada-8f2c6d.html"
       - "supabase/functions/create-payment-order/**"
       - "supabase/functions/_shared/**"
       - "supabase/functions/infinitepay-webhook/**"
@@ -105,4 +106,19 @@ jobs:
             require("node:child_process").execFileSync(process.execPath, ["--check", path], { stdio: "inherit" });
           });
           console.log("Scripts da página de retorno validados.");
+          NODE
+ 
+      - name: Validar JavaScript da área administrativa
+        run: |
+          node <<'NODE'
+          const fs = require("node:fs");
+          const html = fs.readFileSync("gestao-privada-8f2c6d.html", "utf8");
+          const scripts = [...html.matchAll(/<script\\b[^>]*>([\\s\\S]*?)<\\/script>/gi)];
+          if (!scripts.length) throw new Error("Nenhum script encontrado na área administrativa.");
+          scripts.forEach((match, index) => {
+            const path = "/tmp/gestao-privada-" + index + ".js";
+            fs.writeFileSync(path, match[1]);
+            require("node:child_process").execFileSync(process.execPath, ["--check", path], { stdio: "inherit" });
+          });
+          console.log("Scripts da área administrativa validados.");
           NODE
