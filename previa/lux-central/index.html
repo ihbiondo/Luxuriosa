@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow,noarchive">
+<meta name="theme-color" content="#101014">
+<title>Lux-Central | Inteligência Empresarial</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600&display=swap" rel="stylesheet">
+<style>
+:root{color-scheme:dark;--bg:#101014;--panel:#19191f;--panel2:#202027;--line:#30303a;--text:#f1edf0;--muted:#aaa3ac;--wine:#8b1e3f;--gold:#d4af7c;--pink:#f7d7d9;--good:#8bc6a3;--warn:#e5bd75;--bad:#e58b91;--radius:13px}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 50% -15%,#39202c 0,transparent 42%),var(--bg);color:var(--text);font:14px/1.5 "DM Sans",sans-serif}
+button,input,select{font:inherit}button{cursor:pointer}.shell{max-width:1440px;margin:auto;padding:22px 26px 40px}
+header{display:flex;align-items:center;justify-content:space-between;gap:18px;padding:8px 0 22px;border-bottom:1px solid var(--line)}
+.brand{font:600 14px "Playfair Display",serif;letter-spacing:3px}.brand span{color:var(--gold)}.eyebrow,.mono{font:10px "DM Mono",monospace;letter-spacing:1.1px;text-transform:uppercase;color:var(--muted)}
+.header-right{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.pill{border:1px solid var(--line);border-radius:30px;padding:6px 10px;font:10px "DM Mono",monospace;color:var(--muted)}
+.btn{border:1px solid var(--line);background:var(--panel2);color:var(--text);border-radius:9px;padding:9px 13px;font-size:12px;font-weight:600}.btn:hover{border-color:var(--gold)}.btn.primary{background:var(--wine);border-color:var(--wine)}.btn:disabled{opacity:.5;cursor:wait}
+.hero{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;padding:28px 0 20px}.hero h1{font:500 clamp(30px,4vw,44px)/1.1 "Playfair Display",serif;margin:7px 0}.hero h1 em{font-style:normal;color:var(--gold)}.hero p{margin:0;color:var(--muted);max-width:620px}.controls{display:flex;align-items:center;gap:9px;flex-wrap:wrap}.field{background:var(--panel);border:1px solid var(--line);color:var(--text);border-radius:8px;padding:9px 11px}
+.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}.metric,.panel{background:linear-gradient(145deg,#1d1d24,#17171d);border:1px solid var(--line);border-radius:var(--radius);padding:15px;min-width:0}.metric .label{color:var(--muted);font-size:11px}.metric strong{display:block;font:600 clamp(21px,2.2vw,29px) "DM Sans",sans-serif;letter-spacing:-.7px;margin:8px 0 3px;font-variant-numeric:tabular-nums}.metric small{color:var(--muted);font-size:10px}.metric.good strong{color:var(--good)}.metric.warn strong{color:var(--warn)}
+.section-title{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:24px 0 10px}.section-title h2{font:500 21px "Playfair Display",serif;margin:0}.section-title p{margin:2px 0 0;color:var(--muted);font-size:11px}
+.cols{display:grid;grid-template-columns:1.15fr .85fr;gap:12px}.panel h3{font-size:13px;margin:0 0 4px}.hint{font-size:10px;color:var(--muted);margin:0 0 14px}
+.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.kpi{padding:11px;background:#ffffff05;border:1px solid #ffffff0a;border-radius:9px}.kpi span{display:block;color:var(--muted);font-size:10px}.kpi strong{display:block;font-size:18px;margin-top:5px;font-variant-numeric:tabular-nums}
+.bars{display:grid;gap:10px}.bar-row{display:grid;grid-template-columns:minmax(90px,1fr) minmax(80px,2fr) auto;gap:10px;align-items:center;font-size:11px}.bar-label{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#ddd}.track{height:7px;border-radius:9px;background:#ffffff12;overflow:hidden}.fill{height:100%;background:linear-gradient(90deg,var(--wine),var(--gold));border-radius:9px}.bar-value{font:10px "DM Mono",monospace;color:var(--muted)}
+.list{display:grid;gap:7px}.rowitem{display:flex;justify-content:space-between;gap:12px;padding:9px 0;border-bottom:1px solid #ffffff0c;font-size:11px}.rowitem:last-child{border-bottom:0}.rowitem strong{font-weight:600}.muted{color:var(--muted)}.status{font:10px "DM Mono",monospace;padding:3px 7px;border-radius:30px;background:#ffffff0d;color:var(--muted)}.status.good{color:var(--good)}.status.warn{color:var(--warn)}.status.bad{color:var(--bad)}
+.table-wrap{overflow:auto}table{width:100%;border-collapse:collapse;font-size:11px}th,td{text-align:left;padding:9px 8px;border-bottom:1px solid #ffffff10}th{font:10px "DM Mono",monospace;color:var(--muted);font-weight:400;text-transform:uppercase}td:last-child,th:last-child{text-align:right}
+.notice{padding:11px 13px;border:1px solid #8b1e3f66;background:#8b1e3f14;border-radius:10px;color:#e9d7dc;font-size:11px;margin:14px 0}.empty{color:var(--muted);font-size:11px;padding:12px 0}.hidden{display:none!important}
+.login-wrap{min-height:75vh;display:grid;place-items:center}.login{width:min(100%,420px);background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:26px}.login h1{font:500 30px "Playfair Display",serif;margin:8px 0}.login p{color:var(--muted);font-size:12px}.login label{display:block;color:var(--muted);font-size:11px;margin:13px 0 5px}.login input{width:100%}.login button{width:100%;margin-top:17px}
+footer{display:flex;justify-content:space-between;gap:10px;border-top:1px solid var(--line);margin-top:28px;padding-top:14px;color:#77717b;font:9px "DM Mono",monospace}
+@media(max-width:900px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.cols{grid-template-columns:1fr}.hero{align-items:flex-start;flex-direction:column}}
+@media(max-width:560px){.shell{padding:14px}.grid{gap:8px}.metric{padding:11px}.metric strong{font-size:21px}.kpis{grid-template-columns:repeat(2,1fr)}header{align-items:flex-start;flex-direction:column}.hero{padding-top:20px}.bar-row{grid-template-columns:85px 1fr auto}}
+</style>
+</head>
+<body>
+<div class="shell">
+<header><div class="brand">LUXURIOSA <span>/</span> LUX-CENTRAL</div><div class="header-right"><span class="pill" id="connection">AGUARDANDO AUTENTICAÇÃO</span><a class="btn" href="/442/">PORTAL 442</a><a class="btn" href="/lux-gestao/">ABRIR GESTÃO</a><button class="btn hidden" id="logout">SAIR</button></div></header>
+<section id="loginView" class="login-wrap"><form class="login" id="loginForm"><div class="eyebrow">Ambiente administrativo</div><h1>Inteligência <em style="color:var(--gold)">empresarial.</em></h1><p>Entre com sua conta administrativa Luxuriosa. O acesso aos dados é validado também pelo servidor.</p><label for="email">E-mail</label><input class="field" id="email" type="email" autocomplete="username" required><label for="password">Senha</label><input class="field" id="password" type="password" autocomplete="current-password" required><button class="btn primary" type="submit" id="loginButton">ENTRAR NO LUX-CENTRAL</button><p id="loginMessage" role="status"></p></form></section>
+<main id="appView" class="hidden">
+<div class="hero"><div><div class="eyebrow">Painel executivo · dados operacionais</div><h1>Decisões melhores.<br><em>Números reais.</em></h1><p id="subtitle">Indicadores financeiros, vendas, estoque e comportamento comercial em um único lugar.</p></div><div class="controls"><select class="field" id="period"><option value="7">7 dias</option><option value="30" selected>30 dias</option><option value="90">90 dias</option><option value="365">12 meses</option></select><button class="btn primary" id="refresh">ATUALIZAR DADOS</button><button class="btn" id="retrySync">REPROCESSAR SINCRONIZAÇÃO</button></div></div>
+<div class="notice" id="dataNotice">Os indicadores dependem de vendas, custos, despesas e estoque cadastrados. Valores ausentes serão apresentados como indisponíveis, nunca estimados.</div>
+<div class="grid">
+<div class="metric"><div class="label">Recebido em vendas</div><strong id="received">—</strong><small id="paidCount">Aguardando dados</small></div>
+<div class="metric"><div class="label">Lucro bruto apurado</div><strong id="grossProfit">—</strong><small id="margin">Exige custo cadastrado para os itens</small></div>
+<div class="metric"><div class="label">Resultado operacional parcial</div><strong id="operating">—</strong><small>Lucro bruto menos despesas registradas</small></div>
+<div class="metric"><div class="label">Vendas pendentes</div><strong id="pending">—</strong><small id="pendingCount">Aguardando dados</small></div>
+<div class="metric"><div class="label">Ticket médio pago</div><strong id="ticket">—</strong><small>Somente vendas com pagamento confirmado</small></div>
+<div class="metric"><div class="label">Taxa de pagamento</div><strong id="paidRate">—</strong><small>Vendas pagas ÷ vendas registradas</small></div>
+<div class="metric"><div class="label">Despesas registradas</div><strong id="expenses">—</strong><small id="expenseCount">Lançamentos no período</small></div>
+<div class="metric"><div class="label">Margem bruta</div><strong id="marginBig">—</strong><small id="costCoverage">Cobertura de custos</small></div>
+</div>
+<div class="section-title"><div><h2>Visão comercial</h2><p>Comportamento agregado do site e funil de compra.</p></div><span class="pill" id="updated">SEM CONSULTA</span></div>
+<div class="grid">
+<div class="metric"><div class="label">Sessões observadas</div><strong id="sessions">—</strong><small>Identificadores agregados</small></div>
+<div class="metric"><div class="label">Eventos do site</div><strong id="events">—</strong><small>Atividade registrada</small></div>
+<div class="metric"><div class="label">Carrinhos</div><strong id="carts">—</strong><small id="cartBreakdown">Aguardando dados</small></div>
+<div class="metric"><div class="label">Pedidos do site</div><strong id="orders">—</strong><small id="orderBreakdown">Aguardando dados</small></div>
+</div>
+<div class="section-title"><div><h2>Desempenho</h2><p>Vendas registradas no Lux-Gestão, com comparação de períodos.</p></div></div>
+<div class="cols">
+<section class="panel"><h3>Receita recebida por dia</h3><p class="hint">Somente vendas pagas registradas no Gestão.</p><div class="bars" id="trend"><div class="empty">Aguardando dados...</div></div></section>
+<section class="panel"><h3>Produtos mais vendidos</h3><p class="hint">Unidades e valor bruto por produto.</p><div class="bars" id="topProducts"><div class="empty">Aguardando dados...</div></div></section>
+</div>
+<div class="section-title"><div><h2>Pagamentos e operação</h2><p>Conciliação, estoque e qualidade dos dados.</p></div></div>
+<div class="cols">
+<section class="panel"><h3>Pedidos do site por situação</h3><p class="hint">Pedidos não equivalem a vendas recebidas.</p><div class="list" id="paymentStatus"><div class="empty">Aguardando dados...</div></div></section>
+<section class="panel"><h3>Integridade operacional</h3><p class="hint">Conferência de cadastros necessários para a inteligência.</p><div class="list" id="integrity"><div class="empty">Aguardando dados...</div></div></section>
+</div>
+<div class="cols" style="margin-top:12px">
+<section class="panel"><h3>Formas de pagamento</h3><div class="list" id="methods"><div class="empty">Aguardando dados...</div></div></section>
+<section class="panel"><h3>Eventos mais frequentes</h3><div class="list" id="eventsList"><div class="empty">Aguardando dados...</div></div></section>
+</div>
+</main>
+<footer><span>LUXURIOSA · LUX-CENTRAL</span><span>ACESSO RESTRITO · INDICADORES INTERNOS</span></footer>
+</div>
+<script type="module">
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+const URL="https://byiykxfugvxuowueuxca.supabase.co";
+const KEY="sb_publishable_LaMbeWQ1PNANEQ85SD_35Q_wDzswy8y";
+const supabase=createClient(URL,KEY,{auth:{autoRefreshToken:true,persistSession:true,detectSessionInUrl:true}});
+const $=id=>document.getElementById(id);
+const money=v=>Number(v||0).toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
+const num=v=>Number(v||0).toLocaleString("pt-BR");
+function message(el,text){$(el).textContent=text}
+function row(label,value,kind){const div=document.createElement("div");div.className="rowitem";const a=document.createElement("span");a.textContent=label;const b=document.createElement("strong");b.textContent=value;if(kind)b.className="status "+kind;div.append(a,b);return div}
+function list(id,items,empty){const box=$(id);box.replaceChildren();if(!items.length){const p=document.createElement("div");p.className="empty";p.textContent=empty||"Sem dados no período.";box.append(p);return}items.forEach(x=>box.append(x))}
+function bars(id,items,labelKey,valueKey,formatter){const box=$(id);box.replaceChildren();if(!items.length){const p=document.createElement("div");p.className="empty";p.textContent="Sem dados suficientes no período.";box.append(p);return}const max=Math.max(1,...items.map(x=>Number(x[valueKey])||0));items.forEach(item=>{const line=document.createElement("div");line.className="bar-row";const label=document.createElement("span");label.className="bar-label";label.textContent=item[labelKey];label.title=item[labelKey];const track=document.createElement("div");track.className="track";const fill=document.createElement("div");fill.className="fill";fill.style.width=Math.max(1,(Number(item[valueKey])||0)/max*100)+"%";track.append(fill);const value=document.createElement("span");value.className="bar-value";value.textContent=formatter(item[valueKey]);line.append(label,track,value);box.append(line)})}
+function setMetric(id,value){message(id,value)}
+async function load(){
+ $("refresh").disabled=true;$("retrySync").disabled=true;message("connection","CONSULTANDO DADOS");
+ try{
+  const days=Number($("period").value);
+  const [analytics,stock,costs,kits,expenses]=await Promise.all([
+   supabase.functions.invoke("management-sales",{body:{action:"analytics",period_days:days}}),
+   supabase.functions.invoke("management-sales",{body:{action:"stock-list"}}),
+   supabase.functions.invoke("management-sales",{body:{action:"cost-list"}}),
+   supabase.functions.invoke("management-sales",{body:{action:"kit-recipes-list"}}),
+   supabase.functions.invoke("management-sales",{body:{action:"expense-list"}})
+  ]);
+  for(const result of [analytics,stock,costs,kits,expenses])if(result.error)throw result.error;
+  if(!analytics.data?.ok)throw new Error(analytics.data?.error||"Falha ao consultar indicadores.");
+  const d=analytics.data,c=d.current||{},pulse=c.business_pulse||{},cart=pulse.carts||{},orders=pulse.orders||{};
+  setMetric("received",money(c.received_cents/100));message("paidCount",num(c.paid_count)+" vendas pagas");
+  setMetric("grossProfit",c.costed_paid_revenue_cents>0?money(c.gross_profit_cents/100):"Indisponível");
+  message("margin",c.gross_margin_percent===null?"Cadastre os custos para calcular a margem":("Margem sobre receita com custo conhecido"));
+  setMetric("operating",c.partial_operating_result_cents===null?"Indisponível":money(c.partial_operating_result_cents/100));
+  setMetric("pending",money(c.pending_cents/100));message("pendingCount",num(c.pending_count)+" vendas pendentes");
+  setMetric("ticket",money(c.average_paid_ticket_cents/100));setMetric("paidRate",Number(c.paid_rate_percent||0).toLocaleString("pt-BR")+"%");
+  const expenseRows=expenses.data?.expenses||[];const activeExpenses=expenseRows.filter(x=>x.status==="active");
+  const expenseTotal=activeExpenses.reduce((sum,x)=>sum+Number(x.amount_cents||0),0);
+  setMetric("expenses",money(Number(c.recorded_expenses_cents||0)/100));message("expenseCount",num(c.expense_count||0)+" lançamentos no período");
+  setMetric("marginBig",c.gross_margin_percent===null?"—":Number(c.gross_margin_percent).toLocaleString("pt-BR")+"%");
+  message("costCoverage",num(c.costed_sales_count)+" vendas com custo · "+num(c.sales_without_cost_count)+" sem custo");
+  setMetric("sessions",num(pulse.site_sessions));setMetric("events",num(pulse.site_events));
+  setMetric("carts",num(cart.total));message("cartBreakdown",num(cart.converted)+" convertidos · "+num(cart.abandoned)+" abandonados");
+  setMetric("orders",num(orders.total));message("orderBreakdown",num(orders.payment_statuses?.reduce((a,x)=>a+x.count,0)||0)+" com status financeiro");
+  const trend=(c.trend||[]).slice(-14).map(x=>({label:x.date.slice(5),value:x.received_cents/100}));
+  bars("trend",trend,"label","value",money);
+  bars("topProducts",(c.top_products||[]).slice(0,8).map(x=>({label:x.name,value:x.quantity,detail:x.gross_cents})), "label","value",v=>num(v)+" un.");
+  list("paymentStatus",(orders.payment_statuses||[]).map(x=>row(x.status,num(x.count)+" · "+money(x.amount_cents/100),x.status==="paid"?"good":x.status==="pending"?"warn":"bad")),"Nenhum pedido do site no período.");
+  const stockRows=stock.data?.stock||[],costRows=costs.data?.costs||[],kitRows=kits.data?.recipes||[];
+  list("integrity",[
+   row("Produtos com estoque",num(stockRows.length),stockRows.length?"good":"warn"),
+   row("Custos cadastrados",num(costRows.length),costRows.length?"good":"warn"),
+   row("Componentes de kits",num(kitRows.length),kitRows.length?"good":"warn"),
+   row("Despesas ativas",num(activeExpenses.length),activeExpenses.length?"good":"warn"),
+   row("Vendas sem custo conhecido",num(c.sales_without_cost_count),c.sales_without_cost_count?"warn":"good")
+  ]);
+  list("methods",(c.payment_methods||[]).map(x=>row(x.method,num(x.paid_count)+" pagas · "+money(x.received_cents/100))),"Nenhum pagamento registrado.");
+  list("eventsList",(pulse.events||[]).slice(0,8).map(x=>row(x.event_name,num(x.count)+" eventos · "+num(x.sessions)+" sessões")),"Nenhum evento registrado.");
+  const notices=[];
+  if(!c.paid_count)notices.push("Ainda não há vendas pagas registradas no Gestão.");
+  if(!costRows.length)notices.push("Sem custos cadastrados: lucro e margem não podem ser calculados.");
+  if(!stockRows.length)notices.push("Estoque administrativo ainda não foi inicializado.");
+  if(analytics.data.truncated)notices.push("A consulta atingiu o limite de amostragem; alguns indicadores podem estar incompletos.");
+  message("dataNotice",notices.length?notices.join(" "):"Dados consultados. Indicadores calculados com os registros disponíveis.");
+  message("updated","ATUALIZADO "+new Date().toLocaleTimeString("pt-BR"));
+  message("connection","CONECTADO · ADMINISTRADOR");
+ }catch(error){
+  console.error(error);message("connection","FALHA NA CONSULTA");message("dataNotice",error.message||"Não foi possível carregar os dados.");
+  if(/401|403|sessão|login/i.test(error.message||"")){await supabase.auth.signOut();showLogin("Sessão inválida ou sem permissão administrativa. Entre novamente.");}
+ }finally{$("refresh").disabled=false;$("retrySync").disabled=false}
+}
+function showLogin(msg){$("loginView").classList.remove("hidden");$("appView").classList.add("hidden");$("logout").classList.add("hidden");message("loginMessage",msg||"");message("connection","AGUARDANDO AUTENTICAÇÃO")}
+async function showApp(){const {data:{session}}=await supabase.auth.getSession();if(!session){showLogin("");return}$("loginView").classList.add("hidden");$("appView").classList.remove("hidden");$("logout").classList.remove("hidden");load()}
+$("loginForm").addEventListener("submit",async e=>{e.preventDefault();$("loginButton").disabled=true;message("loginMessage","Validando acesso...");try{const {error}=await supabase.auth.signInWithPassword({email:$("email").value.trim(),password:$("password").value});if(error)throw error;await showApp()}catch(error){message("loginMessage",error.message||"Não foi possível entrar.")}finally{$("loginButton").disabled=false}});
+$("logout").addEventListener("click",async()=>{await supabase.auth.signOut();showLogin("Sessão encerrada.")});
+$("refresh").addEventListener("click",load);$("period").addEventListener("change",load);
+$("retrySync").addEventListener("click",async()=>{if(!confirm("Reprocessar a sincronização de pedidos já pagos para o Lux-Gestão?"))return;$("retrySync").disabled=true;try{const {data,error}=await supabase.functions.invoke("management-sales",{body:{action:"website-sync-retry",limit:50}});if(error)throw error;alert("Verificados: "+data.scanned+" · Sincronizados: "+data.synced+" · Falhas: "+data.failed);await load()}catch(error){alert(error.message||"Falha ao reprocessar.")}finally{$("retrySync").disabled=false}});
+supabase.auth.onAuthStateChange((event)=>{if(event==="SIGNED_OUT")showLogin("Sessão encerrada.")});
+showApp();
+</script>
+</body>
+</html>
