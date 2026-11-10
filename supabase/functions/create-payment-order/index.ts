@@ -628,7 +628,6 @@ Deno.serve(async (req: Request) => {
     });
 
     const checkoutPayload = {
-      handle: INFINITEPAY_HANDLE,
       order_nsu: orderId,
       redirect_url: RETURN_URL + "?order=" + encodeURIComponent(orderId),
       webhook: {
