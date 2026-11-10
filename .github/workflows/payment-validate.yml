@@ -81,7 +81,7 @@ jobs:
           node <<'NODE'
           const fs = require("node:fs");
           const html = fs.readFileSync("pagamento-retorno.html", "utf8");
-          const scripts = [...html.matchAll(/<script\\b[^>]*>([\\s\\S]*?)<\\/script>/gi)];
+          const scripts = [...html.matchAll(/<script\b[^>]*>([\s\S]*?)<\/script>/gi)];
           if (!scripts.length) throw new Error("Nenhum script encontrado na página de retorno.");
           scripts.forEach((match, index) => {
             const path = "/tmp/pagamento-retorno-" + index + ".js";
