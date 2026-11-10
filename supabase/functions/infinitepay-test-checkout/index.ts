@@ -64,7 +64,6 @@ Deno.serve(async(req:Request)=>{
    if(insertError?.code==="23505") return reply({error:"Já existe um teste de pagamento pendente para esta conta administrativa."},409,origin);
    if(insertError) throw insertError;
    const payload={
-    handle:HANDLE,
     order_nsu:orderNsu,
     redirect_url:"https://luxuriosa.com.br/",
     webhook:{url:WEBHOOK,events:["paid","settled"]},
