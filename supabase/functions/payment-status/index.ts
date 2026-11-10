@@ -44,7 +44,7 @@ Deno.serve(async (req: Request) => {
     const captureMethod = clean(body?.capture_method, 30);
 
     const { data: order, error: orderError } = await admin.from("orders")
-      .select("id, order_number, payment_status, paid_at, dispatch_due_at, delivery_due_at, status, payment_provider, payment_expires_at, payment_amount_cents, payment_transaction_nsu, dispatch_sla_minutes, delivery_sla_minutes")
+      .select("id, order_number, payment_status, paid_at, dispatch_due_at, delivery_due_at, status, source, payment_provider, payment_expires_at, payment_amount_cents, payment_transaction_nsu, dispatch_sla_minutes, delivery_sla_minutes, management_sale_id, management_sales_sync_status, management_sales_sync_error")
       .eq("id", orderNsu)
       .eq("payment_provider", "infinitepay")
       .maybeSingle();
@@ -52,6 +52,23 @@ Deno.serve(async (req: Request) => {
     if (!order) return reply({ error: "Pedido não encontrado." }, 404, origin);
 
     let reconciliation = "not_attempted";
+    let salesSync: any = null;
+
+    // A successful payment must also exist in the management ledger. Retry the
+    // idempotent server-side synchronization whenever the customer returns or refreshes.
+    if (order.payment_status === "paid" && order.source === "website") {
+      const { data, error } = await admin.rpc("sync_online_order_to_management_sale", {
+        p_order_id: orderNsu
+      });
+      if (error) {
+        console.error("Website order sales synchronization retry failed.", error);
+        salesSync = { outcome: "error", synced: false };
+      } else {
+        salesSync = data;
+      }
+      reconciliation = salesSync?.synced === true ? "sale_synced" : "sale_sync_pending";
+    }
+
     // If the webhook already confirmed the payment but its email notification
     // failed, a later customer return/refresh can safely retry that notification.
     // sendOrderNotification is idempotent for sent/not-configured events.
@@ -93,7 +110,7 @@ Deno.serve(async (req: Request) => {
     }
 
     const { data: current, error: currentError } = await admin.from("orders")
-      .select("order_number, payment_status, paid_at, dispatch_due_at, delivery_due_at, status")
+      .select("order_number, payment_status, paid_at, dispatch_due_at, delivery_due_at, status, management_sale_id, management_sales_sync_status, management_sales_sync_error")
       .eq("id", orderNsu)
       .eq("payment_provider", "infinitepay")
       .single();
@@ -107,6 +124,9 @@ Deno.serve(async (req: Request) => {
       dispatch_due_at: current.dispatch_due_at,
       delivery_due_at: current.delivery_due_at,
       fulfillment_status: current.status,
+      management_sale_id: current.management_sale_id,
+      management_sales_sync_status: current.management_sales_sync_status,
+      management_sales_sync_error: current.management_sales_sync_error,
       reconciliation
     }, 200, origin);
   } catch (error) {
