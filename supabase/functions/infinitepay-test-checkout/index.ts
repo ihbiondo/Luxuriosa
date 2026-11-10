@@ -72,7 +72,7 @@ Deno.serve(async(req:Request)=>{
    const raw=await response.text(); let result:any={};
    try{result=raw?JSON.parse(raw):{};}catch{}
    const link=clean(result?.url??result?.data?.url,1000);
-   let host="";try{host=new URL(link).hostname;}catch{}
+   let host="";try{host=new globalThis.URL(link).hostname;}catch{}
    if(!response.ok||!link.startsWith("https://")||!["checkout.infinitepay.io","checkout.infinitepay.com.br"].includes(host)){
     await admin.from("infinitepay_test_payments").update({status:"failed",updated_at:new Date().toISOString()}).eq("order_nsu",orderNsu);
     return reply({error:"A InfinitePay não gerou um link válido para o teste. Nenhuma venda foi criada."},502,origin);
