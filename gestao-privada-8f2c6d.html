@@ -710,7 +710,7 @@ $("createPaymentTest").addEventListener("click",async()=>{
   const {data,error}=await supabase.functions.invoke("infinitepay-test-checkout",{body:{action:"create"}});
   if(error)throw error;if(!data?.ok||!data?.checkout_url)throw new Error(data?.error||"Não foi possível gerar o link de teste.");
   paymentTestOrderNsu=data.order_nsu;
-  const url=new URL(data.checkout_url);
+  const url=new globalThis.URL(data.checkout_url);
   if(url.protocol!=="https:"||!["checkout.infinitepay.io","checkout.infinitepay.com.br"].includes(url.hostname))throw new Error("O servidor retornou um endereço de pagamento inválido.");
   open.href=url.href;open.hidden=false;check.disabled=false;
   paymentTestStatus.textContent=(data.reused?"Reutilizando cobrança pendente":"Cobrança criada")+
