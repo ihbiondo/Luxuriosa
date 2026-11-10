@@ -100,11 +100,11 @@ jobs:
           const fs = require("node:fs");
           for (const file of ["index.html", "loja.html"]) {
             const html = fs.readFileSync(file, "utf8");
-            const emailField = /<input\\b(?=[^>]*\\bid=["']customerEmail["'])(?=[^>]*\\btype=["']email["'])(?=[^>]*\\brequired\\b)[^>]*>/i;
+            const emailField = /<input\b(?=[^>]*\bid=["']customerEmail["'])(?=[^>]*\btype=["']email["'])(?=[^>]*\brequired\b)[^>]*>/i;
             if (!emailField.test(html)) throw new Error(file + " precisa conter o campo de e-mail obrigatório do checkout.");
           }
           const customerScript = fs.readFileSync("js/clientes.js", "utf8");
-          if (!/var required = exigirEndereco[\\s\\S]*?["']customerEmail["']/.test(customerScript)) {
+          if (!/var required = exigirEndereco[\s\\S]*?["']customerEmail["']/.test(customerScript)) {
             throw new Error("A validação do checkout precisa exigir e-mail.");
           }
           console.log("Campos de e-mail do checkout validados nas duas páginas.");
