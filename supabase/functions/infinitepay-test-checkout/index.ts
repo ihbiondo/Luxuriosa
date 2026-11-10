@@ -13,7 +13,7 @@ function reply(body: unknown, status=200, origin="") {
   return new Response(status===204?null:JSON.stringify(body), {status,headers:{
     "content-type":"application/json; charset=utf-8",
     "access-control-allow-origin":ORIGINS.has(origin)?origin:"https://luxuriosa.com.br",
-    "access-control-allow-headers":"authorization, apikey, content-type",
+    "access-control-allow-headers":"authorization, x-client-info, apikey, content-type, x-retry-count, traceparent, tracestate, baggage",
     "access-control-allow-methods":"POST, OPTIONS","vary":"Origin","cache-control":"no-store"
   }});
 }
