@@ -7,6 +7,7 @@ const status = fs.readFileSync("supabase/functions/payment-status/index.ts", "ut
 const migration = fs.readFileSync("supabase/migrations/20261110120000_atomic_infinitepay_payment_confirmation.sql", "utf8");
 const page = fs.readFileSync("pagamento-retorno.html", "utf8");
 const createOrder = fs.readFileSync("supabase/functions/create-payment-order/index.ts", "utf8");
+const testCheckout = fs.readFileSync("supabase/functions/infinitepay-test-checkout/index.ts", "utf8");
 
 assert.match(shared, /api\.checkout\.infinitepay\.io\/payment_check/);
 assert.match(shared, /X-Api-Key/);
@@ -30,6 +31,9 @@ assert.match(migration, /update public\.cart_sessions/i);
 assert.match(migration, /update public\.payment_provider_events/i);
 assert.match(migration, /revoke all on function/i);
 assert.match(migration, /grant execute on function[\s\S]*to service_role/i);
+assert.match(testCheckout, /access-control-allow-headers[^\n]*x-client-info/i);
+assert.match(testCheckout, /req\.method\s*===\s*"OPTIONS"/);
+assert.match(testCheckout, /access-control-allow-origin/);
 assert.match(createOrder, /checkout\.infinitepay\.io\/links/);
 assert.match(createOrder, /webhook:\s*\{\s*url:\s*WEBHOOK_URL/);
 assert.match(createOrder, /events:\s*\["paid",\s*"settled",\s*"refunded",\s*"canceled",\s*"payment_failed"\]/);
