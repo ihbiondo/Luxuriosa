@@ -79,7 +79,14 @@
       var data=await response.json().catch(function(){return{}});
       if(!response.ok||!data.ok)throw new Error(data.error||"Não foi possível consultar o pagamento.");
       if(data.payment_status==="paid"){
-        show(data,"Pagamento confirmado!","Recebemos a confirmação do pagamento. Seu pedido já pode seguir para a fila de expedição.","✓");
+        if(data.management_sales_sync_status==="error"){
+          show(data,"Pagamento confirmado; conferência interna","O pagamento foi aprovado. Houve uma falha no registro interno da venda, e a equipe da Luxuriosa fará a conferência. Não realize outro pagamento.","!");
+          $("note").textContent="Seu pagamento está confirmado pela InfinitePay. A divergência está apenas na sincronização administrativa; o pedido não será cobrado novamente.";
+        }else if(data.management_sales_sync_status!=="synced"){
+          show(data,"Pagamento confirmado","Recebemos a confirmação do pagamento. Estamos finalizando a atualização interna do pedido. Não é necessário pagar novamente.","✓");
+        }else{
+          show(data,"Pagamento confirmado!","Pagamento conciliado e pedido registrado. Seu pedido já pode seguir para a fila de expedição.","✓");
+        }
       }else if(data.payment_status==="pending"){
         show(data,"Aguardando confirmação","Ainda não recebemos a confirmação da InfinitePay. Caso você já tenha pago, aguarde alguns instantes e consulte novamente.","…");
       }else if(data.payment_status==="review_required"){
