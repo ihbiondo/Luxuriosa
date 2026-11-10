@@ -119,10 +119,14 @@ async function load(){
   bars("topProducts",(c.top_products||[]).slice(0,8).map(x=>({label:x.name,value:x.quantity,detail:x.gross_cents})), "label","value",v=>num(v)+" un.");
   list("paymentStatus",(orders.payment_statuses||[]).map(x=>row(x.status,num(x.count)+" · "+money(x.amount_cents/100),x.status==="paid"?"good":x.status==="pending"?"warn":"bad")),"Nenhum pedido do site no período.");
   const stockRows=stock.data?.stock||[],costRows=costs.data?.costs||[],kitRows=kits.data?.recipes||[];
+  const stockControlCount=stockRows.filter(x=>x.stock_control_enabled===true).length;
+  const stockNeedsPhysicalCount=stockRows.filter(x=>x.stock_control_enabled!==true).length;
   list("integrity",[
-   row("Produtos com estoque",num(stockRows.length),stockRows.length?"good":"warn"),
-   row("Custos cadastrados",num(costRows.length),costRows.length?"good":"warn"),
-   row("Componentes de kits",num(kitRows.length),kitRows.length?"good":"warn"),
+   row("Produtos cadastrados no estoque",num(stockRows.length),stockRows.length?"good":"warn"),
+   row("Controle ativo após conferência",num(stockControlCount),stockControlCount===stockRows.length&&stockRows.length?"good":"warn"),
+   row("Aguardando contagem física",num(stockNeedsPhysicalCount),stockNeedsPhysicalCount?"warn":"good"),
+   row("Produtos com custo cadastrado",num(costRows.length),costRows.length?"good":"warn"),
+   row("Componentes de kits configurados",num(kitRows.length),kitRows.length?"good":"warn"),
    row("Despesas ativas",num(activeExpenses.length),activeExpenses.length?"good":"warn"),
    row("Vendas sem custo conhecido",num(c.sales_without_cost_count),c.sales_without_cost_count?"warn":"good")
   ]);
@@ -132,6 +136,9 @@ async function load(){
   if(!c.paid_count)notices.push("Ainda não há vendas pagas registradas no Gestão.");
   if(!costRows.length)notices.push("Sem custos cadastrados: lucro e margem não podem ser calculados.");
   if(!stockRows.length)notices.push("Estoque administrativo ainda não foi inicializado.");
+  else if(stockNeedsPhysicalCount>0)notices.push(stockNeedsPhysicalCount+" produtos aguardam contagem física. Os saldos cadastrados não devem ser tratados como estoque confirmado.");
+  if(!kitRows.length)notices.push("Composições dos kits ainda não foram cadastradas; o consumo automático de componentes depende dessa configuração.");
+  if(!activeExpenses.length)notices.push("Nenhuma despesa ativa foi lançada no período; o resultado operacional ainda não representa todos os custos do negócio.");
   if(analytics.data.truncated)notices.push("A consulta atingiu o limite de amostragem; alguns indicadores podem estar incompletos.");
   message("dataNotice",notices.length?notices.join(" "):"Dados consultados. Indicadores calculados com os registros disponíveis.");
   message("updated","ATUALIZADO "+new Date().toLocaleTimeString("pt-BR"));
