@@ -113,7 +113,7 @@ Deno.serve(async (req: Request) => {
     }
 
     const { data: current, error: currentError } = await admin.from("orders")
-      .select("order_number, payment_status, paid_at, dispatch_due_at, delivery_due_at, status, management_sale_id, management_sales_sync_status, management_sales_sync_error")
+      .select("order_number, payment_status, paid_at, dispatch_due_at, delivery_due_at, status, management_sales_sync_status")
       .eq("id", orderNsu)
       .eq("payment_provider", "infinitepay")
       .single();
