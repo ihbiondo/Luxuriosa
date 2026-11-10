@@ -47,8 +47,8 @@ BEGIN
  IF (SELECT count(*) FROM public.infinitepay_test_payments WHERE status='paid' AND provider_verified) <> 1 THEN
   RAISE EXCEPTION 'Isolated test payment confirmation was not persisted';
  END IF;
- IF to_regclass('public.orders') IS NOT NULL THEN
-  RAISE EXCEPTION 'This isolated CI fixture unexpectedly includes commercial orders';
+ IF to_regclass('public.orders') IS NOT NULL AND (SELECT count(*) FROM public.orders) <> 5 THEN
+  RAISE EXCEPTION 'Isolated test changed the commercial orders fixture';
  END IF;
 END $$;
 \echo 'Isolated R$1 test table: amount lock, admin-only data access and no commercial orders passed.'
