@@ -68,7 +68,18 @@ Deno.serve(async (req: Request) => {
     const transactionNsu = clean(payload?.transaction_nsu, 160);
     const invoiceSlug = clean(payload?.invoice_slug || payload?.slug, 200);
     const receipt = receiptUrl(payload?.receipt_url);
-    const eventName = clean(payload?.event || payload?.type || payload?.status, 50).toLowerCase();
+    const eventName = clean(
+      payload?.event || payload?.type || payload?.status || payload?.event_type || payload?.event_name,
+      50
+    ).toLowerCase();
+    const payloadKeys = Object.keys(payload && typeof payload === "object" ? payload : {}).slice(0, 40).sort();
+    console.info("infinitepay-webhook.received", {
+      eventName: eventName || null,
+      payloadKeys,
+      hasOrderNsu: validUuid(orderNsu),
+      hasTransactionNsu: !!transactionNsu,
+      hasInvoiceSlug: !!invoiceSlug
+    });
 
     if (!validUuid(orderNsu)) {
       return response({ ok: true, ignored: true });
@@ -82,6 +93,11 @@ Deno.serve(async (req: Request) => {
     else if (eventName === "paid" || eventName === "settled" || (!eventName && transactionNsu && invoiceSlug)) {
       eventType = "paid";
     } else {
+      console.warn("infinitepay-webhook.unclassified-event", {
+        eventName: eventName || null,
+        payloadKeys,
+        hasOrderNsu: true
+      });
       return response({ ok: true, ignored: true });
     }
 
