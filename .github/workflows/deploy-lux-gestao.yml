@@ -1,0 +1,43 @@
+name: Deploy Lux-Gestão Worker
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - "cloudflare/lux-gestao-worker.mjs"
+      - "wrangler.jsonc"
+      - ".github/workflows/deploy-lux-gestao.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy-lux-gestao-worker
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: Publish existing Worker
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install Wrangler
+        run: npm install --global wrangler@4
+
+      - name: Deploy lux-gestao
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          test -n "$CLOUDFLARE_API_TOKEN" || (echo "::error::Missing CLOUDFLARE_API_TOKEN repository secret" && exit 1)
+          test -n "$CLOUDFLARE_ACCOUNT_ID" || (echo "::error::Missing CLOUDFLARE_ACCOUNT_ID repository secret" && exit 1)
+          wrangler deploy --config wrangler.jsonc
