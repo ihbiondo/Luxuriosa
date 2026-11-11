@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow,noarchive">
+  <meta name="theme-color" content="#0B0B0B">
+  <title>Acompanhar pedido | Luxuriosa</title>
+  <link rel="icon" href="/img/site/favicon.ico" sizes="any">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Playfair+Display:wght@500;600&display=swap" rel="stylesheet">
+  <style>
+    :root{color-scheme:dark;--bg:#0b0b0b;--panel:#151214;--line:#392b31;--wine:#8b1e3f;--gold:#d4af7c;--pink:#f7d7d9;--muted:#b7aeb2;--ok:#8fc7a0;--warn:#e5bf75}
+    *{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top,#24121a 0,#0b0b0b 55%);color:#f8f3f4;font:14px Montserrat,Arial,sans-serif;min-height:100vh}
+    a{color:var(--gold)}.wrap{width:min(920px,calc(100% - 32px));margin:auto;padding:28px 0 60px}
+    header{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-bottom:22px;border-bottom:1px solid var(--line)}
+    .brand{font:600 26px 'Playfair Display',serif;letter-spacing:.08em;color:var(--gold)}.brand small{display:block;font:500 9px Montserrat,sans-serif;letter-spacing:.28em;color:var(--pink);margin-top:3px}
+    .back{font-size:12px;text-decoration:none}.intro{padding:34px 0 20px}.eyebrow{color:var(--gold);font-size:10px;letter-spacing:.2em;text-transform:uppercase}
+    h1{font:500 clamp(30px,5vw,42px) 'Playfair Display',serif;margin:9px 0}.intro p{color:var(--muted);line-height:1.7;max-width:650px}
+    .toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:18px 0}.muted{color:var(--muted)}
+    button,.button{border:1px solid #72513f;background:#21171b;color:var(--gold);border-radius:8px;padding:11px 15px;font:600 11px Montserrat,sans-serif;letter-spacing:.06em;text-decoration:none;cursor:pointer}
+    button:disabled{opacity:.5;cursor:wait}.message{border:1px solid var(--line);background:#171316;padding:18px;border-radius:12px;color:var(--muted);line-height:1.7}
+    .order{border:1px solid var(--line);background:linear-gradient(145deg,#191417,#100e0f);border-radius:14px;padding:20px;margin:14px 0}
+    .order-head{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;flex-wrap:wrap}.order-number{font:500 22px 'Playfair Display',serif;color:var(--gold)}
+    .status{border:1px solid #72513f;border-radius:999px;padding:7px 11px;color:var(--pink);font-size:10px;font-weight:700;letter-spacing:.04em}
+    .meta{display:flex;flex-wrap:wrap;gap:8px 22px;color:var(--muted);font-size:12px;margin:14px 0}
+    .items{border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:12px 0;margin:12px 0;color:#e9dfe2}
+    .items div{display:flex;justify-content:space-between;gap:12px;padding:5px 0}.total{display:flex;justify-content:space-between;font-weight:700;color:var(--gold)}
+    .steps{display:grid;grid-template-columns:repeat(5,1fr);gap:5px;margin:20px 0 8px}.step{height:5px;border-radius:9px;background:#44363b}.step.done{background:var(--gold)}
+    .step-labels{display:grid;grid-template-columns:repeat(5,1fr);gap:5px}.step-labels span{font-size:9px;line-height:1.4;color:#857a7f;text-align:center}.step-labels span.done{color:var(--pink)}
+    .payment-note{font-size:11px;line-height:1.6;color:var(--muted);margin-top:12px}
+    .empty{padding:28px;text-align:center}.empty strong{display:block;color:var(--pink);margin-bottom:8px}
+    footer{border-top:1px solid var(--line);padding-top:18px;margin-top:34px;color:#8d8187;font-size:10px;text-align:center}
+    @media(max-width:560px){.wrap{width:min(100% - 24px,920px);padding-top:18px}.brand{font-size:22px}.order{padding:15px}.steps{gap:3px}.step-labels span{font-size:8px}.toolbar{align-items:flex-start;flex-direction:column}}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <a href="/" aria-label="Luxuriosa - início" style="text-decoration:none"><span class="brand">LUXURIOSA<small>LINGERIE &amp; INTIMIDADE</small></span></a>
+      <a class="back" href="/login.html">Minha conta</a>
+    </header>
+    <main>
+      <section class="intro">
+        <div class="eyebrow">Área do cliente</div>
+        <h1>Acompanhe seu pedido.</h1>
+        <p>Consulte o pagamento e cada etapa da preparação e entrega. Suas informações são privadas: você só consegue visualizar pedidos vinculados à sua própria conta.</p>
+      </section>
+      <div class="toolbar"><span id="lastUpdated" class="muted">Consultando seus pedidos…</span><button id="refresh" type="button">ATUALIZAR</button></div>
+      <section id="orders" aria-live="polite"><div class="message">Carregando seus pedidos com segurança…</div></section>
+    </main>
+    <footer>Luxuriosa · Sinta-se ainda mais você. · Atendimento discreto.</footer>
+  </div>
+  <script type="module">
+    import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+    const supabase = createClient(
+      "https://byiykxfugvxuowueuxca.supabase.co",
+      "sb_publishable_LaMbeWQ1PNANEQ85SD_35Q_wDzswy8y",
+      { auth: { autoRefreshToken: true, persistSession: true, detectSessionInUrl: true } }
+    );
+    const $ = (id) => document.getElementById(id);
+    const money = new Intl.NumberFormat("pt-BR", { style:"currency", currency:"BRL" });
+    const stages = [
+      { key:"payment", label:"Aguardando pagamento" },
+      { key:"confirmed", label:"Pagamento aprovado" },
+      { key:"processing", label:"Em expedição" },
+      { key:"out_for_delivery", label:"Em rota de entrega" },
+      { key:"delivered", label:"Pedido entregue" }
+    ];
+    const paymentLabels = { pending:"Aguardando pagamento", paid:"Pagamento aprovado", review_required:"Pagamento em conferência", cancelled:"Pagamento cancelado", failed:"Pagamento não concluído" };
+    const fulfillmentLabels = { awaiting_confirmation:"Aguardando pagamento", confirmed:"Pagamento aprovado", processing:"Em expedição", out_for_delivery:"Em rota de entrega", delivered:"Pedido entregue", cancelled:"Pedido cancelado" };
+    function el(tag, className, text){const node=document.createElement(tag);if(className)node.className=className;if(text!==undefined)node.textContent=text;return node;}
+    function stageIndex(order){
+      if(order.payment_status!=="paid") return order.payment_status==="review_required"?0:0;
+      return Math.max(1,["confirmed","processing","out_for_delivery","delivered"].indexOf(order.status)+1);
+    }
+    function renderOrder(order, items){
+      const card=el("article","order"), head=el("div","order-head"), title=el("div","order-number","Pedido #"+order.order_number);
+      const statusText=order.payment_status==="review_required"?"Pagamento em conferência":(paymentLabels[order.payment_status]&&order.payment_status!=="paid"?paymentLabels[order.payment_status]:(fulfillmentLabels[order.status]||"Pedido em atualização"));
+      const pill=el("span","status",statusText);head.append(title,pill);card.append(head);
+      const meta=el("div","meta");
+      meta.append(el("span","", "Realizado em "+new Date(order.created_at).toLocaleDateString("pt-BR")));
+      meta.append(el("span","", "Pagamento: "+(paymentLabels[order.payment_status]||"Em atualização")));
+      if(order.paid_at)meta.append(el("span","", "Pago em "+new Date(order.paid_at).toLocaleString("pt-BR")));
+      card.append(meta);
+      const itemBox=el("div","items");
+      (items||[]).filter(x=>x.order_id===order.id).forEach(item=>itemBox.append(el("div","",String(item.quantity)+"× "+item.product_name)));
+      card.append(itemBox);
+      const total=el("div","total");total.append(el("span","","Total do pedido"),el("span","",money.format(Number(order.total_amount)||0)));card.append(total);
+      if(order.payment_status==="review_required"){
+        card.append(el("p","payment-note","Estamos conferindo a confirmação do pagamento. A expedição ficará bloqueada até a validação."));
+      } else if(order.payment_status!=="paid"){
+        card.append(el("p","payment-note","O pagamento é realizado no ambiente seguro da InfinitePay. A preparação começa após a confirmação."));
+      }
+      if(order.payment_status==="paid" && order.status!=="cancelled"){
+        const index=stageIndex(order), bars=el("div","steps"), labels=el("div","step-labels");
+        stages.forEach((stage,i)=>{bars.append(el("span","step"+(i<=index?" done":"")));labels.append(el("span",i<=index?"done":"",stage.label));});
+        card.append(bars,labels);
+      }
+      if(order.status==="cancelled" || order.payment_status==="cancelled")card.append(el("p","payment-note","Este pedido foi cancelado. Se houve cobrança, entre em contato para conferência."));
+      return card;
+    }
+    async function load(){
+      const button=$("refresh");button.disabled=true;
+      try{
+        const {data:{user},error:authError}=await supabase.auth.getUser();
+        if(authError)throw authError;
+        if(!user){
+          $("orders").replaceChildren();
+          const box=el("div","message empty");box.append(el("strong","","Entre na sua conta para acompanhar seus pedidos."),el("p","","Por segurança, o histórico não é consultado por número de pedido ou link público."),Object.assign(el("a","button","ENTRAR NA MINHA CONTA"),{href:"/login.html?redirect=acompanhar-pedido/"}));
+          $("orders").append(box);$("lastUpdated").textContent="Acesso restrito a clientes autenticados.";return;
+        }
+        const {data:orders,error}=await supabase.from("orders")
+          .select("id,order_number,status,payment_status,subtotal,shipping_amount,total_amount,created_at,paid_at,updated_at")
+          .eq("customer_id",user.id).order("created_at",{ascending:false}).limit(30);
+        if(error)throw error;
+        const ids=(orders||[]).map(o=>o.id);let items=[];
+        if(ids.length){const result=await supabase.from("order_items").select("order_id,product_name,quantity").in("order_id",ids);if(result.error)throw result.error;items=result.data||[];}
+        const container=$("orders");container.replaceChildren();
+        if(!orders||!orders.length){const empty=el("div","message empty");empty.append(el("strong","","Você ainda não tem pedidos."),el("p","","Quando concluir uma compra com sua conta Luxuriosa, ela aparecerá aqui."),Object.assign(el("a","button","IR PARA A LOJA"),{href:"/loja.html"}));container.append(empty);}
+        else orders.forEach(order=>container.append(renderOrder(order,items)));
+        $("lastUpdated").textContent="Atualizado às "+new Date().toLocaleTimeString("pt-BR");
+      }catch(error){console.error("Falha ao carregar acompanhamento:",error);$("orders").replaceChildren(el("div","message","Não foi possível consultar seus pedidos agora. Atualize a página ou entre novamente na sua conta."));$("lastUpdated").textContent="Consulta indisponível";}
+      finally{button.disabled=false;}
+    }
+    $("refresh").addEventListener("click",load);
+    supabase.auth.onAuthStateChange((event)=>{if(event==="SIGNED_IN"||event==="TOKEN_REFRESHED")load();});
+    load();
+    window.setInterval(()=>{if(document.visibilityState==="visible")load();},30000);
+  </script>
+</body>
+</html>
