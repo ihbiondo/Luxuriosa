@@ -142,36 +142,44 @@ Deno.serve(async (req: Request) => {
         return response({ error: "Pedido ou status inválido." }, 400, origin);
       }
       const { data: current, error: currentError } = await admin.from("orders")
-        .select("id, order_number, status, cart_session_id, payment_status").eq("id", orderId).maybeSingle();
+        .select("id, order_number, status, cart_session_id, payment_status, dispatch_started_at, dispatched_at, delivered_at").eq("id", orderId).maybeSingle();
       if (currentError) throw currentError;
       if (!current) return response({ error: "Pedido não encontrado." }, 404, origin);
-      const transitions: Record<string, string[]> = {
-        awaiting_confirmation: ["confirmed", "cancelled"],
-        confirmed: ["processing", "cancelled"],
-        processing: ["out_for_delivery", "cancelled"],
-        out_for_delivery: ["delivered"],
-        delivered: [],
-        cancelled: []
-      };
-      if (!transitions[current.status]?.includes(nextStatus)) {
-        return response({ error: "Transição de status não permitida. Atualize a partir da etapa atual do pedido." }, 409, origin);
+      const paidStatuses = ["confirmed", "processing", "out_for_delivery", "delivered"];
+      if (current.status === "cancelled") {
+        return response({ error: "Pedido cancelado não pode ser reaberto por este painel." }, 409, origin);
       }
-      if (["confirmed", "processing", "out_for_delivery", "delivered"].includes(nextStatus) &&
-          current.payment_status !== "paid") {
-        return response({ error: "A expedição só pode avançar depois que a InfinitePay confirmar o pagamento." }, 409, origin);
+      if (nextStatus === "cancelled") {
+        if (current.payment_status === "paid") {
+          return response({ error: "O pagamento já foi aprovado. Faça a conferência e o estorno na InfinitePay antes de encerrar este pedido." }, 409, origin);
+        }
+        if (current.payment_status === "review_required") {
+          return response({ error: "Este pagamento está em conferência. Resolva a conciliação antes de cancelar o pedido." }, 409, origin);
+        }
+      } else if (!paidStatuses.includes(nextStatus) || current.payment_status !== "paid") {
+        return response({ error: "A etapa de expedição só pode ser editada depois que a InfinitePay confirmar o pagamento." }, 409, origin);
       }
-      if (nextStatus === "cancelled" && current.payment_status === "paid") {
-        return response({ error: "O pagamento já foi aprovado. Faça a conferência e o estorno na InfinitePay antes de encerrar este pedido." }, 409, origin);
-      }
-      if (current.payment_status === "review_required" && nextStatus === "cancelled") {
-        return response({ error: "Este pagamento está em conferência. Resolva a conciliação antes de cancelar o pedido." }, 409, origin);
+      if (nextStatus === current.status) {
+        return response({ ok: true, order: current, previous_status: current.status }, 200, origin);
       }
       const now = new Date().toISOString();
       const update: Record<string, unknown> = { status: nextStatus, updated_at: now };
-      if (nextStatus === "confirmed" && current.status !== "confirmed") update.confirmed_at = now;
-      if (current.payment_status === "paid" && nextStatus === "processing") update.dispatch_started_at = now;
-      if (current.payment_status === "paid" && nextStatus === "out_for_delivery") update.dispatched_at = now;
-      if (current.payment_status === "paid" && nextStatus === "delivered") update.delivered_at = now;
+      if (nextStatus === "confirmed") {
+        update.confirmed_at = now;
+        update.dispatch_started_at = null;
+        update.dispatched_at = null;
+        update.delivered_at = null;
+      }
+      if (nextStatus === "processing") {
+        update.dispatch_started_at = now;
+        update.dispatched_at = null;
+        update.delivered_at = null;
+      }
+      if (nextStatus === "out_for_delivery") {
+        update.dispatched_at = now;
+        update.delivered_at = null;
+      }
+      if (nextStatus === "delivered") update.delivered_at = now;
       const { data: updated, error: updateError } = await admin.from("orders")
         .update(update).eq("id", orderId).eq("status", current.status)
         .select("id, order_number, status, updated_at, confirmed_at").maybeSingle();
