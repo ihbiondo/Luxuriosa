@@ -277,7 +277,10 @@ async function load(){
    row("Produtos com custo cadastrado",num(costRows.length),costRows.length?"good":"warn"),
    row("Componentes de kits configurados",num(kitRows.length),kitRows.length?"good":"warn"),
    row("Despesas ativas",num(activeExpenses.length),activeExpenses.length?"good":"warn"),
-   row("Vendas sem custo conhecido",num(c.sales_without_cost_count),c.sales_without_cost_count?"warn":"good")
+   row("Vendas sem custo conhecido",num(c.sales_without_cost_count),c.sales_without_cost_count?"warn":"good"),
+   row("Eventos de pagamento recebidos",num(pulse.payment_events?.total||0),Number(pulse.payment_events?.total||0)>0?"good":"warn"),
+   row("Eventos de pagamento verificados",num(pulse.payment_events?.verified||0),Number(pulse.payment_events?.verified||0)>0?"good":"warn"),
+   row("Eventos com erro de processamento",num(pulse.payment_events?.failed||0),Number(pulse.payment_events?.failed||0)>0?"bad":"good")
   ]);
   list("methods",(c.payment_methods||[]).map(x=>row(x.method,num(x.paid_count)+" pagas · "+money(x.received_cents/100))),"Nenhum pagamento registrado.");
   list("eventsList",(pulse.events||[]).slice(0,8).map(x=>row(x.event_name,num(x.count)+" eventos · "+num(x.sessions)+" sessões")),"Nenhum evento registrado.");
@@ -290,6 +293,8 @@ async function load(){
   }
   const notices=[];
   if(!c.paid_count)notices.push("Ainda não há vendas pagas registradas no Gestão.");
+  if(Number(orders.total||0)>0 && !Number(pulse.payment_events?.total||0))notices.push("Há pedidos online, mas nenhum evento de webhook foi registrado no período. A confirmação automática de pagamentos ainda precisa de validação real.");
+  if(Number(pulse.payment_events?.failed||0)>0)notices.push(Number(pulse.payment_events.failed)+" eventos de pagamento apresentam erro de processamento e precisam de conferência.");
   if(!costRows.length)notices.push("Sem custos cadastrados: lucro e margem não podem ser calculados.");
   if(!stockRows.length)notices.push("Estoque administrativo ainda não foi inicializado.");
   else if(stockNeedsPhysicalCount>0)notices.push(stockNeedsPhysicalCount+" produtos aguardam contagem física. Os saldos cadastrados não devem ser tratados como estoque confirmado.");
