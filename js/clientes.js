@@ -562,7 +562,7 @@
     if (!validarDados({ exigirEndereco: true })) return;
 
     var cidadePagamento = String(dadosAtuais.address.city || "").normalize("NFD")
-      .replace(/[\\u0300-\\u036f]/g, "").trim().toLowerCase();
+      .replace(/[\u0300-\u036f]/g, "").trim().toLowerCase();
     var estadoPagamento = String(dadosAtuais.address.state || "").trim().toUpperCase();
     if (cidadePagamento === "bauru" && estadoPagamento === "SP" && integridade.subtotal < 50) {
       avisar("Para pagamento automático com Pix ou cartão em Bauru, o subtotal mínimo de produtos é R$ 50,00. O frete grátis por incluir kit continua válido, mas não elimina o mínimo. Abaixo desse valor, revise o carrinho ou encaminhe o pedido pelo WhatsApp para consultar as condições.", "error");
