@@ -274,7 +274,7 @@
       var consentOverlay = $("lux-cookie-overlay");
       if (document.body.classList.contains("lux-consent-open") ||
           (consentOverlay && consentOverlay.classList.contains("open"))) {
-        document.addEventListener("lux:consent-updated", function () {
+        window.addEventListener("lux:consent-updated", function () {
           timer = window.setTimeout(abrir, 5000);
         }, { once: true });
         return;
