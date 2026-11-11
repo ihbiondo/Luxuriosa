@@ -111,7 +111,7 @@
       const next=transitions[order.status]||[];
       return next.filter(status=>{
         if(["confirmed","processing","out_for_delivery","delivered"].includes(status)&&order.payment_status!=="paid")return false;
-        if(status==="cancelled"&&order.payment_status==="review_required")return false;
+        if(status==="cancelled"&&(order.payment_status==="review_required"||order.payment_status==="paid"))return false;
         return true;
       });
     }
