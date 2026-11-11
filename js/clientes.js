@@ -205,9 +205,14 @@
       var api = window.LuxuriosaCarrinho;
       var items = api && typeof api.obterItens === "function" ? api.obterItens() : [];
       var temKit = pedidoContemKit(items);
-      aviso.textContent = temKit
+      var avisoFrete = temKit
         ? "Entrega em Bauru-SP: seu pedido inclui um kit promocional e tem frete grátis. Os demais pedidos têm frete de R$ 15,00."
         : "Entrega em Bauru-SP: frete fixo de R$ 15,00. Pedidos que incluam pelo menos um kit promocional têm frete grátis.";
+      var avisoMinimo = " Para pagamento automático pelo site com Pix ou cartão, o subtotal mínimo de produtos é R$ 50,00, inclusive quando há kit no pedido.";
+      if (subtotal > 0 && subtotal < 50) {
+        avisoMinimo += " Faltam " + formatarPreco(50 - subtotal) + " em produtos para atingir o mínimo.";
+      }
+      aviso.textContent = avisoFrete + avisoMinimo;
       return;
     }
 
@@ -555,6 +560,14 @@
       return;
     }
     if (!validarDados({ exigirEndereco: true })) return;
+
+    var cidadePagamento = String(dadosAtuais.address.city || "").normalize("NFD")
+      .replace(/[\\u0300-\\u036f]/g, "").trim().toLowerCase();
+    var estadoPagamento = String(dadosAtuais.address.state || "").trim().toUpperCase();
+    if (cidadePagamento === "bauru" && estadoPagamento === "SP" && integridade.subtotal < 50) {
+      avisar("Para pagamento automático com Pix ou cartão em Bauru, o subtotal mínimo de produtos é R$ 50,00. O frete grátis por incluir kit continua válido, mas não elimina o mínimo. Abaixo desse valor, revise o carrinho ou encaminhe o pedido pelo WhatsApp para consultar as condições.", "error");
+      return;
+    }
 
     var button = $("customerPaymentButton");
     if (button) {
