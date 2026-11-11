@@ -56,6 +56,17 @@ footer{display:flex;justify-content:space-between;gap:10px;border-top:1px solid 
 <div class="metric"><div class="label">Carrinhos</div><strong id="carts">—</strong><small id="cartBreakdown">Aguardando dados</small></div>
 <div class="metric"><div class="label">Pedidos do site</div><strong id="orders">—</strong><small id="orderBreakdown">Aguardando dados</small></div>
 </div>
+<div class="section-title"><div><h2>Inteligência de clientes</h2><p>Preferências declaradas, interesse demonstrado e compras confirmadas no período.</p></div><span class="pill" id="customerPeriod">AGUARDANDO DADOS</span></div>
+<div class="grid">
+<div class="metric"><div class="label">Perfis cadastrados</div><strong id="customersRegistered">—</strong><small>Total de contas registradas</small></div>
+<div class="metric"><div class="label">Perfis aptos à personalização</div><strong id="customersEligible">—</strong><small id="customersEligibleNote">Exige autorização atual</small></div>
+<div class="metric"><div class="label">Clientes com interesse observado</div><strong id="customersTracked">—</strong><small>Visualizações ou adições ao carrinho</small></div>
+<div class="metric"><div class="label">Clientes com compra paga</div><strong id="customersPurchased">—</strong><small id="customersPaidNote">Somente pedidos pagos vinculados à conta</small></div>
+</div>
+<div class="cols">
+<section class="panel"><h3>Preferências × comportamento × compras</h3><p class="hint">Contagem de clientes por categoria. Visualização não é compra; receita considera apenas pedidos pagos.</p><div class="table-wrap"><table><thead><tr><th>Categoria</th><th>Declararam</th><th>Visualizaram</th><th>Carrinho</th><th>Compraram</th><th>Receita</th></tr></thead><tbody id="customerCategoryRows"><tr><td colspan="6" class="muted">Aguardando dados...</td></tr></tbody></table></div><p class="hint" id="customerCoverageNote">Os indicadores aparecerão após a primeira atualização.</p></section>
+<section class="panel"><h3>Faixa de preço preferida</h3><p class="hint">Perfis que escolheram cada faixa.</p><div class="bars" id="customerPriceRanges"><div class="empty">Aguardando dados...</div></div><div style="height:16px"></div><h3>Tipo de oferta preferida</h3><p class="hint">Descontos, kits, novidades ou recomendações.</p><div class="bars" id="customerOfferTypes"><div class="empty">Aguardando dados...</div></div></section>
+</div>
 <div class="section-title"><div><h2>Desempenho</h2><p>Vendas registradas no Lux-Gestão, com comparação de períodos.</p></div></div>
 <div class="cols">
 <section class="panel"><h3>Receita recebida por dia</h3><p class="hint">Somente vendas pagas registradas no Gestão.</p><div class="bars" id="trend"><div class="empty">Aguardando dados...</div></div></section>
@@ -85,19 +96,60 @@ function message(el,text){$(el).textContent=text}
 function row(label,value,kind){const div=document.createElement("div");div.className="rowitem";const a=document.createElement("span");a.textContent=label;const b=document.createElement("strong");b.textContent=value;if(kind)b.className="status "+kind;div.append(a,b);return div}
 function list(id,items,empty){const box=$(id);box.replaceChildren();if(!items.length){const p=document.createElement("div");p.className="empty";p.textContent=empty||"Sem dados no período.";box.append(p);return}items.forEach(x=>box.append(x))}
 function bars(id,items,labelKey,valueKey,formatter){const box=$(id);box.replaceChildren();if(!items.length){const p=document.createElement("div");p.className="empty";p.textContent="Sem dados suficientes no período.";box.append(p);return}const max=Math.max(1,...items.map(x=>Number(x[valueKey])||0));items.forEach(item=>{const line=document.createElement("div");line.className="bar-row";const label=document.createElement("span");label.className="bar-label";label.textContent=item[labelKey];label.title=item[labelKey];const track=document.createElement("div");track.className="track";const fill=document.createElement("div");fill.className="fill";fill.style.width=Math.max(1,(Number(item[valueKey])||0)/max*100)+"%";track.append(fill);const value=document.createElement("span");value.className="bar-value";value.textContent=formatter(item[valueKey]);line.append(label,track,value);box.append(line)})}
+
 function setMetric(id,value){message(id,value)}
+function renderCustomerInsights(data){
+  const categories=Array.isArray(data.categories)?data.categories:[];
+  message("customersRegistered",num(data.total_profiles));
+  message("customersEligible",num(data.personalization_eligible_profiles));
+  message("customersEligibleNote",num(data.profiles_with_categories)+" com categorias · "+num(data.profiles_with_price)+" com faixa de preço");
+  message("customersTracked",num(data.tracked_profiles));
+  message("customersPurchased",num(data.purchased_profiles));
+  message("customersPaidNote",num(data.paid_orders)+" pedidos pagos · "+money(Number(data.paid_revenue_cents||0)/100));
+  message("customerPeriod","JANELA: "+num(data.period_days)+" DIAS");
+  const body=$("customerCategoryRows");
+  body.replaceChildren();
+  if(!categories.length){
+    const tr=document.createElement("tr"),td=document.createElement("td");
+    td.colSpan=6;td.className="muted";td.textContent="Sem dados de categorias no período.";tr.append(td);body.append(tr);
+  }else{
+    categories.forEach(item=>{
+      const tr=document.createElement("tr");
+      const values=[item.label,num(item.declared_customers),num(item.viewing_customers),num(item.cart_customers),num(item.buying_customers),money(Number(item.revenue_cents||0)/100)];
+      values.forEach((value,index)=>{
+        const td=document.createElement("td");td.textContent=value;
+        if(index>0)td.style.textAlign="right";
+        tr.append(td);
+      });
+      body.append(tr);
+    });
+  }
+  bars("customerPriceRanges",data.price_ranges||[],"label","customers",num);
+  bars("customerOfferTypes",data.offer_types||[],"label","customers",num);
+  const coverage=data.coverage||{};
+  const notes=[
+    num(coverage.eligible_profiles||0)+" perfis com autorização atual",
+    num(coverage.linked_product_events||0)+" eventos de produto vinculados a essas contas"
+  ];
+  if(coverage.unmapped_product_events)notes.push(num(coverage.unmapped_product_events)+" eventos sem categoria mapeada");
+  if(coverage.unmapped_purchase_items)notes.push(num(coverage.unmapped_purchase_items)+" itens pagos sem categoria mapeada");
+  if(coverage.source_limit_reached)notes.push("Amostra atingiu o limite de consulta; a leitura pode estar parcial");
+  if(!coverage.eligible_profiles)notes.push("Ainda não há perfis com autorização v2 ativa; salve as preferências e a autorização para começar a formar esta amostra");
+  message("customerCoverageNote",notes.join(" · "));
+}
 async function load(){
  $("refresh").disabled=true;$("retrySync").disabled=true;message("connection","CONSULTANDO DADOS");
  try{
   const days=Number($("period").value);
-  const [analytics,stock,costs,kits,expenses]=await Promise.all([
+  const [analytics,stock,costs,kits,expenses,customers]=await Promise.all([
    supabase.functions.invoke("management-sales",{body:{action:"analytics",period_days:days}}),
    supabase.functions.invoke("management-sales",{body:{action:"stock-list"}}),
    supabase.functions.invoke("management-sales",{body:{action:"cost-list"}}),
    supabase.functions.invoke("management-sales",{body:{action:"kit-recipes-list"}}),
-   supabase.functions.invoke("management-sales",{body:{action:"expense-list"}})
+   supabase.functions.invoke("management-sales",{body:{action:"expense-list"}}),
+   supabase.functions.invoke("management-sales",{body:{action:"customer-insights",period_days:days}})
   ]);
-  const responses=[["indicadores",analytics],["estoque",stock],["custos",costs],["composições dos kits",kits],["despesas",expenses]];
+  const responses=[["indicadores",analytics],["estoque",stock],["custos",costs],["composições dos kits",kits],["despesas",expenses],["inteligência de clientes",customers]];
   for(const [label,result] of responses){
    if(result.error)throw result.error;
    if(!result.data?.ok)throw new Error(result.data?.error||"Falha ao consultar "+label+".");
@@ -138,6 +190,7 @@ async function load(){
   ]);
   list("methods",(c.payment_methods||[]).map(x=>row(x.method,num(x.paid_count)+" pagas · "+money(x.received_cents/100))),"Nenhum pagamento registrado.");
   list("eventsList",(pulse.events||[]).slice(0,8).map(x=>row(x.event_name,num(x.count)+" eventos · "+num(x.sessions)+" sessões")),"Nenhum evento registrado.");
+  renderCustomerInsights(customers.data);
   const notices=[];
   if(!c.paid_count)notices.push("Ainda não há vendas pagas registradas no Gestão.");
   if(!costRows.length)notices.push("Sem custos cadastrados: lucro e margem não podem ser calculados.");
