@@ -201,6 +201,8 @@ jobs:
           if (!panel.includes('functions.invoke("luxuriosa-intelligence",{body:{action:"analytics"')) throw new Error("O Lux-Central ainda não consulta analytics na Inteligência.");
           if (!management.includes('action === "analytics"')) throw new Error("A ação legada deve permanecer disponível durante a transição.");
           if (!intelligence.includes('from("payment_provider_events")') || !intelligence.includes("payment_events: paymentEvents")) throw new Error("A Inteligência precisa agregar a cobertura dos webhooks de pagamento.");
+          if (!intelligence.includes("HISTORICAL_TEST_ORDER_IDS") || !intelligence.includes("total: websiteOrders.length")) throw new Error("A Inteligência precisa excluir tentativas históricas de teste dos indicadores operacionais.");
+          if (!intelligence.includes('select("order_id, provider, event_type, verified, processing_error, received_at")')) throw new Error("A cobertura de webhooks precisa excluir eventos associados aos pedidos de teste.");
           for (const field of ["pending_expired_count", "pending_without_checkout_link_count", "active_pending_count", "checkout_link_count"]) {
             if (!intelligence.includes(field)) throw new Error("A Inteligência precisa expor o diagnóstico de cobranças: " + field);
           }
