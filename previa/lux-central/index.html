@@ -275,14 +275,19 @@ async function load(){
   const stockRows=stock.data?.stock||[],costRows=costs.data?.costs||[],kitRows=kits.data?.recipes||[];
   const stockControlCount=stockRows.filter(x=>x.stock_control_enabled===true).length;
   const stockNeedsPhysicalCount=stockRows.filter(x=>x.stock_control_enabled!==true).length;
+  const stockIds=new Set(stockRows.map(x=>String(x.product_id)));
+  const costCoverageCount=costRows.filter(x=>stockIds.has(String(x.product_id))).length;
+  const stockCoveragePercent=stockRows.length?Math.round(stockControlCount/stockRows.length*100):null;
+  const costCoveragePercent=stockRows.length?Math.round(costCoverageCount/stockRows.length*100):null;
   const websiteSync=(orders.paid_website_sales_sync||[]).filter(item=>["pending","error","not_applicable"].includes(String(item.status||"").toLowerCase())).reduce((sum,item)=>sum+Number(item.count||0),0);
   renderActionQueue({stockRows,costRows,kitRows,stockNeedsPhysicalCount,ordersCount:Number(orders.total||0),paidCount:Number(c.paid_count||0),paidWebsiteSync:websiteSync,expiredPendingOrders:Number(orders.pending_expired_count||0),pendingWithoutCheckoutLink:Number(orders.pending_without_checkout_link_count||0),customerCoverage:customers?.data?.coverage||{},customerInsightsOk:!customers.error&&!!customers.data?.ok});
   list("integrity",[
    row("Produtos cadastrados no estoque",num(stockRows.length),stockRows.length?"good":"warn"),
-   row("Controle ativo após conferência",num(stockControlCount),stockControlCount===stockRows.length&&stockRows.length?"good":"warn"),
+   row("Contagem física registrada",stockRows.length?num(stockControlCount)+"/"+num(stockRows.length)+" · "+num(stockCoveragePercent)+"%":"Sem catálogo",stockControlCount===stockRows.length&&stockRows.length?"good":"warn"),
    row("Aguardando contagem física",num(stockNeedsPhysicalCount),stockNeedsPhysicalCount?"warn":"good"),
-   row("Produtos com custo cadastrado",num(costRows.length),costRows.length?"good":"warn"),
-   row("Componentes de kits configurados",num(kitRows.length),kitRows.length?"good":"warn"),
+   row("Cobertura de custos do catálogo",stockRows.length?num(costCoverageCount)+"/"+num(stockRows.length)+" · "+num(costCoveragePercent)+"%":"Sem catálogo",costCoverageCount===stockRows.length&&stockRows.length?"good":"warn"),
+   row("Produtos sem custo cadastrado",num(Math.max(0,stockRows.length-costCoverageCount)),costCoverageCount===stockRows.length&&stockRows.length?"good":"warn"),
+   row("Composições de kits cadastradas",num(new Set(kitRows.map(x=>String(x.kit_product_id))).size),kitRows.length?"good":"warn"),
    row("Despesas ativas",num(activeExpenses.length),activeExpenses.length?"good":"warn"),
    row("Vendas sem custo conhecido",num(c.sales_without_cost_count),c.sales_without_cost_count?"warn":"good"),
    row("Eventos de pagamento recebidos",num(pulse.payment_events?.total||0),Number(pulse.payment_events?.total||0)>0?"good":"warn"),
@@ -309,6 +314,7 @@ async function load(){
   if(Number(orders.pending_expired_count||0)>0)notices.push(Number(orders.pending_expired_count)+" pedidos expiraram sem confirmação de pagamento. Revise os pedidos antes de emitir novas cobranças.");
   if(Number(orders.pending_without_checkout_link_count||0)>0)notices.push(Number(orders.pending_without_checkout_link_count)+" pedidos pendentes estão sem link de checkout salvo.");
   if(!costRows.length)notices.push("Sem custos cadastrados: lucro e margem não podem ser calculados.");
+  else if(stockRows.length&&costCoverageCount<stockRows.length)notices.push("Custos cadastrados em "+costCoverageCount+" de "+stockRows.length+" produtos do catálogo ("+costCoveragePercent+"%). A margem permanece parcial até completar os custos.");
   if(!stockRows.length)notices.push("Estoque administrativo ainda não foi inicializado.");
   else if(stockNeedsPhysicalCount>0)notices.push(stockNeedsPhysicalCount+" produtos aguardam contagem física. Os saldos cadastrados não devem ser tratados como estoque confirmado.");
   if(!kitRows.length)notices.push("Composições dos kits ainda não foram cadastradas; o consumo automático de componentes depende dessa configuração.");
