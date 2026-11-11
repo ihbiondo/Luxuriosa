@@ -339,6 +339,12 @@ Deno.serve(async (req: Request) => {
       customerId = userData.user.id;
       if (!customerEmail) customerEmail = textValue(userData.user.email, 254);
     }
+    if (!customerId) {
+      return reply({
+        code: "account_required",
+        error: "Entre ou crie sua conta Luxuriosa antes de finalizar o pedido. Seus dados cadastrados serão aproveitados no checkout."
+      }, 401, origin);
+    }
     if (customerEmail && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(customerEmail)) {
       customerEmail = "";
     }
