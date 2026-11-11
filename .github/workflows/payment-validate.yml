@@ -172,6 +172,7 @@ jobs:
           const webhook = fs.readFileSync("supabase/functions/infinitepay-webhook/index.ts", "utf8");
           if (!payment.includes('events: ["created", "paid", "settled", "refunded", "canceled", "payment_failed"]')) throw new Error("O checkout precisa assinar o evento created para monitorar a entrega do webhook.");
           if (!webhook.includes('eventName === "created"') || !webhook.includes('eventType === "created"')) throw new Error("O webhook precisa registrar o evento created sem alterar o pedido.");
+          if (!webhook.includes('infinitepay-webhook.unclassified-event') || !webhook.includes("payloadKeys")) throw new Error("O webhook precisa registrar diagnóstico seguro quando não reconhecer o evento recebido.");
           const paymentAdmin = fs.readFileSync("supabase/functions/payment-admin/index.ts", "utf8");
           if (!admin.includes('/functions/v1/payment-admin') || !admin.includes('action:"reconcile_payment"')) throw new Error("O painel precisa acionar a conciliação administrativa da InfinitePay.");
           if (!ordersFunction.includes("payment_checkout_url, payment_expires_at, payment_amount_cents")) throw new Error("O painel precisa receber link, expiração e valor da cobrança.");
