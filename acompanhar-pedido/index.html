@@ -92,6 +92,18 @@
         card.append(el("p","payment-note","Estamos conferindo a confirmação do pagamento. A expedição ficará bloqueada até a validação."));
       } else if(order.payment_status!=="paid"){
         card.append(el("p","payment-note","O pagamento é realizado no ambiente seguro da InfinitePay. A preparação começa após a confirmação."));
+        if(order.payment_status==="pending"&&order.payment_checkout_url){
+          try{
+            const paymentUrl=new URL(order.payment_checkout_url);
+            const validPaymentUrl=paymentUrl.protocol==="https:"&&["checkout.infinitepay.io","checkout.infinitepay.com.br"].includes(paymentUrl.hostname);
+            const notExpired=!order.payment_expires_at||new Date(order.payment_expires_at).getTime()>Date.now();
+            if(validPaymentUrl&&notExpired){
+              const pay=el("a","button","CONTINUAR PAGAMENTO NA INFINITEPAY");
+              pay.href=paymentUrl.toString();pay.target="_blank";pay.rel="noopener noreferrer";pay.style.display="inline-block";pay.style.marginTop="12px";
+              card.append(pay);
+            }
+          }catch(_){}
+        }
       }
       if(order.payment_status==="paid" && order.status!=="cancelled"){
         const index=stageIndex(order), bars=el("div","steps"), labels=el("div","step-labels");
@@ -112,7 +124,7 @@
           $("orders").append(box);$("lastUpdated").textContent="Acesso restrito a clientes autenticados.";return;
         }
         const {data:orders,error}=await supabase.from("orders")
-          .select("id,order_number,status,payment_status,subtotal,shipping_amount,total_amount,created_at,paid_at,updated_at")
+          .select("id,order_number,status,payment_status,payment_checkout_url,payment_expires_at,subtotal,shipping_amount,total_amount,created_at,paid_at,updated_at")
           .eq("customer_id",user.id).order("created_at",{ascending:false}).limit(30);
         if(error)throw error;
         const ids=(orders||[]).map(o=>o.id);let items=[];
