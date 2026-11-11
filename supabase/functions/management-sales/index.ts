@@ -1,4 +1,5 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.119.0";
+import { normalizeInventoryMovementDelta } from "../_shared/inventory.ts";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
@@ -443,17 +444,21 @@ Deno.serve(async (request: Request) => {
       const productId = cleanText(body.product_id, 100);
       const productName = cleanText(body.product_name, 180);
       const movementType = cleanText(body.movement_type, 20);
-      const quantity = Number(body.quantity);
+      const quantity = body.quantity;
       const note = cleanText(body.note, 500);
-      const signs: Record<string, number> = { opening: 1, inbound: 1, return: 1, outbound: -1, loss: -1 };
-      if (!productId || !productName || !Object.hasOwn(signs, movementType) || !Number.isSafeInteger(quantity) || quantity <= 0 || quantity > 1000000) {
-        return reply({ error: "Informe produto, tipo e quantidade válida." }, 400, origin);
+      const quantityDelta = normalizeInventoryMovementDelta(movementType, quantity, body.quantity_delta);
+      if (!productId || !productName || quantityDelta === null) {
+        return reply({
+          error: movementType === "adjustment"
+            ? "Informe um quantity_delta inteiro diferente de zero (positivo para aumentar, negativo para reduzir), até 1.000.000 unidades."
+            : "Informe produto, tipo e quantidade válida."
+        }, 400, origin);
       }
       const { data, error } = await admin.rpc("management_record_inventory_movement", {
         p_product_id: productId,
         p_product_name: productName,
         p_movement_type: movementType,
-        p_quantity_delta: quantity * signs[movementType],
+        p_quantity_delta: quantityDelta,
         p_note: note || null,
         p_created_by: auth.user.id
       });
