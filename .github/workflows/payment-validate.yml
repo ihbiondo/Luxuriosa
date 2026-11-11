@@ -1,3 +1,4 @@
+# Validação também cobre a transferência dos endpoints administrativos de pedidos.
 name: Validacao do checkout InfinitePay
 
 on:
@@ -167,6 +168,7 @@ jobs:
           if (!ordersFunction.includes('current.payment_status !== "paid"')) throw new Error("A operação administrativa precisa bloquear avanço sem pagamento confirmado.");
           if (!ordersFunction.includes('current.payment_status === "paid"') || !ordersFunction.includes("Faça a conferência e o estorno na InfinitePay")) throw new Error("O painel não pode cancelar pedido pago sem conciliação de estorno.");
           if (!admin.includes('action:"admin_dashboard"') || !admin.includes('action:"admin_update_order_status"')) throw new Error("O painel Lux-Gestão precisa consultar e atualizar pedidos.");
+          if (!admin.includes('invokeOrdersAdmin({action:"admin_dashboard"') || !ordersAdminFunction.includes('action === "admin_dashboard"')) throw new Error("O dashboard precisa usar o endpoint administrativo isolado.");
           if (!admin.includes("/functions/v1/orders-admin") || !ordersAdminFunction.includes('action === "admin_update_order_status"')) throw new Error("A atualização de etapa precisa usar o endpoint administrativo isolado.");
           const paymentAdmin = fs.readFileSync("supabase/functions/payment-admin/index.ts", "utf8");
           if (!admin.includes('/functions/v1/payment-admin') || !admin.includes('action:"reconcile_payment"')) throw new Error("O painel precisa acionar a conciliação administrativa da InfinitePay.");
