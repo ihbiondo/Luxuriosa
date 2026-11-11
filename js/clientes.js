@@ -419,6 +419,11 @@
     limparAviso();
     review.hidden = true;
     form.hidden = false;
+    var paymentMinimumInfo = $("customerPaymentMinimumInfo");
+    if (paymentMinimumInfo) {
+      paymentMinimumInfo.hidden = true;
+      paymentMinimumInfo.textContent = "";
+    }
     preencherFormulario(null);
     var marketingOptIn = $("customerMarketingWhatsAppOptIn");
     if (marketingOptIn) marketingOptIn.checked = false;
@@ -445,6 +450,11 @@
     ultimoEnderecoViaCep = "";
     if (form) form.reset();
     if (messagePreview) messagePreview.textContent = "";
+    var paymentMinimumInfo = $("customerPaymentMinimumInfo");
+    if (paymentMinimumInfo) {
+      paymentMinimumInfo.hidden = true;
+      paymentMinimumInfo.textContent = "";
+    }
     if (review) review.hidden = true;
     if (form) form.hidden = false;
     limparAviso();
@@ -475,6 +485,23 @@
       return;
     }
     messagePreview.textContent = mensagemAtual;
+
+    var paymentMinimumInfo = $("customerPaymentMinimumInfo");
+    if (paymentMinimumInfo) {
+      var reviewCity = String(dadosAtuais.address.city || "").normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "").trim().toLowerCase();
+      var reviewState = String(dadosAtuais.address.state || "").trim().toUpperCase();
+      if (reviewCity === "bauru" && reviewState === "SP") {
+        paymentMinimumInfo.hidden = false;
+        paymentMinimumInfo.textContent = integridade.subtotal < 50
+          ? "Atenção: para pagar pelo site com Pix ou cartão em Bauru, o subtotal mínimo de produtos é R$ 50,00. Seu pedido está em " + formatarPreco(integridade.subtotal) + "; faltam " + formatarPreco(50 - integridade.subtotal) + ". O frete grátis por incluir kit não elimina o mínimo. Você também pode encaminhar a solicitação pelo WhatsApp e consultar as condições."
+          : "Para pagamento automático pelo site com Pix ou cartão em Bauru, o subtotal mínimo de produtos é R$ 50,00. O frete grátis por incluir kit continua válido, mas não elimina esse mínimo.";
+      } else {
+        paymentMinimumInfo.hidden = true;
+        paymentMinimumInfo.textContent = "";
+      }
+    }
+
     if (window.LuxuriosaMedicao && typeof window.LuxuriosaMedicao.registrar === "function") {
       window.LuxuriosaMedicao.registrar("checkout_review", { step: "dados_validos" });
     }
