@@ -231,7 +231,7 @@ async function load(){
  try{
   const days=Number($("period").value);
   const [analytics,stock,costs,kits,expenses,customers]=await Promise.all([
-   supabase.functions.invoke("management-sales",{body:{action:"analytics",period_days:days}}),
+   supabase.functions.invoke("luxuriosa-intelligence",{body:{action:"analytics",period_days:days}}),
    supabase.functions.invoke("management-sales",{body:{action:"stock-list"}}),
    supabase.functions.invoke("management-sales",{body:{action:"cost-list"}}),
    supabase.functions.invoke("management-sales",{body:{action:"kit-recipes-list"}}),
