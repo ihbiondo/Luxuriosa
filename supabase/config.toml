@@ -3,3 +3,6 @@ verify_jwt = true
 
 [functions.cart-orders]
 verify_jwt = false
+
+[functions.luxuriosa-intelligence]
+verify_jwt = true
