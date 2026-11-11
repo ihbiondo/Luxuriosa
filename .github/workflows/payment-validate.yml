@@ -32,6 +32,8 @@ on:
       - "pagamento-retorno.html"
       - "supabase/functions/create-payment-order/**"
       - "acompanhar-pedido/**"
+      - "lux-gestao-pedidos/**"
+      - "supabase/functions/cart-orders/**"
       - "js/clientes.js"
       - "login.html"
       - "loja.html"
