@@ -68,8 +68,9 @@
         <input id="search" type="search" placeholder="Buscar cliente, telefone ou número do pedido">
         <select id="statusFilter">
           <option value="">Todos os pedidos</option>
-          <option value="awaiting_confirmation">Aguardando pagamento</option>
-          <option value="confirmed">Pagamento aprovado</option>
+          <option value="pending">Aguardando pagamento</option>
+          <option value="paid">Pagamentos aprovados</option>
+          <option value="review_required">Pagamento em conferência</option>
           <option value="processing">Em expedição</option>
           <option value="out_for_delivery">Em rota de entrega</option>
           <option value="delivered">Pedido entregue</option>
@@ -152,7 +153,14 @@
     }
     function render(){
       const filter=$("statusFilter").value,term=$("search").value.trim().toLocaleLowerCase("pt-BR");
-      const filtered=allOrders.filter(o=>(!filter||o.status===filter)&&(!term||[o.order_number,o.customer_name,o.customer_phone].some(v=>String(v||"").toLocaleLowerCase("pt-BR").includes(term))));
+      const filtered=allOrders.filter(o=>{
+        const statusMatch=!filter||
+          (filter==="pending"&&o.payment_status==="pending"&&o.status!=="cancelled")||
+          (filter==="paid"&&o.payment_status==="paid")||
+          (filter==="review_required"&&o.payment_status==="review_required")||
+          (!["pending","paid","review_required"].includes(filter)&&o.status===filter);
+        return statusMatch&&(!term||[o.order_number,o.customer_name,o.customer_phone].some(v=>String(v||"").toLocaleLowerCase("pt-BR").includes(term)));
+      });
       const box=$("orders");box.replaceChildren();
       if(!filtered.length){box.append(node("div","empty","Nenhum pedido encontrado com esses filtros."));return;}
       filtered.forEach(o=>box.append(renderOrder(o)));
