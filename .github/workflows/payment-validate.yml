@@ -150,6 +150,7 @@ jobs:
           if (!customer.includes('await carregarDadosDaConta()')) throw new Error("O checkout precisa carregar automaticamente os dados cadastrados.");
           if (!payment.includes('code: "account_required"')) throw new Error("A Edge Function precisa bloquear checkout sem conta.");
           if (!ordersFunction.includes('current.payment_status !== "paid"')) throw new Error("A operação administrativa precisa bloquear avanço sem pagamento confirmado.");
+          if (!ordersFunction.includes('nextStatus === "cancelled" && current.payment_status === "paid"')) throw new Error("O painel não pode cancelar pedido pago sem conciliação de estorno.");
           if (!admin.includes('action:"admin_dashboard"') || !admin.includes('action:"admin_update_order_status"')) throw new Error("O painel Lux-Gestão precisa consultar e atualizar pedidos.");
           if (!tracking.includes('.eq("customer_id",user.id)')) throw new Error("A consulta de pedidos precisa filtrar pelo usuário autenticado.");
           for (const label of ["Aguardando pagamento", "Pagamento aprovado", "Em expedição", "Em rota de entrega", "Pedido entregue"]) {
