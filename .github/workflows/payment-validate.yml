@@ -184,6 +184,22 @@ jobs:
           console.log("Checkout autenticado e acompanhamento privado validados.");
           NODE
 
+      - name: Validar migração da inteligência financeira
+        run: |
+          node <<'NODE'
+          const fs = require("node:fs");
+          const intelligence = fs.readFileSync("supabase/functions/luxuriosa-intelligence/index.ts", "utf8");
+          const management = fs.readFileSync("supabase/functions/management-sales/index.ts", "utf8");
+          const panel = fs.readFileSync("previa/lux-central/index.html", "utf8");
+          if (!intelligence.includes('body.action === "analytics"')) throw new Error("A Inteligência precisa expor a ação analytics.");
+          for (const helper of ["summarizeSales", "readExpensesForAnalytics", "readSalesForAnalytics", "readBusinessSignals"]) {
+            if (!intelligence.includes("function " + helper) && !intelligence.includes("async function " + helper)) throw new Error("Helper ausente na Inteligência: " + helper);
+          }
+          if (!panel.includes('functions.invoke("luxuriosa-intelligence",{body:{action:"analytics"')) throw new Error("O Lux-Central ainda não consulta analytics na Inteligência.");
+          if (!management.includes('action === "analytics"')) throw new Error("A ação legada deve permanecer disponível durante a transição.");
+          console.log("Migração financeira centralizada e compatibilidade legada validadas.");
+          NODE
+
       - name: Validar JavaScript da página de retorno
         run: |
           node <<'NODE'
