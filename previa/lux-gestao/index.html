@@ -170,7 +170,7 @@ td strong{font-size:9px}td .muted{font-size:8px;color:var(--muted);display:block
       </div>
       <div class="callout" style="margin-bottom:13px"><strong>Este é o sistema da operação interna.</strong> Use Vendas e caixa para registrar uma venda presencial. Para acompanhar pedidos feitos pela loja virtual, pagamentos do checkout e entregas, abra <a href="/lux-gestao-pedidos/">Pedidos Online</a>.</div>
       <div class="kpis">
-        <div class="kpi"><div class="kpi-top"><span class="kpi-label">Vendas presenciais · últimos 30 dias</span><span class="kpi-icon">▤</span></div><strong id="kpiSales">—</strong><small id="kpiSalesNote">Aguardando consulta</small></div>
+        <div class="kpi"><div class="kpi-top"><span class="kpi-label">Vendas presenciais · últimas 50 consultadas</span><span class="kpi-icon">▤</span></div><strong id="kpiSales">—</strong><small id="kpiSalesNote">Aguardando consulta</small></div>
         <div class="kpi"><div class="kpi-top"><span class="kpi-label">Recebido · vendas presenciais</span><span class="kpi-icon">R$</span></div><strong id="kpiReceived">—</strong><small>Somente vendas registradas como pagas</small></div>
         <div class="kpi"><div class="kpi-top"><span class="kpi-label">Estoque com controle ativo</span><span class="kpi-icon">◇</span></div><strong id="kpiStock">—</strong><small id="kpiStockNote">Contagem física pendente</small></div>
         <div class="kpi"><div class="kpi-top"><span class="kpi-label">Despesas ativas cadastradas</span><span class="kpi-icon">−</span></div><strong id="kpiExpenses">—</strong><small id="kpiExpensesNote">Últimos lançamentos</small></div>
@@ -331,7 +331,7 @@ const paymentLabels={paid:"Recebido",pending:"Pendente"};
 const methodLabels={DINHEIRO:"Dinheiro",PIX:"Pix",TRANSFERENCIA:"Transferência",CARTAO_CREDITO:"Crédito",CARTAO_DEBITO:"Débito",OUTRO:"Outro"};
 const movementLabels={opening:"Contagem inicial",inbound:"Entrada",outbound:"Saída",return:"Devolução",loss:"Perda / avaria",adjustment:"Ajuste",sale:"Venda"};
 const expenseLabels={FORNECEDOR:"Fornecedor",FRETE:"Frete",TAXAS:"Taxas",MARKETING:"Marketing",EMBALAGEM:"Embalagem",ALUGUEL:"Aluguel",SERVICOS:"Serviços",IMPOSTOS:"Impostos",OUTROS:"Outros"};
-let catalog=[],stock=[],movements=[],costs=[],recipes=[],expenses=[],sales=[],cart=[],view="overview",idempotencyKey=null;
+let catalog=[],stock=[],movements=[],costs=[],recipes=[],expenses=[],sales=[],cart=[],view="overview",idempotencyKey=null,startingApp=false;
 function safeText(value){return String(value??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
 function showNotice(message,type=""){const box=$("notice");box.textContent=message;box.className="notice show"+(type?" "+type:"");window.scrollTo({top:0,behavior:"smooth"});}
 function setConnection(text,ok=true){$("connection").textContent=text.toUpperCase();$("connection").style.color=ok?"var(--green)":"var(--red)";}
@@ -395,13 +395,13 @@ function renderOverview(){
  $("kpiExpenses").textContent=number(activeExpenses.length);$("kpiExpensesNote").textContent="Lançamentos ativos entre os 100 mais recentes";
  const tasks=[];
  if(stock.length&&needs)tasks.push(["▧","Conferir o estoque físico",needs+" de "+stock.length+" produtos ainda não têm controle ativo. Faça a contagem antes de ativar o saldo.","stock"]);
- const stockIds=new Set(stock.map(x=>String(x.product_id))),costIds=new Set(costs.map(x=>String(x.product_id)));
+ const costIds=new Set(costs.map(x=>String(x.product_id)));
  const missingCosts=stock.filter(x=>!costIds.has(String(x.product_id))).length;
  if(missingCosts)tasks.push(["R$","Cadastrar custos dos produtos",missingCosts+" produtos do catálogo ainda não têm custo registrado. O cálculo de margem fica parcial.","products"]);
  if(!recipes.length)tasks.push(["◇","Definir composição dos kits","Sem receitas cadastradas, a baixa automática dos componentes de kits não pode ser calculada.","products"]);
  if(!sales.length)tasks.push(["＋","Registrar a primeira venda presencial","Use o caixa interno para registrar uma venda feita diretamente pela loja.","sales"]);
  if(!tasks.length)tasks.push(["✓","Rotina cadastral em dia","Não identificamos pendências básicas de estoque, custos ou kits nesta consulta.","sales"]);
- $("priorityCount").textContent=tasks.length+" ITENS";$("tasks").innerHTML=tasks.slice(0,5).map((t,i)=>'<div class="task '+(t[0]==="✓"?"ok":"")+'"><span class="task-icon">'+t[0]+'</span><div><strong>'+safeText(t[1])+'</strong><p>'+safeText(t[2])+'</p><button class="small-btn subtle" data-go="'+t[2]+'" style="margin-top:6px">Abrir etapa →</button></div></div>').join("");
+ $("priorityCount").textContent=tasks.length+" ITENS";$("tasks").innerHTML=tasks.slice(0,5).map((t,i)=>'<div class="task '+(t[0]==="✓"?"ok":"")+'"><span class="task-icon">'+t[0]+'</span><div><strong>'+safeText(t[1])+'</strong><p>'+safeText(t[2])+'</p><button class="small-btn subtle" data-go="'+t[3]+'" style="margin-top:6px">Abrir etapa →</button></div></div>').join("");
  const recent=period.slice(0,6);
  $("recentSales").innerHTML=recent.length?recent.map(s=>'<tr><td><strong>#'+safeText(s.sale_number)+'</strong></td><td>'+safeText(s.customer_name||"Consumidor")+'</td><td>'+dateBR(s.created_at)+'</td><td><span class="status '+(s.payment_status==="paid"?"good":"warn")+'">'+paymentLabels[s.payment_status]+'</span></td><td class="text-right">'+money(s.total_cents)+'</td></tr>').join(""):emptyRow(5,"Nenhuma venda presencial registrada no período.");
 }
@@ -413,7 +413,7 @@ function renderCart(){
  $("saveSaleBtn").disabled=!cart.length||total<=0;
  const cash=$("posMethod").value==="DINHEIRO"&&$("posStatus").value==="paid";
  $("cashReceivedWrap").classList.toggle("hidden",!cash);
- if(cash&&!$("cashReceived").value)$("cashReceived").value=(total/100).toFixed(2);
+ if(cash)$("cashReceived").value=(total/100).toFixed(2);
  idempotencyKey=null;
 }
 function renderSales(){
@@ -459,16 +459,23 @@ function renderExpenses(){
 async function enableStock(productId){
  const product=catalog.find(p=>String(p.id)===String(productId));if(!product)return;
  const existing=stock.find(x=>String(x.product_id)===String(productId));
- const message=existing?.stock_control_enabled
-  ?"O controle será ajustado para este produto. O saldo atual será preservado."
-  ?"Confirma que você contou fisicamente "+product.nome+"? O saldo inicial será o que está registrado no sistema. Use a movimentação 'Contagem inicial' para registrar o saldo correto antes de ativar.":"";
- if(!confirm(message))return;
+ if(existing?.stock_control_enabled){
+  const reorderInput=prompt("Quantidade mínima para alerta (unidades):",String(existing.reorder_point??0));
+  if(reorderInput===null)return;
+  const reorder=Number(reorderInput);if(!Number.isSafeInteger(reorder)||reorder<0){showNotice("Informe um mínimo inteiro igual ou maior que zero.","error");return;}
+  try{const result=await api("stock-configure",{product_id:String(product.id),product_name:product.nome,reorder_point:reorder,stock_control_enabled:true});showNotice("Mínimo de "+product.nome+" atualizado. Saldo preservado: "+number(result.item.quantity_on_hand)+".","success");await loadData();}
+  catch(error){showNotice(error.message,"error");}
+  return;
+ }
+ if(!confirm("Antes de ativar: você já registrou o saldo contado em uma movimentação de Contagem inicial ou Ajuste? O controle só deve ser ativado depois dessa conferência física. Produto: "+product.nome))return;
+ const existingBalance=Number(existing?.quantity_on_hand||0);
+ if(!confirm("Confirme o saldo que está salvo no sistema: "+number(existingBalance)+" unidade(s). Esse será o saldo controlado inicial."))return;
  const reorderInput=prompt("Quantidade mínima para alerta (unidades):",String(existing?.reorder_point??0));
  if(reorderInput===null)return;
  const reorder=Number(reorderInput);if(!Number.isSafeInteger(reorder)||reorder<0){showNotice("Informe um mínimo inteiro igual ou maior que zero.","error");return;}
  try{
   const result=await api("stock-configure",{product_id:String(product.id),product_name:product.nome,reorder_point:reorder,stock_control_enabled:true});
-  showNotice("Controle de estoque ativado para "+product.nome+". Saldo atual: "+number(result.item.quantity_on_hand)+".","success");await loadData();
+  showNotice("Controle de estoque ativado para "+product.nome+". Saldo controlado: "+number(result.item.quantity_on_hand)+".","success");await loadData();
  }catch(error){showNotice(error.message,"error");}
 }
 function openMovement(productId=""){
@@ -556,10 +563,12 @@ async function removeRecipe(key){
 }
 function loginError(message){$("loginNotice").textContent=message;$("loginNotice").className="notice show error";}
 async function startApp(session){
+ if(startingApp)return;startingApp=true;
  $("loginView").classList.add("hidden");$("appView").classList.remove("hidden");
  $("adminName").textContent=session.user.email||"Administrador";
  try{await loadCatalog();await loadData();}
  catch(error){if(/401|403|admin|permissão/i.test(error.message||"")){await supabase.auth.signOut();$("appView").classList.add("hidden");$("loginView").classList.remove("hidden");loginError("Acesso restrito à conta administrativa autorizada.");}}
+ finally{startingApp=false;}
 }
 $("loginForm").addEventListener("submit",async event=>{
  event.preventDefault();const button=$("loginForm").querySelector("button");button.disabled=true;button.textContent="VALIDANDO…";
