@@ -467,15 +467,22 @@ async function enableStock(productId){
   catch(error){showNotice(error.message,"error");}
   return;
  }
- if(!confirm("Antes de ativar: você já registrou o saldo contado em uma movimentação de Contagem inicial ou Ajuste? O controle só deve ser ativado depois dessa conferência física. Produto: "+product.nome))return;
- const existingBalance=Number(existing?.quantity_on_hand||0);
- if(!confirm("Confirme o saldo que está salvo no sistema: "+number(existingBalance)+" unidade(s). Esse será o saldo controlado inicial."))return;
+ const currentBalance=Number(existing?.quantity_on_hand||0);
+ const countedInput=prompt("Contagem física de "+product.nome+"\nInforme quantas unidades existem agora:",String(currentBalance));
+ if(countedInput===null)return;
+ const counted=Number(countedInput);
+ if(!Number.isSafeInteger(counted)||counted<0||counted>1000000){showNotice("Informe uma quantidade inteira entre zero e 1.000.000.","error");return;}
  const reorderInput=prompt("Quantidade mínima para alerta (unidades):",String(existing?.reorder_point??0));
  if(reorderInput===null)return;
  const reorder=Number(reorderInput);if(!Number.isSafeInteger(reorder)||reorder<0){showNotice("Informe um mínimo inteiro igual ou maior que zero.","error");return;}
+ if(!confirm("Confirma a contagem física de "+counted+" unidade(s) para "+product.nome+" e a ativação do controle?"))return;
  try{
+  const delta=counted-currentBalance;
+  if(delta!==0){
+   await api("stock-move",{product_id:String(product.id),product_name:product.nome,movement_type:"adjustment",quantity_delta:delta,quantity:null,note:"Ajuste de contagem física inicial"});
+  }
   const result=await api("stock-configure",{product_id:String(product.id),product_name:product.nome,reorder_point:reorder,stock_control_enabled:true});
-  showNotice("Controle de estoque ativado para "+product.nome+". Saldo controlado: "+number(result.item.quantity_on_hand)+".","success");await loadData();
+  showNotice("Controle ativado para "+product.nome+". Saldo físico registrado: "+number(result.item.quantity_on_hand)+".","success");await loadData();
  }catch(error){showNotice(error.message,"error");}
 }
 function openMovement(productId=""){
