@@ -136,7 +136,14 @@
         select.append(new Option("Atualizar status…",""));
         options.forEach(status=>select.append(new Option(statusNames[status],status)));
         const save=node("button","","SALVAR");save.disabled=true;select.addEventListener("change",()=>{save.disabled=!select.value;});
-        save.addEventListener("click",async()=>{save.disabled=true;save.textContent="SALVANDO…";try{await invoke({action:"admin_update_order_status",order_id:order.id,status:select.value});showNotice("Pedido #"+order.order_number+" atualizado.");await load();}catch(e){showNotice(e.message,true);}finally{save.textContent="SALVAR";}});
+        save.addEventListener("click",async()=>{
+          if(select.value==="delivered"&&!window.confirm("Confirmar que o pedido #"+order.order_number+" foi entregue ao cliente?"))return;
+          if(select.value==="cancelled"&&!window.confirm("Cancelar o pedido #"+order.order_number+"?"))return;
+          save.disabled=true;save.textContent="SALVANDO…";
+          try{await invoke({action:"admin_update_order_status",order_id:order.id,status:select.value});showNotice("Pedido #"+order.order_number+" atualizado.");await load();}
+          catch(e){showNotice(e.message,true);}
+          finally{save.textContent="SALVAR";}
+        });
         edit.append(select,save);foot.append(edit);
       }else{
         foot.append(node("span","muted",order.status==="delivered"?"Pedido finalizado":order.status==="cancelled"?"Pedido cancelado":order.payment_status==="review_required"?"Conferência necessária":"Aguardando pagamento"));
