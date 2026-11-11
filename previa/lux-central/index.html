@@ -246,7 +246,7 @@ async function load(){
   if(!Array.isArray(stock.data.stock)||!Array.isArray(costs.data.costs)||!Array.isArray(kits.data.recipes)||!Array.isArray(expenses.data.expenses)){
    throw new Error("Uma das consultas retornou dados em formato inesperado. Atualize a página e tente novamente.");
   }
-  const d=analytics.data,c=d.current||{},pulse=c.business_pulse||{},cart=pulse.carts||{},orders=pulse.orders||{};
+  const d=analytics.data,c=d.current||{},pulse=d.business_pulse||{},cart=pulse.carts||{},orders=pulse.orders||{};
   setMetric("received",money(c.received_cents/100));message("paidCount",num(c.paid_count)+" vendas pagas");
   setMetric("grossProfit",c.costed_paid_revenue_cents>0?money(c.gross_profit_cents/100):"Indisponível");
   message("margin",c.gross_margin_percent===null?"Cadastre os custos para calcular a margem":("Margem sobre receita com custo conhecido"));
@@ -257,7 +257,7 @@ async function load(){
   const expenseTotal=activeExpenses.reduce((sum,x)=>sum+Number(x.amount_cents||0),0);
   setMetric("expenses",money(Number(c.recorded_expenses_cents||0)/100));message("expenseCount",num(c.expense_count||0)+" lançamentos no período");
   setMetric("marginBig",c.gross_margin_percent===null?"—":Number(c.gross_margin_percent).toLocaleString("pt-BR")+"%");
-  message("costCoverage",num(c.costed_sales_count)+" vendas com custo · "+num(c.sales_without_cost_count)+" sem custo");
+  message("costCoverage",num(c.costed_sales_count)+" vendas com custo · "+num(c.sales_without_cost_count)+" sem custo · "+(c.paid_cost_coverage_percent===null?"cobertura indisponível":Number(c.paid_cost_coverage_percent).toLocaleString("pt-BR")+"% das pagas"));
   setMetric("sessions",num(pulse.site_sessions));setMetric("events",num(pulse.site_events));
   setMetric("carts",num(cart.total));message("cartBreakdown",num(cart.converted)+" convertidos · "+num(cart.abandoned)+" abandonados");
   setMetric("orders",num(orders.total));message("orderBreakdown",num(orders.payment_statuses?.reduce((a,x)=>a+x.count,0)||0)+" com status financeiro");
@@ -268,7 +268,7 @@ async function load(){
   const stockRows=stock.data?.stock||[],costRows=costs.data?.costs||[],kitRows=kits.data?.recipes||[];
   const stockControlCount=stockRows.filter(x=>x.stock_control_enabled===true).length;
   const stockNeedsPhysicalCount=stockRows.filter(x=>x.stock_control_enabled!==true).length;
-  const websiteSync=(orders.paid_website_sales_sync||[]).reduce((sum,item)=>sum+Number(item.count||0),0);
+  const websiteSync=(orders.paid_website_sales_sync||[]).filter(item=>["pending","error","not_applicable"].includes(String(item.status||"").toLowerCase())).reduce((sum,item)=>sum+Number(item.count||0),0);
   renderActionQueue({stockRows,costRows,kitRows,stockNeedsPhysicalCount,ordersCount:Number(orders.total||0),paidCount:Number(c.paid_count||0),paidWebsiteSync:websiteSync,customerCoverage:customers?.data?.coverage||{},customerInsightsOk:!customers.error&&!!customers.data?.ok});
   list("integrity",[
    row("Produtos cadastrados no estoque",num(stockRows.length),stockRows.length?"good":"warn"),
@@ -296,6 +296,9 @@ async function load(){
   if(!kitRows.length)notices.push("Composições dos kits ainda não foram cadastradas; o consumo automático de componentes depende dessa configuração.");
   if(!activeExpenses.length)notices.push("Nenhuma despesa ativa foi lançada no período; o resultado operacional ainda não representa todos os custos do negócio.");
   if(analytics.data.truncated)notices.push("A consulta atingiu o limite de amostragem; alguns indicadores podem estar incompletos.");
+   if(websiteSync>0)notices.push(websiteSync+" pedidos pagos do site ainda precisam de sincronização ou conferência no Gestão.");
+   const paidCostCoverage=Number(c.paid_cost_coverage_percent);
+   if(c.paid_count>0&&Number.isFinite(paidCostCoverage)&&paidCostCoverage<100)notices.push("Custos conhecidos cobrem "+paidCostCoverage.toLocaleString("pt-BR")+"% das vendas pagas. Lucro e margem são parciais.");
   message("dataNotice",notices.length?notices.join(" "):"Dados consultados. Indicadores calculados com os registros disponíveis.");
   message("updated","ATUALIZADO "+new Date().toLocaleTimeString("pt-BR"));
   message("connection","CONECTADO · ADMINISTRADOR");
