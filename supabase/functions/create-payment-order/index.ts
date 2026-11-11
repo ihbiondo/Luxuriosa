@@ -638,7 +638,7 @@ Deno.serve(async (req: Request) => {
       redirect_url: RETURN_URL + "?order=" + encodeURIComponent(orderId),
       webhook: {
         url: WEBHOOK_URL,
-        events: ["paid", "settled", "refunded", "canceled", "payment_failed"]
+        events: ["created", "paid", "settled", "refunded", "canceled", "payment_failed"]
       },
       customer: checkoutCustomer,
       address: {
