@@ -40,6 +40,8 @@ on:
       - "acompanhar-pedido/**"
       - "lux-gestao-pedidos/**"
       - "supabase/functions/cart-orders/**"
+      - "supabase/functions/orders-admin/**"
+      - "supabase/config.toml"
       - "js/clientes.js"
       - "login.html"
       - "loja.html"
