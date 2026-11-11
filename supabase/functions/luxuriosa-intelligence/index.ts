@@ -541,11 +541,38 @@ async function readAnalyticsRows(table: string, columns: string, from: string, t
 }
 
 async function readBusinessSignals(from: string, to: string) {
-  const [eventResult, cartResult, orderResult] = await Promise.all([
+  const [eventResult, cartResult, orderResult, paymentResult] = await Promise.all([
     readAnalyticsRows("site_events", "event_name, session_key, created_at", from, to),
     readAnalyticsRows("cart_sessions", "status, session_key, converted_at, created_at", from, to),
-    readAnalyticsRows("orders", "status, payment_status, total_amount, created_at, source, management_sales_sync_status, payment_checkout_url", from, to)
+    readAnalyticsRows("orders", "status, payment_status, total_amount, created_at, source, management_sales_sync_status, payment_checkout_url", from, to),
+    admin.from("payment_provider_events")
+      .select("provider, event_type, verified, processing_error, received_at")
+      .gte("received_at", from)
+      .lte("received_at", to)
+      .order("received_at", { ascending: false })
+      .limit(10000)
   ]);
+  if (paymentResult.error) throw paymentResult.error;
+  const paymentEventRows = paymentResult.data || [];
+  const paymentEventTypes = new Map<string, { provider: string; event_type: string; total: number; verified: number; failed: number }>();
+  for (const event of paymentEventRows) {
+    const provider = cleanText(event.provider, 40) || "unknown";
+    const eventType = cleanText(event.event_type, 80) || "unknown";
+    const key = provider + ":" + eventType;
+    const entry = paymentEventTypes.get(key) || { provider, event_type: eventType, total: 0, verified: 0, failed: 0 };
+    entry.total += 1;
+    if (event.verified === true) entry.verified += 1;
+    if (cleanText(event.processing_error, 500)) entry.failed += 1;
+    paymentEventTypes.set(key, entry);
+  }
+  const paymentEvents = {
+    total: paymentEventRows.length,
+    verified: paymentEventRows.filter((event: any) => event.verified === true).length,
+    failed: paymentEventRows.filter((event: any) => !!cleanText(event.processing_error, 500)).length,
+    last_received_at: paymentEventRows[0]?.received_at || null,
+    by_type: [...paymentEventTypes.values()].sort((a, b) => b.total - a.total),
+    truncated: paymentEventRows.length >= 10000
+  };
 
   const eventMap = new Map<string, { event_name: string; count: number; sessions: Set<string> }>();
   const allSessions = new Set<string>();
@@ -599,6 +626,7 @@ async function readBusinessSignals(from: string, to: string) {
     site_sessions: allSessions.size,
     site_events: eventResult.rows.length,
     events,
+    payment_events: paymentEvents,
     carts: {
       total: cartResult.rows.length,
       abandoned: cartStatuses.get("abandoned") || 0,
@@ -615,7 +643,7 @@ async function readBusinessSignals(from: string, to: string) {
         .map(([status, count]) => ({ status, count }))
         .sort((a, b) => b.count - a.count)
     },
-    truncated: eventResult.truncated || cartResult.truncated || orderResult.truncated
+    truncated: eventResult.truncated || cartResult.truncated || orderResult.truncated || paymentEvents.truncated
   };
 }
 
