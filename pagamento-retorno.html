@@ -54,8 +54,6 @@
   var invoiceSlug=params.get("slug")||params.get("invoice_slug")||"";
   var receiptUrl=params.get("receipt_url")||"";
   var captureMethod=params.get("capture_method")||"";
-  var hasProviderReturn=Boolean(transactionNsu&&invoiceSlug);
-  var automaticChecks=0;
   var api="https://byiykxfugvxuowueuxca.supabase.co/functions/v1/payment-status";
   var $=function(id){return document.getElementById(id)};
   var formatter=new Intl.DateTimeFormat("pt-BR",{timeZone:"America/Sao_Paulo",dateStyle:"short",timeStyle:"short"});
@@ -89,7 +87,7 @@
           show(data,"Pagamento confirmado!","Pagamento conciliado e pedido registrado. Seu pedido já pode seguir para a fila de expedição.","✓");
         }
       }else if(data.payment_status==="pending"){
-        show(data,"Aguardando confirmação","Ainda não recebemos a confirmação da InfinitePay. Caso você já tenha pago, aguarde alguns instantes e consulte novamente.","…");
+        show(data,"Aguardando conferência","Seu pedido foi registrado e aguarda a conferência manual do recebimento no aplicativo InfinitePay. Se você já pagou, não faça outro pagamento. A equipe atualizará o pedido após verificar a entrada do valor.","…");
       }else if(data.payment_status==="review_required"){
         show(data,"Pagamento em conferência","Identificamos uma divergência e a equipe precisa revisar a transação antes de liberar a expedição. Não faça outro pagamento agora.","!");
       }else if(data.payment_status==="failed"||data.payment_status==="cancelled"){
@@ -100,15 +98,11 @@
     }catch(error){
       show({},"Não foi possível consultar agora",error.message||"Tente novamente em instantes.","!");
     }finally{
-      $("check").disabled=false;$("check").textContent="CONSULTAR PAGAMENTO";
-      if(hasProviderReturn&&automaticChecks<2){
-        automaticChecks++;
-        window.setTimeout(function(){check(true)},4000);
-      }
+      $("check").disabled=false;$("check").textContent="ATUALIZAR STATUS";
     }
   }
   $("check").addEventListener("click",function(){check(false)});
-  check(true);
+  check(false);
 })();
 </script>
 </body>
