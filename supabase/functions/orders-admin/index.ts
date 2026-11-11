@@ -15,6 +15,11 @@ function response(body: unknown, status = 200, origin = "") {
 function isUuid(value: unknown): value is string {
   return typeof value === "string" && /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(value);
 }
+function cleanText(value: unknown, max = 160): string | null {
+  if (typeof value !== "string") return null;
+  const result = value.trim().slice(0, max);
+  return result || null;
+}
 Deno.serve(async (req: Request) => {
   const origin = req.headers.get("origin") || "";
   if (req.method === "OPTIONS") return new Response(null, { status: 204, headers: {
