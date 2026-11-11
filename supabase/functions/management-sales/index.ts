@@ -127,7 +127,7 @@ function summarizeSales(rows: any[]) {
     paid_cost_of_goods_cents: 0,
     gross_profit_cents: 0,
     costed_paid_revenue_cents: 0,
-    gross_margin_percent: null,
+    gross_margin_percent: null as number | null,
     recorded_expenses_cents: 0,
     expense_count: 0,
     partial_operating_result_cents: null,
@@ -867,20 +867,38 @@ const PRODUCT_INTEREST_MAP: Record<string, string> = {
   "28": "kits_presentes", "29": "kits_presentes"
 };
 
-function createCustomerInterestStats() {
-  return new Map(CUSTOMER_INTERESTS.map((item) => [item.key, {
-    key: item.key,
-    label: item.label,
-    declared_customers: 0,
-    viewing_users: new Set<string>(),
-    view_events: 0,
-    cart_users: new Set<string>(),
-    add_to_cart_events: 0,
-    buyers: new Set<string>(),
-    paid_orders: new Set<string>(),
-    units_sold: 0,
-    revenue_cents: 0
-  }] as const));
+type CustomerInterestStat = {
+  key: string;
+  label: string;
+  declared_customers: number;
+  viewing_users: Set<string>;
+  view_events: number;
+  cart_users: Set<string>;
+  add_to_cart_events: number;
+  buyers: Set<string>;
+  paid_orders: Set<string>;
+  units_sold: number;
+  revenue_cents: number;
+};
+
+function createCustomerInterestStats(): Map<string, CustomerInterestStat> {
+  const entries = CUSTOMER_INTERESTS.map((item) => [
+    item.key,
+    {
+      key: item.key,
+      label: item.label,
+      declared_customers: 0,
+      viewing_users: new Set<string>(),
+      view_events: 0,
+      cart_users: new Set<string>(),
+      add_to_cart_events: 0,
+      buyers: new Set<string>(),
+      paid_orders: new Set<string>(),
+      units_sold: 0,
+      revenue_cents: 0
+    }
+  ] as [string, CustomerInterestStat]);
+  return new Map(entries);
 }
 
 async function readCustomerInsights(from: string, to: string, periodDays: number) {
@@ -940,8 +958,8 @@ async function readCustomerInsights(from: string, to: string, periodDays: number
   const eligiblePreferences = (preferenceResult.data || [])
     .filter((row: any) => eligibleUsers.has(row.user_id));
   const categoryStats = createCustomerInterestStats();
-  const priceCounts = new Map(CUSTOMER_PRICE_RANGES.map((item) => [item.key, 0] as const));
-  const offerCounts = new Map(CUSTOMER_OFFER_TYPES.map((item) => [item.key, 0] as const));
+  const priceCounts = new Map<string, number>(CUSTOMER_PRICE_RANGES.map((item) => [item.key, 0] as [string, number]));
+  const offerCounts = new Map<string, number>(CUSTOMER_OFFER_TYPES.map((item) => [item.key, 0] as [string, number]));
 
   let profilesWithCategories = 0;
   let profilesWithPrice = 0;
