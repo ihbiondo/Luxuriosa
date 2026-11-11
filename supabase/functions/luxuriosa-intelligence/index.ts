@@ -30,19 +30,6 @@ function reply(body: unknown, status = 200, origin = "") {
 const cleanText = (value: unknown, max: number) =>
   typeof value === "string" ? value.trim().slice(0, max) : "";
 
-const isUuid = (value: unknown): value is string =>
-  typeof value === "string" &&
-  /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(value);
-
-async function hashPayload(value: unknown): Promise<string> {
-  const bytes = new TextEncoder().encode(JSON.stringify(value));
-  const digest = await crypto.subtle.digest("SHA-256", bytes);
-  return Array.from(new Uint8Array(digest), (byte) => byte.toString(16).padStart(2, "0")).join("");
-}
-
-class ValidationError extends Error {}
-
-
 async function authorize(request: Request) {
   const token = (request.headers.get("authorization") || "").replace(/^Bearer\s+/i, "");
   if (!token) return { error: "Faça login para acessar a Gestão.", status: 401 };
