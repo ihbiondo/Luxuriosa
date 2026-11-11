@@ -21,6 +21,8 @@ on:
       - ".github/workflows/payment-validate.yml"
   pull_request:
     paths:
+      - "gestao-privada-8f2c6d.html"
+      - "previa/lux-central/index.html"
       - "pagamento-retorno.html"
       - "supabase/functions/create-payment-order/**"
       - "supabase/functions/_shared/**"
@@ -125,6 +127,23 @@ jobs:
           console.log("Scripts da página de retorno validados.");
           NODE
  
+      - name: Validar JavaScript do Lux-Central
+        run: |
+          node <<'NODE'
+          const fs = require("node:fs");
+          const html = fs.readFileSync("previa/lux-central/index.html", "utf8");
+          const scripts = [...html.matchAll(/<script\b[^>]*>([\s\S]*?)<\/script>/gi)];
+          if (!scripts.length) throw new Error("Nenhum script encontrado no Lux-Central.");
+          scripts.forEach((match, index) => {
+            const path = "/tmp/lux-central-" + index + ".js";
+            fs.writeFileSync(path, match[1]);
+            require("node:child_process").execFileSync(process.execPath, ["--check", path], { stdio: "inherit" });
+          });
+          if (!html.includes("Aguardando contagem física")) throw new Error("Painel não informa a pendência de contagem física.");
+          if (!html.includes("Composições dos kits ainda não foram cadastradas")) throw new Error("Painel não alerta para receitas de kits ausentes.");
+          console.log("Scripts e alertas operacionais do Lux-Central validados.");
+          NODE
+
       - name: Validar JavaScript da área administrativa
         run: |
           node <<'NODE'
