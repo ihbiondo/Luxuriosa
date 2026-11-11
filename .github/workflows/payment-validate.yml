@@ -36,6 +36,7 @@ on:
     paths:
       - "gestao-privada-8f2c6d.html"
       - "previa/lux-central/index.html"
+      - "previa/lux-gestao/index.html"
       - "pagamento-retorno.html"
       - "supabase/functions/create-payment-order/**"
       - "acompanhar-pedido/**"
@@ -249,6 +250,30 @@ jobs:
           if (!html.includes("Contagem física registrada") || !html.includes("Cobertura de custos do catálogo")) throw new Error("Painel não apresenta cobertura mensurável de estoque e custos.");
           if (!html.includes("Composições dos kits ainda não foram cadastradas")) throw new Error("Painel não alerta para receitas de kits ausentes.");
           console.log("Scripts e alertas operacionais do Lux-Central validados.");
+          NODE
+
+      - name: Validar JavaScript e separação de responsabilidades do Lux-Gestão
+        run: |
+          node <<'NODE'
+          const fs = require("node:fs");
+          const html = fs.readFileSync("previa/lux-gestao/index.html", "utf8");
+          const scriptTags = [...html.matchAll(/<script[^>]*>/gi)];
+          const scripts = scriptTags.map(match => {
+            const start = match.index + match[0].length;
+            const end = html.indexOf("</script>", start);
+            return html.slice(start, end);
+          });
+          if (!scripts.length) throw new Error("Nenhum script encontrado no Lux-Gestão.");
+          scripts.forEach((source, index) => {
+            const path = "/tmp/lux-gestao-" + index + ".mjs";
+            fs.writeFileSync(path, source);
+            require("node:child_process").execFileSync(process.execPath, ["--check", path], { stdio: "inherit" });
+          });
+          for (const phrase of ["Gestão da loja", "Vendas e caixa", "Pedidos Online", "Contagem física", "Custos e kits", "Despesas"]) {
+            if (!html.includes(phrase)) throw new Error("Lux-Gestão precisa manter a função clara: " + phrase);
+          }
+          if (!html.includes('href="/lux-gestao-pedidos/"')) throw new Error("Lux-Gestão deve manter o acesso separado aos Pedidos Online.");
+          console.log("Scripts, propósito do Lux-Gestão e separação dos Pedidos Online validados.");
           NODE
 
       - name: Validar JavaScript da área administrativa

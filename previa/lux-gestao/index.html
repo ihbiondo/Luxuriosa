@@ -1,0 +1,619 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow,noarchive">
+<meta name="theme-color" content="#f4f2f3">
+<title>Lux-Gestão | Operação da loja</title>
+<link rel="icon" href="/img/site/favicon.ico" sizes="any">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{color-scheme:light;--bg:#f4f2f3;--surface:#fff;--surface-soft:#faf8f9;--ink:#241d21;--muted:#766b72;--line:#e8e1e5;--wine:#8b1e3f;--wine-dark:#681630;--wine-soft:#f8edf1;--gold:#ad8653;--gold-soft:#f7f0e8;--green:#24734e;--green-bg:#eaf5ee;--amber:#95621a;--amber-bg:#fff5e6;--red:#a83c48;--red-bg:#fff0f1;--shadow:0 5px 20px rgba(40,20,30,.045);--radius:13px;--sidebar:246px}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:13px/1.5 "Montserrat",Inter,system-ui,sans-serif;min-height:100vh}
+button,input,select,textarea{font:inherit}button{cursor:pointer}a{color:var(--wine);text-decoration:none}
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid #d4af7c88;outline-offset:2px}
+.login-wrap{min-height:100vh;display:grid;place-items:center;padding:22px;background:radial-gradient(ellipse at 50% 0%,#ead9df 0,transparent 48%),var(--bg)}
+.login-card{width:min(100%,410px);background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:30px;box-shadow:var(--shadow)}
+.brand-lockup{display:flex;align-items:center;gap:11px;color:var(--ink)}
+.brand-mark{width:39px;height:39px;background:var(--wine);color:#fff;border-radius:11px;display:grid;place-items:center;font:600 19px "Playfair Display",Georgia,serif}
+.brand-name{font:600 17px "Playfair Display",Georgia,serif;letter-spacing:.8px}.brand-sub{font-size:8px;letter-spacing:1.6px;color:var(--gold);font-weight:800;margin-top:1px}
+.login-card h1{font:600 29px "Playfair Display",Georgia,serif;margin:28px 0 6px}.login-card p{font-size:11px;color:var(--muted);line-height:1.7;margin:0 0 20px}
+.field{display:grid;gap:6px;min-width:0}.field label{font-size:10px;font-weight:700;color:#594d54}.field small{font-size:9px;color:var(--muted)}
+input,select,textarea{width:100%;min-width:0;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink);padding:10px 11px;font-size:11px}
+textarea{resize:vertical;min-height:72px}input::placeholder,textarea::placeholder{color:#a49aa0}
+button{border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:8px;padding:9px 12px;font-size:10px;font-weight:800;transition:.15s}
+button:hover{border-color:#c9a980;transform:translateY(-1px)}button:disabled{opacity:.48;cursor:wait;transform:none}
+.primary{background:var(--wine);border-color:var(--wine);color:white}.primary:hover{background:var(--wine-dark);border-color:var(--wine-dark)}
+.subtle{background:var(--wine-soft);border-color:#ecd8e0;color:var(--wine)}
+.danger{background:var(--red-bg);border-color:#f0d2d5;color:var(--red)}
+.small-btn{padding:6px 8px;font-size:9px}.full{width:100%}
+.hidden{display:none!important}
+#loginNotice{margin-top:12px}
+.app{min-height:100vh}
+.sidebar{position:fixed;inset:0 auto 0 0;width:var(--sidebar);background:#fff;border-right:1px solid var(--line);display:flex;flex-direction:column;padding:19px 14px 14px;z-index:30}
+.sidebar-top{padding:3px 8px 19px;border-bottom:1px solid var(--line)}
+.workspace-tag{display:inline-flex;align-items:center;gap:6px;background:var(--wine-soft);color:var(--wine);border-radius:20px;padding:5px 8px;font-size:8px;letter-spacing:1px;font-weight:800;margin-top:16px}
+.workspace-tag:before{content:"";width:6px;height:6px;border-radius:50%;background:var(--green)}
+.nav-label{font-size:8px;color:#9a8d94;font-weight:800;letter-spacing:1.3px;padding:18px 9px 7px}
+.nav{display:grid;gap:4px}
+.nav button{display:flex;align-items:center;gap:10px;width:100%;text-align:left;padding:10px 10px;border:1px solid transparent;border-radius:9px;background:transparent;color:#655961;font-size:10px;font-weight:700}
+.nav button svg{width:16px;height:16px;stroke:currentColor;flex:none}
+.nav button:hover{background:var(--surface-soft);transform:none}
+.nav button.active{background:var(--wine-soft);border-color:#efdae2;color:var(--wine)}
+.nav-link{display:flex;align-items:center;gap:10px;padding:10px;border:1px solid transparent;border-radius:9px;font-size:10px;font-weight:700;color:#655961}
+.nav-link:hover{background:var(--surface-soft)}
+.nav-link svg{width:16px;height:16px;stroke:currentColor;flex:none}
+.sidebar-bottom{margin-top:auto;border-top:1px solid var(--line);padding:14px 7px 2px}
+.user-line{font-size:9px;color:var(--muted);line-height:1.6;overflow-wrap:anywhere}
+.user-line strong{display:block;color:var(--ink);font-size:10px}
+.sidebar-bottom button{margin-top:10px;width:100%;background:var(--surface-soft)}
+.main{margin-left:var(--sidebar);min-height:100vh}
+.topbar{height:62px;background:rgba(255,255,255,.92);border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 29px;position:sticky;top:0;z-index:20;backdrop-filter:blur(12px)}
+.breadcrumb{font-size:9px;color:var(--muted);font-weight:700}.breadcrumb strong{color:var(--ink)}
+.top-actions{display:flex;align-items:center;gap:8px}.connection{display:inline-flex;align-items:center;gap:6px;font-size:8px;font-weight:800;letter-spacing:.7px;color:var(--green);margin-right:8px}.connection:before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
+.content{width:min(1440px,100%);padding:26px 29px 38px;margin:0 auto}
+.page-head{display:flex;justify-content:space-between;align-items:flex-end;gap:18px;margin-bottom:18px}
+.eyebrow{font-size:8px;font-weight:800;letter-spacing:1.4px;color:var(--gold);text-transform:uppercase;margin-bottom:6px}
+h1{font:600 clamp(27px,3vw,35px)/1.12 "Playfair Display",Georgia,serif;margin:0;color:var(--ink)}
+.page-desc{margin:6px 0 0;color:var(--muted);font-size:10px;line-height:1.65;max-width:680px}
+.page-actions{display:flex;gap:7px;align-items:center;flex-wrap:wrap}
+.notice{display:none;margin:0 0 13px;padding:10px 12px;border:1px solid var(--line);border-radius:9px;background:#fff;color:#5e4752;font-size:10px;line-height:1.55}
+.notice.show{display:block}.notice.error{background:var(--red-bg);border-color:#efcdd1;color:var(--red)}.notice.success{background:var(--green-bg);border-color:#cde5d5;color:var(--green)}
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;margin-bottom:14px}
+.kpi{background:var(--surface);border:1px solid var(--line);border-radius:11px;padding:13px 14px;box-shadow:var(--shadow);min-width:0}
+.kpi-top{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.kpi-label{font-size:9px;color:var(--muted);font-weight:700}
+.kpi-icon{width:29px;height:29px;border-radius:8px;background:var(--wine-soft);color:var(--wine);display:grid;place-items:center;font-size:14px}
+.kpi strong{display:block;font-size:21px;letter-spacing:-.5px;margin:7px 0 2px;font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.kpi small{display:block;color:var(--muted);font-size:9px;line-height:1.4}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);min-width:0}
+.panel-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding:13px 15px;border-bottom:1px solid var(--line)}
+.panel-head h2,.panel-head h3{font:600 17px "Playfair Display",Georgia,serif;margin:0}
+.panel-head p{font-size:9px;color:var(--muted);margin:3px 0 0;line-height:1.5}
+.panel-body{padding:14px 15px}
+.cols{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(280px,.7fr);gap:11px}
+.quick-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.quick{display:flex;align-items:center;gap:10px;border:1px solid var(--line);border-radius:10px;padding:11px;background:var(--surface);text-align:left}
+.quick:hover{background:var(--surface-soft)}
+.quick .qicon{width:31px;height:31px;display:grid;place-items:center;border-radius:9px;background:var(--wine-soft);color:var(--wine);font-size:15px;flex:none}
+.quick strong{display:block;font-size:10px}.quick small{display:block;color:var(--muted);font-size:8px;margin-top:2px;line-height:1.4}
+.task-list{display:grid;gap:8px}
+.task{display:flex;align-items:flex-start;gap:9px;padding:9px 10px;border:1px solid var(--line);border-radius:9px;background:#fff}
+.task-icon{width:25px;height:25px;display:grid;place-items:center;background:var(--amber-bg);color:var(--amber);border-radius:7px;flex:none}
+.task strong{display:block;font-size:9px}.task p{font-size:8px;color:var(--muted);margin:2px 0 0;line-height:1.45}
+.task.ok .task-icon{background:var(--green-bg);color:var(--green)}
+.section{margin-top:13px}.section-title{font:600 18px "Playfair Display",Georgia,serif;margin:0 0 9px}
+.grid-2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.form-grid .wide{grid-column:1/-1}
+.form-actions{display:flex;justify-content:flex-end;gap:7px;margin-top:12px}
+.table-wrap{overflow:auto}
+table{width:100%;border-collapse:collapse;font-size:9px;min-width:540px}
+th{font-size:8px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);font-weight:800;background:#faf8f9;text-align:left;padding:9px 10px;white-space:nowrap}
+td{padding:9px 10px;border-top:1px solid #f0ebee;vertical-align:middle}
+td strong{font-size:9px}td .muted{font-size:8px;color:var(--muted);display:block;margin-top:2px}
+.text-right{text-align:right}.nowrap{white-space:nowrap}
+.status{display:inline-flex;align-items:center;border-radius:20px;padding:4px 7px;font-size:8px;font-weight:800;white-space:nowrap}
+.status.good{background:var(--green-bg);color:var(--green)}.status.warn{background:var(--amber-bg);color:var(--amber)}.status.bad{background:var(--red-bg);color:var(--red)}.status.neutral{background:#f0edf0;color:#736771}
+.empty{padding:20px;text-align:center;color:var(--muted);font-size:9px}
+.inline-form{display:grid;grid-template-columns:minmax(160px,1.5fr) minmax(80px,.55fr) minmax(120px,1fr) auto;gap:7px;align-items:end}
+.product-name{font-weight:700}.pill-note{display:inline-flex;padding:5px 8px;border-radius:20px;background:var(--gold-soft);color:#87653c;font-size:8px;font-weight:800}
+.callout{border:1px solid #ead9e0;background:#fcf7f9;border-radius:10px;padding:11px 12px;color:#684a57;font-size:9px;line-height:1.6}
+.callout strong{color:var(--wine)}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.tab{padding:7px 10px;border:1px solid var(--line);border-radius:20px;background:#fff;color:var(--muted);font-size:8px;font-weight:800}
+.tab.active{background:var(--wine-soft);border-color:#e7cbd5;color:var(--wine)}
+.row-actions{display:flex;gap:5px;align-items:center}
+.cart-total{display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--line);padding:9px 0;font-size:10px}
+.cart-total strong{font-size:16px}
+.footer-note{margin-top:19px;border-top:1px solid var(--line);padding-top:11px;display:flex;justify-content:space-between;color:#968a91;font-size:8px;letter-spacing:.5px}
+.mobile-menu{display:none}
+@media(max-width:1050px){:root{--sidebar:210px}.content{padding:22px 20px 32px}.topbar{padding:0 20px}.cols{grid-template-columns:1fr}}
+@media(max-width:760px){:root{--sidebar:0px}.sidebar{width:100%;height:auto;inset:auto 0 0;top:auto;padding:7px 8px calc(7px + env(safe-area-inset-bottom));border-right:0;border-top:1px solid var(--line);flex-direction:row;justify-content:space-around}.sidebar-top,.sidebar .nav-label,.sidebar-bottom,.external-links{display:none}.nav{display:flex;width:100%;justify-content:space-around;gap:2px}.nav button{width:auto;min-width:0;flex:1;display:grid;justify-items:center;gap:3px;padding:7px 3px;font-size:7px}.nav button svg{width:17px;height:17px}.main{margin-left:0;padding-bottom:76px}.topbar{height:55px;padding:0 14px}.content{padding:19px 13px 25px}.page-head{align-items:flex-start;flex-direction:column}.page-actions{width:100%}.kpis{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}.kpi{padding:10px}.kpi strong{font-size:19px}.grid-2,.form-grid{grid-template-columns:1fr}.inline-form{grid-template-columns:1fr 1fr}.inline-form .wide-mobile{grid-column:1/-1}.quick-grid{grid-template-columns:1fr 1fr}.panel-body{padding:12px}.footer-note{font-size:7px}.top-actions .connection{display:none}}
+@media(max-width:390px){.quick-grid{grid-template-columns:1fr}.inline-form{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<section id="loginView" class="login-wrap">
+  <form id="loginForm" class="login-card">
+    <div class="brand-lockup"><span class="brand-mark">L</span><div><div class="brand-name">LUXURIOSA</div><div class="brand-sub">GESTÃO DA LOJA</div></div></div>
+    <h1>Gestão com clareza.</h1>
+    <p>Entre para cuidar das vendas presenciais, caixa, estoque, custos e despesas. Os pedidos feitos pelo site ficam em outro painel.</p>
+    <div class="field"><label for="loginEmail">E-mail administrativo</label><input id="loginEmail" type="email" autocomplete="username" required placeholder="seu e-mail"></div>
+    <div class="field" style="margin-top:12px"><label for="loginPassword">Senha</label><input id="loginPassword" type="password" autocomplete="current-password" required placeholder="sua senha"></div>
+    <button class="primary full" style="margin-top:17px" type="submit">Entrar no Lux-Gestão</button>
+    <div id="loginNotice" class="notice"></div>
+  </form>
+</section>
+
+<div id="appView" class="app hidden">
+<aside class="sidebar">
+  <div class="sidebar-top">
+    <div class="brand-lockup"><span class="brand-mark">L</span><div><div class="brand-name">LUXURIOSA</div><div class="brand-sub">GESTÃO DA LOJA</div></div></div>
+    <span class="workspace-tag">AMBIENTE ADMINISTRATIVO</span>
+  </div>
+  <div class="nav-label">ROTINA DA LOJA</div>
+  <nav class="nav" aria-label="Navegação principal">
+    <button class="active" data-view="overview"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>Visão geral</button>
+    <button data-view="sales"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 4h16v16H4z"/><path d="M8 8h8M8 12h8M8 16h4"/></svg>Vendas e caixa</button>
+    <button data-view="stock"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m12 3 9 5-9 5-9-5 9-5Z"/><path d="M3 8v9l9 5 9-5V8M12 13v9"/></svg>Estoque</button>
+    <button data-view="products"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h16v13H4z"/><path d="M8 7V4h8v3M8 12h8M8 16h5"/></svg>Custos e kits</button>
+    <button data-view="expenses"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 5h16v15H4z"/><path d="M8 9h8M8 13h8M8 17h4M8 2v6M16 2v6"/></svg>Despesas</button>
+  </nav>
+  <div class="nav-label external-links">OUTROS SISTEMAS</div>
+  <div class="external-links">
+    <a class="nav-link" href="/lux-gestao-pedidos/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h16l-1 13H5L4 7Z"/><path d="M9 9V6a3 3 0 0 1 6 0v3"/></svg>Pedidos Online ↗</a>
+    <a class="nav-link" href="/previa/lux-central/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19V5M4 19h17"/><path d="m7 15 4-4 3 2 6-7"/></svg>Lux-Central ↗</a>
+  </div>
+  <div class="sidebar-bottom">
+    <div class="user-line"><strong id="adminName">Administrador</strong><span>Conta autorizada</span></div>
+    <button id="logoutBtn" type="button">Sair da conta</button>
+  </div>
+</aside>
+
+<main class="main">
+  <header class="topbar">
+    <div class="breadcrumb">LUXURIOSA <span style="color:#c3b8be">/</span> <strong id="breadcrumb">Visão geral</strong></div>
+    <div class="top-actions"><span id="connection" class="connection">CONECTANDO</span><button id="refreshBtn" type="button">↻ Atualizar</button></div>
+  </header>
+  <div class="content">
+    <div id="notice" class="notice" role="status" aria-live="polite"></div>
+
+    <section class="view" id="view-overview">
+      <div class="page-head">
+        <div><div class="eyebrow">OPERAÇÃO INTERNA · PONTO DE VENDA</div><h1>Gestão da loja</h1><p class="page-desc">O centro de comando da operação presencial: registre vendas, acompanhe o caixa, organize estoque, custos e despesas.</p></div>
+        <div class="page-actions"><span class="pill-note">PEDIDOS DO SITE NÃO ENTRAM AQUI</span></div>
+      </div>
+      <div class="callout" style="margin-bottom:13px"><strong>Este é o sistema da operação interna.</strong> Use Vendas e caixa para registrar uma venda presencial. Para acompanhar pedidos feitos pela loja virtual, pagamentos do checkout e entregas, abra <a href="/lux-gestao-pedidos/">Pedidos Online</a>.</div>
+      <div class="kpis">
+        <div class="kpi"><div class="kpi-top"><span class="kpi-label">Vendas presenciais · últimas 50 consultadas</span><span class="kpi-icon">▤</span></div><strong id="kpiSales">—</strong><small id="kpiSalesNote">Aguardando consulta</small></div>
+        <div class="kpi"><div class="kpi-top"><span class="kpi-label">Recebido · vendas presenciais</span><span class="kpi-icon">R$</span></div><strong id="kpiReceived">—</strong><small>Somente vendas registradas como pagas</small></div>
+        <div class="kpi"><div class="kpi-top"><span class="kpi-label">Estoque com controle ativo</span><span class="kpi-icon">◇</span></div><strong id="kpiStock">—</strong><small id="kpiStockNote">Contagem física pendente</small></div>
+        <div class="kpi"><div class="kpi-top"><span class="kpi-label">Despesas ativas cadastradas</span><span class="kpi-icon">−</span></div><strong id="kpiExpenses">—</strong><small id="kpiExpensesNote">Últimos lançamentos</small></div>
+      </div>
+      <div class="cols">
+        <section class="panel">
+          <div class="panel-head"><div><h2>O que precisa de atenção</h2><p>Pendências reais dos cadastros e da rotina de loja.</p></div><span id="priorityCount" class="status neutral">CONSULTANDO</span></div>
+          <div class="panel-body"><div id="tasks" class="task-list"><div class="empty">Consultando os dados da operação...</div></div></div>
+        </section>
+        <section class="panel">
+          <div class="panel-head"><div><h2>Comece por aqui</h2><p>Atalhos para as tarefas mais usadas.</p></div></div>
+          <div class="panel-body">
+            <div class="quick-grid">
+              <button class="quick" data-go="sales"><span class="qicon">＋</span><span><strong>Registrar venda</strong><small>Venda presencial e recebimento</small></span></button>
+              <button class="quick" data-go="stock"><span class="qicon">▧</span><span><strong>Conferir estoque</strong><small>Contagem, entrada e ajuste</small></span></button>
+              <button class="quick" data-go="products"><span class="qicon">R$</span><span><strong>Cadastrar custos</strong><small>Base para calcular a margem</small></span></button>
+              <button class="quick" data-go="expenses"><span class="qicon">−</span><span><strong>Lançar despesa</strong><small>Fornecedor, frete, taxas e mais</small></span></button>
+            </div>
+            <div class="callout" style="margin-top:12px"><strong>Outro fluxo:</strong> pedidos online, checkout InfinitePay e entrega têm uma fila própria. <a href="/lux-gestao-pedidos/">Abrir Pedidos Online →</a></div>
+          </div>
+        </section>
+      </div>
+      <section class="panel section">
+        <div class="panel-head"><div><h2>Movimentação recente</h2><p>Últimas vendas lançadas no caixa interno.</p></div><button class="small-btn" data-go="sales">Ver vendas</button></div>
+        <div class="table-wrap"><table><thead><tr><th>Venda</th><th>Cliente</th><th>Data</th><th>Pagamento</th><th class="text-right">Total</th></tr></thead><tbody id="recentSales"><tr><td colspan="5" class="empty">Aguardando dados...</td></tr></tbody></table></div>
+      </section>
+    </section>
+
+    <section class="view hidden" id="view-sales">
+      <div class="page-head"><div><div class="eyebrow">CAIXA · ATENDIMENTO PRESENCIAL</div><h1>Vendas e caixa</h1><p class="page-desc">Registre uma venda feita diretamente pela loja, marque o recebimento e acompanhe o histórico. Pedidos online são administrados em outro sistema.</p></div><div class="page-actions"><span class="status neutral">VENDA PRESENCIAL</span></div></div>
+      <div class="cols">
+        <section class="panel">
+          <div class="panel-head"><div><h2>Registrar venda</h2><p>Adicione os produtos, confira o total e registre o pagamento.</p></div><span class="status good">PDV INTERNO</span></div>
+          <div class="panel-body">
+            <div class="form-grid">
+              <div class="field wide"><label for="posProduct">Produto</label><select id="posProduct"><option value="">Carregando catálogo...</option></select></div>
+              <div class="field"><label for="posQuantity">Quantidade</label><input id="posQuantity" type="number" min="1" max="999" step="1" value="1"></div>
+              <div class="field" style="align-self:end"><button id="addCartBtn" class="subtle full" type="button">＋ Adicionar item</button></div>
+            </div>
+            <div class="section">
+              <div class="section-title">Itens da venda</div>
+              <div class="table-wrap"><table style="min-width:380px"><thead><tr><th>Produto</th><th>Qtd.</th><th class="text-right">Total</th><th></th></tr></thead><tbody id="cartRows"><tr><td colspan="4" class="empty">Adicione produtos para começar.</td></tr></tbody></table></div>
+            </div>
+            <div class="form-grid section">
+              <div class="field"><label for="posCustomer">Cliente (opcional)</label><input id="posCustomer" maxlength="120" placeholder="Nome do cliente"></div>
+              <div class="field"><label for="posDiscount">Desconto (R$)</label><input id="posDiscount" type="number" min="0" step="0.01" value="0"></div>
+              <div class="field"><label for="posMethod">Forma de pagamento</label><select id="posMethod"><option value="PIX">Pix</option><option value="DINHEIRO">Dinheiro</option><option value="CARTAO_DEBITO">Cartão de débito</option><option value="CARTAO_CREDITO">Cartão de crédito</option><option value="TRANSFERENCIA">Transferência</option><option value="OUTRO">Outro</option></select></div>
+              <div class="field"><label for="posStatus">Situação do pagamento</label><select id="posStatus"><option value="paid">Recebido agora</option><option value="pending">Ainda não recebido</option></select></div>
+              <div class="field wide hidden" id="cashReceivedWrap"><label for="cashReceived">Valor recebido em dinheiro (R$)</label><input id="cashReceived" type="number" min="0" step="0.01" placeholder="0,00"></div>
+            </div>
+            <div class="cart-total"><span>Subtotal</span><strong id="cartSubtotal">R$ 0,00</strong></div>
+            <div class="cart-total"><span>Desconto</span><strong id="cartDiscount">R$ 0,00</strong></div>
+            <div class="cart-total"><span>Total da venda</span><strong id="cartTotal">R$ 0,00</strong></div>
+            <div class="form-actions"><button id="clearCartBtn" type="button">Limpar</button><button id="saveSaleBtn" type="button" class="primary">Registrar venda</button></div>
+            <p style="font-size:8px;color:var(--muted);margin:9px 0 0">A venda só baixa o estoque dos produtos cujo controle já tenha sido ativado após a contagem física.</p>
+          </div>
+        </section>
+        <section class="panel">
+          <div class="panel-head"><div><h2>Resumo do caixa</h2><p>Últimas 50 vendas internas retornadas pelo sistema.</p></div></div>
+          <div class="panel-body">
+            <div class="task-list" id="cashSummary"><div class="empty">Aguardando dados...</div></div>
+            <div class="callout" style="margin-top:12px">O registro de venda não cria cobrança InfinitePay. Para pedidos iniciados no site, use o módulo <a href="/lux-gestao-pedidos/">Pedidos Online</a>.</div>
+          </div>
+        </section>
+      </div>
+      <section class="panel section"><div class="panel-head"><div><h2>Histórico de vendas presenciais</h2><p>Pedidos iniciados na loja não aparecem nesta lista.</p></div><span id="salesCount" class="status neutral">—</span></div><div class="table-wrap"><table><thead><tr><th>Nº</th><th>Data</th><th>Cliente</th><th>Pagamento</th><th>Estoque</th><th class="text-right">Total</th><th>Ação</th></tr></thead><tbody id="salesRows"><tr><td colspan="7" class="empty">Aguardando dados...</td></tr></tbody></table></div></section>
+    </section>
+
+    <section class="view hidden" id="view-stock">
+      <div class="page-head"><div><div class="eyebrow">PRODUTOS · SALDO FÍSICO</div><h1>Estoque</h1><p class="page-desc">Cadastre a contagem real, registre entradas e saídas e mantenha um histórico de cada movimentação.</p></div><div class="page-actions"><button id="openMovementBtn" class="primary" type="button">＋ Registrar movimentação</button></div></div>
+      <div class="callout" style="margin-bottom:12px"><strong>Atenção:</strong> saldo não contado não é estoque zero. Ative o controle somente depois de conferir fisicamente o produto. A partir daí, as vendas pagas poderão baixar os itens automaticamente, inclusive os componentes de kits.</div>
+      <section class="panel"><div class="panel-head"><div><h2>Produtos e saldo controlado</h2><p>Ative individualmente depois de conferir a quantidade na prateleira.</p></div><span id="stockCount" class="status neutral">—</span></div><div class="table-wrap"><table><thead><tr><th>Produto</th><th>Saldo</th><th>Alerta mínimo</th><th>Controle</th><th>Ação</th></tr></thead><tbody id="stockRows"><tr><td colspan="5" class="empty">Aguardando dados...</td></tr></tbody></table></div></section>
+      <section class="panel section"><div class="panel-head"><div><h2>Histórico de movimentações</h2><p>Entradas, saídas, perdas e ajustes com usuário e saldo final.</p></div><span class="status neutral">ÚLTIMAS 100</span></div><div class="table-wrap"><table><thead><tr><th>Data</th><th>Produto</th><th>Tipo</th><th>Variação</th><th>Saldo final</th><th>Observação</th></tr></thead><tbody id="movementRows"><tr><td colspan="6" class="empty">Nenhuma movimentação registrada.</td></tr></tbody></table></div></section>
+    </section>
+
+    <section class="view hidden" id="view-products">
+      <div class="page-head"><div><div class="eyebrow">FORMAÇÃO DE PREÇO · COMPOSIÇÃO</div><h1>Custos e kits</h1><p class="page-desc">Cadastre quanto cada produto custa para a loja e defina os componentes dos kits. Essas informações alimentam a margem e a baixa automática de estoque.</p></div></div>
+      <div class="grid-2">
+        <section class="panel">
+          <div class="panel-head"><div><h2>Custo de aquisição</h2><p>Informe o custo unitário pago ao fornecedor.</p></div></div>
+          <div class="panel-body">
+            <form id="costForm">
+              <div class="field"><label for="costProduct">Produto</label><select id="costProduct" required></select></div>
+              <div class="field" style="margin-top:9px"><label for="costValue">Custo unitário (R$)</label><input id="costValue" type="number" min="0" step="0.01" required placeholder="0,00"></div>
+              <div class="form-actions"><button class="primary" type="submit">Salvar custo</button></div>
+            </form>
+          </div>
+          <div class="table-wrap"><table><thead><tr><th>Produto</th><th class="text-right">Custo unitário</th><th>Atualizado</th></tr></thead><tbody id="costRows"><tr><td colspan="3" class="empty">Aguardando dados...</td></tr></tbody></table></div>
+        </section>
+        <section class="panel">
+          <div class="panel-head"><div><h2>Composição dos kits</h2><p>Escolha um kit, um componente e a quantidade usada em cada unidade.</p></div></div>
+          <div class="panel-body">
+            <form id="kitForm">
+              <div class="field"><label for="kitProduct">Kit</label><select id="kitProduct" required></select></div>
+              <div class="field" style="margin-top:9px"><label for="kitComponent">Produto componente</label><select id="kitComponent" required></select></div>
+              <div class="form-grid" style="margin-top:9px"><div class="field"><label for="kitQuantity">Unidades por kit</label><input id="kitQuantity" type="number" min="1" max="999" value="1" required></div><div class="field" style="align-self:end"><button class="primary full" type="submit">Adicionar componente</button></div></div>
+            </form>
+          </div>
+          <div class="table-wrap"><table><thead><tr><th>Kit</th><th>Componente</th><th>Qtd.</th><th></th></tr></thead><tbody id="kitRows"><tr><td colspan="4" class="empty">Nenhuma composição cadastrada.</td></tr></tbody></table></div>
+        </section>
+      </div>
+      <div class="callout section"><strong>Por que isso importa?</strong> Sem custo de aquisição, o lucro e a margem ficam incompletos. Sem receita de kit, o sistema não sabe quantas unidades de cada componente devem sair quando um kit for vendido.</div>
+    </section>
+
+    <section class="view hidden" id="view-expenses">
+      <div class="page-head"><div><div class="eyebrow">CONTROLE FINANCEIRO</div><h1>Despesas</h1><p class="page-desc">Lance os gastos da operação para acompanhar o resultado. Despesas canceladas permanecem no histórico, sem entrar nos totais ativos.</p></div></div>
+      <div class="grid-2">
+        <section class="panel">
+          <div class="panel-head"><div><h2>Novo lançamento</h2><p>Registre um gasto pago ou a pagar.</p></div></div>
+          <div class="panel-body">
+            <form id="expenseForm">
+              <div class="form-grid">
+                <div class="field"><label for="expenseDate">Data</label><input id="expenseDate" type="date" required></div>
+                <div class="field"><label for="expenseCategory">Categoria</label><select id="expenseCategory" required><option value="FORNECEDOR">Fornecedor</option><option value="FRETE">Frete</option><option value="TAXAS">Taxas</option><option value="MARKETING">Marketing</option><option value="EMBALAGEM">Embalagem</option><option value="ALUGUEL">Aluguel</option><option value="SERVICOS">Serviços</option><option value="IMPOSTOS">Impostos</option><option value="OUTROS">Outros</option></select></div>
+                <div class="field wide"><label for="expenseDescription">Descrição</label><input id="expenseDescription" maxlength="180" required placeholder="Ex.: compra de mercadorias"></div>
+                <div class="field"><label for="expenseAmount">Valor (R$)</label><input id="expenseAmount" type="number" min="0.01" step="0.01" required placeholder="0,00"></div>
+                <div class="field"><label for="expenseMethod">Forma de pagamento</label><select id="expenseMethod"><option value="">Não informado</option><option value="PIX">Pix</option><option value="DINHEIRO">Dinheiro</option><option value="TRANSFERENCIA">Transferência</option><option value="CARTAO_CREDITO">Cartão de crédito</option><option value="CARTAO_DEBITO">Cartão de débito</option><option value="OUTRO">Outro</option></select></div>
+                <div class="field wide"><label style="display:flex;align-items:center;gap:8px;font-weight:600"><input id="expenseRecurring" type="checkbox" style="width:14px;height:14px"> Despesa recorrente</label></div>
+              </div>
+              <div class="form-actions"><button class="primary" type="submit">Salvar despesa</button></div>
+            </form>
+          </div>
+        </section>
+        <section class="panel">
+          <div class="panel-head"><div><h2>Resumo dos lançamentos</h2><p>Até 100 registros mais recentes.</p></div></div>
+          <div class="panel-body"><div id="expenseSummary" class="task-list"><div class="empty">Aguardando dados...</div></div></div>
+        </section>
+      </div>
+      <section class="panel section"><div class="panel-head"><div><h2>Histórico de despesas</h2><p>Cancelamentos exigem justificativa e não apagam o registro.</p></div><span id="expenseCount" class="status neutral">—</span></div><div class="table-wrap"><table><thead><tr><th>Data</th><th>Categoria</th><th>Descrição</th><th>Pagamento</th><th class="text-right">Valor</th><th>Situação</th><th>Ação</th></tr></thead><tbody id="expenseRows"><tr><td colspan="7" class="empty">Aguardando dados...</td></tr></tbody></table></div></section>
+    </section>
+    <div class="footer-note"><span>LUXURIOSA · GESTÃO DA LOJA</span><span>CAIXA · ESTOQUE · CUSTOS · DESPESAS</span></div>
+  </div>
+</main>
+</div>
+
+<dialog id="movementDialog" style="width:min(460px,calc(100% - 28px));border:1px solid var(--line);border-radius:14px;padding:0;box-shadow:0 20px 70px #241d2133">
+<form id="movementForm" method="dialog" style="padding:18px">
+  <div class="eyebrow">ESTOQUE · MOVIMENTAÇÃO</div><h2 style="font:600 21px 'Playfair Display',serif;margin:0 0 5px">Registrar movimento</h2><p style="font-size:9px;color:var(--muted);margin:0 0 14px">A movimentação será registrada no histórico com o saldo resultante.</p>
+  <div class="field"><label for="movementProduct">Produto</label><select id="movementProduct" required></select></div>
+  <div class="field" style="margin-top:10px"><label for="movementType">Tipo de movimentação</label><select id="movementType"><option value="opening">Contagem inicial / abertura</option><option value="inbound">Entrada de mercadoria</option><option value="outbound">Saída manual</option><option value="return">Devolução ao estoque</option><option value="loss">Perda / avaria</option><option value="adjustment">Ajuste de contagem (+ ou −)</option></select></div>
+  <div class="field" style="margin-top:10px"><label id="movementQuantityLabel" for="movementQuantity">Quantidade</label><input id="movementQuantity" type="number" step="1" required placeholder="Ex.: 5"></div>
+  <div class="field" style="margin-top:10px"><label for="movementNote">Observação</label><input id="movementNote" maxlength="500" placeholder="Ex.: contagem física em 11/11"></div>
+  <div class="form-actions"><button id="cancelMovementBtn" type="button">Cancelar</button><button class="primary" type="submit">Registrar movimentação</button></div>
+</form>
+</dialog>
+
+<script type="module">
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+const SUPABASE_URL="https://byiykxfugvxuowueuxca.supabase.co";
+const SUPABASE_KEY="sb_publishable_LaMbeWQ1PNANEQ85SD_35Q_wDzswy8y";
+const supabase=createClient(SUPABASE_URL,SUPABASE_KEY,{auth:{autoRefreshToken:true,persistSession:true,detectSessionInUrl:true}});
+const $=id=>document.getElementById(id);
+const money=cents=>Number(cents||0).toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
+const number=n=>Number(n||0).toLocaleString("pt-BR");
+const cents=value=>Math.round(Number(value||0)*100);
+const dateBR=value=>value?new Date(value).toLocaleDateString("pt-BR"):"—";
+const paymentLabels={paid:"Recebido",pending:"Pendente"};
+const methodLabels={DINHEIRO:"Dinheiro",PIX:"Pix",TRANSFERENCIA:"Transferência",CARTAO_CREDITO:"Crédito",CARTAO_DEBITO:"Débito",OUTRO:"Outro"};
+const movementLabels={opening:"Contagem inicial",inbound:"Entrada",outbound:"Saída",return:"Devolução",loss:"Perda / avaria",adjustment:"Ajuste",sale:"Venda"};
+const expenseLabels={FORNECEDOR:"Fornecedor",FRETE:"Frete",TAXAS:"Taxas",MARKETING:"Marketing",EMBALAGEM:"Embalagem",ALUGUEL:"Aluguel",SERVICOS:"Serviços",IMPOSTOS:"Impostos",OUTROS:"Outros"};
+let catalog=[],stock=[],movements=[],costs=[],recipes=[],expenses=[],sales=[],cart=[],view="overview",idempotencyKey=null,startingApp=false;
+function safeText(value){return String(value??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
+function showNotice(message,type=""){const box=$("notice");box.textContent=message;box.className="notice show"+(type?" "+type:"");window.scrollTo({top:0,behavior:"smooth"});}
+function setConnection(text,ok=true){$("connection").textContent=text.toUpperCase();$("connection").style.color=ok?"var(--green)":"var(--red)";}
+function emptyRow(columns,text){return '<tr><td colspan="'+columns+'" class="empty">'+safeText(text)+'</td></tr>';}
+async function api(action,payload={}){
+ const {data,error}=await supabase.functions.invoke("management-sales",{body:{action,...payload}});
+ if(error)throw error;
+ if(!data?.ok)throw new Error(data?.error||"Não foi possível concluir a operação.");
+ return data;
+}
+async function loadCatalog(){
+ const response=await fetch("/data/produtos.json",{cache:"no-store"});
+ if(!response.ok)throw new Error("Não foi possível carregar o catálogo de produtos.");
+ const data=await response.json();catalog=Array.isArray(data.produtos)?data.produtos:[];
+}
+async function loadData(showSuccess=false){
+ $("refreshBtn").disabled=true;setConnection("Consultando");
+ try{
+  const [stockResult,costResult,kitResult,expenseResult,saleResult]=await Promise.all([
+   api("stock-list"),api("cost-list"),api("kit-recipes-list"),api("expense-list"),api("list",{limit:50})
+  ]);
+  stock=stockResult.stock||[];movements=stockResult.movements||[];costs=costResult.costs||[];recipes=kitResult.recipes||[];expenses=expenseResult.expenses||[];
+  sales=(saleResult.sales||[]).filter(s=>s.source!=="website");
+  if(!catalog.length)await loadCatalog();
+  renderAll();setConnection("Conectado");
+  if(showSuccess)showNotice("Dados atualizados. Nenhum saldo físico foi alterado.","success");
+ }catch(error){setConnection("Falha na consulta",false);showNotice(error.message||"Falha ao consultar o sistema.","error");throw error;}
+ finally{$("refreshBtn").disabled=false;}
+}
+function nav(name){
+ view=name;
+ document.querySelectorAll(".view").forEach(el=>el.classList.toggle("hidden",el.id!=="view-"+name));
+ document.querySelectorAll("[data-view]").forEach(el=>el.classList.toggle("active",el.dataset.view===name));
+ const names={overview:"Visão geral",sales:"Vendas e caixa",stock:"Estoque",products:"Custos e kits",expenses:"Despesas"};
+ $("breadcrumb").textContent=names[name]||"Gestão";
+ if(name==="sales")renderSales();if(name==="stock")renderStock();if(name==="products")renderProducts();if(name==="expenses")renderExpenses();
+}
+function optionsForProducts(select,items,placeholder){
+ const current=select.value;
+ select.innerHTML='<option value="">'+safeText(placeholder)+'</option>'+items.map(p=>'<option value="'+safeText(p.id)+'">'+safeText(p.nome)+'</option>').join("");
+ if(items.some(p=>String(p.id)===current))select.value=current;
+}
+function renderAll(){fillProductSelects();renderOverview();renderSales();renderStock();renderProducts();renderExpenses();renderCart();}
+function fillProductSelects(){
+ const all=[...catalog].sort((a,b)=>a.nome.localeCompare(b.nome,"pt-BR"));
+ optionsForProducts($("posProduct"),all,"Selecione um produto");
+ optionsForProducts($("costProduct"),all,"Selecione um produto");
+ optionsForProducts($("movementProduct"),all,"Selecione um produto");
+ const kits=all.filter(p=>/kit/i.test(p.nome));
+ optionsForProducts($("kitProduct"),kits,"Selecione o kit");
+ optionsForProducts($("kitComponent"),all,"Selecione o componente");
+}
+function internalSales(){
+ return sales.filter(s=>s.source!=="website");
+}
+function renderOverview(){
+ const now=Date.now(),from=now-30*86400000,period=sales.filter(s=>new Date(s.created_at).getTime()>=from),paid=period.filter(s=>s.payment_status==="paid"),received=paid.reduce((sum,s)=>sum+Number(s.total_cents||0),0);
+ const activeExpenses=expenses.filter(e=>e.status==="active"),controlled=stock.filter(x=>x.stock_control_enabled===true).length,needs=stock.length-controlled;
+ $("kpiSales").textContent=number(period.length);$("kpiSalesNote").textContent=number(paid.length)+" recebidas · "+number(period.filter(s=>s.payment_status==="pending").length)+" pendentes";
+ $("kpiReceived").textContent=money(received);$("kpiStock").textContent=number(controlled)+"/"+number(stock.length);$("kpiStockNote").textContent=needs?number(needs)+" aguardando contagem":"Controle ativo no catálogo";
+ $("kpiExpenses").textContent=number(activeExpenses.length);$("kpiExpensesNote").textContent="Lançamentos ativos entre os 100 mais recentes";
+ const tasks=[];
+ if(stock.length&&needs)tasks.push(["▧","Conferir o estoque físico",needs+" de "+stock.length+" produtos ainda não têm controle ativo. Faça a contagem antes de ativar o saldo.","stock"]);
+ const costIds=new Set(costs.map(x=>String(x.product_id)));
+ const missingCosts=stock.filter(x=>!costIds.has(String(x.product_id))).length;
+ if(missingCosts)tasks.push(["R$","Cadastrar custos dos produtos",missingCosts+" produtos do catálogo ainda não têm custo registrado. O cálculo de margem fica parcial.","products"]);
+ if(!recipes.length)tasks.push(["◇","Definir composição dos kits","Sem receitas cadastradas, a baixa automática dos componentes de kits não pode ser calculada.","products"]);
+ if(!sales.length)tasks.push(["＋","Registrar a primeira venda presencial","Use o caixa interno para registrar uma venda feita diretamente pela loja.","sales"]);
+ if(!tasks.length)tasks.push(["✓","Rotina cadastral em dia","Não identificamos pendências básicas de estoque, custos ou kits nesta consulta.","sales"]);
+ $("priorityCount").textContent=tasks.length+" ITENS";$("tasks").innerHTML=tasks.slice(0,5).map((t,i)=>'<div class="task '+(t[0]==="✓"?"ok":"")+'"><span class="task-icon">'+t[0]+'</span><div><strong>'+safeText(t[1])+'</strong><p>'+safeText(t[2])+'</p><button class="small-btn subtle" data-go="'+t[3]+'" style="margin-top:6px">Abrir etapa →</button></div></div>').join("");
+ const recent=period.slice(0,6);
+ $("recentSales").innerHTML=recent.length?recent.map(s=>'<tr><td><strong>#'+safeText(s.sale_number)+'</strong></td><td>'+safeText(s.customer_name||"Consumidor")+'</td><td>'+dateBR(s.created_at)+'</td><td><span class="status '+(s.payment_status==="paid"?"good":"warn")+'">'+paymentLabels[s.payment_status]+'</span></td><td class="text-right">'+money(s.total_cents)+'</td></tr>').join(""):emptyRow(5,"Nenhuma venda presencial registrada no período.");
+}
+function renderCart(){
+ const rows=$("cartRows");if(!cart.length)rows.innerHTML=emptyRow(4,"Adicione produtos para começar.");
+ else rows.innerHTML=cart.map((item,i)=>'<tr><td><strong>'+safeText(item.product_name)+'</strong></td><td>'+number(item.quantity)+'</td><td class="text-right">'+money(item.quantity*item.unit_price_cents)+'</td><td><button class="small-btn danger" data-remove-cart="'+i+'" type="button">Remover</button></td></tr>').join("");
+ const subtotal=cart.reduce((sum,item)=>sum+item.quantity*item.unit_price_cents,0),discount=cents($("posDiscount").value),total=Math.max(0,subtotal-discount);
+ $("cartSubtotal").textContent=money(subtotal);$("cartDiscount").textContent=money(discount);$("cartTotal").textContent=money(total);
+ $("saveSaleBtn").disabled=!cart.length||total<=0;
+ const cash=$("posMethod").value==="DINHEIRO"&&$("posStatus").value==="paid";
+ $("cashReceivedWrap").classList.toggle("hidden",!cash);
+ if(cash)$("cashReceived").value=(total/100).toFixed(2);
+ idempotencyKey=null;
+}
+function renderSales(){
+ const list=internalSales();$("salesCount").textContent=number(list.length)+" VENDAS";
+ const pending=list.filter(s=>s.payment_status==="pending"),paid=list.filter(s=>s.payment_status==="paid");
+ $("cashSummary").innerHTML=[
+  '<div class="task ok"><span class="task-icon">✓</span><div><strong>'+number(paid.length)+' vendas recebidas</strong><p>Entre as últimas 50 vendas internas consultadas.</p></div></div>',
+  '<div class="task"><span class="task-icon">◷</span><div><strong>'+number(pending.length)+' vendas pendentes</strong><p>Registre o recebimento somente depois que o dinheiro entrar.</p></div></div>',
+  '<div class="task"><span class="task-icon">R$</span><div><strong>'+money(paid.reduce((sum,s)=>sum+Number(s.total_cents||0),0))+'</strong><p>Recebido nas últimas 50 vendas internas.</p></div></div>'
+ ].join("");
+ $("salesRows").innerHTML=list.length?list.map(s=>{
+  const stockText={deducted:"Baixado",partially_tracked:"Parcial",insufficient_stock:"Saldo insuficiente",not_tracked:"Sem controle"}[s.stock_control_status]||"—";
+  const stockTone=s.stock_control_status==="deducted"?"good":s.stock_control_status==="insufficient_stock"?"bad":s.stock_control_status==="partially_tracked"?"warn":"neutral";
+  return '<tr><td><strong>#'+safeText(s.sale_number)+'</strong></td><td>'+dateBR(s.created_at)+'</td><td>'+safeText(s.customer_name||"Consumidor")+'</td><td><span class="status '+(s.payment_status==="paid"?"good":"warn")+'">'+paymentLabels[s.payment_status]+'</span><span class="muted">'+safeText(methodLabels[s.payment_method]||s.payment_method)+'</span></td><td><span class="status '+stockTone+'">'+stockText+'</span></td><td class="text-right"><strong>'+money(s.total_cents)+'</strong></td><td>'+(s.payment_status==="pending"?'<button class="small-btn subtle" data-mark-paid="'+safeText(s.id)+'" type="button">Registrar recebimento</button>':'<span class="muted">Concluída</span>')+'</td></tr>';
+ }).join(""):emptyRow(7,"Nenhuma venda presencial registrada. Pedidos do site são exibidos em Pedidos Online.");
+}
+function renderStock(){
+ const map=new Map(stock.map(x=>[String(x.product_id),x]));
+ const rows=[...catalog].sort((a,b)=>a.nome.localeCompare(b.nome,"pt-BR"));
+ const controlled=stock.filter(x=>x.stock_control_enabled===true).length;$("stockCount").textContent=controlled+"/"+stock.length+" CONTROLADOS";
+ $("stockRows").innerHTML=rows.map(p=>{
+  const x=map.get(String(p.id)),enabled=x?.stock_control_enabled===true,qty=Number(x?.quantity_on_hand||0),reorder=Number(x?.reorder_point||0);
+  let balance=enabled?number(qty)+" un.":"<span class='status warn'>Contagem pendente</span>";
+  if(enabled&&qty<=reorder)balance+='<span class="muted" style="color:var(--amber)">Abaixo do mínimo</span>';
+  return '<tr><td><span class="product-name">'+safeText(p.nome)+'</span><span class="muted">Código '+safeText(p.id)+'</span></td><td>'+balance+'</td><td>'+number(reorder)+'</td><td><span class="status '+(enabled?"good":"warn")+'">'+(enabled?"Ativo":"Não ativado")+'</span></td><td><div class="row-actions">'+(enabled?'<button class="small-btn" data-config-stock="'+safeText(p.id)+'" type="button">Ajustar mínimo</button>':'<button class="small-btn primary" data-enable-stock="'+safeText(p.id)+'" type="button">Ativar após contar</button>')+'<button class="small-btn" data-move-stock="'+safeText(p.id)+'" type="button">Movimentar</button></div></td></tr>';
+ }).join("");
+ $("movementRows").innerHTML=movements.length?movements.slice(0,100).map(m=>'<tr><td>'+new Date(m.created_at).toLocaleString("pt-BR")+'</td><td><strong>'+safeText(m.product_name)+'</strong></td><td>'+safeText(movementLabels[m.movement_type]||m.movement_type)+'</td><td class="nowrap">'+(Number(m.quantity_delta)>0?"+":"")+number(m.quantity_delta)+'</td><td>'+number(m.balance_after)+'</td><td>'+safeText(m.note||"—")+'</td></tr>').join(""):emptyRow(6,"Nenhuma movimentação registrada.");
+}
+function renderProducts(){
+ const costMap=new Map(costs.map(x=>[String(x.product_id),x]));
+ $("costRows").innerHTML=costs.length?costs.map(c=>'<tr><td><strong>'+safeText(c.product_name)+'</strong><span class="muted">Código '+safeText(c.product_id)+'</span></td><td class="text-right">'+money(c.unit_cost_cents)+'</td><td>'+dateBR(c.updated_at)+'</td></tr>').join(""):emptyRow(3,"Nenhum custo cadastrado.");
+ $("kitRows").innerHTML=recipes.length?recipes.map(r=>'<tr><td><strong>'+safeText(r.kit_product_name)+'</strong></td><td>'+safeText(r.component_product_name)+'</td><td>'+number(r.quantity)+'</td><td><button class="small-btn danger" data-remove-recipe="'+safeText(r.kit_product_id)+'|'+safeText(r.component_product_id)+'" type="button">Remover</button></td></tr>').join(""):emptyRow(4,"Nenhuma composição cadastrada.");
+}
+function renderExpenses(){
+ const active=expenses.filter(e=>e.status==="active"),total=active.reduce((sum,e)=>sum+Number(e.amount_cents||0),0);
+ $("expenseCount").textContent=number(expenses.length)+" LANÇAMENTOS";
+ $("expenseSummary").innerHTML=[
+  '<div class="task"><span class="task-icon">R$</span><div><strong>'+money(total)+'</strong><p>Total dos lançamentos ativos entre os 100 mais recentes.</p></div></div>',
+  '<div class="task ok"><span class="task-icon">✓</span><div><strong>'+number(active.length)+' despesas ativas</strong><p>Cancelamentos ficam preservados no histórico.</p></div></div>'
+ ].join("");
+ $("expenseRows").innerHTML=expenses.length?expenses.map(e=>'<tr><td>'+dateBR(e.expense_date)+'</td><td>'+safeText(expenseLabels[e.category]||e.category)+'</td><td><strong>'+safeText(e.description)+'</strong>'+(e.recurring?'<span class="muted">Recorrente</span>':'')+(e.status==="void"?'<span class="muted">Motivo: '+safeText(e.void_reason||"—")+'</span>':'')+'</td><td>'+safeText(methodLabels[e.payment_method]||e.payment_method||"—")+'</td><td class="text-right"><strong>'+money(e.amount_cents)+'</strong></td><td><span class="status '+(e.status==="active"?"good":"neutral")+'">'+(e.status==="active"?"Ativa":"Cancelada")+'</span></td><td>'+(e.status==="active"?'<button class="small-btn danger" data-void-expense="'+safeText(e.id)+'" type="button">Cancelar</button>':'—')+'</td></tr>').join(""):emptyRow(7,"Nenhuma despesa cadastrada.");
+}
+async function enableStock(productId){
+ const product=catalog.find(p=>String(p.id)===String(productId));if(!product)return;
+ const existing=stock.find(x=>String(x.product_id)===String(productId));
+ if(existing?.stock_control_enabled){
+  const reorderInput=prompt("Quantidade mínima para alerta (unidades):",String(existing.reorder_point??0));
+  if(reorderInput===null)return;
+  const reorder=Number(reorderInput);if(!Number.isSafeInteger(reorder)||reorder<0){showNotice("Informe um mínimo inteiro igual ou maior que zero.","error");return;}
+  try{const result=await api("stock-configure",{product_id:String(product.id),product_name:product.nome,reorder_point:reorder,stock_control_enabled:true});showNotice("Mínimo de "+product.nome+" atualizado. Saldo preservado: "+number(result.item.quantity_on_hand)+".","success");await loadData();}
+  catch(error){showNotice(error.message,"error");}
+  return;
+ }
+ const currentBalance=Number(existing?.quantity_on_hand||0);
+ const countedInput=prompt("Contagem física de "+product.nome+"\nInforme quantas unidades existem agora:",String(currentBalance));
+ if(countedInput===null)return;
+ const counted=Number(countedInput);
+ if(!Number.isSafeInteger(counted)||counted<0||counted>1000000){showNotice("Informe uma quantidade inteira entre zero e 1.000.000.","error");return;}
+ const reorderInput=prompt("Quantidade mínima para alerta (unidades):",String(existing?.reorder_point??0));
+ if(reorderInput===null)return;
+ const reorder=Number(reorderInput);if(!Number.isSafeInteger(reorder)||reorder<0){showNotice("Informe um mínimo inteiro igual ou maior que zero.","error");return;}
+ if(!confirm("Confirma a contagem física de "+counted+" unidade(s) para "+product.nome+" e a ativação do controle?"))return;
+ try{
+  const delta=counted-currentBalance;
+  if(delta!==0){
+   await api("stock-move",{product_id:String(product.id),product_name:product.nome,movement_type:"adjustment",quantity_delta:delta,quantity:null,note:"Ajuste de contagem física inicial"});
+  }
+  const result=await api("stock-configure",{product_id:String(product.id),product_name:product.nome,reorder_point:reorder,stock_control_enabled:true});
+  showNotice("Controle ativado para "+product.nome+". Saldo físico registrado: "+number(result.item.quantity_on_hand)+".","success");await loadData();
+ }catch(error){showNotice(error.message,"error");}
+}
+function openMovement(productId=""){
+ optionsForProducts($("movementProduct"),[...catalog].sort((a,b)=>a.nome.localeCompare(b.nome,"pt-BR")),"Selecione um produto");
+ if(productId)$("movementProduct").value=String(productId);
+ $("movementType").value="opening";$("movementQuantity").value="";$("movementNote").value="";
+ $("movementDialog").showModal();
+}
+function updateMovementLabel(){
+ const adjustment=$("movementType").value==="adjustment";
+ $("movementQuantityLabel").textContent=adjustment?"Variação (+ aumenta / − reduz)":"Quantidade";
+ $("movementQuantity").placeholder=adjustment?"Ex.: 4 ou -2":"Ex.: 5";
+}
+async function submitMovement(){
+ const p=catalog.find(x=>String(x.id)===$("movementProduct").value);
+ const type=$("movementType").value,raw=Number($("movementQuantity").value);
+ if(!p||!Number.isSafeInteger(raw)||raw===0||Math.abs(raw)>1000000){showNotice("Confira produto e quantidade inteira diferente de zero.","error");return;}
+ if(type!=="adjustment"&&raw<0){showNotice("Para este movimento, informe a quantidade como número positivo.","error");return;}
+ try{
+  await api("stock-move",{product_id:String(p.id),product_name:p.nome,movement_type:type,quantity:type==="adjustment"?null:raw,quantity_delta:type==="adjustment"?raw:null,note:$("movementNote").value.trim()});
+  $("movementDialog").close();showNotice("Movimentação registrada para "+p.nome+".","success");await loadData();
+ }catch(error){showNotice(error.message,"error");}
+}
+async function saveCost(event){
+ event.preventDefault();const p=catalog.find(x=>String(x.id)===$("costProduct").value),value=Number($("costValue").value);
+ if(!p||!Number.isFinite(value)||value<0){showNotice("Informe produto e custo válido.","error");return;}
+ try{await api("cost-upsert",{product_id:String(p.id),product_name:p.nome,unit_cost_cents:cents(value)});$("costValue").value="";showNotice("Custo de "+p.nome+" salvo.","success");await loadData();}
+ catch(error){showNotice(error.message,"error");}
+}
+async function saveRecipe(event){
+ event.preventDefault();const kit=catalog.find(x=>String(x.id)===$("kitProduct").value),component=catalog.find(x=>String(x.id)===$("kitComponent").value),quantity=Number($("kitQuantity").value);
+ if(!kit||!component||!Number.isSafeInteger(quantity)||quantity<1||quantity>999){showNotice("Confira kit, componente e quantidade.","error");return;}
+ try{await api("kit-recipe-upsert",{kit_product_id:String(kit.id),kit_product_name:kit.nome,component_product_id:String(component.id),component_product_name:component.nome,quantity});showNotice("Componente adicionado à composição de "+kit.nome+".","success");await loadData();}
+ catch(error){showNotice(error.message,"error");}
+}
+async function saveExpense(event){
+ event.preventDefault();const amount=Number($("expenseAmount").value);
+ if(!Number.isFinite(amount)||amount<=0){showNotice("Informe um valor de despesa válido.","error");return;}
+ try{
+  await api("expense-create",{expense_date:$("expenseDate").value,category:$("expenseCategory").value,description:$("expenseDescription").value.trim(),amount_cents:cents(amount),payment_method:$("expenseMethod").value||null,recurring:$("expenseRecurring").checked});
+  $("expenseForm").reset();$("expenseDate").value=new Date().toLocaleDateString("en-CA");showNotice("Despesa registrada.","success");await loadData();
+ }catch(error){showNotice(error.message,"error");}
+}
+function addCartItem(){
+ const id=$("posProduct").value,product=catalog.find(p=>String(p.id)===id),quantity=Number($("posQuantity").value);
+ if(!product||!Number.isSafeInteger(quantity)||quantity<1||quantity>999){showNotice("Selecione um produto e uma quantidade válida.","error");return;}
+ const item=cart.find(x=>String(x.product_id)===String(product.id));
+ if(item)item.quantity+=quantity;else cart.push({product_id:String(product.id),product_name:product.nome,quantity,unit_price_cents:cents(product.preco)});
+ $("posQuantity").value="1";renderCart();
+}
+async function saveSale(){
+ if(!cart.length)return;
+ const items=cart.map(item=>({...item})),subtotal=items.reduce((sum,item)=>sum+item.quantity*item.unit_price_cents,0),discount=cents($("posDiscount").value),total=subtotal-discount,method=$("posMethod").value,status=$("posStatus").value;
+ if(discount<0||discount>=subtotal){showNotice("O desconto deve ser menor que o subtotal.","error");return;}
+ const received=status==="pending"?0:method==="DINHEIRO"?cents($("cashReceived").value||total/100):total;
+ if(status==="paid"&&received<total){showNotice("O valor recebido não pode ser menor que o total.","error");return;}
+ $("saveSaleBtn").disabled=true;
+ try{
+  idempotencyKey=idempotencyKey||crypto.randomUUID();
+  const result=await api("create",{idempotency_key:idempotencyKey,items,discount_cents:discount,payment_method:method,payment_status:status,amount_received_cents:received,customer_name:$("posCustomer").value.trim()||null});
+  const numberSale=result.sale?.sale_number;cart=[];idempotencyKey=null;$("posCustomer").value="";$("posDiscount").value="0";$("cashReceived").value="";renderCart();
+  const stockMessage=result.sale?.stock_control_status==="insufficient_stock"?" Atenção: o sistema registrou insuficiência de saldo para conferência.":"";
+  showNotice("Venda #"+numberSale+" registrada. "+(status==="paid"?"Pagamento lançado como recebido.":"Pagamento ficou pendente.")+stockMessage,"success");
+  await loadData();
+ }catch(error){showNotice(error.message||"Não foi possível registrar a venda.","error");}
+ finally{$("saveSaleBtn").disabled=!cart.length;}
+}
+async function markSalePaid(id){
+ const sale=sales.find(x=>x.id===id);if(!sale)return;
+ if(!confirm("Confirma que recebeu "+money(sale.total_cents)+" da venda #"+sale.sale_number+"?"))return;
+ try{await api("mark-paid",{id,amount_received_cents:sale.total_cents});showNotice("Recebimento da venda #"+sale.sale_number+" registrado.","success");await loadData();}
+ catch(error){showNotice(error.message,"error");}
+}
+async function voidExpense(id){
+ const reason=prompt("Informe o motivo do cancelamento (mínimo 4 caracteres):");if(reason===null)return;
+ if(reason.trim().length<4){showNotice("O motivo precisa ter pelo menos quatro caracteres.","error");return;}
+ try{await api("expense-void",{id,reason:reason.trim()});showNotice("Despesa cancelada e mantida no histórico.","success");await loadData();}
+ catch(error){showNotice(error.message,"error");}
+}
+async function removeRecipe(key){
+ const [kitId,componentId]=key.split("|");const recipe=recipes.find(x=>String(x.kit_product_id)===kitId&&String(x.component_product_id)===componentId);
+ if(!recipe||!confirm("Remover "+recipe.component_product_name+" da composição de "+recipe.kit_product_name+"?"))return;
+ try{await api("kit-recipe-remove",{kit_product_id:kitId,component_product_id:componentId});showNotice("Componente removido.","success");await loadData();}
+ catch(error){showNotice(error.message,"error");}
+}
+function loginError(message){$("loginNotice").textContent=message;$("loginNotice").className="notice show error";}
+async function startApp(session){
+ if(startingApp)return;startingApp=true;
+ $("loginView").classList.add("hidden");$("appView").classList.remove("hidden");
+ $("adminName").textContent=session.user.email||"Administrador";
+ try{await loadCatalog();await loadData();}
+ catch(error){if(/401|403|admin|permissão/i.test(error.message||"")){await supabase.auth.signOut();$("appView").classList.add("hidden");$("loginView").classList.remove("hidden");loginError("Acesso restrito à conta administrativa autorizada.");}}
+ finally{startingApp=false;}
+}
+$("loginForm").addEventListener("submit",async event=>{
+ event.preventDefault();const button=$("loginForm").querySelector("button");button.disabled=true;button.textContent="VALIDANDO…";
+ try{const {data,error}=await supabase.auth.signInWithPassword({email:$("loginEmail").value.trim(),password:$("loginPassword").value});if(error)throw error;await startApp(data.session);}
+ catch(error){loginError(error.message||"Não foi possível entrar.");}
+ finally{button.disabled=false;button.textContent="Entrar no Lux-Gestão";}
+});
+$("logoutBtn").addEventListener("click",async()=>{await supabase.auth.signOut();$("appView").classList.add("hidden");$("loginView").classList.remove("hidden");});
+$("refreshBtn").addEventListener("click",()=>loadData(true));
+document.querySelectorAll("[data-view]").forEach(el=>el.addEventListener("click",()=>nav(el.dataset.view)));
+document.addEventListener("click",event=>{
+ const go=event.target.closest("[data-go]");if(go)nav(go.dataset.go);
+ const remove=event.target.closest("[data-remove-cart]");if(remove){cart.splice(Number(remove.dataset.removeCart),1);renderCart();}
+ const enable=event.target.closest("[data-enable-stock]");if(enable)enableStock(enable.dataset.enableStock);
+ const config=event.target.closest("[data-config-stock]");if(config)enableStock(config.dataset.configStock);
+ const move=event.target.closest("[data-move-stock]");if(move)openMovement(move.dataset.moveStock);
+ const paid=event.target.closest("[data-mark-paid]");if(paid)markSalePaid(paid.dataset.markPaid);
+ const voided=event.target.closest("[data-void-expense]");if(voided)voidExpense(voided.dataset.voidExpense);
+ const recipe=event.target.closest("[data-remove-recipe]");if(recipe)removeRecipe(recipe.dataset.removeRecipe);
+});
+$("addCartBtn").addEventListener("click",addCartItem);
+$("clearCartBtn").addEventListener("click",()=>{if(cart.length&&!confirm("Limpar os itens desta venda?"))return;cart=[];idempotencyKey=null;renderCart();});
+$("posDiscount").addEventListener("input",renderCart);
+$("posMethod").addEventListener("change",renderCart);
+$("posStatus").addEventListener("change",renderCart);
+$("saveSaleBtn").addEventListener("click",saveSale);
+$("movementType").addEventListener("change",updateMovementLabel);
+$("openMovementBtn").addEventListener("click",()=>openMovement());
+$("cancelMovementBtn").addEventListener("click",()=>$("movementDialog").close());
+$("movementForm").addEventListener("submit",event=>{event.preventDefault();submitMovement();});
+$("costForm").addEventListener("submit",saveCost);
+$("kitForm").addEventListener("submit",saveRecipe);
+$("expenseForm").addEventListener("submit",saveExpense);
+$("expenseDate").value=new Date().toLocaleDateString("en-CA");
+$("cashReceived").addEventListener("input",()=>{idempotencyKey=null;});
+supabase.auth.onAuthStateChange((_event,session)=>{if(session&&$("appView").classList.contains("hidden"))startApp(session);});
+const {data:{session}}=await supabase.auth.getSession();
+if(session)await startApp(session);
+</script>
+</body>
+</html>
