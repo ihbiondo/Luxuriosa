@@ -6,3 +6,6 @@ verify_jwt = false
 
 [functions.luxuriosa-intelligence]
 verify_jwt = true
+
+[functions.orders-admin]
+verify_jwt = true
