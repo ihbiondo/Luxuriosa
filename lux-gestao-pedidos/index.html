@@ -104,7 +104,10 @@
     }
     function currentStatus(order){
       if(order.payment_status==="review_required")return "Pagamento em conferência";
-      if(order.payment_status!=="paid")return order.status==="cancelled"?"Pedido cancelado":"Aguardando pagamento";
+      if(order.payment_status!=="paid"){
+        if(order.status==="cancelled")return "Pedido cancelado";
+        return paymentNames[order.payment_status]||"Aguardando pagamento";
+      }
       return statusNames[order.status]||"Em atualização";
     }
     function allowedNext(order){
@@ -175,7 +178,12 @@
         const review=allOrders.filter(o=>o.payment_status==="review_required").length;
         $("summary").replaceChildren(node("span","","Pedidos listados"),node("strong","",String(allOrders.length)),node("span","","Aguardando pagamento"),node("strong","",String(pending)),node("span","","Pagamentos aprovados"),node("strong","",String(paid)),node("span","","Em conferência"),node("strong","",String(review)));
         render();$("notice").className="notice";
-      }catch(error){showNotice(error.message,true);if(/restrito|sessão|login|acesso/i.test(error.message)){$("dashboard").classList.add("hidden");$("loginPanel").classList.remove("hidden");}}
+      }catch(error){
+        if(/restrito|sessão|login|acesso/i.test(error.message)){
+          $("dashboard").classList.add("hidden");$("loginPanel").classList.remove("hidden");
+          showNotice(error.message,true,true);
+        }else showNotice(error.message,true);
+      }
       finally{$("refresh").disabled=false;$("refresh").textContent="ATUALIZAR";}
     }
     async function enter(){
