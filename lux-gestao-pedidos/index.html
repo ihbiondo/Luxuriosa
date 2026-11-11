@@ -10,80 +10,61 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Playfair+Display:wght@500;600&display=swap" rel="stylesheet">
-  <style>
-    :root{color-scheme:dark;--bg:#0b0b0b;--panel:#151214;--line:#382a30;--wine:#8b1e3f;--gold:#d4af7c;--pink:#f7d7d9;--muted:#aa9ea4;--green:#92c7a2;--amber:#e5bf75;--red:#dc8790}
-    *{box-sizing:border-box}body{margin:0;background:linear-gradient(145deg,#160d12,#0b0b0b 55%);color:#f7f1f3;font:13px Montserrat,Arial,sans-serif;min-height:100vh}
-    a{color:var(--gold);text-decoration:none}.shell{width:min(1180px,calc(100% - 32px));margin:auto;padding:22px 0 50px}
-    header{display:flex;justify-content:space-between;align-items:center;gap:16px;border-bottom:1px solid var(--line);padding-bottom:17px}
-    .brand{font:600 23px 'Playfair Display',serif;color:var(--gold);letter-spacing:.09em}.brand small{display:block;font:600 9px Montserrat,sans-serif;color:var(--pink);letter-spacing:.25em;margin-top:3px}
-    .top-actions{display:flex;align-items:center;gap:14px;font-size:11px}.muted{color:var(--muted)}
-    h1{font:500 34px 'Playfair Display',serif;margin:26px 0 5px;color:#fff}.subtitle{color:var(--muted);margin:0 0 22px;line-height:1.6}
-    .toolbar{display:grid;grid-template-columns:minmax(220px,1fr) 190px 110px auto;gap:9px;margin:18px 0 14px}
-    input,select{width:100%;min-width:0;border:1px solid var(--line);border-radius:8px;background:#100e0f;color:#f7f1f3;padding:11px 12px;font:12px Montserrat,sans-serif}
-    button{border:1px solid #765b45;background:#21171b;color:var(--gold);border-radius:8px;padding:10px 14px;font:700 10px Montserrat,sans-serif;letter-spacing:.07em;cursor:pointer}
-    button:disabled{opacity:.5;cursor:wait}.primary{background:var(--wine);border-color:var(--wine);color:white}
-    .summary{display:flex;gap:18px;flex-wrap:wrap;color:var(--muted);font-size:11px;padding:10px 0 16px;border-bottom:1px solid var(--line)}
-    .summary strong{color:var(--gold);font-size:13px;margin-left:5px}
-    .notice{display:none;padding:12px 14px;border:1px solid var(--line);border-radius:9px;margin:14px 0;background:#171316;color:var(--pink);line-height:1.5}.notice.show{display:block}.notice.error{border-color:#74404a;color:#f1aab2}
-    .order{border:1px solid var(--line);background:linear-gradient(140deg,#191417,#100e0f);border-radius:12px;margin:12px 0;overflow:hidden}
-    .order-head{display:grid;grid-template-columns:1fr auto;gap:12px;padding:14px 16px;border-bottom:1px solid var(--line);align-items:center}
-    .order-id{font:500 20px 'Playfair Display',serif;color:var(--gold)}.customer{font-weight:700;margin-top:4px}.order-meta{color:var(--muted);font-size:10px;margin-top:5px}
-    .status{display:inline-block;padding:7px 10px;border-radius:99px;border:1px solid #604b3b;color:var(--pink);font-size:9px;font-weight:700;letter-spacing:.04em;text-align:center}
-    .status.paid{border-color:#41664c;color:var(--green)}.status.pending{border-color:#705b38;color:var(--amber)}.status.review{border-color:#79504b;color:#f0a7a0}
-    .order-body{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(220px,.8fr);gap:16px;padding:14px 16px}
-    .label{color:var(--muted);font-size:9px;text-transform:uppercase;letter-spacing:.12em;margin-bottom:7px}
-    .items{display:grid;gap:5px;color:#e9dfe2}.item{display:flex;justify-content:space-between;gap:10px;font-size:11px}
-    .address{color:#c7bbc0;font-size:11px;line-height:1.6;overflow-wrap:anywhere}
-    .order-foot{display:flex;justify-content:space-between;align-items:center;gap:14px;padding:12px 16px;border-top:1px solid var(--line);flex-wrap:wrap}
-    .total{font-weight:700;color:var(--gold);font-size:15px}.payment{font-size:10px;color:var(--muted);margin-top:3px}
-    .status-edit{display:flex;gap:8px;align-items:center;min-width:min(100%,360px)}.status-edit select{max-width:230px}
-    .empty{border:1px dashed var(--line);border-radius:12px;padding:34px;text-align:center;color:var(--muted);line-height:1.7}
-    .login{max-width:420px;margin:8vh auto 0;border:1px solid var(--line);background:#151214;border-radius:14px;padding:26px}
-    .login h1{margin-top:0}.login form{display:grid;gap:12px}.login label{font-size:10px;color:var(--muted)}
-    .hidden{display:none!important}footer{border-top:1px solid var(--line);margin-top:28px;padding-top:16px;color:#82777c;font-size:10px;text-align:center}
-    @media(max-width:760px){.toolbar{grid-template-columns:1fr 1fr}.toolbar input{grid-column:1/-1}.order-body{grid-template-columns:1fr}.order-head{align-items:start}.status-edit{width:100%}.status-edit select{flex:1}.shell{width:calc(100% - 22px);padding-top:15px}}
-  </style>
+  <style>:root{color-scheme:light;--bg:#f4f2f3;--surface:#fff;--soft:#faf8f9;--ink:#241d21;--muted:#766b72;--line:#e8e1e5;--wine:#8b1e3f;--wine-dark:#681630;--gold:#ad8653;--green:#24734e;--green-bg:#eaf5ee;--amber:#95621a;--amber-bg:#fff5e6;--red:#a83c48;--red-bg:#fff0f1;--shadow:0 4px 16px rgba(40,20,30,.045);--radius:13px}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:13px/1.5 "Montserrat",Inter,system-ui,sans-serif;min-height:100vh}a{color:var(--wine);text-decoration:none}button,input,select{font:inherit}button{cursor:pointer}.shell{width:min(1380px,calc(100% - 40px));margin:auto;padding:0 0 34px}
+header{height:68px;display:flex;justify-content:space-between;align-items:center;gap:16px;border-bottom:1px solid var(--line);background:rgba(255,255,255,.94);position:sticky;top:0;z-index:20;padding:0 max(20px,calc((100vw - 1380px)/2));margin:0 -20px;padding:0 20px;backdrop-filter:blur(12px)}
+.brand{display:flex;align-items:center;gap:10px;font:600 13px "Playfair Display",Georgia,serif;color:var(--ink);letter-spacing:1.5px}.brand-mark{width:34px;height:34px;display:grid;place-items:center;background:var(--wine);color:#fff;border-radius:10px;font:600 15px "Playfair Display",serif}.brand small{display:block;font:9px "Montserrat",sans-serif;color:var(--muted);letter-spacing:1.2px;margin-top:2px}
+.top-actions{display:flex;align-items:center;gap:9px;font-size:10px}.top-link{padding:8px 10px;color:var(--muted);font-weight:700}.top-link:hover{color:var(--wine)}.top-actions button{margin-left:5px}
+h1{font:500 clamp(26px,3vw,34px)/1.15 "Playfair Display",Georgia,serif;margin:0 0 5px;color:var(--ink)}.subtitle{color:var(--muted);margin:0;line-height:1.6;font-size:11px;max-width:660px}
+.eyebrow{font:9px "Montserrat",sans-serif;color:var(--gold);font-weight:700;letter-spacing:1.3px;text-transform:uppercase;margin-bottom:6px}
+button{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:8px;padding:9px 12px;font:700 10px "Montserrat",sans-serif;letter-spacing:.02em;transition:.16s}button:hover{border-color:#c4a071;transform:translateY(-1px)}button:disabled{opacity:.5;cursor:wait;transform:none}.primary{background:var(--wine);border-color:var(--wine);color:white}.primary:hover{background:var(--wine-dark);border-color:var(--wine-dark)}
+input,select{width:100%;min-width:0;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink);padding:10px 11px;font:11px "Montserrat",sans-serif}input::placeholder{color:#9a9096}input:focus,select:focus,button:focus-visible,a:focus-visible{outline:3px solid #d4af7c77;outline-offset:2px}
+.page-head{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;padding:25px 0 15px}.page-head .eyebrow{color:var(--wine)}.page-head-copy{max-width:650px}.page-head-actions{display:flex;align-items:center;gap:8px}
+.summary{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;margin:8px 0 15px}.summary-card{display:flex;align-items:center;gap:11px;background:var(--surface);border:1px solid var(--line);border-radius:11px;padding:12px;min-width:0;box-shadow:var(--shadow)}.summary-icon{width:32px;height:32px;display:grid;place-items:center;border-radius:9px;background:#f7edf1;color:var(--wine);flex:none}.summary-icon.green{background:var(--green-bg);color:var(--green)}.summary-icon.amber{background:var(--amber-bg);color:var(--amber)}.summary-icon.red{background:var(--red-bg);color:var(--red)}.summary-icon svg{width:16px;height:16px;stroke:currentColor}.summary-label{font-size:9px;color:var(--muted);font-weight:600}.summary-value{font-size:21px;line-height:1.25;font-weight:700;font-variant-numeric:tabular-nums;margin-top:2px}.summary-note{font-size:9px;color:var(--muted-2,var(--muted))}
+.toolbar{display:grid;grid-template-columns:minmax(230px,1fr) minmax(180px,220px) 145px auto;gap:8px;margin:13px 0 10px}.toolbar .search-wrap{position:relative}.search-wrap svg{position:absolute;left:11px;top:50%;transform:translateY(-50%);width:15px;height:15px;color:var(--muted)}.search-wrap input{padding-left:34px}
+.quick-filters{display:flex;align-items:center;gap:7px;overflow:auto;padding:3px 0 11px}.quick-filter{display:inline-flex;align-items:center;gap:7px;white-space:nowrap;border:1px solid var(--line);background:var(--surface);padding:7px 10px;border-radius:30px;color:var(--muted);font-size:9px;font-weight:700}.quick-filter b{font:10px "DM Mono",monospace;color:var(--ink);background:#f2eef0;padding:2px 6px;border-radius:20px}.quick-filter.active{color:var(--wine);background:#f8edf1;border-color:#e4c9d3}.quick-filter.active b{background:#ecd8e0;color:var(--wine)}
+.notice{display:none;padding:11px 13px;border:1px solid var(--line);border-radius:9px;margin:10px 0;background:#fff;color:#6b3347;line-height:1.55;font-size:10px}.notice.show{display:block}.notice.error{border-color:#e6c3c8;background:var(--red-bg);color:var(--red)}
+.results-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:7px 0 8px}.results-head h2{font:500 19px "Playfair Display",Georgia,serif;margin:0}.results-head p{font-size:9px;color:var(--muted);margin:3px 0 0}.result-count{font:9px "Montserrat",sans-serif;color:var(--muted);background:#fff;border:1px solid var(--line);border-radius:30px;padding:6px 9px}
+.order{border:1px solid var(--line);background:var(--surface);border-radius:12px;margin:9px 0;overflow:hidden;box-shadow:var(--shadow)}.order-head{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:14px;padding:12px 14px;border-bottom:1px solid var(--line);align-items:center;background:linear-gradient(90deg,#fff,#fdfbfc)}.order-head-left{display:flex;align-items:center;gap:12px;min-width:0}.order-id{font:600 16px "DM Sans",sans-serif;color:var(--wine);white-space:nowrap}.customer{font-weight:700;font-size:11px;margin-top:2px}.order-meta{color:var(--muted);font-size:9px;margin-top:3px;overflow-wrap:anywhere}
+.order-badges{display:flex;justify-content:flex-end;flex-wrap:wrap;gap:6px}.status{display:inline-flex;align-items:center;gap:5px;padding:6px 8px;border-radius:30px;border:1px solid var(--line);color:var(--muted);font-size:8px;font-weight:700;letter-spacing:.02em;text-align:center;background:#faf8f9}.status:before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}.status.paid{border-color:#cce4d4;color:var(--green);background:var(--green-bg)}.status.pending{border-color:#f0dbb5;color:var(--amber);background:var(--amber-bg)}.status.review{border-color:#ecc7cc;color:var(--red);background:var(--red-bg)}.status.delivery{border-color:#ded1e8;color:#75538c;background:#f5eff9}
+.order-body{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(230px,.85fr);gap:13px;padding:12px 14px}.order-panel{min-width:0}.label{display:flex;align-items:center;gap:7px;color:var(--muted);font-size:8px;text-transform:uppercase;letter-spacing:.1em;font-weight:700;margin-bottom:7px}.label svg{width:13px;height:13px;color:var(--gold)}.items{display:grid;gap:6px;color:#4b4147}.item{display:flex;justify-content:space-between;gap:10px;font-size:10px;padding-bottom:5px;border-bottom:1px dashed #eee8ec}.item:last-child{border-bottom:0;padding-bottom:0}.item strong{color:var(--ink);white-space:nowrap}.address{color:#554b51;font-size:10px;line-height:1.6;overflow-wrap:anywhere;background:var(--soft);border:1px solid #f0eaee;padding:9px;border-radius:8px}
+.order-foot{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:10px 14px;border-top:1px solid var(--line);flex-wrap:wrap;background:#fdfcfd}.total-wrap{display:flex;align-items:center;gap:10px}.total{font-weight:800;color:var(--ink);font-size:16px;font-variant-numeric:tabular-nums}.payment{font-size:9px;color:var(--muted);margin-top:1px}.payment-check{font-size:9px;color:var(--wine);padding:7px 9px;margin-top:5px}.status-edit{display:flex;gap:7px;align-items:center;min-width:min(100%,340px)}.status-edit select{max-width:230px}.status-edit button{min-width:82px}.muted{color:var(--muted)}
+.empty{border:1px dashed #d9cfd5;border-radius:12px;padding:28px 16px;text-align:center;background:var(--surface);color:var(--muted);line-height:1.7;font-size:11px}.empty strong{display:block;color:var(--ink);font-size:13px;margin-bottom:3px}.empty svg{width:28px;height:28px;margin:0 auto 8px;display:block;color:var(--gold)}
+.login{max-width:810px;margin:9vh auto 0;border:1px solid var(--line);background:var(--surface);border-radius:16px;padding:0;overflow:hidden;display:grid;grid-template-columns:1fr 1fr;box-shadow:0 20px 50px rgba(40,20,30,.08)}.login-intro{padding:29px;background:linear-gradient(150deg,#351b27,#24151c);color:#fff;display:flex;flex-direction:column;justify-content:center}.login-intro .eyebrow{color:#d9ba91}.login-intro h1{font:500 29px/1.15 "Playfair Display",Georgia,serif;color:#fff;margin:8px 0}.login-intro h1 em{font-style:normal;color:#e2c28e}.login-intro p{font-size:10px;color:#e3d8dd;line-height:1.7}.login-intro small{font-size:9px;color:#eadde2;margin-top:18px}.login-form{padding:28px}.login-form h2{font:500 21px "Playfair Display",Georgia,serif;margin:0 0 4px}.login-form p{font-size:10px;color:var(--muted);margin:0 0 16px}.login-form label{font-size:9px;color:var(--muted);display:block;margin:12px 0 5px}.login-form input{margin-bottom:2px}.login-form button{width:100%;margin-top:14px}
+.hidden{display:none!important}footer{border-top:1px solid var(--line);margin-top:25px;padding-top:14px;color:#8b8187;font-size:9px;text-align:center}
+@media(max-width:850px){.toolbar{grid-template-columns:1fr 1fr}.toolbar .search-wrap{grid-column:1/-1}.summary{grid-template-columns:repeat(2,minmax(0,1fr))}.page-head{align-items:flex-start;flex-direction:column}.order-body{grid-template-columns:1fr}.order-head{align-items:flex-start}.order-head-left{align-items:flex-start;flex-direction:column;gap:3px}.order-badges{justify-content:flex-start}}
+@media(max-width:560px){.shell{width:calc(100% - 22px);padding-top:0}header{height:60px;margin:0 -11px;padding:0 11px}.top-link{display:none}.page-head{padding-top:20px}.summary{gap:7px}.summary-card{padding:9px}.summary-value{font-size:19px}.toolbar{grid-template-columns:1fr 1fr}.toolbar .search-wrap{grid-column:1/-1}.toolbar select:nth-of-type(1){grid-column:1}.toolbar select:nth-of-type(2){grid-column:2}.toolbar button{grid-column:1/-1}.order-head,.order-body,.order-foot{padding-left:10px;padding-right:10px}.order-foot{align-items:flex-start;flex-direction:column}.status-edit{width:100%}.status-edit select{flex:1;max-width:none}.login{grid-template-columns:1fr;margin:30px auto 0}.login-intro{padding:21px}.login-intro h1{font-size:25px}.login-form{padding:22px}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{transition:none!important}}</style>
 </head>
 <body>
   <main class="shell">
     <header>
-      <a href="/lux-gestao/" aria-label="Lux-Gestão terminal"><span class="brand">LUX-GESTÃO<small>OPERAÇÃO · PEDIDOS ONLINE</small></span></a>
-      <div class="top-actions"><a href="/lux-gestao/">Terminal</a><button id="signOut" type="button" class="hidden">SAIR</button></div>
-    </header>
+<a href="/lux-gestao/" aria-label="Lux-Gestão terminal" class="brand"><span class="brand-mark">L</span><span>LUXURIOSA<small>GESTÃO · PEDIDOS ONLINE</small></span></a>
+<div class="top-actions"><a class="top-link" href="/lux-gestao/">← Terminal de gestão</a><button id="signOut" type="button" class="hidden">SAIR</button></div>
+</header>
     <section id="loginPanel" class="login hidden">
-      <div class="label">Acesso administrativo</div>
-      <h1>Pedidos da loja.</h1>
-      <p class="subtitle">Entre com a conta administrativa Luxuriosa. Não existe cadastro público nesta área.</p>
-      <form id="loginForm">
-        <label for="email">E-mail</label><input id="email" type="email" autocomplete="username" required>
-        <label for="password">Senha</label><input id="password" type="password" autocomplete="current-password" required>
-        <button class="primary" type="submit">ACESSAR PEDIDOS</button>
-      </form>
-      <div id="loginNotice" class="notice"></div>
-    </section>
+<div class="login-intro"><div class="eyebrow">LUXURIOSA · OPERAÇÃO</div><h1>Pedidos em ordem.<br><em>Entrega no ritmo certo.</em></h1><p>Acompanhe o pagamento, a separação e o envio sem misturar confirmação financeira com atualização logística.</p><small>● Acesso somente administrativo</small></div>
+<form id="loginForm" class="login-form"><div class="eyebrow">ACESSO RESTRITO</div><h2>Entrar nos pedidos</h2><p>Use a conta administrativa Luxuriosa.</p><label for="email">E-mail</label><input id="email" type="email" autocomplete="username" required><label for="password">Senha</label><input id="password" type="password" autocomplete="current-password" required><button class="primary" type="submit">ACESSAR PEDIDOS</button><div id="loginNotice" class="notice" role="status"></div></form>
+</section>
     <section id="dashboard" class="hidden">
-      <h1>Pedidos e entregas.</h1>
-      <p class="subtitle">Acompanhe cada venda, confira o pagamento na InfinitePay e atualize a etapa da entrega. A confirmação financeira não é editada por aqui.</p>
-      <div class="toolbar">
-        <input id="search" type="search" placeholder="Buscar cliente, telefone ou número do pedido">
-        <select id="statusFilter">
-          <option value="">Todos os pedidos</option>
-          <option value="pending">Aguardando pagamento</option>
-          <option value="paid">Pagamentos aprovados</option>
-          <option value="review_required">Pagamento em conferência</option>
-          <option value="processing">Em expedição</option>
-          <option value="out_for_delivery">Em rota de entrega</option>
-          <option value="delivered">Pedido entregue</option>
-          <option value="cancelled">Cancelados</option>
-        </select>
-        <select id="period"><option value="7">7 dias</option><option value="30" selected>30 dias</option><option value="90">90 dias</option></select>
-        <button id="refresh" type="button">ATUALIZAR</button>
-      </div>
-      <div id="summary" class="summary"></div>
-      <div id="notice" class="notice"></div>
-      <div id="orders"><div class="empty">Carregando pedidos…</div></div>
-    </section>
-    <footer>Luxuriosa · Painel privado de pedidos · Pagamentos processados pela InfinitePay.</footer>
+<div class="page-head"><div class="page-head-copy"><div class="eyebrow">OPERAÇÃO · VENDAS ONLINE</div><h1>Pedidos e entregas</h1><p class="subtitle">Acompanhe cada pedido, confirme pagamentos na InfinitePay e conduza a entrega por etapas. A confirmação financeira é automática e não pode ser alterada neste painel.</p></div><div class="page-head-actions"><button id="refresh" type="button" class="primary"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 7v5h-5M4 17v-5h5"/><path d="M5.6 9A7 7 0 0 1 18 6l2 6M4 12l2 6a7 7 0 0 0 12.4-3"/></svg>Atualizar pedidos</button></div></div>
+<div id="summary" class="summary" aria-live="polite"><div class="summary-card"><span class="summary-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 4h16v16H4z"/><path d="M8 8h8M8 12h8M8 16h5"/></svg></span><div><div class="summary-label">Pedidos listados</div><div class="summary-value">—</div><div class="summary-note">Aguardando consulta</div></div></div></div>
+<div class="toolbar">
+<div class="search-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 5 5"/></svg><input id="search" type="search" aria-label="Buscar pedidos" placeholder="Buscar número, cliente ou telefone"></div>
+<select id="statusFilter" aria-label="Filtrar por situação"><option value="">Todas as situações</option><option value="pending">Aguardando pagamento</option><option value="paid">Pagamentos aprovados</option><option value="review_required">Pagamento em conferência</option><option value="processing">Em expedição</option><option value="out_for_delivery">Em rota de entrega</option><option value="delivered">Pedido entregue</option><option value="cancelled">Cancelados</option></select>
+<select id="period" aria-label="Período de consulta"><option value="7">Últimos 7 dias</option><option value="30" selected>Últimos 30 dias</option><option value="90">Últimos 90 dias</option></select>
+</div>
+<nav class="quick-filters" id="quickFilters" aria-label="Filtros rápidos">
+<button class="quick-filter active" type="button" data-filter="">Todos <b data-count="all">—</b></button>
+<button class="quick-filter" type="button" data-filter="pending">Aguardando pagamento <b data-count="pending">—</b></button>
+<button class="quick-filter" type="button" data-filter="review_required">Em conferência <b data-count="review">—</b></button>
+<button class="quick-filter" type="button" data-filter="paid">Pagos <b data-count="paid">—</b></button>
+</nav>
+<div id="notice" class="notice" role="status"></div>
+<div class="results-head"><div><h2>Lista de pedidos</h2><p>Abra um pedido para conferir itens, endereço e próxima etapa.</p></div><span id="resultCount" class="result-count">Aguardando dados</span></div>
+<div id="orders" aria-live="polite"><div class="empty"><strong>Carregando pedidos</strong>Buscando os pedidos registrados na loja.</div></div>
+</section>
+    <footer>LUXURIOSA · OPERAÇÃO DE PEDIDOS · CONFIRMAÇÃO FINANCEIRA VIA INFINITEPAY</footer>
   </main>
   <script type="module">
     import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
@@ -136,44 +117,63 @@
       finally{button.disabled=false;button.textContent="VERIFICAR NA INFINITEPAY";}
     }
     function renderOrder(order){
-      const card=node("article","order"),head=node("div","order-head"),left=node("div");
-      left.append(node("div","order-id","Pedido #"+order.order_number));
-      left.append(node("div","customer",order.customer_name||"Cliente não identificado"));
-      left.append(node("div","order-meta",(order.customer_phone||"Sem telefone")+" · "+new Date(order.created_at).toLocaleString("pt-BR")));
-      const pill=node("span","status "+(order.payment_status==="paid"?"paid":order.payment_status==="review_required"?"review":"pending"),currentStatus(order));
-      head.append(left,pill);card.append(head);
-      const body=node("div","order-body"),items=node("div"),address=node("div");
-      items.append(node("div","label","Itens do pedido"));
-      (order.items||[]).forEach(item=>items.append(node("div","item",String(item.quantity)+"× "+item.product_name)));
-      address.append(node("div","label","Entrega"));
+      const card=node("article","order"),head=node("div","order-head"),left=node("div","order-head-left"),meta=node("div");
+      left.append(node("div","order-id","#"+order.order_number));
+      meta.append(node("div","customer",order.customer_name||"Cliente não identificado"));
+      meta.append(node("div","order-meta",(order.customer_phone||"Sem telefone")+" · "+new Date(order.created_at).toLocaleString("pt-BR")));
+      left.append(meta);
+      const badges=node("div","order-badges");
+      const paymentClass=order.payment_status==="paid"?"paid":order.payment_status==="review_required"?"review":"pending";
+      badges.append(node("span","status "+paymentClass,paymentNames[order.payment_status]||"Pagamento não identificado"));
+      if(order.payment_status==="paid"){
+        const stageClass=order.status==="delivered"?"paid":order.status==="out_for_delivery"?"delivery":"";
+        badges.append(node("span","status "+stageClass,statusNames[order.status]||"Etapa em atualização"));
+      }else if(order.status==="cancelled"){
+        badges.append(node("span","status review","Pedido cancelado"));
+      }
+      head.append(left,badges);card.append(head);
+      const body=node("div","order-body"),items=node("div","order-panel"),address=node("div","order-panel");
+      const itemsLabel=node("div","label","ITENS DO PEDIDO");
+      itemsLabel.insertAdjacentHTML("afterbegin",'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 4h16v16H4z"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>');
+      items.append(itemsLabel);
+      (order.items||[]).forEach(item=>{
+        const line=node("div","item");
+        const detail=node("span","",String(item.quantity)+"× "+item.product_name);
+        const price=node("strong","",money.format(Number(item.line_total||item.unit_price*item.quantity)||0));
+        line.append(detail,price);items.append(line);
+      });
+      const addressLabel=node("div","label","ENDEREÇO DE ENTREGA");
+      addressLabel.insertAdjacentHTML("afterbegin",'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></svg>');
+      address.append(addressLabel);
       const a=order.delivery_address||{};
       address.append(node("div","address",[a.street,a.number,a.complement,a.district||a.neighborhood,[a.city,a.state].filter(Boolean).join("/"),a.zip?"CEP "+a.zip:""].filter(Boolean).join(", ")||"Endereço não informado"));
       body.append(items,address);card.append(body);
-      const foot=node("div","order-foot"),amount=node("div");
-      amount.append(node("div","total",money.format(Number(order.total_amount)||0)));
-      amount.append(node("div","payment", "Pagamento: "+(paymentNames[order.payment_status]||"Não identificado")+(order.payment_method==="pix"?" · Pix":order.payment_method==="credit_card"?" · Cartão":"")));
+      const foot=node("div","order-foot"),amount=node("div","total-wrap"),price=node("div");
+      price.append(node("div","total",money.format(Number(order.total_amount)||0)));
+      price.append(node("div","payment","Total do pedido · "+(order.payment_method==="pix"?"Pix":order.payment_method==="credit_card"?"Cartão":"Forma de pagamento não informada")));
+      amount.append(price);
       if(order.payment_status==="pending"&&order.payment_transaction_nsu&&order.payment_invoice_slug){
-        const check=node("button","","VERIFICAR NA INFINITEPAY");check.type="button";check.style.marginTop="8px";
+        const check=node("button","payment-check","VERIFICAR NA INFINITEPAY");check.type="button";
         check.addEventListener("click",()=>verifyPayment(order,check));amount.append(check);
       }
       foot.append(amount);
       const options=allowedNext(order);
       if(options.length){
         const edit=node("div","status-edit"),select=node("select");
-        select.append(new Option("Atualizar status…",""));
+        select.append(new Option("Próxima etapa…",""));
         options.forEach(status=>select.append(new Option(statusNames[status],status)));
-        const save=node("button","","SALVAR");save.disabled=true;select.addEventListener("change",()=>{save.disabled=!select.value;});
+        const save=node("button","primary","SALVAR ETAPA");save.disabled=true;select.addEventListener("change",()=>{save.disabled=!select.value;});
         save.addEventListener("click",async()=>{
           if(select.value==="delivered"&&!window.confirm("Confirmar que o pedido #"+order.order_number+" foi entregue ao cliente?"))return;
           if(select.value==="cancelled"&&!window.confirm("Cancelar o pedido #"+order.order_number+"?"))return;
           save.disabled=true;save.textContent="SALVANDO…";
           try{await invoke({action:"admin_update_order_status",order_id:order.id,status:select.value});showNotice("Pedido #"+order.order_number+" atualizado.");await load();}
           catch(e){showNotice(e.message,true);}
-          finally{save.textContent="SALVAR";}
+          finally{save.textContent="SALVAR ETAPA";}
         });
         edit.append(select,save);foot.append(edit);
       }else{
-        foot.append(node("span","muted",order.status==="delivered"?"Pedido finalizado":order.status==="cancelled"?"Pedido cancelado":order.payment_status==="review_required"?"Conferência necessária":"Aguardando pagamento"));
+        foot.append(node("span","muted",order.status==="delivered"?"Entrega finalizada":order.status==="cancelled"?"Pedido cancelado":order.payment_status==="review_required"?"Aguardando conciliação financeira":"Aguardando confirmação do pagamento"));
       }
       card.append(foot);return card;
     }
@@ -188,7 +188,14 @@
         return statusMatch&&(!term||[o.order_number,o.customer_name,o.customer_phone].some(v=>String(v||"").toLocaleLowerCase("pt-BR").includes(term)));
       });
       const box=$("orders");box.replaceChildren();
-      if(!filtered.length){box.append(node("div","empty","Nenhum pedido encontrado com esses filtros."));return;}
+      $("resultCount").textContent=filtered.length+" de "+allOrders.length+" pedidos";
+      if(!filtered.length){
+        const empty=node("div","empty");
+        const icon=node("span","","");
+        icon.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 5 5"/></svg>';
+        empty.append(icon,node("strong","",allOrders.length?"Nenhum pedido corresponde ao filtro":"Nenhum pedido neste período"),node("span","",allOrders.length?"Limpe os filtros ou tente outra busca. Os pedidos novos aparecerão após a próxima atualização.":"Quando um cliente concluir um pedido, ele aparecerá automaticamente aqui."));
+        box.append(empty);return;
+      }
       filtered.forEach(o=>box.append(renderOrder(o)));
     }
     async function load(){
@@ -199,7 +206,32 @@
         const pending=allOrders.filter(o=>o.payment_status==="pending"&&o.status!=="cancelled").length;
         const paid=allOrders.filter(o=>o.payment_status==="paid").length;
         const review=allOrders.filter(o=>o.payment_status==="review_required").length;
-        $("summary").replaceChildren(node("span","","Pedidos listados"),node("strong","",String(allOrders.length)),node("span","","Aguardando pagamento"),node("strong","",String(pending)),node("span","","Pagamentos aprovados"),node("strong","",String(paid)),node("span","","Em conferência"),node("strong","",String(review)));
+        const moving=allOrders.filter(o=>o.payment_status==="paid"&&["processing","out_for_delivery"].includes(o.status)).length;
+        const metric=(label,value,note,icon,tone)=>{
+          const card=node("div","summary-card"),symbol=node("span","summary-icon"+(tone?" "+tone:""));
+          const paths={
+            list:'<path d="M4 4h16v16H4z"/><path d="M8 8h8M8 12h8M8 16h5"/>',
+            clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+            check:'<path d="m5 12 4 4L19 6"/>',
+            route:'<path d="M4 18V6h16v12H4Z"/><path d="M8 15l3-3 2 2 4-5"/>'
+          };
+          symbol.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">'+paths[icon]+'</svg>';
+          const body=node("div",""),name=node("div","summary-label",label),number=node("div","summary-value",String(value)),detail=node("div","summary-note",note);
+          body.append(name,number,detail);card.append(symbol,body);return card;
+        };
+        $("summary").replaceChildren(
+          metric("Pedidos listados",allOrders.length,"No período selecionado","list",""),
+          metric("Aguardando pagamento",pending,"Ainda sem confirmação","clock","amber"),
+          metric("Em conferência",review,"Exigem conciliação","clock","red"),
+          metric("Pagos · em andamento",moving,"Expedição ou rota","route","green")
+        );
+        $("quickFilters").querySelectorAll("[data-count]").forEach(el=>{
+          const key=el.dataset.count;
+          const count=key==="all"?allOrders.length:key==="pending"?pending:key==="review"?review:paid;
+          el.textContent=count;
+        });
+        $("quickFilters").querySelectorAll(".quick-filter").forEach(button=>button.classList.toggle("active",button.dataset.filter===$("statusFilter").value));
+
         render();$("notice").className="notice";
       }catch(error){
         if(/restrito|sessão|login|acesso/i.test(error.message)){
@@ -214,7 +246,13 @@
     }
     $("loginForm").addEventListener("submit",async event=>{event.preventDefault();const button=event.submitter;button.disabled=true;try{const {error}=await supabase.auth.signInWithPassword({email:$("email").value.trim(),password:$("password").value});if(error)throw error;await enter();}catch(error){showNotice(error.message,true,true);}finally{button.disabled=false;}});
     $("signOut").addEventListener("click",async()=>{await supabase.auth.signOut();location.reload();});
-    $("refresh").addEventListener("click",load);$("period").addEventListener("change",load);$("statusFilter").addEventListener("change",render);$("search").addEventListener("input",render);
+    $("refresh").addEventListener("click",load);$("period").addEventListener("change",load);
+    $("statusFilter").addEventListener("change",()=>{render();$("quickFilters").querySelectorAll(".quick-filter").forEach(button=>button.classList.toggle("active",button.dataset.filter===$("statusFilter").value));});
+    $("search").addEventListener("input",render);
+    $("quickFilters").querySelectorAll(".quick-filter").forEach(button=>button.addEventListener("click",()=>{
+      $("statusFilter").value=button.dataset.filter;render();
+      $("quickFilters").querySelectorAll(".quick-filter").forEach(item=>item.classList.toggle("active",item===button));
+    }));
     const {data:{session}}=await supabase.auth.getSession();
     let hasSession=!!session;
     if(session){$("loginPanel").classList.add("hidden");$("dashboard").classList.remove("hidden");$("signOut").classList.remove("hidden");await load();}
