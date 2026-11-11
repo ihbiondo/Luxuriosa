@@ -875,7 +875,7 @@ function createCustomerInterestStats() {
     paid_orders: new Set<string>(),
     units_sold: 0,
     revenue_cents: 0
-  }]));
+  }] as const));
 }
 
 async function readCustomerInsights(from: string, to: string, periodDays: number) {
@@ -935,8 +935,8 @@ async function readCustomerInsights(from: string, to: string, periodDays: number
   const eligiblePreferences = (preferenceResult.data || [])
     .filter((row: any) => eligibleUsers.has(row.user_id));
   const categoryStats = createCustomerInterestStats();
-  const priceCounts = new Map(CUSTOMER_PRICE_RANGES.map((item) => [item.key, 0]));
-  const offerCounts = new Map(CUSTOMER_OFFER_TYPES.map((item) => [item.key, 0]));
+  const priceCounts = new Map(CUSTOMER_PRICE_RANGES.map((item) => [item.key, 0] as const));
+  const offerCounts = new Map(CUSTOMER_OFFER_TYPES.map((item) => [item.key, 0] as const));
 
   let profilesWithCategories = 0;
   let profilesWithPrice = 0;
@@ -955,7 +955,8 @@ async function readCustomerInsights(from: string, to: string, periodDays: number
       profilesWithOffer += 1;
     }
     for (const key of selected) {
-      categoryStats.get(key).declared_customers += 1;
+      const stat = categoryStats.get(key);
+      if (stat) stat.declared_customers += 1;
     }
   }
 
@@ -979,6 +980,10 @@ async function readCustomerInsights(from: string, to: string, periodDays: number
       continue;
     }
     const stat = categoryStats.get(interestKey);
+    if (!stat) {
+      unmappedProductEvents += 1;
+      continue;
+    }
     trackedUsers.add(userId);
     if (event.event_name === "product_view") {
       stat.view_events += 1;
@@ -992,7 +997,7 @@ async function readCustomerInsights(from: string, to: string, periodDays: number
   const eligibleOrders = (orderResult.data || [])
     .filter((order: any) => order.customer_id && eligibleUsers.has(order.customer_id));
   const orderIds = eligibleOrders.map((order: any) => order.id);
-  const orderOwners = new Map(eligibleOrders.map((order: any) => [String(order.id), String(order.customer_id)]));
+  const orderOwners = new Map(eligibleOrders.map((order: any) => [String(order.id), String(order.customer_id)] as const));
   let unmappedPurchaseItems = 0;
   let paidRevenueCents = 0;
   const purchasedUsers = new Set<string>();
@@ -1012,6 +1017,10 @@ async function readCustomerInsights(from: string, to: string, periodDays: number
         continue;
       }
       const stat = categoryStats.get(interestKey);
+      if (!stat) {
+        unmappedPurchaseItems += 1;
+        continue;
+      }
       const quantity = Math.max(0, Number(item.quantity) || 0);
       const lineValue = item.line_total === null || item.line_total === undefined
         ? (Number(item.unit_price) || 0) * quantity
@@ -1026,7 +1035,7 @@ async function readCustomerInsights(from: string, to: string, periodDays: number
   }
 
   const categories = CUSTOMER_INTERESTS.map((item) => {
-    const stat = categoryStats.get(item.key);
+    const stat = categoryStats.get(item.key)!;
     return {
       key: stat.key,
       label: stat.label,
