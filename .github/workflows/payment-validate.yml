@@ -172,6 +172,7 @@ jobs:
           const webhook = fs.readFileSync("supabase/functions/infinitepay-webhook/index.ts", "utf8");
           if (!payment.includes('events: ["created", "paid", "settled", "refunded", "canceled", "payment_failed"]')) throw new Error("O checkout precisa assinar o evento created para monitorar a entrega do webhook.");
           if (!webhook.includes('eventName === "created"') || !webhook.includes('eventType === "created"')) throw new Error("O webhook precisa registrar o evento created sem alterar o pedido.");
+          if (!webhook.includes('infinitepay-webhook.unclassified-event') || !webhook.includes("payloadKeys")) throw new Error("O webhook precisa registrar diagnóstico seguro quando não reconhecer o evento recebido.");
           const paymentAdmin = fs.readFileSync("supabase/functions/payment-admin/index.ts", "utf8");
           if (!admin.includes('/functions/v1/payment-admin') || !admin.includes('action:"reconcile_payment"')) throw new Error("O painel precisa acionar a conciliação administrativa da InfinitePay.");
           if (!ordersFunction.includes("payment_checkout_url, payment_expires_at, payment_amount_cents")) throw new Error("O painel precisa receber link, expiração e valor da cobrança.");
@@ -200,7 +201,11 @@ jobs:
           if (!panel.includes('functions.invoke("luxuriosa-intelligence",{body:{action:"analytics"')) throw new Error("O Lux-Central ainda não consulta analytics na Inteligência.");
           if (!management.includes('action === "analytics"')) throw new Error("A ação legada deve permanecer disponível durante a transição.");
           if (!intelligence.includes('from("payment_provider_events")') || !intelligence.includes("payment_events: paymentEvents")) throw new Error("A Inteligência precisa agregar a cobertura dos webhooks de pagamento.");
-          if (!panel.includes("Eventos de pagamento recebidos") || !panel.includes("Eventos com erro de processamento")) throw new Error("O Lux-Central precisa exibir a saúde dos webhooks.");
+          for (const field of ["pending_expired_count", "pending_without_checkout_link_count", "active_pending_count", "checkout_link_count"]) {
+            if (!intelligence.includes(field)) throw new Error("A Inteligência precisa expor o diagnóstico de cobranças: " + field);
+          }
+          if (!panel.includes("Eventos de pagamento recebidos") || !panel.includes("Eventos com erro de processamento") || !panel.includes("Cobranças expiradas")) throw new Error("O Lux-Central precisa exibir a saúde dos webhooks e dos links.");
+          if (!panel.includes("Revisar cobranças expiradas")) throw new Error("O Lux-Central precisa orientar a revisão de cobranças expiradas.");
           console.log("Migração financeira, cobertura de webhooks e compatibilidade legada validadas.");
           NODE
 
