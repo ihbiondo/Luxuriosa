@@ -47,7 +47,7 @@ input,select{width:100%;min-width:0;border:1px solid var(--line);border-radius:8
 <form id="loginForm" class="login-form"><div class="eyebrow">ACESSO RESTRITO</div><h2>Entrar nos pedidos</h2><p>Use a conta administrativa Luxuriosa.</p><label for="email">E-mail</label><input id="email" type="email" autocomplete="username" required><label for="password">Senha</label><input id="password" type="password" autocomplete="current-password" required><button class="primary" type="submit">ACESSAR PEDIDOS</button><div id="loginNotice" class="notice" role="status"></div></form>
 </section>
     <section id="dashboard" class="hidden">
-<div class="page-head"><div class="page-head-copy"><div class="eyebrow">OPERAÇÃO · VENDAS ONLINE</div><h1>Pedidos e entregas</h1><p class="subtitle">Acompanhe cada pedido, confirme pagamentos na InfinitePay e conduza a entrega por etapas. A confirmação financeira é automática e não pode ser alterada neste painel.</p></div><div class="page-head-actions"><button id="refresh" type="button" class="primary"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 7v5h-5M4 17v-5h5"/><path d="M5.6 9A7 7 0 0 1 18 6l2 6M4 12l2 6a7 7 0 0 0 12.4-3"/></svg>Atualizar pedidos</button></div></div>
+<div class="page-head"><div class="page-head-copy"><div class="eyebrow">OPERAÇÃO · VENDAS ONLINE</div><h1>Pedidos e entregas</h1><p class="subtitle">Acompanhe cada pedido, confira o recebimento no aplicativo InfinitePay e confirme manualmente. Depois, conduza a expedição e a entrega por etapas.</p></div><div class="page-head-actions"><button id="refresh" type="button" class="primary"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 7v5h-5M4 17v-5h5"/><path d="M5.6 9A7 7 0 0 1 18 6l2 6M4 12l2 6a7 7 0 0 0 12.4-3"/></svg>Atualizar pedidos</button></div></div>
 <div id="summary" class="summary" aria-live="polite"><div class="summary-card"><span class="summary-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 4h16v16H4z"/><path d="M8 8h8M8 12h8M8 16h5"/></svg></span><div><div class="summary-label">Pedidos listados</div><div class="summary-value">—</div><div class="summary-note">Aguardando consulta</div></div></div></div>
 <div class="toolbar">
 <div class="search-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 5 5"/></svg><input id="search" type="search" aria-label="Buscar pedidos" placeholder="Buscar número, cliente ou telefone"></div>
@@ -102,39 +102,35 @@ input,select{width:100%;min-width:0;border:1px solid var(--line);border-radius:8
       if(order.payment_status==="pending"&&order.status==="awaiting_confirmation")return ["cancelled"];
       return [];
     }
-    async function verifyPayment(order,button,refs={},formEl=null){
-      button.disabled=true;button.textContent="CONSULTANDO…";
+    async function confirmPaymentManual(order,button,methodSelect){
+      const paymentMethod=methodSelect.value;
+      if(!["pix","credit_card"].includes(paymentMethod)){
+        showNotice("Selecione PIX ou cartão conforme o recebimento que você conferiu.",true);
+        return;
+      }
+      const total=money.format(Number(order.total_amount)||0);
+      if(!window.confirm("Você conferiu no aplicativo InfinitePay o recebimento de "+total+" referente ao pedido #"+order.order_number+"?\n\nSó confirme se o valor estiver efetivamente recebido."))return;
+      button.disabled=true;button.textContent="CONFIRMANDO…";
       try{
-        const {data:{session},error}=await supabase.auth.getSession();
-        if(error)throw error;if(!session)throw new Error("Sua sessão expirou. Entre novamente.");
-        const response=await fetch(URL+"/functions/v1/payment-admin",{
-          method:"POST",
-          headers:{"content-type":"application/json","apikey":KEY,"authorization":"Bearer "+session.access_token},
-          body:JSON.stringify({
-            action:"reconcile_payment",
-            order_id:order.id,
-            transaction_nsu:refs.transaction_nsu||order.payment_transaction_nsu||"",
-            invoice_slug:refs.invoice_slug||order.payment_invoice_slug||""
-          })
+        const result=await invokeOrdersAdmin({
+          action:"admin_confirm_payment_manual",
+          order_id:order.id,
+          payment_method:paymentMethod,
+          confirmation_note:"Recebimento conferido manualmente no aplicativo InfinitePay."
         });
-        const result=await response.json().catch(()=>({}));
-        if(result.code==="references_required"){
-          if(formEl)formEl.classList.remove("hidden");
-          showNotice(result.error||"Informe as referências da transação para continuar.",true);
-          return result;
-        }
-        if(!response.ok||!result.ok)throw new Error(result.error||"Não foi possível consultar a InfinitePay.");
-        if(result.payment_status==="paid"){
-          showNotice("Pagamento confirmado pela InfinitePay. Pedido #"+order.order_number+" liberado para expedição.");
-        }else if(result.payment_status==="review_required"){
-          showNotice("A transação foi localizada, mas o pedido ficou em conferência. A expedição continua bloqueada.",true);
+        if(result.sales_sync?.synced===true){
+          showNotice("Pagamento confirmado. Venda lançada no Lux-Gestão e pedido liberado para expedição.");
         }else{
-          showNotice("A InfinitePay ainda não confirmou o pagamento do pedido #"+order.order_number+". O pedido continua pendente.");
+          showNotice("Pagamento confirmado, mas o lançamento no Lux-Gestão precisa de sincronização. Não confirme novamente.",true);
         }
         await load();
         return result;
-      }catch(error){showNotice(error.message,true);return null;}
-      finally{button.disabled=false;button.textContent="CONFERIR NA INFINITEPAY";}
+      }catch(error){
+        showNotice(error.message,true);
+        return null;
+      }finally{
+        button.disabled=false;button.textContent="CONFIRMAR PAGAMENTO";
+      }
     }
     function checkoutUrl(value){
       try{
@@ -181,14 +177,16 @@ input,select{width:100%;min-width:0;border:1px solid var(--line);border-radius:8
       price.append(node("div","total",money.format(Number(order.total_amount)||0)));
       price.append(node("div","payment","Total do pedido · "+(order.payment_method==="pix"?"Pix":order.payment_method==="credit_card"?"Cartão":"Forma de pagamento não informada")));
       amount.append(price);
-      if(order.payment_status==="pending"&&order.status!=="cancelled"){
+      if(["pending","review_required"].includes(order.payment_status)&&order.status!=="cancelled"){
         const paymentTools=node("div","payment-tools");
         const link=checkoutUrl(order.payment_checkout_url);
         const expires=order.payment_expires_at?new Date(order.payment_expires_at):null;
         const expired=expires&&expires.getTime()<=Date.now();
-        paymentTools.append(node("div","payment-help",expired
-          ?"Link com prazo encerrado em "+expires.toLocaleString("pt-BR")+". Confira a transação antes de gerar nova cobrança."
-          :"Conferência financeira independente da etapa de entrega."));
+        paymentTools.append(node("div","payment-help",order.payment_status==="review_required"
+          ?"Pagamento em conferência. Confira o recebimento no aplicativo InfinitePay antes de confirmar manualmente."
+          :expired
+            ?"O prazo do link terminou em "+expires.toLocaleString("pt-BR")+". Se o valor foi recebido, confira no aplicativo antes de confirmar."
+            :"Confira no aplicativo InfinitePay se o recebimento deste pedido entrou e está disponível. A confirmação será manual."));
         const actionRow=node("div","payment-actions");
         if(link){
           const openLink=node("a","payment-link","ABRIR COBRANÇA");
@@ -201,27 +199,16 @@ input,select{width:100%;min-width:0;border:1px solid var(--line);border-radius:8
           });
           actionRow.append(copy);
         }
-        const check=node("button","payment-check primary","CONFERIR NA INFINITEPAY");check.type="button";
-        const referenceForm=node("div","reconcile-form hidden");
-        const transactionLabel=node("label","reconcile-field","transaction_nsu");
-        const transactionInput=node("input");transactionInput.type="text";transactionInput.autocomplete="off";transactionInput.spellcheck=false;transactionInput.placeholder="Referência da transação";
-        if(order.payment_transaction_nsu)transactionInput.value=order.payment_transaction_nsu;
-        const slugLabel=node("label","reconcile-field","invoice_slug / slug");
-        const slugInput=node("input");slugInput.type="text";slugInput.autocomplete="off";slugInput.spellcheck=false;slugInput.placeholder="Identificador da cobrança";
-        if(order.payment_invoice_slug)slugInput.value=order.payment_invoice_slug;
-        transactionLabel.append(transactionInput);slugLabel.append(slugInput);
-        const fields=node("div","reconcile-fields");fields.append(transactionLabel,slugLabel);
-        const explanation=node("p","reconcile-note","Use os campos transaction_nsu e invoice_slug recebidos no retorno do checkout ou na notificação da InfinitePay. O sistema só aprova após consultar a própria InfinitePay.");
-        const submit=node("button","primary","VALIDAR REFERÊNCIAS");submit.type="button";
-        submit.addEventListener("click",()=>{
-          const transaction_nsu=transactionInput.value.trim(),invoice_slug=slugInput.value.trim();
-          if(!transaction_nsu||!invoice_slug){showNotice("Preencha os dois campos para consultar a InfinitePay.",true);return;}
-          verifyPayment(order,submit,{transaction_nsu,invoice_slug},referenceForm);
-        });
-        referenceForm.append(explanation,fields,submit);
-        check.addEventListener("click",()=>verifyPayment(order,check,{},referenceForm));
-        actionRow.append(check);
-        paymentTools.append(actionRow,referenceForm);
+        const methodSelect=node("select");
+        methodSelect.setAttribute("aria-label","Forma de pagamento recebida");
+        methodSelect.append(new Option("Forma recebida…",""),new Option("PIX","pix"),new Option("Cartão de crédito","credit_card"));
+        const confirm=node("button","payment-check primary","CONFIRMAR PAGAMENTO");confirm.type="button";
+        confirm.addEventListener("click",()=>confirmPaymentManual(order,confirm,methodSelect));
+        actionRow.append(methodSelect,confirm);
+        paymentTools.append(actionRow);
+        if(order.payment_confirmation_source==="manual_admin"){
+          paymentTools.append(node("div","payment-help","Confirmação manual registrada no painel."));
+        }
         amount.append(paymentTools);
       }
       foot.append(amount);
