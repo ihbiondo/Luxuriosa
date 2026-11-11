@@ -2,6 +2,7 @@
 <html lang="pt-BR">
 <head>
   <base href="/">
+  <meta name="robots" content="noindex,nofollow">
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex,nofollow">
@@ -26,9 +27,53 @@
     .colors{display:flex;flex-wrap:wrap;gap:8px}.color-option{display:flex;align-items:center;gap:7px;padding:8px 10px;border:1px solid rgba(212,175,124,.18);border-radius:7px;color:var(--muted);font-size:10px}.color-option input{width:14px;height:14px;accent-color:var(--wine)}
     .actions{margin-top:22px}.primary{width:100%;min-height:48px;border:1px solid var(--wine);border-radius:7px;background:var(--wine);color:#fff;font:600 10px var(--sans);letter-spacing:.12em;cursor:pointer;transition:.2s}.primary:hover{background:#a32950}.primary:disabled{opacity:.55;cursor:wait}.text-action{display:block;margin:16px auto 0;padding:4px;border:0;background:none;color:var(--gold);font:500 11px var(--sans);text-decoration:underline;text-underline-offset:3px;cursor:pointer}.legal{margin:18px 0 0;color:#887980;font-size:9px;text-align:center}.message{display:none;margin:0 0 18px;padding:12px 14px;border:1px solid rgba(212,175,124,.25);border-radius:8px;background:rgba(212,175,124,.07);color:var(--blush);font-size:11px}.message.show{display:block}.message.error{border-color:rgba(224,100,120,.35);background:rgba(150,35,60,.12);color:#ffc3cc}
     .hidden{display:none!important}.account-box{padding:20px;border:1px solid var(--line);border-radius:12px;background:rgba(0,0,0,.18)}.account-box p{color:var(--muted);font-size:12px}.account-email{margin:0 0 18px}.account-email strong{color:var(--blush);font-weight:600}.email-change-form{padding-bottom:18px;border-bottom:1px solid rgba(212,175,124,.14)}.email-change-help{margin:10px 0 0;color:var(--muted);font-size:11px;line-height:1.6}.email-change-form .actions{margin:14px 0 0}.email-change-form .secondary:disabled{opacity:.55;cursor:wait}.cep-status{display:block;min-height:16px;margin-top:5px;color:var(--muted);font-size:10px}.cep-status.error{color:#ffc3cc}.cep-status.success{color:var(--gold)}.account-form .section-label{margin-top:20px}.account-form .grid{margin-top:12px}.account-form .actions{margin-bottom:22px}.account-actions{display:flex;gap:10px;flex-wrap:wrap}.secondary{min-height:42px;padding:0 16px;border:1px solid var(--line);border-radius:7px;background:transparent;color:var(--gold);font:600 10px var(--sans);cursor:pointer}
+    .orders-panel{margin:22px 0 26px;padding:18px;border:1px solid var(--line);border-radius:13px;background:rgba(11,11,11,.34)}
+    .orders-intro{margin:6px 0 14px;color:var(--muted);font-size:12px;line-height:1.6}
+    .orders-list{display:grid;gap:10px}
+    .order-card{padding:13px;border:1px solid rgba(212,175,124,.16);border-radius:10px;background:var(--surface2)}
+    .order-top{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap}
+    .order-number{font-weight:700;color:var(--gold)}
+    .order-status{font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--blush)}
+    .order-meta{display:flex;gap:12px;flex-wrap:wrap;margin:8px 0;color:var(--muted);font-size:11px}
+    .order-products{margin:0;padding-left:17px;color:var(--text);font-size:12px;line-height:1.7}
+    .orders-empty{margin:0;color:var(--muted);font-size:12px;line-height:1.6}
     footer{padding:20px 0 28px;border-top:1px solid rgba(212,175,124,.12);color:#766970;font-size:9px;text-align:center}
     @media(max-width:800px){main{grid-template-columns:1fr;gap:30px;min-height:auto;padding-top:24px}.intro{max-width:600px}.intro h1{font-size:42px}.intro-note{display:none}.panel{justify-self:center;max-width:620px}.top{padding:20px 0}}
     @media(max-width:480px){.shell{width:min(100% - 24px,1080px)}.top{align-items:flex-start}.brand{font-size:24px}.back{padding-top:8px;font-size:10px}main{padding-top:18px}.intro h1{font-size:36px}.panel{padding:21px 16px;border-radius:15px}.grid{grid-template-columns:1fr}.field.full{grid-column:auto}.section-label{grid-column:auto}.tabs{margin-bottom:22px}h2{font-size:26px}}
+
+    /* Área do cliente: navegação simples por tarefas */
+    .account-home{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:18px 0 22px}
+    .account-home a{display:flex;flex-direction:column;gap:7px;min-height:118px;padding:17px 15px;border:1px solid var(--line);border-radius:12px;background:rgba(0,0,0,.22);text-decoration:none;transition:border-color .2s,transform .2s}
+    .account-home a:hover{border-color:var(--gold);transform:translateY(-2px)}
+    .account-home strong{color:var(--blush);font-size:12px}
+    .account-home span{color:var(--muted);font-size:10px;line-height:1.55}
+    .account-home .tile-icon{color:var(--gold);font-size:19px;line-height:1}
+    .account-welcome{margin:12px 0;padding:17px;border:1px solid var(--line);border-radius:12px;background:linear-gradient(120deg,rgba(139,30,63,.18),rgba(0,0,0,.12))}
+    .account-welcome p{margin:5px 0 0;color:var(--muted);font-size:11px}
+    .account-section{margin:12px 0;border:1px solid var(--line);border-radius:12px;background:rgba(0,0,0,.18);overflow:hidden}
+    .account-section>summary{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px;list-style:none;cursor:pointer;color:var(--blush);font-size:12px;font-weight:600}
+    .account-section>summary::-webkit-details-marker{display:none}
+    .account-section>summary:after{content:"＋";color:var(--gold);font-size:17px}
+    .account-section[open]>summary:after{content:"−"}
+    .account-section>.account-section-content{padding:0 16px 16px}
+    .account-section .section-label{margin-top:8px}
+    .account-section .orders-panel{margin:0;padding:0;border:0;background:transparent}
+    .account-section .orders-panel>.section-label{display:none}
+    .account-section .account-form{margin:0!important;padding:0!important;border:0!important}
+    .account-section .account-form>.section-label:first-child{margin-top:0}
+    .account-section .account-form .actions{margin-bottom:8px}
+    .account-club{margin:18px 0;padding:18px;border:1px solid rgba(212,175,124,.3);border-radius:12px;background:linear-gradient(130deg,rgba(139,30,63,.2),rgba(0,0,0,.2))}
+    .account-club strong{display:block;color:var(--gold);font:400 22px var(--serif)}
+    .account-club p{margin:5px 0 12px;color:var(--muted);font-size:11px}
+    .account-club a{font-size:11px;font-weight:600;text-decoration:none}
+    .interest-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .profile-progress{margin:15px 0 4px;padding:14px;border:1px solid rgba(212,175,124,.2);border-radius:10px;background:rgba(212,175,124,.035)}
+    .profile-progress-head{display:flex;justify-content:space-between;gap:10px;color:var(--blush);font-size:11px;font-weight:600}
+    .profile-progress-track{height:6px;margin:10px 0 7px;border-radius:99px;background:rgba(255,255,255,.1);overflow:hidden}
+    .profile-progress-track span{display:block;height:100%;width:0;background:var(--gold);border-radius:inherit;transition:width .2s}
+    .profile-progress small{color:var(--muted);font-size:10px;line-height:1.5}
+    @media(max-width:560px){.account-home{grid-template-columns:1fr}.account-home a{min-height:0;display:grid;grid-template-columns:25px 1fr;align-items:center}.account-home a .tile-icon{grid-row:span 2}.account-home a span{grid-column:2}}
+
   </style>
 </head>
 <body>
@@ -95,9 +140,57 @@
                   <label class="color-option"><input type="checkbox" name="favoriteColor" value="Outra"> Outra</label>
                 </div>
               </div>
+              <div class="field full">
+                <label>Categorias favoritas — escolha até 3</label>
+                <div class="colors interest-grid">
+                  <label class="color-option"><input type="checkbox" name="favoriteCategory" value="lingerie"> Lingerie</label>
+                  <label class="color-option"><input type="checkbox" name="favoriteCategory" value="cosmeticos_sensuais"> Cosméticos sensuais</label>
+                  <label class="color-option"><input type="checkbox" name="favoriteCategory" value="geles_lubrificantes"> Géis e lubrificantes</label>
+                  <label class="color-option"><input type="checkbox" name="favoriteCategory" value="acessorios_casais"> Acessórios para casais</label>
+                  <label class="color-option"><input type="checkbox" name="favoriteCategory" value="jogos_brincadeiras"> Jogos e brincadeiras</label>
+                  <label class="color-option"><input type="checkbox" name="favoriteCategory" value="massagem_relaxamento"> Massagem e relaxamento</label>
+                  <label class="color-option"><input type="checkbox" name="favoriteCategory" value="estimulacao"> Produtos de estimulação</label>
+                  <label class="color-option"><input type="checkbox" name="favoriteCategory" value="fantasias_acessorios"> Fantasias e acessórios</label>
+                  <label class="color-option"><input type="checkbox" name="favoriteCategory" value="kits_presentes"> Kits e presentes</label>
+                  <label class="color-option"><input type="checkbox" name="favoriteCategory" value="novidades_lancamentos"> Novidades e lançamentos</label>
+                </div>
+                <small class="email-change-help">Escolha apenas o que combina com seus interesses. Você poderá alterar essas preferências depois.</small>
+              </div>
+              <div class="field">
+                <label for="signupPreferredPriceRange">Faixa de preço preferida</label>
+                <select id="signupPreferredPriceRange"><option value="">Não defini uma faixa</option>
+                  <option value="ate_50">Até R$ 50</option>
+                  <option value="50_100">R$ 50 a R$ 100</option>
+                  <option value="100_200">R$ 100 a R$ 200</option>
+                  <option value="acima_200">Acima de R$ 200</option></select>
+              </div>
+              <div class="field">
+                <label for="signupPreferredOfferType">O que mais chama sua atenção?</label>
+                <select id="signupPreferredOfferType"><option value="">Sem preferência</option>
+                  <option value="descontos">Descontos e oportunidades</option>
+                  <option value="kits">Kits e combinações</option>
+                  <option value="novidades">Novidades e lançamentos</option>
+                  <option value="recomendacoes">Recomendações personalizadas</option></select>
+              </div>
+              <div class="field full">
+                <div style="padding:14px;border:1px solid rgba(212,175,124,.18);border-radius:9px;background:rgba(212,175,124,.035)">
+                  <label style="display:flex;gap:10px;align-items:flex-start;font-size:11px;line-height:1.65;letter-spacing:0;cursor:pointer">
+                    <input id="signupExperienceConsent" type="checkbox" style="width:16px;height:16px;flex:0 0 16px;margin:2px 0 0;accent-color:var(--wine)">
+                    <span><strong>Quero uma experiência personalizada (opcional).</strong><br>Autorizo a Luxuriosa a usar minhas categorias favoritas, cores, faixa de preço e preferências de ofertas para recomendar produtos, organizar vantagens e melhorar a seleção de estoque. Posso alterar minhas escolhas na minha conta.</span>
+                  </label>
+                </div>
+              </div>
+              <div class="field full">
+                <div style="padding:14px;border:1px solid rgba(212,175,124,.18);border-radius:9px;background:rgba(212,175,124,.035)">
+                  <label style="display:flex;gap:10px;align-items:flex-start;font-size:11px;line-height:1.65;letter-spacing:0;cursor:pointer">
+                    <input id="signupAggregatedConsent" type="checkbox" style="width:16px;height:16px;flex:0 0 16px;margin:2px 0 0;accent-color:var(--wine)">
+                    <span><strong>Quero contribuir com a melhoria da Luxuriosa (opcional).</strong><br>Autorizo o uso de indicadores de navegação, interesse e compras em análises agregadas e efetivamente anonimizadas, para medir demanda e melhorar produtos e serviços. Somente resultados sem identificação individual poderão ser compartilhados com parceiros. Nome, contato, endereço e histórico individual de compras não serão compartilhados. Posso alterar esta autorização na minha conta.</span>
+                  </label>
+                </div>
+              </div>
             </div>
             <div class="actions"><button class="primary" type="submit">CRIAR MINHA CONTA</button></div>
-            <p class="legal">Ao criar sua conta, você confirma que tem 18 anos ou mais e concorda com nossa <a href="privacidade.html" target="_blank" rel="noopener">Política de Privacidade</a>.</p>
+            <p class="legal">Ao criar sua conta, você confirma que tem 18 anos ou mais. Os dados essenciais são usados para administrar sua conta e atender pedidos. As autorizações adicionais acima são opcionais, independentes e não condicionam o cadastro. Consulte a <a href="privacidade.html" target="_blank" rel="noopener">Política de Privacidade</a>.</p>
           </form>
 
           <form id="resetForm" class="hidden">
@@ -122,6 +215,27 @@
           <p class="lead">Consulte e mantenha seus dados atualizados.</p>
           <div class="account-box">
             <p class="account-email">Conta vinculada a <strong id="accountEmail"></strong></p>
+            <p><a id="adminDashboardLink" class="hidden" href="#" rel="nofollow">Acessar Gestão Luxuriosa →</a></p>
+            <div class="account-welcome">
+              <strong>O que você gostaria de fazer?</strong>
+              <p>Escolha uma opção. Você pode voltar a esta página quando quiser.</p>
+            </div>
+            <nav class="account-home" aria-label="Atalhos da sua conta">
+              <a href="#account-profile-section" data-open-account="account-profile-section"><span class="tile-icon" aria-hidden="true">♙</span><strong>Revisar cadastro</strong><span>Confira seu nome, contato e endereço de entrega.</span></a>
+              <a href="#account-orders-section" data-open-account="account-orders-section"><span class="tile-icon" aria-hidden="true">▤</span><strong>Acompanhar compra</strong><span>Veja o status dos pedidos e as próximas etapas.</span></a>
+              <a href="/loja.html"><span class="tile-icon" aria-hidden="true">✦</span><strong>Novidades</strong><span>Descubra produtos, kits e novidades da Luxuriosa.</span></a>
+            </nav>
+            <aside class="account-club">
+              <strong>Clube Luxuriosa</strong>
+              <p>Estamos preparando um espaço de vantagens com ofertas especiais, novidades e benefícios para quem faz parte da comunidade. Participar será opcional e suas preferências poderão ser ajustadas quando quiser.</p>
+              <a href="/loja.html">EXPLORAR A LUXURIOSA →</a>
+            </aside>
+            <section class="orders-panel" aria-labelledby="ordersHeading">
+              <div class="section-label" id="ordersHeading">Meus pedidos</div>
+              <p class="orders-intro">Acompanhe as solicitações feitas pelo site e o andamento de cada pedido. Solicitações encaminhadas ao WhatsApp ficam aguardando confirmação; a compra só é confirmada após o atendimento.</p>
+              <div id="accountOrders" class="orders-list" aria-live="polite"><p class="orders-empty">Carregando seu histórico...</p></div>
+              <p class="orders-intro"><a href="/acompanhar-pedido/">ABRIR ACOMPANHAMENTO COMPLETO DOS PEDIDOS →</a></p>
+            </section>
             <form id="emailChangeForm" class="account-form email-change-form">
               <div class="section-label">E-mail de acesso</div>
               <div class="grid">
@@ -130,6 +244,24 @@
               </div>
               <p class="email-change-help">Por segurança, a alteração depende da confirmação por e-mail. O endereço atual continua válido até a conclusão do processo.</p>
               <div class="actions"><button class="secondary" id="requestEmailChangeButton" type="submit">SOLICITAR ALTERAÇÃO DE E-MAIL</button></div>
+            </form>
+            <form id="accountDataConsentForm" class="account-form" style="margin:18px 0;padding:16px;border:1px solid var(--line);border-radius:10px">
+              <div class="section-label">Privacidade e uso de dados opcionais</div>
+              <p class="email-change-help">Estas escolhas não afetam sua conta, seus pedidos ou o atendimento. Você pode alterá-las gratuitamente.</p>
+              <div class="field full" style="margin:12px 0">
+                <label style="display:flex;gap:10px;align-items:flex-start;letter-spacing:0;line-height:1.6">
+                  <input id="accountExperienceConsent" type="checkbox" style="width:16px;height:16px;flex:0 0 16px;margin:2px 0 0;accent-color:var(--wine)">
+                  <span>Permitir o uso das categorias favoritas, cores, faixa de preço e preferências de ofertas que informei para recomendações, vantagens e melhor seleção de produtos.</span>
+                </label>
+              </div>
+              <div class="field full" style="margin:12px 0">
+                <label style="display:flex;gap:10px;align-items:flex-start;letter-spacing:0;line-height:1.6">
+                  <input id="accountAggregatedConsent" type="checkbox" style="width:16px;height:16px;flex:0 0 16px;margin:2px 0 0;accent-color:var(--wine)">
+                  <span>Permitir uso de indicadores limitados para estatísticas agregadas e anonimizadas, que podem ser compartilhadas com parceiros sem identificação individual. Não inclui nome, contato, endereço ou histórico individual de compras.</span>
+                </label>
+              </div>
+              <p id="accountConsentStatus" class="email-change-help" aria-live="polite"></p>
+              <div class="actions"><button class="secondary" id="saveAccountDataConsentButton" type="submit">SALVAR AUTORIZAÇÕES</button></div>
             </form>
             <form id="accountForm" class="account-form">
               <div class="section-label">Dados pessoais</div>
@@ -159,6 +291,43 @@
                   <label class="color-option"><input type="checkbox" name="accountFavoriteColor" value="Branco"> Branco</label>
                   <label class="color-option"><input type="checkbox" name="accountFavoriteColor" value="Outra"> Outra</label>
                 </div>
+              </div>
+              <div class="section-label">Perfil de preferências</div>
+              <div class="field full">
+                <label>Categorias favoritas — escolha até 3</label>
+                <div class="colors interest-grid">
+                  <label class="color-option"><input type="checkbox" name="accountFavoriteCategory" value="lingerie"> Lingerie</label>
+                  <label class="color-option"><input type="checkbox" name="accountFavoriteCategory" value="cosmeticos_sensuais"> Cosméticos sensuais</label>
+                  <label class="color-option"><input type="checkbox" name="accountFavoriteCategory" value="geles_lubrificantes"> Géis e lubrificantes</label>
+                  <label class="color-option"><input type="checkbox" name="accountFavoriteCategory" value="acessorios_casais"> Acessórios para casais</label>
+                  <label class="color-option"><input type="checkbox" name="accountFavoriteCategory" value="jogos_brincadeiras"> Jogos e brincadeiras</label>
+                  <label class="color-option"><input type="checkbox" name="accountFavoriteCategory" value="massagem_relaxamento"> Massagem e relaxamento</label>
+                  <label class="color-option"><input type="checkbox" name="accountFavoriteCategory" value="estimulacao"> Produtos de estimulação</label>
+                  <label class="color-option"><input type="checkbox" name="accountFavoriteCategory" value="fantasias_acessorios"> Fantasias e acessórios</label>
+                  <label class="color-option"><input type="checkbox" name="accountFavoriteCategory" value="kits_presentes"> Kits e presentes</label>
+                  <label class="color-option"><input type="checkbox" name="accountFavoriteCategory" value="novidades_lancamentos"> Novidades e lançamentos</label>
+                </div>
+              </div>
+              <div class="field">
+                <label for="accountPreferredPriceRange">Faixa de preço preferida</label>
+                <select id="accountPreferredPriceRange"><option value="">Não defini uma faixa</option>
+                  <option value="ate_50">Até R$ 50</option>
+                  <option value="50_100">R$ 50 a R$ 100</option>
+                  <option value="100_200">R$ 100 a R$ 200</option>
+                  <option value="acima_200">Acima de R$ 200</option></select>
+              </div>
+              <div class="field">
+                <label for="accountPreferredOfferType">Tipo de oferta preferida</label>
+                <select id="accountPreferredOfferType"><option value="">Sem preferência</option>
+                  <option value="descontos">Descontos e oportunidades</option>
+                  <option value="kits">Kits e combinações</option>
+                  <option value="novidades">Novidades e lançamentos</option>
+                  <option value="recomendacoes">Recomendações personalizadas</option></select>
+              </div>
+              <div class="profile-progress field full" id="profileCompletion" aria-live="polite">
+                <div class="profile-progress-head"><span id="profileProgressLabel">Seu perfil está começando</span><strong id="profileProgressValue">0%</strong></div>
+                <div class="profile-progress-track"><span id="profileProgressBar"></span></div>
+                <small id="profileProgressHint">Escolha categorias, faixa de preço e ofertas para receber recomendações mais alinhadas às suas preferências.</small>
               </div>
               <div class="actions"><button class="primary" id="saveAccountButton" type="submit">SALVAR ALTERAÇÕES</button></div>
             </form>
@@ -190,6 +359,38 @@
     });
 
     const $ = (id) => document.getElementById(id);
+    // Agrupa configurações em seções recolhíveis para reduzir a sobrecarga visual.
+    function organizeAccountSections() {
+      const box = document.querySelector("#signedInArea .account-box");
+      if (!box || box.dataset.organized === "true") return;
+      const sections = [
+        ["account-orders-section", "Meus pedidos", $("ordersHeading")?.closest(".orders-panel")],
+        ["account-email-section", "E-mail de acesso", $("emailChangeForm")],
+        ["account-consent-section", "Privacidade e autorizações", $("accountDataConsentForm")],
+        ["account-profile-section", "Meus dados e endereço", $("accountForm")],
+        ["account-delete-section", "Encerrar conta", $("deleteAccountForm")]
+      ];
+      sections.forEach(([id, title, node]) => {
+        if (!node) return;
+        const details = document.createElement("details");
+        details.className = "account-section";
+        details.id = id;
+        const summary = document.createElement("summary");
+        summary.textContent = title;
+        const content = document.createElement("div");
+        content.className = "account-section-content";
+        details.append(summary, content);
+        node.before(details);
+        content.append(node);
+      });
+      box.dataset.organized = "true";
+      document.querySelectorAll("[data-open-account]").forEach(link => {
+        link.addEventListener("click", () => {
+          const target = document.getElementById(link.dataset.openAccount);
+          if (target) target.open = true;
+        });
+      });
+    }
 
     function attachCepLookup({ inputId, statusId, streetId, neighborhoodId, cityId, stateId, complementId }) {
       const input = $(inputId);
@@ -312,8 +513,56 @@
       return text;
     }
 
+    const ACCOUNT_CONSENT_VERSION = "luxuriosa-account-data-v2-2026-11";
+
+    function updatePreferenceProgress(categories, priceRange, offerType) {
+      const selectedCategories = Array.isArray(categories) ? categories : [];
+      const currentPrice = priceRange ?? $("accountPreferredPriceRange")?.value ?? "";
+      const currentOffer = offerType ?? $("accountPreferredOfferType")?.value ?? "";
+      const progress = (selectedCategories.length ? 50 : 0) + (currentPrice ? 25 : 0) + (currentOffer ? 25 : 0);
+      const label = progress === 100 ? "Perfil completo" : progress >= 50 ? "Perfil personalizado" : "Seu perfil está começando";
+      const hint = progress === 100
+        ? "Pronto. Suas preferências estão completas para recomendações, combinações e oportunidades mais relevantes."
+        : progress >= 50
+          ? "Continue preenchendo sua faixa de preço e o tipo de oferta para refinar suas recomendações."
+          : "Escolha até três categorias, sua faixa de preço e o tipo de oferta que prefere.";
+      if ($("profileProgressLabel")) $("profileProgressLabel").textContent = label;
+      if ($("profileProgressValue")) $("profileProgressValue").textContent = progress + "%";
+      if ($("profileProgressBar")) $("profileProgressBar").style.width = progress + "%";
+      if ($("profileProgressHint")) $("profileProgressHint").textContent = hint;
+    }
+
+    async function syncSignupConsents(user) {
+      const meta = user?.user_metadata || {};
+      if (meta.account_data_consents_recorded === true ||
+          meta.account_consent_version !== ACCOUNT_CONSENT_VERSION ||
+          typeof meta.account_experience_consent !== "boolean" ||
+          typeof meta.account_aggregated_consent !== "boolean") return;
+      const results = await Promise.all([
+        supabase.rpc("record_account_data_consent", {
+          p_purpose: "experience_personalization",
+          p_granted: meta.account_experience_consent,
+          p_source: "signup",
+          p_event_key: meta.account_experience_consent_event_key,
+          p_text_version: ACCOUNT_CONSENT_VERSION
+        }),
+        supabase.rpc("record_account_data_consent", {
+          p_purpose: "aggregated_insights_sharing",
+          p_granted: meta.account_aggregated_consent,
+          p_source: "signup",
+          p_event_key: meta.account_aggregated_consent_event_key,
+          p_text_version: ACCOUNT_CONSENT_VERSION
+        })
+      ]);
+      const failure = results.find(result => result.error);
+      if (failure) throw failure.error;
+      const { error } = await supabase.auth.updateUser({ data: { account_data_consents_recorded: true } });
+      if (error) throw error;
+    }
+
     async function syncNewAccountData(user) {
       const meta = user?.user_metadata || {};
+      await syncSignupConsents(user);
       if (meta.account_setup_completed || !meta.address_postal_code) return;
       const profile = {
         full_name: meta.full_name || null,
@@ -324,7 +573,13 @@
       if (profileResult.error) throw profileResult.error;
 
       const colors = Array.isArray(meta.favorite_colors) ? meta.favorite_colors.slice(0, 3) : [];
-      const preferencesResult = await supabase.from("preferences").update({ favorite_colors: colors }).eq("user_id", user.id);
+      const categories = Array.isArray(meta.favorite_categories) ? meta.favorite_categories.slice(0, 3) : [];
+      const preferencesResult = await supabase.from("preferences").update({
+        favorite_colors: colors,
+        favorite_categories: categories,
+        preferred_price_range: meta.preferred_price_range || null,
+        preferred_offer_type: meta.preferred_offer_type || null
+      }).eq("user_id", user.id);
       if (preferencesResult.error) throw preferencesResult.error;
 
       const existing = await supabase.from("addresses").select("id").eq("user_id", user.id).limit(1);
@@ -346,22 +601,34 @@
         });
         if (addressResult.error) throw addressResult.error;
       }
-      const metadataResult = await supabase.auth.updateUser({ data: { account_setup_completed: true, full_name: null, phone: null, birth_date: null, favorite_colors: null, address_postal_code: null, address_street: null, address_number: null, address_complement: null, address_neighborhood: null, address_city: null, address_state: null } });
+      const metadataResult = await supabase.auth.updateUser({ data: { account_setup_completed: true, full_name: null, phone: null, birth_date: null, favorite_colors: null, favorite_categories: null, preferred_price_range: null, preferred_offer_type: null, address_postal_code: null, address_street: null, address_number: null, address_complement: null, address_neighborhood: null, address_city: null, address_state: null } });
       if (metadataResult.error) throw metadataResult.error;
     }
 
     async function loadAccountData(user) {
-      const [profileResult, addressResult, preferencesResult] = await Promise.all([
+      const [profileResult, addressResult, preferencesResult, consentResult] = await Promise.all([
         supabase.from("profiles").select("full_name, display_name, phone, birth_date").eq("id", user.id).maybeSingle(),
         supabase.from("addresses").select("id, postal_code, street, number, complement, neighborhood, city, state").eq("user_id", user.id).eq("is_default", true).maybeSingle(),
-        supabase.from("preferences").select("favorite_colors").eq("user_id", user.id).maybeSingle()
+        supabase.from("preferences").select("favorite_colors, favorite_categories, preferred_price_range, preferred_offer_type").eq("user_id", user.id).maybeSingle(),
+        supabase.from("account_data_consents").select("purpose, granted, consent_text_version, created_at").eq("user_id", user.id).order("created_at", { ascending: false }).limit(20)
       ]);
       if (profileResult.error) throw profileResult.error;
       if (addressResult.error) throw addressResult.error;
       if (preferencesResult.error) throw preferencesResult.error;
+      if (consentResult.error) throw consentResult.error;
+      const latestConsent = new Map();
+      (consentResult.data || []).forEach(row => {
+        if (!latestConsent.has(row.purpose)) latestConsent.set(row.purpose, row);
+      });
+      $("accountExperienceConsent").checked = latestConsent.get("experience_personalization")?.granted === true && latestConsent.get("experience_personalization")?.consent_text_version === ACCOUNT_CONSENT_VERSION;
+      $("accountAggregatedConsent").checked = latestConsent.get("aggregated_insights_sharing")?.granted === true && latestConsent.get("aggregated_insights_sharing")?.consent_text_version === ACCOUNT_CONSENT_VERSION;
+      $("accountConsentStatus").textContent = consentResult.data?.length
+        ? "Preferências registradas. Última atualização: " + new Date(consentResult.data[0].created_at).toLocaleString("pt-BR") + "."
+        : "Nenhuma autorização opcional ativa. Os recursos essenciais da conta continuam funcionando.";
       const profile = profileResult.data || {};
       const address = addressResult.data || {};
       const colors = preferencesResult.data?.favorite_colors || [];
+      const categories = preferencesResult.data?.favorite_categories || [];
       $("accountEmail").textContent = user.email || "";
       $("accountFullName").value = profile.full_name || user.user_metadata?.full_name || "";
       $("accountBirthDate").value = profile.birth_date || user.user_metadata?.birth_date || "";
@@ -376,13 +643,73 @@
       document.querySelectorAll('input[name="accountFavoriteColor"]').forEach((input) => {
         input.checked = colors.includes(input.value);
       });
+      document.querySelectorAll('input[name="accountFavoriteCategory"]').forEach((input) => {
+        input.checked = categories.includes(input.value);
+      });
+      $("accountPreferredPriceRange").value = preferencesResult.data?.preferred_price_range || "";
+      $("accountPreferredOfferType").value = preferencesResult.data?.preferred_offer_type || "";
+      updatePreferenceProgress(categories, $("accountPreferredPriceRange").value, $("accountPreferredOfferType").value);
       const displayName = profile.display_name || profile.full_name?.trim().split(/\s+/)[0] || user.user_metadata?.display_name || user.email || "cliente";
       $("accountGreeting").textContent = "Olá, " + displayName + "!";
+    }
+
+    async function loadAccountOrders(user) {
+      const container = $("accountOrders");
+      container.replaceChildren();
+      const { data: orders, error } = await supabase.from("orders")
+        .select("id, order_number, status, subtotal, shipping_amount, total_amount, created_at")
+        .eq("customer_id", user.id).order("created_at", { ascending: false }).limit(20);
+      if (error) throw error;
+      if (!orders || !orders.length) {
+        const empty = document.createElement("p");
+        empty.className = "orders-empty";
+        empty.textContent = "Ainda não há pedidos vinculados à sua conta. Quando você fizer uma solicitação pelo site estando conectado, ela aparecerá aqui.";
+        container.append(empty);
+        return;
+      }
+      const ids = orders.map((order) => order.id);
+      const { data: lines, error: linesError } = await supabase.from("order_items")
+        .select("order_id, product_name, quantity").in("order_id", ids);
+      if (linesError) throw linesError;
+      const labels = { awaiting_confirmation: "Aguardando confirmação", confirmed: "Confirmado", processing: "Em preparação", out_for_delivery: "Saiu para entrega", delivered: "Entregue", cancelled: "Cancelado" };
+      const money = new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" });
+      orders.forEach((order) => {
+        const card = document.createElement("article"); card.className = "order-card";
+        const top = document.createElement("div"); top.className = "order-top";
+        const number = document.createElement("strong"); number.className = "order-number"; number.textContent = "Pedido #" + order.order_number;
+        const status = document.createElement("span"); status.className = "order-status"; status.textContent = labels[order.status] || "Em atualização";
+        top.append(number, status);
+        const meta = document.createElement("div"); meta.className = "order-meta";
+        const date = document.createElement("span"); date.textContent = new Date(order.created_at).toLocaleDateString("pt-BR");
+        const amount = document.createElement("strong"); amount.textContent = order.shipping_amount == null ? "Produtos: " + money.format(Number(order.subtotal) || 0) + " · frete a confirmar" : money.format(Number(order.total_amount) || 0);
+        meta.append(date, amount);
+        const list = document.createElement("ul"); list.className = "order-products";
+        (lines || []).filter((line) => line.order_id === order.id).forEach((line) => {
+          const item = document.createElement("li"); item.textContent = line.quantity + "x " + line.product_name; list.append(item);
+        });
+        card.append(top, meta, list); container.append(card);
+      });
+    }
+
+    async function loadAdminAccess(user) {
+      const link = $("adminDashboardLink");
+      if (!link) return;
+      link.classList.add("hidden");
+      link.removeAttribute("href");
+      try {
+        const { data, error } = await supabase.from("user_permissions")
+          .select("role").eq("user_id", user.id).maybeSingle();
+        if (!error && data?.role === "admin") {
+          link.href = "/lux-gestao-pedidos/";
+          link.classList.remove("hidden");
+        }
+      } catch (_) {}
     }
 
     let loadingUserId = null;
 
     async function showSignedIn(user) {
+      organizeAccountSections();
       if (activeUserId === user.id) {
         $("accountEmail").textContent = user.email || "";
         return;
@@ -394,7 +721,20 @@
       try {
         await syncNewAccountData(user);
         await loadAccountData(user);
+        await loadAccountOrders(user);
+        await loadAdminAccess(user);
         activeUserId = user.id;
+        const requestedPage = new URLSearchParams(window.location.search).get("redirect");
+        let resumeCheckout = false;
+        try {
+          resumeCheckout = localStorage.getItem("luxuriosa_checkout_after_login") === "1";
+          if (resumeCheckout) localStorage.removeItem("luxuriosa_checkout_after_login");
+        } catch (_) {}
+        if (resumeCheckout) {
+          window.location.replace("/loja.html?retomar-checkout=1");
+          return;
+        }
+        if (requestedPage === "acompanhar-pedido/") window.location.replace("/acompanhar-pedido/");
       } catch (error) {
         activeUserId = null;
         message("Não foi possível carregar todos os dados da sua conta. Atualize a página para tentar novamente.", true);
@@ -435,6 +775,42 @@
       }
     });
 
+    $("accountDataConsentForm").addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const button = $("saveAccountDataConsentButton");
+      button.disabled = true;
+      button.textContent = "SALVANDO...";
+      try {
+        const results = await Promise.all([
+          supabase.rpc("record_account_data_consent", {
+            p_purpose: "experience_personalization",
+            p_granted: $("accountExperienceConsent").checked,
+            p_source: "account_settings",
+            p_event_key: crypto.randomUUID(),
+            p_text_version: ACCOUNT_CONSENT_VERSION
+          }),
+          supabase.rpc("record_account_data_consent", {
+            p_purpose: "aggregated_insights_sharing",
+            p_granted: $("accountAggregatedConsent").checked,
+            p_source: "account_settings",
+            p_event_key: crypto.randomUUID(),
+            p_text_version: ACCOUNT_CONSENT_VERSION
+          })
+        ]);
+        const failure = results.find(result => result.error);
+        if (failure) throw failure.error;
+        message("Suas autorizações opcionais foram atualizadas. A revogação vale para usos futuros baseados nessas autorizações.");
+        const { data } = await supabase.auth.getUser();
+        if (data.user) await loadAccountData(data.user);
+      } catch (error) {
+        console.error("Falha ao salvar autorizações:", error);
+        message("Não foi possível atualizar suas autorizações. " + friendlyError(error), true);
+      } finally {
+        button.disabled = false;
+        button.textContent = "SALVAR AUTORIZAÇÕES";
+      }
+    });
+
     $("accountForm").addEventListener("submit", async (event) => {
       event.preventDefault();
       clearMessage();
@@ -453,6 +829,10 @@
       if (!/^[A-Z]{2}$/.test(state)) return message("Informe uma UF válida com duas letras.", true);
       const colors = Array.from(document.querySelectorAll('input[name="accountFavoriteColor"]:checked')).map((input) => input.value);
       if (colors.length > 3) return message("Escolha no máximo três cores favoritas.", true);
+      const categories = Array.from(document.querySelectorAll('input[name="accountFavoriteCategory"]:checked')).map((input) => input.value);
+      if (categories.length > 3) return message("Escolha no máximo três categorias favoritas.", true);
+      const preferredPriceRange = $("accountPreferredPriceRange").value;
+      const preferredOfferType = $("accountPreferredOfferType").value;
       const button = $("saveAccountButton");
       button.disabled = true;
       button.textContent = "SALVANDO...";
@@ -474,8 +854,14 @@
         const { data: userData, error: userError } = await supabase.auth.getUser();
         if (userError) throw userError;
         if (!userData.user) throw new Error("Sua sessão expirou. Entre novamente.");
+        const preferencesResult = await supabase.from("preferences").update({
+          favorite_categories: categories,
+          preferred_price_range: preferredPriceRange || null,
+          preferred_offer_type: preferredOfferType || null
+        }).eq("user_id", userData.user.id);
+        if (preferencesResult.error) throw preferencesResult.error;
         await loadAccountData(userData.user);
-        message("Seus dados foram atualizados com sucesso.");
+        message("Seus dados e preferências foram atualizados com sucesso.");
       } catch (error) {
         console.error("Falha ao atualizar conta:", error);
         message("Não foi possível salvar todas as alterações. " + friendlyError(error), true);
@@ -483,6 +869,25 @@
         button.disabled = false;
         button.textContent = "SALVAR ALTERAÇÕES";
       }
+    });
+
+    ["favoriteCategory", "accountFavoriteCategory"].forEach((name) => {
+      document.querySelectorAll('input[name="' + name + '"]').forEach((input) => {
+        input.addEventListener("change", () => {
+          const selected = document.querySelectorAll('input[name="' + name + '"]:checked');
+          if (selected.length > 3) {
+            input.checked = false;
+            message("Escolha no máximo três categorias favoritas.", true);
+          }
+        });
+      });
+    });
+
+    document.querySelectorAll('input[name="accountFavoriteCategory"], #accountPreferredPriceRange, #accountPreferredOfferType').forEach((control) => {
+      control.addEventListener("change", () => {
+        const categories = Array.from(document.querySelectorAll('input[name="accountFavoriteCategory"]:checked')).map((input) => input.value);
+        updatePreferenceProgress(categories);
+      });
     });
 
     $("loginTab").addEventListener("click", () => showForm("login"));
@@ -518,6 +923,10 @@
       if ($("signupPassword").value !== $("confirmPassword").value) return message("As senhas não coincidem.", true);
       const colors = Array.from(document.querySelectorAll('input[name="favoriteColor"]:checked')).map((el) => el.value);
       if (colors.length > 3) return message("Escolha no máximo três cores favoritas.", true);
+      const categories = Array.from(document.querySelectorAll('input[name="favoriteCategory"]:checked')).map((el) => el.value);
+      if (categories.length > 3) return message("Escolha no máximo três categorias favoritas.", true);
+      const preferredPriceRange = $("signupPreferredPriceRange").value;
+      const preferredOfferType = $("signupPreferredOfferType").value;
       const birth = $("birthDate").value;
       if (!birth || new Date(birth + "T00:00:00") >= new Date()) return message("Informe uma data de nascimento válida.", true);
       const birthDate = new Date(birth + "T00:00:00");
@@ -548,13 +957,22 @@
               phone,
               birth_date: birth,
               favorite_colors: colors,
+              favorite_categories: categories,
+              preferred_price_range: preferredPriceRange,
+              preferred_offer_type: preferredOfferType,
               address_postal_code: postalCode,
               address_street: $("street").value.trim(),
               address_number: $("addressNumber").value.trim(),
               address_complement: $("complement").value.trim(),
               address_neighborhood: $("neighborhood").value.trim(),
               address_city: $("city").value.trim(),
-              address_state: $("state").value.trim().toUpperCase()
+              address_state: $("state").value.trim().toUpperCase(),
+              account_experience_consent: $("signupExperienceConsent").checked,
+              account_aggregated_consent: $("signupAggregatedConsent").checked,
+              account_consent_version: ACCOUNT_CONSENT_VERSION,
+              account_experience_consent_event_key: crypto.randomUUID(),
+              account_aggregated_consent_event_key: crypto.randomUUID(),
+              account_data_consents_recorded: false
             }
           }
         });
@@ -703,5 +1121,6 @@
       showForm("login");
     }
   </script>
+<script src="js/inteligencia.js"></script>
 </body>
 </html>
