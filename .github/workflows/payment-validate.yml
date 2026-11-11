@@ -9,6 +9,12 @@ on:
       - "pagamento-retorno.html"
       - "gestao-privada-8f2c6d.html"
       - "supabase/functions/create-payment-order/**"
+      - "acompanhar-pedido/**"
+      - "lux-gestao-pedidos/**"
+      - "supabase/functions/cart-orders/**"
+      - "js/clientes.js"
+      - "login.html"
+      - "loja.html"
       - "supabase/functions/_shared/**"
       - "supabase/functions/infinitepay-webhook/**"
       - "supabase/functions/payment-status/**"
@@ -25,6 +31,12 @@ on:
       - "previa/lux-central/index.html"
       - "pagamento-retorno.html"
       - "supabase/functions/create-payment-order/**"
+      - "acompanhar-pedido/**"
+      - "lux-gestao-pedidos/**"
+      - "supabase/functions/cart-orders/**"
+      - "js/clientes.js"
+      - "login.html"
+      - "loja.html"
       - "supabase/functions/_shared/**"
       - "supabase/functions/infinitepay-webhook/**"
       - "supabase/functions/payment-status/**"
@@ -70,6 +82,7 @@ jobs:
       - name: Verificar tipos das Edge Functions
         run: |
           deno check supabase/functions/create-payment-order/index.ts
+          deno check supabase/functions/cart-orders/index.ts
           deno check supabase/functions/_shared/infinitepay-payment.ts
           deno check supabase/functions/infinitepay-webhook/index.ts
           deno check supabase/functions/payment-status/index.ts
@@ -112,6 +125,42 @@ jobs:
           console.log("Campos de e-mail do checkout validados nas duas páginas.");
           NODE
 
+
+      - name: Validar checkout autenticado e acompanhamento privado
+        run: |
+          node <<'NODE'
+          const fs = require("node:fs");
+          const cp = require("node:child_process");
+          const customer = fs.readFileSync("js/clientes.js", "utf8");
+          const login = fs.readFileSync("login.html", "utf8");
+          const tracking = fs.readFileSync("acompanhar-pedido/index.html", "utf8");
+          const admin = fs.readFileSync("lux-gestao-pedidos/index.html", "utf8");
+          const payment = fs.readFileSync("supabase/functions/create-payment-order/index.ts", "utf8");
+          const ordersFunction = fs.readFileSync("supabase/functions/cart-orders/index.ts", "utf8");
+          cp.execFileSync(process.execPath, ["--check", "js/clientes.js"], { stdio: "inherit" });
+          for (const [file, html] of [["login.html", login], ["acompanhar-pedido/index.html", tracking], ["lux-gestao-pedidos/index.html", admin]]) {
+            const scripts = [...html.matchAll(/<script\b[^>]*>([\s\S]*?)<\/script>/gi)];
+            for (let i = 0; i < scripts.length; i++) {
+              const path = "/tmp/" + file.replace(/[^a-z0-9]/gi, "-") + "-" + i + ".mjs";
+              fs.writeFileSync(path, scripts[i][1]);
+              cp.execFileSync(process.execPath, ["--check", path], { stdio: "inherit" });
+            }
+          }
+          if (!customer.includes('localStorage.setItem("luxuriosa_checkout_after_login", "1")')) throw new Error("O carrinho precisa preservar a intenção de checkout durante o login.");
+          if (!customer.includes('await carregarDadosDaConta()')) throw new Error("O checkout precisa carregar automaticamente os dados cadastrados.");
+          if (!payment.includes('code: "account_required"')) throw new Error("A Edge Function precisa bloquear checkout sem conta.");
+          if (!ordersFunction.includes('current.payment_status !== "paid"')) throw new Error("A operação administrativa precisa bloquear avanço sem pagamento confirmado.");
+          if (!ordersFunction.includes('current.payment_status === "paid"') || !ordersFunction.includes("Faça a conferência e o estorno na InfinitePay")) throw new Error("O painel não pode cancelar pedido pago sem conciliação de estorno.");
+          if (!admin.includes('action:"admin_dashboard"') || !admin.includes('action:"admin_update_order_status"')) throw new Error("O painel Lux-Gestão precisa consultar e atualizar pedidos.");
+          if (!admin.includes('/functions/v1/payment-status') || !ordersFunction.includes("payment_transaction_nsu, payment_invoice_slug")) throw new Error("O painel precisa oferecer conciliação assistida pela InfinitePay quando houver referência.");
+          if (!tracking.includes('.eq("customer_id",user.id)')) throw new Error("A consulta de pedidos precisa filtrar pelo usuário autenticado.");
+          if (!tracking.includes("payment_checkout_url") || !tracking.includes("checkout.infinitepay.io")) throw new Error("O cliente precisa conseguir retomar uma cobrança pendente na InfinitePay.");
+          for (const label of ["Aguardando pagamento", "Pagamento aprovado", "Em expedição", "Em rota de entrega", "Pedido entregue"]) {
+            if (!tracking.includes(label)) throw new Error("Status ausente no acompanhamento: " + label);
+          }
+          console.log("Checkout autenticado e acompanhamento privado validados.");
+          NODE
+
       - name: Validar JavaScript da página de retorno
         run: |
           node <<'NODE'
@@ -148,13 +197,13 @@ jobs:
         run: |
           node <<'NODE'
           const fs = require("node:fs");
-          const html = fs.readFileSync("gestao-privada-8f2c6d.html", "utf8");
+          const html = fs.readFileSync("lux-gestao-pedidos/index.html", "utf8");
           const scripts = [...html.matchAll(/<script\b[^>]*>([\s\S]*?)<\/script>/gi)];
-          if (!scripts.length) throw new Error("Nenhum script encontrado na área administrativa.");
+          if (!scripts.length) throw new Error("Nenhum script encontrado no painel Lux-Gestão.");
           scripts.forEach((match, index) => {
-            const path = "/tmp/gestao-privada-" + index + ".js";
+            const path = "/tmp/lux-gestao-pedidos-" + index + ".mjs";
             fs.writeFileSync(path, match[1]);
             require("node:child_process").execFileSync(process.execPath, ["--check", path], { stdio: "inherit" });
           });
-          console.log("Scripts da área administrativa validados.");
+          console.log("Scripts do painel Lux-Gestão validados.");
           NODE

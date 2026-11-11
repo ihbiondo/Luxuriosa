@@ -152,6 +152,7 @@
               <div class="section-label" id="ordersHeading">Meus pedidos</div>
               <p class="orders-intro">Acompanhe as solicitações feitas pelo site e o andamento de cada pedido. Solicitações encaminhadas ao WhatsApp ficam aguardando confirmação; a compra só é confirmada após o atendimento.</p>
               <div id="accountOrders" class="orders-list" aria-live="polite"><p class="orders-empty">Carregando seu histórico...</p></div>
+              <p class="orders-intro"><a href="/acompanhar-pedido/">ABRIR ACOMPANHAMENTO COMPLETO DOS PEDIDOS →</a></p>
             </section>
             <form id="emailChangeForm" class="account-form email-change-form">
               <div class="section-label">E-mail de acesso</div>
@@ -518,7 +519,7 @@
         const { data, error } = await supabase.from("user_permissions")
           .select("role").eq("user_id", user.id).maybeSingle();
         if (!error && data?.role === "admin") {
-          link.href = ["gestao-privada", "8f2c6d.html"].join("-");
+          link.href = "/lux-gestao-pedidos/";
           link.classList.remove("hidden");
         }
       } catch (_) {}
@@ -541,6 +542,17 @@
         await loadAccountOrders(user);
         await loadAdminAccess(user);
         activeUserId = user.id;
+        const requestedPage = new URLSearchParams(window.location.search).get("redirect");
+        let resumeCheckout = false;
+        try {
+          resumeCheckout = localStorage.getItem("luxuriosa_checkout_after_login") === "1";
+          if (resumeCheckout) localStorage.removeItem("luxuriosa_checkout_after_login");
+        } catch (_) {}
+        if (resumeCheckout) {
+          window.location.replace("/loja.html?retomar-checkout=1");
+          return;
+        }
+        if (requestedPage === "acompanhar-pedido/") window.location.replace("/acompanhar-pedido/");
       } catch (error) {
         activeUserId = null;
         message("Não foi possível carregar todos os dados da sua conta. Atualize a página para tentar novamente.", true);

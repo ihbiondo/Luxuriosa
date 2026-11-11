@@ -12,7 +12,7 @@
     *{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 50% -20%,#34202a 0,transparent 48%),var(--bg);color:var(--white);font:15px/1.5 Inter,system-ui,-apple-system,Segoe UI,sans-serif;display:grid;place-items:center;padding:28px}
     main{width:min(100%,880px)}.top{display:flex;align-items:center;justify-content:space-between;gap:18px;margin-bottom:54px}.brand{font:600 13px Georgia,serif;letter-spacing:3px}.brand span{color:var(--gold)}.private{font:10px/1.2 ui-monospace,monospace;letter-spacing:1.3px;color:var(--muted);border:1px solid var(--line);padding:8px 10px}
     .eyebrow{color:var(--gold);font:10px ui-monospace,monospace;letter-spacing:2px;text-transform:uppercase}h1{font:500 clamp(36px,7vw,64px)/1.02 Georgia,serif;letter-spacing:-1.8px;margin:14px 0 12px}h1 em{color:var(--gold);font-style:normal}.intro{color:var(--muted);max-width:540px;margin:0 0 34px;font-size:14px}
-    .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.item{min-height:210px;border:1px solid var(--line);background:linear-gradient(145deg,#20232b,#17191f);padding:22px;display:flex;flex-direction:column;text-decoration:none;color:inherit;transition:border-color .18s,transform .18s,background .18s}.item[href]:hover{border-color:var(--gold);transform:translateY(-3px);background:linear-gradient(145deg,#29242a,#191b22)}.num{font:10px ui-monospace,monospace;color:var(--gold);letter-spacing:1.5px}.item h2{font:500 25px Georgia,serif;margin:24px 0 8px}.item p{font-size:12px;color:var(--muted);margin:0}.go{margin-top:auto;padding-top:20px;color:var(--gold);font:10px ui-monospace,monospace;letter-spacing:1px}.soon{opacity:.72}.soon .go{color:#a9aeba}.foot{display:flex;justify-content:space-between;gap:12px;margin-top:28px;padding-top:16px;border-top:1px solid var(--line);color:#747b87;font:9px ui-monospace,monospace;letter-spacing:.7px}
+    .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.item{min-height:210px;border:1px solid var(--line);background:linear-gradient(145deg,#20232b,#17191f);padding:22px;display:flex;flex-direction:column;text-decoration:none;color:inherit;transition:border-color .18s,transform .18s,background .18s}.item[href]:hover{border-color:var(--gold);transform:translateY(-3px);background:linear-gradient(145deg,#29242a,#191b22)}.num{font:10px ui-monospace,monospace;color:var(--gold);letter-spacing:1.5px}.item h2{font:500 25px Georgia,serif;margin:24px 0 8px}.item p{font-size:12px;color:var(--muted);margin:0}.go{margin-top:auto;padding-top:20px;color:var(--gold);font:10px ui-monospace,monospace;letter-spacing:1px}.soon{opacity:.72}.soon .go{color:#a9aeba}.foot{display:flex;justify-content:space-between;gap:12px;margin-top:28px;padding-top:16px;border-top:1px solid var(--line);color:#747b87;font:9px ui-monospace,monospace;letter-spacing:.7px}
     @media(max-width:700px){body{padding:22px}.top{margin-bottom:42px}.grid{grid-template-columns:1fr}.item{min-height:155px}.item h2{margin-top:14px}.foot{flex-direction:column}}
   </style>
 </head>
@@ -21,7 +21,7 @@
     <header class="top"><div class="brand">LUXURIOSA <span> / </span> PRIVATE ACCESS</div><div class="private">ÁREA RESTRITA</div></header>
     <section>
       <div class="eyebrow">Portal de acesso · 442</div>
-      <h1>Um ponto de entrada.<br><em>Três caminhos.</em></h1>
+      <h1>Um ponto de entrada.<br><em>Quatro caminhos.</em></h1>
       <p class="intro">Escolha o ambiente que deseja acessar. Cada sistema possui sua própria finalidade e área de trabalho.</p>
       <div class="grid">
         <a class="item" href="/" aria-label="Acessar o site Luxuriosa">
@@ -30,8 +30,11 @@
         <a class="item" href="/lux-gestao/" aria-label="Acessar o Sistema de Gestão">
           <span class="num">02 / OPERAÇÃO</span><h2>Sistema de Gestão</h2><p>Caixa, vendas, pagamentos, estoque e rotinas operacionais.</p><span class="go">ACESSAR GESTÃO ↗</span>
         </a>
+        <a class="item" href="/lux-gestao-pedidos/" aria-label="Acessar o painel de pedidos online">
+          <span class="num">03 / VENDAS ONLINE</span><h2>Pedidos Online</h2><p>Pagamentos confirmados, separação, expedição e entrega dos pedidos do site.</p><span class="go">ACESSAR PEDIDOS ↗</span>
+        </a>
         <a class="item" href="/lux-central/" aria-label="Acessar o Lux-Central">
-          <span class="num">03 / INTELIGÊNCIA</span><h2>Lux-Central</h2><p>Indicadores financeiros, vendas, estoque e inteligência comercial.</p><span class="go">ACESSAR LUX-CENTRAL ↗</span>
+          <span class="num">04 / INTELIGÊNCIA</span><h2>Lux-Central</h2><p>Indicadores financeiros, vendas, estoque e inteligência comercial.</p><span class="go">ACESSAR LUX-CENTRAL ↗</span>
         </a>
       </div>
     </section>

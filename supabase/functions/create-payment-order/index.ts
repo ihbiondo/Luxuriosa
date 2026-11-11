@@ -327,8 +327,8 @@ Deno.serve(async (req: Request) => {
       return reply({ error: "O frete calculado ultrapassou o limite permitido. Fale com a Luxuriosa." }, 409, origin);
     }
 
-    // Checkout público aceita visitantes. Quando houver sessão, validamos o token
-    // manualmente; o gateway não pode exigir login para quem compra como visitante.
+    // Pedidos do site devem pertencer a uma conta autenticada para permitir acompanhamento privado.
+    // O gateway da Edge Function não exige JWT; por isso validamos a sessão manualmente.
     let customerId: string | null = null;
     const token = (req.headers.get("authorization") || "").replace(/^Bearer\s+/i, "");
     if (token) {
@@ -338,6 +338,12 @@ Deno.serve(async (req: Request) => {
       }
       customerId = userData.user.id;
       if (!customerEmail) customerEmail = textValue(userData.user.email, 254);
+    }
+    if (!customerId) {
+      return reply({
+        code: "account_required",
+        error: "Entre ou crie sua conta Luxuriosa antes de finalizar o pedido. Seus dados cadastrados serão aproveitados no checkout."
+      }, 401, origin);
     }
     if (customerEmail && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(customerEmail)) {
       customerEmail = "";
