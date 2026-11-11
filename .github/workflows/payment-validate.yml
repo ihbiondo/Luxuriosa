@@ -1,3 +1,4 @@
+# Validação também cobre a transferência dos endpoints administrativos de pedidos.
 name: Validacao do checkout InfinitePay
 
 on:
