@@ -122,9 +122,9 @@
     async function load(){
       const button=$("refresh");button.disabled=true;
       try{
-        const {data:{user},error:authError}=await supabase.auth.getUser();
-        if(authError)throw authError;
-        if(!user){
+        const {data:{session},error:sessionError}=await supabase.auth.getSession();
+        if(sessionError)throw sessionError;
+        if(!session?.user){
           $("orders").replaceChildren();
           const box=el("div","message empty");box.append(el("strong","","Entre na sua conta para acompanhar seus pedidos."),el("p","","Por segurança, o histórico não é consultado por número de pedido ou link público."),Object.assign(el("a","button","ENTRAR NA MINHA CONTA"),{href:"/login.html?redirect=acompanhar-pedido/"}));
           $("orders").append(box);$("lastUpdated").textContent="Acesso restrito a clientes autenticados.";return;
