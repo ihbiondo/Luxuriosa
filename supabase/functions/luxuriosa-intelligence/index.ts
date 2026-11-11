@@ -349,10 +349,10 @@ function summarizeSales(rows: any[]) {
     paid_cost_of_goods_cents: 0,
     gross_profit_cents: 0,
     costed_paid_revenue_cents: 0,
-    gross_margin_percent: null,
+    gross_margin_percent: null as number | null,
     recorded_expenses_cents: 0,
     expense_count: 0,
-    partial_operating_result_cents: null,
+    partial_operating_result_cents: null as number | null,
     expense_categories: [] as any[],
     top_products: [] as any[],
     payment_methods: [] as any[],
@@ -703,6 +703,6 @@ Deno.serve(async (request: Request) => {
     return reply({ error: "Ação não reconhecida." }, 400, origin);
   } catch (error) {
     console.error("luxuriosa-intelligence:", error);
-    return reply({ error: "Não foi possível consultar a inteligência de clientes." }, 500, origin);
+    return reply({ error: "Não foi possível consultar os indicadores da Inteligência." }, 500, origin);
   }
 });
