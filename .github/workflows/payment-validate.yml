@@ -132,7 +132,7 @@ jobs:
           const payment = fs.readFileSync("supabase/functions/create-payment-order/index.ts", "utf8");
           cp.execFileSync(process.execPath, ["--check", "js/clientes.js"], { stdio: "inherit" });
           for (const [file, html] of [["login.html", login], ["acompanhar-pedido/index.html", tracking]]) {
-            const scripts = [...html.matchAll(/<script\\b[^>]*>([\\s\\S]*?)<\\/script>/gi)];
+            const scripts = [...html.matchAll(/<script\b[^>]*>([\s\S]*?)<\/script>/gi)];
             for (let i = 0; i < scripts.length; i++) {
               const path = "/tmp/" + file.replace(/[^a-z0-9]/gi, "-") + "-" + i + ".mjs";
               fs.writeFileSync(path, scripts[i][1]);
