@@ -725,7 +725,7 @@
     } finally {
       if (requestId === accountLoadId) {
         button.disabled = false;
-        button.textContent = "👤 Usar meus dados cadastrados";
+        button.textContent = "Atualizar dados da conta";
       }
     }
   }
