@@ -18,6 +18,7 @@ on:
       - "supabase/functions/_shared/**"
       - "supabase/functions/infinitepay-webhook/**"
       - "supabase/functions/payment-status/**"
+      - "supabase/functions/payment-admin/**"
       - "supabase/functions/infinitepay-test-checkout/**"
       - "supabase/functions/infinitepay-test-webhook/**"
       - "supabase/migrations/20261110153000_isolated_infinitepay_test_payments.sql"
@@ -40,6 +41,7 @@ on:
       - "supabase/functions/_shared/**"
       - "supabase/functions/infinitepay-webhook/**"
       - "supabase/functions/payment-status/**"
+      - "supabase/functions/payment-admin/**"
       - "supabase/functions/infinitepay-test-checkout/**"
       - "supabase/functions/infinitepay-test-webhook/**"
       - "supabase/migrations/20261110153000_isolated_infinitepay_test_payments.sql"
@@ -86,25 +88,28 @@ jobs:
           deno check supabase/functions/_shared/infinitepay-payment.ts
           deno check supabase/functions/infinitepay-webhook/index.ts
           deno check supabase/functions/payment-status/index.ts
+          deno check supabase/functions/payment-admin/index.ts
           deno check supabase/functions/infinitepay-test-checkout/index.ts
           deno check supabase/functions/infinitepay-test-webhook/index.ts
 
-      - name: Instalar cliente PostgreSQL
+      - name: Preparar acesso ao PostgreSQL 17
         run: |
-          sudo apt-get update
-          sudo apt-get install -y postgresql-client
+          POSTGRES_CONTAINER=$(docker ps --format '{{.ID}} {{.Image}}' | awk '$2 ~ /^postgres:17/ {print $1; exit}')
+          test -n "$POSTGRES_CONTAINER"
+          echo "POSTGRES_CONTAINER=$POSTGRES_CONTAINER" >> "$GITHUB_ENV"
 
       - name: Testar confirmação atômica no PostgreSQL 17
-        env:
-          PGPASSWORD: postgres
         run: |
-          psql -h localhost -U postgres -d luxuriosa_test -v ON_ERROR_STOP=1 -f .github/scripts/payment-confirmation.integration.sql
+          docker exec "$POSTGRES_CONTAINER" mkdir -p /workspace/.github/scripts /workspace/supabase/migrations
+          docker cp .github/scripts/payment-confirmation.integration.sql "$POSTGRES_CONTAINER":/workspace/.github/scripts/payment-confirmation.integration.sql
+          docker cp supabase/migrations/20261110120000_atomic_infinitepay_payment_confirmation.sql "$POSTGRES_CONTAINER":/workspace/supabase/migrations/
+          docker exec -e PGPASSWORD=postgres -w /workspace "$POSTGRES_CONTAINER" psql -h 127.0.0.1 -U postgres -d luxuriosa_test -v ON_ERROR_STOP=1 -f .github/scripts/payment-confirmation.integration.sql
 
       - name: Testar isolamento do pagamento de R$ 1
-        env:
-          PGPASSWORD: postgres
         run: |
-          psql -h localhost -U postgres -d luxuriosa_test -v ON_ERROR_STOP=1 -f .github/scripts/infinitepay-test.integration.sql
+          docker cp .github/scripts/infinitepay-test.integration.sql "$POSTGRES_CONTAINER":/workspace/.github/scripts/infinitepay-test.integration.sql
+          docker cp supabase/migrations/20261110153000_isolated_infinitepay_test_payments.sql "$POSTGRES_CONTAINER":/workspace/supabase/migrations/
+          docker exec -e PGPASSWORD=postgres -w /workspace "$POSTGRES_CONTAINER" psql -h 127.0.0.1 -U postgres -d luxuriosa_test -v ON_ERROR_STOP=1 -f .github/scripts/infinitepay-test.integration.sql
 
       - name: Testar contrato de confirmação
         run: node --test .github/scripts/payment-confirmation.test.cjs
@@ -152,7 +157,12 @@ jobs:
           if (!ordersFunction.includes('current.payment_status !== "paid"')) throw new Error("A operação administrativa precisa bloquear avanço sem pagamento confirmado.");
           if (!ordersFunction.includes('current.payment_status === "paid"') || !ordersFunction.includes("Faça a conferência e o estorno na InfinitePay")) throw new Error("O painel não pode cancelar pedido pago sem conciliação de estorno.");
           if (!admin.includes('action:"admin_dashboard"') || !admin.includes('action:"admin_update_order_status"')) throw new Error("O painel Lux-Gestão precisa consultar e atualizar pedidos.");
-          if (!admin.includes('/functions/v1/payment-status') || !ordersFunction.includes("payment_transaction_nsu, payment_invoice_slug")) throw new Error("O painel precisa oferecer conciliação assistida pela InfinitePay quando houver referência.");
+          const paymentAdmin = fs.readFileSync("supabase/functions/payment-admin/index.ts", "utf8");
+          if (!admin.includes('/functions/v1/payment-admin') || !admin.includes('action:"reconcile_payment"')) throw new Error("O painel precisa acionar a conciliação administrativa da InfinitePay.");
+          if (!ordersFunction.includes("payment_checkout_url, payment_expires_at, payment_amount_cents")) throw new Error("O painel precisa receber link, expiração e valor da cobrança.");
+          if (!paymentAdmin.includes('action === "reconcile_payment"') || !paymentAdmin.includes('/functions/v1/payment-status')) throw new Error("A conciliação precisa consultar o verificador da InfinitePay.");
+          if (!paymentAdmin.includes('references_required') || !paymentAdmin.includes('payment_provider_events')) throw new Error("A conciliação precisa recuperar referências do webhook ou solicitar os dados manualmente.");
+          if (!paymentAdmin.includes('success=true e paid=true')) throw new Error("O sistema não pode aprovar pagamento sem confirmação positiva da InfinitePay.");
           if (!tracking.includes('.eq("customer_id",user.id)')) throw new Error("A consulta de pedidos precisa filtrar pelo usuário autenticado.");
           if (!tracking.includes("payment_checkout_url") || !tracking.includes("checkout.infinitepay.io")) throw new Error("O cliente precisa conseguir retomar uma cobrança pendente na InfinitePay.");
           for (const label of ["Aguardando pagamento", "Pagamento aprovado", "Em expedição", "Em rota de entrega", "Pedido entregue"]) {
