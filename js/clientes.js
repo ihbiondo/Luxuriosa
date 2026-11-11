@@ -725,14 +725,29 @@
     } finally {
       if (requestId === accountLoadId) {
         button.disabled = false;
-        button.textContent = "👤 Usar meus dados cadastrados";
+        button.textContent = "Atualizar dados da conta";
       }
     }
   }
 
-  function iniciarFinalizacao() {
+  async function iniciarFinalizacao() {
     if (!window.LuxuriosaCarrinho || !window.LuxuriosaCarrinho.obterQuantidade()) return;
-    abrir();
+    try {
+      var supabase = await obterClienteSupabase();
+      var auth = await supabase.auth.getUser();
+      if (auth.error) throw auth.error;
+      if (!auth.data || !auth.data.user) {
+        try { localStorage.setItem("luxuriosa_checkout_after_login", "1"); } catch (_) {}
+        window.location.assign("/login.html?cadastro=1");
+        return;
+      }
+      abrir();
+      await carregarDadosDaConta();
+    } catch (error) {
+      console.error("Não foi possível validar a conta antes do checkout:", error);
+      avisar("Entre na sua conta Luxuriosa para finalizar o pedido.", "error");
+      window.location.assign("/login.html");
+    }
   }
 
   function iniciar() {
@@ -787,6 +802,10 @@
         atualizarAvisoFrete();
           });
     });
+    if (new URLSearchParams(window.location.search).get("retomar-checkout") === "1") {
+      window.history.replaceState({}, document.title, window.location.pathname);
+      window.setTimeout(function () { iniciarFinalizacao(); }, 350);
+    }
     var campoEstado = $("customerState");
     if (campoEstado) {
       campoEstado.addEventListener("input", function () {

@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow,noarchive">
+  <meta name="theme-color" content="#0B0B0B">
+  <title>Pedidos | Lux-Gestão</title>
+  <link rel="icon" href="/img/site/favicon.ico" sizes="any">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Playfair+Display:wght@500;600&display=swap" rel="stylesheet">
+  <style>
+    :root{color-scheme:dark;--bg:#0b0b0b;--panel:#151214;--line:#382a30;--wine:#8b1e3f;--gold:#d4af7c;--pink:#f7d7d9;--muted:#aa9ea4;--green:#92c7a2;--amber:#e5bf75;--red:#dc8790}
+    *{box-sizing:border-box}body{margin:0;background:linear-gradient(145deg,#160d12,#0b0b0b 55%);color:#f7f1f3;font:13px Montserrat,Arial,sans-serif;min-height:100vh}
+    a{color:var(--gold);text-decoration:none}.shell{width:min(1180px,calc(100% - 32px));margin:auto;padding:22px 0 50px}
+    header{display:flex;justify-content:space-between;align-items:center;gap:16px;border-bottom:1px solid var(--line);padding-bottom:17px}
+    .brand{font:600 23px 'Playfair Display',serif;color:var(--gold);letter-spacing:.09em}.brand small{display:block;font:600 9px Montserrat,sans-serif;color:var(--pink);letter-spacing:.25em;margin-top:3px}
+    .top-actions{display:flex;align-items:center;gap:14px;font-size:11px}.muted{color:var(--muted)}
+    h1{font:500 34px 'Playfair Display',serif;margin:26px 0 5px;color:#fff}.subtitle{color:var(--muted);margin:0 0 22px;line-height:1.6}
+    .toolbar{display:grid;grid-template-columns:minmax(220px,1fr) 190px 110px auto;gap:9px;margin:18px 0 14px}
+    input,select{width:100%;min-width:0;border:1px solid var(--line);border-radius:8px;background:#100e0f;color:#f7f1f3;padding:11px 12px;font:12px Montserrat,sans-serif}
+    button{border:1px solid #765b45;background:#21171b;color:var(--gold);border-radius:8px;padding:10px 14px;font:700 10px Montserrat,sans-serif;letter-spacing:.07em;cursor:pointer}
+    button:disabled{opacity:.5;cursor:wait}.primary{background:var(--wine);border-color:var(--wine);color:white}
+    .summary{display:flex;gap:18px;flex-wrap:wrap;color:var(--muted);font-size:11px;padding:10px 0 16px;border-bottom:1px solid var(--line)}
+    .summary strong{color:var(--gold);font-size:13px;margin-left:5px}
+    .notice{display:none;padding:12px 14px;border:1px solid var(--line);border-radius:9px;margin:14px 0;background:#171316;color:var(--pink);line-height:1.5}.notice.show{display:block}.notice.error{border-color:#74404a;color:#f1aab2}
+    .order{border:1px solid var(--line);background:linear-gradient(140deg,#191417,#100e0f);border-radius:12px;margin:12px 0;overflow:hidden}
+    .order-head{display:grid;grid-template-columns:1fr auto;gap:12px;padding:14px 16px;border-bottom:1px solid var(--line);align-items:center}
+    .order-id{font:500 20px 'Playfair Display',serif;color:var(--gold)}.customer{font-weight:700;margin-top:4px}.order-meta{color:var(--muted);font-size:10px;margin-top:5px}
+    .status{display:inline-block;padding:7px 10px;border-radius:99px;border:1px solid #604b3b;color:var(--pink);font-size:9px;font-weight:700;letter-spacing:.04em;text-align:center}
+    .status.paid{border-color:#41664c;color:var(--green)}.status.pending{border-color:#705b38;color:var(--amber)}.status.review{border-color:#79504b;color:#f0a7a0}
+    .order-body{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(220px,.8fr);gap:16px;padding:14px 16px}
+    .label{color:var(--muted);font-size:9px;text-transform:uppercase;letter-spacing:.12em;margin-bottom:7px}
+    .items{display:grid;gap:5px;color:#e9dfe2}.item{display:flex;justify-content:space-between;gap:10px;font-size:11px}
+    .address{color:#c7bbc0;font-size:11px;line-height:1.6;overflow-wrap:anywhere}
+    .order-foot{display:flex;justify-content:space-between;align-items:center;gap:14px;padding:12px 16px;border-top:1px solid var(--line);flex-wrap:wrap}
+    .total{font-weight:700;color:var(--gold);font-size:15px}.payment{font-size:10px;color:var(--muted);margin-top:3px}
+    .status-edit{display:flex;gap:8px;align-items:center;min-width:min(100%,360px)}.status-edit select{max-width:230px}
+    .empty{border:1px dashed var(--line);border-radius:12px;padding:34px;text-align:center;color:var(--muted);line-height:1.7}
+    .login{max-width:420px;margin:8vh auto 0;border:1px solid var(--line);background:#151214;border-radius:14px;padding:26px}
+    .login h1{margin-top:0}.login form{display:grid;gap:12px}.login label{font-size:10px;color:var(--muted)}
+    .hidden{display:none!important}footer{border-top:1px solid var(--line);margin-top:28px;padding-top:16px;color:#82777c;font-size:10px;text-align:center}
+    @media(max-width:760px){.toolbar{grid-template-columns:1fr 1fr}.toolbar input{grid-column:1/-1}.order-body{grid-template-columns:1fr}.order-head{align-items:start}.status-edit{width:100%}.status-edit select{flex:1}.shell{width:calc(100% - 22px);padding-top:15px}}
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <header>
+      <a href="/lux-gestao/" aria-label="Lux-Gestão terminal"><span class="brand">LUX-GESTÃO<small>OPERAÇÃO · PEDIDOS ONLINE</small></span></a>
+      <div class="top-actions"><a href="/lux-gestao/">Terminal</a><button id="signOut" type="button" class="hidden">SAIR</button></div>
+    </header>
+    <section id="loginPanel" class="login hidden">
+      <div class="label">Acesso administrativo</div>
+      <h1>Pedidos da loja.</h1>
+      <p class="subtitle">Entre com a conta administrativa Luxuriosa. Não existe cadastro público nesta área.</p>
+      <form id="loginForm">
+        <label for="email">E-mail</label><input id="email" type="email" autocomplete="username" required>
+        <label for="password">Senha</label><input id="password" type="password" autocomplete="current-password" required>
+        <button class="primary" type="submit">ACESSAR PEDIDOS</button>
+      </form>
+      <div id="loginNotice" class="notice"></div>
+    </section>
+    <section id="dashboard" class="hidden">
+      <h1>Pedidos e entregas.</h1>
+      <p class="subtitle">Acompanhe cada venda, confira o pagamento na InfinitePay e atualize a etapa da entrega. A confirmação financeira não é editada por aqui.</p>
+      <div class="toolbar">
+        <input id="search" type="search" placeholder="Buscar cliente, telefone ou número do pedido">
+        <select id="statusFilter">
+          <option value="">Todos os pedidos</option>
+          <option value="pending">Aguardando pagamento</option>
+          <option value="paid">Pagamentos aprovados</option>
+          <option value="review_required">Pagamento em conferência</option>
+          <option value="processing">Em expedição</option>
+          <option value="out_for_delivery">Em rota de entrega</option>
+          <option value="delivered">Pedido entregue</option>
+          <option value="cancelled">Cancelados</option>
+        </select>
+        <select id="period"><option value="7">7 dias</option><option value="30" selected>30 dias</option><option value="90">90 dias</option></select>
+        <button id="refresh" type="button">ATUALIZAR</button>
+      </div>
+      <div id="summary" class="summary"></div>
+      <div id="notice" class="notice"></div>
+      <div id="orders"><div class="empty">Carregando pedidos…</div></div>
+    </section>
+    <footer>Luxuriosa · Painel privado de pedidos · Pagamentos processados pela InfinitePay.</footer>
+  </main>
+  <script type="module">
+    import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+    const URL="https://byiykxfugvxuowueuxca.supabase.co";
+    const KEY="sb_publishable_LaMbeWQ1PNANEQ85SD_35Q_wDzswy8y";
+    const supabase=createClient(URL,KEY,{auth:{autoRefreshToken:true,persistSession:true,detectSessionInUrl:true}});
+    const $=id=>document.getElementById(id);
+    const money=new Intl.NumberFormat("pt-BR",{style:"currency",currency:"BRL"});
+    const statusNames={awaiting_confirmation:"Aguardando pagamento",confirmed:"Pagamento aprovado",processing:"Em expedição",out_for_delivery:"Em rota de entrega",delivered:"Pedido entregue",cancelled:"Pedido cancelado"};
+    const paymentNames={pending:"Aguardando pagamento",paid:"Pagamento aprovado",review_required:"Pagamento em conferência",cancelled:"Pagamento cancelado",failed:"Pagamento não concluído"};
+    let allOrders=[];
+    function node(tag,cls,text){const e=document.createElement(tag);if(cls)e.className=cls;if(text!==undefined)e.textContent=text;return e;}
+    function showNotice(text,error=false,login=false){const box=$(login?"loginNotice":"notice");box.textContent=text;box.className="notice show"+(error?" error":"");}
+    async function invoke(body){
+      const {data:{session},error}=await supabase.auth.getSession();if(error)throw error;if(!session)throw new Error("Sua sessão expirou. Entre novamente.");
+      const response=await fetch(URL+"/functions/v1/cart-orders",{method:"POST",headers:{"content-type":"application/json","apikey":KEY,"authorization":"Bearer "+session.access_token},body:JSON.stringify(body)});
+      const result=await response.json().catch(()=>({}));if(!response.ok||!result.ok)throw new Error(result.error||"Não foi possível consultar os pedidos.");return result;
+    }
+    function currentStatus(order){
+      if(order.payment_status==="review_required")return "Pagamento em conferência";
+      if(order.payment_status!=="paid"){
+        if(order.status==="cancelled")return "Pedido cancelado";
+        return paymentNames[order.payment_status]||"Aguardando pagamento";
+      }
+      return statusNames[order.status]||"Em atualização";
+    }
+    function allowedNext(order){
+      if(order.status==="cancelled")return [];
+      if(order.payment_status==="paid")return ["confirmed","processing","out_for_delivery","delivered"].filter(status=>status!==order.status);
+      if(order.payment_status==="pending"&&order.status==="awaiting_confirmation")return ["cancelled"];
+      return [];
+    }
+    async function verifyPayment(order,button){
+      button.disabled=true;button.textContent="CONSULTANDO…";
+      try{
+        const {data:{session},error}=await supabase.auth.getSession();
+        if(error)throw error;if(!session)throw new Error("Sua sessão expirou. Entre novamente.");
+        const response=await fetch(URL+"/functions/v1/payment-status",{
+          method:"POST",
+          headers:{"content-type":"application/json","apikey":KEY,"authorization":"Bearer "+session.access_token},
+          body:JSON.stringify({order_nsu:order.id,transaction_nsu:order.payment_transaction_nsu,invoice_slug:order.payment_invoice_slug})
+        });
+        const result=await response.json().catch(()=>({}));
+        if(!response.ok||!result.ok)throw new Error(result.error||"Não foi possível consultar a InfinitePay.");
+        if(result.payment_status==="paid")showNotice("Pagamento confirmado pela InfinitePay. Pedido #"+order.order_number+" atualizado.");
+        else if(result.payment_status==="review_required")showNotice("Pagamento em conferência. Não avance a expedição até a conciliação.",true);
+        else showNotice("A InfinitePay ainda não confirmou o pagamento do pedido #"+order.order_number+".");
+        await load();
+      }catch(error){showNotice(error.message,true);}
+      finally{button.disabled=false;button.textContent="VERIFICAR NA INFINITEPAY";}
+    }
+    function renderOrder(order){
+      const card=node("article","order"),head=node("div","order-head"),left=node("div");
+      left.append(node("div","order-id","Pedido #"+order.order_number));
+      left.append(node("div","customer",order.customer_name||"Cliente não identificado"));
+      left.append(node("div","order-meta",(order.customer_phone||"Sem telefone")+" · "+new Date(order.created_at).toLocaleString("pt-BR")));
+      const pill=node("span","status "+(order.payment_status==="paid"?"paid":order.payment_status==="review_required"?"review":"pending"),currentStatus(order));
+      head.append(left,pill);card.append(head);
+      const body=node("div","order-body"),items=node("div"),address=node("div");
+      items.append(node("div","label","Itens do pedido"));
+      (order.items||[]).forEach(item=>items.append(node("div","item",String(item.quantity)+"× "+item.product_name)));
+      address.append(node("div","label","Entrega"));
+      const a=order.delivery_address||{};
+      address.append(node("div","address",[a.street,a.number,a.complement,a.district||a.neighborhood,[a.city,a.state].filter(Boolean).join("/"),a.zip?"CEP "+a.zip:""].filter(Boolean).join(", ")||"Endereço não informado"));
+      body.append(items,address);card.append(body);
+      const foot=node("div","order-foot"),amount=node("div");
+      amount.append(node("div","total",money.format(Number(order.total_amount)||0)));
+      amount.append(node("div","payment", "Pagamento: "+(paymentNames[order.payment_status]||"Não identificado")+(order.payment_method==="pix"?" · Pix":order.payment_method==="credit_card"?" · Cartão":"")));
+      if(order.payment_status==="pending"&&order.payment_transaction_nsu&&order.payment_invoice_slug){
+        const check=node("button","","VERIFICAR NA INFINITEPAY");check.type="button";check.style.marginTop="8px";
+        check.addEventListener("click",()=>verifyPayment(order,check));amount.append(check);
+      }
+      foot.append(amount);
+      const options=allowedNext(order);
+      if(options.length){
+        const edit=node("div","status-edit"),select=node("select");
+        select.append(new Option("Atualizar status…",""));
+        options.forEach(status=>select.append(new Option(statusNames[status],status)));
+        const save=node("button","","SALVAR");save.disabled=true;select.addEventListener("change",()=>{save.disabled=!select.value;});
+        save.addEventListener("click",async()=>{
+          if(select.value==="delivered"&&!window.confirm("Confirmar que o pedido #"+order.order_number+" foi entregue ao cliente?"))return;
+          if(select.value==="cancelled"&&!window.confirm("Cancelar o pedido #"+order.order_number+"?"))return;
+          save.disabled=true;save.textContent="SALVANDO…";
+          try{await invoke({action:"admin_update_order_status",order_id:order.id,status:select.value});showNotice("Pedido #"+order.order_number+" atualizado.");await load();}
+          catch(e){showNotice(e.message,true);}
+          finally{save.textContent="SALVAR";}
+        });
+        edit.append(select,save);foot.append(edit);
+      }else{
+        foot.append(node("span","muted",order.status==="delivered"?"Pedido finalizado":order.status==="cancelled"?"Pedido cancelado":order.payment_status==="review_required"?"Conferência necessária":"Aguardando pagamento"));
+      }
+      card.append(foot);return card;
+    }
+    function render(){
+      const filter=$("statusFilter").value,term=$("search").value.trim().toLocaleLowerCase("pt-BR");
+      const filtered=allOrders.filter(o=>{
+        const statusMatch=!filter||
+          (filter==="pending"&&o.payment_status==="pending"&&o.status!=="cancelled")||
+          (filter==="paid"&&o.payment_status==="paid")||
+          (filter==="review_required"&&o.payment_status==="review_required")||
+          (!["pending","paid","review_required"].includes(filter)&&o.status===filter);
+        return statusMatch&&(!term||[o.order_number,o.customer_name,o.customer_phone].some(v=>String(v||"").toLocaleLowerCase("pt-BR").includes(term)));
+      });
+      const box=$("orders");box.replaceChildren();
+      if(!filtered.length){box.append(node("div","empty","Nenhum pedido encontrado com esses filtros."));return;}
+      filtered.forEach(o=>box.append(renderOrder(o)));
+    }
+    async function load(){
+      $("refresh").disabled=true;$("refresh").textContent="ATUALIZANDO…";
+      try{
+        const data=await invoke({action:"admin_dashboard",days:Number($("period").value),q:"",status:""});
+        allOrders=data.orders||[];
+        const pending=allOrders.filter(o=>o.payment_status==="pending"&&o.status!=="cancelled").length;
+        const paid=allOrders.filter(o=>o.payment_status==="paid").length;
+        const review=allOrders.filter(o=>o.payment_status==="review_required").length;
+        $("summary").replaceChildren(node("span","","Pedidos listados"),node("strong","",String(allOrders.length)),node("span","","Aguardando pagamento"),node("strong","",String(pending)),node("span","","Pagamentos aprovados"),node("strong","",String(paid)),node("span","","Em conferência"),node("strong","",String(review)));
+        render();$("notice").className="notice";
+      }catch(error){
+        if(/restrito|sessão|login|acesso/i.test(error.message)){
+          $("dashboard").classList.add("hidden");$("loginPanel").classList.remove("hidden");
+          showNotice(error.message,true,true);
+        }else showNotice(error.message,true);
+      }
+      finally{$("refresh").disabled=false;$("refresh").textContent="ATUALIZAR";}
+    }
+    async function enter(){
+      $("loginPanel").classList.add("hidden");$("dashboard").classList.remove("hidden");$("signOut").classList.remove("hidden");await load();
+    }
+    $("loginForm").addEventListener("submit",async event=>{event.preventDefault();const button=event.submitter;button.disabled=true;try{const {error}=await supabase.auth.signInWithPassword({email:$("email").value.trim(),password:$("password").value});if(error)throw error;await enter();}catch(error){showNotice(error.message,true,true);}finally{button.disabled=false;}});
+    $("signOut").addEventListener("click",async()=>{await supabase.auth.signOut();location.reload();});
+    $("refresh").addEventListener("click",load);$("period").addEventListener("change",load);$("statusFilter").addEventListener("change",render);$("search").addEventListener("input",render);
+    const {data:{session}}=await supabase.auth.getSession();
+    let hasSession=!!session;
+    if(session){$("loginPanel").classList.add("hidden");$("dashboard").classList.remove("hidden");$("signOut").classList.remove("hidden");await load();}
+    else $("loginPanel").classList.remove("hidden");
+    supabase.auth.onAuthStateChange((event,nextSession)=>{hasSession=!!nextSession;if(event==="SIGNED_OUT")location.reload();});
+    window.setInterval(()=>{if(document.visibilityState==="visible"&&hasSession)load();},45000);
+  </script>
+</body>
+</html>
