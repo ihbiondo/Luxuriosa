@@ -145,7 +145,7 @@ function renderActionQueue(context){
   const costIds=new Set(costRows.map(x=>String(x.product_id)));
   const missingCosts=stockRows.filter(x=>!costIds.has(String(x.product_id))).length;
   if(context.stockNeedsPhysicalCount>0){
-    tasks.push({title:"Conferir o estoque físico",detail:context.stockNeedsPhysicalCount+" de "+stockRows.length+" produtos ainda não têm controle de saldo ativo.",cta:"Abrir Lux-Gestão",href:"/lux-gestao/",tone:"warn",icon:"package"});
+    tasks.push({title:"Aguardando contagem física",detail:context.stockNeedsPhysicalCount+" de "+stockRows.length+" produtos ainda não têm controle de saldo ativo.",cta:"Abrir Lux-Gestão",href:"/lux-gestao/",tone:"warn",icon:"package"});
   }
   if(missingCosts>0){
     tasks.push({title:"Completar custos dos produtos",detail:missingCosts+" produtos sem custo cadastrado. A margem fica parcial até completar.",cta:"Cadastrar custos",href:"/lux-gestao/",tone:"warn",icon:"wallet"});
