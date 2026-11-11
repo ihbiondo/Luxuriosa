@@ -28,7 +28,7 @@
     .items{border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:12px 0;margin:12px 0;color:#e9dfe2}
     .items div{display:flex;justify-content:space-between;gap:12px;padding:5px 0}.total{display:flex;justify-content:space-between;font-weight:700;color:var(--gold)}
     .steps{display:grid;grid-template-columns:repeat(5,1fr);gap:5px;margin:20px 0 8px}.step{height:5px;border-radius:9px;background:#44363b}.step.done{background:var(--gold)}
-    .step-labels{display:grid;grid-template-columns:repeat(5,1fr);gap:5px}.step-labels span{font-size:9px;line-height:1.4;color:#857a7f;text-align:center}.step-labels span.done{color:var(--pink)}
+    .step-labels{display:grid;grid-template-columns:repeat(5,1fr);gap:5px}.step-labels span{font-size:9px;line-height:1.4;color:#857a7f;text-align:center}.step-labels span.done{color:var(--pink)}.step-labels small{display:block;font-size:8px;color:#8d8288;margin-top:4px;line-height:1.4}
     .payment-note{font-size:11px;line-height:1.6;color:var(--muted);margin-top:12px}
     .empty{padding:28px;text-align:center}.empty strong{display:block;color:var(--pink);margin-bottom:8px}
     footer{border-top:1px solid var(--line);padding-top:18px;margin-top:34px;color:#8d8187;font-size:10px;text-align:center}
@@ -62,11 +62,11 @@
     const $ = (id) => document.getElementById(id);
     const money = new Intl.NumberFormat("pt-BR", { style:"currency", currency:"BRL" });
     const stages = [
-      { key:"payment", label:"Aguardando pagamento" },
-      { key:"confirmed", label:"Pagamento aprovado" },
-      { key:"processing", label:"Em expedição" },
-      { key:"out_for_delivery", label:"Em rota de entrega" },
-      { key:"delivered", label:"Pedido entregue" }
+      { key:"payment", label:"Aguardando pagamento", dateKey:null },
+      { key:"confirmed", label:"Pagamento aprovado", dateKey:"paid_at" },
+      { key:"processing", label:"Em expedição", dateKey:"dispatch_started_at" },
+      { key:"out_for_delivery", label:"Em rota de entrega", dateKey:"dispatched_at" },
+      { key:"delivered", label:"Pedido entregue", dateKey:"delivered_at" }
     ];
     const paymentLabels = { pending:"Aguardando pagamento", paid:"Pagamento aprovado", review_required:"Pagamento em conferência", cancelled:"Pagamento cancelado", failed:"Pagamento não concluído" };
     const fulfillmentLabels = { awaiting_confirmation:"Aguardando pagamento", confirmed:"Pagamento aprovado", processing:"Em expedição", out_for_delivery:"Em rota de entrega", delivered:"Pedido entregue", cancelled:"Pedido cancelado" };
@@ -83,6 +83,7 @@
       meta.append(el("span","", "Realizado em "+new Date(order.created_at).toLocaleDateString("pt-BR")));
       meta.append(el("span","", "Pagamento: "+(paymentLabels[order.payment_status]||"Em atualização")));
       if(order.paid_at)meta.append(el("span","", "Pago em "+new Date(order.paid_at).toLocaleString("pt-BR")));
+      if(order.updated_at)meta.append(el("span","", "Última atualização: "+new Date(order.updated_at).toLocaleString("pt-BR")));
       card.append(meta);
       const itemBox=el("div","items");
       (items||[]).filter(x=>x.order_id===order.id).forEach(item=>itemBox.append(el("div","",String(item.quantity)+"× "+item.product_name)));
@@ -107,7 +108,12 @@
       }
       if(order.payment_status==="paid" && order.status!=="cancelled"){
         const index=stageIndex(order), bars=el("div","steps"), labels=el("div","step-labels");
-        stages.forEach((stage,i)=>{bars.append(el("span","step"+(i<=index?" done":"")));labels.append(el("span",i<=index?"done":"",stage.label));});
+        stages.forEach((stage,i)=>{
+          bars.append(el("span","step"+(i<=index?" done":"")));
+          const label=el("span",i<=index?"done":"",stage.label);
+          if(i<=index&&stage.dateKey&&order[stage.dateKey])label.append(el("small","",new Date(order[stage.dateKey]).toLocaleString("pt-BR")));
+          labels.append(label);
+        });
         card.append(bars,labels);
       }
       if(order.status==="cancelled" || order.payment_status==="cancelled")card.append(el("p","payment-note","Este pedido foi cancelado. Se houve cobrança, entre em contato para conferência."));
@@ -124,7 +130,7 @@
           $("orders").append(box);$("lastUpdated").textContent="Acesso restrito a clientes autenticados.";return;
         }
         const {data:orders,error}=await supabase.from("orders")
-          .select("id,order_number,status,payment_status,payment_checkout_url,payment_expires_at,subtotal,shipping_amount,total_amount,created_at,paid_at,updated_at")
+          .select("id,order_number,status,payment_status,payment_checkout_url,payment_expires_at,subtotal,shipping_amount,total_amount,created_at,paid_at,dispatch_started_at,dispatched_at,delivered_at,updated_at")
           .eq("customer_id",user.id).order("created_at",{ascending:false}).limit(30);
         if(error)throw error;
         const ids=(orders||[]).map(o=>o.id);let items=[];
