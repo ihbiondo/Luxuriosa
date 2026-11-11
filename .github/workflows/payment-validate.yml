@@ -246,6 +246,7 @@ jobs:
             require("node:child_process").execFileSync(process.execPath, ["--check", path], { stdio: "inherit" });
           });
           if (!html.includes("Aguardando contagem física")) throw new Error("Painel não informa a pendência de contagem física.");
+          if (!html.includes("Contagem física registrada") || !html.includes("Cobertura de custos do catálogo")) throw new Error("Painel não apresenta cobertura mensurável de estoque e custos.");
           if (!html.includes("Composições dos kits ainda não foram cadastradas")) throw new Error("Painel não alerta para receitas de kits ausentes.");
           console.log("Scripts e alertas operacionais do Lux-Central validados.");
           NODE
