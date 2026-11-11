@@ -163,8 +163,8 @@ async function readCustomerInsights(from: string, to: string, periodDays: number
   const eligiblePreferences = (preferenceResult.data || [])
     .filter((row: any) => eligibleUsers.has(row.user_id));
   const categoryStats = createCustomerInterestStats();
-  const priceCounts = new Map(CUSTOMER_PRICE_RANGES.map((item) => [item.key, 0] as const));
-  const offerCounts = new Map(CUSTOMER_OFFER_TYPES.map((item) => [item.key, 0] as const));
+  const priceCounts = new Map<string, number>(CUSTOMER_PRICE_RANGES.map((item): [string, number] => [item.key, 0]));
+  const offerCounts = new Map<string, number>(CUSTOMER_OFFER_TYPES.map((item): [string, number] => [item.key, 0]));
 
   let profilesWithCategories = 0;
   let profilesWithPrice = 0;
