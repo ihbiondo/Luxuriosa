@@ -68,19 +68,36 @@ Deno.serve(async (req: Request) => {
     const transactionNsu = clean(payload?.transaction_nsu, 160);
     const invoiceSlug = clean(payload?.invoice_slug || payload?.slug, 200);
     const receipt = receiptUrl(payload?.receipt_url);
-    const eventName = clean(payload?.event || payload?.type || payload?.status, 50).toLowerCase();
+    const eventName = clean(
+      payload?.event || payload?.type || payload?.status || payload?.event_type || payload?.event_name,
+      50
+    ).toLowerCase();
+    const payloadKeys = Object.keys(payload && typeof payload === "object" ? payload : {}).slice(0, 40).sort();
+    console.info("infinitepay-webhook.received", {
+      eventName: eventName || null,
+      payloadKeys,
+      hasOrderNsu: validUuid(orderNsu),
+      hasTransactionNsu: !!transactionNsu,
+      hasInvoiceSlug: !!invoiceSlug
+    });
 
     if (!validUuid(orderNsu)) {
       return response({ ok: true, ignored: true });
     }
 
     let eventType = "";
-    if (eventName.includes("refund")) eventType = "refunded";
+    if (eventName === "created") eventType = "created";
+    else if (eventName.includes("refund")) eventType = "refunded";
     else if (eventName.includes("cancel")) eventType = "canceled";
     else if (eventName.includes("fail")) eventType = "payment_failed";
     else if (eventName === "paid" || eventName === "settled" || (!eventName && transactionNsu && invoiceSlug)) {
       eventType = "paid";
     } else {
+      console.warn("infinitepay-webhook.unclassified-event", {
+        eventName: eventName || null,
+        payloadKeys,
+        hasOrderNsu: true
+      });
       return response({ ok: true, ignored: true });
     }
 
@@ -94,11 +111,13 @@ Deno.serve(async (req: Request) => {
 
     const eventKey = [eventType, orderNsu, transactionNsu || invoiceSlug || "no-reference"].join(":");
 
-    // InfinitePay webhooks are unsigned. Non-payment notices are recorded but
-    // never allowed to cancel, fail, refund, or otherwise mutate an order.
+    // InfinitePay webhooks are unsigned. Only payment_check can confirm payment.
+    // Lifecycle notices are recorded for observability and never mutate an order.
     if (eventType !== "paid") {
-      await recordEvent(order, eventKey, eventType, payload,
-        "Notificação sem assinatura criptográfica. Pedido preservado; conferir diretamente na InfinitePay.");
+      const notice = eventType === "created"
+        ? ""
+        : "Notificação sem assinatura criptográfica. Pedido preservado; conferir diretamente na InfinitePay.";
+      await recordEvent(order, eventKey, eventType, payload, notice);
       return response({ ok: true, order_unchanged: true, review_required: eventType === "refunded" });
     }
 

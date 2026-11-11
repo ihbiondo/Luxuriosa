@@ -13,6 +13,19 @@ const ALLOWED_ORIGINS = new Set([
   "http://localhost:1421"
 ]);
 
+// Explicit historical checkout attempts confirmed by the operator as test-only.
+// They remain in the audit trail but must not enter operational/business indicators.
+const HISTORICAL_TEST_ORDER_IDS = new Set([
+  "e17943d3-a651-4fcd-a34f-c3d96ca06a4f",
+  "33ef69ad-188a-44a9-bdf1-6adc3abc9bc4",
+  "763bedaa-3f0a-44f2-beae-6ee55b202fc8",
+  "55429912-f824-42dd-966b-a1e8f8c4cd7c",
+  "4fba6f8f-ef04-46a2-b157-647616ab42c3",
+  "3089cb19-6dc1-4d0c-a364-dc40b5ac6e10",
+  "0de325e6-56ca-4497-9a1f-647659d9611c",
+  "40e0bd61-dc05-4569-b822-2af3fbe0cf17"
+]);
+
 function reply(body: unknown, status = 200, origin = "") {
   return new Response(JSON.stringify(body), {
     status,
@@ -541,11 +554,40 @@ async function readAnalyticsRows(table: string, columns: string, from: string, t
 }
 
 async function readBusinessSignals(from: string, to: string) {
-  const [eventResult, cartResult, orderResult] = await Promise.all([
+  const [eventResult, cartResult, orderResult, paymentResult] = await Promise.all([
     readAnalyticsRows("site_events", "event_name, session_key, created_at", from, to),
     readAnalyticsRows("cart_sessions", "status, session_key, converted_at, created_at", from, to),
-    readAnalyticsRows("orders", "status, payment_status, total_amount, created_at, source, management_sales_sync_status, payment_checkout_url", from, to)
+    readAnalyticsRows("orders", "id, status, payment_status, total_amount, created_at, source, management_sales_sync_status, payment_checkout_url, payment_expires_at", from, to),
+    admin.from("payment_provider_events")
+      .select("order_id, provider, event_type, verified, processing_error, received_at")
+      .gte("received_at", from)
+      .lte("received_at", to)
+      .order("received_at", { ascending: false })
+      .limit(10000)
   ]);
+  if (paymentResult.error) throw paymentResult.error;
+  const paymentEventRows = (paymentResult.data || []).filter(
+    (event: any) => !HISTORICAL_TEST_ORDER_IDS.has(String(event.order_id || ""))
+  );
+  const paymentEventTypes = new Map<string, { provider: string; event_type: string; total: number; verified: number; failed: number }>();
+  for (const event of paymentEventRows) {
+    const provider = cleanText(event.provider, 40) || "unknown";
+    const eventType = cleanText(event.event_type, 80) || "unknown";
+    const key = provider + ":" + eventType;
+    const entry = paymentEventTypes.get(key) || { provider, event_type: eventType, total: 0, verified: 0, failed: 0 };
+    entry.total += 1;
+    if (event.verified === true) entry.verified += 1;
+    if (cleanText(event.processing_error, 500)) entry.failed += 1;
+    paymentEventTypes.set(key, entry);
+  }
+  const paymentEvents = {
+    total: paymentEventRows.length,
+    verified: paymentEventRows.filter((event: any) => event.verified === true).length,
+    failed: paymentEventRows.filter((event: any) => !!cleanText(event.processing_error, 500)).length,
+    last_received_at: paymentEventRows[0]?.received_at || null,
+    by_type: [...paymentEventTypes.values()].sort((a, b) => b.total - a.total),
+    truncated: paymentEventRows.length >= 10000
+  };
 
   const eventMap = new Map<string, { event_name: string; count: number; sessions: Set<string> }>();
   const allSessions = new Set<string>();
@@ -573,10 +615,31 @@ async function readBusinessSignals(from: string, to: string) {
   const paymentStatuses = new Map<string, { status: string; count: number; amount_cents: number }>();
   const websiteSalesSync = new Map<string, number>();
   let failedCheckoutWithoutLinkCount = 0;
-  for (const order of orderResult.rows.filter((row: any) => !row.source || row.source === "website")) {
+  let pendingActiveCount = 0;
+  let pendingExpiredCount = 0;
+  let pendingWithoutCheckoutLinkCount = 0;
+  let checkoutLinkCount = 0;
+  let failedPaymentCount = 0;
+  let cancelledOrderCount = 0;
+  const reportTime = new Date(to).getTime();
+  const websiteOrders = orderResult.rows.filter((row: any) =>
+    (!row.source || row.source === "website") &&
+    !HISTORICAL_TEST_ORDER_IDS.has(String(row.id || ""))
+  );
+  for (const order of websiteOrders) {
     const status = cleanText(order.status, 50) || "unknown";
     orderStatuses.set(status, (orderStatuses.get(status) || 0) + 1);
     const paymentStatus = cleanText(order.payment_status, 50) || "unknown";
+    const hasCheckoutLink = typeof order.payment_checkout_url === "string" && !!order.payment_checkout_url.trim();
+    if (hasCheckoutLink) checkoutLinkCount += 1;
+    if (paymentStatus === "failed") failedPaymentCount += 1;
+    if (status === "cancelled") cancelledOrderCount += 1;
+    if (paymentStatus === "pending" && status !== "cancelled") {
+      if (!hasCheckoutLink) pendingWithoutCheckoutLinkCount += 1;
+      const expiresAt = order.payment_expires_at ? new Date(order.payment_expires_at).getTime() : Number.NaN;
+      if (Number.isFinite(expiresAt) && expiresAt <= reportTime) pendingExpiredCount += 1;
+      else pendingActiveCount += 1;
+    }
     const payment = paymentStatuses.get(paymentStatus) || { status: paymentStatus, count: 0, amount_cents: 0 };
     payment.count += 1;
     const amount = Number(order.total_amount);
@@ -599,6 +662,7 @@ async function readBusinessSignals(from: string, to: string) {
     site_sessions: allSessions.size,
     site_events: eventResult.rows.length,
     events,
+    payment_events: paymentEvents,
     carts: {
       total: cartResult.rows.length,
       abandoned: cartStatuses.get("abandoned") || 0,
@@ -607,15 +671,21 @@ async function readBusinessSignals(from: string, to: string) {
       statuses: [...cartStatuses.entries()].map(([status, count]) => ({ status, count }))
     },
     orders: {
-      total: orderResult.rows.length,
+      total: websiteOrders.length,
       statuses: [...orderStatuses.entries()].map(([status, count]) => ({ status, count })),
       payment_statuses: [...paymentStatuses.values()].sort((a, b) => b.count - a.count),
+      active_pending_count: pendingActiveCount,
+      pending_expired_count: pendingExpiredCount,
+      pending_without_checkout_link_count: pendingWithoutCheckoutLinkCount,
+      checkout_link_count: checkoutLinkCount,
+      failed_payment_count: failedPaymentCount,
+      cancelled_order_count: cancelledOrderCount,
       failed_checkout_without_link_count: failedCheckoutWithoutLinkCount,
       paid_website_sales_sync: [...websiteSalesSync.entries()]
         .map(([status, count]) => ({ status, count }))
         .sort((a, b) => b.count - a.count)
     },
-    truncated: eventResult.truncated || cartResult.truncated || orderResult.truncated
+    truncated: eventResult.truncated || cartResult.truncated || orderResult.truncated || paymentEvents.truncated
   };
 }
 
