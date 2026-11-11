@@ -236,7 +236,7 @@ async function load(){
    supabase.functions.invoke("management-sales",{body:{action:"cost-list"}}),
    supabase.functions.invoke("management-sales",{body:{action:"kit-recipes-list"}}),
    supabase.functions.invoke("management-sales",{body:{action:"expense-list"}}),
-   supabase.functions.invoke("management-sales",{body:{action:"customer-insights",period_days:days}}).catch(error=>({error}))
+   supabase.functions.invoke("luxuriosa-intelligence",{body:{action:"customer-insights",period_days:days}}).catch(error=>({error}))
   ]);
   const responses=[["indicadores",analytics],["estoque",stock],["custos",costs],["composições dos kits",kits],["despesas",expenses]];
   for(const [label,result] of responses){
