@@ -1,4 +1,5 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.119.0";
+import { normalizeInventoryMovementDelta } from "../_shared/inventory.ts";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
@@ -126,7 +127,7 @@ function summarizeSales(rows: any[]) {
     paid_cost_of_goods_cents: 0,
     gross_profit_cents: 0,
     costed_paid_revenue_cents: 0,
-    gross_margin_percent: null,
+    gross_margin_percent: null as number | null,
     recorded_expenses_cents: 0,
     expense_count: 0,
     partial_operating_result_cents: null,
@@ -443,17 +444,21 @@ Deno.serve(async (request: Request) => {
       const productId = cleanText(body.product_id, 100);
       const productName = cleanText(body.product_name, 180);
       const movementType = cleanText(body.movement_type, 20);
-      const quantity = Number(body.quantity);
+      const quantity = body.quantity;
       const note = cleanText(body.note, 500);
-      const signs: Record<string, number> = { opening: 1, inbound: 1, return: 1, outbound: -1, loss: -1 };
-      if (!productId || !productName || !Object.hasOwn(signs, movementType) || !Number.isSafeInteger(quantity) || quantity <= 0 || quantity > 1000000) {
-        return reply({ error: "Informe produto, tipo e quantidade válida." }, 400, origin);
+      const quantityDelta = normalizeInventoryMovementDelta(movementType, quantity, body.quantity_delta);
+      if (!productId || !productName || quantityDelta === null) {
+        return reply({
+          error: movementType === "adjustment"
+            ? "Informe um quantity_delta inteiro diferente de zero (positivo para aumentar, negativo para reduzir), até 1.000.000 unidades."
+            : "Informe produto, tipo e quantidade válida."
+        }, 400, origin);
       }
       const { data, error } = await admin.rpc("management_record_inventory_movement", {
         p_product_id: productId,
         p_product_name: productName,
         p_movement_type: movementType,
-        p_quantity_delta: quantity * signs[movementType],
+        p_quantity_delta: quantityDelta,
         p_note: note || null,
         p_created_by: auth.user.id
       });
@@ -862,20 +867,38 @@ const PRODUCT_INTEREST_MAP: Record<string, string> = {
   "28": "kits_presentes", "29": "kits_presentes"
 };
 
-function createCustomerInterestStats() {
-  return new Map(CUSTOMER_INTERESTS.map((item) => [item.key, {
-    key: item.key,
-    label: item.label,
-    declared_customers: 0,
-    viewing_users: new Set<string>(),
-    view_events: 0,
-    cart_users: new Set<string>(),
-    add_to_cart_events: 0,
-    buyers: new Set<string>(),
-    paid_orders: new Set<string>(),
-    units_sold: 0,
-    revenue_cents: 0
-  }] as const));
+type CustomerInterestStat = {
+  key: string;
+  label: string;
+  declared_customers: number;
+  viewing_users: Set<string>;
+  view_events: number;
+  cart_users: Set<string>;
+  add_to_cart_events: number;
+  buyers: Set<string>;
+  paid_orders: Set<string>;
+  units_sold: number;
+  revenue_cents: number;
+};
+
+function createCustomerInterestStats(): Map<string, CustomerInterestStat> {
+  const entries = CUSTOMER_INTERESTS.map((item) => [
+    item.key,
+    {
+      key: item.key,
+      label: item.label,
+      declared_customers: 0,
+      viewing_users: new Set<string>(),
+      view_events: 0,
+      cart_users: new Set<string>(),
+      add_to_cart_events: 0,
+      buyers: new Set<string>(),
+      paid_orders: new Set<string>(),
+      units_sold: 0,
+      revenue_cents: 0
+    }
+  ] as [string, CustomerInterestStat]);
+  return new Map(entries);
 }
 
 async function readCustomerInsights(from: string, to: string, periodDays: number) {
@@ -935,8 +958,8 @@ async function readCustomerInsights(from: string, to: string, periodDays: number
   const eligiblePreferences = (preferenceResult.data || [])
     .filter((row: any) => eligibleUsers.has(row.user_id));
   const categoryStats = createCustomerInterestStats();
-  const priceCounts = new Map(CUSTOMER_PRICE_RANGES.map((item) => [item.key, 0] as const));
-  const offerCounts = new Map(CUSTOMER_OFFER_TYPES.map((item) => [item.key, 0] as const));
+  const priceCounts = new Map<string, number>(CUSTOMER_PRICE_RANGES.map((item) => [item.key, 0] as [string, number]));
+  const offerCounts = new Map<string, number>(CUSTOMER_OFFER_TYPES.map((item) => [item.key, 0] as [string, number]));
 
   let profilesWithCategories = 0;
   let profilesWithPrice = 0;
