@@ -56,6 +56,9 @@ Este documento passa a ser a referência para separar responsabilidades e nomes.
 **Regra:** vendas presenciais nascem na Gestão. Pedidos online nascem em Pedidos Online e, após pagamento validado, podem ser sincronizados para a Gestão. A sincronização não deve criar uma segunda cobrança nem uma segunda venda independente.
 
 ### Inteligência
+- Endpoint dedicado de clientes: `luxuriosa-intelligence` (JWT obrigatório + verificação de papel `admin`), responsável pela leitura agregada de preferências, eventos e compras com consentimento v2.
+- `customer-insights` permanece temporariamente em `management-sales` como compatibilidade durante a migração; a interface Luxuriosa Inteligência passa a chamar a função dedicada.
+- `analytics` continua temporariamente em `management-sales`; sua extração será a próxima etapa, depois de validar a nova API de clientes.
 - Consome dados transacionais e agregações para exibir resultados.
 - Não deve ser usada para alterar a fonte original dos registros.
 - Métricas precisam distinguir valores confirmados, pendentes, cancelados e dados incompletos.
