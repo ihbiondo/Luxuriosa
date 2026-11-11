@@ -153,9 +153,15 @@ function renderActionQueue(context){
   if(!kitRows.length){
     tasks.push({title:"Configurar composição dos kits",detail:"Sem receitas cadastradas, o sistema não consegue projetar o consumo dos componentes.",cta:"Configurar kits",href:"/lux-gestao/",tone:"warn",icon:"layers"});
   }
+  if(context.expiredPendingOrders>0){
+    tasks.push({title:"Revisar cobranças expiradas",detail:context.expiredPendingOrders+" pedidos continuam pendentes, mas o prazo de pagamento já terminou. Confira antes de emitir uma nova cobrança.",cta:"Revisar pedidos online",href:"/lux-gestao-pedidos/",tone:"warn",icon:"clock"});
+  }
+  if(context.pendingWithoutCheckoutLink>0){
+    tasks.push({title:"Corrigir pedidos sem link de pagamento",detail:context.pendingWithoutCheckoutLink+" pedidos pendentes não têm uma URL de checkout salva.",cta:"Abrir pedidos online",href:"/lux-gestao-pedidos/",tone:"warn",icon:"shopping"});
+  }
   if(context.ordersCount>0 && context.paidWebsiteSync>0){
     tasks.push({title:"Revisar sincronização de vendas online",detail:context.paidWebsiteSync+" pedidos pagos podem exigir conferência no Gestão.",cta:"Abrir pedidos online",href:"/lux-gestao-pedidos/",tone:"warn",icon:"refresh"});
-  } else if(context.ordersCount>0 && context.paidCount===0){
+  } else if(context.ordersCount>0 && context.paidCount===0 && context.expiredPendingOrders===0){
     tasks.push({title:"Acompanhar os pedidos do site",detail:context.ordersCount+" pedidos registrados no período; nenhum pagamento foi confirmado no recorte.",cta:"Ver pedidos",href:"/lux-gestao-pedidos/",tone:"warn",icon:"shopping"});
   }
   const eligible=Number(context.customerCoverage?.eligible_profiles||0);
@@ -269,7 +275,7 @@ async function load(){
   const stockControlCount=stockRows.filter(x=>x.stock_control_enabled===true).length;
   const stockNeedsPhysicalCount=stockRows.filter(x=>x.stock_control_enabled!==true).length;
   const websiteSync=(orders.paid_website_sales_sync||[]).filter(item=>["pending","error","not_applicable"].includes(String(item.status||"").toLowerCase())).reduce((sum,item)=>sum+Number(item.count||0),0);
-  renderActionQueue({stockRows,costRows,kitRows,stockNeedsPhysicalCount,ordersCount:Number(orders.total||0),paidCount:Number(c.paid_count||0),paidWebsiteSync:websiteSync,customerCoverage:customers?.data?.coverage||{},customerInsightsOk:!customers.error&&!!customers.data?.ok});
+  renderActionQueue({stockRows,costRows,kitRows,stockNeedsPhysicalCount,ordersCount:Number(orders.total||0),paidCount:Number(c.paid_count||0),paidWebsiteSync:websiteSync,expiredPendingOrders:Number(orders.pending_expired_count||0),pendingWithoutCheckoutLink:Number(orders.pending_without_checkout_link_count||0),customerCoverage:customers?.data?.coverage||{},customerInsightsOk:!customers.error&&!!customers.data?.ok});
   list("integrity",[
    row("Produtos cadastrados no estoque",num(stockRows.length),stockRows.length?"good":"warn"),
    row("Controle ativo após conferência",num(stockControlCount),stockControlCount===stockRows.length&&stockRows.length?"good":"warn"),
@@ -280,7 +286,11 @@ async function load(){
    row("Vendas sem custo conhecido",num(c.sales_without_cost_count),c.sales_without_cost_count?"warn":"good"),
    row("Eventos de pagamento recebidos",num(pulse.payment_events?.total||0),Number(pulse.payment_events?.total||0)>0?"good":"warn"),
    row("Eventos de pagamento verificados",num(pulse.payment_events?.verified||0),Number(pulse.payment_events?.verified||0)>0?"good":"warn"),
-   row("Eventos com erro de processamento",num(pulse.payment_events?.failed||0),Number(pulse.payment_events?.failed||0)>0?"bad":"good")
+   row("Eventos com erro de processamento",num(pulse.payment_events?.failed||0),Number(pulse.payment_events?.failed||0)>0?"bad":"good"),
+   row("Pedidos aguardando pagamento",num(orders.active_pending_count||0),Number(orders.active_pending_count||0)>0?"warn":"good"),
+   row("Cobranças expiradas",num(orders.pending_expired_count||0),Number(orders.pending_expired_count||0)>0?"warn":"good"),
+   row("Pedidos pendentes sem link",num(orders.pending_without_checkout_link_count||0),Number(orders.pending_without_checkout_link_count||0)>0?"bad":"good"),
+   row("Links de checkout registrados",num(orders.checkout_link_count||0),Number(orders.checkout_link_count||0)>0?"good":"warn")
   ]);
   list("methods",(c.payment_methods||[]).map(x=>row(x.method,num(x.paid_count)+" pagas · "+money(x.received_cents/100))),"Nenhum pagamento registrado.");
   list("eventsList",(pulse.events||[]).slice(0,8).map(x=>row(x.event_name,num(x.count)+" eventos · "+num(x.sessions)+" sessões")),"Nenhum evento registrado.");
@@ -295,6 +305,8 @@ async function load(){
   if(!c.paid_count)notices.push("Ainda não há vendas pagas registradas no Gestão.");
   if(Number(orders.total||0)>0 && !Number(pulse.payment_events?.total||0))notices.push("Há pedidos online, mas nenhum evento de webhook foi registrado no período. A confirmação automática de pagamentos ainda precisa de validação real.");
   if(Number(pulse.payment_events?.failed||0)>0)notices.push(Number(pulse.payment_events.failed)+" eventos de pagamento apresentam erro de processamento e precisam de conferência.");
+  if(Number(orders.pending_expired_count||0)>0)notices.push(Number(orders.pending_expired_count)+" pedidos expiraram sem confirmação de pagamento. Revise os pedidos antes de emitir novas cobranças.");
+  if(Number(orders.pending_without_checkout_link_count||0)>0)notices.push(Number(orders.pending_without_checkout_link_count)+" pedidos pendentes estão sem link de checkout salvo.");
   if(!costRows.length)notices.push("Sem custos cadastrados: lucro e margem não podem ser calculados.");
   if(!stockRows.length)notices.push("Estoque administrativo ainda não foi inicializado.");
   else if(stockNeedsPhysicalCount>0)notices.push(stockNeedsPhysicalCount+" produtos aguardam contagem física. Os saldos cadastrados não devem ser tratados como estoque confirmado.");
