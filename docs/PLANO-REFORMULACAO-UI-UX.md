@@ -1,9 +1,9 @@
 # Plano de reformulação UI/UX — Luxuriosa
 
 **Repositório:** `ihbiondo/Luxuriosa`  
-**Branch de trabalho:** `uiux-reformulacao`  
-**Direção visual aprovada:** híbrida — base minimalista premium com linguagem editorial (aprox. 70% minimalista / 30% editorial).  
-**Status:** implementação iniciada na branch `uiux-reformulacao`; homepage em evolução. A `main` e o site publicado permanecem fora desta etapa.
+**Status deste documento:** plano histórico de UX; etapas posteriores foram integradas à `main`.  
+**Direção visual de referência:** base minimalista premium com linguagem editorial (aprox. 70% minimalista / 30% editorial).  
+**Documento de arquitetura vigente:** [ARQUITETURA-4-PROJETOS.md](ARQUITETURA-4-PROJETOS.md). Este plano não define nomes de sistemas nem substitui a arquitetura atual.
 
 ---
 
