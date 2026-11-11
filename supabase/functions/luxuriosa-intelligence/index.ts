@@ -316,6 +316,306 @@ async function readCustomerInsights(from: string, to: string, periodDays: number
   };
 }
 
+function localAnalyticsParts(value: string) {
+  const parts = new Intl.DateTimeFormat("pt-BR", {
+    timeZone: "America/Sao_Paulo",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    weekday: "short",
+    hour: "2-digit",
+    hourCycle: "h23"
+  }).formatToParts(new Date(value));
+  return Object.fromEntries(parts.map((part) => [part.type, part.value]));
+}
+
+function summarizeSales(rows: any[]) {
+  const result = {
+    sales_count: 0,
+    paid_count: 0,
+    pending_count: 0,
+    sold_cents: 0,
+    received_cents: 0,
+    pending_cents: 0,
+    discount_cents: 0,
+    subtotal_cents: 0,
+    average_paid_ticket_cents: 0,
+    paid_rate_percent: 0,
+    discount_rate_percent: 0,
+    units_sold: 0,
+    costed_sales_count: 0,
+    sales_without_cost_count: 0,
+    sold_cost_of_goods_cents: 0,
+    paid_cost_of_goods_cents: 0,
+    gross_profit_cents: 0,
+    costed_paid_revenue_cents: 0,
+    gross_margin_percent: null,
+    recorded_expenses_cents: 0,
+    expense_count: 0,
+    partial_operating_result_cents: null,
+    expense_categories: [] as any[],
+    top_products: [] as any[],
+    payment_methods: [] as any[],
+    trend: [] as any[],
+    weekday_activity: [] as any[],
+    hourly_activity: [] as any[]
+  };
+
+  const products = new Map<string, { name: string; quantity: number; gross_cents: number }>();
+  const methods = new Map<string, { method: string; sales_count: number; paid_count: number; pending_count: number; received_cents: number; pending_cents: number }>();
+  const days = new Map<string, { date: string; sales_count: number; paid_count: number; sold_cents: number; received_cents: number; pending_cents: number }>();
+  const weekdays = new Map<string, number>();
+  const hours = new Map<string, number>();
+
+  for (const sale of rows) {
+    const total = Number(sale.total_cents) || 0;
+    const discount = Number(sale.discount_cents) || 0;
+    const subtotal = Number(sale.subtotal_cents) || 0;
+    const paid = sale.payment_status === "paid";
+    const methodName = cleanText(sale.payment_method, 30) || "OUTRO";
+    let saleCostKnown = true;
+    let saleCost = 0;
+
+    result.sales_count += 1;
+    result.sold_cents += total;
+    result.discount_cents += discount;
+    result.subtotal_cents += subtotal;
+
+    if (paid) {
+      result.paid_count += 1;
+      result.received_cents += total;
+    } else {
+      result.pending_count += 1;
+      result.pending_cents += total;
+    }
+
+    const method = methods.get(methodName) || {
+      method: methodName, sales_count: 0, paid_count: 0, pending_count: 0,
+      received_cents: 0, pending_cents: 0
+    };
+    method.sales_count += 1;
+    if (paid) {
+      method.paid_count += 1;
+      method.received_cents += total;
+    } else {
+      method.pending_count += 1;
+      method.pending_cents += total;
+    }
+    methods.set(methodName, method);
+
+    for (const item of (Array.isArray(sale.items) ? sale.items : [])) {
+      const name = cleanText(item?.product_name, 180) || "Item sem descrição";
+      const quantity = Number(item?.quantity) || 0;
+      const line = Number(item?.line_total_cents) || 0;
+      const product = products.get(name) || { name, quantity: 0, gross_cents: 0 };
+      product.quantity += quantity;
+      product.gross_cents += line;
+      products.set(name, product);
+      result.units_sold += quantity;
+      if (item?.unit_cost_cents === null || item?.unit_cost_cents === undefined || !Number.isSafeInteger(Number(item.unit_cost_cents))) {
+        saleCostKnown = false;
+      } else {
+        saleCost += Number(item.unit_cost_cents) * quantity;
+      }
+    }
+
+    if (saleCostKnown && Array.isArray(sale.items) && sale.items.length) {
+      result.costed_sales_count += 1;
+      result.sold_cost_of_goods_cents += saleCost;
+      if (paid) {
+        result.paid_cost_of_goods_cents += saleCost;
+        result.costed_paid_revenue_cents += total;
+        result.gross_profit_cents += total - saleCost;
+      }
+    } else {
+      result.sales_without_cost_count += 1;
+    }
+
+    const local = localAnalyticsParts(sale.created_at);
+    const dayKey = `${local.year}-${local.month}-${local.day}`;
+    const day = days.get(dayKey) || {
+      date: dayKey, sales_count: 0, paid_count: 0, sold_cents: 0,
+      received_cents: 0, pending_cents: 0
+    };
+    day.sales_count += 1;
+    day.sold_cents += total;
+    if (paid) {
+      day.paid_count += 1;
+      day.received_cents += total;
+    } else {
+      day.pending_cents += total;
+    }
+    days.set(dayKey, day);
+
+    const weekday = local.weekday || "—";
+    weekdays.set(weekday, (weekdays.get(weekday) || 0) + 1);
+    const hour = local.hour || "00";
+    hours.set(hour, (hours.get(hour) || 0) + 1);
+  }
+
+  result.gross_margin_percent = result.costed_paid_revenue_cents
+    ? Math.round((result.gross_profit_cents / result.costed_paid_revenue_cents) * 1000) / 10 : null;
+  result.average_paid_ticket_cents = result.paid_count
+    ? Math.round(result.received_cents / result.paid_count) : 0;
+  result.paid_rate_percent = result.sales_count
+    ? Math.round((result.paid_count / result.sales_count) * 1000) / 10 : 0;
+  result.discount_rate_percent = result.subtotal_cents
+    ? Math.round((result.discount_cents / result.subtotal_cents) * 1000) / 10 : 0;
+  result.top_products = [...products.values()]
+    .sort((a, b) => b.quantity - a.quantity || b.gross_cents - a.gross_cents)
+    .slice(0, 8);
+  result.payment_methods = [...methods.values()]
+    .sort((a, b) => b.received_cents + b.pending_cents - (a.received_cents + a.pending_cents));
+  result.trend = [...days.values()].sort((a, b) => a.date.localeCompare(b.date));
+  result.weekday_activity = [...weekdays.entries()]
+    .map(([weekday, sales_count]) => ({ weekday, sales_count }))
+    .sort((a, b) => b.sales_count - a.sales_count);
+  result.hourly_activity = [...hours.entries()]
+    .map(([hour, sales_count]) => ({ hour, sales_count }))
+    .sort((a, b) => b.sales_count - a.sales_count);
+  return result;
+}
+
+async function readExpensesForAnalytics(userId: string, from: string, to: string) {
+  const { data, error } = await admin.from("management_expenses")
+    .select("expense_date, category, amount_cents")
+    .eq("created_by", userId)
+    .eq("status", "active")
+    .gte("expense_date", from.slice(0, 10))
+    .lte("expense_date", to.slice(0, 10))
+    .order("expense_date", { ascending: true })
+    .limit(10000);
+  if (error) throw error;
+  return data || [];
+}
+
+async function readSalesForAnalytics(userId: string, from: string, to: string) {
+  const rows: any[] = [];
+  const pageSize = 500;
+  const maximumRows = 10000;
+  let truncated = false;
+
+  for (let offset = 0; offset < maximumRows; offset += pageSize) {
+    const { data, error } = await admin.from("management_sales")
+      .select("created_at, items, subtotal_cents, discount_cents, total_cents, payment_method, payment_status")
+      .eq("created_by", userId)
+      .gte("created_at", from)
+      .lte("created_at", to)
+      .order("created_at", { ascending: true })
+      .range(offset, offset + pageSize - 1);
+    if (error) throw error;
+    const page = data || [];
+    rows.push(...page);
+    if (page.length < pageSize) return { rows, truncated };
+  }
+
+  truncated = true;
+  return { rows, truncated };
+}
+
+
+async function readAnalyticsRows(table: string, columns: string, from: string, to: string) {
+  const rows: any[] = [];
+  const pageSize = 500;
+  const maximumRows = 10000;
+  let truncated = false;
+  for (let offset = 0; offset < maximumRows; offset += pageSize) {
+    const { data, error } = await admin.from(table)
+      .select(columns)
+      .gte("created_at", from)
+      .lte("created_at", to)
+      .order("created_at", { ascending: true })
+      .range(offset, offset + pageSize - 1);
+    if (error) throw error;
+    const page = data || [];
+    rows.push(...page);
+    if (page.length < pageSize) return { rows, truncated };
+  }
+  truncated = true;
+  return { rows, truncated };
+}
+
+async function readBusinessSignals(from: string, to: string) {
+  const [eventResult, cartResult, orderResult] = await Promise.all([
+    readAnalyticsRows("site_events", "event_name, session_key, created_at", from, to),
+    readAnalyticsRows("cart_sessions", "status, session_key, converted_at, created_at", from, to),
+    readAnalyticsRows("orders", "status, payment_status, total_amount, created_at, source, management_sales_sync_status, payment_checkout_url", from, to)
+  ]);
+
+  const eventMap = new Map<string, { event_name: string; count: number; sessions: Set<string> }>();
+  const allSessions = new Set<string>();
+  for (const event of eventResult.rows) {
+    const name = cleanText(event.event_name, 80) || "unknown";
+    const entry = eventMap.get(name) || { event_name: name, count: 0, sessions: new Set<string>() };
+    entry.count += 1;
+    if (event.session_key) {
+      const key = String(event.session_key);
+      entry.sessions.add(key);
+      allSessions.add(key);
+    }
+    eventMap.set(name, entry);
+  }
+
+  const cartStatuses = new Map<string, number>();
+  let convertedCarts = 0;
+  for (const cart of cartResult.rows) {
+    const status = cleanText(cart.status, 40) || "unknown";
+    cartStatuses.set(status, (cartStatuses.get(status) || 0) + 1);
+    if (status === "converted" || cart.converted_at) convertedCarts += 1;
+  }
+
+  const orderStatuses = new Map<string, number>();
+  const paymentStatuses = new Map<string, { status: string; count: number; amount_cents: number }>();
+  const websiteSalesSync = new Map<string, number>();
+  let failedCheckoutWithoutLinkCount = 0;
+  for (const order of orderResult.rows.filter((row: any) => !row.source || row.source === "website")) {
+    const status = cleanText(order.status, 50) || "unknown";
+    orderStatuses.set(status, (orderStatuses.get(status) || 0) + 1);
+    const paymentStatus = cleanText(order.payment_status, 50) || "unknown";
+    const payment = paymentStatuses.get(paymentStatus) || { status: paymentStatus, count: 0, amount_cents: 0 };
+    payment.count += 1;
+    const amount = Number(order.total_amount);
+    if (Number.isFinite(amount) && amount > 0) payment.amount_cents += Math.round(amount * 100);
+    paymentStatuses.set(paymentStatus, payment);
+    if (order.source === "website" && paymentStatus === "failed" && !order.payment_checkout_url) {
+      failedCheckoutWithoutLinkCount += 1;
+    }
+    if (order.source === "website" && paymentStatus === "paid") {
+      const syncStatus = cleanText(order.management_sales_sync_status, 40) || "not_applicable";
+      websiteSalesSync.set(syncStatus, (websiteSalesSync.get(syncStatus) || 0) + 1);
+    }
+  }
+
+  const events = [...eventMap.values()]
+    .map(entry => ({ event_name: entry.event_name, count: entry.count, sessions: entry.sessions.size }))
+    .sort((a, b) => b.count - a.count);
+
+  return {
+    site_sessions: allSessions.size,
+    site_events: eventResult.rows.length,
+    events,
+    carts: {
+      total: cartResult.rows.length,
+      abandoned: cartStatuses.get("abandoned") || 0,
+      active: cartStatuses.get("active") || 0,
+      converted: convertedCarts,
+      statuses: [...cartStatuses.entries()].map(([status, count]) => ({ status, count }))
+    },
+    orders: {
+      total: orderResult.rows.length,
+      statuses: [...orderStatuses.entries()].map(([status, count]) => ({ status, count })),
+      payment_statuses: [...paymentStatuses.values()].sort((a, b) => b.count - a.count),
+      failed_checkout_without_link_count: failedCheckoutWithoutLinkCount,
+      paid_website_sales_sync: [...websiteSalesSync.entries()]
+        .map(([status, count]) => ({ status, count }))
+        .sort((a, b) => b.count - a.count)
+    },
+    truncated: eventResult.truncated || cartResult.truncated || orderResult.truncated
+  };
+}
+
+
+
 Deno.serve(async (request: Request) => {
   const origin = request.headers.get("origin") || "";
   if (request.method === "OPTIONS") {
@@ -343,15 +643,64 @@ Deno.serve(async (request: Request) => {
   try {
     const authorization = await authorize(request);
     if ("error" in authorization) return reply({ error: authorization.error }, authorization.status, origin);
-    if (body.action !== "customer-insights") return reply({ error: "Ação não reconhecida." }, 400, origin);
     const periodDays = Number(body.period_days ?? 30);
     if (![7, 30, 90, 365].includes(periodDays)) {
       return reply({ error: "Período inválido. Escolha 7, 30, 90 ou 365 dias." }, 400, origin);
     }
     const now = new Date();
     const from = new Date(now.getTime() - periodDays * 86400000).toISOString();
-    const result = await readCustomerInsights(from, now.toISOString(), periodDays);
-    return reply(result, 200, origin);
+
+    if (body.action === "customer-insights") {
+      const result = await readCustomerInsights(from, now.toISOString(), periodDays);
+      return reply(result, 200, origin);
+    }
+
+    if (body.action === "analytics") {
+      const currentStart = new Date(now.getTime() - periodDays * 86400000);
+      const previousStart = new Date(now.getTime() - periodDays * 2 * 86400000);
+      const [{ rows, truncated }, expenseRows] = await Promise.all([
+        readSalesForAnalytics(authorization.user.id, previousStart.toISOString(), now.toISOString()),
+        readExpensesForAnalytics(authorization.user.id, previousStart.toISOString(), now.toISOString())
+      ]);
+      const currentRows = rows.filter((sale) => new Date(sale.created_at).getTime() >= currentStart.getTime());
+      const previousRows = rows.filter((sale) => new Date(sale.created_at).getTime() < currentStart.getTime());
+      const currentExpenseRows = expenseRows.filter((expense) => expense.expense_date >= currentStart.toISOString().slice(0, 10));
+      const previousExpenseRows = expenseRows.filter((expense) => expense.expense_date < currentStart.toISOString().slice(0, 10));
+      const summarizeExpenses = (items: any[]) => {
+        const categories = new Map<string, number>();
+        let total = 0;
+        for (const expense of items) {
+          const amount = Number(expense.amount_cents) || 0;
+          total += amount;
+          categories.set(expense.category, (categories.get(expense.category) || 0) + amount);
+        }
+        return { total, count: items.length, categories: [...categories.entries()].map(([category, amount_cents]) => ({ category, amount_cents })).sort((a,b)=>b.amount_cents-a.amount_cents) };
+      };
+      const current = summarizeSales(currentRows);
+      const previous = summarizeSales(previousRows);
+      const currentExpenses = summarizeExpenses(currentExpenseRows);
+      const previousExpenses = summarizeExpenses(previousExpenseRows);
+      for (const [summary, expenseSummary] of [[current,currentExpenses],[previous,previousExpenses]] as any[]) {
+        summary.recorded_expenses_cents = expenseSummary.total;
+        summary.expense_count = expenseSummary.count;
+        summary.expense_categories = expenseSummary.categories;
+        summary.partial_operating_result_cents = summary.costed_paid_revenue_cents > 0
+          ? summary.gross_profit_cents - expenseSummary.total : null;
+      }
+      const businessPulse = await readBusinessSignals(currentStart.toISOString(), now.toISOString());
+      return reply({
+        ok: true,
+        generated_at: now.toISOString(),
+        timezone: "America/Sao_Paulo",
+        period_days: periodDays,
+        current,
+        previous,
+        business_pulse: businessPulse,
+        truncated: truncated || businessPulse.truncated
+      }, 200, origin);
+    }
+
+    return reply({ error: "Ação não reconhecida." }, 400, origin);
   } catch (error) {
     console.error("luxuriosa-intelligence:", error);
     return reply({ error: "Não foi possível consultar a inteligência de clientes." }, 500, origin);
