@@ -869,6 +869,18 @@
       }
     });
 
+    ["favoriteCategory", "accountFavoriteCategory"].forEach((name) => {
+      document.querySelectorAll('input[name="' + name + '"]').forEach((input) => {
+        input.addEventListener("change", () => {
+          const selected = document.querySelectorAll('input[name="' + name + '"]:checked');
+          if (selected.length > 3) {
+            input.checked = false;
+            message("Escolha no máximo três categorias favoritas.", true);
+          }
+        });
+      });
+    });
+
     document.querySelectorAll('input[name="accountFavoriteCategory"], #accountPreferredPriceRange, #accountPreferredOfferType').forEach((control) => {
       control.addEventListener("change", () => {
         const categories = Array.from(document.querySelectorAll('input[name="accountFavoriteCategory"]:checked')).map((input) => input.value);
