@@ -38,6 +38,34 @@
     footer{padding:20px 0 28px;border-top:1px solid rgba(212,175,124,.12);color:#766970;font-size:9px;text-align:center}
     @media(max-width:800px){main{grid-template-columns:1fr;gap:30px;min-height:auto;padding-top:24px}.intro{max-width:600px}.intro h1{font-size:42px}.intro-note{display:none}.panel{justify-self:center;max-width:620px}.top{padding:20px 0}}
     @media(max-width:480px){.shell{width:min(100% - 24px,1080px)}.top{align-items:flex-start}.brand{font-size:24px}.back{padding-top:8px;font-size:10px}main{padding-top:18px}.intro h1{font-size:36px}.panel{padding:21px 16px;border-radius:15px}.grid{grid-template-columns:1fr}.field.full{grid-column:auto}.section-label{grid-column:auto}.tabs{margin-bottom:22px}h2{font-size:26px}}
+
+    /* Área do cliente: navegação simples por tarefas */
+    .account-home{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:18px 0 22px}
+    .account-home a{display:flex;flex-direction:column;gap:7px;min-height:118px;padding:17px 15px;border:1px solid var(--line);border-radius:12px;background:rgba(0,0,0,.22);text-decoration:none;transition:border-color .2s,transform .2s}
+    .account-home a:hover{border-color:var(--gold);transform:translateY(-2px)}
+    .account-home strong{color:var(--blush);font-size:12px}
+    .account-home span{color:var(--muted);font-size:10px;line-height:1.55}
+    .account-home .tile-icon{color:var(--gold);font-size:19px;line-height:1}
+    .account-welcome{margin:12px 0;padding:17px;border:1px solid var(--line);border-radius:12px;background:linear-gradient(120deg,rgba(139,30,63,.18),rgba(0,0,0,.12))}
+    .account-welcome p{margin:5px 0 0;color:var(--muted);font-size:11px}
+    .account-section{margin:12px 0;border:1px solid var(--line);border-radius:12px;background:rgba(0,0,0,.18);overflow:hidden}
+    .account-section>summary{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px;list-style:none;cursor:pointer;color:var(--blush);font-size:12px;font-weight:600}
+    .account-section>summary::-webkit-details-marker{display:none}
+    .account-section>summary:after{content:"＋";color:var(--gold);font-size:17px}
+    .account-section[open]>summary:after{content:"−"}
+    .account-section>.account-section-content{padding:0 16px 16px}
+    .account-section .section-label{margin-top:8px}
+    .account-section .orders-panel{margin:0;padding:0;border:0;background:transparent}
+    .account-section .orders-panel>.section-label{display:none}
+    .account-section .account-form{margin:0!important;padding:0!important;border:0!important}
+    .account-section .account-form>.section-label:first-child{margin-top:0}
+    .account-section .account-form .actions{margin-bottom:8px}
+    .account-club{margin:18px 0;padding:18px;border:1px solid rgba(212,175,124,.3);border-radius:12px;background:linear-gradient(130deg,rgba(139,30,63,.2),rgba(0,0,0,.2))}
+    .account-club strong{display:block;color:var(--gold);font:400 22px var(--serif)}
+    .account-club p{margin:5px 0 12px;color:var(--muted);font-size:11px}
+    .account-club a{font-size:11px;font-weight:600;text-decoration:none}
+    @media(max-width:560px){.account-home{grid-template-columns:1fr}.account-home a{min-height:0;display:grid;grid-template-columns:25px 1fr;align-items:center}.account-home a .tile-icon{grid-row:span 2}.account-home a span{grid-column:2}}
+
   </style>
 </head>
 <body>
@@ -148,6 +176,15 @@
           <div class="account-box">
             <p class="account-email">Conta vinculada a <strong id="accountEmail"></strong></p>
             <p><a id="adminDashboardLink" class="hidden" href="#" rel="nofollow">Acessar Gestão Luxuriosa →</a></p>
+            <div class="account-welcome">
+              <strong>O que você gostaria de fazer?</strong>
+              <p>Escolha uma opção. Você pode voltar a esta página quando quiser.</p>
+            </div>
+            <nav class="account-home" aria-label="Atalhos da sua conta">
+              <a href="#account-profile-section" data-open-account="account-profile-section"><span class="tile-icon" aria-hidden="true">♙</span><strong>Revisar cadastro</strong><span>Confira seu nome, contato e endereço de entrega.</span></a>
+              <a href="#account-orders-section" data-open-account="account-orders-section"><span class="tile-icon" aria-hidden="true">▤</span><strong>Acompanhar compra</strong><span>Veja o status dos pedidos e as próximas etapas.</span></a>
+              <a href="/loja.html"><span class="tile-icon" aria-hidden="true">✦</span><strong>Novidades</strong><span>Descubra produtos, kits e novidades da Luxuriosa.</span></a>
+            </nav>
             <section class="orders-panel" aria-labelledby="ordersHeading">
               <div class="section-label" id="ordersHeading">Meus pedidos</div>
               <p class="orders-intro">Acompanhe as solicitações feitas pelo site e o andamento de cada pedido. Solicitações encaminhadas ao WhatsApp ficam aguardando confirmação; a compra só é confirmada após o atendimento.</p>
@@ -240,6 +277,38 @@
     });
 
     const $ = (id) => document.getElementById(id);
+    // Agrupa configurações em seções recolhíveis para reduzir a sobrecarga visual.
+    function organizeAccountSections() {
+      const box = document.querySelector("#signedInArea .account-box");
+      if (!box || box.dataset.organized === "true") return;
+      const sections = [
+        ["account-orders-section", "Meus pedidos", $("ordersHeading")?.closest(".orders-panel")],
+        ["account-email-section", "E-mail de acesso", $("emailChangeForm")],
+        ["account-consent-section", "Privacidade e autorizações", $("accountDataConsentForm")],
+        ["account-profile-section", "Meus dados e endereço", $("accountForm")],
+        ["account-delete-section", "Encerrar conta", $("deleteAccountForm")]
+      ];
+      sections.forEach(([id, title, node]) => {
+        if (!node) return;
+        const details = document.createElement("details");
+        details.className = "account-section";
+        details.id = id;
+        const summary = document.createElement("summary");
+        summary.textContent = title;
+        const content = document.createElement("div");
+        content.className = "account-section-content";
+        details.append(summary, content);
+        node.before(details);
+        content.append(node);
+      });
+      box.dataset.organized = "true";
+      document.querySelectorAll("[data-open-account]").forEach(link => {
+        link.addEventListener("click", () => {
+          const target = document.getElementById(link.dataset.openAccount);
+          if (target) target.open = true;
+        });
+      });
+    }
 
     function attachCepLookup({ inputId, statusId, streetId, neighborhoodId, cityId, stateId, complementId }) {
       const input = $(inputId);
@@ -528,6 +597,7 @@
     let loadingUserId = null;
 
     async function showSignedIn(user) {
+      organizeAccountSections();
       if (activeUserId === user.id) {
         $("accountEmail").textContent = user.email || "";
         return;
