@@ -19,6 +19,10 @@ on:
       - "supabase/functions/infinitepay-webhook/**"
       - "supabase/functions/payment-status/**"
       - "supabase/functions/payment-admin/**"
+      - "supabase/functions/luxuriosa-intelligence/**"
+      - "supabase/config.toml"
+      - "supabase/functions/luxuriosa-intelligence/**"
+      - "supabase/config.toml"
       - "supabase/functions/infinitepay-test-checkout/**"
       - "supabase/functions/infinitepay-test-webhook/**"
       - "supabase/migrations/20261110153000_isolated_infinitepay_test_payments.sql"
@@ -89,6 +93,7 @@ jobs:
           deno check supabase/functions/infinitepay-webhook/index.ts
           deno check supabase/functions/payment-status/index.ts
           deno check supabase/functions/payment-admin/index.ts
+          deno check supabase/functions/luxuriosa-intelligence/index.ts
           deno check supabase/functions/infinitepay-test-checkout/index.ts
           deno check supabase/functions/infinitepay-test-webhook/index.ts
 
