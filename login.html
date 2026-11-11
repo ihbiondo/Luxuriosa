@@ -543,6 +543,15 @@
         await loadAdminAccess(user);
         activeUserId = user.id;
         const requestedPage = new URLSearchParams(window.location.search).get("redirect");
+        let resumeCheckout = false;
+        try {
+          resumeCheckout = localStorage.getItem("luxuriosa_checkout_after_login") === "1";
+          if (resumeCheckout) localStorage.removeItem("luxuriosa_checkout_after_login");
+        } catch (_) {}
+        if (resumeCheckout) {
+          window.location.replace("/loja.html?retomar-checkout=1");
+          return;
+        }
         if (requestedPage === "acompanhar-pedido/") window.location.replace("/acompanhar-pedido/");
       } catch (error) {
         activeUserId = null;
