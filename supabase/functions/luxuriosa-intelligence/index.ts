@@ -102,7 +102,7 @@ function createCustomerInterestStats() {
     paid_orders: new Set<string>(),
     units_sold: 0,
     revenue_cents: 0
-  }] as const));
+  }]))
 }
 
 
