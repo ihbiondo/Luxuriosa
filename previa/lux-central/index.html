@@ -97,8 +97,14 @@ async function load(){
    supabase.functions.invoke("management-sales",{body:{action:"kit-recipes-list"}}),
    supabase.functions.invoke("management-sales",{body:{action:"expense-list"}})
   ]);
-  for(const result of [analytics,stock,costs,kits,expenses])if(result.error)throw result.error;
-  if(!analytics.data?.ok)throw new Error(analytics.data?.error||"Falha ao consultar indicadores.");
+  const responses=[["indicadores",analytics],["estoque",stock],["custos",costs],["composições dos kits",kits],["despesas",expenses]];
+  for(const [label,result] of responses){
+   if(result.error)throw result.error;
+   if(!result.data?.ok)throw new Error(result.data?.error||"Falha ao consultar "+label+".");
+  }
+  if(!Array.isArray(stock.data.stock)||!Array.isArray(costs.data.costs)||!Array.isArray(kits.data.recipes)||!Array.isArray(expenses.data.expenses)){
+   throw new Error("Uma das consultas retornou dados em formato inesperado. Atualize a página e tente novamente.");
+  }
   const d=analytics.data,c=d.current||{},pulse=c.business_pulse||{},cart=pulse.carts||{},orders=pulse.orders||{};
   setMetric("received",money(c.received_cents/100));message("paidCount",num(c.paid_count)+" vendas pagas");
   setMetric("grossProfit",c.costed_paid_revenue_cents>0?money(c.gross_profit_cents/100):"Indisponível");
