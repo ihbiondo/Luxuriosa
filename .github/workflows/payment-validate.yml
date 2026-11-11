@@ -153,6 +153,7 @@ jobs:
           if (!ordersFunction.includes('nextStatus === "cancelled" && current.payment_status === "paid"')) throw new Error("O painel não pode cancelar pedido pago sem conciliação de estorno.");
           if (!admin.includes('action:"admin_dashboard"') || !admin.includes('action:"admin_update_order_status"')) throw new Error("O painel Lux-Gestão precisa consultar e atualizar pedidos.");
           if (!tracking.includes('.eq("customer_id",user.id)')) throw new Error("A consulta de pedidos precisa filtrar pelo usuário autenticado.");
+          if (!tracking.includes("payment_checkout_url") || !tracking.includes("checkout.infinitepay.io")) throw new Error("O cliente precisa conseguir retomar uma cobrança pendente na InfinitePay.");
           for (const label of ["Aguardando pagamento", "Pagamento aprovado", "Em expedição", "Em rota de entrega", "Pedido entregue"]) {
             if (!tracking.includes(label)) throw new Error("Status ausente no acompanhamento: " + label);
           }
