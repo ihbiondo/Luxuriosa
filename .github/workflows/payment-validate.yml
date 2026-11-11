@@ -200,7 +200,11 @@ jobs:
           if (!panel.includes('functions.invoke("luxuriosa-intelligence",{body:{action:"analytics"')) throw new Error("O Lux-Central ainda não consulta analytics na Inteligência.");
           if (!management.includes('action === "analytics"')) throw new Error("A ação legada deve permanecer disponível durante a transição.");
           if (!intelligence.includes('from("payment_provider_events")') || !intelligence.includes("payment_events: paymentEvents")) throw new Error("A Inteligência precisa agregar a cobertura dos webhooks de pagamento.");
-          if (!panel.includes("Eventos de pagamento recebidos") || !panel.includes("Eventos com erro de processamento")) throw new Error("O Lux-Central precisa exibir a saúde dos webhooks.");
+          for (const field of ["pending_expired_count", "pending_without_checkout_link_count", "active_pending_count", "checkout_link_count"]) {
+            if (!intelligence.includes(field)) throw new Error("A Inteligência precisa expor o diagnóstico de cobranças: " + field);
+          }
+          if (!panel.includes("Eventos de pagamento recebidos") || !panel.includes("Eventos com erro de processamento") || !panel.includes("Cobranças expiradas")) throw new Error("O Lux-Central precisa exibir a saúde dos webhooks e dos links.");
+          if (!panel.includes("Revisar cobranças expiradas")) throw new Error("O Lux-Central precisa orientar a revisão de cobranças expiradas.");
           console.log("Migração financeira, cobertura de webhooks e compatibilidade legada validadas.");
           NODE
 
