@@ -75,7 +75,8 @@ Deno.serve(async (req: Request) => {
     }
 
     let eventType = "";
-    if (eventName.includes("refund")) eventType = "refunded";
+    if (eventName === "created") eventType = "created";
+    else if (eventName.includes("refund")) eventType = "refunded";
     else if (eventName.includes("cancel")) eventType = "canceled";
     else if (eventName.includes("fail")) eventType = "payment_failed";
     else if (eventName === "paid" || eventName === "settled" || (!eventName && transactionNsu && invoiceSlug)) {
@@ -94,11 +95,13 @@ Deno.serve(async (req: Request) => {
 
     const eventKey = [eventType, orderNsu, transactionNsu || invoiceSlug || "no-reference"].join(":");
 
-    // InfinitePay webhooks are unsigned. Non-payment notices are recorded but
-    // never allowed to cancel, fail, refund, or otherwise mutate an order.
+    // InfinitePay webhooks are unsigned. Only payment_check can confirm payment.
+    // Lifecycle notices are recorded for observability and never mutate an order.
     if (eventType !== "paid") {
-      await recordEvent(order, eventKey, eventType, payload,
-        "Notificação sem assinatura criptográfica. Pedido preservado; conferir diretamente na InfinitePay.");
+      const notice = eventType === "created"
+        ? ""
+        : "Notificação sem assinatura criptográfica. Pedido preservado; conferir diretamente na InfinitePay.";
+      await recordEvent(order, eventKey, eventType, payload, notice);
       return response({ ok: true, order_unchanged: true, review_required: eventType === "refunded" });
     }
 
