@@ -304,15 +304,15 @@ Deno.serve(async (req: Request) => {
 
       let orders = allRecentOrders.data || [];
       if (q) {
-        const nameSearch = admin.from("orders").select("id, order_number, status, customer_name, customer_phone, delivery_address, subtotal, shipping_amount, total_amount, club_discount_amount_cents, club_discount_percent, created_at, cart_session_id").ilike("customer_name", "%" + q + "%").order("created_at", { ascending: false }).limit(100);
-        const phoneSearch = admin.from("orders").select("id, order_number, status, customer_name, customer_phone, delivery_address, subtotal, shipping_amount, total_amount, club_discount_amount_cents, club_discount_percent, created_at, cart_session_id").ilike("customer_phone", "%" + q + "%").order("created_at", { ascending: false }).limit(100);
+        const nameSearch = admin.from("orders").select("id, order_number, status, payment_status, payment_method, payment_provider, customer_name, customer_phone, delivery_address, subtotal, shipping_amount, total_amount, club_discount_amount_cents, club_discount_percent, created_at, cart_session_id").ilike("customer_name", "%" + q + "%").order("created_at", { ascending: false }).limit(100);
+        const phoneSearch = admin.from("orders").select("id, order_number, status, payment_status, payment_method, payment_provider, customer_name, customer_phone, delivery_address, subtotal, shipping_amount, total_amount, club_discount_amount_cents, club_discount_percent, created_at, cart_session_id").ilike("customer_phone", "%" + q + "%").order("created_at", { ascending: false }).limit(100);
         const [byName, byPhone] = await Promise.all([nameSearch, phoneSearch]);
         if (byName.error) throw byName.error;
         if (byPhone.error) throw byPhone.error;
         const found = new Map<string, any>();
         for (const order of [...(byName.data || []), ...(byPhone.data || [])]) found.set(order.id, order);
         if (/^\\d+$/.test(q)) {
-          const { data, error } = await admin.from("orders").select("id, order_number, status, customer_name, customer_phone, delivery_address, subtotal, shipping_amount, total_amount, club_discount_amount_cents, club_discount_percent, created_at, cart_session_id").eq("order_number", Number(q)).limit(1);
+          const { data, error } = await admin.from("orders").select("id, order_number, status, payment_status, payment_method, payment_provider, customer_name, customer_phone, delivery_address, subtotal, shipping_amount, total_amount, club_discount_amount_cents, club_discount_percent, created_at, cart_session_id").eq("order_number", Number(q)).limit(1);
           if (error) throw error;
           for (const order of data || []) found.set(order.id, order);
         }
