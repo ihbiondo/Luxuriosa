@@ -169,6 +169,9 @@ jobs:
           if (!admin.includes('action:"admin_dashboard"') || !admin.includes('action:"admin_update_order_status"')) throw new Error("O painel Lux-Gestão precisa consultar e atualizar pedidos.");
           if (!admin.includes('invokeOrdersAdmin({action:"admin_dashboard"') || !ordersAdminFunction.includes('action === "admin_dashboard"')) throw new Error("O dashboard precisa usar o endpoint administrativo isolado.");
           if (!admin.includes("/functions/v1/orders-admin") || !ordersAdminFunction.includes('action === "admin_update_order_status"')) throw new Error("A atualização de etapa precisa usar o endpoint administrativo isolado.");
+          const webhook = fs.readFileSync("supabase/functions/infinitepay-webhook/index.ts", "utf8");
+          if (!payment.includes('events: ["created", "paid", "settled", "refunded", "canceled", "payment_failed"]')) throw new Error("O checkout precisa assinar o evento created para monitorar a entrega do webhook.");
+          if (!webhook.includes('eventName === "created"') || !webhook.includes('eventType === "created"')) throw new Error("O webhook precisa registrar o evento created sem alterar o pedido.");
           const paymentAdmin = fs.readFileSync("supabase/functions/payment-admin/index.ts", "utf8");
           if (!admin.includes('/functions/v1/payment-admin') || !admin.includes('action:"reconcile_payment"')) throw new Error("O painel precisa acionar a conciliação administrativa da InfinitePay.");
           if (!ordersFunction.includes("payment_checkout_url, payment_expires_at, payment_amount_cents")) throw new Error("O painel precisa receber link, expiração e valor da cobrança.");
