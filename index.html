@@ -20,7 +20,7 @@
   <!-- Open Graph -->
   <meta property="og:type" content="website">
   <meta property="og:locale" content="pt_BR">
-  <meta property="og:title" content="Luxuriosa Sexshop em Bauru | Produtos para Intimidade e Lingerie">
+  <meta property="og:title" content="Luxuriosa | Sexshop em Bauru e Região — Entrega Discreta">
   <meta
     property="og:description"
     content="Sexshop em Bauru e região, com produtos para intimidade, atendimento reservado e entrega discreta. Lingerie e acessórios selecionados."
@@ -33,7 +33,7 @@
   <meta property="og:image:height" content="630">
   <meta property="og:image:alt" content="Logo da marca Luxuriosa">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Luxuriosa Sexshop em Bauru | Produtos para Intimidade e Lingerie">
+  <meta name="twitter:title" content="Luxuriosa | Sexshop em Bauru e Região — Entrega Discreta">
   <meta name="twitter:description" content="Sexshop em Bauru e região, com produtos para intimidade, atendimento reservado e entrega discreta. Lingerie e acessórios selecionados.">
   <meta name="twitter:image" content="https://luxuriosa.com.br/img/site/og-luxuriosa.jpg">
   <meta name="twitter:image:alt" content="Logo da marca Luxuriosa">
@@ -115,6 +115,15 @@
       "@id": "https://luxuriosa.com.br/#return-policy",
       "merchantReturnLink": "https://luxuriosa.com.br/faq.html"
     }
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "Luxuriosa",
+    "alternateName": "luxuriosa.com.br",
+    "url": "https://luxuriosa.com.br/"
   }
   </script>
 </head>
@@ -382,7 +391,7 @@
     <section class="hero" id="inicio">
       <div class="container hero-grid">
         <div class="hero-copy">
-          <div class="kicker">Luxuriosa <span aria-hidden="true">•</span> Bauru e região</div>
+          <div class="kicker">SEXSHOP <span aria-hidden="true">•</span> Bauru e região</div>
           <h1>Intimidade no seu tempo. <em>Do seu jeito.</em></h1>
           <p>Descubra produtos selecionados para explorar novas possibilidades com conforto, liberdade e discrição.</p>
           <div class="hero-actions">
@@ -397,8 +406,8 @@
         </div>
         <div class="hero-visual" aria-label="Logo da Luxuriosa em destaque">
           <div class="hero-image-main">
-            <img src="img/site/logo-hero.webp" alt="Luxuriosa — Lingerie & Intimidade" width="900" height="900" loading="eager" fetchpriority="high" decoding="async">
-            <span class="hero-image-caption">LUXURIOSA · LINGERIE &amp; INTIMIDADE</span>
+            <img src="img/site/logo-hero.webp" alt="Luxuriosa — Sexshop em Bauru" width="900" height="900" loading="eager" fetchpriority="high" decoding="async">
+            <span class="hero-image-caption">LUXURIOSA · SEXSHOP &amp; INTIMIDADE</span>
           </div>
           <span class="hero-visual-note">Sinta-se ainda mais você.</span>
         </div>
@@ -483,7 +492,7 @@
 
     <section class="section about-preview-section" id="sobre">
       <div class="container about-preview">
-        <div class="about-preview-visual" role="img" aria-label="Luxuriosa, sex shop e lingerie em Bauru">
+        <div class="about-preview-visual" role="img" aria-label="Luxuriosa, sexshop em Bauru com lingerie selecionada">
           <div class="about-brand-mark">
             <span class="about-brand-name">Luxuriosa</span>
             <span class="about-brand-line">SEX SHOP <i aria-hidden="true">&amp;</i> LINGERIE</span>
@@ -731,9 +740,11 @@
         <h3 id="customerReviewTitle">Revise antes de pagar</h3>
         <p>Confira os produtos, o endereço e as condições da entrega. O valor final será calculado pelo sistema antes de abrir o checkout.</p>
         <pre id="customerMessagePreview" class="customer-message-preview" tabindex="0" aria-label="Mensagem preparada para o WhatsApp"></pre>
+        <p id="customerPaymentMinimumInfo" class="customer-storage-help" role="status" aria-live="polite" hidden></p>
         <div class="customer-actions">
           <button class="btn secondary" id="customerEditButton" type="button">Editar dados</button>
           <button class="btn secondary" id="customerCopyButton" type="button">Copiar mensagem</button>
+          <button class="btn secondary" id="customerWhatsAppButton" type="button">Enviar pedido pelo WhatsApp</button>
           <button class="btn primary" id="customerPaymentButton" type="button">Pagar com Pix ou cartão</button>
         </div>
         <p class="customer-storage-help">Você será direcionado ao ambiente seguro da InfinitePay. O pedido só entra na fila de expedição depois da confirmação do pagamento.</p>
