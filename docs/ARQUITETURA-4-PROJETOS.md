@@ -41,6 +41,7 @@ Este documento passa a ser a referência para separar responsabilidades e nomes.
 - `status`: etapa operacional do pedido (confirmação, processamento, saída para entrega, entregue ou cancelado).
 - `payment_provider_events`: evidências/eventos recebidos do provedor.
 - `infinitepay-webhook`, `payment-status`, `create-payment-order`, `cart-orders`: funções do fluxo online.
+- `orders-admin`: endpoint autenticado para atualização de etapa operacional; `cart-orders` mantém a ação antiga temporariamente como compatibilidade.
 - `payment-admin`: consulta/conciliação administrativa. O slug permanece por compatibilidade, mas pertence conceitualmente a **Pedidos Online**.
 
 **Regra:** situação financeira e etapa de entrega são dimensões independentes. Pedido não é sinônimo de pagamento. A aprovação de pagamento online depende de validação da InfinitePay, não de alteração manual no painel.
