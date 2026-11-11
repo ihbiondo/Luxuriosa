@@ -344,6 +344,8 @@ function summarizeSales(rows: any[]) {
     discount_rate_percent: 0,
     units_sold: 0,
     costed_sales_count: 0,
+    paid_costed_sales_count: 0,
+    paid_cost_coverage_percent: null as number | null,
     sales_without_cost_count: 0,
     sold_cost_of_goods_cents: 0,
     paid_cost_of_goods_cents: 0,
@@ -423,6 +425,7 @@ function summarizeSales(rows: any[]) {
       result.costed_sales_count += 1;
       result.sold_cost_of_goods_cents += saleCost;
       if (paid) {
+        result.paid_costed_sales_count += 1;
         result.paid_cost_of_goods_cents += saleCost;
         result.costed_paid_revenue_cents += total;
         result.gross_profit_cents += total - saleCost;
@@ -453,6 +456,8 @@ function summarizeSales(rows: any[]) {
     hours.set(hour, (hours.get(hour) || 0) + 1);
   }
 
+  result.paid_cost_coverage_percent = result.paid_count
+    ? Math.round((result.paid_costed_sales_count / result.paid_count) * 1000) / 10 : null;
   result.gross_margin_percent = result.costed_paid_revenue_cents
     ? Math.round((result.gross_profit_cents / result.costed_paid_revenue_cents) * 1000) / 10 : null;
   result.average_paid_ticket_cents = result.paid_count
