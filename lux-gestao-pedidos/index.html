@@ -173,10 +173,11 @@
     $("signOut").addEventListener("click",async()=>{await supabase.auth.signOut();location.reload();});
     $("refresh").addEventListener("click",load);$("period").addEventListener("change",load);$("statusFilter").addEventListener("change",render);$("search").addEventListener("input",render);
     const {data:{session}}=await supabase.auth.getSession();
+    let hasSession=!!session;
     if(session){$("loginPanel").classList.add("hidden");$("dashboard").classList.remove("hidden");$("signOut").classList.remove("hidden");await load();}
     else $("loginPanel").classList.remove("hidden");
-    supabase.auth.onAuthStateChange((event,session)=>{if(event==="SIGNED_OUT")location.reload();});
-    window.setInterval(()=>{if(document.visibilityState==="visible"&&session)load();},45000);
+    supabase.auth.onAuthStateChange((event,nextSession)=>{hasSession=!!nextSession;if(event==="SIGNED_OUT")location.reload();});
+    window.setInterval(()=>{if(document.visibilityState==="visible"&&hasSession)load();},45000);
   </script>
 </body>
 </html>
