@@ -194,13 +194,13 @@ jobs:
         run: |
           node <<'NODE'
           const fs = require("node:fs");
-          const html = fs.readFileSync("gestao-privada-8f2c6d.html", "utf8");
+          const html = fs.readFileSync("lux-gestao-pedidos/index.html", "utf8");
           const scripts = [...html.matchAll(/<script\b[^>]*>([\s\S]*?)<\/script>/gi)];
-          if (!scripts.length) throw new Error("Nenhum script encontrado na área administrativa.");
+          if (!scripts.length) throw new Error("Nenhum script encontrado no painel Lux-Gestão.");
           scripts.forEach((match, index) => {
-            const path = "/tmp/gestao-privada-" + index + ".js";
+            const path = "/tmp/lux-gestao-pedidos-" + index + ".mjs";
             fs.writeFileSync(path, match[1]);
             require("node:child_process").execFileSync(process.execPath, ["--check", path], { stdio: "inherit" });
           });
-          console.log("Scripts da área administrativa validados.");
+          console.log("Scripts do painel Lux-Gestão validados.");
           NODE
