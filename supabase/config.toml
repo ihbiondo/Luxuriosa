@@ -1,0 +1,5 @@
+[functions.create-payment-order]
+verify_jwt = true
+
+[functions.cart-orders]
+verify_jwt = false
