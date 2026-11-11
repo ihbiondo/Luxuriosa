@@ -8,6 +8,7 @@ const migration = fs.readFileSync("supabase/migrations/20261110120000_atomic_inf
 const page = fs.readFileSync("pagamento-retorno.html", "utf8");
 const createOrder = fs.readFileSync("supabase/functions/create-payment-order/index.ts", "utf8");
 const testCheckout = fs.readFileSync("supabase/functions/infinitepay-test-checkout/index.ts", "utf8");
+const config = fs.readFileSync("supabase/config.toml", "utf8");
 
 assert.match(shared, /api\.checkout\.infinitepay\.io\/payment_check/);
 assert.match(shared, /X-Api-Key/);
@@ -39,6 +40,7 @@ assert.match(createOrder, /webhook:\s*\{\s*url:\s*WEBHOOK_URL/);
 assert.match(createOrder, /events:\s*\["created",\s*"paid",\s*"settled",\s*"refunded",\s*"canceled",\s*"payment_failed"\]/);
 assert.match(webhook, /eventName === "created"/);
 assert.match(webhook, /eventType === "created"/);
+assert.match(config, /\[functions\.infinitepay-webhook\]\s*verify_jwt\s*=\s*false/);
 assert.doesNotMatch(createOrder, /webhook_url\s*:/);
 assert.match(createOrder, /PAYMENT_CHECKOUT_PAYLOAD_VERSION\s*=\s*4/);
 console.log("Checkout InfinitePay: retorno, payment_check, webhook no formato oficial, RPC atômica e proteção de estado verificados.");
