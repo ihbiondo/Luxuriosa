@@ -160,6 +160,9 @@ Deno.serve(async (req: Request) => {
           current.payment_status !== "paid") {
         return response({ error: "A expedição só pode avançar depois que a InfinitePay confirmar o pagamento." }, 409, origin);
       }
+      if (nextStatus === "cancelled" && current.payment_status === "paid") {
+        return response({ error: "O pagamento já foi aprovado. Faça a conferência e o estorno na InfinitePay antes de encerrar este pedido." }, 409, origin);
+      }
       if (current.payment_status === "review_required" && nextStatus === "cancelled") {
         return response({ error: "Este pagamento está em conferência. Resolva a conciliação antes de cancelar o pedido." }, 409, origin);
       }
