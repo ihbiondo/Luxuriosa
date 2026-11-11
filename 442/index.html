@@ -5,40 +5,146 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="robots" content="noindex,nofollow,noarchive">
   <meta name="referrer" content="strict-origin-when-cross-origin">
-  <meta name="theme-color" content="#111318">
-  <title>Acesso | Luxuriosa</title>
+  <meta name="theme-color" content="#f5f4f1">
+  <title>Central de Operação | Luxuriosa</title>
   <style>
-    :root{color-scheme:dark;--bg:#111318;--panel:#191c23;--line:#30343e;--muted:#9ba1ad;--white:#f4f2ed;--gold:#d4af7c;--wine:#8b1e3f}
-    *{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 50% -20%,#34202a 0,transparent 48%),var(--bg);color:var(--white);font:15px/1.5 Inter,system-ui,-apple-system,Segoe UI,sans-serif;display:grid;place-items:center;padding:28px}
-    main{width:min(100%,880px)}.top{display:flex;align-items:center;justify-content:space-between;gap:18px;margin-bottom:54px}.brand{font:600 13px Georgia,serif;letter-spacing:3px}.brand span{color:var(--gold)}.private{font:10px/1.2 ui-monospace,monospace;letter-spacing:1.3px;color:var(--muted);border:1px solid var(--line);padding:8px 10px}
-    .eyebrow{color:var(--gold);font:10px ui-monospace,monospace;letter-spacing:2px;text-transform:uppercase}h1{font:500 clamp(36px,7vw,64px)/1.02 Georgia,serif;letter-spacing:-1.8px;margin:14px 0 12px}h1 em{color:var(--gold);font-style:normal}.intro{color:var(--muted);max-width:540px;margin:0 0 34px;font-size:14px}
-    .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.item{min-height:210px;border:1px solid var(--line);background:linear-gradient(145deg,#20232b,#17191f);padding:22px;display:flex;flex-direction:column;text-decoration:none;color:inherit;transition:border-color .18s,transform .18s,background .18s}.item[href]:hover{border-color:var(--gold);transform:translateY(-3px);background:linear-gradient(145deg,#29242a,#191b22)}.num{font:10px ui-monospace,monospace;color:var(--gold);letter-spacing:1.5px}.item h2{font:500 25px Georgia,serif;margin:24px 0 8px}.item p{font-size:12px;color:var(--muted);margin:0}.go{margin-top:auto;padding-top:20px;color:var(--gold);font:10px ui-monospace,monospace;letter-spacing:1px}.soon{opacity:.72}.soon .go{color:#a9aeba}.foot{display:flex;justify-content:space-between;gap:12px;margin-top:28px;padding-top:16px;border-top:1px solid var(--line);color:#747b87;font:9px ui-monospace,monospace;letter-spacing:.7px}
-    @media(max-width:700px){body{padding:22px}.top{margin-bottom:42px}.grid{grid-template-columns:1fr}.item{min-height:155px}.item h2{margin-top:14px}.foot{flex-direction:column}}
+    :root {
+      color-scheme: light;
+      --bg:#f5f4f1; --surface:#fff; --ink:#222329; --muted:#747782;
+      --line:#e6e3df; --wine:#741b38; --wine-dark:#4d1429;
+      --gold:#b68b55; --soft:#f8f1f2; --green:#286b51;
+      --shadow:0 12px 32px rgba(32,25,27,.055);
+    }
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.5 Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}
+    a{color:inherit}
+    .shell{width:min(1080px,calc(100% - 48px));margin:0 auto;padding:28px 0 24px}
+    .top{display:flex;align-items:center;justify-content:space-between;gap:20px;padding-bottom:22px;border-bottom:1px solid var(--line)}
+    .brand{display:flex;align-items:center;gap:12px}
+    .brand-mark{display:grid;place-items:center;width:34px;height:34px;border-radius:10px;background:var(--wine);color:#fff;font:600 17px Georgia,serif}
+    .brand-name{font:600 12px Georgia,serif;letter-spacing:2.1px}
+    .brand-name span{color:var(--gold)}
+    .secure{display:flex;align-items:center;gap:7px;color:var(--muted);font-size:11px}
+    .secure svg{color:var(--green)}
+    .intro{padding:38px 0 24px;max-width:720px}
+    .eyebrow{display:flex;align-items:center;gap:9px;color:var(--wine);font-size:10px;font-weight:750;letter-spacing:1.5px;text-transform:uppercase}
+    .eyebrow:before{content:"";width:20px;height:1px;background:var(--gold)}
+    h1{margin:11px 0 8px;font:500 clamp(30px,5vw,44px)/1.08 Georgia,serif;letter-spacing:-.8px}
+    .lead{max-width:640px;margin:0;color:var(--muted);font-size:13px}
+    .section-head{display:flex;justify-content:space-between;align-items:end;gap:16px;margin:18px 0 12px}
+    .section-head h2{margin:0;font-size:13px;font-weight:750;letter-spacing:.2px}
+    .section-head p{margin:0;color:var(--muted);font-size:11px}
+    .apps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+    .app{position:relative;display:flex;flex-direction:column;min-height:226px;padding:19px;background:var(--surface);border:1px solid var(--line);border-radius:13px;text-decoration:none;box-shadow:var(--shadow);transition:transform .18s,border-color .18s,box-shadow .18s}
+    .app:hover{transform:translateY(-3px);border-color:#c9a9af;box-shadow:0 16px 34px rgba(32,25,27,.09)}
+    .app:focus-visible,.site-link:focus-visible{outline:3px solid #c9a9af;outline-offset:3px}
+    .app-top{display:flex;justify-content:space-between;align-items:center}
+    .number{color:#9a8f8b;font:11px ui-monospace,SFMono-Regular,Consolas,monospace;letter-spacing:1px}
+    .app-icon{width:39px;height:39px;display:grid;place-items:center;border-radius:11px;background:var(--soft);color:var(--wine)}
+    .app-icon svg{width:20px;height:20px}
+    .app h3{margin:18px 0 5px;font:500 22px Georgia,serif}
+    .app p{margin:0;color:var(--muted);font-size:12px;line-height:1.55}
+    .app-meta{margin-top:9px;color:#5d5e66;font-size:10px}
+    .open{display:flex;align-items:center;gap:7px;margin-top:auto;padding-top:20px;color:var(--wine);font-size:10px;font-weight:800;letter-spacing:.8px}
+    .open svg{width:14px;height:14px;transition:transform .18s}
+    .app:hover .open svg{transform:translateX(3px)}
+    .guide{display:grid;grid-template-columns:150px 1fr;gap:20px;align-items:center;margin-top:18px;padding:15px 18px;background:#efede9;border:1px solid #e5e1db;border-radius:12px}
+    .guide-title{font-size:11px;font-weight:800}
+    .guide-title span{display:block;margin-top:2px;color:var(--muted);font-size:10px;font-weight:500}
+    .steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+    .step{display:flex;align-items:center;gap:8px;color:#555760;font-size:10px}
+    .step b{display:grid;place-items:center;flex:0 0 22px;height:22px;border-radius:50%;background:#fff;color:var(--wine);font:700 10px ui-monospace,monospace}
+    .bottom{display:flex;align-items:center;justify-content:space-between;gap:18px;margin-top:26px;padding-top:17px;border-top:1px solid var(--line)}
+    .note{color:var(--muted);font-size:10px}
+    .site-link{display:inline-flex;align-items:center;gap:7px;color:var(--wine);font-size:11px;font-weight:700;text-decoration:none}
+    .site-link:hover{text-decoration:underline}
+    .site-link svg{width:14px;height:14px}
+    @media(max-width:760px){.apps{grid-template-columns:1fr}.app{min-height:0}.app h3{margin-top:13px}.open{padding-top:17px}.guide{grid-template-columns:1fr;gap:12px}.steps{grid-template-columns:1fr;gap:8px}}
+    @media(max-width:480px){.shell{width:calc(100% - 32px);padding-top:18px}.top{align-items:flex-start}.secure{max-width:120px;text-align:right;font-size:10px}.intro{padding-top:30px}.bottom{align-items:flex-start;flex-direction:column;gap:9px}}
+    @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition:none!important}}
   </style>
 </head>
 <body>
-  <main>
-    <header class="top"><div class="brand">LUXURIOSA <span> / </span> PRIVATE ACCESS</div><div class="private">ÁREA RESTRITA</div></header>
-    <section>
-      <div class="eyebrow">Portal de acesso · 442</div>
-      <h1>Um ponto de entrada.<br><em>Quatro caminhos.</em></h1>
-      <p class="intro">Escolha o ambiente que deseja acessar. Cada sistema possui sua própria finalidade e área de trabalho.</p>
-      <div class="grid">
-        <a class="item" href="/" aria-label="Acessar o site Luxuriosa">
-          <span class="num">01 / PÚBLICO</span><h2>Site Luxuriosa</h2><p>Loja, produtos, atendimento e informações da marca.</p><span class="go">ACESSAR SITE ↗</span>
-        </a>
-        <a class="item" href="/lux-gestao/" aria-label="Acessar o Sistema de Gestão">
-          <span class="num">02 / OPERAÇÃO</span><h2>Sistema de Gestão</h2><p>Caixa, vendas, pagamentos, estoque e rotinas operacionais.</p><span class="go">ACESSAR GESTÃO ↗</span>
-        </a>
-        <a class="item" href="/lux-gestao-pedidos/" aria-label="Acessar o painel de pedidos online">
-          <span class="num">03 / VENDAS ONLINE</span><h2>Pedidos Online</h2><p>Pagamentos confirmados, separação, expedição e entrega dos pedidos do site.</p><span class="go">ACESSAR PEDIDOS ↗</span>
-        </a>
-        <a class="item" href="/lux-central/" aria-label="Acessar o Lux-Central">
-          <span class="num">04 / INTELIGÊNCIA</span><h2>Lux-Central</h2><p>Indicadores financeiros, vendas, estoque e inteligência comercial.</p><span class="go">ACESSAR LUX-CENTRAL ↗</span>
-        </a>
+  <main class="shell">
+    <header class="top">
+      <div class="brand" aria-label="Luxuriosa">
+        <div class="brand-mark" aria-hidden="true">L</div>
+        <div class="brand-name">LUXURIOSA <span>/</span> OPERAÇÃO</div>
+      </div>
+      <div class="secure">
+        <svg viewBox="0 0 20 20" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><rect x="4" y="8" width="12" height="9" rx="2"/><path d="M6.5 8V5.8a3.5 3.5 0 0 1 7 0V8"/></svg>
+        Acesso aos ambientes administrativos
+      </div>
+    </header>
+
+    <section class="intro">
+      <div class="eyebrow">Portal interno · 442</div>
+      <h1>O que você precisa resolver hoje?</h1>
+      <p class="lead">Entre diretamente no sistema da tarefa. Cada ambiente tem uma função específica e mantém seu próprio acesso.</p>
+    </section>
+
+    <div class="section-head">
+      <h2>AMBIENTES DE TRABALHO</h2>
+      <p>Selecione para abrir</p>
+    </div>
+
+    <section class="apps" aria-label="Sistemas administrativos">
+      <a class="app" href="/lux-gestao/" aria-label="Abrir Sistema de Gestão">
+        <div class="app-top">
+          <span class="number">01 · OPERAÇÃO</span>
+          <span class="app-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 8h10M7 12h3m3 0h4M7 16h5m3 0h2"/></svg>
+          </span>
+        </div>
+        <h3>Lux-Gestão</h3>
+        <p>Controle a rotina da loja: caixa, vendas, pagamentos e estoque.</p>
+        <div class="app-meta">Use para registrar e administrar a operação.</div>
+        <span class="open">ABRIR SISTEMA <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 10h11M10 5l5 5-5 5"/></svg></span>
+      </a>
+
+      <a class="app" href="/lux-gestao-pedidos/" aria-label="Abrir Pedidos Online">
+        <div class="app-top">
+          <span class="number">02 · VENDAS ONLINE</span>
+          <span class="app-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h2l2 10h9l2-7H7"/><circle cx="10" cy="19" r="1.5"/><circle cx="17" cy="19" r="1.5"/><path d="M10 9h7m-3.5-3.5V12.5"/></svg>
+          </span>
+        </div>
+        <h3>Pedidos Online</h3>
+        <p>Acompanhe os pedidos do site, confira pagamentos e atualize separação e entrega.</p>
+        <div class="app-meta">Use para acompanhar cada pedido até a conclusão.</div>
+        <span class="open">ABRIR PEDIDOS <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 10h11M10 5l5 5-5 5"/></svg></span>
+      </a>
+
+      <a class="app" href="/lux-central/" aria-label="Abrir Lux-Central">
+        <div class="app-top">
+          <span class="number">03 · INTELIGÊNCIA</span>
+          <span class="app-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19V5m0 14h17"/><path d="m7 15 4-4 3 2 6-7"/><path d="M16 6h4v4"/></svg>
+          </span>
+        </div>
+        <h3>Lux-Central</h3>
+        <p>Consulte indicadores financeiros, desempenho comercial e alertas operacionais.</p>
+        <div class="app-meta">Use para entender os resultados e definir prioridades.</div>
+        <span class="open">ABRIR CENTRAL <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 10h11M10 5l5 5-5 5"/></svg></span>
+      </a>
+    </section>
+
+    <section class="guide" aria-label="Fluxo recomendado">
+      <div class="guide-title">FLUXO DO DIA<span>Atalhos por finalidade</span></div>
+      <div class="steps">
+        <div class="step"><b>1</b><span>Confira pedidos e pagamentos</span></div>
+        <div class="step"><b>2</b><span>Registre vendas e atualize estoque</span></div>
+        <div class="step"><b>3</b><span>Revise indicadores e pendências</span></div>
       </div>
     </section>
-    <footer class="foot"><span>LUXURIOSA · ACESSO ADMINISTRATIVO</span><span>SESSÃO PROTEGIDA PELO SISTEMA DE DESTINO</span></footer>
+
+    <footer class="bottom">
+      <div class="note">Cada sistema valida o acesso e as permissões de forma independente.</div>
+      <a class="site-link" href="/" aria-label="Ir para o site público da Luxuriosa">
+        Ir para o site público
+        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 15 15 5M6 5h9v9"/></svg>
+      </a>
+    </footer>
   </main>
 </body>
 </html>
