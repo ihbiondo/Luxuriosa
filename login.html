@@ -64,6 +64,12 @@
     .account-club strong{display:block;color:var(--gold);font:400 22px var(--serif)}
     .account-club p{margin:5px 0 12px;color:var(--muted);font-size:11px}
     .account-club a{font-size:11px;font-weight:600;text-decoration:none}
+    .interest-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .profile-progress{margin:15px 0 4px;padding:14px;border:1px solid rgba(212,175,124,.2);border-radius:10px;background:rgba(212,175,124,.035)}
+    .profile-progress-head{display:flex;justify-content:space-between;gap:10px;color:var(--blush);font-size:11px;font-weight:600}
+    .profile-progress-track{height:6px;margin:10px 0 7px;border-radius:99px;background:rgba(255,255,255,.1);overflow:hidden}
+    .profile-progress-track span{display:block;height:100%;width:0;background:var(--gold);border-radius:inherit;transition:width .2s}
+    .profile-progress small{color:var(--muted);font-size:10px;line-height:1.5}
     @media(max-width:560px){.account-home{grid-template-columns:1fr}.account-home a{min-height:0;display:grid;grid-template-columns:25px 1fr;align-items:center}.account-home a .tile-icon{grid-row:span 2}.account-home a span{grid-column:2}}
 
   </style>
@@ -133,10 +139,42 @@
                 </div>
               </div>
               <div class="field full">
+                <label>Categorias favoritas — escolha até 3</label>
+                <div class="colors interest-grid">
+                  <label class="color-option"><input type="checkbox" name="favoriteCategory" value="lingerie"> Lingerie</label>
+                  <label class="color-option"><input type="checkbox" name="favoriteCategory" value="cosmeticos_sensuais"> Cosméticos sensuais</label>
+                  <label class="color-option"><input type="checkbox" name="favoriteCategory" value="geles_lubrificantes"> Géis e lubrificantes</label>
+                  <label class="color-option"><input type="checkbox" name="favoriteCategory" value="acessorios_casais"> Acessórios para casais</label>
+                  <label class="color-option"><input type="checkbox" name="favoriteCategory" value="jogos_brincadeiras"> Jogos e brincadeiras</label>
+                  <label class="color-option"><input type="checkbox" name="favoriteCategory" value="massagem_relaxamento"> Massagem e relaxamento</label>
+                  <label class="color-option"><input type="checkbox" name="favoriteCategory" value="estimulacao"> Produtos de estimulação</label>
+                  <label class="color-option"><input type="checkbox" name="favoriteCategory" value="fantasias_acessorios"> Fantasias e acessórios</label>
+                  <label class="color-option"><input type="checkbox" name="favoriteCategory" value="kits_presentes"> Kits e presentes</label>
+                  <label class="color-option"><input type="checkbox" name="favoriteCategory" value="novidades_lancamentos"> Novidades e lançamentos</label>
+                </div>
+                <small class="email-change-help">Escolha apenas o que combina com seus interesses. Você poderá alterar essas preferências depois.</small>
+              </div>
+              <div class="field">
+                <label for="signupPreferredPriceRange">Faixa de preço preferida</label>
+                <select id="signupPreferredPriceRange"><option value="">Não defini uma faixa</option>
+                  <option value="ate_50">Até R$ 50</option>
+                  <option value="50_100">R$ 50 a R$ 100</option>
+                  <option value="100_200">R$ 100 a R$ 200</option>
+                  <option value="acima_200">Acima de R$ 200</option></select>
+              </div>
+              <div class="field">
+                <label for="signupPreferredOfferType">O que mais chama sua atenção?</label>
+                <select id="signupPreferredOfferType"><option value="">Sem preferência</option>
+                  <option value="descontos">Descontos e oportunidades</option>
+                  <option value="kits">Kits e combinações</option>
+                  <option value="novidades">Novidades e lançamentos</option>
+                  <option value="recomendacoes">Recomendações personalizadas</option></select>
+              </div>
+              <div class="field full">
                 <div style="padding:14px;border:1px solid rgba(212,175,124,.18);border-radius:9px;background:rgba(212,175,124,.035)">
                   <label style="display:flex;gap:10px;align-items:flex-start;font-size:11px;line-height:1.65;letter-spacing:0;cursor:pointer">
                     <input id="signupExperienceConsent" type="checkbox" style="width:16px;height:16px;flex:0 0 16px;margin:2px 0 0;accent-color:var(--wine)">
-                    <span><strong>Quero uma experiência mais personalizada (opcional).</strong><br>Autorizo o uso das preferências que eu informar voluntariamente, como cores favoritas, para adaptar a experiência e destacar opções relevantes. Não serão criados perfis sobre minha vida íntima nem inferências a partir de compras de produtos íntimos.</span>
+                    <span><strong>Quero uma experiência personalizada (opcional).</strong><br>Autorizo a Luxuriosa a usar minhas categorias favoritas, cores, faixa de preço e preferências de ofertas para recomendar produtos, organizar vantagens e melhorar a seleção de estoque. Posso alterar minhas escolhas na minha conta.</span>
                   </label>
                 </div>
               </div>
@@ -144,7 +182,7 @@
                 <div style="padding:14px;border:1px solid rgba(212,175,124,.18);border-radius:9px;background:rgba(212,175,124,.035)">
                   <label style="display:flex;gap:10px;align-items:flex-start;font-size:11px;line-height:1.65;letter-spacing:0;cursor:pointer">
                     <input id="signupAggregatedConsent" type="checkbox" style="width:16px;height:16px;flex:0 0 16px;margin:2px 0 0;accent-color:var(--wine)">
-                    <span><strong>Quero contribuir com a melhoria da Luxuriosa (opcional).</strong><br>Autorizo o uso de indicadores limitados de navegação e experiência para gerar estatísticas agregadas e efetivamente anonimizadas. Somente resultados sem identificação individual poderão ser compartilhados com parceiros para pesquisa e melhoria de serviços. Não compartilhamos nome, contato, endereço, identificadores de conta ou histórico individual de compras. A recusa não impede o cadastro e posso revogar esta autorização na minha conta.</span>
+                    <span><strong>Quero contribuir com a melhoria da Luxuriosa (opcional).</strong><br>Autorizo o uso de indicadores de navegação, interesse e compras em análises agregadas e efetivamente anonimizadas, para medir demanda e melhorar produtos e serviços. Somente resultados sem identificação individual poderão ser compartilhados com parceiros. Nome, contato, endereço e histórico individual de compras não serão compartilhados. Posso alterar esta autorização na minha conta.</span>
                   </label>
                 </div>
               </div>
@@ -211,7 +249,7 @@
               <div class="field full" style="margin:12px 0">
                 <label style="display:flex;gap:10px;align-items:flex-start;letter-spacing:0;line-height:1.6">
                   <input id="accountExperienceConsent" type="checkbox" style="width:16px;height:16px;flex:0 0 16px;margin:2px 0 0;accent-color:var(--wine)">
-                  <span>Permitir personalização com preferências que informei voluntariamente, como cores favoritas. Não inclui criação de perfis sobre vida íntima.</span>
+                  <span>Permitir o uso das categorias favoritas, cores, faixa de preço e preferências de ofertas que informei para recomendações, vantagens e melhor seleção de produtos.</span>
                 </label>
               </div>
               <div class="field full" style="margin:12px 0">
@@ -251,6 +289,43 @@
                   <label class="color-option"><input type="checkbox" name="accountFavoriteColor" value="Branco"> Branco</label>
                   <label class="color-option"><input type="checkbox" name="accountFavoriteColor" value="Outra"> Outra</label>
                 </div>
+              </div>
+              <div class="section-label">Perfil de preferências</div>
+              <div class="field full">
+                <label>Categorias favoritas — escolha até 3</label>
+                <div class="colors interest-grid">
+                  <label class="color-option"><input type="checkbox" name="accountFavoriteCategory" value="lingerie"> Lingerie</label>
+                  <label class="color-option"><input type="checkbox" name="accountFavoriteCategory" value="cosmeticos_sensuais"> Cosméticos sensuais</label>
+                  <label class="color-option"><input type="checkbox" name="accountFavoriteCategory" value="geles_lubrificantes"> Géis e lubrificantes</label>
+                  <label class="color-option"><input type="checkbox" name="accountFavoriteCategory" value="acessorios_casais"> Acessórios para casais</label>
+                  <label class="color-option"><input type="checkbox" name="accountFavoriteCategory" value="jogos_brincadeiras"> Jogos e brincadeiras</label>
+                  <label class="color-option"><input type="checkbox" name="accountFavoriteCategory" value="massagem_relaxamento"> Massagem e relaxamento</label>
+                  <label class="color-option"><input type="checkbox" name="accountFavoriteCategory" value="estimulacao"> Produtos de estimulação</label>
+                  <label class="color-option"><input type="checkbox" name="accountFavoriteCategory" value="fantasias_acessorios"> Fantasias e acessórios</label>
+                  <label class="color-option"><input type="checkbox" name="accountFavoriteCategory" value="kits_presentes"> Kits e presentes</label>
+                  <label class="color-option"><input type="checkbox" name="accountFavoriteCategory" value="novidades_lancamentos"> Novidades e lançamentos</label>
+                </div>
+              </div>
+              <div class="field">
+                <label for="accountPreferredPriceRange">Faixa de preço preferida</label>
+                <select id="accountPreferredPriceRange"><option value="">Não defini uma faixa</option>
+                  <option value="ate_50">Até R$ 50</option>
+                  <option value="50_100">R$ 50 a R$ 100</option>
+                  <option value="100_200">R$ 100 a R$ 200</option>
+                  <option value="acima_200">Acima de R$ 200</option></select>
+              </div>
+              <div class="field">
+                <label for="accountPreferredOfferType">Tipo de oferta preferida</label>
+                <select id="accountPreferredOfferType"><option value="">Sem preferência</option>
+                  <option value="descontos">Descontos e oportunidades</option>
+                  <option value="kits">Kits e combinações</option>
+                  <option value="novidades">Novidades e lançamentos</option>
+                  <option value="recomendacoes">Recomendações personalizadas</option></select>
+              </div>
+              <div class="profile-progress field full" id="profileCompletion" aria-live="polite">
+                <div class="profile-progress-head"><span id="profileProgressLabel">Seu perfil está começando</span><strong id="profileProgressValue">0%</strong></div>
+                <div class="profile-progress-track"><span id="profileProgressBar"></span></div>
+                <small id="profileProgressHint">Escolha categorias, faixa de preço e ofertas para receber recomendações mais alinhadas às suas preferências.</small>
               </div>
               <div class="actions"><button class="primary" id="saveAccountButton" type="submit">SALVAR ALTERAÇÕES</button></div>
             </form>
@@ -436,7 +511,24 @@
       return text;
     }
 
-    const ACCOUNT_CONSENT_VERSION = "luxuriosa-account-data-v1-2026-11";
+    const ACCOUNT_CONSENT_VERSION = "luxuriosa-account-data-v2-2026-11";
+
+    function updatePreferenceProgress(categories, priceRange, offerType) {
+      const selectedCategories = Array.isArray(categories) ? categories : [];
+      const currentPrice = priceRange ?? $("accountPreferredPriceRange")?.value ?? "";
+      const currentOffer = offerType ?? $("accountPreferredOfferType")?.value ?? "";
+      const progress = (selectedCategories.length ? 50 : 0) + (currentPrice ? 25 : 0) + (currentOffer ? 25 : 0);
+      const label = progress === 100 ? "Perfil completo" : progress >= 50 ? "Perfil personalizado" : "Seu perfil está começando";
+      const hint = progress === 100
+        ? "Pronto. Suas preferências estão completas para recomendações, combinações e oportunidades mais relevantes."
+        : progress >= 50
+          ? "Continue preenchendo sua faixa de preço e o tipo de oferta para refinar suas recomendações."
+          : "Escolha até três categorias, sua faixa de preço e o tipo de oferta que prefere.";
+      if ($("profileProgressLabel")) $("profileProgressLabel").textContent = label;
+      if ($("profileProgressValue")) $("profileProgressValue").textContent = progress + "%";
+      if ($("profileProgressBar")) $("profileProgressBar").style.width = progress + "%";
+      if ($("profileProgressHint")) $("profileProgressHint").textContent = hint;
+    }
 
     async function syncSignupConsents(user) {
       const meta = user?.user_metadata || {};
@@ -479,7 +571,13 @@
       if (profileResult.error) throw profileResult.error;
 
       const colors = Array.isArray(meta.favorite_colors) ? meta.favorite_colors.slice(0, 3) : [];
-      const preferencesResult = await supabase.from("preferences").update({ favorite_colors: colors }).eq("user_id", user.id);
+      const categories = Array.isArray(meta.favorite_categories) ? meta.favorite_categories.slice(0, 3) : [];
+      const preferencesResult = await supabase.from("preferences").update({
+        favorite_colors: colors,
+        favorite_categories: categories,
+        preferred_price_range: meta.preferred_price_range || null,
+        preferred_offer_type: meta.preferred_offer_type || null
+      }).eq("user_id", user.id);
       if (preferencesResult.error) throw preferencesResult.error;
 
       const existing = await supabase.from("addresses").select("id").eq("user_id", user.id).limit(1);
@@ -501,7 +599,7 @@
         });
         if (addressResult.error) throw addressResult.error;
       }
-      const metadataResult = await supabase.auth.updateUser({ data: { account_setup_completed: true, full_name: null, phone: null, birth_date: null, favorite_colors: null, address_postal_code: null, address_street: null, address_number: null, address_complement: null, address_neighborhood: null, address_city: null, address_state: null } });
+      const metadataResult = await supabase.auth.updateUser({ data: { account_setup_completed: true, full_name: null, phone: null, birth_date: null, favorite_colors: null, favorite_categories: null, preferred_price_range: null, preferred_offer_type: null, address_postal_code: null, address_street: null, address_number: null, address_complement: null, address_neighborhood: null, address_city: null, address_state: null } });
       if (metadataResult.error) throw metadataResult.error;
     }
 
@@ -509,8 +607,8 @@
       const [profileResult, addressResult, preferencesResult, consentResult] = await Promise.all([
         supabase.from("profiles").select("full_name, display_name, phone, birth_date").eq("id", user.id).maybeSingle(),
         supabase.from("addresses").select("id, postal_code, street, number, complement, neighborhood, city, state").eq("user_id", user.id).eq("is_default", true).maybeSingle(),
-        supabase.from("preferences").select("favorite_colors").eq("user_id", user.id).maybeSingle(),
-        supabase.from("account_data_consents").select("purpose, granted, created_at").eq("user_id", user.id).order("created_at", { ascending: false }).limit(20)
+        supabase.from("preferences").select("favorite_colors, favorite_categories, preferred_price_range, preferred_offer_type").eq("user_id", user.id).maybeSingle(),
+        supabase.from("account_data_consents").select("purpose, granted, consent_text_version, created_at").eq("user_id", user.id).order("created_at", { ascending: false }).limit(20)
       ]);
       if (profileResult.error) throw profileResult.error;
       if (addressResult.error) throw addressResult.error;
@@ -520,14 +618,15 @@
       (consentResult.data || []).forEach(row => {
         if (!latestConsent.has(row.purpose)) latestConsent.set(row.purpose, row);
       });
-      $("accountExperienceConsent").checked = latestConsent.get("experience_personalization")?.granted === true;
-      $("accountAggregatedConsent").checked = latestConsent.get("aggregated_insights_sharing")?.granted === true;
+      $("accountExperienceConsent").checked = latestConsent.get("experience_personalization")?.granted === true && latestConsent.get("experience_personalization")?.consent_text_version === ACCOUNT_CONSENT_VERSION;
+      $("accountAggregatedConsent").checked = latestConsent.get("aggregated_insights_sharing")?.granted === true && latestConsent.get("aggregated_insights_sharing")?.consent_text_version === ACCOUNT_CONSENT_VERSION;
       $("accountConsentStatus").textContent = consentResult.data?.length
         ? "Preferências registradas. Última atualização: " + new Date(consentResult.data[0].created_at).toLocaleString("pt-BR") + "."
         : "Nenhuma autorização opcional ativa. Os recursos essenciais da conta continuam funcionando.";
       const profile = profileResult.data || {};
       const address = addressResult.data || {};
       const colors = preferencesResult.data?.favorite_colors || [];
+      const categories = preferencesResult.data?.favorite_categories || [];
       $("accountEmail").textContent = user.email || "";
       $("accountFullName").value = profile.full_name || user.user_metadata?.full_name || "";
       $("accountBirthDate").value = profile.birth_date || user.user_metadata?.birth_date || "";
@@ -542,6 +641,12 @@
       document.querySelectorAll('input[name="accountFavoriteColor"]').forEach((input) => {
         input.checked = colors.includes(input.value);
       });
+      document.querySelectorAll('input[name="accountFavoriteCategory"]').forEach((input) => {
+        input.checked = categories.includes(input.value);
+      });
+      $("accountPreferredPriceRange").value = preferencesResult.data?.preferred_price_range || "";
+      $("accountPreferredOfferType").value = preferencesResult.data?.preferred_offer_type || "";
+      updatePreferenceProgress(categories, $("accountPreferredPriceRange").value, $("accountPreferredOfferType").value);
       const displayName = profile.display_name || profile.full_name?.trim().split(/\s+/)[0] || user.user_metadata?.display_name || user.email || "cliente";
       $("accountGreeting").textContent = "Olá, " + displayName + "!";
     }
@@ -722,6 +827,10 @@
       if (!/^[A-Z]{2}$/.test(state)) return message("Informe uma UF válida com duas letras.", true);
       const colors = Array.from(document.querySelectorAll('input[name="accountFavoriteColor"]:checked')).map((input) => input.value);
       if (colors.length > 3) return message("Escolha no máximo três cores favoritas.", true);
+      const categories = Array.from(document.querySelectorAll('input[name="accountFavoriteCategory"]:checked')).map((input) => input.value);
+      if (categories.length > 3) return message("Escolha no máximo três categorias favoritas.", true);
+      const preferredPriceRange = $("accountPreferredPriceRange").value;
+      const preferredOfferType = $("accountPreferredOfferType").value;
       const button = $("saveAccountButton");
       button.disabled = true;
       button.textContent = "SALVANDO...";
@@ -743,8 +852,14 @@
         const { data: userData, error: userError } = await supabase.auth.getUser();
         if (userError) throw userError;
         if (!userData.user) throw new Error("Sua sessão expirou. Entre novamente.");
+        const preferencesResult = await supabase.from("preferences").update({
+          favorite_categories: categories,
+          preferred_price_range: preferredPriceRange || null,
+          preferred_offer_type: preferredOfferType || null
+        }).eq("user_id", userData.user.id);
+        if (preferencesResult.error) throw preferencesResult.error;
         await loadAccountData(userData.user);
-        message("Seus dados foram atualizados com sucesso.");
+        message("Seus dados e preferências foram atualizados com sucesso.");
       } catch (error) {
         console.error("Falha ao atualizar conta:", error);
         message("Não foi possível salvar todas as alterações. " + friendlyError(error), true);
@@ -752,6 +867,13 @@
         button.disabled = false;
         button.textContent = "SALVAR ALTERAÇÕES";
       }
+    });
+
+    document.querySelectorAll('input[name="accountFavoriteCategory"], #accountPreferredPriceRange, #accountPreferredOfferType').forEach((control) => {
+      control.addEventListener("change", () => {
+        const categories = Array.from(document.querySelectorAll('input[name="accountFavoriteCategory"]:checked')).map((input) => input.value);
+        updatePreferenceProgress(categories);
+      });
     });
 
     $("loginTab").addEventListener("click", () => showForm("login"));
@@ -787,6 +909,10 @@
       if ($("signupPassword").value !== $("confirmPassword").value) return message("As senhas não coincidem.", true);
       const colors = Array.from(document.querySelectorAll('input[name="favoriteColor"]:checked')).map((el) => el.value);
       if (colors.length > 3) return message("Escolha no máximo três cores favoritas.", true);
+      const categories = Array.from(document.querySelectorAll('input[name="favoriteCategory"]:checked')).map((el) => el.value);
+      if (categories.length > 3) return message("Escolha no máximo três categorias favoritas.", true);
+      const preferredPriceRange = $("signupPreferredPriceRange").value;
+      const preferredOfferType = $("signupPreferredOfferType").value;
       const birth = $("birthDate").value;
       if (!birth || new Date(birth + "T00:00:00") >= new Date()) return message("Informe uma data de nascimento válida.", true);
       const birthDate = new Date(birth + "T00:00:00");
@@ -817,6 +943,9 @@
               phone,
               birth_date: birth,
               favorite_colors: colors,
+              favorite_categories: categories,
+              preferred_price_range: preferredPriceRange,
+              preferred_offer_type: preferredOfferType,
               address_postal_code: postalCode,
               address_street: $("street").value.trim(),
               address_number: $("addressNumber").value.trim(),
