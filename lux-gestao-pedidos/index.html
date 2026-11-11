@@ -86,7 +86,7 @@ input,select{width:100%;min-width:0;border:1px solid var(--line);border-radius:8
     async function invokeOrdersAdmin(body){
       const {data:{session},error}=await supabase.auth.getSession();if(error)throw error;if(!session)throw new Error("Sua sessão expirou. Entre novamente.");
       const response=await fetch(URL+"/functions/v1/orders-admin",{method:"POST",headers:{"content-type":"application/json","apikey":KEY,"authorization":"Bearer "+session.access_token},body:JSON.stringify(body)});
-      const result=await response.json().catch(()=>({}));if(!response.ok||!result.ok)throw new Error(result.error||"Não foi possível atualizar o pedido.");return result;
+      const result=await response.json().catch(()=>({}));if(!response.ok||!result.ok)throw new Error(result.error||"Não foi possível concluir a operação administrativa.");return result;
     }
     function currentStatus(order){
       if(order.payment_status==="review_required")return "Pagamento em conferência";
@@ -269,7 +269,7 @@ input,select{width:100%;min-width:0;border:1px solid var(--line);border-radius:8
     async function load(){
       $("refresh").disabled=true;$("refresh").textContent="ATUALIZANDO…";
       try{
-        const data=await invoke({action:"admin_dashboard",days:Number($("period").value),q:"",status:""});
+        const data=await invokeOrdersAdmin({action:"admin_dashboard",days:Number($("period").value),q:"",status:""});
         allOrders=data.orders||[];
         const pending=allOrders.filter(o=>o.payment_status==="pending"&&o.status!=="cancelled").length;
         const paid=allOrders.filter(o=>o.payment_status==="paid").length;

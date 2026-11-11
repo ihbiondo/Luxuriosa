@@ -130,3 +130,8 @@ Contagens são fotografia do banco no momento da inspeção; não são metas nem
 3. Mapear o aplicativo desktop Tauri e decidir se será mantido como cliente sincronizado ou aposentado.
 4. Separar gradualmente ações de `management-sales` por domínio sem quebrar contratos existentes.
 5. Validar ponta a ponta: Loja → pedido → checkout InfinitePay → webhook/consulta → sincronização para Gestão → indicadores na Inteligência.
+
+
+### Separação do dashboard administrativo
+
+A ação `admin_dashboard` é atendida pelo endpoint autenticado `orders-admin`. O endpoint legado `cart-orders` mantém a ação por compatibilidade temporária; a interface Pedidos Online utiliza o endpoint dedicado. Consultas de atividade ao vivo e inteligência permanecem no legado até suas respectivas migrações e validações.
