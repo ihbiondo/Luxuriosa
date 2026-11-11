@@ -21,6 +21,8 @@ on:
       - "supabase/functions/payment-status/**"
       - "supabase/functions/payment-admin/**"
       - "supabase/functions/luxuriosa-intelligence/**"
+      - "supabase/functions/management-sales/**"
+      - "supabase/functions/_shared/inventory.*"
       - "supabase/functions/orders-admin/**"
       - "supabase/config.toml"
       - "supabase/functions/infinitepay-test-checkout/**"
@@ -49,6 +51,8 @@ on:
       - "supabase/functions/payment-status/**"
       - "supabase/functions/payment-admin/**"
       - "supabase/functions/luxuriosa-intelligence/**"
+      - "supabase/functions/management-sales/**"
+      - "supabase/functions/_shared/inventory.*"
       - "supabase/functions/infinitepay-test-checkout/**"
       - "supabase/functions/infinitepay-test-webhook/**"
       - "supabase/migrations/20261110153000_isolated_infinitepay_test_payments.sql"
@@ -97,6 +101,9 @@ jobs:
           deno check supabase/functions/payment-status/index.ts
           deno check supabase/functions/payment-admin/index.ts
           deno check supabase/functions/luxuriosa-intelligence/index.ts
+          deno check supabase/functions/management-sales/index.ts
+          deno check supabase/functions/_shared/inventory.ts
+          deno test supabase/functions/_shared/inventory.test.ts
           deno check supabase/functions/orders-admin/index.ts
           deno check supabase/functions/infinitepay-test-checkout/index.ts
           deno check supabase/functions/infinitepay-test-webhook/index.ts
