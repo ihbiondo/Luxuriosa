@@ -269,6 +269,17 @@
 
     function abrir() {
       if (jaFoiExibidoRecentemente()) return;
+
+      /* Não empilha o convite de cadastro sobre as preferências de cookies. */
+      var consentOverlay = $("lux-cookie-overlay");
+      if (document.body.classList.contains("lux-consent-open") ||
+          (consentOverlay && consentOverlay.classList.contains("open"))) {
+        window.addEventListener("lux:consent-updated", function () {
+          timer = window.setTimeout(abrir, 5000);
+        }, { once: true });
+        return;
+      }
+
       focoAnterior = document.activeElement;
       overlay.classList.add("open");
       overlay.setAttribute("aria-hidden", "false");
@@ -294,7 +305,7 @@
 
     function agendar() {
       if (timer !== null) window.clearTimeout(timer);
-      timer = window.setTimeout(abrir, 10000);
+      timer = window.setTimeout(abrir, 12000);
     }
 
     if (gate && gate.classList.contains("open")) {
