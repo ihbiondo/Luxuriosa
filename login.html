@@ -152,6 +152,7 @@
               <div class="section-label" id="ordersHeading">Meus pedidos</div>
               <p class="orders-intro">Acompanhe as solicitações feitas pelo site e o andamento de cada pedido. Solicitações encaminhadas ao WhatsApp ficam aguardando confirmação; a compra só é confirmada após o atendimento.</p>
               <div id="accountOrders" class="orders-list" aria-live="polite"><p class="orders-empty">Carregando seu histórico...</p></div>
+              <p class="orders-intro"><a href="/acompanhar-pedido/">ABRIR ACOMPANHAMENTO COMPLETO DOS PEDIDOS →</a></p>
             </section>
             <form id="emailChangeForm" class="account-form email-change-form">
               <div class="section-label">E-mail de acesso</div>
@@ -541,6 +542,8 @@
         await loadAccountOrders(user);
         await loadAdminAccess(user);
         activeUserId = user.id;
+        const requestedPage = new URLSearchParams(window.location.search).get("redirect");
+        if (requestedPage === "acompanhar-pedido/") window.location.replace("/acompanhar-pedido/");
       } catch (error) {
         activeUserId = null;
         message("Não foi possível carregar todos os dados da sua conta. Atualize a página para tentar novamente.", true);
