@@ -147,9 +147,9 @@ async function load(){
    supabase.functions.invoke("management-sales",{body:{action:"cost-list"}}),
    supabase.functions.invoke("management-sales",{body:{action:"kit-recipes-list"}}),
    supabase.functions.invoke("management-sales",{body:{action:"expense-list"}}),
-   supabase.functions.invoke("management-sales",{body:{action:"customer-insights",period_days:days}})
+   supabase.functions.invoke("management-sales",{body:{action:"customer-insights",period_days:days}}).catch(error=>({error}))
   ]);
-  const responses=[["indicadores",analytics],["estoque",stock],["custos",costs],["composições dos kits",kits],["despesas",expenses],["inteligência de clientes",customers]];
+  const responses=[["indicadores",analytics],["estoque",stock],["custos",costs],["composições dos kits",kits],["despesas",expenses]];
   for(const [label,result] of responses){
    if(result.error)throw result.error;
    if(!result.data?.ok)throw new Error(result.data?.error||"Falha ao consultar "+label+".");
@@ -190,7 +190,13 @@ async function load(){
   ]);
   list("methods",(c.payment_methods||[]).map(x=>row(x.method,num(x.paid_count)+" pagas · "+money(x.received_cents/100))),"Nenhum pagamento registrado.");
   list("eventsList",(pulse.events||[]).slice(0,8).map(x=>row(x.event_name,num(x.count)+" eventos · "+num(x.sessions)+" sessões")),"Nenhum evento registrado.");
-  renderCustomerInsights(customers.data);
+  if(customers.error || !customers.data?.ok){
+   const customerError=customers.error?.message||customers.data?.error||"Não foi possível consultar os indicadores de clientes.";
+   message("customerPeriod","INDISPONÍVEL");
+   message("customerCoverageNote","A inteligência de clientes não foi atualizada nesta consulta. Os demais indicadores do Lux-Central continuam disponíveis. "+customerError);
+  }else{
+   renderCustomerInsights(customers.data);
+  }
   const notices=[];
   if(!c.paid_count)notices.push("Ainda não há vendas pagas registradas no Gestão.");
   if(!costRows.length)notices.push("Sem custos cadastrados: lucro e margem não podem ser calculados.");
