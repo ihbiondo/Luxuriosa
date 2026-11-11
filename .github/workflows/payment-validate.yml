@@ -92,22 +92,21 @@ jobs:
           deno check supabase/functions/infinitepay-test-checkout/index.ts
           deno check supabase/functions/infinitepay-test-webhook/index.ts
 
-      - name: Instalar cliente PostgreSQL
+      - name: Preparar acesso ao PostgreSQL 17
         run: |
-          sudo apt-get update
-          sudo apt-get install -y postgresql-client
+          POSTGRES_CONTAINER=$(docker ps --format '{{.ID}} {{.Image}}' | awk '$2 ~ /^postgres:17/ {print $1; exit}')
+          test -n "$POSTGRES_CONTAINER"
+          echo "POSTGRES_CONTAINER=$POSTGRES_CONTAINER" >> "$GITHUB_ENV"
 
       - name: Testar confirmação atômica no PostgreSQL 17
-        env:
-          PGPASSWORD: postgres
         run: |
-          psql -h localhost -U postgres -d luxuriosa_test -v ON_ERROR_STOP=1 -f .github/scripts/payment-confirmation.integration.sql
+          docker cp .github/scripts/payment-confirmation.integration.sql "$POSTGRES_CONTAINER":/tmp/payment-confirmation.integration.sql
+          docker exec -e PGPASSWORD=postgres "$POSTGRES_CONTAINER" psql -h 127.0.0.1 -U postgres -d luxuriosa_test -v ON_ERROR_STOP=1 -f /tmp/payment-confirmation.integration.sql
 
       - name: Testar isolamento do pagamento de R$ 1
-        env:
-          PGPASSWORD: postgres
         run: |
-          psql -h localhost -U postgres -d luxuriosa_test -v ON_ERROR_STOP=1 -f .github/scripts/infinitepay-test.integration.sql
+          docker cp .github/scripts/infinitepay-test.integration.sql "$POSTGRES_CONTAINER":/tmp/infinitepay-test.integration.sql
+          docker exec -e PGPASSWORD=postgres "$POSTGRES_CONTAINER" psql -h 127.0.0.1 -U postgres -d luxuriosa_test -v ON_ERROR_STOP=1 -f /tmp/infinitepay-test.integration.sql
 
       - name: Testar contrato de confirmação
         run: node --test .github/scripts/payment-confirmation.test.cjs
