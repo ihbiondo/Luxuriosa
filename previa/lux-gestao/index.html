@@ -412,7 +412,7 @@ function renderOverview(){
 }
 function renderCart(){
  const rows=$("cartRows");if(!cart.length)rows.innerHTML=emptyRow(4,"Adicione produtos para começar.");
- else rows.innerHTML=cart.map((item,i)=>'<tr><td><strong>'+safeText(item.product_name)+'</strong>'+(item.is_gift?'<span class="status neutral">BRINDE · R$ 0,00</span>':'')+'</td><td>'+number(item.quantity)+'</td><td class="text-right">'+money(item.quantity*item.unit_price_cents)+'</td><td><button class="small-btn danger" data-remove-cart="'+i+'" type="button">Remover</button></td></tr>').join("");
+ else rows.innerHTML=cart.map((item,i)=>'<tr><td><strong>'+safeText(item.product_name)+'</strong>'+(item.is_gift?'<span class="status neutral">BRINDE · R$ 0,00</span>':item.is_kit_component?'<span class="status neutral">DADO ESCOLHIDO · INCLUSO NO KIT</span>':'')+'</td><td>'+number(item.quantity)+'</td><td class="text-right">'+money(item.quantity*item.unit_price_cents)+'</td><td><button class="small-btn danger" data-remove-cart="'+i+'" type="button">Remover</button></td></tr>').join("");
  const subtotal=cart.reduce((sum,item)=>sum+item.quantity*item.unit_price_cents,0),discount=cents($("posDiscount").value),total=Math.max(0,subtotal-discount);
  $("cartSubtotal").textContent=money(subtotal);$("cartDiscount").textContent=money(discount);$("cartTotal").textContent=money(total);
  $("saveSaleBtn").disabled=!cart.length||total<=0;
@@ -641,8 +641,25 @@ async function saveExpense(event){
 function addCartItem(){
  const id=$("posProduct").value,product=catalog.find(p=>String(p.id)===id),quantity=Number($("posQuantity").value),isGift=$("posGift").checked;
  if(!product||!Number.isSafeInteger(quantity)||quantity<1||quantity>999){showNotice("Selecione um produto e uma quantidade válida.","error");return;}
- const item=cart.find(x=>String(x.product_id)===String(product.id)&&Boolean(x.is_gift)===isGift),unitPrice=isGift?0:cents(product.preco);
- if(item)item.quantity+=quantity;else cart.push({product_id:String(product.id),product_name:product.nome,quantity,unit_price_cents:unitPrice,is_gift:isGift});
+ const variableDiceKits=new Set(["22","23","24","26","27","28","29"]);
+ const requiresDice=variableDiceKits.has(String(product.id));
+ let selectedDice=null;
+ if(requiresDice){
+  const choice=prompt("Escolha o Dado do Prazer que acompanha "+product.nome+":\n1 — Hétero\n2 — Gay\n3 — Lésbico","1");
+  if(choice===null)return;
+  const diceIds={"1":"2","2":"1","3":"3"},selectedId=diceIds[String(choice).trim()];
+  selectedDice=catalog.find(p=>String(p.id)===selectedId);
+  if(!selectedDice){showNotice("Escolha inválida. Selecione 1, 2 ou 3 para a versão do dado.","error");return;}
+ }
+ const unitPrice=isGift?0:cents(product.preco);
+ if(requiresDice){
+  const cartKey=crypto.randomUUID();
+  cart.push({product_id:String(product.id),product_name:product.nome,quantity,unit_price_cents:unitPrice,is_gift:isGift,cart_key:cartKey});
+  cart.push({product_id:String(selectedDice.id),product_name:selectedDice.nome,quantity,unit_price_cents:0,is_kit_component:true,kit_parent_key:cartKey});
+ }else{
+  const item=cart.find(x=>String(x.product_id)===String(product.id)&&Boolean(x.is_gift)===isGift&&!x.is_kit_component&&!x.cart_key);
+  if(item)item.quantity+=quantity;else cart.push({product_id:String(product.id),product_name:product.nome,quantity,unit_price_cents:unitPrice,is_gift:isGift});
+ }
  $("posGift").checked=false;$("posQuantity").value="1";renderCart();
 }
 async function saveSale(){
@@ -700,7 +717,7 @@ $("refreshBtn").addEventListener("click",()=>loadData(true));
 document.querySelectorAll("[data-view]").forEach(el=>el.addEventListener("click",()=>nav(el.dataset.view)));
 document.addEventListener("click",event=>{
  const go=event.target.closest("[data-go]");if(go)nav(go.dataset.go);
- const remove=event.target.closest("[data-remove-cart]");if(remove){cart.splice(Number(remove.dataset.removeCart),1);renderCart();}
+ const remove=event.target.closest("[data-remove-cart]");if(remove){const index=Number(remove.dataset.removeCart),item=cart[index];if(item){const parentKey=item.kit_parent_key||item.cart_key;if(parentKey)cart=cart.filter(x=>x.cart_key!==parentKey&&x.kit_parent_key!==parentKey);else cart.splice(index,1);}renderCart();}
  const enable=event.target.closest("[data-enable-stock]");if(enable)enableStock(enable.dataset.enableStock);
  const config=event.target.closest("[data-config-stock]");if(config)enableStock(config.dataset.configStock);
  const move=event.target.closest("[data-move-stock]");if(move)openMovement(move.dataset.moveStock);
