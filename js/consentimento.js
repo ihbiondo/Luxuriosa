@@ -9,6 +9,12 @@
   var CLUB_INVITE_KEY = "lux_clube_convite_v1";
   var clubInviteScheduled = false;
 
+  function scheduleConsent() {
+    window.setTimeout(function () {
+      if (!consent) openConsent();
+    }, 60000);
+  }
+
   function clubInviteAlreadySeen() {
     try {
       var seenAt = Number(localStorage.getItem(CLUB_INVITE_KEY) || 0);
@@ -238,7 +244,7 @@
       document.body.classList.remove("gate-open");
       gate.classList.remove("open");
       gate.setAttribute("aria-hidden", "true");
-      if (consent) applyConsent();
+      if (consent) applyConsent(); else scheduleConsent();
       scheduleClubInvitation();
     } else {
       gate.classList.add("open");
