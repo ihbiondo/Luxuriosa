@@ -465,6 +465,16 @@ Deno.serve(async (request: Request) => {
       if (!productId || !productName || !Number.isSafeInteger(reorderPoint) || reorderPoint < 0 || reorderPoint > 1000000 || typeof body.stock_control_enabled !== "boolean") {
         return reply({ error: "Dados de controle de estoque inválidos." }, 400, origin);
       }
+      if (body.stock_control_enabled === true) {
+        const { data: currentStock, error: currentStockError } = await admin.from("management_inventory")
+          .select("stock_control_enabled")
+          .eq("product_id", productId)
+          .maybeSingle();
+        if (currentStockError) throw currentStockError;
+        if (currentStock?.stock_control_enabled !== true) {
+          return reply({ error: "A ativação exige contagem física. Use a ação de contagem em lote para registrar o saldo e ativar o controle na mesma transação." }, 409, origin);
+        }
+      }
       const { data, error } = await admin.from("management_inventory")
         .upsert({
           product_id: productId,
