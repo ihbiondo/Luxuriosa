@@ -163,6 +163,13 @@ function freightTier(distanceKm: number, rule: any, fulfillmentType: "express" |
   return null;
 }
 
+const KITS_WITH_DICE_CHOICE = new Set(["22", "23", "24", "27", "28", "29"]);
+const DICE_OPTIONS: Record<string, string> = {
+  "1": "Dado do Prazer — Gay",
+  "2": "Dado do Prazer — Hétero",
+  "3": "Dado do Prazer — Lésbico"
+};
+
 type CatalogProduct = {
   id: string | number;
   esgotado?: boolean;
@@ -242,6 +249,34 @@ Deno.serve(async (req: Request) => {
       if (unitCents < 1) return reply({ error: "Um produto está sem preço válido. Fale com a Luxuriosa." }, 409, origin);
       const productName = textValue(product.nome, 180);
       if (!productName) return reply({ error: "Produto inválido no catálogo." }, 409, origin);
+
+      const rawSelected = Array.isArray(raw?.selected_components) ? raw.selected_components : [];
+      const selectedComponents = rawSelected.map((component: any) => {
+        const selectedId = textValue(String(component?.product_id ?? ""), 10);
+        const selectedQuantity = Number(component?.quantity);
+        const selectedProduct = catalog.get(selectedId);
+        const selectedCategory = textValue(selectedProduct?.categoria || selectedProduct?.tipoProduto, 80).toLowerCase();
+        if (!Object.prototype.hasOwnProperty.call(DICE_OPTIONS, selectedId) ||
+            !selectedProduct || selectedCategory !== "jogos eróticos" ||
+            !Number.isSafeInteger(selectedQuantity) || selectedQuantity !== 1) {
+          return null;
+        }
+        return {
+          product_id: selectedId,
+          product_name: textValue(selectedProduct.nome, 180),
+          quantity: 1
+        };
+      });
+      if (selectedComponents.some((component: any) => component === null)) {
+        return reply({ error: "A versão do Dado do Prazer selecionada é inválida. Atualize a página e escolha novamente." }, 400, origin);
+      }
+      if (KITS_WITH_DICE_CHOICE.has(productId) && selectedComponents.length !== 1) {
+        return reply({ error: "Escolha a versão do Dado do Prazer antes de finalizar este kit." }, 400, origin);
+      }
+      if (!KITS_WITH_DICE_CHOICE.has(productId) && selectedComponents.length > 0) {
+        return reply({ error: "A escolha de componente não corresponde ao produto do carrinho." }, 400, origin);
+      }
+
       const lineCents = unitCents * quantity;
       if (!Number.isSafeInteger(lineCents) || lineCents > 100000000) {
         return reply({ error: "Valor do pedido fora do limite permitido." }, 400, origin);
@@ -255,7 +290,12 @@ Deno.serve(async (req: Request) => {
         sku: textValue(product.sku, 80) || null,
         quantity,
         unit_price: unitCents / 100,
-        product_snapshot: { id: productId, name: productName, category: product.categoria || product.tipoProduto || null }
+        product_snapshot: {
+          id: productId,
+          name: productName,
+          category: product.categoria || product.tipoProduto || null,
+          ...(selectedComponents.length ? { selected_components: selectedComponents } : {})
+        }
       });
     }
 
@@ -389,7 +429,8 @@ Deno.serve(async (req: Request) => {
       nome: item.product_name,
       quantidade: item.quantity,
       preco: item.unit_price,
-      sku: item.sku
+      sku: item.sku,
+      ...(item.product_snapshot?.selected_components ? { selected_components: item.product_snapshot.selected_components } : {})
     }));
 
     const { data: cart, error: cartError } = await admin.from("cart_sessions")
@@ -431,19 +472,27 @@ Deno.serve(async (req: Request) => {
         if (expireError) throw expireError;
       } else {
         const { data: existingItems, error: existingItemsError } = await admin.from("order_items")
-          .select("product_id, quantity, unit_price")
+          .select("product_id, quantity, unit_price, product_snapshot")
           .eq("order_id", pendingOrder.id);
         if (existingItemsError) throw existingItemsError;
+        const normalizeSelected = (snapshot: any) =>
+          (Array.isArray(snapshot?.selected_components) ? snapshot.selected_components : [])
+            .map((component: any) => String(component.product_id || "") + "x" + Number(component.quantity || 0))
+            .sort();
         const expectedItems = orderItems.map(item => ({
           product_id: item.product_id,
           quantity: item.quantity,
-          unit_price: Number(item.unit_price)
-        })).sort((a,b) => String(a.product_id).localeCompare(String(b.product_id)));
+          unit_price: Number(item.unit_price),
+          selected_components: normalizeSelected(item.product_snapshot)
+        })).sort((a,b) => String(a.product_id).localeCompare(String(b.product_id)) ||
+          JSON.stringify(a.selected_components).localeCompare(JSON.stringify(b.selected_components)));
         const savedItems = (existingItems || []).map(item => ({
           product_id: item.product_id,
           quantity: Number(item.quantity),
-          unit_price: Number(item.unit_price)
-        })).sort((a,b) => String(a.product_id).localeCompare(String(b.product_id)));
+          unit_price: Number(item.unit_price),
+          selected_components: normalizeSelected(item.product_snapshot)
+        })).sort((a,b) => String(a.product_id).localeCompare(String(b.product_id)) ||
+          JSON.stringify(a.selected_components).localeCompare(JSON.stringify(b.selected_components)));
         const sameItems = JSON.stringify(expectedItems) === JSON.stringify(savedItems);
         const priorAddress = pendingOrder.delivery_address || {};
         const addressKeys: Array<keyof typeof deliveryAddress> =
