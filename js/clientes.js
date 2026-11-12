@@ -334,9 +334,6 @@
           return { valido: false, motivo: "Escolha a versão do Dado do Prazer no kit antes de continuar." };
         }
       }
-      if (false) {
-        return { valido: false, motivo: "Há produtos indisponíveis no carrinho. Volte ao carrinho e remova esses itens antes de continuar." };
-      }
       if (item.preco === null || item.preco === undefined || item.preco === "" ||
           !Number.isFinite(preco) || preco <= 0 ||
           !Number.isInteger(quantidade) || quantidade < 1 || quantidade > 99) {
