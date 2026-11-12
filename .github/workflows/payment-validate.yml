@@ -158,11 +158,13 @@ jobs:
           const login = fs.readFileSync("login.html", "utf8");
           const tracking = fs.readFileSync("acompanhar-pedido/index.html", "utf8");
           const admin = fs.readFileSync("lux-gestao-pedidos/index.html", "utf8");
+          const previewAdmin = fs.readFileSync("previa/lux-gestao-pedidos/index.html", "utf8");
+          const ordersPanel = previewAdmin;
           const payment = fs.readFileSync("supabase/functions/create-payment-order/index.ts", "utf8");
           const ordersFunction = fs.readFileSync("supabase/functions/cart-orders/index.ts", "utf8");
           const ordersAdminFunction = fs.readFileSync("supabase/functions/orders-admin/index.ts", "utf8");
           cp.execFileSync(process.execPath, ["--check", "js/clientes.js"], { stdio: "inherit" });
-          for (const [file, html] of [["login.html", login], ["acompanhar-pedido/index.html", tracking], ["lux-gestao-pedidos/index.html", admin]]) {
+          for (const [file, html] of [["login.html", login], ["acompanhar-pedido/index.html", tracking], ["lux-gestao-pedidos/index.html", admin], ["previa/lux-gestao-pedidos/index.html", previewAdmin]]) {
             const scripts = [...html.matchAll(/<script\b[^>]*>([\s\S]*?)<\/script>/gi)];
             for (let i = 0; i < scripts.length; i++) {
               const path = "/tmp/" + file.replace(/[^a-z0-9]/gi, "-") + "-" + i + ".mjs";
@@ -175,15 +177,15 @@ jobs:
           if (!payment.includes('code: "account_required"')) throw new Error("A Edge Function precisa bloquear checkout sem conta.");
           if (!ordersFunction.includes('current.payment_status !== "paid"')) throw new Error("A operação administrativa precisa bloquear avanço sem pagamento confirmado.");
           if (!ordersFunction.includes('current.payment_status === "paid"') || !ordersFunction.includes("Faça a conferência e o estorno na InfinitePay")) throw new Error("O painel não pode cancelar pedido pago sem conciliação de estorno.");
-          if (!admin.includes('action:"admin_dashboard"') || !admin.includes('action:"admin_update_order_status"')) throw new Error("O painel Lux-Gestão precisa consultar e atualizar pedidos.");
-          if (!admin.includes('invokeOrdersAdmin({action:"admin_dashboard"') || !ordersAdminFunction.includes('action === "admin_dashboard"')) throw new Error("O dashboard precisa usar o endpoint administrativo isolado.");
-          if (!admin.includes("/functions/v1/orders-admin") || !ordersAdminFunction.includes('action === "admin_update_order_status"')) throw new Error("A atualização de etapa precisa usar o endpoint administrativo isolado.");
+          if (!ordersPanel.includes('action:"admin_dashboard"') || !ordersPanel.includes('action:"admin_update_order_status"')) throw new Error("O painel Lux-Gestão precisa consultar e atualizar pedidos.");
+          if (!ordersPanel.includes('invokeOrdersAdmin({action:"admin_dashboard"') || !ordersAdminFunction.includes('action === "admin_dashboard"')) throw new Error("O dashboard precisa usar o endpoint administrativo isolado.");
+          if (!ordersPanel.includes("/functions/v1/orders-admin") || !ordersAdminFunction.includes('action === "admin_update_order_status"')) throw new Error("A atualização de etapa precisa usar o endpoint administrativo isolado.");
           const webhook = fs.readFileSync("supabase/functions/infinitepay-webhook/index.ts", "utf8");
           if (!payment.includes('events: ["created", "paid", "settled", "refunded", "canceled", "payment_failed"]')) throw new Error("O checkout precisa assinar o evento created para monitorar a entrega do webhook.");
           if (!webhook.includes('eventName === "created"') || !webhook.includes('eventType === "created"')) throw new Error("O webhook precisa registrar o evento created sem alterar o pedido.");
           if (!webhook.includes('infinitepay-webhook.unclassified-event') || !webhook.includes("payloadKeys")) throw new Error("O webhook precisa registrar diagnóstico seguro quando não reconhecer o evento recebido.");
           const paymentAdmin = fs.readFileSync("supabase/functions/payment-admin/index.ts", "utf8");
-          if (!admin.includes('/functions/v1/payment-admin') || !admin.includes('action:"reconcile_payment"')) throw new Error("O painel precisa acionar a conciliação administrativa da InfinitePay.");
+          if (!ordersPanel.includes('/functions/v1/payment-admin') || !ordersPanel.includes('action:"reconcile_payment"')) throw new Error("O painel precisa acionar a conciliação administrativa da InfinitePay.");
           if (!ordersFunction.includes("payment_checkout_url, payment_expires_at, payment_amount_cents")) throw new Error("O painel precisa receber link, expiração e valor da cobrança.");
           if (!paymentAdmin.includes('action === "reconcile_payment"') || !paymentAdmin.includes('/functions/v1/payment-status')) throw new Error("A conciliação precisa consultar o verificador da InfinitePay.");
           if (!paymentAdmin.includes('references_required') || !paymentAdmin.includes('payment_provider_events')) throw new Error("A conciliação precisa recuperar referências do webhook ou solicitar os dados manualmente.");
