@@ -37,6 +37,7 @@ on:
       - "gestao-privada-8f2c6d.html"
       - "previa/lux-central/index.html"
       - "previa/lux-gestao/index.html"
+      - "previa/lux-gestao/index.html"
       - "pagamento-retorno.html"
       - "supabase/functions/create-payment-order/**"
       - "acompanhar-pedido/**"
@@ -273,6 +274,19 @@ jobs:
             if (!html.includes(phrase)) throw new Error("Lux-Gestão precisa manter a função clara: " + phrase);
           }
           if (!html.includes('href="/lux-gestao-pedidos/"')) throw new Error("Lux-Gestão deve manter o acesso separado aos Pedidos Online.");
+          if (!html.includes('id="configureFixedKitRecipesBtn"') || !html.includes("async function configureFixedKitRecipes")) {
+            throw new Error("Lux-Gestão precisa oferecer o cadastro em lote das receitas fixas de kits.");
+          }
+          for (const kitId of ["10", "25", "26"]) {
+            if (!html.includes('kitId:"' + kitId + '"')) throw new Error("Receita fixa ausente para o kit " + kitId + ".");
+          }
+          if (!html.includes("Composições existentes não serão sobrescritas") || !html.includes("Nenhum estoque será ativado ou alterado")) {
+            throw new Error("Cadastro em lote precisa preservar composições e não alterar saldo físico.");
+          }
+          const recipeBulk = html.slice(html.indexOf("async function configureFixedKitRecipes()"), html.indexOf("async function saveRecipe(event)"));
+          if (!recipeBulk || recipeBulk.includes('api("stock-move"') || recipeBulk.includes('api("stock-configure"')) {
+            throw new Error("Cadastro de receitas não pode movimentar ou ativar estoque.");
+          }
           console.log("Scripts, propósito do Lux-Gestão e separação dos Pedidos Online validados.");
           NODE
 

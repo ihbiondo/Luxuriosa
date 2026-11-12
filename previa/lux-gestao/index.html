@@ -262,7 +262,7 @@ td strong{font-size:9px}td .muted{font-size:8px;color:var(--muted);display:block
           <div class="table-wrap"><table><thead><tr><th>Produto</th><th class="text-right">Custo unitário</th><th>Atualizado</th></tr></thead><tbody id="costRows"><tr><td colspan="3" class="empty">Aguardando dados...</td></tr></tbody></table></div>
         </section>
         <section class="panel">
-          <div class="panel-head"><div><h2>Composição dos kits</h2><p>Escolha um kit, um componente e a quantidade usada em cada unidade.</p></div></div>
+          <div class="panel-head"><div><h2>Composição dos kits</h2><p>Escolha um kit, um componente e a quantidade usada em cada unidade.</p></div><button id="configureFixedKitRecipesBtn" class="subtle small-btn" type="button">Cadastrar receitas fixas</button></div>
           <div class="panel-body">
             <form id="kitForm">
               <div class="field"><label for="kitProduct">Kit</label><select id="kitProduct" required></select></div>
@@ -273,7 +273,7 @@ td strong{font-size:9px}td .muted{font-size:8px;color:var(--muted);display:block
           <div class="table-wrap"><table><thead><tr><th>Kit</th><th>Componente</th><th>Qtd.</th><th></th></tr></thead><tbody id="kitRows"><tr><td colspan="4" class="empty">Nenhuma composição cadastrada.</td></tr></tbody></table></div>
         </section>
       </div>
-      <div class="callout section"><strong>Por que isso importa?</strong> Sem custo de aquisição, o lucro e a margem ficam incompletos. Sem receita de kit, o sistema não sabe quantas unidades de cada componente devem sair quando um kit for vendido.</div>
+      <div class="callout section"><strong>Receitas fixas prontas:</strong> Kit Gel Funcional, Kit Ela e Kit Ele. Os kits com Dado do Prazer à escolha ficam pendentes de uma seleção de variante gravada no pedido; não serão configurados para baixar três dados por engano. Cadastrar receitas não ativa o controle nem altera saldos físicos.</div>
     </section>
 
     <section class="view hidden" id="view-expenses">
@@ -552,6 +552,70 @@ async function saveCost(event){
  try{await api("cost-upsert",{product_id:String(p.id),product_name:p.nome,unit_cost_cents:cents(value)});$("costValue").value="";showNotice("Custo de "+p.nome+" salvo.","success");await loadData();}
  catch(error){showNotice(error.message,"error");}
 }
+const FIXED_KIT_RECIPES=[
+ {kitId:"10",kitName:"Kit Gel Funcional — Xana Loka + Ku Loko",components:[
+  {id:"12",name:"Gel Funcional — Xana Loka",quantity:1},
+  {id:"13",name:"Gel Funcional Anal — Ku Loko",quantity:1}
+ ]},
+ {kitId:"25",kitName:"Kit Ela",components:[
+  {id:"17",name:"Vibrador Golfinho — Tamanho P — Rosa",quantity:1},
+  {id:"11",name:"Hot Ball — Xana Loka",quantity:1},
+  {id:"12",name:"Gel Funcional — Xana Loka",quantity:1},
+  {id:"19",name:"Plug Anal com Pedra — Tamanho P — Rosa",quantity:1}
+ ]},
+ {kitId:"26",kitName:"Kit Ele",components:[
+  {id:"8",name:"Egg Masturbador — Stepper",quantity:1},
+  {id:"13",name:"Gel Funcional Anal — Ku Loko",quantity:1},
+  {id:"4",name:"Anel Peniano com Vibro",quantity:1},
+  {id:"9",name:"Prótese sem Vibro com Ventosa — Tamanho M",quantity:1}
+ ]}
+];
+async function configureFixedKitRecipes(){
+ const button=$("configureFixedKitRecipesBtn");
+ const existing=new Map(recipes.map(r=>[String(r.kit_product_id)+"|"+String(r.component_product_id),r]));
+ const missing=[],conflicts=[];
+ for(const kit of FIXED_KIT_RECIPES){
+  const catalogKit=catalog.find(p=>String(p.id)===kit.kitId);
+  if(!catalogKit){conflicts.push(kit.kitName+" (kit não localizado no catálogo)");continue;}
+  for(const component of kit.components){
+   const catalogComponent=catalog.find(p=>String(p.id)===component.id);
+   if(!catalogComponent){conflicts.push(kit.kitName+" → "+component.name+" (componente não localizado)");continue;}
+   const key=kit.kitId+"|"+component.id,already=existing.get(key);
+   if(already){
+    if(Number(already.quantity)!==component.quantity)conflicts.push(kit.kitName+" → "+component.name+" (quantidade cadastrada: "+already.quantity+")");
+    continue;
+   }
+   missing.push({kitId:kit.kitId,kitName:catalogKit.nome,componentId:component.id,componentName:catalogComponent.nome,quantity:component.quantity});
+  }
+ }
+ if(!missing.length){
+  showNotice(conflicts.length?"Nenhuma receita nova foi criada. Há "+conflicts.length+" composição(ões) já cadastrada(s) com diferença; elas foram preservadas.":"As receitas fixas já estão cadastradas. Nenhuma alteração foi necessária.","success");
+  return;
+ }
+ if(!confirm("Cadastrar "+missing.length+" componente(s) das receitas fixas de 3 kits?\n\nSerão incluídos somente componentes ausentes. Composições existentes não serão sobrescritas. Nenhum estoque será ativado ou alterado."))return;
+ button.disabled=true;button.textContent="CADASTRANDO…";
+ let saved=0;
+ try{
+  for(const item of missing){
+   await api("kit-recipe-upsert",{
+    kit_product_id:item.kitId,
+    kit_product_name:item.kitName,
+    component_product_id:item.componentId,
+    component_product_name:item.componentName,
+    quantity:item.quantity
+   });
+   saved++;
+  }
+  await loadData();
+  const message=saved+" componente(s) cadastrado(s) nas receitas fixas. Estoque físico não foi alterado.";
+  showNotice(conflicts.length?message+" "+conflicts.length+" diferença(s) em receitas preexistentes foram preservadas para revisão.":message,"success");
+ }catch(error){
+  try{await loadData();}catch(_){}
+  showNotice(saved+" de "+missing.length+" componente(s) foram salvos. Você pode executar novamente: itens já cadastrados serão preservados. "+(error.message||"Verifique a conexão."),"error");
+ }finally{
+  button.disabled=false;button.textContent="Cadastrar receitas fixas";
+ }
+}
 async function saveRecipe(event){
  event.preventDefault();const kit=catalog.find(x=>String(x.id)===$("kitProduct").value),component=catalog.find(x=>String(x.id)===$("kitComponent").value),quantity=Number($("kitQuantity").value);
  if(!kit||!component||!Number.isSafeInteger(quantity)||quantity<1||quantity>999){showNotice("Confira kit, componente e quantidade.","error");return;}
@@ -650,6 +714,7 @@ $("cancelMovementBtn").addEventListener("click",()=>$("movementDialog").close())
 $("movementForm").addEventListener("submit",event=>{event.preventDefault();submitMovement();});
 $("costForm").addEventListener("submit",saveCost);
 $("kitForm").addEventListener("submit",saveRecipe);
+$("configureFixedKitRecipesBtn").addEventListener("click",configureFixedKitRecipes);
 $("expenseForm").addEventListener("submit",saveExpense);
 $("expenseDate").value=new Date().toLocaleDateString("en-CA");
 $("cashReceived").addEventListener("input",()=>{idempotencyKey=null;});
