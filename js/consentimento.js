@@ -257,7 +257,7 @@
       gate.classList.remove("open");
       gate.setAttribute("aria-hidden", "true");
       document.body.classList.remove("gate-open");
-      if (consent) applyConsent();
+      if (consent) applyConsent(); else scheduleConsent();
       scheduleClubInvitation();
     });
     gate.addEventListener("keydown", function (event) {
