@@ -7,6 +7,8 @@ const admin = createClient(SUPABASE_URL, SERVICE_ROLE_KEY, {
   auth: { persistSession: false, autoRefreshToken: false }
 });
 
+const KIT_PRODUCT_IDS = new Set(["10","22","23","24","25","26","27","28","29"]);
+
 const ALLOWED_ORIGINS = new Set([
   "https://luxuriosa.com.br",
   "https://www.luxuriosa.com.br",
@@ -400,6 +402,9 @@ Deno.serve(async (request: Request) => {
         const productId = cleanText(raw?.product_id, 100);
         const productName = cleanText(raw?.product_name, 180);
         const unitCost = Number(raw?.unit_cost_cents);
+        if (KIT_PRODUCT_IDS.has(productId)) {
+          return reply({ error: "Kits não recebem contagem física própria. Conte os produtos componentes." }, 400, origin);
+        }
         if (!/^\d{1,100}$/.test(productId) || !productName ||
             !Number.isSafeInteger(unitCost) || unitCost < 0 || unitCost > 100000000) {
           return reply({ error: "Produto ou custo inválido. Informe o custo em centavos, sem valores negativos." }, 400, origin);
@@ -502,6 +507,7 @@ Deno.serve(async (request: Request) => {
       const productId = cleanText(body.product_id, 100);
       const productName = cleanText(body.product_name, 180);
       const reorderPoint = Number(body.reorder_point ?? 0);
+      if (KIT_PRODUCT_IDS.has(productId)) return reply({ error: "O estoque dos kits é calculado pelos componentes; não configure saldo próprio." }, 400, origin);
       if (!productId || !productName || !Number.isSafeInteger(reorderPoint) || reorderPoint < 0 || reorderPoint > 1000000 || typeof body.stock_control_enabled !== "boolean") {
         return reply({ error: "Dados de controle de estoque inválidos." }, 400, origin);
       }
@@ -536,6 +542,7 @@ Deno.serve(async (request: Request) => {
       const quantity = body.quantity;
       const note = cleanText(body.note, 500);
       const quantityDelta = normalizeInventoryMovementDelta(movementType, quantity, body.quantity_delta);
+      if (KIT_PRODUCT_IDS.has(productId)) return reply({ error: "Movimente os produtos componentes; kits não têm estoque próprio." }, 400, origin);
       if (!productId || !productName || quantityDelta === null) {
         return reply({
           error: movementType === "adjustment"
