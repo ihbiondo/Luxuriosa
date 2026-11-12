@@ -273,6 +273,14 @@ td strong{font-size:9px}td .muted{font-size:8px;color:var(--muted);display:block
           <div class="table-wrap"><table><thead><tr><th>Kit</th><th>Componente</th><th>Qtd.</th><th></th></tr></thead><tbody id="kitRows"><tr><td colspan="4" class="empty">Nenhuma composição cadastrada.</td></tr></tbody></table></div>
         </section>
       </div>
+      <section class="panel section">
+        <div class="panel-head"><div><h2>Cadastro de custos em lote</h2><p>Preencha os custos de aquisição de vários produtos em uma única gravação.</p></div><span id="bulkCostCount" class="status neutral">—</span></div>
+        <div class="panel-body">
+          <div class="callout" style="margin-bottom:10px">Os custos atuais aparecem ao lado para consulta. Preencha somente os campos que deseja cadastrar ou atualizar; campos vazios preservam os valores existentes. A gravação é integral: se um item falhar, nenhum custo do lote será alterado.</div>
+          <div class="table-wrap"><table style="min-width:650px"><thead><tr><th>Produto</th><th>Custo cadastrado</th><th>Novo custo unitário (R$)</th></tr></thead><tbody id="bulkCostRows"><tr><td colspan="3" class="empty">Aguardando catálogo...</td></tr></tbody></table></div>
+          <div class="form-actions" style="align-items:center"><span id="bulkCostStatus" class="muted">Nenhum custo preenchido.</span><button id="saveBulkCostsBtn" class="primary" type="button" disabled>Salvar custos preenchidos</button></div>
+        </div>
+      </section>
       <div class="callout section"><strong>Receitas fixas prontas:</strong> Kit Gel Funcional, Kit Ela e Kit Ele. Os kits com Dado do Prazer à escolha ficam pendentes de uma seleção de variante gravada no pedido; não serão configurados para baixar três dados por engano. Cadastrar receitas não ativa o controle nem altera saldos físicos.</div>
     </section>
 
@@ -453,6 +461,15 @@ function renderStock(){
 function renderProducts(){
  const costMap=new Map(costs.map(x=>[String(x.product_id),x]));
  $("costRows").innerHTML=costs.length?costs.map(c=>'<tr><td><strong>'+safeText(c.product_name)+'</strong><span class="muted">Código '+safeText(c.product_id)+'</span></td><td class="text-right">'+money(c.unit_cost_cents)+'</td><td>'+dateBR(c.updated_at)+'</td></tr>').join(""):emptyRow(3,"Nenhum custo cadastrado.");
+ const productRows=[...catalog].sort((a,b)=>a.nome.localeCompare(b.nome,"pt-BR"));
+ const missingCosts=productRows.filter(p=>!costMap.has(String(p.id))).length;
+ $("bulkCostCount").textContent=costs.length+"/"+productRows.length+" COM CUSTO";
+ $("bulkCostRows").innerHTML=productRows.map(p=>{
+  const current=costMap.get(String(p.id));
+  return '<tr><td><strong>'+safeText(p.nome)+'</strong><span class="muted">Código '+safeText(p.id)+'</span></td><td>'+(current?money(current.unit_cost_cents):'<span class="status warn">Não cadastrado</span>')+'</td><td><input aria-label="Novo custo de '+safeText(p.nome)+'" data-bulk-cost="'+safeText(p.id)+'" type="number" min="0" max="1000000" step="0.01" placeholder="0,00" style="width:145px"></td></tr>';
+ }).join("");
+ $("bulkCostStatus").textContent=missingCosts+" produto(s) sem custo cadastrado. Campos vazios não alteram os valores atuais.";
+ $("saveBulkCostsBtn").disabled=true;
  $("kitRows").innerHTML=recipes.length?recipes.map(r=>'<tr><td><strong>'+safeText(r.kit_product_name)+'</strong></td><td>'+safeText(r.component_product_name)+'</td><td>'+number(r.quantity)+'</td><td><button class="small-btn danger" data-remove-recipe="'+safeText(r.kit_product_id)+'|'+safeText(r.component_product_id)+'" type="button">Remover</button></td></tr>').join(""):emptyRow(4,"Nenhuma composição cadastrada.");
 }
 function renderExpenses(){
@@ -559,6 +576,39 @@ async function saveCost(event){
  if(!p||!Number.isFinite(value)||value<0){showNotice("Informe produto e custo válido.","error");return;}
  try{await api("cost-upsert",{product_id:String(p.id),product_name:p.nome,unit_cost_cents:cents(value)});$("costValue").value="";showNotice("Custo de "+p.nome+" salvo.","success");await loadData();}
  catch(error){showNotice(error.message,"error");}
+}
+async function saveBulkCosts(){
+ const entries=[...$("bulkCostRows").querySelectorAll("[data-bulk-cost]")].filter(input=>input.value.trim()!=="");
+ if(!entries.length){showNotice("Preencha o custo de pelo menos um produto.","error");return;}
+ const items=[];
+ for(const input of entries){
+  const product=catalog.find(p=>String(p.id)===input.dataset.bulkCost),value=Number(input.value);
+  if(!product||!Number.isFinite(value)||value<0||value>1000000||Math.abs(value*100-Math.round(value*100))>0.000001){
+   showNotice("Confira os custos: use valores entre R$ 0,00 e R$ 1.000.000,00 com até duas casas decimais.","error");return;
+  }
+  items.push({product_id:String(product.id),product_name:product.nome,unit_cost_cents:cents(value)});
+ }
+ if(!confirm("Salvar "+items.length+" custo(s) em uma única transação? Os campos vazios e os demais produtos permanecerão inalterados."))return;
+ const button=$("saveBulkCostsBtn"),status=$("bulkCostStatus");
+ button.disabled=true;button.textContent="SALVANDO…";status.textContent="Gravando lote de custos…";
+ try{
+  const result=await api("cost-upsert-bulk",{items});
+  const saved=Number(result.batch?.saved_count||items.length);
+  [...$("bulkCostRows").querySelectorAll("[data-bulk-cost]")].forEach(input=>{input.value="";});
+  status.textContent=saved+" custo(s) gravados em uma transação.";
+  try{
+   await loadData();
+   showNotice(saved+" custo(s) cadastrados/atualizados em uma única transação.","success");
+  }catch(refreshError){
+   showNotice("Os "+saved+" custos foram gravados, mas a atualização da tela falhou. Atualize os dados para conferir. "+(refreshError.message||""),"error");
+  }
+ }catch(error){
+  status.textContent="Nenhuma alteração foi gravada.";
+  showNotice("O lote de custos foi cancelado integralmente; nenhum valor foi alterado. "+(error.message||"Confira os dados e tente novamente."),"error");
+ }finally{
+  button.disabled=![...$("bulkCostRows").querySelectorAll("[data-bulk-cost]")].some(input=>input.value.trim()!=="");
+  button.textContent="Salvar custos preenchidos";
+ }
 }
 const FIXED_KIT_RECIPES=[
  {kitId:"10",kitName:"Kit Gel Funcional — Xana Loka + Ku Loko",components:[
@@ -726,6 +776,8 @@ document.addEventListener("click",event=>{
  const recipe=event.target.closest("[data-remove-recipe]");if(recipe)removeRecipe(recipe.dataset.removeRecipe);
 });
 $("bulkStockRows").addEventListener("input",()=>{const count=[...$("bulkStockRows").querySelectorAll("[data-bulk-count]")].filter(input=>input.value.trim()!=="").length;$("saveBulkStockBtn").disabled=count===0;$("bulkStockStatus").textContent=count?count+" produto(s) preenchido(s).":"Nenhuma contagem preenchida.";});
+$("bulkCostRows").addEventListener("input",()=>{const count=[...$("bulkCostRows").querySelectorAll("[data-bulk-cost]")].filter(input=>input.value.trim()!=="").length;$("saveBulkCostsBtn").disabled=count===0;$("bulkCostStatus").textContent=count?count+" custo(s) preenchido(s).":"Nenhum custo preenchido.";});
+$("saveBulkCostsBtn").addEventListener("click",saveBulkCosts);
 $("saveBulkStockBtn").addEventListener("click",saveBulkStock);
 $("addCartBtn").addEventListener("click",addCartItem);
 $("clearCartBtn").addEventListener("click",()=>{if(cart.length&&!confirm("Limpar os itens desta venda?"))return;cart=[];idempotencyKey=null;renderCart();});
