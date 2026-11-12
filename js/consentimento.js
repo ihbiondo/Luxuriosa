@@ -146,8 +146,8 @@
       ".lux-club-invite-close{position:absolute;right:16px;top:10px;border:0;background:none;color:#c8bdbb;font-size:28px;cursor:pointer}.lux-club-kicker{color:#d8bd91;font-size:10px;letter-spacing:.24em}",
       ".lux-club-invite-panel h2{margin:15px 0 14px;color:#f7e8d0;font-family:'Playfair Display',Georgia,serif;font-size:clamp(34px,8vw,52px);font-weight:500;line-height:.98;letter-spacing:.015em}.lux-club-invite-panel h2 span{color:#ed5b9a}",
       ".lux-club-invite-panel p{max-width:390px;margin:0 auto 24px;color:#d0c7c5;font-size:13px;line-height:1.7}.lux-club-invite-cta{display:block;padding:15px 18px;border-radius:30px;background:linear-gradient(100deg,#d6b47e,#f0d4a2);color:#1a1010!important;font-size:11px;font-weight:700;letter-spacing:.08em;text-decoration:none!important}",
-      ".lux-club-invite-later{margin-top:14px;border:0;background:transparent;color:#b9aeac;font:12px Montserrat,Arial,sans-serif;cursor:pointer}@media(max-width:560px){.lux-club-invite-panel{padding:34px 22px 24px}}"
-
+      ".lux-club-invite-later{margin-top:14px;border:0;background:transparent;color:#b9aeac;font:12px Montserrat,Arial,sans-serif;cursor:pointer}@media(max-width:560px){.lux-club-invite-panel{padding:34px 22px 24px}}",
+      "#lux-cookie-overlay{z-index:10003}",
       "body.lux-consent-open{overflow:hidden}",".lux-cookie-preferences-link{text-align:center;margin:14px auto;padding:8px}.lux-cookie-preferences-link a{color:#d8bd91;font-size:12px}.lux-cookie-fallback-footer{padding:16px;text-align:center;background:#10090c;border-top:1px solid rgba(212,175,124,.2)}",
       "@media(max-width:560px){#lux-cookie-panel{padding:24px 20px;border-radius:15px}.lux-cookie-actions{flex-direction:column}.lux-cookie-actions button{width:100%}}"
     ].join("\n");
