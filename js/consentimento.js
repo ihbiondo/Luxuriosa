@@ -296,12 +296,21 @@
   function addPreferencesLink() {
     var footer = document.querySelector("footer");
     if (!footer) { footer = document.createElement("footer"); footer.className = "lux-cookie-fallback-footer"; document.body.appendChild(footer); }
-    if (footer.querySelector("[data-open-cookie-preferences]")) return;
-    var p = document.createElement("p");
-    p.className = "lux-cookie-preferences-link";
-    p.innerHTML = '<a href="#" data-open-cookie-preferences>Preferências de cookies</a>';
-    footer.appendChild(p);
-    p.querySelector("a").addEventListener("click", function (event) { event.preventDefault(); openPreferences(); });
+    var link = footer.querySelector("[data-open-cookie-preferences]");
+    if (!link) {
+      var p = document.createElement("p");
+      p.className = "lux-cookie-preferences-link";
+      p.innerHTML = '<a href="#" data-open-cookie-preferences>Preferências de cookies</a>';
+      footer.appendChild(p);
+      link = p.querySelector("a");
+    }
+    if (link.getAttribute("data-cookie-handler-bound") !== "1") {
+      link.setAttribute("data-cookie-handler-bound", "1");
+      link.addEventListener("click", function (event) {
+        event.preventDefault();
+        openPreferences();
+      });
+    }
   }
 
   function start() {
