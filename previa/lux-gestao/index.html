@@ -510,7 +510,7 @@ async function enableStock(productId){
   if(!Number.isSafeInteger(reorder)||reorder<0||reorder>1000000){showNotice("Informe um mínimo inteiro entre zero e 1.000.000.","error");return;}
   if(!confirm("Atualizar o mínimo de "+product.nome+"? O saldo atual de "+number(counted)+" unidade(s) será preservado."))return;
  }else{
-  const countedInput=prompt("Contagem física de "+product.nome+"\\nInforme quantas unidades existem agora:",String(counted));
+  const countedInput=prompt("Contagem física de "+product.nome+"\nInforme quantas unidades existem agora:",String(counted));
   if(countedInput===null)return;
   counted=Number(countedInput);
   if(!Number.isSafeInteger(counted)||counted<0||counted>1000000){showNotice("Informe uma quantidade inteira entre zero e 1.000.000.","error");return;}
