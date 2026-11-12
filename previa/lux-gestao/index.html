@@ -408,7 +408,6 @@ function renderOverview(){
  const tasks=[];
  if(physicalProducts.length&&needs)tasks.push(["▧","Conferir o estoque físico",needs+" de "+physicalProducts.length+" produtos físicos ainda não têm controle ativo. Kits são calculados pelos componentes.","stock"]);
  const costIds=new Set(costs.map(x=>String(x.product_id)));
- const physicalProducts=catalog.filter(p=>!/^kit\b/i.test(String(p.nome||"")));
  const missingCosts=physicalProducts.filter(p=>!costIds.has(String(p.id))).length;
  if(missingCosts)tasks.push(["R$","Cadastrar custos dos produtos",missingCosts+" produtos físicos ainda não têm custo registrado. O cálculo de margem fica parcial.","products"]);
  const kits=catalog.filter(p=>/^kit\b/i.test(String(p.nome||"")));
