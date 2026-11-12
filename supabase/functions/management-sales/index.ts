@@ -431,7 +431,7 @@ Deno.serve(async (request: Request) => {
         const productName = cleanText(raw?.product_name, 180);
         const quantityOnHand = Number(raw?.quantity_on_hand);
         const reorderPoint = Number(raw?.reorder_point ?? 0);
-        if (!/^\\d{1,100}$/.test(productId) || !productName ||
+        if (!/^\d{1,100}$/.test(productId) || !productName ||
             !Number.isSafeInteger(quantityOnHand) || quantityOnHand < 0 || quantityOnHand > 1000000 ||
             !Number.isSafeInteger(reorderPoint) || reorderPoint < 0 || reorderPoint > 1000000) {
           return reply({ error: "Produto, saldo físico ou estoque mínimo inválido." }, 400, origin);
