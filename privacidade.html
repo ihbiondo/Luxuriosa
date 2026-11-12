@@ -106,7 +106,7 @@
   <p>A Luxuriosa atende em Bauru/SP e região.</p>
 
   <h2>2. Que dados coletamos e para quê</h2>
-  <p>Os dados dependem da etapa do atendimento. O formulário do site não cria uma conta nem envia automaticamente seus dados pessoais à Luxuriosa.</p>
+  <p>Os dados dependem da etapa do atendimento. O site permite criar uma conta e participar do Clube de Vantagens. Os dados de cadastro são armazenados na infraestrutura segura do Supabase, conforme as finalidades descritas abaixo.</p>
 
   <div class="table-wrap">
   <table>
@@ -137,6 +137,12 @@
         <td>Confirmar o recebimento e registrar a venda, quando essas informações forem fornecidas durante o atendimento.</td>
         <td>Execução de contrato e cumprimento de obrigação legal ou regulatória, conforme o caso (art. 7º, V e II).</td>
         <td>Pelo prazo necessário à operação e às obrigações legais aplicáveis.</td>
+      </tr>
+      <tr>
+        <td>Conta e perfil</td>
+        <td>Autenticar o acesso, manter nome, e-mail, telefone, data de nascimento e endereço informado, e permitir que o cliente gerencie sua conta e participação no Clube.</td>
+        <td>Execução de contrato e procedimentos preliminares (art. 7º, V); consentimento quando aplicável às preferências opcionais.</td>
+        <td>Enquanto a conta estiver ativa e pelo prazo necessário para obrigações legais, prevenção a fraude e defesa de direitos. As autorizações são registradas com data e versão do texto.</td>
       </tr>
       <tr>
         <td>Dados técnicos e preferências de cookies</td>
@@ -170,11 +176,10 @@
 
   <h2>4. Informações armazenadas no navegador</h2>
   <p>
-    O site não oferece cadastro de cliente e não salva nome, telefone ou endereço preenchidos
-    no formulário de pedido. Esses campos permanecem temporariamente na memória da página
-    enquanto você prepara e revisa a mensagem. Ao fechar a etapa do pedido, o site limpa
-    os campos e a prévia da mensagem; ao atualizar ou fechar a página, os dados também
-    deixam de estar disponíveis no fluxo do formulário.
+    Ao criar uma conta, os dados necessários ao cadastro e ao perfil são armazenados
+    no Supabase: o e-mail e as credenciais são tratados pelo Supabase Auth; os dados básicos
+    do perfil, preferências e endereços são mantidos nas tabelas próprias da Luxuriosa.
+    O acesso é protegido por autenticação e regras de acesso por usuário.
   </p>
   <p>
     Para o funcionamento, algumas informações ficam no armazenamento local do navegador
@@ -224,26 +229,32 @@
     <li><strong>WhatsApp (Meta):</strong> recebe os dados incluídos na URL quando você escolhe abrir o link com a mensagem pré-preenchida. O envio da conversa ao atendimento da Luxuriosa depende de confirmação sua dentro do aplicativo. O tratamento pela Meta está sujeito aos termos e às políticas do serviço.</li>
     <li><strong>ViaCEP:</strong> se você consultar o CEP no formulário, o número informado é enviado ao serviço ViaCEP para buscar dados públicos de endereço. Nome, telefone, produtos e demais campos do pedido não são enviados nessa consulta. Consulte a <a href="https://viacep.com.br/" target="_blank" rel="noopener noreferrer">página do ViaCEP</a>.</li>
     <li><strong>Google Analytics 4 (Google):</strong> é carregado somente se você autorizar estatísticas no aviso de cookies. Nesse caso, recebe informações técnicas e eventos genéricos de navegação. A configuração procura não transmitir nomes de produtos, conteúdo do carrinho, dados do formulário, URLs específicas ou termos digitados; os eventos comerciais usam apenas parâmetros limitados, como etapa, método e quantidade. O IP é configurado com anonimização. Saiba mais na <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">Política de Privacidade do Google</a>.</li>
+    <li><strong>Supabase:</strong> fornece autenticação e infraestrutura de banco de dados para armazenar os dados da conta, perfil, endereços, adesão ao Clube e registros de consentimento. Trata esses dados para prestar o serviço de infraestrutura à Luxuriosa, conforme seus termos e controles de segurança.</li>
     <li><strong>GitHub Pages (GitHub):</strong> hospeda e entrega os arquivos estáticos do site. Como outros serviços de hospedagem, pode processar dados técnicos de conexão e acesso, como endereço IP, página solicitada e informações do navegador, necessários à disponibilização, segurança e funcionamento das páginas.</li>
     <li><strong>Google Fonts (Google):</strong> algumas páginas carregam fontes tipográficas hospedadas pelo Google. Ao acessar essas páginas, o navegador solicita os arquivos de fonte aos servidores do Google, que podem receber dados técnicos da conexão, como o endereço IP. Consulte a <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">Política de Privacidade do Google</a>.</li>
     <li><strong>Serviços de pagamento, entregadores e autoridades:</strong> somente os dados necessários à confirmação do pagamento, realização da entrega ou cumprimento de obrigação legal ou ordem válida.</li>
   </ul>
-  <p>Não vendemos nem alugamos dados pessoais.</p>
+  <p>Não vendemos nem alugamos dados pessoais e <strong>não compartilhamos cadastros ou dados pessoais identificáveis com parceiros comerciais</strong>. Prestadores de serviço, como infraestrutura de autenticação, hospedagem, pagamento e entrega, recebem apenas os dados necessários para executar suas funções. Estatísticas destinadas a análises e melhorias somente poderão ser usadas em formato efetivamente anonimizado e agregado, sem identificação individual.</p>
 
-  <h2>7. Marketing e preferências de cookies</h2>
+  <h2>7. Autorizações do Clube, marketing e cookies</h2>
   <p>
-    O aviso de privacidade permite escolher separadamente estatísticas e marketing. As
-    estatísticas, realizadas pelo Google Analytics 4, só são ativadas após autorização.
-    A opção de marketing fica disponível para registrar sua preferência, mas nenhuma
-    ferramenta de publicidade ou marketing está integrada nesta versão do site; marcar
-    essa opção não inscreve você em uma lista, não inicia campanhas e não autoriza o envio
-    automático de mensagens promocionais.
+    Ao entrar no Clube, você pode escolher separadamente se autoriza a personalização da
+    experiência, o uso de informações efetivamente anonimizadas e agregadas para análises,
+    e o recebimento de ofertas e novidades pelo WhatsApp. Nenhuma dessas autorizações é
+    condição para participar do Clube. A recusa ou revogação de uma delas não cancela as
+    demais nem impede o acesso aos benefícios básicos do Clube.
   </p>
   <p>
-    A escolha é guardada localmente no navegador por até 180 dias. Você pode alterá-la
-    pelo link “Preferências de cookies” no rodapé. Para receber ofertas pelo WhatsApp,
-    será necessário manifestar essa vontade diretamente no atendimento; a preferência
-    de cookies não equivale a consentimento para mensagens comerciais.
+    A autorização para marketing é opcional, específica para comunicações promocionais e
+    pode ser retirada a qualquer momento. Nesta etapa, o site registra sua escolha; isso
+    não significa que campanhas automáticas já estejam integradas ou ativas.
+  </p>
+  <p>
+    As preferências de cookies são independentes e tratam apenas de tecnologias de
+    navegação. Estatísticas pelo Google Analytics 4 só são ativadas após autorização no
+    painel de cookies. Marketing não é uma categoria de cookie nesta configuração.
+    Você pode rever as preferências pelo link “Preferências de cookies” no rodapé e as
+    autorizações do Clube na página do Clube.
   </p>
 
   <h2>8. Seus direitos</h2>
