@@ -196,19 +196,20 @@
     var subtotal = api && typeof api.obterTotal === "function" ? Number(api.obterTotal()) : 0;
 
     if (!cidade || !estado) {
-      aviso.textContent = "Informe a cidade e o estado para consultar as condições de entrega. O frete será confirmado no atendimento.";
+      aviso.textContent = "Informe a cidade e o estado. O site calcula o frete e o pedido mínimo pelo endereço antes de abrir a cobrança.";
       return;
     }
 
-    var cidadeNormalizada = cidade.normalize ? cidade.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase() : cidade.toLowerCase();
+    var cidadeNormalizada = cidade.normalize
+      ? cidade.normalize("NFD").replace(/[\\u0300-\\u036f]/g, "").trim().toLowerCase()
+      : cidade.trim().toLowerCase();
     if (cidadeNormalizada === "bauru" && estado === "SP") {
-      var api = window.LuxuriosaCarrinho;
       var items = api && typeof api.obterItens === "function" ? api.obterItens() : [];
       var temKit = pedidoContemKit(items);
       var avisoFrete = temKit
-        ? "Entrega em Bauru-SP: seu pedido inclui um kit promocional e tem frete grátis. Os demais pedidos têm frete de R$ 15,00."
-        : "Entrega em Bauru-SP: frete fixo de R$ 15,00. Pedidos que incluam pelo menos um kit promocional têm frete grátis.";
-      var avisoMinimo = " Para pagamento automático pelo site com Pix ou cartão, o subtotal mínimo de produtos é R$ 50,00, inclusive quando há kit no pedido.";
+        ? "Entrega em Bauru-SP: seu pedido inclui um kit promocional e tem frete grátis."
+        : "Entrega em Bauru-SP: frete fixo de R$ 15,00. Pedidos com pelo menos um kit promocional têm frete grátis.";
+      var avisoMinimo = " O subtotal mínimo para pagamento automático é R$ 50,00, inclusive quando há kit.";
       if (subtotal > 0 && subtotal < 50) {
         avisoMinimo += " Faltam " + formatarPreco(50 - subtotal) + " em produtos para atingir o mínimo.";
       }
@@ -216,7 +217,13 @@
       return;
     }
 
-    aviso.textContent = "Entrega para " + cidade + "/" + estado + ": disponibilidade e valor do frete serão confirmados no atendimento.";
+    var cidadesCheckout = ["agudos", "pederneiras", "piratininga", "lencois paulista"];
+    if (estado === "SP" && cidadesCheckout.indexOf(cidadeNormalizada) !== -1) {
+      aviso.textContent = "Entrega em " + cidade + "/SP: checkout automático disponível. O frete e o pedido mínimo são calculados pela rota do endereço e aparecem antes do pagamento. Prazo operacional previsto: até 2 horas após a confirmação. Pedidos com kit podem zerar a tarifa-base; pedágios, se houver, são calculados à parte.";
+      return;
+    }
+
+    aviso.textContent = "Entrega para " + cidade + "/" + estado + ": consulte a disponibilidade e o frete pelo WhatsApp. O checkout automático está habilitado apenas para Bauru, Agudos, Pederneiras, Piratininga e Lençóis Paulista, dentro do limite de rota.";
   }
 
 
