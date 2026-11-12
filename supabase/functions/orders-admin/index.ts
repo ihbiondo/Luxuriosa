@@ -181,8 +181,17 @@ Deno.serve(async (req: Request) => {
             ...order,
             items: orderItems.filter((item: any) => item.order_id === order.id)
           }));
+
+          const { data: managementSales, error: managementSalesError } = await admin
+            .from("management_sales")
+            .select("id, sale_number, created_at, customer_name, items, subtotal_cents, discount_cents, total_cents, payment_method, payment_status, source, shipping_cents, stock_control_status")
+            .eq("created_by", userId)
+            .order("created_at", { ascending: false })
+            .limit(100);
+          if (managementSalesError) throw managementSalesError;
     
           const validOrders = (periodOrders.data || []).filter((order: any) =>
+            order.payment_status === "paid" &&
             ["confirmed", "processing", "out_for_delivery", "delivered"].includes(order.status)
           );
           const revenue = validOrders.reduce((sum: number, order: any) => sum + Number(order.total_amount || 0), 0);
@@ -204,7 +213,8 @@ Deno.serve(async (req: Request) => {
             const periodOrderMap = new Map(periodOrderRows.map((order: any) => [order.id, order]));
             for (const item of data || []) {
               const order: any = periodOrderMap.get(item.order_id);
-              if (!order || !["confirmed", "processing", "out_for_delivery", "delivered"].includes(order.status)) continue;
+              if (!order || order.payment_status !== "paid" ||
+                  !["confirmed", "processing", "out_for_delivery", "delivered"].includes(order.status)) continue;
               const key = item.product_name;
               if (!topProducts.has(key)) topProducts.set(key, { name: key, quantity: 0, revenue: 0 });
               const product = topProducts.get(key)!;
@@ -244,7 +254,8 @@ Deno.serve(async (req: Request) => {
             daily: Array.from(byDay.values()),
             top_products: Array.from(topProducts.values()).sort((a,b) => b.quantity-a.quantity).slice(0,8),
             carts,
-            orders
+            orders,
+            sales: managementSales || []
           }, 200, origin);
         }
 
