@@ -38,75 +38,7 @@ Deno.serve(async (req: Request) => {
     if (error || !data.user) return response({ error: "Sessão inválida. Entre novamente." }, 401, origin);
     const userId = data.user.id;
     const action = body?.action;
-    if (!["admin_update_order_status", "admin_dashboard", "admin_confirm_payment_manual"].includes(action)) return response({ error: "Ação inválida." }, 400, origin);
-    if (action === "admin_confirm_payment_manual") {
-      const { data: manualPermission, error: manualPermissionError } = await admin
-        .from("user_permissions").select("role").eq("user_id", userId).maybeSingle();
-      if (manualPermissionError) throw manualPermissionError;
-      if (manualPermission?.role !== "admin") {
-        return response({ error: "Acesso restrito à administração." }, 403, origin);
-      }
-
-      const orderId = body.order_id;
-      const paymentMethod = body.payment_method;
-      if (!isUuid(orderId) || !["pix", "credit_card"].includes(paymentMethod)) {
-        return response({ error: "Pedido ou forma de pagamento inválida." }, 400, origin);
-      }
-
-      const { data: current, error: currentError } = await admin.from("orders")
-        .select("id, order_number, status, payment_status, payment_provider, source, total_amount, payment_amount_cents")
-        .eq("id", orderId).maybeSingle();
-      if (currentError) throw currentError;
-      if (!current) return response({ error: "Pedido não encontrado." }, 404, origin);
-      if (current.payment_provider !== "infinitepay") {
-        return response({ error: "A confirmação manual está disponível somente para pedidos InfinitePay." }, 409, origin);
-      }
-      if (current.payment_status !== "pending" || current.status !== "awaiting_confirmation") {
-        return response({ error: "Somente pedidos aguardando pagamento podem ser confirmados. Atualize a lista antes de tentar novamente.",
-          payment_status: current.payment_status, order_status: current.status }, 409, origin);
-      }
-
-      const expectedCents = Number(current.payment_amount_cents ?? Math.round(Number(current.total_amount) * 100));
-      if (!Number.isSafeInteger(expectedCents) || expectedCents <= 0) {
-        return response({ error: "O valor esperado do pedido é inválido. A confirmação foi bloqueada." }, 409, origin);
-      }
-
-      const now = new Date().toISOString();
-      const { data: updatedOrder, error: updateError } = await admin.from("orders")
-        .update({
-          status: "confirmed",
-          payment_status: "paid",
-          payment_method: paymentMethod,
-          payment_paid_amount_cents: expectedCents,
-          payment_confirmation_source: "manual_admin",
-          payment_confirmed_by: userId,
-          paid_at: now,
-          confirmed_at: now,
-          updated_at: now
-        })
-        .eq("id", orderId)
-        .eq("status", "awaiting_confirmation")
-        .eq("payment_status", "pending")
-        .select("id, order_number, status, payment_status, payment_method, paid_at, payment_confirmation_source, payment_confirmed_by")
-        .maybeSingle();
-      if (updateError) throw updateError;
-      if (!updatedOrder) {
-        return response({ error: "O pedido mudou durante a confirmação. Atualize a lista e confira o pagamento antes de tentar novamente." }, 409, origin);
-      }
-
-      let salesSync: any = null;
-      if (current.source === "website") {
-        const { data, error } = await admin.rpc("sync_online_order_to_management_sale", { p_order_id: orderId });
-        if (error) {
-          console.error("Manual payment confirmed; sales synchronization failed.", error);
-          salesSync = { synced: false, outcome: "error" };
-        } else {
-          salesSync = data;
-        }
-      }
-      return response({ ok: true, order: updatedOrder, sales_sync: salesSync }, 200, origin);
-    }
-
+    if (!["admin_update_order_status", "admin_dashboard"].includes(action)) return response({ error: "Ação inválida." }, 400, origin);
     if (action === "admin_update_order_status") {
       if (!userId) return response({ error: "Faça login para alterar pedidos." }, 401, origin);
       const { data: permission, error: permissionError } = await admin
