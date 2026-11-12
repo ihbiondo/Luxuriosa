@@ -201,7 +201,7 @@
     }
 
     var cidadeNormalizada = cidade.normalize
-      ? cidade.normalize("NFD").replace(/[\\u0300-\\u036f]/g, "").trim().toLowerCase()
+      ? cidade.normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim().toLowerCase()
       : cidade.trim().toLowerCase();
     if (cidadeNormalizada === "bauru" && estado === "SP") {
       var items = api && typeof api.obterItens === "function" ? api.obterItens() : [];
