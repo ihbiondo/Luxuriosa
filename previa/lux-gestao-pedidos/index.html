@@ -47,7 +47,7 @@ input,select{width:100%;min-width:0;border:1px solid var(--line);border-radius:8
 <form id="loginForm" class="login-form"><div class="eyebrow">ACESSO RESTRITO</div><h2>Entrar nos pedidos</h2><p>Use a conta administrativa Luxuriosa.</p><label for="email">E-mail</label><input id="email" type="email" autocomplete="username" required><label for="password">Senha</label><input id="password" type="password" autocomplete="current-password" required><button class="primary" type="submit">ACESSAR PEDIDOS</button><div id="loginNotice" class="notice" role="status"></div></form>
 </section>
     <section id="dashboard" class="hidden">
-<div class="page-head"><div class="page-head-copy"><div class="eyebrow">OPERAÇÃO · VENDAS ONLINE</div><h1>Pedidos e entregas</h1><p class="subtitle">Confira o recebimento no InfinitePay e confirme manualmente. Depois, avance cada pedido por separação, despacho, rota e entrega.</p></div><div class="page-head-actions"><button id="refresh" type="button" class="primary"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 7v5h-5M4 17v-5h5"/><path d="M5.6 9A7 7 0 0 1 18 6l2 6M4 12l2 6a7 7 0 0 0 12.4-3"/></svg>Atualizar pedidos</button></div></div>
+<div class="page-head"><div class="page-head-copy"><div class="eyebrow">OPERAÇÃO · VENDAS ONLINE</div><h1>Pedidos e entregas</h1><p class="subtitle">Confira o recebimento na InfinitePay. Se o webhook não trouxer as referências, informe os dados da cobrança para validar o pagamento antes de liberar o pedido.</p></div><div class="page-head-actions"><button id="refresh" type="button" class="primary"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 7v5h-5M4 17v-5h5"/><path d="M5.6 9A7 7 0 0 1 18 6l2 6M4 12l2 6a7 7 0 0 0 12.4-3"/></svg>Atualizar pedidos</button></div></div>
 <div id="summary" class="summary" aria-live="polite"><div class="summary-card"><span class="summary-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 4h16v16H4z"/><path d="M8 8h8M8 12h8M8 16h5"/></svg></span><div><div class="summary-label">Pedidos listados</div><div class="summary-value">—</div><div class="summary-note">Aguardando consulta</div></div></div></div>
 <div class="toolbar">
 <div class="search-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 5 5"/></svg><input id="search" type="search" aria-label="Buscar pedidos" placeholder="Buscar número, cliente ou telefone"></div>
@@ -182,7 +182,7 @@ input,select{width:100%;min-width:0;border:1px solid var(--line);border-radius:8
         price.append(sla);
       }
       amount.append(price);
-      if(["pending","review_required"].includes(order.payment_status)&&order.status!=="cancelled"){
+      if(order.payment_status==="pending"&&order.status!=="cancelled"){
         const paymentTools=node("div","payment-tools");
         const link=checkoutUrl(order.payment_checkout_url);
         const expires=order.payment_expires_at?new Date(order.payment_expires_at):null;
@@ -219,6 +219,10 @@ input,select{width:100%;min-width:0;border:1px solid var(--line);border-radius:8
         const confirm=node("button","primary","VERIFICAR PAGAMENTO");confirm.type="button";
         confirm.addEventListener("click",()=>confirmPaymentManual(order,confirm,methodSelect,transactionInput,invoiceInput));
         reconcile.append(note,fields,confirm);paymentTools.append(reconcile);amount.append(paymentTools);
+      }else if(order.payment_status==="review_required"&&order.status!=="cancelled"){
+        const paymentTools=node("div","payment-tools");
+        paymentTools.append(node("div","payment-help","Pagamento em conferência: a validação identificou uma divergência. O pedido continua bloqueado; não tente confirmar novamente por este painel. Revise a transação e resolva a pendência antes de liberar."));
+        amount.append(paymentTools);
       }
       foot.append(amount);
       const options=allowedNext(order);
