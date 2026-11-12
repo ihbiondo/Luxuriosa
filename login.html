@@ -235,6 +235,10 @@
       } catch (error) {
         message("Sua conta foi ativada, mas não conseguimos concluir o salvamento de todos os dados do perfil. Entre novamente ou contate o atendimento.", true);
         console.error("Falha ao sincronizar perfil:", error);
+        return;
+      }
+      if (new URLSearchParams(window.location.search).get("next") === "clube.html") {
+        window.location.replace("clube.html");
       }
     }
 
@@ -283,7 +287,8 @@
         email: $("signupEmail").value.trim(),
         password: $("signupPassword").value,
         options: {
-          emailRedirectTo: window.location.origin + window.location.pathname,
+          emailRedirectTo: window.location.origin + window.location.pathname +
+            (new URLSearchParams(window.location.search).get("next") === "clube.html" ? "?next=clube.html" : ""),
           data: {
             username,
             display_name: firstName,
