@@ -398,9 +398,12 @@ function renderOverview(){
  const tasks=[];
  if(stock.length&&needs)tasks.push(["▧","Conferir o estoque físico",needs+" de "+stock.length+" produtos ainda não têm controle ativo. Faça a contagem antes de ativar o saldo.","stock"]);
  const costIds=new Set(costs.map(x=>String(x.product_id)));
- const missingCosts=stock.filter(x=>!costIds.has(String(x.product_id))).length;
- if(missingCosts)tasks.push(["R$","Cadastrar custos dos produtos",missingCosts+" produtos do catálogo ainda não têm custo registrado. O cálculo de margem fica parcial.","products"]);
- if(!recipes.length)tasks.push(["◇","Definir composição dos kits","Sem receitas cadastradas, a baixa automática dos componentes de kits não pode ser calculada.","products"]);
+ const physicalProducts=catalog.filter(p=>!/^kit\b/i.test(String(p.nome||"")));
+ const missingCosts=physicalProducts.filter(p=>!costIds.has(String(p.id))).length;
+ if(missingCosts)tasks.push(["R$","Cadastrar custos dos produtos",missingCosts+" produtos físicos ainda não têm custo registrado. O cálculo de margem fica parcial.","products"]);
+ const kits=catalog.filter(p=>/^kit\b/i.test(String(p.nome||"")));
+ const kitsWithoutRecipe=kits.filter(p=>!recipes.some(r=>String(r.kit_product_id)===String(p.id))).length;
+ if(kitsWithoutRecipe)tasks.push(["◇","Completar receitas dos kits",kitsWithoutRecipe+" de "+kits.length+" kits ainda não têm composição fixa cadastrada. Kits com opções variáveis precisam registrar a escolha feita no pedido.","products"]);
  if(!sales.length)tasks.push(["＋","Registrar a primeira venda presencial","Use o caixa interno para registrar uma venda feita diretamente pela loja.","sales"]);
  if(!tasks.length)tasks.push(["✓","Rotina cadastral em dia","Não identificamos pendências básicas de estoque, custos ou kits nesta consulta.","sales"]);
  $("priorityCount").textContent=tasks.length+" ITENS";$("tasks").innerHTML=tasks.slice(0,5).map((t,i)=>'<div class="task '+(t[0]==="✓"?"ok":"")+'"><span class="task-icon">'+t[0]+'</span><div><strong>'+safeText(t[1])+'</strong><p>'+safeText(t[2])+'</p><button class="small-btn subtle" data-go="'+t[3]+'" style="margin-top:6px">Abrir etapa →</button></div></div>').join("");
