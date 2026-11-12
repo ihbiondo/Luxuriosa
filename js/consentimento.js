@@ -72,7 +72,11 @@
     overlay.addEventListener("keydown", function (event) {
       if (event.key === "Escape") closeDataInvitation();
     });
+    document.body.classList.add("lux-club-invite-open");
     overlay.classList.add("open");
+    overlay.addEventListener("keydown", function (event) {
+      if (event.key === "Escape") closeClubInvitation();
+    });
     overlay.querySelector(".lux-club-invite-cta").focus();
   }
 
@@ -90,6 +94,7 @@
   function closeClubInvitation() {
     var overlay = document.getElementById("lux-club-invite");
     if (overlay) overlay.classList.remove("open");
+    document.body.classList.remove("lux-club-invite-open");
     try { localStorage.setItem(CLUB_INVITE_KEY, String(Date.now())); } catch (e) {}
   }
 
@@ -100,7 +105,8 @@
     overlay.setAttribute("role", "dialog");
     overlay.setAttribute("aria-modal", "true");
     overlay.setAttribute("aria-labelledby", "luxClubInviteTitle");
-    overlay.innerHTML = '<section class="lux-club-invite-panel"><button type="button" class="lux-club-invite-close" aria-label="Fechar convite">×</button><span class="lux-club-kicker">LUXURIOSA CONVIDA</span><h2 id="luxClubInviteTitle">VANTAGENS <span>&amp;</span><br>BENEFÍCIOS</h2><p>Descubra benefícios, atendimento e uma experiência ainda mais especial. Faça sua adesão pelo site e escolha suas preferências.</p><a class="lux-club-invite-cta" href="/clube.html">QUERO ENTRAR NO CLUBE</a><button type="button" class="lux-club-invite-later">Agora não</button></section>';
+    overlay.setAttribute("aria-describedby", "luxClubInviteDescription");
+    overlay.innerHTML = '<section class="lux-club-invite-panel"><button type="button" class="lux-club-invite-close" aria-label="Fechar convite do Clube">×</button><div class="lux-club-invite-art" aria-hidden="true"><span class="lux-club-art-overline">LUXURIOSA</span><div class="lux-club-seal"><span class="lux-club-seal-top">CLUBE DE VANTAGENS</span><strong>L</strong><span class="lux-club-seal-bottom">INTIMIDADE &amp; BEM-ESTAR</span></div><span class="lux-club-art-caption">SINTA-SE AINDA MAIS VOCÊ</span></div><div class="lux-club-invite-content"><span class="lux-club-kicker">UM CONVITE ESPECIAL</span><h2 id="luxClubInviteTitle">Mais vantagens.<br><em>Mais a sua cara.</em></h2><p id="luxClubInviteDescription">Faça parte do Clube Luxuriosa e aproveite benefícios pensados para valorizar sua experiência de compra.</p><div class="lux-club-benefit"><strong>10<span>%</span></strong><div><b>DE DESCONTO</b><small>para membros ativos em pedidos com subtotal acima de R$ 100</small></div></div><a class="lux-club-invite-cta" href="/clube.html">QUERO CONHECER O CLUBE</a><button type="button" class="lux-club-invite-later">Agora não</button><p class="lux-club-invite-note">A adesão é opcional. Marketing e autorizações de dados são escolhas independentes.</p></div></section>';
     document.body.appendChild(overlay);
     overlay.querySelector(".lux-club-invite-close").addEventListener("click", closeClubInvitation);
     overlay.querySelector(".lux-club-invite-later").addEventListener("click", closeClubInvitation);
@@ -213,12 +219,12 @@
       "#lux-data-invite.open{display:flex}.lux-data-invite-panel{position:relative;width:min(100%,500px);padding:34px 28px 25px;text-align:center;border:1px solid rgba(212,175,124,.65);border-radius:19px;background:radial-gradient(ellipse at 50% 0%,#351324,#10080d 72%);box-shadow:0 24px 90px #000}",
       ".lux-data-invite-panel h2{margin:14px 0;color:#f7e8d0;font-family:'Playfair Display',Georgia,serif;font-size:clamp(30px,7vw,43px);font-weight:500;line-height:1.02}.lux-data-invite-panel h2 span{color:#ed5b9a}",
       ".lux-data-invite-panel p{max-width:390px;margin:0 auto 21px;color:#d0c7c5;font-size:12px;line-height:1.75}.lux-data-invite-close{position:absolute;right:15px;top:10px;border:0;background:none;color:#c8bdbb;font-size:27px;cursor:pointer}.lux-data-invite-later{margin-top:13px;border:0;background:transparent;color:#b9aeac;font:12px Montserrat,Arial,sans-serif;cursor:pointer}.lux-data-invite-privacy{margin:12px 0 0!important}.lux-data-invite-privacy a{color:#d8bd91;font-size:11px}",
-      "#lux-club-invite{position:fixed;inset:0;z-index:10002;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(0,0,0,.84);backdrop-filter:blur(6px);font-family:Montserrat,Arial,sans-serif;color:#f7f0e8}",
-      "#lux-club-invite.open{display:flex}.lux-club-invite-panel{position:relative;width:min(100%,520px);padding:38px 30px 28px;text-align:center;border:1px solid rgba(212,175,124,.65);border-radius:20px;background:radial-gradient(ellipse at 50% 0,rgba(160,31,78,.34),transparent 58%),linear-gradient(145deg,#211018,#090809);box-shadow:0 24px 90px #000}",
-      ".lux-club-invite-close{position:absolute;right:16px;top:10px;border:0;background:none;color:#c8bdbb;font-size:28px;cursor:pointer}.lux-club-kicker{color:#d8bd91;font-size:10px;letter-spacing:.24em}",
-      ".lux-club-invite-panel h2{margin:15px 0 14px;color:#f7e8d0;font-family:'Playfair Display',Georgia,serif;font-size:clamp(34px,8vw,52px);font-weight:500;line-height:.98;letter-spacing:.015em}.lux-club-invite-panel h2 span{color:#ed5b9a}",
-      ".lux-club-invite-panel p{max-width:390px;margin:0 auto 24px;color:#d0c7c5;font-size:13px;line-height:1.7}.lux-club-invite-cta{display:block;padding:15px 18px;border-radius:30px;background:linear-gradient(100deg,#d6b47e,#f0d4a2);color:#1a1010!important;font-size:11px;font-weight:700;letter-spacing:.08em;text-decoration:none!important}",
-      ".lux-club-invite-later{margin-top:14px;border:0;background:transparent;color:#b9aeac;font:12px Montserrat,Arial,sans-serif;cursor:pointer}@media(max-width:560px){.lux-club-invite-panel{padding:34px 22px 24px}}",
+      "#lux-club-invite{position:fixed;inset:0;z-index:10002;display:none;align-items:center;justify-content:center;overflow-y:auto;padding:18px;background:rgba(5,3,5,.88);backdrop-filter:blur(9px);font-family:Montserrat,Arial,sans-serif;color:#f7f0e8}",
+      "#lux-club-invite.open{display:flex}.lux-club-invite-panel{position:relative;isolation:isolate;display:grid;grid-template-columns:minmax(205px,.82fr) minmax(0,1.18fr);width:min(100%,690px);max-height:92vh;overflow:auto;border:1px solid rgba(212,175,124,.62);border-radius:25px;background:linear-gradient(145deg,#211018 0%,#100a0e 62%,#080809 100%);box-shadow:0 32px 110px rgba(0,0,0,.72);animation:luxClubInviteIn .36s cubic-bezier(.2,.8,.2,1) both}",
+      ".lux-club-invite-art{position:relative;isolation:isolate;display:flex;min-height:410px;flex-direction:column;align-items:center;justify-content:center;gap:22px;overflow:hidden;padding:30px 22px;border-right:1px solid rgba(212,175,124,.2);background:radial-gradient(ellipse at 50% 42%,rgba(173,38,89,.32),transparent 54%),linear-gradient(155deg,#3b1225,#160b12 72%)}.lux-club-invite-art:before,.lux-club-invite-art:after{position:absolute;z-index:-1;content:'';border:1px solid rgba(212,175,124,.16);border-radius:50%;pointer-events:none}.lux-club-invite-art:before{width:255px;height:255px}.lux-club-invite-art:after{width:305px;height:305px;border-color:rgba(212,175,124,.08)}.lux-club-art-overline{color:#e7d1ad;font-family:'Playfair Display',Georgia,serif;font-size:12px;letter-spacing:.42em}",
+      ".lux-club-seal{position:relative;display:flex;width:174px;aspect-ratio:1;flex-direction:column;align-items:center;justify-content:center;border:1px solid rgba(226,194,140,.78);border-radius:50%;box-shadow:inset 0 0 0 7px rgba(212,175,124,.06),0 0 42px rgba(207,74,129,.14)}.lux-club-seal:before{position:absolute;inset:9px;content:'';border:1px solid rgba(226,194,140,.35);border-radius:50%}.lux-club-seal strong{color:#f4dfbd;font-family:'Playfair Display',Georgia,serif;font-size:104px;font-weight:400;line-height:.9;text-shadow:0 5px 28px rgba(237,91,154,.23)}.lux-club-seal-top,.lux-club-seal-bottom{position:absolute;color:#d8bd91;font-size:7px;letter-spacing:.2em}.lux-club-seal-top{top:27px}.lux-club-seal-bottom{bottom:27px;font-size:6px;letter-spacing:.15em}.lux-club-art-caption{color:#f1d9c9;font-family:'Playfair Display',Georgia,serif;font-size:14px;font-style:italic;letter-spacing:.04em}",
+      ".lux-club-invite-content{display:flex;flex-direction:column;justify-content:center;padding:43px 40px 34px}.lux-club-invite-close{position:absolute;z-index:3;top:13px;right:14px;display:grid;width:36px;height:36px;place-items:center;border:1px solid rgba(255,255,255,.12);border-radius:50%;background:rgba(0,0,0,.28);color:#e8deda;font-size:25px;line-height:1;cursor:pointer;transition:background .2s,border-color .2s}.lux-club-invite-close:hover{border-color:rgba(212,175,124,.65);background:rgba(212,175,124,.12)}.lux-club-invite-content .lux-club-kicker{color:#d8bd91;font-size:9px;font-weight:600;letter-spacing:.25em}",
+      ".lux-club-invite-content h2{margin:15px 30px 13px 0;color:#f7e8d0;font-family:'Playfair Display',Georgia,serif;font-size:clamp(33px,4.3vw,46px);font-weight:400;line-height:1.04;letter-spacing:-.015em}.lux-club-invite-content h2 em{color:#ec8bb2;font-weight:400}.lux-club-invite-content>p{margin:0 0 21px;color:#d0c7c5;font-size:12px;line-height:1.75}",
       "#lux-cookie-overlay{z-index:10003}",
       "body.lux-consent-open{overflow:hidden}",".lux-cookie-preferences-link{text-align:center;margin:14px auto;padding:8px}.lux-cookie-preferences-link a{color:#d8bd91;font-size:12px}.lux-cookie-fallback-footer{padding:16px;text-align:center;background:#10090c;border-top:1px solid rgba(212,175,124,.2)}",
       "@media(max-width:560px){#lux-cookie-panel{padding:24px 20px;border-radius:15px}.lux-cookie-actions{flex-direction:column}.lux-cookie-actions button{width:100%}}"
