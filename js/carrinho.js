@@ -177,6 +177,40 @@
   }
 
 
+  var KITS_COM_DADO_A_ESCOLHER = ["22", "23", "24", "27", "28", "29"];
+  var OPCOES_DADO_PRAZER = {
+    "1": "Dado do Prazer — Gay",
+    "2": "Dado do Prazer — Hétero",
+    "3": "Dado do Prazer — Lésbico"
+  };
+
+  function normalizarComponentesSelecionados(value) {
+    if (!Array.isArray(value) || value.length > 3) return [];
+    return value.slice(0, 3).map(function (component) {
+      var id = String(component && component.product_id || "");
+      var quantity = Number(component && component.quantity);
+      if (!Object.prototype.hasOwnProperty.call(OPCOES_DADO_PRAZER, id) ||
+          !Number.isSafeInteger(quantity) || quantity < 1 || quantity > 99) return null;
+      return {
+        product_id: id,
+        product_name: OPCOES_DADO_PRAZER[id],
+        quantity: quantity
+      };
+    }).filter(Boolean);
+  }
+
+  function chaveLinhaCarrinho(item) {
+    var selected = normalizarComponentesSelecionados(item && item.selected_components);
+    return String(item && item.id || "") + "::" +
+      selected.map(function (component) { return component.product_id + "x" + component.quantity; }).join(",");
+  }
+
+  function localizarLinhaCarrinho(key) {
+    return carrinho.find(function (item) {
+      return chaveLinhaCarrinho(item) === String(key) || String(item.id) === String(key);
+    });
+  }
+
   function normalizarItem(
     item
   ) {
@@ -220,7 +254,10 @@
       );
 
 
-    return {
+    var selectedComponents = normalizarComponentesSelecionados(item.selected_components);
+    var requiresDice = KITS_COM_DADO_A_ESCOLHER.indexOf(idNormalizado) !== -1;
+    var missingDiceChoice = requiresDice && selectedComponents.length !== 1;
+    var itemNormalizado = {
 
       id: idNormalizado,
 
@@ -267,9 +304,15 @@
         Number.isFinite(Number(item.precoAnteriorCatalogo)) &&
         Number(item.precoAnteriorCatalogo) > 0
           ? Number(item.precoAnteriorCatalogo)
-          : null
+          : null,
 
+      selected_components: selectedComponents
     };
+    if (missingDiceChoice) {
+      itemNormalizado.indisponivel = true;
+      itemNormalizado.motivoIndisponibilidade = "Este kit precisa da escolha da versão do Dado do Prazer. Remova o item e adicione novamente pela página do produto.";
+    }
+    return itemNormalizado;
 
   }
 
@@ -322,7 +365,7 @@
       carrinho = [];
       itensNormalizados.forEach(function (item) {
         var existente = carrinho.find(function (atual) {
-          return atual.id === item.id;
+          return chaveLinhaCarrinho(atual) === chaveLinhaCarrinho(item);
         });
         if (!existente) {
           carrinho.push(item);
@@ -378,7 +421,8 @@
 
   function adicionar(
     produto,
-    quantidade
+    quantidade,
+    opcoes
   ) {
 
     if (
@@ -415,6 +459,18 @@
 
     /* Mantém os IDs consistentes entre catálogo, carrinho e armazenamento local. */
     var id = String(idOriginal).trim();
+    var selectedComponents = normalizarComponentesSelecionados(opcoes && opcoes.selected_components);
+    if (KITS_COM_DADO_A_ESCOLHER.indexOf(id) !== -1 && selectedComponents.length !== 1) {
+      window.alert("Escolha a versão do Dado do Prazer antes de adicionar este kit ao carrinho.");
+      return;
+    }
+    if (selectedComponents.length && KITS_COM_DADO_A_ESCOLHER.indexOf(id) === -1) {
+      window.alert("A opção selecionada não corresponde a este produto. Atualize a página e tente novamente.");
+      return;
+    }
+    var cartKey = id + "::" + selectedComponents.map(function (component) {
+      return component.product_id + "x" + component.quantity;
+    }).join(",");
 
     quantidade =
       Number(
@@ -447,12 +503,7 @@
       carrinho.find(
         function (item) {
 
-          return (
-            String(
-              item.id
-            ) ===
-            String(id)
-          );
+          return chaveLinhaCarrinho(item) === cartKey;
 
         }
       );
@@ -496,7 +547,9 @@
           "",
 
         quantidade:
-          quantidade
+          quantidade,
+
+        selected_components: selectedComponents
 
       });
 
@@ -539,26 +592,12 @@
   ) {
 
     var indiceAnterior = carrinho.findIndex(function (item) {
-      return String(item.id) === String(id);
+      return chaveLinhaCarrinho(item) === String(id) || String(item.id) === String(id);
     });
-
-    carrinho =
-      carrinho.filter(
-        function (item) {
-
-          return (
-            String(
-              item.id
-            ) !==
-            String(id)
-          );
-
-        }
-      );
-
+    if (indiceAnterior < 0) return;
+    carrinho.splice(indiceAnterior, 1);
 
     salvar();
-
     renderizar();
     focarAposRemocao(Math.max(0, indiceAnterior));
 
@@ -570,19 +609,7 @@
     quantidade
   ) {
 
-    var item =
-      carrinho.find(
-        function (produto) {
-
-          return (
-            String(
-              produto.id
-            ) ===
-            String(id)
-          );
-
-        }
-      );
+    var item = localizarLinhaCarrinho(id);
 
 
     if (!item) {
@@ -640,7 +667,7 @@
     /* A lista é reconstruída a cada alteração; devolve o foco ao controle
        equivalente para que a navegação por teclado não se perca. */
     var linhaAtualizada = $("cartItems")
-      ? $("cartItems").querySelector('[data-product-id="' + String(id).replace(/"/g, '\\"') + '"]')
+      ? $("cartItems").querySelector('[data-cart-line-key="' + String(id).replace(/"/g, '\\"') + '"]')
       : null;
     if (linhaAtualizada) {
       var botoesQuantidade = linhaAtualizada.querySelectorAll(".cart-qty-btn");
@@ -891,12 +918,8 @@
           );
 
 
-        linha.setAttribute(
-          "data-product-id",
-          String(
-            item.id
-          )
-        );
+        linha.setAttribute("data-product-id", String(item.id));
+        linha.setAttribute("data-cart-line-key", chaveLinhaCarrinho(item));
 
 
         /* =================================================
@@ -961,6 +984,16 @@
           )
         );
 
+        if (Array.isArray(item.selected_components) && item.selected_components.length) {
+          item.selected_components.forEach(function (component) {
+            info.appendChild(criarElemento(
+              "span",
+              "cart-item-option",
+              "Dado do Prazer: " + component.product_name
+            ));
+          });
+        }
+
         if (item.avisoPrecoAlterado && Number(item.precoAnteriorCatalogo) > 0) {
           info.appendChild(
             criarElemento(
@@ -1022,7 +1055,7 @@
           function () {
 
             alterarQuantidade(
-              item.id,
+              chaveLinhaCarrinho(item),
               item.quantidade - 1
             );
 
@@ -1078,7 +1111,7 @@
           function () {
 
             alterarQuantidade(
-              item.id,
+              chaveLinhaCarrinho(item),
               item.quantidade + 1
             );
 
@@ -1130,7 +1163,7 @@
           function () {
 
             remover(
-              item.id
+              chaveLinhaCarrinho(item)
             );
 
           }
@@ -1381,6 +1414,9 @@
         "• " + item.nome + " — " + item.quantidade + "x — " +
         formatarPreco(item.preco * item.quantidade)
       );
+      (item.selected_components || []).forEach(function (component) {
+        linhas.push("  ↳ Dado escolhido: " + component.product_name);
+      });
     });
 
     linhas.push(
