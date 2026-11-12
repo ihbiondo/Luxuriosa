@@ -15,7 +15,9 @@ const admin = createClient(SUPABASE_URL, SERVICE_ROLE_KEY, {
 const ALLOWED_ORIGINS = new Set(["https://luxuriosa.com.br", "https://www.luxuriosa.com.br"]);
 const CATALOG_URL = "https://luxuriosa.com.br/data/produtos.json";
 const CHECKOUT_URL = "https://api.checkout.infinitepay.io/links";
-const PAYMENT_CHECKOUT_PAYLOAD_VERSION = 4;
+const PAYMENT_CHECKOUT_PAYLOAD_VERSION = 5;
+const VARIABLE_DICE_KIT_IDS = new Set(["22", "23", "24", "26", "27", "28", "29"]);
+const ALLOWED_DICE_VARIANT_IDS = new Set(["1", "2", "3"]);
 const CLUB_DISCOUNT_THRESHOLD_CENTS = 10000;
 const CLUB_DISCOUNT_PERCENT = 10;
 const CLUB_DISCOUNT_RULE_VERSION = "clube-10-v1-2026-11";
@@ -242,12 +244,36 @@ Deno.serve(async (req: Request) => {
       if (unitCents < 1) return reply({ error: "Um produto está sem preço válido. Fale com a Luxuriosa." }, 409, origin);
       const productName = textValue(product.nome, 180);
       if (!productName) return reply({ error: "Produto inválido no catálogo." }, 409, origin);
+      const categoryValue = textValue(product.categoria || product.tipoProduto, 80);
+      const category = categoryValue.toLowerCase();
+      const selectedComponents: Array<{ product_id: string; product_name: string; quantity: number }> = [];
+      const selectedVariantId = textValue(String(raw?.kit_variant_id ?? ""), 10);
+
+      if (VARIABLE_DICE_KIT_IDS.has(productId)) {
+        if (!ALLOWED_DICE_VARIANT_IDS.has(selectedVariantId)) {
+          return reply({
+            code: "kit_variant_required",
+            error: "Escolha o Dado do Prazer que acompanha o kit. Volte ao catálogo, remova este kit do carrinho e adicione-o novamente para selecionar a variante."
+          }, 409, origin);
+        }
+        const selectedDice = catalog.get(selectedVariantId);
+        if (!selectedDice || selectedDice.esgotado === true) {
+          return reply({ error: "A variante escolhida do Dado do Prazer está indisponível. Escolha outra opção ou fale com a Luxuriosa." }, 409, origin);
+        }
+        selectedComponents.push({
+          product_id: selectedVariantId,
+          product_name: textValue(selectedDice.nome, 180),
+          quantity: 1
+        });
+      } else if (selectedVariantId) {
+        return reply({ error: "A variante enviada não corresponde a este produto. Atualize o carrinho e tente novamente." }, 400, origin);
+      }
+
       const lineCents = unitCents * quantity;
       if (!Number.isSafeInteger(lineCents) || lineCents > 100000000) {
         return reply({ error: "Valor do pedido fora do limite permitido." }, 400, origin);
       }
       subtotalCents += lineCents;
-      const category = textValue(product.categoria || product.tipoProduto, 80).toLowerCase();
       if (category === "kits") containsKit = true;
       orderItems.push({
         product_id: productId,
@@ -255,8 +281,102 @@ Deno.serve(async (req: Request) => {
         sku: textValue(product.sku, 80) || null,
         quantity,
         unit_price: unitCents / 100,
-        product_snapshot: { id: productId, name: productName, category: product.categoria || product.tipoProduto || null }
+        product_snapshot: {
+          id: productId,
+          name: productName,
+          category: product.categoria || product.tipoProduto || null,
+          selected_components: selectedComponents
+        }
       });
+    }
+
+    // Confere o saldo dos produtos físicos já contados. Produtos sem contagem
+    // continuam liberados, mas qualquer saldo controlado insuficiente bloqueia a cobrança.
+    const kitItems = orderItems.filter(item =>
+      textValue(item.product_snapshot?.category, 80).toLowerCase() === "kits"
+    );
+    const kitIds = [...new Set(kitItems.map(item => String(item.product_id)))];
+    let kitRecipes: any[] = [];
+    if (kitIds.length) {
+      const { data, error } = await admin.from("management_kit_components")
+        .select("kit_product_id, component_product_id, component_product_name, quantity")
+        .in("kit_product_id", kitIds);
+      if (error) throw error;
+      kitRecipes = data || [];
+    }
+
+    const stockDemand = new Map<string, { product_name: string; quantity: number }>();
+    const addStockDemand = (productId: unknown, productName: unknown, quantity: number) => {
+      const id = textValue(String(productId ?? ""), 100);
+      const name = textValue(String(productName ?? ""), 180);
+      if (!id || !name || !Number.isSafeInteger(quantity) || quantity < 1) return;
+      const current = stockDemand.get(id);
+      stockDemand.set(id, {
+        product_name: name,
+        quantity: (current?.quantity || 0) + quantity
+      });
+    };
+
+    for (const item of orderItems) {
+      const isKit = textValue(item.product_snapshot?.category, 80).toLowerCase() === "kits";
+      if (!isKit) {
+        addStockDemand(item.product_id, item.product_name, Number(item.quantity));
+        continue;
+      }
+
+      const components = kitRecipes.filter(recipe => String(recipe.kit_product_id) === String(item.product_id));
+      if (!components.length) {
+        return reply({
+          code: "kit_recipe_missing",
+          error: "A composição deste kit ainda não está configurada no estoque. Fale com a Luxuriosa para concluir o pedido."
+        }, 409, origin);
+      }
+      for (const component of components) {
+        addStockDemand(
+          component.component_product_id,
+          component.component_product_name,
+          Number(component.quantity) * Number(item.quantity)
+        );
+      }
+      for (const selected of item.product_snapshot?.selected_components || []) {
+        addStockDemand(
+          selected.product_id,
+          selected.product_name,
+          Number(selected.quantity) * Number(item.quantity)
+        );
+      }
+    }
+
+    const demandedProductIds = [...stockDemand.keys()];
+    if (demandedProductIds.length) {
+      const { data: inventoryRows, error: inventoryError } = await admin.from("management_inventory")
+        .select("product_id, product_name, quantity_on_hand, stock_control_enabled")
+        .in("product_id", demandedProductIds);
+      if (inventoryError) throw inventoryError;
+
+      const inventoryMap = new Map((inventoryRows || []).map(row => [String(row.product_id), row]));
+      const shortages = demandedProductIds.flatMap(productId => {
+        const inventory = inventoryMap.get(productId);
+        const demand = stockDemand.get(productId)!;
+        if (inventory?.stock_control_enabled !== true) return [];
+        const available = Number(inventory.quantity_on_hand || 0);
+        if (available >= demand.quantity) return [];
+        return [{
+          product_name: demand.product_name,
+          available,
+          required: demand.quantity
+        }];
+      });
+
+      if (shortages.length) {
+        const detail = shortages.slice(0, 5).map(item =>
+          item.product_name + ": " + item.available + " disponível(is), " + item.required + " necessário(s)"
+        ).join("; ");
+        return reply({
+          code: "insufficient_stock",
+          error: "Não foi possível gerar a cobrança porque falta estoque físico: " + detail + ". Atualize o carrinho após a reposição ou fale com a Luxuriosa."
+        }, 409, origin);
+      }
     }
 
     const cityNormalized = normalizeCity(deliveryAddress.city);
@@ -389,7 +509,8 @@ Deno.serve(async (req: Request) => {
       nome: item.product_name,
       quantidade: item.quantity,
       preco: item.unit_price,
-      sku: item.sku
+      sku: item.sku,
+      selected_components: item.product_snapshot?.selected_components || []
     }));
 
     const { data: cart, error: cartError } = await admin.from("cart_sessions")
@@ -431,18 +552,28 @@ Deno.serve(async (req: Request) => {
         if (expireError) throw expireError;
       } else {
         const { data: existingItems, error: existingItemsError } = await admin.from("order_items")
-          .select("product_id, quantity, unit_price")
+          .select("product_id, quantity, unit_price, product_snapshot")
           .eq("order_id", pendingOrder.id);
         if (existingItemsError) throw existingItemsError;
+        const selectedComponentsForCompare = (snapshot: any) =>
+          (Array.isArray(snapshot?.selected_components) ? snapshot.selected_components : [])
+            .map((component: any) => ({
+              product_id: String(component.product_id || ""),
+              product_name: String(component.product_name || ""),
+              quantity: Number(component.quantity || 0)
+            }))
+            .sort((a: any, b: any) => a.product_id.localeCompare(b.product_id));
         const expectedItems = orderItems.map(item => ({
           product_id: item.product_id,
-          quantity: item.quantity,
-          unit_price: Number(item.unit_price)
+          quantity: Number(item.quantity),
+          unit_price: Number(item.unit_price),
+          selected_components: selectedComponentsForCompare(item.product_snapshot)
         })).sort((a,b) => String(a.product_id).localeCompare(String(b.product_id)));
         const savedItems = (existingItems || []).map(item => ({
           product_id: item.product_id,
           quantity: Number(item.quantity),
-          unit_price: Number(item.unit_price)
+          unit_price: Number(item.unit_price),
+          selected_components: selectedComponentsForCompare(item.product_snapshot)
         })).sort((a,b) => String(a.product_id).localeCompare(String(b.product_id)));
         const sameItems = JSON.stringify(expectedItems) === JSON.stringify(savedItems);
         const priorAddress = pendingOrder.delivery_address || {};
