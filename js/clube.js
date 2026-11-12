@@ -1,98 +1,95 @@
-/* Clube Luxuriosa — demonstração local de cadastro. Não envia nem persiste dados. */
-(function () {
-  "use strict";
-  var form = document.getElementById("clubMemberForm");
-  var result = document.getElementById("clubFormResult");
-  if (!form || !result) return;
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
-  function value(name) {
-    var el = form.elements[name];
-    return el ? String(el.value || "").trim() : "";
-  }
-  function checked(name) {
-    var el = form.elements[name];
-    return !!(el && el.checked);
-  }
-  function selected(name) {
-    return Array.prototype.slice.call(form.querySelectorAll('[name="' + name + '"]:checked')).map(function (el) { return el.value; });
-  }
-  function escapeHTML(text) {
-    return String(text).replace(/[&<>"']/g, function (char) {
-      return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[char];
-    });
-  }
-  function row(label, val) {
-    if (!val) return "";
-    return "<div class=\"club-review-row\"><span>" + escapeHTML(label) + "</span><strong>" + escapeHTML(val) + "</strong></div>";
-  }
-  function resetResult() {
-    result.hidden = true;
-    result.innerHTML = "";
+const SUPABASE_URL = "https://byiykxfugvxuowueuxca.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_LaMbeWQ1PNANEQ85SD_35Q_wDzswy8y";
+const supabase = createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+
+const $ = (id) => document.getElementById(id);
+let isMember = false;
+
+function showMessage(text, error = false) {
+  const box = $("clubMessage");
+  box.textContent = text;
+  box.classList.toggle("error", error);
+  box.classList.add("show");
+}
+
+function setBusy(busy) {
+  $("saveClub").disabled = busy;
+  $("leaveClub").disabled = busy;
+  $("saveClub").textContent = busy ? "SALVANDO..." : (isMember ? "SALVAR PREFERÊNCIAS" : "SALVAR MINHAS ESCOLHAS");
+}
+
+function renderState(state) {
+  isMember = state?.is_member === true;
+  $("joinChoice").hidden = isMember;
+  $("leaveClub").hidden = !isMember;
+  $("joinClub").checked = false;
+  $("personalization").checked = state?.personalization === true;
+  $("anonymousStatistics").checked = state?.anonymous_statistics === true;
+  $("whatsappMarketing").checked = state?.whatsapp_marketing === true;
+  $("clubStatus").textContent = isMember
+    ? "Você já faz parte do Clube Luxuriosa. Atualize suas preferências quando quiser."
+    : "Entre para o Clube ou apenas ajuste suas autorizações opcionais.";
+  $("clubStatus").classList.add("show");
+  $("saveClub").textContent = isMember ? "SALVAR PREFERÊNCIAS" : "SALVAR MINHAS ESCOLHAS";
+}
+
+async function loadState() {
+  const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
+  if (sessionError) throw sessionError;
+  if (!sessionData.session?.user) {
+    window.location.replace("login.html?next=clube.html");
+    return false;
   }
 
-  form.addEventListener("input", resetResult);
-  form.addEventListener("change", resetResult);
-  form.addEventListener("reset", function () { window.setTimeout(resetResult, 0); });
-  form.addEventListener("submit", function (event) {
-    event.preventDefault();
-    if (!form.reportValidity()) return;
+  const { data, error } = await supabase.rpc("get_club_membership_state");
+  if (error) throw error;
+  renderState(data || {});
+  return true;
+}
 
-    var birth = new Date(value("nascimento") + "T00:00:00");
-    var today = new Date();
-    var age = today.getFullYear() - birth.getFullYear();
-    var monthDiff = today.getMonth() - birth.getMonth();
-    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) age--;
-    if (!Number.isFinite(birth.getTime()) || age < 18) {
-      form.elements.nascimento.setCustomValidity("O Clube é destinado exclusivamente a maiores de 18 anos.");
-      form.elements.nascimento.reportValidity();
-      form.elements.nascimento.setCustomValidity("");
-      return;
-    }
+$("clubForm").addEventListener("submit", async (event) => {
+  event.preventDefault();
+  $("clubMessage").classList.remove("show", "error");
+  setBusy(true);
 
-    var sensitiveNames = ["orientacao","genero","momento_afetivo","companhia","preferencias_produtos","curiosidades","evitar"];
-    var hasSensitive = sensitiveNames.some(function (name) { return !!value(name); });
-    if (hasSensitive && !checked("sensivel")) {
-      result.hidden = false;
-      result.innerHTML = "<strong>Revise suas autorizações</strong><p>Você preencheu informações de perfil íntimo. Nesta demonstração, marque a autorização específica correspondente ou remova essas informações para continuar a revisão.</p>";
-      result.scrollIntoView({behavior:"smooth",block:"center"});
-      return;
-    }
-
-    var address = [value("endereco"),value("numero"),value("complemento"),value("bairro"),value("cidade"),value("estado"),value("cep")].filter(Boolean).join(", ");
-    var profile = [
-      row("Nome",value("nome")),
-      row("Como prefere ser chamado(a)",value("tratamento")),
-      row("E-mail",value("email")),
-      row("WhatsApp",value("whatsapp")),
-      row("Nascimento",value("nascimento")),
-      row("Estado civil",value("estado_civil")),
-      row("Pronomes",value("pronomes")),
-      row("Outro pronome",value("pronome_outro")),
-      row("Endereço",address),
-      row("Orientação sexual",value("orientacao")),
-      row("Identidade de gênero",value("genero")),
-      row("Momento afetivo",value("momento_afetivo")),
-      row("Experiências",value("companhia")),
-      row("Interesses",selected("interesses").join(", ")),
-      row("Preferências de produtos",value("preferencias_produtos")),
-      row("Curiosidades",value("curiosidades")),
-      row("O que deseja evitar",value("evitar")),
-      row("Atendimento",value("tipo_atendimento")),
-      row("Comunicação",value("comunicacao")),
-      row("Curadoria personalizada",value("concierge")),
-      row("Frequência de contato",value("frequencia"))
-    ].join("");
-
-    result.hidden = false;
-    result.innerHTML = "<div class=\"club-review-head\"><span>REVISÃO LOCAL</span><h3>Confira suas informações</h3><p>Esta visualização existe somente nesta página. Nenhum dado foi transmitido ou gravado.</p></div><div class=\"club-review-list\">" +
-      (profile || "<p>Nenhuma informação preenchida.</p>") +
-      "</div><div class=\"club-review-consents\"><strong>Suas escolhas nesta demonstração</strong>" +
-      row("Política de Privacidade",checked("privacidade") ? "Aceita" : "Não aceita") +
-      row("Perfil íntimo e dados sensíveis",checked("sensivel") ? "Autorizado" : "Não autorizado") +
-      row("Marketing",checked("marketing") ? "Autorizado" : "Não autorizado") +
-      row("Informações sobre curadoria",checked("contato_concierge") ? "Tenho interesse" : "Sem autorização") +
-      "</div><p class=\"club-review-warning\">Demonstração concluída. Para efetivar o cadastro, será necessário integrar um backend seguro e registrar as autorizações com suas respectivas versões e datas.</p><button type=\"button\" class=\"club-reset\" data-edit-profile>Voltar e editar</button>";
-    result.querySelector("[data-edit-profile]").addEventListener("click",function(){form.scrollIntoView({behavior:"smooth",block:"start"});});
-    result.scrollIntoView({behavior:"smooth",block:"start"});
+  const wantsToJoin = $("joinClub").checked;
+  const { data, error } = await supabase.rpc("save_club_membership_preferences", {
+    p_accept_terms: wantsToJoin,
+    p_personalization: $("personalization").checked,
+    p_anonymous_statistics: $("anonymousStatistics").checked,
+    p_whatsapp_marketing: $("whatsappMarketing").checked
   });
-})();
+
+  setBusy(false);
+  if (error) {
+    showMessage(error.message || "Não foi possível salvar suas escolhas. Tente novamente.", true);
+    return;
+  }
+
+  await loadState();
+  showMessage(data
+    ? "Pronto! Sua participação no Clube e suas preferências foram salvas."
+    : "Suas preferências foram salvas. Se quiser entrar no Clube, marque a opção de adesão e salve novamente.");
+});
+
+$("leaveClub").addEventListener("click", async () => {
+  if (!window.confirm("Deseja realmente sair do Clube Luxuriosa? Suas autorizações opcionais continuarão como estão e poderão ser alteradas nesta página.")) return;
+  setBusy(true);
+  const { error } = await supabase.rpc("leave_luxuriosa_club");
+  setBusy(false);
+  if (error) {
+    showMessage(error.message || "Não foi possível concluir sua saída. Tente novamente.", true);
+    return;
+  }
+  await loadState();
+  showMessage("Sua saída do Clube foi registrada. Você pode voltar quando quiser.");
+});
+
+try {
+  await loadState();
+} catch (error) {
+  console.error("Falha ao carregar Clube Luxuriosa:", error);
+  showMessage("Não foi possível carregar o Clube agora. Atualize a página ou entre novamente.", true);
+}

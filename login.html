@@ -119,11 +119,11 @@
           <span class="eyebrow">Área da sua conta</span>
           <h2 id="accountGreeting">Olá!</h2>
           <p class="lead">Você está conectado à sua conta Luxuriosa.</p>
-          <div class="account-box"><p>Seu acesso está ativo. Em breve, você poderá consultar e atualizar seus dados e preferências por aqui.</p><div class="account-actions"><button class="secondary" id="signOutButton" type="button">SAIR DA CONTA</button></div></div>
+          <div class="account-box"><p>Seu acesso está ativo. Em breve, você poderá consultar e atualizar seus dados e preferências por aqui.</p><div class="account-actions"><a class="secondary" href="clube.html" style="display:inline-flex;align-items:center;text-decoration:none">CLUBE DE VANTAGENS</a><button class="secondary" id="signOutButton" type="button">SAIR DA CONTA</button></div></div>
         </div>
       </section>
     </main>
-    <footer>Luxuriosa | Lingerie &amp; Intimidade · Sinta-se ainda mais você.</footer>
+    <footer>Luxuriosa | SexShop, Intimidade &amp; Lingerie · Sinta-se ainda mais você.</footer>
   </div>
 
   <script type="module">
@@ -235,7 +235,14 @@
       } catch (error) {
         message("Sua conta foi ativada, mas não conseguimos concluir o salvamento de todos os dados do perfil. Entre novamente ou contate o atendimento.", true);
         console.error("Falha ao sincronizar perfil:", error);
+        return;
       }
+      let returnToClub = new URLSearchParams(window.location.search).get("next") === "clube.html";
+      try {
+        returnToClub = returnToClub || localStorage.getItem("luxuriosa_after_auth") === "clube.html";
+        if (returnToClub) localStorage.removeItem("luxuriosa_after_auth");
+      } catch (e) {}
+      if (returnToClub) window.location.replace("clube.html");
     }
 
     $("loginTab").addEventListener("click", () => showForm("login"));
@@ -278,12 +285,16 @@
       const phone = $("phone").value.trim();
       const postalCode = $("postalCode").value.replace(/\D/g, "");
       if (postalCode.length !== 8) return message("Informe um CEP válido com oito dígitos.", true);
+      if (new URLSearchParams(window.location.search).get("next") === "clube.html") {
+        try { localStorage.setItem("luxuriosa_after_auth", "clube.html"); } catch (e) {}
+      }
       setBusy(signupForm, true, "CRIANDO SUA CONTA...");
       const { data, error } = await supabase.auth.signUp({
         email: $("signupEmail").value.trim(),
         password: $("signupPassword").value,
         options: {
-          emailRedirectTo: window.location.origin + window.location.pathname,
+          emailRedirectTo: window.location.origin + window.location.pathname +
+            (new URLSearchParams(window.location.search).get("next") === "clube.html" ? "?next=clube.html" : ""),
           data: {
             username,
             display_name: firstName,

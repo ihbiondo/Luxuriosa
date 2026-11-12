@@ -2,17 +2,54 @@
 (function () {
   "use strict";
   var CONSENT_KEY = "lux_cookie_consent_v1";
-  var CONSENT_VERSION = 1;
+  var CONSENT_VERSION = 2;
   var GA_ID = "G-PP3SPL55B0";
   var consent = null;
   var gaLoaded = false;
   var CLUB_INVITE_KEY = "lux_clube_convite_v1";
   var clubInviteScheduled = false;
 
-  function scheduleConsent() {
-    window.setTimeout(function () {
-      if (!consent) openConsent();
-    }, 60000);
+  var DATA_INVITE_KEY = "lux_autorizacoes_clube_v1";
+
+  function dataInvitationAlreadySeen() {
+    try {
+      var seenAt = Number(localStorage.getItem(DATA_INVITE_KEY) || 0);
+      return seenAt > 0 && Date.now() - seenAt < 30 * 24 * 60 * 60 * 1000;
+    } catch (e) { return false; }
+  }
+
+  function closeDataInvitation() {
+    var overlay = document.getElementById("lux-data-invite");
+    if (overlay) overlay.classList.remove("open");
+    try { localStorage.setItem(DATA_INVITE_KEY, String(Date.now())); } catch (e) {}
+  }
+
+  function openDataInvitation() {
+    if (dataInvitationAlreadySeen() ||
+        window.location.pathname.toLowerCase().endsWith("/clube.html") ||
+        document.getElementById("lux-data-invite")) return;
+    var clubOverlay = document.getElementById("lux-club-invite");
+    if (clubOverlay && clubOverlay.classList.contains("open")) return;
+
+    var overlay = document.createElement("div");
+    overlay.id = "lux-data-invite";
+    overlay.setAttribute("role", "dialog");
+    overlay.setAttribute("aria-modal", "true");
+    overlay.setAttribute("aria-labelledby", "luxDataInviteTitle");
+    overlay.innerHTML = '<section class="lux-data-invite-panel"><button type="button" class="lux-data-invite-close" aria-label="Fechar convite">×</button><span class="lux-club-kicker">SUA EXPERIÊNCIA, SUAS ESCOLHAS</span><h2 id="luxDataInviteTitle">Mais benefícios.<br><span>Mais cuidado.</span></h2><p>Você pode autorizar a personalização da sua experiência e o uso de estatísticas realmente anônimas para melhorar nossos serviços. Cada escolha é opcional. Seus dados pessoais identificáveis nunca serão compartilhados com parceiros.</p><a class="lux-club-invite-cta" href="/clube.html">CONFIGURAR AUTORIZAÇÕES</a><button type="button" class="lux-data-invite-later">Agora não</button><p class="lux-data-invite-privacy"><a href="/privacidade.html">Entenda como usamos seus dados</a></p></section>';
+    document.body.appendChild(overlay);
+    overlay.querySelector(".lux-data-invite-close").addEventListener("click", closeDataInvitation);
+    overlay.querySelector(".lux-data-invite-later").addEventListener("click", closeDataInvitation);
+    overlay.querySelector(".lux-club-invite-cta").addEventListener("click", closeDataInvitation);
+    overlay.addEventListener("keydown", function (event) {
+      if (event.key === "Escape") closeDataInvitation();
+    });
+    overlay.classList.add("open");
+    overlay.querySelector(".lux-club-invite-cta").focus();
+  }
+
+  function scheduleDataInvitation() {
+    window.setTimeout(openDataInvitation, 60000);
   }
 
   function clubInviteAlreadySeen() {
@@ -35,7 +72,7 @@
     overlay.setAttribute("role", "dialog");
     overlay.setAttribute("aria-modal", "true");
     overlay.setAttribute("aria-labelledby", "luxClubInviteTitle");
-    overlay.innerHTML = '<section class="lux-club-invite-panel"><button type="button" class="lux-club-invite-close" aria-label="Fechar convite">×</button><span class="lux-club-kicker">LUXURIOSA CONVIDA</span><h2 id="luxClubInviteTitle">VANTAGENS <span>&amp;</span><br>BENEFÍCIOS</h2><p>Descubra o Clube de Vantagens Luxuriosa e fique por dentro de novidades, condições especiais e oportunidades selecionadas.</p><a class="lux-club-invite-cta" href="https://wa.me/5514996355924?text=Ol%C3%A1!%20Quero%20conhecer%20o%20Clube%20de%20Vantagens%20da%20Luxuriosa." target="_blank" rel="noopener noreferrer">QUERO CONHECER O CLUBE</a><button type="button" class="lux-club-invite-later">Agora não</button></section>';
+    overlay.innerHTML = '<section class="lux-club-invite-panel"><button type="button" class="lux-club-invite-close" aria-label="Fechar convite">×</button><span class="lux-club-kicker">LUXURIOSA CONVIDA</span><h2 id="luxClubInviteTitle">VANTAGENS <span>&amp;</span><br>BENEFÍCIOS</h2><p>Descubra benefícios, atendimento e uma experiência ainda mais especial. Faça sua adesão pelo site e escolha suas preferências.</p><a class="lux-club-invite-cta" href="/clube.html">QUERO ENTRAR NO CLUBE</a><button type="button" class="lux-club-invite-later">Agora não</button></section>';
     document.body.appendChild(overlay);
     overlay.querySelector(".lux-club-invite-close").addEventListener("click", closeClubInvitation);
     overlay.querySelector(".lux-club-invite-later").addEventListener("click", closeClubInvitation);
@@ -45,6 +82,7 @@
   }
 
   function scheduleClubInvitation() {
+    if (window.location.pathname.toLowerCase().endsWith("/clube.html")) return;
     if (clubInviteScheduled || clubInviteAlreadySeen()) return;
     clubInviteScheduled = true;
     window.setTimeout(openClubInvitation, 15000);
@@ -56,14 +94,14 @@
       if (!value || value.version !== CONSENT_VERSION || !value.updatedAt) return null;
       var updatedAt = new Date(value.updatedAt).getTime();
       if (!Number.isFinite(updatedAt) || updatedAt > Date.now() || Date.now() - updatedAt > 180 * 24 * 60 * 60 * 1000) return null;
-      if (typeof value.analytics !== "boolean" || typeof value.marketing !== "boolean" || value.necessary !== true) return null;
+      if (typeof value.analytics !== "boolean" || value.necessary !== true) return null;
       return value;
     } catch (e) { return null; }
   }
 
-  function saveConsent(analytics, marketing) {
+  function saveConsent(analytics) {
     consent = { version: CONSENT_VERSION, updatedAt: new Date().toISOString(),
-      necessary: true, analytics: !!analytics, marketing: !!marketing };
+      necessary: true, analytics: !!analytics };
     try { localStorage.setItem(CONSENT_KEY, JSON.stringify(consent)); } catch (e) {}
     applyConsent();
     closeConsent();
@@ -141,6 +179,10 @@
       ".lux-switch{width:44px;height:25px;flex:0 0 44px;position:relative}.lux-switch input{position:absolute;opacity:0;width:1px;height:1px}.lux-switch span{position:absolute;inset:0;background:#555;border-radius:20px;cursor:pointer;transition:.2s}.lux-switch span:before{content:'';position:absolute;width:17px;height:17px;left:4px;top:4px;border-radius:50%;background:#fff;transition:.2s}.lux-switch input:checked+span{background:#9a7040}.lux-switch input:checked+span:before{transform:translateX(19px)}.lux-switch input:focus-visible+span{outline:2px solid #e5c18e;outline-offset:3px}",
       ".lux-cookie-actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:22px}.lux-cookie-actions button{flex:1;min-width:125px;border:1px solid #8f704e;border-radius:30px;padding:13px 15px;background:transparent;color:#f5eee7;font:500 12px Montserrat,Arial;cursor:pointer}.lux-cookie-actions .lux-primary{background:linear-gradient(100deg,#d6b47e,#f0d4a2);color:#1a1010;border-color:transparent}.lux-cookie-actions button:hover{filter:brightness(1.12)}",
       "#lux-cookie-panel a{color:#d8bd91;text-decoration:underline;font-size:12px}",
+      "#lux-data-invite{position:fixed;inset:0;z-index:10001;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(0,0,0,.82);backdrop-filter:blur(6px);font-family:Montserrat,Arial,sans-serif;color:#f7f0e8}",
+      "#lux-data-invite.open{display:flex}.lux-data-invite-panel{position:relative;width:min(100%,500px);padding:34px 28px 25px;text-align:center;border:1px solid rgba(212,175,124,.65);border-radius:19px;background:radial-gradient(ellipse at 50% 0%,#351324,#10080d 72%);box-shadow:0 24px 90px #000}",
+      ".lux-data-invite-panel h2{margin:14px 0;color:#f7e8d0;font-family:'Playfair Display',Georgia,serif;font-size:clamp(30px,7vw,43px);font-weight:500;line-height:1.02}.lux-data-invite-panel h2 span{color:#ed5b9a}",
+      ".lux-data-invite-panel p{max-width:390px;margin:0 auto 21px;color:#d0c7c5;font-size:12px;line-height:1.75}.lux-data-invite-close{position:absolute;right:15px;top:10px;border:0;background:none;color:#c8bdbb;font-size:27px;cursor:pointer}.lux-data-invite-later{margin-top:13px;border:0;background:transparent;color:#b9aeac;font:12px Montserrat,Arial,sans-serif;cursor:pointer}.lux-data-invite-privacy{margin:12px 0 0!important}.lux-data-invite-privacy a{color:#d8bd91;font-size:11px}",
       "#lux-club-invite{position:fixed;inset:0;z-index:10002;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(0,0,0,.84);backdrop-filter:blur(6px);font-family:Montserrat,Arial,sans-serif;color:#f7f0e8}",
       "#lux-club-invite.open{display:flex}.lux-club-invite-panel{position:relative;width:min(100%,520px);padding:38px 30px 28px;text-align:center;border:1px solid rgba(212,175,124,.65);border-radius:20px;background:radial-gradient(ellipse at 50% 0,rgba(160,31,78,.34),transparent 58%),linear-gradient(145deg,#211018,#090809);box-shadow:0 24px 90px #000}",
       ".lux-club-invite-close{position:absolute;right:16px;top:10px;border:0;background:none;color:#c8bdbb;font-size:28px;cursor:pointer}.lux-club-kicker{color:#d8bd91;font-size:10px;letter-spacing:.24em}",
@@ -176,18 +218,18 @@
     overlay.setAttribute("role", "dialog");
     overlay.setAttribute("aria-modal", "true");
     overlay.setAttribute("aria-labelledby", "luxCookieTitle");
-    overlay.innerHTML = '<section id="lux-cookie-panel"><button class="lux-cookie-close" type="button" aria-label="Fechar preferências e rejeitar opções opcionais" data-cookie-close>×</button><h2 id="luxCookieTitle">Sua privacidade importa</h2><p>Usamos armazenamento local para recursos essenciais, como carrinho e confirmação de maioridade. Com sua autorização, também usamos ferramentas opcionais de análise. Você escolhe quais categorias opcionais autoriza.</p><div class="lux-cookie-option"><div><strong>Tecnologias necessárias</strong><small>Armazenamento local para carrinho, confirmação de maioridade e registro das preferências.</small></div><span class="lux-cookie-pill">Sempre ativas</span></div><div class="lux-cookie-option"><div><strong>Estatísticas e análise</strong><small>Medição de navegação por meio do Google Analytics 4. Só é ativada com sua autorização.</small></div><label class="lux-switch"><input id="luxAnalytics" type="checkbox" aria-label="Autorizar estatísticas e análise"><span></span></label></div><div class="lux-cookie-option"><div><strong>Marketing</strong><small>Autoriza o uso futuro de tecnologias opcionais de marketing e publicidade, quando integradas. Nenhuma ferramenta de marketing está ativa no momento.</small></div><label class="lux-switch"><input id="luxMarketing" type="checkbox" aria-label="Autorizar marketing"><span></span></label></div><p><a href="' + (location.pathname.indexOf("/produtos/") !== -1 ? "../privacidade.html" : "privacidade.html") + '">Leia nossa Política de Privacidade</a></p><div class="lux-cookie-actions"><button type="button" class="lux-primary" data-cookie-accept>Aceitar todas</button><button type="button" data-cookie-reject>Rejeitar opcionais</button><button type="button" data-cookie-custom>Personalizar</button></div><div class="lux-cookie-actions" id="lux-cookie-save-row" hidden><button type="button" class="lux-primary" data-cookie-save>Salvar minhas preferências</button></div></section>';
+    overlay.innerHTML = '<section id="lux-cookie-panel"><button class="lux-cookie-close" type="button" aria-label="Fechar preferências e rejeitar estatísticas opcionais" data-cookie-close>×</button><h2 id="luxCookieTitle">Sua privacidade importa</h2><p>Usamos armazenamento local para recursos essenciais, como carrinho e confirmação de maioridade. Estatísticas opcionais só são ativadas com sua autorização. Marketing e autorizações do Clube são tratados separadamente.</p><div class="lux-cookie-option"><div><strong>Tecnologias necessárias</strong><small>Armazenamento local para carrinho, confirmação de maioridade e registro das preferências.</small></div><span class="lux-cookie-pill">Sempre ativas</span></div><div class="lux-cookie-option"><div><strong>Estatísticas e análise</strong><small>Medição de navegação por meio do Google Analytics 4. Só é ativada com sua autorização.</small></div><label class="lux-switch"><input id="luxAnalytics" type="checkbox" aria-label="Autorizar estatísticas e análise"><span></span></label></div><p><a href="' + (location.pathname.indexOf("/produtos/") !== -1 ? "../privacidade.html" : "privacidade.html") + '">Leia nossa Política de Privacidade</a></p><div class="lux-cookie-actions"><button type="button" class="lux-primary" data-cookie-accept>Aceitar estatísticas</button><button type="button" data-cookie-reject>Rejeitar opcionais</button><button type="button" data-cookie-custom>Personalizar</button></div><div class="lux-cookie-actions" id="lux-cookie-save-row" hidden><button type="button" class="lux-primary" data-cookie-save>Salvar minhas preferências</button></div></section>';
     document.body.appendChild(overlay);
-    overlay.querySelector("[data-cookie-reject]").addEventListener("click", function () { saveConsent(false, false); });
-    overlay.querySelector("[data-cookie-accept]").addEventListener("click", function () { saveConsent(true, true); });
+    overlay.querySelector("[data-cookie-reject]").addEventListener("click", function () { saveConsent(false); });
+    overlay.querySelector("[data-cookie-accept]").addEventListener("click", function () { saveConsent(true); });
     overlay.querySelector("[data-cookie-custom]").addEventListener("click", function () {
       document.getElementById("lux-cookie-save-row").hidden = false;
       document.querySelector("[data-cookie-save]").focus();
     });
     overlay.querySelector("[data-cookie-save]").addEventListener("click", function () {
-      saveConsent(document.getElementById("luxAnalytics").checked, document.getElementById("luxMarketing").checked);
+      saveConsent(document.getElementById("luxAnalytics").checked);
     });
-    overlay.querySelector("[data-cookie-close]").addEventListener("click", function () { saveConsent(false, false); });
+    overlay.querySelector("[data-cookie-close]").addEventListener("click", function () { saveConsent(false); });
     overlay.addEventListener("keydown", trapFocus);
   }
 
@@ -206,7 +248,6 @@
     overlay.classList.add("open");
     document.body.classList.add("lux-consent-open");
     document.getElementById("luxAnalytics").checked = !!(consent && consent.analytics);
-    document.getElementById("luxMarketing").checked = !!(consent && consent.marketing);
     document.getElementById("lux-cookie-save-row").hidden = true;
     window.setTimeout(function () { overlay.querySelector("[data-cookie-accept]").focus(); }, 0);
   }
@@ -245,7 +286,8 @@
       document.body.classList.remove("gate-open");
       gate.classList.remove("open");
       gate.setAttribute("aria-hidden", "true");
-      if (consent) applyConsent(); else scheduleConsent();
+      if (consent) applyConsent();
+      scheduleDataInvitation();
       scheduleClubInvitation();
     } else {
       gate.classList.add("open");
@@ -258,7 +300,8 @@
       gate.classList.remove("open");
       gate.setAttribute("aria-hidden", "true");
       document.body.classList.remove("gate-open");
-      if (consent) applyConsent(); else scheduleConsent();
+      if (consent) applyConsent();
+      scheduleDataInvitation();
       scheduleClubInvitation();
     });
     gate.addEventListener("keydown", function (event) {

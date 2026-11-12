@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#12070d">
+  <meta name="description" content="Entre para o Clube de Vantagens Luxuriosa e personalize sua experiência.">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Clube de Vantagens | Luxuriosa</title>
+  <link rel="icon" href="favicon.ico">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root{color-scheme:dark;--bg:#10070c;--panel:#1b0c14;--gold:#d8b77f;--pink:#ed5b9a;--text:#f7f0e8;--muted:#c0b2b6;--line:rgba(216,183,127,.22)}
+    *{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 50% 0%,#351324 0%,var(--bg) 58%);color:var(--text);font-family:Montserrat,Arial,sans-serif}
+    a{color:var(--gold)}.top{max-width:960px;margin:auto;padding:24px 22px;display:flex;align-items:center;justify-content:space-between}.brand{font:500 22px 'Playfair Display',serif;letter-spacing:.08em;color:var(--gold);text-decoration:none}.back{font-size:12px;text-decoration:none;color:var(--muted)}
+    main{width:min(100% - 32px,720px);margin:28px auto 64px}.hero{text-align:center;margin-bottom:28px}.eyebrow{color:var(--gold);font-size:10px;font-weight:700;letter-spacing:.24em}.hero h1{font:500 clamp(38px,8vw,58px)/1.05 'Playfair Display',serif;margin:14px 0;color:#f4dfc3}.hero p{max-width:540px;margin:0 auto;color:var(--muted);font-size:13px;line-height:1.8}
+    .panel{background:linear-gradient(145deg,rgba(38,17,29,.98),rgba(19,9,15,.98));border:1px solid var(--line);border-radius:20px;padding:clamp(22px,5vw,38px);box-shadow:0 24px 80px #0008}
+    .status{display:none;margin-bottom:18px;padding:12px 14px;border:1px solid var(--line);border-radius:12px;color:var(--gold);font-size:12px}.status.show{display:block}
+    .choice{display:flex;gap:14px;align-items:flex-start;padding:18px 0;border-top:1px solid rgba(255,255,255,.09)}.choice:first-of-type{border-top:0}.choice[hidden]{display:none!important}.choice input{width:19px;height:19px;margin:2px 0 0;accent-color:var(--pink);flex:0 0 auto}.choice label{cursor:pointer;display:block}.choice strong{display:block;color:#fff;font-size:14px;margin-bottom:5px}.choice small{display:block;color:var(--muted);font-size:12px;line-height:1.65}.required{border:1px solid rgba(237,91,154,.28);background:rgba(237,91,154,.06);border-radius:13px;padding:15px;margin-bottom:6px}
+    .actions{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-top:24px}.primary{border:0;border-radius:28px;padding:15px 24px;background:linear-gradient(100deg,#d6b47e,#f0d4a2);color:#21130d;font-weight:700;font-size:11px;letter-spacing:.1em;cursor:pointer}.primary:disabled{opacity:.55;cursor:wait}.quiet{border:0;background:none;color:var(--muted);font-size:12px;text-decoration:underline;cursor:pointer;padding:12px}.note{font-size:11px;line-height:1.7;color:var(--muted);margin:18px 0 0}.message{display:none;margin-top:18px;padding:13px 15px;border-radius:12px;font-size:13px;line-height:1.6;background:#123326;color:#d9f4e5}.message.error{background:#421b28;color:#ffe1e8}.message.show{display:block}.footer{text-align:center;color:#9c8b91;font-size:11px;padding:24px}.footer a{margin:0 8px}
+    @media(max-width:520px){.top{padding:18px}.back{font-size:11px}.actions{display:grid}.primary,.quiet{width:100%}}
+  </style>
+</head>
+<body>
+  <header class="top"><a class="brand" href="index.html">LUXURIOSA</a><a class="back" href="index.html">VOLTAR À LOJA</a></header>
+  <main>
+    <section class="hero"><span class="eyebrow">UM UNIVERSO DE VANTAGENS</span><h1>Clube Luxuriosa</h1><p>Benefícios, atendimento e uma experiência cada vez mais alinhada ao que você procura. Você escolhe como deseja participar.</p></section>
+    <section class="panel" aria-labelledby="clubTitle">
+      <div id="clubStatus" class="status" role="status"></div>
+      <h2 id="clubTitle" style="font:500 24px 'Playfair Display',serif;color:#f4dfc3;margin:0 0 8px">Suas escolhas</h2>
+      <p style="font-size:12px;color:var(--muted);line-height:1.7;margin:0 0 20px">A entrada no Clube é independente das autorizações opcionais abaixo. Você pode alterar ou retirar suas escolhas depois.</p>
+      <form id="clubForm">
+        <div id="joinChoice" class="choice required">
+          <input id="joinClub" type="checkbox">
+          <label for="joinClub"><strong>Quero fazer parte do Clube Luxuriosa</strong><small>Confirmo minha adesão ao Clube de Vantagens. Posso sair a qualquer momento e não preciso autorizar marketing nem personalização.</small></label>
+        </div>
+        <div class="choice">
+          <input id="personalization" type="checkbox">
+          <label for="personalization"><strong>Personalizar minha experiência</strong><small>Autorizo a Luxuriosa a usar os dados do meu cadastro e minhas preferências que eu informar para melhorar recomendações, atendimento e benefícios. Não inclui criar perfil sobre minha vida íntima.</small></label>
+        </div>
+        <div class="choice">
+          <input id="anonymousStatistics" type="checkbox">
+          <label for="anonymousStatistics"><strong>Contribuir com estatísticas anônimas</strong><small>Autorizo o uso de informações efetivamente anonimizadas e agregadas para análises e melhorias. Nenhum cadastro pessoal identificável será compartilhado com parceiros comerciais.</small></label>
+        </div>
+        <div class="choice">
+          <input id="whatsappMarketing" type="checkbox">
+          <label for="whatsappMarketing"><strong>Quero receber novidades e ofertas pelo WhatsApp</strong><small>Autorizo mensagens promocionais e benefícios do Clube. É opcional e posso cancelar quando quiser. Não é necessário para entrar no Clube.</small></label>
+        </div>
+        <div class="actions"><button id="saveClub" class="primary" type="submit">SALVAR MINHAS ESCOLHAS</button><button id="leaveClub" class="quiet" type="button" hidden>Sair do Clube</button></div>
+        <p class="note">Cookies e tecnologias de navegação são configurados separadamente em <a href="privacidade.html">Preferências de cookies e Política de Privacidade</a>. A Luxuriosa não vende nem compartilha cadastros identificáveis com parceiros comerciais.</p>
+        <div id="clubMessage" class="message" role="status" aria-live="polite"></div>
+      </form>
+    </section>
+  </main>
+  <footer class="footer"><a href="privacidade.html">Privacidade</a><a href="index.html">Loja Luxuriosa</a></footer>
+  <script src="js/consentimento.js"></script>
+  <script type="module" src="js/clube.js"></script>
+</body>
+</html>
