@@ -74,6 +74,7 @@ input,select{width:100%;min-width:0;border:1px solid var(--line);border-radius:8
 <button class="quick-filter" type="button" data-filter="pending">Aguardando pagamento <b data-count="pending">—</b></button>
 <button class="quick-filter" type="button" data-filter="review_required">Em conferência <b data-count="review">—</b></button>
 <button class="quick-filter" type="button" data-filter="paid">Pagos <b data-count="paid">—</b></button>
+<button class="quick-filter" type="button" data-filter="test">Testes <b data-count="test">—</b></button>
 </nav>
 <div id="notice" class="notice" role="status"></div>
 <section class="sales-ledger" aria-labelledby="salesLedgerTitle">
@@ -301,8 +302,9 @@ input,select{width:100%;min-width:0;border:1px solid var(--line);border-radius:8
         const statusMatch=!filter||
           (filter==="pending"&&o.payment_status==="pending"&&o.status!=="cancelled")||
           (filter==="paid"&&o.payment_status==="paid")||
-          (filter==="review_required"&&o.payment_status==="review_required")||
-          (!["pending","paid","review_required"].includes(filter)&&o.status===filter);
+          (filter==="review_required"&&!o.is_test&&o.payment_status==="review_required")||
+          (filter==="test"&&o.is_test===true)||
+          (!["pending","paid","review_required","test"].includes(filter)&&o.status===filter);
         return statusMatch&&(!term||[o.order_number,o.customer_name,o.customer_phone].some(v=>String(v||"").toLocaleLowerCase("pt-BR").includes(term)));
       });
       const box=$("orders");box.replaceChildren();
@@ -323,10 +325,11 @@ input,select{width:100%;min-width:0;border:1px solid var(--line);border-radius:8
         allOrders=data.orders||[];
         allSales=Array.isArray(data.sales)?data.sales:[];
         renderSalesLedger();
-        const pending=allOrders.filter(o=>o.payment_status==="pending"&&o.status!=="cancelled").length;
-        const paid=allOrders.filter(o=>o.payment_status==="paid").length;
-        const review=allOrders.filter(o=>o.payment_status==="review_required").length;
-        const moving=allOrders.filter(o=>o.payment_status==="paid"&&["processing","dispatched","out_for_delivery"].includes(o.status)).length;
+        const operationalOrders=allOrders.filter(o=>!o.is_test);
+        const testOrders=allOrders.filter(o=>o.is_test);
+        const pending=operationalOrders.filter(o=>o.payment_status==="pending"&&o.status!=="cancelled").length;
+        const paid=operationalOrders.filter(o=>o.payment_status==="paid").length;
+        const review=operationalOrders.filter(o=>o.payment_status==="review_required").length;
         const metric=(label,value,note,icon,tone)=>{
           const card=node("div","summary-card"),symbol=node("span","summary-icon"+(tone?" "+tone:""));
           const paths={
@@ -340,14 +343,14 @@ input,select{width:100%;min-width:0;border:1px solid var(--line);border-radius:8
           body.append(name,number,detail);card.append(symbol,body);return card;
         };
         $("summary").replaceChildren(
-          metric("Pedidos listados",allOrders.length,"No período selecionado","list",""),
-          metric("Aguardando pagamento",pending,"Ainda sem confirmação","clock","amber"),
-          metric("Em conferência",review,"Exigem conciliação","clock","red"),
-          metric("Pagos · em andamento",moving,"Separação, despacho ou rota","route","green")
+          metric("Pedidos operacionais",operationalOrders.length,"Tentativas de teste excluídas","list",""),
+          metric("Aguardando pagamento",pending,"Pedidos reais sem confirmação","clock","amber"),
+          metric("Em conferência",review,"Pedidos reais em conciliação","clock","red"),
+          metric("Registros de teste",testOrders.length,"Fora dos indicadores comerciais","route","")
         );
         $("quickFilters").querySelectorAll("[data-count]").forEach(el=>{
           const key=el.dataset.count;
-          const count=key==="all"?allOrders.length:key==="pending"?pending:key==="review"?review:paid;
+          const count=key==="all"?allOrders.length:key==="pending"?pending:key==="review"?review:key==="test"?testOrders.length:paid;
           el.textContent=count;
         });
         $("quickFilters").querySelectorAll(".quick-filter").forEach(button=>button.classList.toggle("active",button.dataset.filter===$("statusFilter").value));
