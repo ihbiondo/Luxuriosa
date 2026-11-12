@@ -28,6 +28,13 @@ function cleanText(value: unknown, max = 160): string | null {
   const result = value.trim().slice(0, max);
   return result || null;
 }
+const KITS_WITH_DICE_CHOICE = new Set(["22", "23", "24", "27", "28", "29"]);
+const DICE_OPTIONS: Record<string, string> = {
+  "1": "Dado do Prazer — Gay",
+  "2": "Dado do Prazer — Hétero",
+  "3": "Dado do Prazer — Lésbico"
+};
+
 function cleanItems(value: unknown) {
   if (!Array.isArray(value) || value.length > 80) throw new Error("Carrinho inválido.");
   return value.map((raw: any) => {
@@ -36,13 +43,30 @@ function cleanItems(value: unknown) {
     const price = Number(raw?.preco);
     if (!name || !Number.isInteger(quantity) || quantity < 1 || quantity > 999 ||
         !Number.isFinite(price) || price < 0 || price > 100000) throw new Error("Item inválido.");
+    const productId = cleanText(raw?.id, 100);
+    const rawSelected = Array.isArray(raw?.selected_components) ? raw.selected_components : [];
+    const selectedComponents = rawSelected.map((component: any) => {
+      const id = cleanText(component?.product_id, 10) || "";
+      const componentQuantity = Number(component?.quantity);
+      if (!Object.prototype.hasOwnProperty.call(DICE_OPTIONS, id) ||
+          !Number.isSafeInteger(componentQuantity) || componentQuantity !== 1) {
+        throw new Error("A versão do Dado do Prazer selecionada no kit é inválida.");
+      }
+      return { product_id: id, product_name: DICE_OPTIONS[id], quantity: 1 };
+    });
+    if (KITS_WITH_DICE_CHOICE.has(productId || "") && selectedComponents.length !== 1) {
+      throw new Error("Escolha a versão do Dado do Prazer antes de continuar com este kit.");
+    }
+    if (!KITS_WITH_DICE_CHOICE.has(productId || "") && selectedComponents.length) {
+      throw new Error("A seleção de componente não corresponde ao produto informado.");
+    }
     return {
-      product_id: cleanText(raw?.id, 100),
+      product_id: productId,
       product_name: name,
       sku: cleanText(raw?.sku, 80),
       quantity,
       unit_price: Math.round(price * 100) / 100,
-      product_snapshot: {}
+      product_snapshot: selectedComponents.length ? { selected_components: selectedComponents } : {}
     };
   });
 }
