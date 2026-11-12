@@ -238,7 +238,7 @@
       document.body.classList.remove("gate-open");
       gate.classList.remove("open");
       gate.setAttribute("aria-hidden", "true");
-      if (consent) applyConsent(); else scheduleConsent();
+      if (consent) applyConsent();
       scheduleClubInvitation();
     } else {
       gate.classList.add("open");
@@ -251,7 +251,7 @@
       gate.classList.remove("open");
       gate.setAttribute("aria-hidden", "true");
       document.body.classList.remove("gate-open");
-      if (consent) applyConsent(); else scheduleConsent();
+      if (consent) applyConsent();
       scheduleClubInvitation();
     });
     gate.addEventListener("keydown", function (event) {
