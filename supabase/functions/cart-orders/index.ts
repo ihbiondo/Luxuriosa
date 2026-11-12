@@ -536,7 +536,7 @@ Deno.serve(async (req: Request) => {
     if (previousOrderError) throw previousOrderError;
     if (previousOrder) {
       const { data: previousItems, error: previousItemsError } = await admin.from("order_items")
-        .select("product_id, product_name, sku, quantity, unit_price")
+        .select("product_id, product_name, sku, quantity, unit_price, product_snapshot")
         .eq("order_id", previousOrder.id);
       if (previousItemsError) throw previousItemsError;
       const normalizeItems = (rows: any[]) => rows.map(item => ({
@@ -544,13 +544,18 @@ Deno.serve(async (req: Request) => {
         product_name: item.product_name || "",
         sku: item.sku || null,
         quantity: Number(item.quantity),
-        unit_price: Math.round(Number(item.unit_price) * 100)
+        unit_price: Math.round(Number(item.unit_price) * 100),
+        selected_components: (Array.isArray(item.product_snapshot?.selected_components)
+          ? item.product_snapshot.selected_components : [])
+          .map((component: any) => String(component.product_id || "") + "x" + Number(component.quantity || 0))
+          .sort()
       })).sort((a,b) =>
         String(a.product_id).localeCompare(String(b.product_id)) ||
         String(a.product_name).localeCompare(String(b.product_name)) ||
         String(a.sku).localeCompare(String(b.sku)) ||
         a.quantity - b.quantity ||
-        a.unit_price - b.unit_price
+        a.unit_price - b.unit_price ||
+        JSON.stringify(a.selected_components).localeCompare(JSON.stringify(b.selected_components))
       );
       const sameItems = JSON.stringify(normalizeItems(previousItems || [])) ===
         JSON.stringify(normalizeItems(items));
