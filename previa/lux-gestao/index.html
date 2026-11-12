@@ -209,6 +209,7 @@ td strong{font-size:9px}td .muted{font-size:8px;color:var(--muted);display:block
               <div class="field wide"><label for="posProduct">Produto</label><select id="posProduct"><option value="">Carregando catálogo...</option></select></div>
               <div class="field"><label for="posQuantity">Quantidade</label><input id="posQuantity" type="number" min="1" max="999" step="1" value="1"></div>
               <div class="field" style="align-self:end"><button id="addCartBtn" class="subtle full" type="button">＋ Adicionar item</button></div>
+              <div class="field wide" style="display:flex;align-items:center;gap:8px"><input id="posGift" type="checkbox" style="width:16px;height:16px;flex:0 0 auto"><label for="posGift" style="margin:0">Registrar este item como brinde (R$ 0,00; estoque baixado normalmente)</label></div>
             </div>
             <div class="section">
               <div class="section-title">Itens da venda</div>
@@ -407,7 +408,7 @@ function renderOverview(){
 }
 function renderCart(){
  const rows=$("cartRows");if(!cart.length)rows.innerHTML=emptyRow(4,"Adicione produtos para começar.");
- else rows.innerHTML=cart.map((item,i)=>'<tr><td><strong>'+safeText(item.product_name)+'</strong></td><td>'+number(item.quantity)+'</td><td class="text-right">'+money(item.quantity*item.unit_price_cents)+'</td><td><button class="small-btn danger" data-remove-cart="'+i+'" type="button">Remover</button></td></tr>').join("");
+ else rows.innerHTML=cart.map((item,i)=>'<tr><td><strong>'+safeText(item.product_name)+'</strong>'+(item.is_gift?'<span class="status neutral">BRINDE · R$ 0,00</span>':'')+'</td><td>'+number(item.quantity)+'</td><td class="text-right">'+money(item.quantity*item.unit_price_cents)+'</td><td><button class="small-btn danger" data-remove-cart="'+i+'" type="button">Remover</button></td></tr>').join("");
  const subtotal=cart.reduce((sum,item)=>sum+item.quantity*item.unit_price_cents,0),discount=cents($("posDiscount").value),total=Math.max(0,subtotal-discount);
  $("cartSubtotal").textContent=money(subtotal);$("cartDiscount").textContent=money(discount);$("cartTotal").textContent=money(total);
  $("saveSaleBtn").disabled=!cart.length||total<=0;
@@ -564,11 +565,11 @@ async function saveExpense(event){
  }catch(error){showNotice(error.message,"error");}
 }
 function addCartItem(){
- const id=$("posProduct").value,product=catalog.find(p=>String(p.id)===id),quantity=Number($("posQuantity").value);
+ const id=$("posProduct").value,product=catalog.find(p=>String(p.id)===id),quantity=Number($("posQuantity").value),isGift=$("posGift").checked;
  if(!product||!Number.isSafeInteger(quantity)||quantity<1||quantity>999){showNotice("Selecione um produto e uma quantidade válida.","error");return;}
- const item=cart.find(x=>String(x.product_id)===String(product.id));
- if(item)item.quantity+=quantity;else cart.push({product_id:String(product.id),product_name:product.nome,quantity,unit_price_cents:cents(product.preco)});
- $("posQuantity").value="1";renderCart();
+ const item=cart.find(x=>String(x.product_id)===String(product.id)&&Boolean(x.is_gift)===isGift),unitPrice=isGift?0:cents(product.preco);
+ if(item)item.quantity+=quantity;else cart.push({product_id:String(product.id),product_name:product.nome,quantity,unit_price_cents:unitPrice,is_gift:isGift});
+ $("posGift").checked=false;$("posQuantity").value="1";renderCart();
 }
 async function saveSale(){
  if(!cart.length)return;
