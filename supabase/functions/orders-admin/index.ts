@@ -40,6 +40,13 @@ Deno.serve(async (req: Request) => {
     const action = body?.action;
     if (!["admin_update_order_status", "admin_dashboard", "admin_confirm_payment_manual"].includes(action)) return response({ error: "Ação inválida." }, 400, origin);
     if (action === "admin_confirm_payment_manual") {
+      const { data: manualPermission, error: manualPermissionError } = await admin
+        .from("user_permissions").select("role").eq("user_id", userId).maybeSingle();
+      if (manualPermissionError) throw manualPermissionError;
+      if (manualPermission?.role !== "admin") {
+        return response({ error: "Acesso restrito à administração." }, 403, origin);
+      }
+
       const orderId = body.order_id;
       const paymentMethod = body.payment_method;
       if (!isUuid(orderId) || !["pix", "credit_card"].includes(paymentMethod)) {
