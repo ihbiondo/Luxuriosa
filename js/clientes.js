@@ -209,17 +209,18 @@
       var avisoFrete = temKit
         ? "Entrega em Bauru-SP: seu pedido inclui um kit promocional e tem frete grátis."
         : "Entrega em Bauru-SP: frete fixo de R$ 15,00. Pedidos com pelo menos um kit promocional têm frete grátis.";
+      var avisoPrazo = " Prazo operacional previsto: até 30 minutos após a confirmação do pagamento, contado dentro da janela de entrega. Pagamentos fora da janela entram na próxima abertura.";
       var avisoMinimo = " O subtotal mínimo para pagamento automático é R$ 50,00, inclusive quando há kit.";
       if (subtotal > 0 && subtotal < 50) {
         avisoMinimo += " Faltam " + formatarPreco(50 - subtotal) + " em produtos para atingir o mínimo.";
       }
-      aviso.textContent = avisoFrete + avisoMinimo;
+      aviso.textContent = avisoFrete + avisoPrazo + avisoMinimo;
       return;
     }
 
     var cidadesCheckout = ["agudos", "pederneiras", "piratininga", "lencois paulista"];
     if (estado === "SP" && cidadesCheckout.indexOf(cidadeNormalizada) !== -1) {
-      aviso.textContent = "Entrega em " + cidade + "/SP: checkout automático disponível. O frete e o pedido mínimo são calculados pela rota do endereço e aparecem antes do pagamento. Prazo operacional previsto: até 2 horas após a confirmação. Pedidos com kit podem zerar a tarifa-base; pedágios, se houver, são calculados à parte.";
+      aviso.textContent = "Entrega em " + cidade + "/SP: checkout automático disponível. O frete e o pedido mínimo são calculados pela rota do endereço e aparecem antes do pagamento. Prazo operacional previsto: até 2 horas de operação após a confirmação, contado dentro da janela de entrega. Pedidos com kit podem zerar a tarifa-base; pedágios, se houver, são calculados à parte.";
       return;
     }
 
