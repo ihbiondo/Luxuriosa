@@ -635,10 +635,51 @@ Deno.serve(async (request: Request) => {
           .in("product_id", productIds);
         if (costError) throw costError;
         const costMap = new Map((costs || []).map((row) => [row.product_id, Number(row.unit_cost_cents)]));
+
+        // Fixed kits inherit their unit cost from the configured component recipe.
+        const { data: kitComponents, error: kitError } = await admin.from("management_kit_components")
+          .select("kit_product_id, component_product_id, quantity")
+          .in("kit_product_id", productIds);
+        if (kitError) throw kitError;
+        const componentIds = [...new Set((kitComponents || []).map((row) => row.component_product_id))];
+        const componentCostMap = new Map<string, number>();
+        if (componentIds.length) {
+          const { data: componentCosts, error: componentCostError } = await admin.from("management_product_costs")
+            .select("product_id, unit_cost_cents")
+            .in("product_id", componentIds);
+          if (componentCostError) throw componentCostError;
+          for (const row of componentCosts || []) componentCostMap.set(row.product_id, Number(row.unit_cost_cents));
+        }
+
+        const kitCostMap = new Map<string, number | null>();
+        const kitGroups = new Map<string, any[]>();
+        for (const component of kitComponents || []) {
+          const group = kitGroups.get(component.kit_product_id) || [];
+          group.push(component);
+          kitGroups.set(component.kit_product_id, group);
+        }
+        for (const [kitId, components] of kitGroups) {
+          let total = 0;
+          let complete = components.length > 0;
+          for (const component of components) {
+            const unitCost = componentCostMap.get(component.component_product_id);
+            if (unitCost === undefined || !Number.isSafeInteger(unitCost)) {
+              complete = false;
+              break;
+            }
+            total += unitCost * Number(component.quantity);
+          }
+          kitCostMap.set(kitId, complete && Number.isSafeInteger(total) ? total : null);
+        }
+
         for (const item of items) {
-          item.unit_cost_cents = item.product_id && costMap.has(item.product_id)
-            ? costMap.get(item.product_id)
-            : null;
+          if (item.product_id && kitCostMap.has(item.product_id)) {
+            item.unit_cost_cents = kitCostMap.get(item.product_id);
+          } else {
+            item.unit_cost_cents = item.product_id && costMap.has(item.product_id)
+              ? costMap.get(item.product_id)
+              : null;
+          }
         }
       } else {
         for (const item of items) item.unit_cost_cents = null;
