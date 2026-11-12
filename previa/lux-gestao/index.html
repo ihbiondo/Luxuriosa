@@ -489,8 +489,9 @@ async function saveBulkStock(){
   showNotice("Contagem concluída. "+completed+" produto(s) tiveram o controle atualizado.","success");
  }catch(error){
   try{const fresh=await api("stock-list");stock=fresh.stock||[];movements=fresh.movements||[];renderStock();for(const item of entries.slice(completed)){const count=$("bulkStockRows").querySelector('[data-bulk-count="'+item.id+'"]');const minimum=$("bulkStockRows").querySelector('[data-bulk-minimum="'+item.id+'"]');if(count)count.value=String(item.count);if(minimum)minimum.value=String(item.minimum);}$("bulkStockStatus").textContent=completed+" de "+entries.length+" salvos; revise os restantes e tente novamente.";}catch(_){}
-  showNotice("A contagem foi interrompida após "+completed+" de "+entries.length+" produto(s). Os itens já salvos foram preservados. "+(error.message||"Confira a conexão e tente novamente."),"error");
- }finally{button.disabled=false;button.textContent="Salvar contagens preenchidas";}
+  if(completed===entries.length)showNotice("As "+completed+" contagens foram registradas. A atualização final da tela falhou; atualize os dados antes de continuar. "+(error.message||""),"error");
+  else showNotice("A contagem foi interrompida após "+completed+" de "+entries.length+" produto(s). Os itens já salvos foram preservados. "+(error.message||"Confira a conexão e tente novamente."),"error");
+ }finally{button.disabled=![...$("bulkStockRows").querySelectorAll("[data-bulk-count]")].some(input=>input.value.trim()!=="");button.textContent="Salvar contagens preenchidas";}
 }
 async function enableStock(productId){
  const product=catalog.find(p=>String(p.id)===String(productId));if(!product)return;
