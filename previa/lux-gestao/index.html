@@ -243,7 +243,7 @@ td strong{font-size:9px}td .muted{font-size:8px;color:var(--muted);display:block
     <section class="view hidden" id="view-stock">
       <div class="page-head"><div><div class="eyebrow">PRODUTOS · SALDO FÍSICO</div><h1>Estoque</h1><p class="page-desc">Cadastre a contagem real, registre entradas e saídas e mantenha um histórico de cada movimentação.</p></div><div class="page-actions"><button id="openMovementBtn" class="primary" type="button">＋ Registrar movimentação</button></div></div>
       <div class="callout" style="margin-bottom:12px"><strong>Atenção:</strong> saldo não contado não é estoque zero. Ative o controle somente depois de conferir fisicamente o produto. A partir daí, as vendas pagas poderão baixar os itens automaticamente, inclusive os componentes de kits.</div>
-      <section class="panel section"><div class="panel-head"><div><h2>Contagem física em lote</h2><p>Preencha somente os produtos que você conferiu. Campos vazios não alteram o estoque.</p></div><span class="status neutral">CONTAGEM INICIAL</span></div><div class="panel-body"><div class="callout" style="margin-bottom:10px">Informe a quantidade física atual. Ao salvar, o sistema registra o ajuste no histórico e ativa o controle do produto. Se a operação for interrompida, os itens já salvos permanecem registrados.</div><div class="table-wrap"><table style="min-width:650px"><thead><tr><th>Produto</th><th>Saldo atual</th><th>Contagem física</th><th>Mínimo para alerta</th></tr></thead><tbody id="bulkStockRows"><tr><td colspan="4" class="empty">Aguardando catálogo...</td></tr></tbody></table></div><div class="form-actions" style="align-items:center"><span id="bulkStockStatus" class="muted">Nenhuma contagem preenchida.</span><button id="saveBulkStockBtn" class="primary" type="button" disabled>Salvar contagens preenchidas</button></div></div></section><section class="panel"><div class="panel-head"><div><h2>Produtos e saldo controlado</h2><p>Saldo físico, alertas e movimentações individuais.</p></div><span id="stockCount" class="status neutral">—</span></div><div class="table-wrap"><table><thead><tr><th>Produto</th><th>Saldo</th><th>Alerta mínimo</th><th>Controle</th><th>Ação</th></tr></thead><tbody id="stockRows"><tr><td colspan="5" class="empty">Aguardando dados...</td></tr></tbody></table></div></section>
+      <section class="panel section"><div class="panel-head"><div><h2>Contagem física em lote</h2><p>Preencha somente os produtos que você conferiu. Campos vazios não alteram o estoque.</p></div><span class="status neutral">CONTAGEM INICIAL</span></div><div class="panel-body"><div class="callout" style="margin-bottom:10px">Informe a quantidade física atual. Todos os produtos preenchidos são gravados em uma única transação: ou a contagem inteira é concluída, ou nenhum saldo é alterado. Cada diferença de saldo fica registrada no histórico.</div><div class="table-wrap"><table style="min-width:650px"><thead><tr><th>Produto</th><th>Saldo atual</th><th>Contagem física</th><th>Mínimo para alerta</th></tr></thead><tbody id="bulkStockRows"><tr><td colspan="4" class="empty">Aguardando catálogo...</td></tr></tbody></table></div><div class="form-actions" style="align-items:center"><span id="bulkStockStatus" class="muted">Nenhuma contagem preenchida.</span><button id="saveBulkStockBtn" class="primary" type="button" disabled>Salvar contagens preenchidas</button></div></div></section><section class="panel"><div class="panel-head"><div><h2>Produtos e saldo controlado</h2><p>Saldo físico, alertas e movimentações individuais.</p></div><span id="stockCount" class="status neutral">—</span></div><div class="table-wrap"><table><thead><tr><th>Produto</th><th>Saldo</th><th>Alerta mínimo</th><th>Controle</th><th>Ação</th></tr></thead><tbody id="stockRows"><tr><td colspan="5" class="empty">Aguardando dados...</td></tr></tbody></table></div></section>
       <section class="panel section"><div class="panel-head"><div><h2>Histórico de movimentações</h2><p>Entradas, saídas, perdas e ajustes com usuário e saldo final.</p></div><span class="status neutral">ÚLTIMAS 100</span></div><div class="table-wrap"><table><thead><tr><th>Data</th><th>Produto</th><th>Tipo</th><th>Variação</th><th>Saldo final</th><th>Observação</th></tr></thead><tbody id="movementRows"><tr><td colspan="6" class="empty">Nenhuma movimentação registrada.</td></tr></tbody></table></div></section>
     </section>
 
@@ -464,66 +464,71 @@ function renderExpenses(){
 async function saveBulkStock(){
  const entries=[...$("bulkStockRows").querySelectorAll("[data-bulk-count]")].filter(input=>input.value.trim()!=="").map(input=>{
   const id=input.dataset.bulkCount,minimumInput=$("bulkStockRows").querySelector('[data-bulk-minimum="'+id+'"]');
-  return {id,count:Number(input.value),minimum:Number(minimumInput?.value??0),input};
+  return {id,count:Number(input.value),minimum:Number(minimumInput?.value??0)};
  });
  if(!entries.length){showNotice("Preencha a contagem física de pelo menos um produto.","error");return;}
+ const items=[];
  for(const item of entries){
+  const product=catalog.find(p=>String(p.id)===item.id);
+  if(!product){showNotice("Produto "+item.id+" não foi encontrado no catálogo.","error");return;}
   if(!Number.isSafeInteger(item.count)||item.count<0||item.count>1000000||!Number.isSafeInteger(item.minimum)||item.minimum<0||item.minimum>1000000){
    showNotice("Confira as quantidades: use números inteiros entre zero e 1.000.000.","error");return;
   }
+  items.push({product_id:String(product.id),product_name:product.nome,quantity_on_hand:item.count,reorder_point:item.minimum});
  }
- if(!confirm("Salvar a contagem física e ativar o controle de "+entries.length+" produto(s)? Os saldos serão ajustados e registrados no histórico."))return;
- const button=$("saveBulkStockBtn"),status=$("bulkStockStatus");button.disabled=true;button.textContent="SALVANDO…";
- let completed=0;
+ if(!confirm("Salvar "+items.length+" contagem(ns) em uma única transação e ativar o controle desses produtos? Se qualquer item falhar, nenhuma alteração será gravada."))return;
+ const button=$("saveBulkStockBtn"),status=$("bulkStockStatus");
+ button.disabled=true;button.textContent="SALVANDO…";status.textContent="Gravando lote atômico…";
  try{
-  for(const item of entries){
-   const product=catalog.find(p=>String(p.id)===item.id);if(!product)throw new Error("Produto "+item.id+" não foi encontrado no catálogo.");
-   const existing=stock.find(x=>String(x.product_id)===item.id),currentBalance=Number(existing?.quantity_on_hand||0),delta=item.count-currentBalance;
-   if(delta!==0){
-    await api("stock-move",{product_id:String(product.id),product_name:product.nome,movement_type:"adjustment",quantity_delta:delta,quantity:null,note:"Contagem física em lote"});
-   }
-   const result=await api("stock-configure",{product_id:String(product.id),product_name:product.nome,reorder_point:item.minimum,stock_control_enabled:true});
-   const next=result.item;
-   const index=stock.findIndex(x=>String(x.product_id)===item.id);
-   if(index>=0)stock[index]=next;else stock.push(next);
-   completed++;status.textContent=completed+" de "+entries.length+" produtos salvos.";
+  const result=await api("stock-count-bulk",{items,note:"Contagem física inicial em lote"});
+  const batch=result.batch||{};
+  const movements=Number(batch.movement_count||0);
+  [...$("bulkStockRows").querySelectorAll("[data-bulk-count]")].forEach(input=>{input.value="";});
+  status.textContent=Number(batch.updated_count||items.length)+" produto(s) conferidos · "+movements+" ajuste(s) de saldo registrados.";
+  try{
+   await loadData();
+   showNotice("Contagem concluída: "+Number(batch.updated_count||items.length)+" produto(s) atualizados em uma única transação. "+movements+" ajuste(s) registrados no histórico.","success");
+  }catch(refreshError){
+   showNotice("A contagem foi gravada por completo, mas a atualização da tela falhou. Atualize os dados para conferir os saldos. "+(refreshError.message||""),"error");
   }
-  await loadData();
-  showNotice("Contagem concluída. "+completed+" produto(s) tiveram o controle atualizado.","success");
  }catch(error){
-  try{const fresh=await api("stock-list");stock=fresh.stock||[];movements=fresh.movements||[];renderStock();for(const item of entries.slice(completed)){const count=$("bulkStockRows").querySelector('[data-bulk-count="'+item.id+'"]');const minimum=$("bulkStockRows").querySelector('[data-bulk-minimum="'+item.id+'"]');if(count)count.value=String(item.count);if(minimum)minimum.value=String(item.minimum);}$("bulkStockStatus").textContent=completed+" de "+entries.length+" salvos; revise os restantes e tente novamente.";}catch(_){}
-  if(completed===entries.length)showNotice("As "+completed+" contagens foram registradas. A atualização final da tela falhou; atualize os dados antes de continuar. "+(error.message||""),"error");
-  else showNotice("A contagem foi interrompida após "+completed+" de "+entries.length+" produto(s). Os itens já salvos foram preservados. "+(error.message||"Confira a conexão e tente novamente."),"error");
- }finally{button.disabled=![...$("bulkStockRows").querySelectorAll("[data-bulk-count]")].some(input=>input.value.trim()!=="");button.textContent="Salvar contagens preenchidas";}
+  status.textContent="Nenhuma alteração foi gravada.";
+  showNotice("A contagem em lote foi cancelada integralmente; nenhum produto foi alterado. "+(error.message||"Confira os dados e tente novamente."),"error");
+ }finally{
+  button.disabled=![...$("bulkStockRows").querySelectorAll("[data-bulk-count]")].some(input=>input.value.trim()!=="");
+  button.textContent="Salvar contagens preenchidas";
+ }
 }
 async function enableStock(productId){
- const product=catalog.find(p=>String(p.id)===String(productId));if(!product)return;
+ const product=catalog.find(x=>String(x.id)===String(productId));if(!product)return;
  const existing=stock.find(x=>String(x.product_id)===String(productId));
+ let counted=Number(existing?.quantity_on_hand||0),reorder=Number(existing?.reorder_point||0);
  if(existing?.stock_control_enabled){
-  const reorderInput=prompt("Quantidade mínima para alerta (unidades):",String(existing.reorder_point??0));
+  const reorderInput=prompt("Quantidade mínima para alerta (unidades):",String(reorder));
   if(reorderInput===null)return;
-  const reorder=Number(reorderInput);if(!Number.isSafeInteger(reorder)||reorder<0){showNotice("Informe um mínimo inteiro igual ou maior que zero.","error");return;}
-  try{const result=await api("stock-configure",{product_id:String(product.id),product_name:product.nome,reorder_point:reorder,stock_control_enabled:true});showNotice("Mínimo de "+product.nome+" atualizado. Saldo preservado: "+number(result.item.quantity_on_hand)+".","success");await loadData();}
-  catch(error){showNotice(error.message,"error");}
-  return;
+  reorder=Number(reorderInput);
+  if(!Number.isSafeInteger(reorder)||reorder<0||reorder>1000000){showNotice("Informe um mínimo inteiro entre zero e 1.000.000.","error");return;}
+  if(!confirm("Atualizar o mínimo de "+product.nome+"? O saldo atual de "+number(counted)+" unidade(s) será preservado."))return;
+ }else{
+  const countedInput=prompt("Contagem física de "+product.nome+"\\nInforme quantas unidades existem agora:",String(counted));
+  if(countedInput===null)return;
+  counted=Number(countedInput);
+  if(!Number.isSafeInteger(counted)||counted<0||counted>1000000){showNotice("Informe uma quantidade inteira entre zero e 1.000.000.","error");return;}
+  const reorderInput=prompt("Quantidade mínima para alerta (unidades):",String(reorder));
+  if(reorderInput===null)return;
+  reorder=Number(reorderInput);
+  if(!Number.isSafeInteger(reorder)||reorder<0||reorder>1000000){showNotice("Informe um mínimo inteiro entre zero e 1.000.000.","error");return;}
+  if(!confirm("Confirma a contagem física de "+counted+" unidade(s) para "+product.nome+" e a ativação do controle?"))return;
  }
- const currentBalance=Number(existing?.quantity_on_hand||0);
- const countedInput=prompt("Contagem física de "+product.nome+"\nInforme quantas unidades existem agora:",String(currentBalance));
- if(countedInput===null)return;
- const counted=Number(countedInput);
- if(!Number.isSafeInteger(counted)||counted<0||counted>1000000){showNotice("Informe uma quantidade inteira entre zero e 1.000.000.","error");return;}
- const reorderInput=prompt("Quantidade mínima para alerta (unidades):",String(existing?.reorder_point??0));
- if(reorderInput===null)return;
- const reorder=Number(reorderInput);if(!Number.isSafeInteger(reorder)||reorder<0){showNotice("Informe um mínimo inteiro igual ou maior que zero.","error");return;}
- if(!confirm("Confirma a contagem física de "+counted+" unidade(s) para "+product.nome+" e a ativação do controle?"))return;
  try{
-  const delta=counted-currentBalance;
-  if(delta!==0){
-   await api("stock-move",{product_id:String(product.id),product_name:product.nome,movement_type:"adjustment",quantity_delta:delta,quantity:null,note:"Ajuste de contagem física inicial"});
-  }
-  const result=await api("stock-configure",{product_id:String(product.id),product_name:product.nome,reorder_point:reorder,stock_control_enabled:true});
-  showNotice("Controle ativado para "+product.nome+". Saldo físico registrado: "+number(result.item.quantity_on_hand)+".","success");await loadData();
- }catch(error){showNotice(error.message,"error");}
+  const result=await api("stock-count-bulk",{
+   items:[{product_id:String(product.id),product_name:product.nome,quantity_on_hand:counted,reorder_point:reorder}],
+   note:existing?.stock_control_enabled?"Atualização de estoque mínimo pela Gestão":"Contagem física inicial individual"
+  });
+  const batch=result.batch||{};
+  await loadData();
+  showNotice((existing?.stock_control_enabled?"Mínimo atualizado.":"Controle ativado.")+" Saldo físico: "+number(counted)+" unidade(s). "+Number(batch.movement_count||0)+" ajuste(s) registrados.","success");
+ }catch(error){showNotice(error.message||"Não foi possível salvar a contagem.","error");}
 }
 function openMovement(productId=""){
  optionsForProducts($("movementProduct"),[...catalog].sort((a,b)=>a.nome.localeCompare(b.nome,"pt-BR")),"Selecione um produto");
