@@ -612,20 +612,31 @@ async function saveBulkCosts(){
 }
 const FIXED_KIT_RECIPES=[
  {kitId:"10",kitName:"Kit Gel Funcional — Xana Loka + Ku Loko",components:[
-  {id:"12",name:"Gel Funcional — Xana Loka",quantity:1},
-  {id:"13",name:"Gel Funcional Anal — Ku Loko",quantity:1}
+  {id:"12",quantity:1},{id:"13",quantity:1}
+ ]},
+ {kitId:"22",kitName:"Kit Descoberta",components:[
+  {id:"16",quantity:1},{id:"15",quantity:1},{id:"14",quantity:1},{id:"12",quantity:1},{id:"13",quantity:1}
+ ]},
+ {kitId:"23",kitName:"Kit Essência",components:[
+  {id:"16",quantity:1},{id:"15",quantity:1},{id:"14",quantity:1},{id:"12",quantity:1},{id:"13",quantity:1},{id:"18",quantity:1},{id:"11",quantity:1}
+ ]},
+ {kitId:"24",kitName:"Kit Intensidade",components:[
+  {id:"16",quantity:1},{id:"15",quantity:1},{id:"14",quantity:1},{id:"12",quantity:1},{id:"13",quantity:1},{id:"20",quantity:1},{id:"9",quantity:1}
  ]},
  {kitId:"25",kitName:"Kit Ela",components:[
-  {id:"17",name:"Vibrador Golfinho — Tamanho P — Rosa",quantity:1},
-  {id:"11",name:"Hot Ball — Xana Loka",quantity:1},
-  {id:"12",name:"Gel Funcional — Xana Loka",quantity:1},
-  {id:"19",name:"Plug Anal com Pedra — Tamanho P — Rosa",quantity:1}
+  {id:"17",quantity:1},{id:"11",quantity:1},{id:"12",quantity:1},{id:"19",quantity:1}
  ]},
  {kitId:"26",kitName:"Kit Ele",components:[
-  {id:"8",name:"Egg Masturbador — Stepper",quantity:1},
-  {id:"13",name:"Gel Funcional Anal — Ku Loko",quantity:1},
-  {id:"4",name:"Anel Peniano com Vibro",quantity:1},
-  {id:"9",name:"Prótese sem Vibro com Ventosa — Tamanho M",quantity:1}
+  {id:"5",quantity:2},{id:"15",quantity:2},{id:"8",quantity:1},{id:"4",quantity:1}
+ ]},
+ {kitId:"27",kitName:"Kit Êxtase",components:[
+  {id:"12",quantity:1},{id:"13",quantity:1},{id:"20",quantity:1},{id:"9",quantity:1},{id:"17",quantity:1},{id:"7",quantity:1}
+ ]},
+ {kitId:"28",kitName:"Kit Essencial Dela",components:[
+  {id:"15",quantity:1},{id:"14",quantity:1},{id:"16",quantity:1},{id:"11",quantity:1}
+ ]},
+ {kitId:"29",kitName:"Kit Essencial Dele",components:[
+  {id:"5",quantity:2},{id:"15",quantity:2},{id:"8",quantity:1},{id:"4",quantity:1}
  ]}
 ];
 async function configureFixedKitRecipes(){
@@ -650,7 +661,7 @@ async function configureFixedKitRecipes(){
   showNotice(conflicts.length?"Nenhuma receita nova foi criada. Há "+conflicts.length+" composição(ões) já cadastrada(s) com diferença; elas foram preservadas.":"As receitas fixas já estão cadastradas. Nenhuma alteração foi necessária.","success");
   return;
  }
- if(!confirm("Cadastrar "+missing.length+" componente(s) das receitas fixas de 3 kits?\n\nSerão incluídos somente componentes ausentes. Composições existentes não serão sobrescritas. Nenhum estoque será ativado ou alterado."))return;
+ if(!confirm("Cadastrar "+missing.length+" componente(s) das receitas fixas de 9 kits?\n\nSerão incluídos somente componentes ausentes. Composições existentes não serão sobrescritas. Nenhum estoque será ativado ou alterado."))return;
  button.disabled=true;button.textContent="CADASTRANDO…";
  let saved=0;
  try{
