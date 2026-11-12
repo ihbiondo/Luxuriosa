@@ -6,6 +6,14 @@
   var GA_ID = "G-PP3SPL55B0";
   var consent = null;
   var gaLoaded = false;
+  var entryTime = Date.now();
+
+  function scheduleConsent() {
+    var remaining = Math.max(0, 30000 - (Date.now() - entryTime));
+    window.setTimeout(function () {
+      if (!consent) openConsent();
+    }, remaining);
+  }
 
   function readConsent() {
     try {
@@ -195,7 +203,7 @@
       document.body.classList.remove("gate-open");
       gate.classList.remove("open");
       gate.setAttribute("aria-hidden", "true");
-      if (consent) applyConsent(); else openConsent();
+      if (consent) applyConsent(); else scheduleConsent();
     } else {
       gate.classList.add("open");
       gate.setAttribute("aria-hidden", "false");
@@ -207,7 +215,7 @@
       gate.classList.remove("open");
       gate.setAttribute("aria-hidden", "true");
       document.body.classList.remove("gate-open");
-      if (consent) applyConsent(); else openConsent();
+      if (consent) applyConsent(); else scheduleConsent();
     });
     gate.addEventListener("keydown", function (event) {
       if (event.key !== "Tab" || !gate.classList.contains("open")) return;
