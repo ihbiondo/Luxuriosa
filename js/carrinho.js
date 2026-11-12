@@ -21,10 +21,11 @@
   var MAX_QUANTIDADE = 99;
   var VARIABLE_DICE_KIT_IDS = new Set(["22","23","24","26","27","28","29"]);
   var DICE_VARIANTS = {
-    "1": { id: "2", name: "Hétero" },
-    "2": { id: "1", name: "Gay" },
+    "2": { id: "2", name: "Hétero" },
+    "1": { id: "1", name: "Gay" },
     "3": { id: "3", name: "Lésbico" }
   };
+  var DICE_CHOICE_IDS = { "1": "2", "2": "1", "3": "3" };
 
   var carrinho = [];
   var catalogoSincronizado = false;
@@ -445,7 +446,8 @@
         "1"
       );
       if (choice === null) return;
-      var variant = DICE_VARIANTS[String(choice).trim()];
+      var variantId = DICE_CHOICE_IDS[String(choice).trim()];
+      var variant = DICE_VARIANTS[variantId];
       if (!variant) {
         window.alert("Escolha inválida. Informe 1, 2 ou 3.");
         return;
