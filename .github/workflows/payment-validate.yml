@@ -37,6 +37,7 @@ on:
       - "gestao-privada-8f2c6d.html"
       - "previa/lux-central/index.html"
       - "previa/lux-gestao/index.html"
+      - "previa/lux-gestao-pedidos/**"
       - "pagamento-retorno.html"
       - "supabase/functions/create-payment-order/**"
       - "acompanhar-pedido/**"
