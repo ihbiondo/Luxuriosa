@@ -45,6 +45,7 @@
   }
 
   function scheduleClubInvitation() {
+    if (window.location.pathname.toLowerCase().endsWith("/clube.html")) return;
     if (clubInviteScheduled || clubInviteAlreadySeen()) return;
     clubInviteScheduled = true;
     window.setTimeout(openClubInvitation, 15000);
