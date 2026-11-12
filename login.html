@@ -237,9 +237,12 @@
         console.error("Falha ao sincronizar perfil:", error);
         return;
       }
-      if (new URLSearchParams(window.location.search).get("next") === "clube.html") {
-        window.location.replace("clube.html");
-      }
+      let returnToClub = new URLSearchParams(window.location.search).get("next") === "clube.html";
+      try {
+        returnToClub = returnToClub || localStorage.getItem("luxuriosa_after_auth") === "clube.html";
+        if (returnToClub) localStorage.removeItem("luxuriosa_after_auth");
+      } catch (e) {}
+      if (returnToClub) window.location.replace("clube.html");
     }
 
     $("loginTab").addEventListener("click", () => showForm("login"));
@@ -282,6 +285,9 @@
       const phone = $("phone").value.trim();
       const postalCode = $("postalCode").value.replace(/\D/g, "");
       if (postalCode.length !== 8) return message("Informe um CEP válido com oito dígitos.", true);
+      if (new URLSearchParams(window.location.search).get("next") === "clube.html") {
+        try { localStorage.setItem("luxuriosa_after_auth", "clube.html"); } catch (e) {}
+      }
       setBusy(signupForm, true, "CRIANDO SUA CONTA...");
       const { data, error } = await supabase.auth.signUp({
         email: $("signupEmail").value.trim(),
