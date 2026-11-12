@@ -651,7 +651,7 @@ async function configureFixedKitRecipes(){
    if(!catalogComponent){conflicts.push(kit.kitName+" → "+component.name+" (componente não localizado)");continue;}
    const key=kit.kitId+"|"+component.id,already=existing.get(key);
    if(already){
-    if(Number(already.quantity)!==component.quantity)conflicts.push(kit.kitName+" → "+component.name+" (quantidade cadastrada: "+already.quantity+")");
+    if(Number(already.quantity)!==component.quantity)conflicts.push(kit.kitName+" → "+catalogComponent.nome+" (quantidade cadastrada: "+already.quantity+")");
     continue;
    }
    missing.push({kitId:kit.kitId,kitName:catalogKit.nome,componentId:component.id,componentName:catalogComponent.nome,quantity:component.quantity});
