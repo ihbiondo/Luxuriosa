@@ -6,6 +6,49 @@
   var GA_ID = "G-PP3SPL55B0";
   var consent = null;
   var gaLoaded = false;
+  var CLUB_INVITE_KEY = "lux_clube_convite_v1";
+  var clubInviteScheduled = false;
+
+  function scheduleConsent() {
+    window.setTimeout(function () {
+      if (!consent) openConsent();
+    }, 60000);
+  }
+
+  function clubInviteAlreadySeen() {
+    try {
+      var seenAt = Number(localStorage.getItem(CLUB_INVITE_KEY) || 0);
+      return seenAt > 0 && Date.now() - seenAt < 30 * 24 * 60 * 60 * 1000;
+    } catch (e) { return false; }
+  }
+
+  function closeClubInvitation() {
+    var overlay = document.getElementById("lux-club-invite");
+    if (overlay) overlay.classList.remove("open");
+    try { localStorage.setItem(CLUB_INVITE_KEY, String(Date.now())); } catch (e) {}
+  }
+
+  function openClubInvitation() {
+    if (clubInviteAlreadySeen() || document.getElementById("lux-club-invite")) return;
+    var overlay = document.createElement("div");
+    overlay.id = "lux-club-invite";
+    overlay.setAttribute("role", "dialog");
+    overlay.setAttribute("aria-modal", "true");
+    overlay.setAttribute("aria-labelledby", "luxClubInviteTitle");
+    overlay.innerHTML = '<section class="lux-club-invite-panel"><button type="button" class="lux-club-invite-close" aria-label="Fechar convite">×</button><span class="lux-club-kicker">LUXURIOSA CONVIDA</span><h2 id="luxClubInviteTitle">VANTAGENS <span>&amp;</span><br>BENEFÍCIOS</h2><p>Descubra o Clube de Vantagens Luxuriosa e fique por dentro de novidades, condições especiais e oportunidades selecionadas.</p><a class="lux-club-invite-cta" href="https://wa.me/5514996355924?text=Ol%C3%A1!%20Quero%20conhecer%20o%20Clube%20de%20Vantagens%20da%20Luxuriosa." target="_blank" rel="noopener noreferrer">QUERO CONHECER O CLUBE</a><button type="button" class="lux-club-invite-later">Agora não</button></section>';
+    document.body.appendChild(overlay);
+    overlay.querySelector(".lux-club-invite-close").addEventListener("click", closeClubInvitation);
+    overlay.querySelector(".lux-club-invite-later").addEventListener("click", closeClubInvitation);
+    overlay.querySelector(".lux-club-invite-cta").addEventListener("click", closeClubInvitation);
+    overlay.classList.add("open");
+    overlay.querySelector(".lux-club-invite-cta").focus();
+  }
+
+  function scheduleClubInvitation() {
+    if (clubInviteScheduled || clubInviteAlreadySeen()) return;
+    clubInviteScheduled = true;
+    window.setTimeout(openClubInvitation, 15000);
+  }
 
   function readConsent() {
     try {
@@ -98,6 +141,13 @@
       ".lux-switch{width:44px;height:25px;flex:0 0 44px;position:relative}.lux-switch input{position:absolute;opacity:0;width:1px;height:1px}.lux-switch span{position:absolute;inset:0;background:#555;border-radius:20px;cursor:pointer;transition:.2s}.lux-switch span:before{content:'';position:absolute;width:17px;height:17px;left:4px;top:4px;border-radius:50%;background:#fff;transition:.2s}.lux-switch input:checked+span{background:#9a7040}.lux-switch input:checked+span:before{transform:translateX(19px)}.lux-switch input:focus-visible+span{outline:2px solid #e5c18e;outline-offset:3px}",
       ".lux-cookie-actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:22px}.lux-cookie-actions button{flex:1;min-width:125px;border:1px solid #8f704e;border-radius:30px;padding:13px 15px;background:transparent;color:#f5eee7;font:500 12px Montserrat,Arial;cursor:pointer}.lux-cookie-actions .lux-primary{background:linear-gradient(100deg,#d6b47e,#f0d4a2);color:#1a1010;border-color:transparent}.lux-cookie-actions button:hover{filter:brightness(1.12)}",
       "#lux-cookie-panel a{color:#d8bd91;text-decoration:underline;font-size:12px}",
+      "#lux-club-invite{position:fixed;inset:0;z-index:10002;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(0,0,0,.84);backdrop-filter:blur(6px);font-family:Montserrat,Arial,sans-serif;color:#f7f0e8}",
+      "#lux-club-invite.open{display:flex}.lux-club-invite-panel{position:relative;width:min(100%,520px);padding:38px 30px 28px;text-align:center;border:1px solid rgba(212,175,124,.65);border-radius:20px;background:radial-gradient(ellipse at 50% 0,rgba(160,31,78,.34),transparent 58%),linear-gradient(145deg,#211018,#090809);box-shadow:0 24px 90px #000}",
+      ".lux-club-invite-close{position:absolute;right:16px;top:10px;border:0;background:none;color:#c8bdbb;font-size:28px;cursor:pointer}.lux-club-kicker{color:#d8bd91;font-size:10px;letter-spacing:.24em}",
+      ".lux-club-invite-panel h2{margin:15px 0 14px;color:#f7e8d0;font-family:'Playfair Display',Georgia,serif;font-size:clamp(34px,8vw,52px);font-weight:500;line-height:.98;letter-spacing:.015em}.lux-club-invite-panel h2 span{color:#ed5b9a}",
+      ".lux-club-invite-panel p{max-width:390px;margin:0 auto 24px;color:#d0c7c5;font-size:13px;line-height:1.7}.lux-club-invite-cta{display:block;padding:15px 18px;border-radius:30px;background:linear-gradient(100deg,#d6b47e,#f0d4a2);color:#1a1010!important;font-size:11px;font-weight:700;letter-spacing:.08em;text-decoration:none!important}",
+      ".lux-club-invite-later{margin-top:14px;border:0;background:transparent;color:#b9aeac;font:12px Montserrat,Arial,sans-serif;cursor:pointer}@media(max-width:560px){.lux-club-invite-panel{padding:34px 22px 24px}}",
+      "#lux-cookie-overlay{z-index:10003}",
       "body.lux-consent-open{overflow:hidden}",".lux-cookie-preferences-link{text-align:center;margin:14px auto;padding:8px}.lux-cookie-preferences-link a{color:#d8bd91;font-size:12px}.lux-cookie-fallback-footer{padding:16px;text-align:center;background:#10090c;border-top:1px solid rgba(212,175,124,.2)}",
       "@media(max-width:560px){#lux-cookie-panel{padding:24px 20px;border-radius:15px}.lux-cookie-actions{flex-direction:column}.lux-cookie-actions button{width:100%}}"
     ].join("\n");
@@ -195,7 +245,8 @@
       document.body.classList.remove("gate-open");
       gate.classList.remove("open");
       gate.setAttribute("aria-hidden", "true");
-      if (consent) applyConsent(); else openConsent();
+      if (consent) applyConsent(); else scheduleConsent();
+      scheduleClubInvitation();
     } else {
       gate.classList.add("open");
       gate.setAttribute("aria-hidden", "false");
@@ -207,7 +258,8 @@
       gate.classList.remove("open");
       gate.setAttribute("aria-hidden", "true");
       document.body.classList.remove("gate-open");
-      if (consent) applyConsent(); else openConsent();
+      if (consent) applyConsent(); else scheduleConsent();
+      scheduleClubInvitation();
     });
     gate.addEventListener("keydown", function (event) {
       if (event.key !== "Tab" || !gate.classList.contains("open")) return;
