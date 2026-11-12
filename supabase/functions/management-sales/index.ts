@@ -60,8 +60,12 @@ function normalizeItems(value: unknown) {
     }
 
     const lineTotal = quantity * unitPrice;
-    if (!Number.isSafeInteger(lineTotal) || lineTotal <= 0) {
-      throw new ValidationError("O valor de um item ultrapassa o limite permitido.");
+    const isGift = raw?.is_gift === true;
+    const isKitComponent = raw?.is_kit_component === true;
+    if (!Number.isSafeInteger(lineTotal) || lineTotal < 0 ||
+        (lineTotal === 0 && !isGift && !isKitComponent) ||
+        (isKitComponent && unitPrice !== 0)) {
+      throw new ValidationError("Item gratuito precisa estar identificado como brinde ou componente incluído em kit.");
     }
 
     return {
@@ -69,7 +73,9 @@ function normalizeItems(value: unknown) {
       product_name: productName,
       quantity,
       unit_price_cents: unitPrice,
-      line_total_cents: lineTotal
+      line_total_cents: lineTotal,
+      is_gift: isGift,
+      is_kit_component: isKitComponent
     };
   });
 }
