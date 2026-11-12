@@ -419,6 +419,45 @@ Deno.serve(async (request: Request) => {
       return reply({ ok: true, stock: stock || [], movements: movements || [] }, 200, origin);
     }
 
+    if (action === "stock-count-bulk") {
+      if (!Array.isArray(body.items) || body.items.length < 1 || body.items.length > 50) {
+        return reply({ error: "Informe de 1 a 50 produtos para a contagem." }, 400, origin);
+      }
+
+      const seen = new Set<string>();
+      const items = [];
+      for (const raw of body.items) {
+        const productId = cleanText(raw?.product_id, 100);
+        const productName = cleanText(raw?.product_name, 180);
+        const quantityOnHand = Number(raw?.quantity_on_hand);
+        const reorderPoint = Number(raw?.reorder_point ?? 0);
+        if (!/^\\d{1,100}$/.test(productId) || !productName ||
+            !Number.isSafeInteger(quantityOnHand) || quantityOnHand < 0 || quantityOnHand > 1000000 ||
+            !Number.isSafeInteger(reorderPoint) || reorderPoint < 0 || reorderPoint > 1000000) {
+          return reply({ error: "Produto, saldo físico ou estoque mínimo inválido." }, 400, origin);
+        }
+        if (seen.has(productId)) {
+          return reply({ error: "A contagem contém o mesmo produto mais de uma vez." }, 400, origin);
+        }
+        seen.add(productId);
+        items.push({
+          product_id: productId,
+          product_name: productName,
+          quantity_on_hand: quantityOnHand,
+          reorder_point: reorderPoint
+        });
+      }
+
+      const note = cleanText(body.note, 500) || "Contagem física em lote";
+      const { data, error } = await admin.rpc("management_apply_stock_count_batch", {
+        p_items: items,
+        p_created_by: auth.user.id,
+        p_note: note
+      });
+      if (error) throw error;
+      return reply({ ok: true, batch: data }, 200, origin);
+    }
+
     if (action === "stock-configure") {
       const productId = cleanText(body.product_id, 100);
       const productName = cleanText(body.product_name, 180);
