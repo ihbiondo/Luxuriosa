@@ -164,7 +164,7 @@ input,select{width:100%;min-width:0;border:1px solid var(--line);border-radius:8
       meta.append(node("div","order-meta",(order.customer_phone||"Sem telefone")+" · "+new Date(order.created_at).toLocaleString("pt-BR")));
       left.append(meta);
       const badges=node("div","order-badges");
-      if(/^teste\b/i.test(String(order.customer_name||""))){
+      if(order.is_test||/^teste\b/i.test(String(order.customer_name||""))){
         badges.append(node("span","status review","TESTE · NÃO FATURAR"));
       }
       const paymentClass=order.payment_status==="paid"?"paid":order.payment_status==="review_required"?"review":"pending";
