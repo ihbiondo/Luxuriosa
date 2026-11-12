@@ -389,6 +389,40 @@ Deno.serve(async (request: Request) => {
       return reply({ ok: true, costs: data || [] }, 200, origin);
     }
 
+    if (action === "cost-upsert-bulk") {
+      if (!Array.isArray(body.items) || body.items.length < 1 || body.items.length > 50) {
+        return reply({ error: "Informe de 1 a 50 custos para salvar." }, 400, origin);
+      }
+
+      const seen = new Set<string>();
+      const items = [];
+      for (const raw of body.items) {
+        const productId = cleanText(raw?.product_id, 100);
+        const productName = cleanText(raw?.product_name, 180);
+        const unitCost = Number(raw?.unit_cost_cents);
+        if (!/^\d{1,100}$/.test(productId) || !productName ||
+            !Number.isSafeInteger(unitCost) || unitCost < 0 || unitCost > 100000000) {
+          return reply({ error: "Produto ou custo inválido. Informe o custo em centavos, sem valores negativos." }, 400, origin);
+        }
+        if (seen.has(productId)) {
+          return reply({ error: "A lista contém o mesmo produto mais de uma vez." }, 400, origin);
+        }
+        seen.add(productId);
+        items.push({
+          product_id: productId,
+          product_name: productName,
+          unit_cost_cents: unitCost
+        });
+      }
+
+      const { data, error } = await admin.rpc("management_apply_product_cost_batch", {
+        p_items: items,
+        p_updated_by: auth.user.id
+      });
+      if (error) throw error;
+      return reply({ ok: true, batch: data }, 200, origin);
+    }
+
     if (action === "cost-upsert") {
       const productId = cleanText(body.product_id, 100);
       const productName = cleanText(body.product_name, 180);
