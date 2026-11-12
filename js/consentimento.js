@@ -6,13 +6,10 @@
   var GA_ID = "G-PP3SPL55B0";
   var consent = null;
   var gaLoaded = false;
-  var entryTime = Date.now();
-
   function scheduleConsent() {
-    var remaining = Math.max(0, 30000 - (Date.now() - entryTime));
     window.setTimeout(function () {
       if (!consent) openConsent();
-    }, remaining);
+    }, 60000);
   }
 
   function readConsent() {
