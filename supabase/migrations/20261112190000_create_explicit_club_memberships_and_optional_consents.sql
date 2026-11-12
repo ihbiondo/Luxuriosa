@@ -6,7 +6,7 @@ create schema if not exists private;
 revoke all on schema private from public, anon, authenticated;
 grant usage on schema private to authenticated;
 
-create table public.club_memberships (
+create table if not exists public.club_memberships (
   user_id uuid primary key references public.profiles(id) on delete cascade,
   active boolean not null default true,
   joined_at timestamptz not null default now(),
@@ -19,6 +19,7 @@ create table public.club_memberships (
 );
 
 alter table public.club_memberships enable row level security;
+drop policy if exists club_memberships_select_own on public.club_memberships;
 create policy club_memberships_select_own
   on public.club_memberships for select to authenticated
   using ((select auth.uid()) = user_id);
