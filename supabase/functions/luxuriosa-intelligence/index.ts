@@ -237,7 +237,11 @@ async function readCustomerInsights(from: string, to: string, periodDays: number
   }
 
   const eligibleOrders = (orderResult.data || [])
-    .filter((order: any) => order.customer_id && eligibleUsers.has(order.customer_id));
+    .filter((order: any) =>
+      order.customer_id &&
+      eligibleUsers.has(order.customer_id) &&
+      !HISTORICAL_TEST_ORDER_IDS.has(String(order.id || ""))
+    );
   const orderIds = eligibleOrders.map((order: any) => order.id);
   const orderOwners = new Map(eligibleOrders.map((order: any) => [String(order.id), String(order.customer_id)] as const));
   let unmappedPurchaseItems = 0;
@@ -466,8 +470,14 @@ function summarizeSales(rows: any[]) {
 
     const weekday = local.weekday || "—";
     weekdays.set(weekday, (weekdays.get(weekday) || 0) + 1);
-    const hour = local.hour || "00";
-    hours.set(hour, (hours.get(hour) || 0) + 1);
+    const hasExactTime = !(
+      Array.isArray(sale.items) &&
+      sale.items.some((item: any) => item?.date_precision === "date_only")
+    );
+    if (hasExactTime) {
+      const hour = local.hour || "00";
+      hours.set(hour, (hours.get(hour) || 0) + 1);
+    }
   }
 
   result.paid_cost_coverage_percent = result.paid_count
