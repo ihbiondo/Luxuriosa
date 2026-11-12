@@ -389,7 +389,7 @@ function renderAll(){fillProductSelects();renderOverview();renderSales();renderS
 function fillProductSelects(){
  const all=[...catalog].sort((a,b)=>a.nome.localeCompare(b.nome,"pt-BR"));
  optionsForProducts($("posProduct"),all,"Selecione um produto");
- optionsForProducts($("costProduct"),all,"Selecione um produto");
+ optionsForProducts($("costProduct"),all.filter(p=>!isKitProduct(p)),"Selecione um produto físico");
  optionsForProducts($("movementProduct"),all.filter(p=>!isKitProduct(p)),"Selecione um produto físico");
  const kits=all.filter(p=>/kit/i.test(p.nome));
  optionsForProducts($("kitProduct"),kits,"Selecione o kit");
@@ -486,7 +486,7 @@ function renderStock(){
 function renderProducts(){
  const costMap=new Map(costs.map(x=>[String(x.product_id),x]));
  $("costRows").innerHTML=costs.length?costs.map(c=>'<tr><td><strong>'+safeText(c.product_name)+'</strong><span class="muted">Código '+safeText(c.product_id)+'</span></td><td class="text-right">'+money(c.unit_cost_cents)+'</td><td>'+dateBR(c.updated_at)+'</td></tr>').join(""):emptyRow(3,"Nenhum custo cadastrado.");
- const productRows=[...catalog].sort((a,b)=>a.nome.localeCompare(b.nome,"pt-BR"));
+ const productRows=catalog.filter(p=>!isKitProduct(p)).sort((a,b)=>a.nome.localeCompare(b.nome,"pt-BR"));
  const missingCosts=productRows.filter(p=>!costMap.has(String(p.id))).length;
  $("bulkCostCount").textContent=costs.length+"/"+productRows.length+" COM CUSTO";
  $("bulkCostRows").innerHTML=productRows.map(p=>{
