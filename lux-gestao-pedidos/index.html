@@ -159,13 +159,13 @@ input,select{width:100%;min-width:0;border:1px solid var(--line);border-radius:8
     function renderOrder(order){
       const card=node("article","order"),head=node("div","order-head"),left=node("div","order-head-left"),meta=node("div");
       left.append(node("div","order-id","#"+order.order_number));
-      if(/^teste\\b/i.test(String(order.customer_name||""))){
-        badges.append(node("span","status review","TESTE · NÃO FATURAR"));
-      }
       meta.append(node("div","customer",order.customer_name||"Cliente não identificado"));
       meta.append(node("div","order-meta",(order.customer_phone||"Sem telefone")+" · "+new Date(order.created_at).toLocaleString("pt-BR")));
       left.append(meta);
       const badges=node("div","order-badges");
+      if(/^teste\b/i.test(String(order.customer_name||""))){
+        badges.append(node("span","status review","TESTE · NÃO FATURAR"));
+      }
       const paymentClass=order.payment_status==="paid"?"paid":order.payment_status==="review_required"?"review":"pending";
       badges.append(node("span","status "+paymentClass,paymentNames[order.payment_status]||"Pagamento não identificado"));
       if(order.payment_status==="pending"&&order.status!=="cancelled"&&order.payment_expires_at&&new Date(order.payment_expires_at).getTime()<=Date.now()){
