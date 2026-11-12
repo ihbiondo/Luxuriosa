@@ -24,7 +24,7 @@ const HISTORICAL_TEST_ORDER_IDS = new Set([
   "3089cb19-6dc1-4d0c-a364-dc40b5ac6e10",
   "0de325e6-56ca-4497-9a1f-647659d9611c",
   "40e0bd61-dc05-4569-b822-2af3fbe0cf17",
-  "ID_ORDER_9_SHAMBIVERS_TEST"
+  "4fb9fbfc-20e4-46d2-8535-86d7054fd1a1"
 ]);
 
 function reply(body: unknown, status = 200, origin = "") {
