@@ -403,7 +403,7 @@ Deno.serve(async (request: Request) => {
         const productName = cleanText(raw?.product_name, 180);
         const unitCost = Number(raw?.unit_cost_cents);
         if (KIT_PRODUCT_IDS.has(productId)) {
-          return reply({ error: "Kits não recebem contagem física própria. Conte os produtos componentes." }, 400, origin);
+          return reply({ error: "O custo dos kits é calculado pelos produtos componentes." }, 400, origin);
         }
         if (!/^\d{1,100}$/.test(productId) || !productName ||
             !Number.isSafeInteger(unitCost) || unitCost < 0 || unitCost > 100000000) {
@@ -432,6 +432,7 @@ Deno.serve(async (request: Request) => {
       const productId = cleanText(body.product_id, 100);
       const productName = cleanText(body.product_name, 180);
       const unitCost = Number(body.unit_cost_cents);
+      if (KIT_PRODUCT_IDS.has(productId)) return reply({ error: "O custo dos kits é calculado pelos produtos componentes." }, 400, origin);
       if (!productId || !productName || !Number.isSafeInteger(unitCost) || unitCost < 0 || unitCost > 100000000) {
         return reply({ error: "Informe produto e custo válido em centavos." }, 400, origin);
       }
@@ -476,6 +477,9 @@ Deno.serve(async (request: Request) => {
         const productName = cleanText(raw?.product_name, 180);
         const quantityOnHand = Number(raw?.quantity_on_hand);
         const reorderPoint = Number(raw?.reorder_point ?? 0);
+        if (KIT_PRODUCT_IDS.has(productId)) {
+          return reply({ error: "Kits não recebem contagem física própria. Conte os produtos componentes." }, 400, origin);
+        }
         if (!/^\d{1,100}$/.test(productId) || !productName ||
             !Number.isSafeInteger(quantityOnHand) || quantityOnHand < 0 || quantityOnHand > 1000000 ||
             !Number.isSafeInteger(reorderPoint) || reorderPoint < 0 || reorderPoint > 1000000) {
