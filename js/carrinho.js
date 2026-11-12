@@ -19,6 +19,12 @@
     "5514996355924";
 
   var MAX_QUANTIDADE = 99;
+  var VARIABLE_DICE_KIT_IDS = new Set(["22","23","24","26","27","28","29"]);
+  var DICE_VARIANTS = {
+    "1": { id: "2", name: "Hétero" },
+    "2": { id: "1", name: "Gay" },
+    "3": { id: "3", name: "Lésbico" }
+  };
 
   var carrinho = [];
   var catalogoSincronizado = false;
@@ -254,11 +260,26 @@
       quantidade:
         quantidade,
 
+      kit_variant_id:
+        VARIABLE_DICE_KIT_IDS.has(idNormalizado) && DICE_VARIANTS[String(item.kit_variant_id)]
+          ? String(item.kit_variant_id)
+          : null,
+
+      kit_variant_name:
+        VARIABLE_DICE_KIT_IDS.has(idNormalizado) && DICE_VARIANTS[String(item.kit_variant_id)]
+          ? DICE_VARIANTS[String(item.kit_variant_id)].name
+          : "",
+
       indisponivel:
-        Boolean(item.indisponivel),
+        Boolean(item.indisponivel) ||
+        (VARIABLE_DICE_KIT_IDS.has(idNormalizado) && !DICE_VARIANTS[String(item.kit_variant_id)]),
 
       motivoIndisponibilidade:
-        String(item.motivoIndisponibilidade || ""),
+        String(item.motivoIndisponibilidade || (
+          VARIABLE_DICE_KIT_IDS.has(idNormalizado) && !DICE_VARIANTS[String(item.kit_variant_id)]
+            ? "Escolha novamente o Dado do Prazer incluído neste kit antes de finalizar."
+            : ""
+        )),
 
       avisoPrecoAlterado:
         Boolean(item.avisoPrecoAlterado),
@@ -415,6 +436,23 @@
 
     /* Mantém os IDs consistentes entre catálogo, carrinho e armazenamento local. */
     var id = String(idOriginal).trim();
+    var kitVariantId = null;
+    var kitVariantName = "";
+
+    if (VARIABLE_DICE_KIT_IDS.has(id)) {
+      var choice = window.prompt(
+        "Escolha o Dado do Prazer incluído neste kit:\\n1 — Hétero\\n2 — Gay\\n3 — Lésbico\\n\\nO dado é gratuito e acompanha o kit.",
+        "1"
+      );
+      if (choice === null) return;
+      var variant = DICE_VARIANTS[String(choice).trim()];
+      if (!variant) {
+        window.alert("Escolha inválida. Informe 1, 2 ou 3.");
+        return;
+      }
+      kitVariantId = variant.id;
+      kitVariantName = variant.name;
+    }
 
     quantidade =
       Number(
@@ -447,18 +485,19 @@
       carrinho.find(
         function (item) {
 
-          return (
-            String(
-              item.id
-            ) ===
-            String(id)
-          );
+          return String(item.id) === String(id);
 
         }
       );
 
 
     if (existente) {
+      if (VARIABLE_DICE_KIT_IDS.has(id) && String(existente.kit_variant_id || "") !== kitVariantId) {
+        window.alert("Este kit já está no carrinho com o Dado do Prazer — " +
+          (existente.kit_variant_name || "ainda não escolhido") +
+          ". Remova o kit antes de escolher outra variante.");
+        return;
+      }
 
       existente.quantidade =
         Math.min(
@@ -496,7 +535,13 @@
           "",
 
         quantidade:
-          quantidade
+          quantidade,
+
+        kit_variant_id:
+          kitVariantId,
+
+        kit_variant_name:
+          kitVariantName
 
       });
 
@@ -960,6 +1005,16 @@
             )
           )
         );
+
+        if (item.kit_variant_name) {
+          info.appendChild(
+            criarElemento(
+              "span",
+              "cart-item-category",
+              "Dado incluído: " + item.kit_variant_name
+            )
+          );
+        }
 
         if (item.avisoPrecoAlterado && Number(item.precoAnteriorCatalogo) > 0) {
           info.appendChild(
@@ -1629,6 +1684,16 @@
         if (!item.indisponivel || item.motivoIndisponibilidade !== "Este produto não está mais no catálogo. Remova-o para continuar.") {
           item.indisponivel = true;
           item.motivoIndisponibilidade = "Este produto não está mais no catálogo. Remova-o para continuar.";
+          alterado = true;
+        }
+        return;
+      }
+
+      if (VARIABLE_DICE_KIT_IDS.has(String(item.id)) && !DICE_VARIANTS[String(item.kit_variant_id || "")]) {
+        var motivoVariante = "Escolha novamente o Dado do Prazer incluído neste kit antes de finalizar.";
+        if (!item.indisponivel || item.motivoIndisponibilidade !== motivoVariante) {
+          item.indisponivel = true;
+          item.motivoIndisponibilidade = motivoVariante;
           alterado = true;
         }
         return;
