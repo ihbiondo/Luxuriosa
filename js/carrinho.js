@@ -442,7 +442,7 @@
 
     if (VARIABLE_DICE_KIT_IDS.has(id)) {
       var choice = window.prompt(
-        "Escolha o Dado do Prazer incluído neste kit:\\n1 — Hétero\\n2 — Gay\\n3 — Lésbico\\n\\nO dado é gratuito e acompanha o kit.",
+        "Escolha o Dado do Prazer incluído neste kit:\n1 — Hétero\n2 — Gay\n3 — Lésbico\n\nO dado é gratuito e acompanha o kit.",
         "1"
       );
       if (choice === null) return;
