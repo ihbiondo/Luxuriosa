@@ -28,6 +28,14 @@
         var key = localStorage.key(i);
         if (key && /^(_ga|_gid|_gat|_gac|_gcl)/i.test(key)) keys.push(key);
       }
+      keys.forEach(function (key) { localStorage.removeItem(key); });
+    } catch (_) {}
+    var script = document.querySelector('script[src*="googletagmanager.com/gtag/js"]');
+    if (script) script.remove();
+    gaLoaded = false;
+    try { delete window.gtag; } catch (_) { window.gtag = undefined; }
+    window.dataLayer = [];
+  }
 
   var DATA_INVITE_KEY = "lux_autorizacoes_clube_v1";
 
