@@ -475,7 +475,6 @@
     configurarMenu();
     configurarAno();
     configurarScroll();
-    configurarConviteCadastro();
 }
 
 
