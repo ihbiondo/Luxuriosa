@@ -305,6 +305,13 @@
     return true;
   }
 
+  var KITS_COM_DADO_A_ESCOLHER = ["22", "23", "24", "27", "28", "29"];
+  var OPCOES_DADO_PRAZER = {
+    "1": "Dado do Prazer — Gay",
+    "2": "Dado do Prazer — Hétero",
+    "3": "Dado do Prazer — Lésbico"
+  };
+
   function validarIntegridadePedido(items) {
     var api = window.LuxuriosaCarrinho;
     if (!api || typeof api.obterTotal !== "function" || !Array.isArray(items) || !items.length) {
@@ -317,6 +324,17 @@
       var preco = Number(item && item.preco);
       var quantidade = Number(item && item.quantidade);
       if (!item || item.indisponivel) {
+        return { valido: false, motivo: item && item.motivoIndisponibilidade || "Há produtos indisponíveis no carrinho. Volte ao carrinho e revise os itens." };
+      }
+      if (KITS_COM_DADO_A_ESCOLHER.indexOf(String(item.id)) !== -1) {
+        var selected = Array.isArray(item.selected_components) ? item.selected_components : [];
+        var selectedId = selected.length === 1 ? String(selected[0].product_id || "") : "";
+        if (!Object.prototype.hasOwnProperty.call(OPCOES_DADO_PRAZER, selectedId) ||
+            Number(selected[0].quantity) !== 1) {
+          return { valido: false, motivo: "Escolha a versão do Dado do Prazer no kit antes de continuar." };
+        }
+      }
+      if (false) {
         return { valido: false, motivo: "Há produtos indisponíveis no carrinho. Volte ao carrinho e remova esses itens antes de continuar." };
       }
       if (item.preco === null || item.preco === undefined || item.preco === "" ||
@@ -376,6 +394,9 @@
       var quantity = Number(item.quantidade) || 0;
       var price = Number(item.preco) || 0;
       lines.push("• " + item.nome + " — " + quantity + "x — " + formatarPreco(price * quantity));
+      (item.selected_components || []).forEach(function (component) {
+        lines.push("  ↳ Dado escolhido: " + component.product_name);
+      });
     });
 
     lines.push("", "*Subtotal: " + formatarPreco(subtotal) + "*");
