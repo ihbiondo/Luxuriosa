@@ -388,6 +388,7 @@ function fillProductSelects(){
 function internalSales(){
  return sales.filter(s=>s.source!=="website");
 }
+function giftUnits(sale){return (Array.isArray(sale?.items)?sale.items:[]).filter(item=>item?.is_gift===true).reduce((sum,item)=>sum+Math.max(0,Number(item.quantity)||0),0);}
 function renderOverview(){
  const now=Date.now(),from=now-30*86400000,period=sales.filter(s=>new Date(s.created_at).getTime()>=from),paid=period.filter(s=>s.payment_status==="paid"),received=paid.reduce((sum,s)=>sum+Number(s.total_cents||0),0);
  const activeExpenses=expenses.filter(e=>e.status==="active"),controlled=stock.filter(x=>x.stock_control_enabled===true).length,needs=stock.length-controlled;
@@ -404,7 +405,7 @@ function renderOverview(){
  if(!tasks.length)tasks.push(["✓","Rotina cadastral em dia","Não identificamos pendências básicas de estoque, custos ou kits nesta consulta.","sales"]);
  $("priorityCount").textContent=tasks.length+" ITENS";$("tasks").innerHTML=tasks.slice(0,5).map((t,i)=>'<div class="task '+(t[0]==="✓"?"ok":"")+'"><span class="task-icon">'+t[0]+'</span><div><strong>'+safeText(t[1])+'</strong><p>'+safeText(t[2])+'</p><button class="small-btn subtle" data-go="'+t[3]+'" style="margin-top:6px">Abrir etapa →</button></div></div>').join("");
  const recent=period.slice(0,6);
- $("recentSales").innerHTML=recent.length?recent.map(s=>'<tr><td><strong>#'+safeText(s.sale_number)+'</strong></td><td>'+safeText(s.customer_name||"Consumidor")+'</td><td>'+dateBR(s.created_at)+'</td><td><span class="status '+(s.payment_status==="paid"?"good":"warn")+'">'+paymentLabels[s.payment_status]+'</span></td><td class="text-right">'+money(s.total_cents)+'</td></tr>').join(""):emptyRow(5,"Nenhuma venda presencial registrada no período.");
+ $("recentSales").innerHTML=recent.length?recent.map(s=>'<tr><td><strong>#'+safeText(s.sale_number)+'</strong>'+(giftUnits(s)?'<span class="muted">'+number(giftUnits(s))+' un. em brindes</span>':'')+'</td><td>'+safeText(s.customer_name||"Consumidor")+'</td><td>'+dateBR(s.created_at)+'</td><td><span class="status '+(s.payment_status==="paid"?"good":"warn")+'">'+paymentLabels[s.payment_status]+'</span></td><td class="text-right">'+money(s.total_cents)+'</td></tr>').join(""):emptyRow(5,"Nenhuma venda presencial registrada no período.");
 }
 function renderCart(){
  const rows=$("cartRows");if(!cart.length)rows.innerHTML=emptyRow(4,"Adicione produtos para começar.");
@@ -419,16 +420,17 @@ function renderCart(){
 }
 function renderSales(){
  const list=internalSales();$("salesCount").textContent=number(list.length)+" VENDAS";
- const pending=list.filter(s=>s.payment_status==="pending"),paid=list.filter(s=>s.payment_status==="paid");
+ const pending=list.filter(s=>s.payment_status==="pending"),paid=list.filter(s=>s.payment_status==="paid"),giftedUnits=list.reduce((sum,s)=>sum+giftUnits(s),0);
  $("cashSummary").innerHTML=[
   '<div class="task ok"><span class="task-icon">✓</span><div><strong>'+number(paid.length)+' vendas recebidas</strong><p>Entre as últimas 50 vendas internas consultadas.</p></div></div>',
   '<div class="task"><span class="task-icon">◷</span><div><strong>'+number(pending.length)+' vendas pendentes</strong><p>Registre o recebimento somente depois que o dinheiro entrar.</p></div></div>',
-  '<div class="task"><span class="task-icon">R$</span><div><strong>'+money(paid.reduce((sum,s)=>sum+Number(s.total_cents||0),0))+'</strong><p>Recebido nas últimas 50 vendas internas.</p></div></div>'
+  '<div class="task"><span class="task-icon">R$</span><div><strong>'+money(paid.reduce((sum,s)=>sum+Number(s.total_cents||0),0))+'</strong><p>Recebido nas últimas 50 vendas internas.</p></div></div>',
+  '<div class="task"><span class="task-icon">🎁</span><div><strong>'+number(giftedUnits)+' unidades em brindes</strong><p>Itens gratuitos continuam compondo o custo e a baixa de estoque.</p></div></div>'
  ].join("");
  $("salesRows").innerHTML=list.length?list.map(s=>{
   const stockText={deducted:"Baixado",partially_tracked:"Parcial",insufficient_stock:"Saldo insuficiente",not_tracked:"Sem controle"}[s.stock_control_status]||"—";
   const stockTone=s.stock_control_status==="deducted"?"good":s.stock_control_status==="insufficient_stock"?"bad":s.stock_control_status==="partially_tracked"?"warn":"neutral";
-  return '<tr><td><strong>#'+safeText(s.sale_number)+'</strong></td><td>'+dateBR(s.created_at)+'</td><td>'+safeText(s.customer_name||"Consumidor")+'</td><td><span class="status '+(s.payment_status==="paid"?"good":"warn")+'">'+paymentLabels[s.payment_status]+'</span><span class="muted">'+safeText(methodLabels[s.payment_method]||s.payment_method)+'</span></td><td><span class="status '+stockTone+'">'+stockText+'</span></td><td class="text-right"><strong>'+money(s.total_cents)+'</strong></td><td>'+(s.payment_status==="pending"?'<button class="small-btn subtle" data-mark-paid="'+safeText(s.id)+'" type="button">Registrar recebimento</button>':'<span class="muted">Concluída</span>')+'</td></tr>';
+  return '<tr><td><strong>#'+safeText(s.sale_number)+'</strong>'+(giftUnits(s)?'<span class="muted">'+number(giftUnits(s))+' un. em brindes</span>':'')+'</td><td>'+dateBR(s.created_at)+'</td><td>'+safeText(s.customer_name||"Consumidor")+'</td><td><span class="status '+(s.payment_status==="paid"?"good":"warn")+'">'+paymentLabels[s.payment_status]+'</span><span class="muted">'+safeText(methodLabels[s.payment_method]||s.payment_method)+'</span></td><td><span class="status '+stockTone+'">'+stockText+'</span></td><td class="text-right"><strong>'+money(s.total_cents)+'</strong></td><td>'+(s.payment_status==="pending"?'<button class="small-btn subtle" data-mark-paid="'+safeText(s.id)+'" type="button">Registrar recebimento</button>':'<span class="muted">Concluída</span>')+'</td></tr>';
  }).join(""):emptyRow(7,"Nenhuma venda presencial registrada. Pedidos do site são exibidos em Pedidos Online.");
 }
 function renderStock(){
