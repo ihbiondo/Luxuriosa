@@ -209,7 +209,7 @@ td strong{font-size:9px}td .muted{font-size:8px;color:var(--muted);display:block
               <div class="field wide"><label for="posProduct">Produto</label><select id="posProduct"><option value="">Carregando catálogo...</option></select></div>
               <div class="field"><label for="posQuantity">Quantidade</label><input id="posQuantity" type="number" min="1" max="999" step="1" value="1"></div>
               <div class="field" style="align-self:end"><button id="addCartBtn" class="subtle full" type="button">＋ Adicionar item</button></div>
-              <div class="field wide" style="display:flex;align-items:center;gap:8px"><input id="posGift" type="checkbox" style="width:16px;height:16px;flex:0 0 auto"><label for="posGift" style="margin:0">Registrar este item como brinde (R$ 0,00; estoque baixado normalmente)</label></div>
+              <div class="field wide" style="display:flex;align-items:center;gap:8px"><input id="posGift" type="checkbox" style="width:16px;height:16px;flex:0 0 auto"><label for="posGift" style="margin:0">Registrar este item como brinde (R$ 0,00; estoque baixado quando recebido)</label></div>
             </div>
             <div class="section">
               <div class="section-title">Itens da venda</div>
@@ -226,7 +226,7 @@ td strong{font-size:9px}td .muted{font-size:8px;color:var(--muted);display:block
             <div class="cart-total"><span>Desconto</span><strong id="cartDiscount">R$ 0,00</strong></div>
             <div class="cart-total"><span>Total da venda</span><strong id="cartTotal">R$ 0,00</strong></div>
             <div class="form-actions"><button id="clearCartBtn" type="button">Limpar</button><button id="saveSaleBtn" type="button" class="primary">Registrar venda</button></div>
-            <p style="font-size:8px;color:var(--muted);margin:9px 0 0">A venda só baixa o estoque dos produtos cujo controle já tenha sido ativado após a contagem física.</p>
+            <p style="font-size:8px;color:var(--muted);margin:9px 0 0">O estoque só é baixado após a confirmação do pagamento e apenas para produtos com controle ativado.</p>
           </div>
         </section>
         <section class="panel">
