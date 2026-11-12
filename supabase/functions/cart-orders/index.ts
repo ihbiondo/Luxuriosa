@@ -491,10 +491,10 @@ Deno.serve(async (req: Request) => {
     const shippingCents = shipping === null ? null : Math.round(shipping * 100);
     let isClubMember = false;
     if (userId) {
-      const { data: memberProfile, error: memberError } = await admin.from("profiles")
-        .select("id").eq("id", userId).maybeSingle();
-      if (memberError) throw memberError;
-      isClubMember = Boolean(memberProfile?.id);
+      const { data: membership, error: membershipError } = await admin.from("club_memberships")
+        .select("user_id").eq("user_id", userId).eq("active", true).maybeSingle();
+      if (membershipError) throw membershipError;
+      isClubMember = Boolean(membership?.user_id);
     }
     const clubDiscountCents = isClubMember && subtotalCents > 10000
       ? Math.round(subtotalCents * 10 / 100)
