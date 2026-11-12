@@ -724,12 +724,19 @@
         activeUserId = user.id;
         const requestedPage = new URLSearchParams(window.location.search).get("redirect");
         let resumeCheckout = false;
+        let returnToClub = new URLSearchParams(window.location.search).get("next") === "clube.html";
         try {
           resumeCheckout = localStorage.getItem("luxuriosa_checkout_after_login") === "1";
           if (resumeCheckout) localStorage.removeItem("luxuriosa_checkout_after_login");
+          returnToClub = returnToClub || localStorage.getItem("luxuriosa_after_auth") === "clube.html";
+          if (returnToClub) localStorage.removeItem("luxuriosa_after_auth");
         } catch (_) {}
         if (resumeCheckout) {
           window.location.replace("/loja.html?retomar-checkout=1");
+          return;
+        }
+        if (returnToClub) {
+          window.location.replace("/clube.html");
           return;
         }
         if (requestedPage === "acompanhar-pedido/") window.location.replace("/acompanhar-pedido/");
@@ -940,6 +947,9 @@
       const phone = $("phone").value.trim();
       const postalCode = $("postalCode").value.replace(/\D/g, "");
       if (postalCode.length !== 8) return message("Informe um CEP válido com oito dígitos.", true);
+      if (new URLSearchParams(window.location.search).get("next") === "clube.html") {
+        try { localStorage.setItem("luxuriosa_after_auth", "clube.html"); } catch (_) {}
+      }
       setBusy(signupForm, true, "CRIANDO SUA CONTA...");
       let signupResult;
       try {
@@ -947,7 +957,8 @@
           email: $("signupEmail").value.trim(),
           password: $("signupPassword").value,
           options: {
-            emailRedirectTo: window.location.origin + window.location.pathname,
+            emailRedirectTo: window.location.origin + window.location.pathname +
+              (new URLSearchParams(window.location.search).get("next") === "clube.html" ? "?next=clube.html" : ""),
             data: {
               username,
               display_name: firstName,
