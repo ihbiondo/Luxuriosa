@@ -3,6 +3,18 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 const admin = createClient(SUPABASE_URL, SERVICE_ROLE_KEY, { auth: { persistSession: false, autoRefreshToken: false } });
+const HISTORICAL_TEST_ORDER_IDS = new Set([
+  "e17943d3-a651-4fcd-a34f-c3d96ca06a4f",
+  "33ef69ad-188a-44a9-bdf1-6adc3abc9bc4",
+  "763bedaa-3f0a-44f2-beae-6ee55b202fc8",
+  "55429912-f824-42dd-966b-a1e8f8c4cd7c",
+  "4fba6f8f-ef04-46a2-b157-647616ab42c3",
+  "3089cb19-6dc1-4d0c-a364-dc40b5ac6e10",
+  "0de325e6-56ca-4497-9a1f-647659d9611c",
+  "40e0bd61-dc05-4569-b822-2af3fbe0cf17",
+  "4fb9fbfc-20e4-46d2-8535-86d7054fd1a1"
+]);
+
 const allowedOrigins = new Set(["https://luxuriosa.com.br", "https://www.luxuriosa.com.br"]);
 function response(body: unknown, status = 200, origin = "") {
   return new Response(JSON.stringify(body), { status, headers: {
@@ -179,6 +191,7 @@ Deno.serve(async (req: Request) => {
           });
           orders = orders.map((order: any) => ({
             ...order,
+            is_test: HISTORICAL_TEST_ORDER_IDS.has(String(order.id || "")),
             items: orderItems.filter((item: any) => item.order_id === order.id)
           }));
 
