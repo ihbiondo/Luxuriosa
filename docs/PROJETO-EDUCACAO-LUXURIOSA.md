@@ -305,3 +305,17 @@ Referência oficial: Ministério da Saúde, página de Profilaxia Pós-Exposiç�
 - [x] Mobile: ampliar áreas de toque de opções e checkboxes, melhorar espaçamento e manter foco visível.
 
 As recomendações da FDA sobre anéis aplicam-se especificamente a dispositivos de constrição para manter a rigidez peniana; não substituem o manual do produto nem uma avaliação clínica.
+
+
+## 17. Revisão editorial — materiais, lubrificantes, higiene e consentimento
+
+**Revisão:** 13 de novembro de 2026.
+
+- [x] Diferenciar a compatibilidade de lubrificantes de acordo com o material do preservativo e do acessório.
+- [x] Registrar que óleo enfraquece preservativos de látex; a compatibilidade de outros materiais deve ser conferida na embalagem específica.
+- [x] Explicar que lubrificantes de silicone podem danificar acessórios feitos de silicone e que a base aquosa é uma opção mais versátil, sem substituir o manual.
+- [x] Distinguir material não poroso de esterilidade; lembrar que composição desconhecida deve ser tratada como desconhecida.
+- [x] Reforçar que limpeza comum não equivale a esterilização e que água fervente, álcool e desinfetantes não devem ser improvisados em acessórios.
+- [x] Tornar explícitos os princípios de consentimento livre, voluntário, informado e reversível no verbete de jogos para casais, sem transformar fonte estrangeira em orientação jurídica brasileira.
+
+Fontes oficiais consultadas nesta rodada: Ministério da Saúde (Brasil), CDC, OMS e Departamento de Saúde do Governo da Austrália. As instruções do fabricante permanecem necessárias para a compatibilidade e a limpeza de cada produto.
