@@ -27,7 +27,7 @@ Este documento passa a ser a referência para separar responsabilidades e nomes.
 | Loja Luxuriosa | `https://luxuriosa.com.br/` | Site estático no GitHub Pages; catálogo em `data/produtos.json`; páginas públicas no mesmo repositório |
 | Pedidos Online | `https://luxuriosa.com.br/lux-gestao-pedidos/` | Aplicação estática no GitHub Pages; integra com Edge Functions do Supabase |
 | Lux-Gestão | `https://luxuriosa.com.br/lux-gestao/` | Cloudflare Worker; o código-fonte do Worker não foi localizado no repositório GitHub inspecionado |
-| Luxuriosa Inteligência | `https://luxuriosa.com.br/lux-central/` → `/previa/lux-central/` | Interface estática no GitHub Pages; a rota `/lux-central/` é um redirecionamento legado |
+| Luxuriosa Inteligência | `https://luxuriosa.com.br/lux-central/` → `/previa/lux-central/` | Interface executiva estática; `/lux-central/` e `/previa/lux-central/` são identificadores de rota legados, não nomes de produto |
 | Portal 442 | `https://luxuriosa.com.br/442/` | Página estática de navegação para os três ambientes administrativos |
 
 **Observação importante:** existe também o aplicativo desktop Tauri chamado Luxuriosa Gestão no ambiente local informado anteriormente. Ele deve ser tratado como cliente desktop/implementação paralela do projeto **Lux-Gestão**, e não como um quinto produto. Antes de unificar ou desativar qualquer cliente, é necessário conferir sua versão local, esquema SQLite e sincronização efetiva com o Supabase.
@@ -46,24 +46,26 @@ Este documento passa a ser a referência para separar responsabilidades e nomes.
 
 **Regra:** situação financeira e etapa de entrega são dimensões independentes. Pedido não é sinônimo de pagamento. A aprovação de pagamento online depende de validação da InfinitePay, não de alteração manual no painel.
 
-### Operação interna
-- `management_sales`: vendas registradas no caixa/gestão e vendas online sincronizadas.
+### Operação interna — Lux-Gestão
+- `management_sales`: livro operacional de vendas do caixa e vendas online sincronizadas.
 - `management_inventory`, `management_inventory_movements`: saldo e histórico de estoque.
 - `management_product_costs`: custos unitários cadastrados.
 - `management_kit_components`: composição de kits.
 - `management_expenses`: despesas operacionais.
-- `management-sales`: API administrativa que atualmente reúne ações de gestão e consulta de inteligência. O nome da função é legado/abrangente; não significa que o painel de inteligência seja parte da interface Lux-Gestão.
+- `management_customers`, `management_customer_addresses`: cadastro comercial, contatos e endereços.
+- `management-sales`: API de operação da Gestão: caixa, vendas, comprovantes, clientes, custos, estoque, kits e despesas.
 
-**Regra:** vendas presenciais nascem na Gestão. Pedidos online nascem em Pedidos Online e, após pagamento validado, podem ser sincronizados para a Gestão. A sincronização não deve criar uma segunda cobrança nem uma segunda venda independente.
+**Regra:** Gestão mantém e executa registros operacionais. Seu histórico de cliente pode mostrar compras vinculadas e itens pagos/brindes separados, mas não deve apresentar segmentação RFV, scoring, recomendações, análise de comportamento ou oportunidades comerciais. Campos RFV/recomendações ainda emitidos por `customer-get` e `customers-list` são compatibilidade técnica temporária; não são a fonte oficial de inteligência e serão retirados após a migração do consumidor.
 
-### Inteligência
-- Endpoint dedicado de clientes: `luxuriosa-intelligence` (JWT obrigatório + verificação de papel `admin`), responsável pela leitura agregada de preferências, eventos e compras com consentimento v2.
-- `customer-insights` permanece temporariamente em `management-sales` como compatibilidade durante a migração; a interface Luxuriosa Inteligência passa a chamar a função dedicada.
-- `analytics` continua temporariamente em `management-sales`; sua extração será a próxima etapa, depois de validar a nova API de clientes.
-- Consome dados transacionais e agregações para exibir resultados.
-- Não deve ser usada para alterar a fonte original dos registros.
-- Métricas precisam distinguir valores confirmados, pendentes, cancelados e dados incompletos.
-- Ausência de dados não deve ser apresentada como resultado zero de desempenho sem explicação.
+Vendas presenciais nascem na Gestão. Pedidos online nascem em Pedidos Online e, após confirmação do pagamento e sincronização idempotente, aparecem no livro operacional sem criar uma segunda venda ou cobrança.
+
+### Inteligência — Luxuriosa Inteligência
+- `luxuriosa-intelligence`: endpoint dedicado e autenticado para indicadores, análise financeira/comercial, comportamento agregado, preferências autorizadas, RFV e recomendações comerciais.
+- `analytics`: consolidação de vendas, custos, despesas, estoque, pedidos e sinais digitais; somente leitura.
+- `customer-insights`: preferências, eventos e compras agregadas com consentimento aplicável.
+- **RFV por cliente:** responsabilidade exclusiva da Inteligência. Deve usar somente transações pagas e vínculos explícitos; presentes/brindes não contam como frequência, valor ou evidência de recompra. A Gestão não executa nem exibe a segmentação.
+- A Inteligência pode ler as fontes operacionais e produzir interpretações, mas não altera pedidos, pagamentos, vendas, clientes, custos, despesas ou estoque.
+- Métricas distinguem valores confirmados, pendentes, cancelados e dados incompletos. Ausência de dados não deve ser apresentada como desempenho zero sem explicação.
 
 ### Loja e relacionamento
 - `profiles`, `addresses`, `preferences`, `user_permissions`: conta, endereço, preferências e permissões.
@@ -74,7 +76,7 @@ Este documento passa a ser a referência para separar responsabilidades e nomes.
 
 | Encontrado | Problema | Convenção corrigida |
 |---|---|---|
-| **Lux-Central** usado como nome do produto e **Inteligência** como categoria | Dois nomes para o mesmo painel confundem o usuário | Nome de produto: **Luxuriosa Inteligência**. “Inteligência” é a função; `/lux-central/` e `/previa/lux-central/` permanecem como rotas legadas |
+| **Lux-Central** usado como nome do produto e **Inteligência** como categoria | Dois nomes para o mesmo painel confundem o usuário | Nome único do produto: **Luxuriosa Inteligência**; `/lux-central/` e `/previa/lux-central/` permanecem como rotas legadas |
 | **Lux-Gestão** descrito como responsável por “pagamentos” | Pode sugerir que o Worker aprova cobranças online | Gestão cuida do caixa e registros operacionais; **Pedidos Online** cuida do checkout e conciliação InfinitePay |
 | **Pedidos Online** aparece como parte da Gestão em alguns títulos/rotas | Mistura sistemas e dificulta suporte | É projeto próprio; manter `/lux-gestao-pedidos/` apenas como URL histórica |
 | **management-sales** serve vendas, estoque e parte de inteligência | O nome técnico não descreve toda a API | Manter slug para compatibilidade; documentar os domínios e separar ações/endpoints gradualmente |
@@ -135,3 +137,23 @@ Contagens são fotografia do banco no momento da inspeção; não são metas nem
 ### Separação do dashboard administrativo
 
 A ação `admin_dashboard` é atendida pelo endpoint autenticado `orders-admin`. O endpoint legado `cart-orders` mantém a ação por compatibilidade temporária; a interface Pedidos Online utiliza o endpoint dedicado. Consultas de atividade ao vivo e inteligência permanecem no legado até suas respectivas migrações e validações.
+
+
+## 9. Fronteira funcional consolidada — atualização 13/11/2026
+
+Esta seção prevalece sobre descrições históricas anteriores neste documento.
+
+| Projeto | Pode manter | Não deve assumir |
+|---|---|---|
+| Loja Luxuriosa | Catálogo público, conteúdo, conta do cliente, carrinho e início da compra | Estoque interno, conciliação administrativa, venda de caixa ou inteligência gerencial |
+| Pedidos Online | Pedidos, checkout, confirmação de pagamento, expedição e trilha de ocorrências | Cadastro operacional geral, caixa presencial, estoque físico ou relatórios executivos |
+| Lux-Gestão | Cadastro comercial, endereços, vendas, comprovantes, custos, kits, estoque e despesas | RFV, recomendações, funil digital, carrinhos abandonados ou painel executivo |
+| Luxuriosa Inteligência | Indicadores, rentabilidade analítica, RFV, comportamento, alertas, oportunidades e recuperação comercial | Gravar ou alterar transações operacionais |
+
+**Migração em andamento:** o frontend de clientes da Gestão deixou de exibir filtro RFV, score e recomendações. O backend `management-sales` ainda devolve esses campos em contratos legados; eles serão removidos somente depois que a Inteligência oferecer o endpoint equivalente e seus consumidores estiverem migrados.
+
+**Lux-Central:** não é um quinto sistema. Funil, eventos, abandono de carrinho e recuperação comercial são módulos da Luxuriosa Inteligência. O nome antigo permanece apenas em slugs, rotas e identificadores técnicos até migração compatível.
+
+**Portal 442:** catálogo de acesso aos quatro projetos, com distinção visual entre a Loja pública e os três ambientes administrativos. Não possui regras comerciais nem motor analítico próprio.
+
+**Infraestrutura:** Supabase, GitHub e Cloudflare são serviços compartilhados, não projetos funcionais adicionais. O desktop Tauri é um cliente legado do projeto Lux-Gestão, não outro sistema; não recebe novas funcionalidades enquanto não houver decisão explícita de retomada.
