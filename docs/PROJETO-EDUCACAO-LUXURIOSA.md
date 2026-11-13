@@ -319,3 +319,16 @@ As recomendações da FDA sobre anéis aplicam-se especificamente a dispositivos
 - [x] Tornar explícitos os princípios de consentimento livre, voluntário, informado e reversível no verbete de jogos para casais, sem transformar fonte estrangeira em orientação jurídica brasileira.
 
 Fontes oficiais consultadas nesta rodada: Ministério da Saúde (Brasil), CDC, OMS e Departamento de Saúde do Governo da Austrália. As instruções do fabricante permanecem necessárias para a compatibilidade e a limpeza de cada produto.
+
+## 18. Revisão editorial — contracepção de emergência e acolhimento no SUS
+
+**Revisão:** 13 de novembro de 2026.
+
+- [x] Explicar a importância de buscar contracepção de emergência o quanto antes após falha ou ausência de método.
+- [x] Registrar a janela de até cinco dias para opções orais conforme a OMS, com a ressalva de que a eficácia varia e diminui com o tempo.
+- [x] Incluir o DIU de cobre como opção emergencial em até cinco dias, sujeita à avaliação profissional e às contraindicações.
+- [x] Atualizar o texto sobre acesso e acolhimento de pessoas com diferentes orientações sexuais, identidades de gênero e características sexuais com referência à Nota Técnica nº 10/2026 do Ministério da Saúde.
+- [x] Conferir os canais nacionais de apoio: Ligue 180 gratuito, 24 horas, e WhatsApp (61) 9610-0180; emergência com risco imediato pelo 190.
+
+Fontes consultadas: Ministério da Saúde — Contracepção e DIU de cobre; OMS — Emergency contraception; Ministério da Saúde — Nota Técnica nº 10/2026; Ministério das Mulheres — Ligue 180. O conteúdo permanece educativo, sem prescrição individual ou orientação jurídica.
+
