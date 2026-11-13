@@ -384,7 +384,6 @@ async function showApp(){const {data:{session}}=await supabase.auth.getSession()
 $("loginForm").addEventListener("submit",async e=>{e.preventDefault();$("loginButton").disabled=true;message("loginMessage","Validando acesso...");try{const {error}=await supabase.auth.signInWithPassword({email:$("email").value.trim(),password:$("password").value});if(error)throw error;await showApp()}catch(error){message("loginMessage",error.message||"Não foi possível entrar.")}finally{$("loginButton").disabled=false}});
 $("logout").addEventListener("click",async()=>{await supabase.auth.signOut();showLogin("Sessão encerrada.")});
 $("refresh").addEventListener("click",load);$("period").addEventListener("change",load);
-$("retrySync").addEventListener("click",async()=>{if(!confirm("Reprocessar a sincronização de pedidos já pagos para o Lux-Gestão?"))return;$("retrySync").disabled=true;try{const {data,error}=await supabase.functions.invoke("management-sales",{body:{action:"website-sync-retry",limit:50}});if(error)throw error;alert("Verificados: "+data.scanned+" · Sincronizados: "+data.synced+" · Falhas: "+data.failed);await load()}catch(error){alert(error.message||"Falha ao reprocessar.")}finally{$("retrySync").disabled=false}});
 
 document.querySelectorAll(".nav-link[href^='#']").forEach(link=>{
   link.addEventListener("click",()=>{
