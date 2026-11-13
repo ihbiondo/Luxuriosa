@@ -149,6 +149,7 @@
       }
       overlay.remove();
       document.body.classList.remove("ed-age-open");
+      document.documentElement.classList.remove("ed-age-pending");
       setBackgroundHidden(false);
       const main = document.querySelector(".ed-main");
       if (main) main.focus({ preventScroll: true });
