@@ -60,7 +60,7 @@ Deno.serve(async (req: Request) => {
       const orderId = body.order_id;
       if (!isUuid(orderId)) return response({ error: "Pedido inválido." }, 400, origin);
       const { data: order, error: orderError } = await admin.from("orders")
-        .select("id, order_number, source, payment_provider, payment_status, management_sale_id, management_sales_sync_status")
+        .select("id, order_number, source, payment_provider, payment_status, status, management_sale_id, management_sales_sync_status")
         .eq("id", orderId).maybeSingle();
       if (orderError) throw orderError;
       if (!order || order.source !== "website" || order.payment_provider !== "infinitepay") {
@@ -68,6 +68,9 @@ Deno.serve(async (req: Request) => {
       }
       if (order.payment_status !== "paid") {
         return response({ error: "A recuperação de estoque exige pagamento já confirmado." }, 409, origin);
+      }
+      if (order.status !== "confirmed") {
+        return response({ error: "A recuperação automática só pode ocorrer antes do início da separação. Pedido que já avançou na expedição exige conferência física e ajuste auditável." }, 409, origin);
       }
 
       const { data: sync, error: syncError } = await admin.rpc("sync_online_order_to_management_sale", {
