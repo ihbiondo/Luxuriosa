@@ -41,7 +41,8 @@ jobs:
             for (const forbidden of ["sales-ledger", "salesLedgerRows", "salesLedgerMeta", "renderSalesLedger", "action:\"list\",limit:50", "sales.data?.sales"]) {
               if (html.includes(forbidden) || moduleSource.includes(forbidden)) throw new Error("Livro de vendas duplicado na Inteligência: " + forbidden);
             }
-            if (moduleSource.includes('supabase.functions.invoke("management-sales",{body:{action:"list"')) {
+            const legacySalesCall = "supabase.functions.invoke(\\\"management-sales\\\",{body:{action:\\\"list\\\"";
+            if (moduleSource.includes(legacySalesCall)) {
               throw new Error("A Inteligência não deve consultar o livro oficial de vendas da Gestão.");
             }
             writeFileSync("/tmp/luxuriosa-intelligence-preview.mjs", moduleSource);
