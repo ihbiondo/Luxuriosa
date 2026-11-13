@@ -160,6 +160,7 @@ jobs:
           const admin = fs.readFileSync("lux-gestao-pedidos/index.html", "utf8");
           const payment = fs.readFileSync("supabase/functions/create-payment-order/index.ts", "utf8");
           const ordersAdminFunction = fs.readFileSync("supabase/functions/orders-admin/index.ts", "utf8");
+          const managementSalesFunction = fs.readFileSync("supabase/functions/management-sales/index.ts", "utf8");
           cp.execFileSync(process.execPath, ["--check", "js/clientes.js"], { stdio: "inherit" });
           for (const [file, html] of [["login.html", login], ["acompanhar-pedido/index.html", tracking], ["lux-gestao-pedidos/index.html", admin]]) {
             const scripts = [...html.matchAll(/<script\b[^>]*>([\s\S]*?)<\/script>/gi)];
@@ -185,7 +186,20 @@ jobs:
           if (!webhook.includes('eventName === "created"') || !webhook.includes('eventType === "created"')) throw new Error("O webhook precisa registrar o evento created sem alterar o pedido.");
           if (!webhook.includes('infinitepay-webhook.unclassified-event') || !webhook.includes("payloadKeys")) throw new Error("O webhook precisa registrar diagnóstico seguro quando não reconhecer o evento recebido.");
           if (!admin.includes('action:"admin_confirm_manual_payment"') || !ordersAdminFunction.includes('action === "admin_confirm_manual_payment"')) throw new Error("O painel precisa permitir confirmação manual do recebimento pelo administrador.");
-          if (!ordersAdminFunction.includes('payment_confirmation_source: "manual_admin"') || !ordersAdminFunction.includes("payment_confirmed_by: userId") || !ordersAdminFunction.includes('manualPermission?.role !== "admin"')) throw new Error("A confirmação manual precisa registrar origem compatível com o banco, operador e autorização administrativa.");
+          for (const legacy of ["scoreCustomerRfv", "buildCustomerRecommendations", "buildCustomerRelationshipSummary", "summarizeCustomerConsumption"]) {
+            if (managementSalesFunction.includes(legacy)) throw new Error("Gestão ainda contém análise de clientes: " + legacy);
+          }
+          const customerGetStart = managementSalesFunction.indexOf('if (action === "customer-get")');
+          const customerGetEnd = managementSalesFunction.indexOf('if (action === "customer-insights")', customerGetStart);
+          if (customerGetStart < 0 || customerGetEnd < 0) throw new Error("customer-get não encontrado no contrato da Gestão.");
+          const customerGet = managementSalesFunction.slice(customerGetStart, customerGetEnd);
+          for (const legacy of ["relationship:", "consumption_summary:", "consumption:"]) {
+            if (customerGet.includes(legacy)) throw new Error("Ficha da Gestão ainda retorna resumo comportamental: " + legacy);
+          }
+          if (!customerGet.includes("sales: salesForDisplay") || !customerGet.includes("orders: ordersForDisplay") || !customerGet.includes("items: (Array.isArray(sale.items)")) {
+            throw new Error("Histórico detalhado de vendas/pedidos precisa continuar disponível.");
+          }
+                    if (!ordersAdminFunction.includes('payment_confirmation_source: "manual_admin"') || !ordersAdminFunction.includes("payment_confirmed_by: userId") || !ordersAdminFunction.includes('manualPermission?.role !== "admin"')) throw new Error("A confirmação manual precisa registrar origem compatível com o banco, operador e autorização administrativa.");
           if (!ordersAdminFunction.includes('current.management_sales_sync_status !== "synced"') || !ordersAdminFunction.includes('stockSale.stock_control_status !== "deducted"') || !ordersAdminFunction.includes('.eq("source_order_id", orderId)')) throw new Error("A expedição precisa exigir venda sincronizada, estoque baixado e vínculo com o pedido original.");
           if (!ordersAdminFunction.includes('processing: ["dispatched"]') || !ordersAdminFunction.includes('dispatched: ["out_for_delivery"]') || !ordersAdminFunction.includes("update.route_started_at = now;")) throw new Error("A expedição precisa separar pedido pronto da saída efetiva para a rota.");
           if (!ordersAdminFunction.includes("payment_checkout_url, payment_expires_at, payment_amount_cents")) throw new Error("O painel administrativo precisa receber link, expiração e valor da cobrança pelo endpoint protegido.");
