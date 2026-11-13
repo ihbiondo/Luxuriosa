@@ -12,7 +12,7 @@ Este documento passa a ser a referência para separar responsabilidades e nomes.
 | Nº | Nome oficial | Responsabilidade principal | O que não deve fazer |
 |---|---|---|---|
 | 1 | **Loja Luxuriosa** | Presença pública, catálogo, páginas de produto, conta do cliente, carrinho e início da compra | Administrar estoque interno, conciliar pagamentos manualmente ou calcular indicadores gerenciais |
-| 2 | **Pedidos Online** | Criar e acompanhar pedidos do site, checkout, links InfinitePay, confirmação/consulta de pagamento, notificações e fluxo de separação/entrega | Ser o caixa de vendas presenciais ou a fonte de relatórios gerenciais |
+| 2 | **Pedidos Online** | Criar e acompanhar pedidos do site, confirmação/conciliação de pagamento, vínculo comercial, etapas de separação/entrega e ocorrências | Manter livro de vendas do caixa, emitir relatórios financeiros, calcular ticket médio, série de faturamento ou produtos mais vendidos |
 | 3 | **Lux-Gestão** | Operação interna: PDV/caixa, vendas presenciais, despesas, estoque, custos, composição de kits e movimentações | Criar links de checkout do site ou declarar pagamento online como aprovado sem validação do provedor |
 | 4 | **Luxuriosa Inteligência** | Indicadores, análise financeira/comercial, comportamento agregado, alertas e recomendações para decisão | Editar pedidos, confirmar pagamentos, movimentar estoque ou substituir os registros transacionais |
 
@@ -41,10 +41,10 @@ Este documento passa a ser a referência para separar responsabilidades e nomes.
 - `status`: etapa operacional do pedido (confirmação, processamento, saída para entrega, entregue ou cancelado).
 - `payment_provider_events`: evidências/eventos recebidos do provedor.
 - `infinitepay-webhook`, `payment-status`, `create-payment-order`, `cart-orders`: funções do fluxo online.
-- `orders-admin`: endpoint autenticado para atualização de etapa operacional; `cart-orders` mantém a ação antiga temporariamente como compatibilidade.
+- `orders-admin`: endpoint autenticado para a fila de pedidos, consulta de detalhes, vínculo de cliente, confirmação financeira/operacional e atualização do ciclo de entrega. A ação `admin_orders_list` fornece apenas os dados da fila; `admin_dashboard` legado está em retirada após migração dos consumidores.
 - `payment-admin`: consulta/conciliação administrativa. O slug permanece por compatibilidade, mas pertence conceitualmente a **Pedidos Online**.
 
-**Regra:** situação financeira e etapa de entrega são dimensões independentes. Pedido não é sinônimo de pagamento. A aprovação de pagamento online depende de validação da InfinitePay, não de alteração manual no painel.
+**Regra:** situação financeira e etapa de entrega são dimensões independentes. Pedido não é sinônimo de pagamento. A aprovação de pagamento online depende de validação/concilição da InfinitePay. A tela Pedidos não mantém livro de vendas do caixa, métricas de faturamento, ticket médio, série diária ou ranking de produtos; isso pertence ao Lux-Gestão (registro oficial) e à Inteligência (análise).
 
 ### Operação interna — Lux-Gestão
 - `management_sales`: livro operacional de vendas do caixa e vendas online sincronizadas.
@@ -55,7 +55,7 @@ Este documento passa a ser a referência para separar responsabilidades e nomes.
 - `management_customers`, `management_customer_addresses`: cadastro comercial, contatos e endereços.
 - `management-sales`: API de operação da Gestão: caixa, vendas, comprovantes, clientes, custos, estoque, kits e despesas.
 
-**Regra:** Gestão mantém e executa registros operacionais. Seu histórico de cliente pode mostrar compras vinculadas e itens pagos/brindes separados, mas não deve apresentar segmentação RFV, scoring, recomendações, análise de comportamento ou oportunidades comerciais. Campos RFV/recomendações ainda emitidos por `customer-get` e `customers-list` são compatibilidade técnica temporária; não são a fonte oficial de inteligência e serão retirados após a migração do consumidor.
+**Regra:** Gestão mantém e executa registros operacionais. Seu histórico de cliente pode mostrar compras vinculadas e itens pagos/brindes separados, mas não apresenta segmentação RFV, scoring, recomendações, análise de comportamento ou oportunidades comerciais. O backend `management-sales` não calcula nem retorna esses campos; as ações analíticas antigas respondem HTTP 410 e encaminham para a Inteligência.
 
 Vendas presenciais nascem na Gestão. Pedidos online nascem em Pedidos Online e, após confirmação do pagamento e sincronização idempotente, aparecem no livro operacional sem criar uma segunda venda ou cobrança.
 
@@ -150,7 +150,7 @@ Esta seção prevalece sobre descrições históricas anteriores neste documento
 | Lux-Gestão | Cadastro comercial, endereços, vendas, comprovantes, custos, kits, estoque e despesas | RFV, recomendações, funil digital, carrinhos abandonados ou painel executivo |
 | Luxuriosa Inteligência | Indicadores, rentabilidade analítica, RFV, comportamento, alertas, oportunidades e recuperação comercial | Gravar ou alterar transações operacionais |
 
-**Migração em andamento:** o frontend de clientes da Gestão deixou de exibir filtro RFV, score e recomendações. O backend `management-sales` ainda devolve esses campos em contratos legados; eles serão removidos somente depois que a Inteligência oferecer o endpoint equivalente e seus consumidores estiverem migrados.
+**RFV transferido:** o cálculo e as recomendações pertencem à ação autenticada `customer-rfv` da `luxuriosa-intelligence`. A Gestão mantém cadastro e histórico transacional, sem scoring comercial.
 
 **Lux-Central:** não é um quinto sistema. Funil, eventos, abandono de carrinho e recuperação comercial são módulos da Luxuriosa Inteligência. O nome antigo permanece apenas em slugs, rotas e identificadores técnicos até migração compatível.
 
@@ -166,4 +166,5 @@ Esta seção prevalece sobre descrições históricas anteriores neste documento
 - RFV usa histórico de vendas pagas e pedidos explicitamente vinculados; sincronizações online são deduplicadas.
 - Sugestões de produto usam apenas pedidos pagos de contas com consentimento de personalização v2 vigente.
 - Gestão mantém cadastro e histórico, e não exibe nem calcula RFV.
-- A antiga tela de Relatórios da Gestão foi substituída por Custos e despesas. A Inteligência é a tela executiva/analítica.
+- A antiga tela de Relatórios da Gestão foi substituída por Custos e despesas. A home da Gestão é operacional. A Inteligência é a tela executiva/analítica.
+- A fila de Pedidos usa `orders-admin` / `admin_orders_list`, sem o livro de vendas ou métricas de faturamento; a confirmação financeira e os bloqueios de sincronização/estoque permanecem no fluxo do pedido.
