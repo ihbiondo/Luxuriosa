@@ -159,7 +159,6 @@ jobs:
           const tracking = fs.readFileSync("acompanhar-pedido/index.html", "utf8");
           const admin = fs.readFileSync("lux-gestao-pedidos/index.html", "utf8");
           const payment = fs.readFileSync("supabase/functions/create-payment-order/index.ts", "utf8");
-          const ordersFunction = fs.readFileSync("supabase/functions/cart-orders/index.ts", "utf8");
           const ordersAdminFunction = fs.readFileSync("supabase/functions/orders-admin/index.ts", "utf8");
           cp.execFileSync(process.execPath, ["--check", "js/clientes.js"], { stdio: "inherit" });
           for (const [file, html] of [["login.html", login], ["acompanhar-pedido/index.html", tracking], ["lux-gestao-pedidos/index.html", admin]]) {
@@ -184,7 +183,7 @@ jobs:
           if (!webhook.includes('infinitepay-webhook.unclassified-event') || !webhook.includes("payloadKeys")) throw new Error("O webhook precisa registrar diagnóstico seguro quando não reconhecer o evento recebido.");
           if (!admin.includes('action:"admin_confirm_manual_payment"') || !ordersAdminFunction.includes('action === "admin_confirm_manual_payment"')) throw new Error("O painel precisa permitir confirmação manual do recebimento pelo administrador.");
           if (!ordersAdminFunction.includes('payment_confirmation_source: "manual"') || !ordersAdminFunction.includes("payment_confirmed_by: userId") || !ordersAdminFunction.includes('manualPermission?.role !== "admin"')) throw new Error("A confirmação manual precisa registrar origem, operador e autorização administrativa.");
-          if (!ordersFunction.includes("payment_checkout_url, payment_expires_at, payment_amount_cents")) throw new Error("O painel precisa receber link, expiração e valor da cobrança.");
+          if (!ordersAdminFunction.includes("payment_checkout_url, payment_expires_at, payment_amount_cents")) throw new Error("O painel administrativo precisa receber link, expiração e valor da cobrança pelo endpoint protegido.");
           if (!tracking.includes('.eq("customer_id",user.id)')) throw new Error("A consulta de pedidos precisa filtrar pelo usuário autenticado.");
           if (!tracking.includes("payment_checkout_url") || !tracking.includes("checkout.infinitepay.io")) throw new Error("O cliente precisa conseguir retomar uma cobrança pendente na InfinitePay.");
           for (const label of ["Aguardando pagamento", "Pagamento aprovado", "Em expedição", "Em rota de entrega", "Pedido entregue"]) {
