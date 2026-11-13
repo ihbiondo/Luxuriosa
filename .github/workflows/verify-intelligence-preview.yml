@@ -38,6 +38,13 @@ jobs:
               if (!html.includes("id=\"" + id + "\"")) throw new Error("Elemento RFV ausente: " + id);
             }
             if (!moduleSource.includes("action:\"customer-rfv\"")) throw new Error("Chamada customer-rfv ausente.");
+            for (const forbidden of ["sales-ledger", "salesLedgerRows", "salesLedgerMeta", "renderSalesLedger", "action:\"list\",limit:50", "sales.data?.sales"]) {
+              if (html.includes(forbidden) || moduleSource.includes(forbidden)) throw new Error("Livro de vendas duplicado na Inteligência: " + forbidden);
+            }
+            const legacySalesCall = "supabase.functions.invoke(\\\"management-sales\\\",{body:{action:\\\"list\\\"";
+            if (moduleSource.includes(legacySalesCall)) {
+              throw new Error("A Inteligência não deve consultar o livro oficial de vendas da Gestão.");
+            }
             writeFileSync("/tmp/luxuriosa-intelligence-preview.mjs", moduleSource);
           '
           node --check /tmp/luxuriosa-intelligence-preview.mjs
