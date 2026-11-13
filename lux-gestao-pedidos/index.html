@@ -160,7 +160,8 @@ input,select{width:100%;min-width:0;border:1px solid var(--line);border-radius:8
       items.append(itemsLabel);
       (order.items||[]).forEach(item=>{
         const line=node("div","item");
-        const detail=node("span","",String(item.quantity)+"× "+item.product_name);
+        const variantLabel=item.selected_dice_product_name?" · Dado: "+item.selected_dice_product_name:item.selected_dice_product_id?" · Dado: opção "+item.selected_dice_product_id:"";
+        const detail=node("span","",String(item.quantity)+"× "+item.product_name+variantLabel);
         const price=node("strong","",money.format(Number(item.line_total||item.unit_price*item.quantity)||0));
         line.append(detail,price);items.append(line);
       });
