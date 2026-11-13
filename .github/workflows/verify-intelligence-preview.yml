@@ -29,12 +29,15 @@ jobs:
           node --input-type=module -e '
             import { readFileSync, writeFileSync } from "node:fs";
             const html = readFileSync("previa/lux-central/index.html", "utf8");
-            const match = html.match(/<script type="module">([\\s\\S]*?)<\\/script>/);
-            if (!match) throw new Error("Módulo JavaScript principal não encontrado.");
+            const startTag = "<script type=\"module\">";
+            const start = html.indexOf(startTag);
+            const end = html.indexOf("</script>", start);
+            if (start < 0 || end < 0) throw new Error("Módulo JavaScript principal não encontrado.");
+            const moduleSource = html.slice(start + startTag.length, end);
             for (const id of ["customerRfvSearch", "customerRfvSegment", "customerRfvRows", "customerRfvNote"]) {
               if (!html.includes("id=\"" + id + "\"")) throw new Error("Elemento RFV ausente: " + id);
             }
-            if (!match[1].includes("action:\"customer-rfv\"")) throw new Error("Chamada customer-rfv ausente.");
-            writeFileSync("/tmp/luxuriosa-intelligence-preview.mjs", match[1]);
+            if (!moduleSource.includes("action:\"customer-rfv\"")) throw new Error("Chamada customer-rfv ausente.");
+            writeFileSync("/tmp/luxuriosa-intelligence-preview.mjs", moduleSource);
           '
           node --check /tmp/luxuriosa-intelligence-preview.mjs
