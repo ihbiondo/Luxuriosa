@@ -40,7 +40,7 @@
     @media(max-width:480px){.shell{width:min(100% - 24px,1080px)}.top{align-items:flex-start}.brand{font-size:24px}.back{padding-top:8px;font-size:10px}main{padding-top:18px}.intro h1{font-size:36px}.panel{padding:21px 16px;border-radius:15px}.grid{grid-template-columns:1fr}.field.full{grid-column:auto}.section-label{grid-column:auto}.tabs{margin-bottom:22px}h2{font-size:26px}}
 
     /* Área do cliente: navegação simples por tarefas */
-    .account-home{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:18px 0 22px}
+    .account-home{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:18px 0 22px}
     .account-home a{display:flex;flex-direction:column;gap:7px;min-height:118px;padding:17px 15px;border:1px solid var(--line);border-radius:12px;background:rgba(0,0,0,.22);text-decoration:none;transition:border-color .2s,transform .2s}
     .account-home a:hover{border-color:var(--gold);transform:translateY(-2px)}
     .account-home strong{color:var(--blush);font-size:12px}
@@ -219,15 +219,11 @@
               <p>Escolha uma opção. Você pode voltar a esta página quando quiser.</p>
             </div>
             <nav class="account-home" aria-label="Atalhos da sua conta">
-              <a href="#account-profile-section" data-open-account="account-profile-section"><span class="tile-icon" aria-hidden="true">♙</span><strong>Revisar cadastro</strong><span>Confira seu nome, contato e endereço de entrega.</span></a>
-              <a href="#account-orders-section" data-open-account="account-orders-section"><span class="tile-icon" aria-hidden="true">▤</span><strong>Acompanhar compra</strong><span>Veja o status dos pedidos e as próximas etapas.</span></a>
-              <a href="/loja.html"><span class="tile-icon" aria-hidden="true">✦</span><strong>Novidades</strong><span>Descubra produtos, kits e novidades da Luxuriosa.</span></a>
+              <a href="#account-profile-section" data-open-account="account-profile-section"><span class="tile-icon" aria-hidden="true">♙</span><strong>Meus dados</strong><span>Confira seu cadastro, contato e endereço.</span></a>
+              <a href="#account-orders-section" data-open-account="account-orders-section"><span class="tile-icon" aria-hidden="true">▤</span><strong>Meus pedidos</strong><span>Acompanhe suas compras e solicitações.</span></a>
+              <a href="/clube.html"><span class="tile-icon" aria-hidden="true">♛</span><strong>Clube e vantagens</strong><span>Conheça o Clube gratuito, Apoiadores e Privilegie.</span></a>
+              <a href="/loja.html"><span class="tile-icon" aria-hidden="true">✦</span><strong>Explorar a loja</strong><span>Descubra produtos, kits e novidades.</span></a>
             </nav>
-            <aside class="account-club">
-              <strong>Clube Luxuriosa</strong>
-              <p>Estamos preparando um espaço de vantagens com ofertas especiais, novidades e benefícios para quem faz parte da comunidade. Participar será opcional e suas preferências poderão ser ajustadas quando quiser.</p>
-              <a href="/loja.html">EXPLORAR A LUXURIOSA →</a>
-            </aside>
             <section class="orders-panel" aria-labelledby="ordersHeading">
               <div class="section-label" id="ordersHeading">Meus pedidos</div>
               <p class="orders-intro">Acompanhe as solicitações feitas pelo site e o andamento de cada pedido. Solicitações encaminhadas ao WhatsApp ficam aguardando confirmação; a compra só é confirmada após o atendimento.</p>
