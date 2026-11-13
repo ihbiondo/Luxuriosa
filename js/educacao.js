@@ -27,8 +27,16 @@
     menu.setAttribute("data-ed-module-menu", "");
     const summary = menu.querySelector("summary");
     if (summary) {
-      summary.textContent = "Explorar módulos";
+      summary.textContent = "Explorar módulos ⌄";
       summary.setAttribute("aria-label", "Abrir navegação dos módulos educativos");
+    }
+
+    const brand = document.querySelector(".ed-brand");
+    if (brand) {
+      brand.href = "/educacao/";
+      brand.setAttribute("aria-label", "Educação Luxuriosa — início");
+      const subtitle = brand.querySelector("small");
+      if (subtitle) subtitle.textContent = "EDUCAÇÃO · CONHECIMENTO";
     }
 
     const currentPath = normalizePath(window.location.pathname);
@@ -60,6 +68,7 @@
     if (!main) return;
 
     if (!main.id) main.id = "conteudo-principal";
+    if (!main.hasAttribute("tabindex")) main.setAttribute("tabindex", "-1");
     if (document.querySelector(".ed-skip-link")) return;
 
     const skip = document.createElement("a");
@@ -141,6 +150,8 @@
       overlay.remove();
       document.body.classList.remove("ed-age-open");
       setBackgroundHidden(false);
+      const main = document.querySelector(".ed-main");
+      if (main) main.focus({ preventScroll: true });
     }
 
     confirm.addEventListener("click", closeGate);
