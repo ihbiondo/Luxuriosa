@@ -37,7 +37,7 @@ jobs:
               if (start < 0 || end < 0) throw new Error(path + ": módulo JavaScript não encontrado.");
               const source = html.slice(start + startTag.length, end);
               if (!source.includes("action:\"admin_orders_list\"")) throw new Error(path + ": fila não usa endpoint operacional.");
-              for (const forbidden of ["renderSalesLedger", "allSales", "admin_dashboard", "revenue_period", "top_products"]) {
+              for (const forbidden of ["sales-ledger", "sales-table", "renderSalesLedger", "allSales", "admin_dashboard", "revenue_period", "top_products"]) {
                 if (html.includes(forbidden)) throw new Error(path + ": referência duplicada/analítica: " + forbidden);
               }
               writeFileSync("/tmp/pedidos-" + name + ".mjs", source);
