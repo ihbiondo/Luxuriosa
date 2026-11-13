@@ -151,6 +151,7 @@ Cada artigo pertence a uma seção principal e aponta para conteúdos relacionad
 - [x] Diferença entre PrEP e PEP e janela de urgência da PEP.
 - [x] Conceito I=I e prevenção por vacinação.
 - [x] Visão geral dos métodos contraceptivos e dupla proteção.
+- [x] Guia prático de acesso a testagem, UBS, CTA, PrEP e atendimento urgente para PEP.
 - [ ] Aprofundamentos específicos somente quando houver atualização oficial ou demanda relevante.
 
 ### Etapa 3 — Corpo e bem-estar (visão geral publicada)
@@ -159,10 +160,10 @@ Cada artigo pertence a uma seção principal e aponta para conteúdos relacionad
 - [ ] Resposta sexual, libido, saúde urogenital, menopausa e envelhecimento ficam como aprofundamentos futuros, sem criar páginas repetitivas.
 
 ### Etapa 4 — Relações, direitos e segurança
-- [ ] Comunicação de limites e preferências.
+- [x] Comunicação de limites e preferências.
 - [ ] Como reconhecer relações respeitosas.
 - [ ] Controle, coerção e violência: sinais e apoio.
-- [ ] Privacidade e consentimento digital.
+- [x] Privacidade e consentimento digital.
 - [ ] Segurança no compartilhamento de imagens íntimas.
 - [ ] Orientação sexual e identidade de gênero: conceitos sem estereótipos.
 - [ ] Direitos sexuais e reprodutivos.
