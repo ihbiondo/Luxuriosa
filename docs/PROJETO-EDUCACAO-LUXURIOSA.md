@@ -159,16 +159,16 @@ Cada artigo pertence a uma seção principal e aponta para conteúdos relacionad
 - [x] Noções básicas sobre o ciclo menstrual e suas variações.
 - [ ] Resposta sexual, libido, saúde urogenital, menopausa e envelhecimento ficam como aprofundamentos futuros, sem criar páginas repetitivas.
 
-### Etapa 4 — Relações, direitos e segurança
+### Etapa 4 — Relações, direitos e segurança (núcleo publicado)
 - [x] Comunicação de limites e preferências.
-- [ ] Como reconhecer relações respeitosas.
-- [ ] Controle, coerção e violência: sinais e apoio.
+- [x] Como reconhecer relações respeitosas.
+- [x] Controle, coerção e violência: sinais e apoio.
 - [x] Privacidade e consentimento digital.
-- [ ] Segurança no compartilhamento de imagens íntimas.
-- [ ] Orientação sexual e identidade de gênero: conceitos sem estereótipos.
-- [ ] Direitos sexuais e reprodutivos.
-- [ ] Como conversar com profissionais de saúde.
-- [ ] Como avaliar informações e falsas promessas na internet.
+- [x] Segurança no compartilhamento de imagens íntimas.
+- [x] Orientação sexual e identidade de gênero: conceitos sem estereótipos.
+- [x] Direitos sexuais e reprodutivos.
+- [x] Como conversar com profissionais de saúde.
+- [x] Princípios de segurança digital e privacidade íntima.
 
 ### Etapa 5 — Produtos e segurança de uso
 - [ ] Revisão técnica de materiais na enciclopédia.
@@ -180,9 +180,11 @@ Cada artigo pertence a uma seção principal e aponta para conteúdos relacionad
 - [ ] Irritação, alergias e quando interromper o uso.
 - [ ] Ergonomia e acessibilidade.
 
-### Etapa 6 — Interatividade (primeira ferramenta educativa publicada)
+### Etapa 6 — Interatividade (ferramentas educativas iniciais publicadas)
 - [x] Quiz com conhecimentos essenciais sobre prevenção, consentimento e contracepção.
 - [x] Checklist local para preparar uma conversa com serviço de saúde.
+- [x] Módulo de mitos e fatos sobre saúde sexual.
+- [x] Orientador de leitura entre os módulos fundamentais.
 - [x] Orientador de conteúdo para localizar os módulos principais.
 - [ ] Próximas ferramentas: mitos e fatos, anatomia e autoconhecimento recreativo, sem pretensão diagnóstica.
 - [ ] Revisar acessibilidade por teclado e leitor de tela.
