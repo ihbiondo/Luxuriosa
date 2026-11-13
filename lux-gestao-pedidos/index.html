@@ -125,7 +125,7 @@ input,select{width:100%;min-width:0;border:1px solid var(--line);border-radius:8
     function allowedNext(order){
       if(order.status==="cancelled")return [];
       if(order.payment_status==="paid"){if(order.management_sales_sync_status!=="synced"||order.stock_control_status!=="deducted")return [];const next={confirmed:["processing"],processing:["out_for_delivery"],out_for_delivery:["delivered"]};return next[order.status]||[];}
-      if(order.payment_status==="pending"&&order.status==="awaiting_confirmation")return ["cancelled"];
+      if(order.payment_status==="pending"&&order.status==="awaiting_confirmation")return [];
       return [];
     }
     function checkoutUrl(value){
@@ -263,6 +263,67 @@ input,select{width:100%;min-width:0;border:1px solid var(--line);border-radius:8
       }else{
         foot.append(node("span","muted",order.status==="delivered"?"Entrega finalizada":order.status==="cancelled"?"Pedido cancelado":order.payment_status==="review_required"?"Aguardando conciliação financeira":order.payment_status==="paid"?"Expedição bloqueada por estoque/sincronização":"Aguardando confirmação do pagamento"));
       }
+      const lifecycleEvents=Array.isArray(order.lifecycle_events)?order.lifecycle_events:[];
+      const hasEvent=type=>lifecycleEvents.some(event=>event.event_type===type);
+      const lifecyclePanel=node("div","order-panel");
+      lifecyclePanel.append(node("div","label","HISTÓRICO DE RESOLUÇÃO"));
+      if(!lifecycleEvents.length) lifecyclePanel.append(node("div","muted","Nenhuma ocorrência de cancelamento, estorno ou devolução."));
+      lifecycleEvents.forEach(event=>{
+        const names={cancelled_unpaid:"Pedido cancelado (não pago)",refund_requested:"Estorno solicitado",refund_confirmed:"Estorno confirmado",return_received:"Devolução física recebida",restock_approved:"Retorno ao estoque aprovado"};
+        const line=node("div","item");
+        const details=node("span","",(names[event.event_type]||event.event_type)+" · "+event.reason+" · "+new Date(event.created_at).toLocaleString("pt-BR"));
+        const value=event.amount_cents?node("strong","",money.format(Number(event.amount_cents)/100)):node("span","muted",event.reference||"");
+        line.append(details,value);lifecyclePanel.append(line);
+      });
+      const lifecycleActions=node("div","status-edit");
+      const lifecycleButton=(label,run)=>{
+        const button=node("button","primary",label);
+        button.addEventListener("click",async()=>{
+          button.disabled=true;button.textContent="REGISTRANDO…";
+          try{await run();showNotice("Ocorrência registrada no histórico do pedido #"+order.order_number+".");await load();}
+          catch(error){showNotice(error.message,true);button.disabled=false;button.textContent=label;}
+        });
+        lifecycleActions.append(button);
+      };
+      const recordEvent=async(eventType,reason,amountCents=null,reference=null)=>{
+        await invokeOrdersAdmin({action:"admin_record_order_lifecycle_event",order_id:order.id,event_type:eventType,reason,amount_cents:amountCents,reference,idempotency_key:crypto.randomUUID()});
+      };
+      if(order.payment_status==="pending"&&order.status==="awaiting_confirmation"&&!hasEvent("cancelled_unpaid")){
+        lifecycleButton("CANCELAR PEDIDO NÃO PAGO",async()=>{
+          const reason=window.prompt("Motivo do cancelamento do pedido #"+order.order_number+":");
+          if(!reason||!reason.trim())throw new Error("Informe o motivo para registrar o cancelamento.");
+          await recordEvent("cancelled_unpaid",reason.trim());
+        });
+      }
+      if(order.payment_status==="paid"&&order.status!=="delivered"&&!hasEvent("refund_requested")){
+        lifecycleButton("REGISTRAR SOLICITAÇÃO DE ESTORNO",async()=>{
+          const reason=window.prompt("Motivo da solicitação de estorno do pedido #"+order.order_number+":");
+          if(!reason||!reason.trim())throw new Error("Informe o motivo da solicitação.");
+          await recordEvent("refund_requested",reason.trim());
+        });
+      }
+      if(hasEvent("refund_requested")&&!hasEvent("refund_confirmed")){
+        lifecycleButton("CONFIRMAR ESTORNO EFETUADO",async()=>{
+          const amount=window.prompt("Valor efetivamente devolvido (R$), após conferir na InfinitePay:");
+          const cents=Math.round(Number(String(amount||"").replace(",", "."))*100);
+          if(!Number.isSafeInteger(cents)||cents<=0)throw new Error("Informe um valor de estorno válido.");
+          const reference=window.prompt("Referência ou comprovante do estorno:");
+          if(!reference||!reference.trim())throw new Error("Informe a referência do estorno.");
+          const reason=window.prompt("Observação do estorno (ex.: integral ou parcial):")||"Estorno confirmado manualmente após conferência.";
+          await recordEvent("refund_confirmed",reason,cents,reference.trim());
+        });
+      }
+      if(order.status==="delivered"&&!hasEvent("return_received")){
+        lifecycleButton("REGISTRAR DEVOLUÇÃO FÍSICA RECEBIDA",async()=>{
+          const reference=window.prompt("Referência da conferência física/recebimento:");
+          if(!reference||!reference.trim())throw new Error("Informe a referência da conferência física.");
+          const reason=window.prompt("Condição e observações da mercadoria devolvida:");
+          if(!reason||!reason.trim())throw new Error("Descreva a condição da mercadoria.");
+          await recordEvent("return_received",reason.trim(),null,reference.trim());
+        });
+      }
+      if(lifecycleActions.childElementCount) lifecyclePanel.append(lifecycleActions);
+      foot.append(lifecyclePanel);
       card.append(foot);return card;
     }
     function renderSalesLedger(){
