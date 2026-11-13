@@ -105,3 +105,51 @@ body.ed-age-open { overflow: hidden; }
 
 /* Evita exibir o conteúdo antes da confirmação 18+ ser apresentada. */
 html.ed-age-pending body > :not(.ed-age-gate) { visibility: hidden !important; }
+
+
+/* Interatividade: áreas de toque, leitura e foco em telas pequenas. */
+.ed-question { min-width: 0; }
+.ed-question legend {
+  max-width: 100%;
+  line-height: 1.5;
+}
+.ed-option {
+  min-height: 44px;
+  align-items: flex-start;
+  padding: 10px 9px;
+  border-radius: 9px;
+  line-height: 1.5;
+}
+.ed-option input {
+  flex: 0 0 18px;
+  width: 18px;
+  min-width: 18px;
+  height: 18px;
+  margin: 2px 0 0;
+}
+.ed-check {
+  min-height: 46px;
+  align-items: flex-start;
+  padding: 13px;
+  line-height: 1.5;
+}
+.ed-check input {
+  flex: 0 0 18px;
+  width: 18px;
+  min-width: 18px;
+  height: 18px;
+  margin: 2px 0 0;
+}
+.ed-feedback { line-height: 1.65; overflow-wrap: anywhere; }
+.ed-result { line-height: 1.65; }
+.ed-tool select, .ed-button { touch-action: manipulation; }
+[hidden] { display: none !important; }
+@media(max-width:540px) {
+  .ed-option { font-size: 14px; gap: 11px; }
+  .ed-check { font-size: 14px; gap: 12px; }
+  .ed-question { padding: 14px 12px; }
+  .ed-tool select { font-size: 16px; }
+}
+@media(prefers-reduced-motion:reduce) {
+  .ed-progress span { transition: none; }
+}

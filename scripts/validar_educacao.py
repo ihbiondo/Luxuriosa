@@ -146,6 +146,16 @@ def main() -> int:
             if not audit.related:
                 errors.append(f"{rel}: bloco de leituras relacionadas ausente")
 
+        if rel.as_posix() == "educacao/interatividade/index.html":
+            if "/js/educacao-interatividade.js" not in audit.scripts:
+                errors.append(f"{rel}: script modular da interatividade ausente")
+            if '<div id="knowledgeQuiz" role="group"' not in page_text:
+                errors.append(f"{rel}: quiz deve ser um grupo local, sem envio de formulário")
+            if "<form" in page_text.lower():
+                errors.append(f"{rel}: formulário pode expor respostas na URL; use controles locais")
+            if 'id="quizResult" class="ed-result" role="status"' not in page_text:
+                errors.append(f"{rel}: resultado do quiz precisa de região de status acessível")
+
         canonical_url = f"{BASE_URL}/{rel.as_posix()}"
         if rel.name == "index.html":
             canonical_url = f"{BASE_URL}/{rel.parent.as_posix()}/"
