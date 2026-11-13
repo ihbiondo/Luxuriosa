@@ -5,7 +5,7 @@
 **Backend compartilhado:** Supabase `byiykxfugvxuowueuxca`  
 **Portal interno:** `/442/`
 
-Este documento passa a ser a referência para separar responsabilidades e nomes. Ele não renomeia tabelas, funções, domínios ou rotas em produção: identificadores técnicos antigos permanecem como compatibilidade até uma migração planejada.
+Este documento é a referência para separar responsabilidades e nomes. Slugs e rotas históricas podem permanecer como aliases, mas ações de backend que duplicavam responsabilidades foram removidas após a migração dos consumidores.
 
 ## 1. Os quatro projetos
 
@@ -41,8 +41,8 @@ Este documento passa a ser a referência para separar responsabilidades e nomes.
 - `status`: etapa operacional do pedido (confirmação, processamento, saída para entrega, entregue ou cancelado).
 - `payment_provider_events`: evidências/eventos recebidos do provedor.
 - `infinitepay-webhook`, `payment-status`, `create-payment-order`, `cart-orders`: funções do fluxo online.
-- `orders-admin`: endpoint administrativo autenticado para a fila de pedidos, detalhes, vínculo de cliente, confirmação financeira/operacional, sincronização, bloqueios de estoque e ciclo de entrega. `admin_orders_list` retorna somente dados operacionais da fila.
-- `cart-orders`: endpoint da Loja para registrar eventos de navegação/carrinho e etapas de checkout, sempre conforme consentimentos aplicáveis; não possui painel administrativo nem motor de indicadores.
+- `orders-admin` v28: endpoint administrativo autenticado para a fila de pedidos, detalhes, vínculo de cliente, confirmação financeira/operacional, sincronização, bloqueios de estoque e ciclo de entrega. `admin_orders_list` retorna somente dados operacionais da fila; `admin_dashboard` foi removido.
+- `cart-orders` v34: endpoint público da Loja para registrar eventos de navegação/carrinho e etapas de checkout, conforme consentimentos aplicáveis. Não possui ações administrativas, dashboards ou motor de indicadores.
 - `payment-admin`: consulta/conciliação administrativa. O slug permanece por compatibilidade, mas pertence conceitualmente a **Pedidos Online**.
 
 **Regra:** situação financeira e etapa de entrega são dimensões independentes. Pedido não é sinônimo de pagamento. A aprovação de pagamento online depende de validação/concilição da InfinitePay. A tela Pedidos não mantém livro de vendas do caixa, métricas de faturamento, ticket médio, série diária ou ranking de produtos; isso pertence ao Lux-Gestão (registro oficial) e à Inteligência (análise).
@@ -80,7 +80,7 @@ Vendas presenciais nascem na Gestão. Pedidos online nascem em Pedidos Online e,
 | **Lux-Central** usado como nome do produto e **Inteligência** como categoria | Dois nomes para o mesmo painel confundem o usuário | Nome único do produto: **Luxuriosa Inteligência**; `/lux-central/` e `/previa/lux-central/` permanecem como rotas legadas |
 | **Lux-Gestão** descrito como responsável por “pagamentos” | Pode sugerir que o Worker aprova cobranças online | Gestão cuida do caixa e registros operacionais; **Pedidos Online** cuida do checkout e conciliação InfinitePay |
 | **Pedidos Online** aparece como parte da Gestão em alguns títulos/rotas | Mistura sistemas e dificulta suporte | É projeto próprio; manter `/lux-gestao-pedidos/` apenas como URL histórica |
-| **management-sales** serve vendas, estoque e parte de inteligência | O nome técnico não descreve toda a API | Manter slug para compatibilidade; documentar os domínios e separar ações/endpoints gradualmente |
+| **management-sales** tem slug histórico amplo | O nome técnico não descreve o contrato operacional atual | Manter slug por compatibilidade; cadastro, caixa, estoque, custos, kits e despesas ficam na Gestão; analytics/RFV são responsabilidade da Inteligência |
 | **Portal 442** chamado de Central de Operação | Pode ser confundido com Luxuriosa Inteligência | Nome funcional: **Portal 442 — Acesso aos sistemas** |
 | Aplicativo Tauri “Luxuriosa Gestão” e Worker “Lux-Gestão” | Mesmo nome, clientes e implantações distintas | Ambos pertencem ao projeto **Lux-Gestão**; distinguir como “Gestão Desktop (Tauri)” e “Gestão Web (Worker)” até validar paridade |
 
@@ -101,11 +101,11 @@ Evitar usar “venda”, “pedido”, “pagamento” e “entrega” como sin�
 
 ## 6. Estado operacional observado no mapeamento
 
-Contagens são fotografia do banco no momento da inspeção; não são metas nem garantias de operação concluída.
+Os números desta seção são a fotografia do mapeamento inicial, não um painel de situação atual. Não devem ser usados como saldo/contagem corrente sem nova consulta ao banco.
 
-- 8 pedidos em `orders`.
-- 0 eventos registrados em `payment_provider_events` no momento da inspeção.
-- 0 vendas em `management_sales` no momento da inspeção.
+- 8 pedidos em `orders` na fotografia inicial.
+- 0 eventos registrados em `payment_provider_events` na fotografia inicial.
+- 0 vendas em `management_sales` na fotografia inicial.
 - 29 produtos cadastrados em `management_inventory`; controle de estoque ainda desabilitado nas linhas observadas.
 - 4 custos cadastrados em `management_product_costs`.
 - 0 composições em `management_kit_components`.
@@ -135,10 +135,13 @@ Contagens são fotografia do banco no momento da inspeção; não são metas nem
 5. Validar ponta a ponta: Loja → pedido → checkout InfinitePay → webhook/consulta → sincronização para Gestão → indicadores na Inteligência.
 
 
-### Separação do dashboard administrativo
+### Contratos administrativos — estado final de 13/11/2026
 
-A ação `admin_dashboard` é atendida pelo endpoint autenticado `orders-admin`. O endpoint legado `cart-orders` mantém a ação por compatibilidade temporária; a interface Pedidos Online utiliza o endpoint dedicado. Consultas de atividade ao vivo e inteligência permanecem no legado até suas respectivas migrações e validações.
-
+- `orders-admin` v28: a fila Pedidos usa somente `admin_orders_list`. Confirmação manual, reconciliação, sincronização, recuperação de estoque, atualização de etapa, ocorrências e vínculo de cliente permanecem no mesmo domínio. A ação analítica `admin_dashboard` foi removida depois da migração de produção e prévia.
+- `cart-orders` v34: recebe apenas eventos de navegação/carrinho e etapas públicas de checkout. As antigas ações administrativas `admin_dashboard`, `admin_live_activity`, `admin_intelligence` e `admin_update_order_status` foram removidas do endpoint e do espelho versionado.
+- `management-sales` v50: mantém o livro de vendas, clientes, custos, kits, estoque e despesas; não calcula nem devolve RFV/recomendações. Ações analíticas antigas respondem HTTP 410 e encaminham para a Inteligência.
+- `luxuriosa-intelligence` v21: mantém analytics financeiro/comercial, comportamento e RFV; é leitura e não altera transações.
+- JWT e papel administrativo são obrigatórios nos três endpoints administrativos (`orders-admin`, `management-sales` e `luxuriosa-intelligence`). `cart-orders` é público apenas para coleta de carrinho/eventos, conforme consentimentos aplicáveis.
 
 ## 9. Fronteira funcional consolidada — atualização 13/11/2026
 
@@ -160,7 +163,7 @@ Esta seção prevalece sobre descrições históricas anteriores neste documento
 **Infraestrutura:** Supabase, GitHub e Cloudflare são serviços compartilhados, não projetos funcionais adicionais. O desktop Tauri é um cliente legado do projeto Lux-Gestão, não outro sistema; não recebe novas funcionalidades enquanto não houver decisão explícita de retomada.
 
 
-### RFV transferido — atualização 13/11/2026
+### RFV e separação operacional — estado final 13/11/2026
 
 - Ação de leitura: `luxuriosa-intelligence` / `customer-rfv`, protegida por JWT e papel administrativo.
 - A implementação é compartilhada em `supabase/functions/_shared/customer-rfv.mjs`, com testes unitários.
@@ -168,4 +171,5 @@ Esta seção prevalece sobre descrições históricas anteriores neste documento
 - Sugestões de produto usam apenas pedidos pagos de contas com consentimento de personalização v2 vigente.
 - Gestão mantém cadastro e histórico, e não exibe nem calcula RFV.
 - A antiga tela de Relatórios da Gestão foi substituída por Custos e despesas. A home da Gestão é operacional. A Inteligência é a tela executiva/analítica.
-- A fila de Pedidos usa `orders-admin` / `admin_orders_list`, sem o livro de vendas ou métricas de faturamento; a confirmação financeira e os bloqueios de sincronização/estoque permanecem no fluxo do pedido.
+- Produção e prévia da fila de Pedidos usam `orders-admin` / `admin_orders_list`, sem livro de vendas ou métricas de faturamento; confirmação financeira, sincronização, bloqueios de estoque e ciclo de entrega permanecem no fluxo do pedido.
+- As fontes canônicas e versões ativas foram conferidas: `cart-orders` v34, `orders-admin` v28, `management-sales` v50 e `luxuriosa-intelligence` v21. Os arquivos implantados correspondem às fontes versionadas.
