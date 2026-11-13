@@ -187,7 +187,7 @@ jobs:
           if (!ordersAdminFunction.includes("payment_checkout_url, payment_expires_at, payment_amount_cents")) throw new Error("O painel administrativo precisa receber link, expiração e valor da cobrança pelo endpoint protegido.");
           if (!tracking.includes('.eq("customer_id",user.id)')) throw new Error("A consulta de pedidos precisa filtrar pelo usuário autenticado.");
           if (!tracking.includes("payment_checkout_url") || !tracking.includes("checkout.infinitepay.io")) throw new Error("O cliente precisa conseguir retomar uma cobrança pendente na InfinitePay.");
-          for (const label of ["Aguardando pagamento", "Pagamento aprovado", "Em expedição", "Em rota de entrega", "Pedido entregue"]) {
+          for (const label of ["Aguardando pagamento", "Pagamento aprovado", "Em separação", "Pedido separado", "Em rota de entrega", "Pedido entregue"]) {
             if (!tracking.includes(label)) throw new Error("Status ausente no acompanhamento: " + label);
           }
           console.log("Checkout autenticado e acompanhamento privado validados.");
