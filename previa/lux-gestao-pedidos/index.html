@@ -67,7 +67,6 @@ input,select{width:100%;min-width:0;border:1px solid var(--line);border-radius:8
 <div class="toolbar">
 <div class="search-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 5 5"/></svg><input id="search" type="search" aria-label="Buscar pedidos" placeholder="Buscar número, cliente ou telefone"></div>
 <select id="statusFilter" aria-label="Filtrar por situação"><option value="">Todas as situações</option><option value="pending">Aguardando pagamento</option><option value="paid">Pagamentos aprovados</option><option value="review_required">Pagamento em conferência</option><option value="processing">Em separação</option><option value="out_for_delivery">Em rota de entrega</option><option value="delivered">Pedido entregue</option><option value="cancelled">Cancelados</option></select>
-<select id="period" aria-label="Período de consulta"><option value="7">Últimos 7 dias</option><option value="30" selected>Últimos 30 dias</option><option value="90">Últimos 90 dias</option></select>
 </div>
 <nav class="quick-filters" id="quickFilters" aria-label="Filtros rápidos">
 <button class="quick-filter active" type="button" data-filter="">Todos <b data-count="all">—</b></button>
@@ -77,10 +76,6 @@ input,select{width:100%;min-width:0;border:1px solid var(--line);border-radius:8
 <button class="quick-filter" type="button" data-filter="test">Testes <b data-count="test">—</b></button>
 </nav>
 <div id="notice" class="notice" role="status"></div>
-<section class="sales-ledger" aria-labelledby="salesLedgerTitle">
-<div class="sales-ledger-head"><div><h2 id="salesLedgerTitle">Vendas reais registradas</h2><p>Histórico oficial do caixa Lux-Gestão. Pedidos pendentes e cancelados não entram como venda.</p></div><div class="sales-ledger-meta" id="salesLedgerMeta">Consultando histórico</div></div>
-<div class="sales-table-wrap"><table class="sales-table"><thead><tr><th>VENDA</th><th>DATA</th><th>CLIENTE</th><th>ITENS</th><th>PAGAMENTO</th><th>TOTAL</th></tr></thead><tbody id="salesRows"><tr><td colspan="6" class="sales-empty">Carregando vendas registradas…</td></tr></tbody></table></div>
-</section>
 <div class="results-head"><div><h2>Lista de pedidos</h2><p>Confira itens e endereço; avance uma etapa por vez para manter o histórico operacional correto.</p></div><span id="resultCount" class="result-count">Aguardando dados</span></div>
 <div id="orders" aria-live="polite"><div class="empty"><strong>Carregando pedidos</strong>Buscando os pedidos registrados na loja.</div></div>
 </section>
@@ -95,7 +90,7 @@ input,select{width:100%;min-width:0;border:1px solid var(--line);border-radius:8
     const money=new Intl.NumberFormat("pt-BR",{style:"currency",currency:"BRL"});
     const statusNames={awaiting_confirmation:"Aguardando pagamento",confirmed:"Pagamento aprovado · aguardando separação",processing:"Em separação",out_for_delivery:"Saiu para entrega",delivered:"Pedido entregue",cancelled:"Pedido cancelado"};
     const paymentNames={pending:"Aguardando pagamento",paid:"Pagamento aprovado",review_required:"Pagamento em conferência",cancelled:"Pagamento cancelado",failed:"Pagamento não concluído"};
-    let allOrders=[];let allSales=[];
+    let allOrders=[];
     function node(tag,cls,text){const e=document.createElement(tag);if(cls)e.className=cls;if(text!==undefined)e.textContent=text;return e;}
     function slaText(label,dueAt,doneAt){
       if(doneAt)return label+" concluída às "+new Date(doneAt).toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"});
@@ -336,34 +331,6 @@ input,select{width:100%;min-width:0;border:1px solid var(--line);border-radius:8
       foot.append(lifecyclePanel);
       card.append(foot);return card;
     }
-    function renderSalesLedger(){
-      const body=$("salesRows");
-      const paid=allSales.filter(s=>s.payment_status==="paid");
-      const received=paid.reduce((sum,s)=>sum+Number(s.total_cents||0),0);
-      $("salesLedgerMeta").textContent=allSales.length+" vendas · "+money.format(received)+" recebidos";
-      body.replaceChildren();
-      if(!allSales.length){
-        const row=node("tr",""),cell=node("td","sales-empty","Nenhuma venda registrada na base oficial ainda.");
-        cell.colSpan=6;row.append(cell);body.append(row);return;
-      }
-      allSales.forEach(sale=>{
-        const row=node("tr","");
-        const saleCell=node("td",""),number=node("strong","","#"+sale.sale_number);
-        const channel=node("span","sale-channel",sale.source==="website"?"Venda online":"Venda presencial");
-        saleCell.append(number,channel);
-        const date=node("td","",new Date(sale.created_at).toLocaleString("pt-BR"));
-        const customer=node("td","",sale.customer_name||"Consumidor");
-        const itemNames=(Array.isArray(sale.items)?sale.items:[])
-          .map(item=>String(item.quantity||1)+"× "+String(item.product_name||"Item"))
-          .join(" · ");
-        const items=node("td","sale-items",itemNames||"Itens não informados");
-        const payment=node("td","");
-        payment.append(node("span","status "+(sale.payment_status==="paid"?"paid":"pending"),sale.payment_status==="paid"?"Recebido":"Pendente"));
-        const total=node("td","");
-        total.append(node("strong","",money.format(Number(sale.total_cents||0)/100)));
-        row.append(saleCell,date,customer,items,payment,total);body.append(row);
-      });
-    }
     function render(){
       const filter=$("statusFilter").value,term=$("search").value.trim().toLocaleLowerCase("pt-BR");
       const filtered=allOrders.filter(o=>{
@@ -389,10 +356,8 @@ input,select{width:100%;min-width:0;border:1px solid var(--line);border-radius:8
     async function load(){
       $("refresh").disabled=true;$("refresh").textContent="ATUALIZANDO…";
       try{
-        const data=await invokeOrdersAdmin({action:"admin_dashboard",days:Number($("period").value),q:"",status:""});
+        const data=await invokeOrdersAdmin({action:"admin_orders_list",q:"",status:""});
         allOrders=data.orders||[];
-        allSales=Array.isArray(data.sales)?data.sales:[];
-        renderSalesLedger();
         const operationalOrders=allOrders.filter(o=>!o.is_test);
         const testOrders=allOrders.filter(o=>o.is_test);
         const pending=operationalOrders.filter(o=>o.payment_status==="pending"&&o.status!=="cancelled").length;
@@ -437,7 +402,7 @@ input,select{width:100%;min-width:0;border:1px solid var(--line);border-radius:8
     }
     $("loginForm").addEventListener("submit",async event=>{event.preventDefault();const button=event.submitter;button.disabled=true;try{const {error}=await supabase.auth.signInWithPassword({email:$("email").value.trim(),password:$("password").value});if(error)throw error;await enter();}catch(error){showNotice(error.message,true,true);}finally{button.disabled=false;}});
     $("signOut").addEventListener("click",async()=>{await supabase.auth.signOut();location.reload();});
-    $("refresh").addEventListener("click",load);$("period").addEventListener("change",load);
+    $("refresh").addEventListener("click",load);
     $("statusFilter").addEventListener("change",()=>{render();$("quickFilters").querySelectorAll(".quick-filter").forEach(button=>button.classList.toggle("active",button.dataset.filter===$("statusFilter").value));});
     $("search").addEventListener("input",render);
     $("quickFilters").querySelectorAll(".quick-filter").forEach(button=>button.addEventListener("click",()=>{
