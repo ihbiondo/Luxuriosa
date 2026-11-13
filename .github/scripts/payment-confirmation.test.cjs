@@ -42,5 +42,5 @@ assert.match(webhook, /eventName === "created"/);
 assert.match(webhook, /eventType === "created"/);
 assert.match(config, /\[functions\.infinitepay-webhook\]\s*verify_jwt\s*=\s*false/);
 assert.doesNotMatch(createOrder, /webhook_url\s*:/);
-assert.match(createOrder, /PAYMENT_CHECKOUT_PAYLOAD_VERSION\s*=\s*4/);
+assert.match(createOrder, /PAYMENT_CHECKOUT_PAYLOAD_VERSION\s*=\s*5/);
 console.log("Checkout InfinitePay: retorno, payment_check, webhook no formato oficial, RPC atômica e proteção de estado verificados.");
