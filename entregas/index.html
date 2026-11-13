@@ -2,16 +2,16 @@
 <html lang="pt-BR">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Entregas e benefícios do Clube | Luxuriosa</title>
-  <meta name="description" content="Conheça as condições de entrega da Luxuriosa e os benefícios de cada modalidade do Clube em Bauru e região.">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Entregas em Bauru e Região | Luxuriosa</title>
+  <meta name="description" content="Consulte as condições de entrega da Luxuriosa: pedidos comuns e vantagens para membros do Clube de Vantagens, em Bauru e região.">
   <meta name="robots" content="index,follow">
   <meta name="theme-color" content="#0B0B0B">
   <link rel="canonical" href="https://luxuriosa.com.br/entregas/">
   <meta property="og:type" content="website">
   <meta property="og:locale" content="pt_BR">
   <meta property="og:title" content="Entregas Luxuriosa | Bauru e Região">
-  <meta property="og:description" content="Entrega discreta, cuidado e vantagens para cada forma de participar da Luxuriosa.">
+  <meta property="og:description" content="Entrega discreta e condições especiais para membros do Clube Luxuriosa.">
   <meta property="og:url" content="https://luxuriosa.com.br/entregas/">
   <meta property="og:site_name" content="Luxuriosa">
   <meta property="og:image" content="https://luxuriosa.com.br/img/site/og-luxuriosa.jpg">
@@ -19,50 +19,41 @@
   <link rel="stylesheet" href="../css/style.css">
   <link rel="stylesheet" href="../css/responsive.css">
   <link rel="stylesheet" href="../css/ajustes.css">
-  <link rel="stylesheet" href="../css/conta.css">
   <style>
     .delivery-page{background:#0b0b0b;color:#f7f0e8}
-    .delivery-hero{padding:34px 0 54px;background:radial-gradient(ellipse at 50% 0%,rgba(170,24,75,.28),transparent 62%),linear-gradient(145deg,#16090f,#0b0b0b 75%)}
+    .delivery-hero{padding:34px 0 46px;background:radial-gradient(ellipse at 50% 0%,rgba(170,24,75,.28),transparent 62%),linear-gradient(145deg,#16090f,#0b0b0b 75%)}
     .delivery-hero .container{max-width:1050px}
-    .delivery-hero-grid{display:grid;grid-template-columns:1fr .9fr;gap:34px;align-items:center}
-    .delivery-hero h1{font:400 clamp(38px,5vw,60px)/1.04 'Playfair Display',serif;margin:12px 0 16px;color:#f8e9df}
+    .delivery-hero-grid{display:grid;grid-template-columns:1fr .82fr;gap:34px;align-items:center}
+    .delivery-hero h1{font:400 clamp(38px,5vw,58px)/1.05 'Playfair Display',serif;margin:12px 0 15px;color:#f8e9df}
     .delivery-hero p{max-width:570px;color:#c9b9bd;font-size:14px;line-height:1.8}
-    .delivery-art{width:100%;max-width:440px;aspect-ratio:1/1;margin:auto;border-radius:24px;overflow:hidden;border:1px solid rgba(232,69,139,.38);box-shadow:0 18px 60px rgba(0,0,0,.45),0 0 36px rgba(232,35,120,.13);background:radial-gradient(circle at 50% 45%,#3a0b20,#10070c 72%);display:grid;place-items:center}
+    .delivery-art{width:100%;max-width:400px;aspect-ratio:1/1;margin:auto;border-radius:22px;overflow:hidden;border:1px solid rgba(232,69,139,.38);box-shadow:0 18px 60px rgba(0,0,0,.45),0 0 36px rgba(232,35,120,.13);background:#170810}
     .delivery-art img{width:100%;height:100%;object-fit:cover;display:block}
-    .delivery-art-fallback{padding:25px;text-align:center;color:#f1d29b;font:400 26px 'Playfair Display',serif}
-    .delivery-art-fallback span{display:block;color:#f05a9b;font:600 10px Montserrat,sans-serif;letter-spacing:.22em;margin-top:12px}
-    .delivery-current{padding:54px 0;background:#100a0e}
-    .delivery-current-card{display:grid;grid-template-columns:1fr auto;gap:24px;align-items:center;padding:26px;border:1px solid rgba(212,175,124,.28);border-radius:18px;background:linear-gradient(120deg,rgba(94,17,45,.38),rgba(20,10,15,.92))}
-    .delivery-current-card h2{font:400 29px 'Playfair Display',serif;color:#f5d9dc;margin:7px 0}
-    .delivery-current-card p{font-size:13px;line-height:1.75;color:#c9b9bd;margin:0;max-width:650px}
-    .delivery-price{min-width:145px;text-align:center;border-left:1px solid rgba(212,175,124,.25);padding-left:24px}
-    .delivery-price strong{display:block;color:#e9c88e;font:400 34px 'Playfair Display',serif}
-    .delivery-price small{color:#c9b9bd;font-size:11px}
-    .delivery-footnote{margin:14px 0 0;color:#a99ba0;font-size:11px;line-height:1.7}
-    .club-preview{padding:58px 0;background:radial-gradient(ellipse at 50% 0%,rgba(114,19,55,.2),transparent 58%),#0b0b0b}
-    .club-preview-head{text-align:center;max-width:720px;margin:0 auto 28px}
-    .club-preview-head h2{font:400 clamp(30px,4vw,42px) 'Playfair Display',serif;color:#f5d9dc;margin:10px 0}
-    .club-preview-head p{font-size:13px;line-height:1.75;color:#bdaeb3}
-    .club-cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
-    .club-card{position:relative;padding:23px 20px;border:1px solid rgba(212,175,124,.22);border-radius:16px;background:linear-gradient(155deg,#211019,#10090d 82%);min-width:0}
-    .club-card--support{border-color:rgba(235,76,143,.55);box-shadow:0 0 28px rgba(235,76,143,.08)}
-    .club-card--privilege{border-color:rgba(222,184,116,.48)}
-    .club-card h3{font:400 24px 'Playfair Display',serif;color:#f4d9dc;margin:9px 0 6px}
-    .club-card .price{font-size:24px;color:#e9c88e;font-weight:600;margin:12px 0}
-    .club-card .price small{font-size:11px;color:#bdaeb3;font-weight:400}
-    .club-card ul{padding-left:18px;margin:14px 0 0;color:#c9b9bd;font-size:12px;line-height:1.85}
-    .club-card .club-kicker{color:#ed6b9f;font-size:9px;letter-spacing:.17em;font-weight:700}
-    .club-card--privilege .club-kicker{color:#e9c88e}
-    .club-coming{display:inline-block;margin-top:18px;padding:7px 10px;border:1px solid rgba(237,91,154,.25);border-radius:30px;color:#f4a5c4;font-size:9px;letter-spacing:.12em}
-    .club-disclaimer{max-width:800px;margin:20px auto 0;text-align:center;color:#9f9096;font-size:10px;line-height:1.7}
-    .delivery-cta{padding:0 0 58px;background:#0b0b0b}
-    .delivery-cta-inner{display:flex;justify-content:space-between;align-items:center;gap:20px;padding:24px 26px;border-radius:16px;background:linear-gradient(105deg,#57132c,#1a0a10)}
-    .delivery-cta h2{font:400 25px 'Playfair Display',serif;color:#f5d9dc;margin:0 0 5px}
-    .delivery-cta p{font-size:12px;color:#d4bfc7;margin:0}
+    .delivery-options{padding:42px 0 58px;background:radial-gradient(ellipse at 50% 0%,rgba(114,19,55,.15),transparent 58%),#0b0b0b}
+    .delivery-options-head{text-align:center;max-width:700px;margin:0 auto 26px}
+    .delivery-options-head h2{font:400 clamp(30px,4vw,40px)/1.14 'Playfair Display',serif;color:#f5d9dc;margin:9px 0}
+    .delivery-options-head p{font-size:13px;line-height:1.7;color:#bdaeb3;margin:0}
+    .delivery-option-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;align-items:stretch}
+    .delivery-option{padding:25px;border:1px solid rgba(212,175,124,.24);border-radius:17px;background:linear-gradient(155deg,#211019,#10090d 82%);min-width:0}
+    .delivery-option--club{border-color:rgba(235,76,143,.55);background:linear-gradient(155deg,#28101d,#10090d 82%);box-shadow:0 0 32px rgba(235,76,143,.08)}
+    .delivery-option-kicker{color:#d8b77f;font-size:9px;font-weight:700;letter-spacing:.17em}
+    .delivery-option--club .delivery-option-kicker{color:#ef75a7}
+    .delivery-option h3{font:400 28px 'Playfair Display',serif;color:#f4d9dc;margin:9px 0 6px}
+    .delivery-option-intro{min-height:42px;margin:0 0 18px;color:#bdaeb3;font-size:12px;line-height:1.65}
+    .delivery-rates{display:grid;gap:0;margin:0;padding:0;list-style:none}
+    .delivery-rates li{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;padding:13px 0;border-top:1px solid rgba(255,255,255,.09)}
+    .delivery-rates li span{color:#c9b9bd;font-size:12px;line-height:1.5}
+    .delivery-rates li strong{color:#e9c88e;font-size:13px;text-align:right;white-space:normal}
+    .delivery-option--club .delivery-rates li strong{color:#f08bb4}
+    .delivery-note{margin:14px 0 0;color:#9f9096;font-size:10px;line-height:1.65}
+    .delivery-benefits{display:grid;gap:8px;margin:18px 0 0;padding:0;list-style:none}
+    .delivery-benefits li{display:flex;gap:9px;color:#d7c8cc;font-size:11px;line-height:1.5}
+    .delivery-benefits li:before{content:"✓";color:#ed76a9;font-weight:700}
+    .delivery-option-action{display:flex;margin-top:20px}
+    .delivery-option-action .btn{width:100%;justify-content:center}
     .delivery-footer{border-top:1px solid rgba(212,175,124,.16);padding:24px 0 32px;color:#a99ba0;font-size:10px}
     .delivery-footer .container{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap}
     .delivery-footer a{color:#e9c88e;text-decoration:none}
-    @media(max-width:760px){.delivery-hero-grid{grid-template-columns:1fr;gap:22px}.delivery-hero{padding:25px 0 38px}.delivery-art{max-width:340px;order:-1}.delivery-current-card{grid-template-columns:1fr;padding:21px}.delivery-price{border-left:0;border-top:1px solid rgba(212,175,124,.25);padding:16px 0 0;text-align:left}.delivery-price strong{font-size:30px}.club-cards{grid-template-columns:1fr;gap:11px}.club-card{padding:20px}.delivery-cta-inner{align-items:stretch;flex-direction:column;padding:21px}.delivery-cta-inner .btn{width:100%;justify-content:center}.club-preview{padding:44px 0}.delivery-current{padding:42px 0}}
+    @media(max-width:760px){.delivery-hero-grid{grid-template-columns:1fr;gap:20px}.delivery-hero{padding:24px 0 34px}.delivery-art{max-width:320px;order:-1}.delivery-option-grid{grid-template-columns:1fr;gap:12px}.delivery-option{padding:21px}.delivery-options{padding:34px 0 44px}.delivery-option-intro{min-height:0}}
   </style>
 </head>
 <body>
@@ -75,25 +66,44 @@
   </div></header>
   <main class="delivery-page">
     <section class="delivery-hero"><div class="container delivery-hero-grid">
-      <div><div class="kicker">BAURU E REGIÃO · COM DISCRIÇÃO</div><h1>Seu pedido chega. Sua privacidade também.</h1><p>Escolha a modalidade que combina com sua experiência: da entrega comum aos benefícios exclusivos de cada nível do Clube Luxuriosa.</p></div>
-      <div class="delivery-art"><img src="../img/site/icones/Emblema%20Neon%20de%20Entregas%20Premium.svg" alt="Entregador da Luxuriosa em uma scooter, emblema Entregas" width="440" height="440" loading="eager" decoding="async"></div>
+      <div><div class="kicker">BAURU E REGIÃO · COM DISCRIÇÃO</div><h1>Seu pedido chega. Sua privacidade também.</h1><p>Escolha a forma de comprar e confira as condições de entrega da Luxuriosa. Quem participa do Clube de Vantagens tem acesso a valores especiais.</p></div>
+      <div class="delivery-art"><img src="../img/site/icones/Emblema%20Neon%20de%20Entregas%20Premium.svg" alt="Emblema neon de entregas da Luxuriosa" width="440" height="440" loading="eager" decoding="async"></div>
     </div></section>
-    <section class="delivery-current"><div class="container">
-      <div class="kicker">PARA TODOS OS CLIENTES</div>
-      <div class="delivery-current-card"><div><h2>Pedidos comuns</h2><p>Para compras sem vínculo com o Clube, é aplicada a taxa normal de entrega conforme o destino. O valor é apresentado durante a finalização do pedido ou confirmado pelo atendimento.</p></div><div class="delivery-price"><strong>Taxa</strong><small>de entrega comum</small></div></div>
-    </div></section>
-    <section class="club-preview"><div class="container">
-      <div class="club-preview-head"><div class="kicker">CLUBE LUXURIOSA</div><h2>Mais vantagens em cada entrega.</h2><p>Quem participa do Clube tem condições especiais para receber seus pedidos.</p></div>
-      <div class="club-cards">
-        <article class="club-card"><span class="club-kicker">CLUBE DE VANTAGENS</span><h3>Clube Luxuriosa</h3><div class="price">Taxa com desconto</div><ul><li>Desconto na taxa de entrega.</li><li>Uma forma mais econômica de receber seus pedidos.</li></ul></article>
-        <article class="club-card club-card--support"><span class="club-kicker">PRIORIDADE NAS ENTREGAS</span><h3>Clube Apoiadores</h3><div class="price">R$ 29,90 <small>/ mês</small></div><ul><li>Prioridade nas entregas.</li><li>Entrega subsidiada em um raio de até 55 km de Bauru.</li></ul></article>
-        <article class="club-card club-card--privilege"><span class="club-kicker">ENTREGA INTEGRADA À ROTINA</span><h3>Clube Privilegie</h3><div class="price">R$ 99,90 <small>/ mês</small></div><ul><li>Sem custo de entrega.</li><li>Pedidos integrados à rotina de entregas da Luxuriosa.</li><li>Entregas em um raio de até 55 km de Bauru.</li></ul></article>
+    <section class="delivery-options">
+      <div class="container">
+        <div class="delivery-options-head"><div class="kicker">DUAS FORMAS DE RECEBER</div><h2>Escolha a condição ideal para você.</h2><p>As taxas são organizadas por distância a partir de Bauru. Para endereços fora da cobertura indicada, consulte nossa equipe.</p></div>
+        <div class="delivery-option-grid">
+          <article class="delivery-option">
+            <span class="delivery-option-kicker">SEM VÍNCULO COM O CLUBE</span>
+            <h3>Pedido comum</h3>
+            <p class="delivery-option-intro">Para compras sem cadastro no Clube de Vantagens.</p>
+            <ul class="delivery-rates">
+              <li><span>G1 · Bauru (área urbana)</span><strong>R$ 20,00</strong></li>
+              <li><span>G2 · Até 30 km</span><strong>R$ 40,00</strong></li>
+              <li><span>G3 · De 30,1 a 55 km</span><strong>R$ 70,00 + pedágio</strong></li>
+              <li><span>G4 · Acima de 55 km</span><strong>Sob consulta</strong></li>
+            </ul>
+            <p class="delivery-note">Nos destinos do G3, o pedágio é acrescentado quando houver. A disponibilidade para G4 precisa ser confirmada antes do pedido.</p>
+          </article>
+          <article class="delivery-option delivery-option--club">
+            <span class="delivery-option-kicker">CADASTRO GRATUITO</span>
+            <h3>Clube de Vantagens</h3>
+            <p class="delivery-option-intro">Cadastre-se gratuitamente e aproveite descontos no catálogo e condições especiais de entrega.</p>
+            <ul class="delivery-rates">
+              <li><span>G1 · Bauru (área urbana)</span><strong>R$ 15,00</strong></li>
+              <li><span>G2 · Até 30 km</span><strong>R$ 25,00 a R$ 60,00*</strong></li>
+              <li><span>G3 · De 30,1 a 55 km</span><strong>R$ 25,00 a R$ 60,00*</strong></li>
+              <li><span>G4 · Acima de 55 km</span><strong>Sob consulta</strong></li>
+            </ul>
+            <ul class="delivery-benefits"><li>Cadastro gratuito no site.</li><li>Descontos exclusivos no catálogo.</li><li>Valores especiais nas entregas.</li></ul>
+            <p class="delivery-note">* O valor regional varia conforme o endereço e a rota. Consulte a taxa aplicável e a eventual cobrança de pedágio antes de confirmar o pedido.</p>
+            <div class="delivery-option-action"><a class="btn primary" href="../login.html?next=clube.html&amp;cadastro=1">Entrar para o Clube</a></div>
+          </article>
+        </div>
       </div>
-      <p class="club-disclaimer">As condições dos planos Apoiadores e Privilegie atendem endereços em um raio de até 55 km de Bauru.</p>
-    </div></section>
-    <section class="delivery-cta"><div class="container delivery-cta-inner"><div><h2>Quer fazer seu pedido?</h2><p>Explore a loja e escolha seus favoritos com tranquilidade.</p></div><a class="btn primary" href="../loja.html">Conhecer a loja</a></div></section>
+    </section>
   </main>
-  <footer class="delivery-footer"><div class="container"><span>© 2026 Luxuriosa · Bauru/SP · Exclusivo para maiores de 18 anos.</span><span><a href="../atendimento.html">Atendimento</a> · <a href="../faq.html">Dúvidas frequentes</a> · <a href="../privacidade.html">Privacidade</a></span></div></footer>
+  <footer class="delivery-footer"><div class="container"><span>© 2026 Luxuriosa · Bauru/SP · Exclusivo para maiores de 18 anos.</span><span><a href="../atendimento.html">Atendimento</a> · <a href="../clube.html">Clube Luxuriosa</a> · <a href="../faq.html">Dúvidas frequentes</a> · <a href="../privacidade.html">Privacidade</a></span></div></footer>
   <script src="../js/app.js"></script>
   <script src="../js/inteligencia.js"></script>
   <script src="../js/consentimento.js?v=20261112-clube-simples"></script>
