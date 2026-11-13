@@ -96,7 +96,9 @@
   function normalizeItems(items) {
     return (Array.isArray(items) ? items : []).slice(0, 80).map(function (item) {
       return { id: item.id, nome: String(item.nome || item.name || "Produto").slice(0, 180),
-        quantidade: Number(item.quantidade) || 1, preco: Number(item.preco) || 0, sku: item.sku || null };
+        quantidade: Number(item.quantidade) || 1, preco: Number(item.preco) || 0, sku: item.sku || null,
+        kit_variant_id: item.kit_variant_id == null ? null : String(item.kit_variant_id),
+        kit_variant_name: String(item.kit_variant_name || "").slice(0, 80) };
     });
   }
   function registrarCarrinho(items) {
