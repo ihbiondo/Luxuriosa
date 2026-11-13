@@ -139,7 +139,7 @@ Os números desta seção são a fotografia do mapeamento inicial, não um paine
 
 - `orders-admin` v28: a fila Pedidos usa somente `admin_orders_list`. Confirmação manual, reconciliação, sincronização, recuperação de estoque, atualização de etapa, ocorrências e vínculo de cliente permanecem no mesmo domínio. A ação analítica `admin_dashboard` foi removida depois da migração de produção e prévia.
 - `cart-orders` v34: recebe apenas eventos de navegação/carrinho e etapas públicas de checkout. As antigas ações administrativas `admin_dashboard`, `admin_live_activity`, `admin_intelligence` e `admin_update_order_status` foram removidas do endpoint e do espelho versionado.
-- `management-sales` v50: mantém o livro de vendas, clientes, custos, kits, estoque e despesas; não calcula nem devolve RFV/recomendações. Ações analíticas antigas respondem HTTP 410 e encaminham para a Inteligência.
+- `management-sales` v51: mantém o livro de vendas, clientes, custos, kits, estoque e despesas; a lista/ficha de clientes contém somente cadastro, contagens simples e histórico individual com itens. Não calcula nem devolve RFV, recomendações ou agregados comportamentais. Ações analíticas antigas respondem HTTP 410.
 - `luxuriosa-intelligence` v21: mantém analytics financeiro/comercial, comportamento e RFV; é leitura e não altera transações.
 - JWT e papel administrativo são obrigatórios nos três endpoints administrativos (`orders-admin`, `management-sales` e `luxuriosa-intelligence`). `cart-orders` é público apenas para coleta de carrinho/eventos, conforme consentimentos aplicáveis.
 
@@ -173,4 +173,4 @@ Esta seção prevalece sobre descrições históricas anteriores neste documento
 - Gestão mantém cadastro e histórico, e não exibe nem calcula RFV.
 - A antiga tela de Relatórios da Gestão foi substituída por Custos e despesas. A home da Gestão é operacional. A Inteligência é a tela executiva/analítica.
 - Produção e prévia da fila de Pedidos usam `orders-admin` / `admin_orders_list`, sem livro de vendas ou métricas de faturamento; confirmação financeira, sincronização, bloqueios de estoque e ciclo de entrega permanecem no fluxo do pedido.
-- As fontes canônicas e versões ativas foram conferidas: `cart-orders` v34, `orders-admin` v28, `management-sales` v50 e `luxuriosa-intelligence` v21. Os arquivos implantados correspondem às fontes versionadas.
+- As fontes canônicas e versões ativas foram conferidas: `cart-orders` v34, `orders-admin` v28, `management-sales` v51 e `luxuriosa-intelligence` v21. Os arquivos implantados correspondem às fontes versionadas.
