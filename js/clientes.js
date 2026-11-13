@@ -327,7 +327,7 @@
       if (!item || item.indisponivel) {
         return { valido: false, motivo: "Há produtos indisponíveis no carrinho. Volte ao carrinho e remova esses itens antes de continuar." };
       }
-      var kitsComDadoVariavel = ["22","23","24","26","27","28","29"];
+      var kitsComDadoVariavel = ["22","23","24","27","28","29"];
       if (kitsComDadoVariavel.indexOf(String(item.id)) !== -1 &&
           ["1","2","3"].indexOf(String(item.kit_variant_id || "")) === -1) {
         return { valido: false, motivo: "Escolha o Dado do Prazer incluído em cada kit variável. Remova o kit do carrinho e adicione-o novamente para selecionar a variante." };
