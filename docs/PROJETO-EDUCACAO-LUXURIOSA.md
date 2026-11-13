@@ -290,3 +290,18 @@ Páginas revisadas:
 - `educacao/guias/violencia-sexual-onde-buscar-ajuda.html`
 
 Referência oficial: Ministério da Saúde, página de Profilaxia Pós-Exposição, que diferencia medidas para HIV, hepatite B e outras IST; e notícia institucional sobre a atualização do PCDT de PEP, atualizada em 26/10/2026. A informação foi incorporada como orientação geral, sem prescrever conduta individual.
+
+
+## 16. Revisão de segurança da Enciclopédia e acessibilidade da Interatividade
+
+**Revisão:** 13 de novembro de 2026.
+
+- [x] Anéis penianos: inserir limite de até 30 minutos por uso e intervalo mínimo de 60 minutos entre usos para anéis de constrição destinados a manter a ereção, conforme orientação de rotulagem da FDA; reforçar mecanismo de liberação rápida, não dormir com o dispositivo e sinais para atendimento urgente.
+- [x] Masturbadores: explicar riscos do compartilhamento, higienização entre pessoas e uso de uma barreira nova quando houver compartilhamento.
+- [x] Plugs anais: orientar que objetos presos ou difíceis de remover não devem ser retirados à força nem com ferramentas improvisadas.
+- [x] Vibradores: incluir inspeção de rachaduras, peças soltas e danos antes do uso.
+- [x] Quiz: retirar o envio nativo de formulário; as respostas são avaliadas por botões locais, sem parâmetros de resposta na URL ou transmissão para servidor.
+- [x] Interatividade: separar a lógica em `js/educacao-interatividade.js`, adicionar descrição programática às questões e semântica ao progresso do checklist.
+- [x] Mobile: ampliar áreas de toque de opções e checkboxes, melhorar espaçamento e manter foco visível.
+
+As recomendações da FDA sobre anéis aplicam-se especificamente a dispositivos de constrição para manter a rigidez peniana; não substituem o manual do produto nem uma avaliação clínica.
