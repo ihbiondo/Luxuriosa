@@ -277,3 +277,16 @@ A estrutura técnica está organizada em cinco módulos editoriais: **Temas educ
 - [ ] Testar visualmente em celular e com teclado/leitor de tela.
 
 **Nota de idade:** o controle implementado é uma autodeclaração e não uma verificação documental. A página pode ser acessada diretamente, e o controle depende de JavaScript para ser apresentado.
+
+
+## 15. Revisão editorial inicial — prevenção pós-exposição
+
+Em 13 de novembro de 2026, a revisão do núcleo de prevenção identificou a necessidade de distinguir explicitamente a PEP contra HIV das demais medidas de cuidado pós-exposição. As páginas abaixo foram ajustadas para esclarecer que o limite de 72 horas se refere à PEP para HIV, e que o serviço de saúde também avalia proteção contra hepatite B, medidas preventivas para outras IST e, em situações de violência sexual, outros cuidados como vacinação contra HPV e contracepção de emergência.
+
+Páginas revisadas:
+- `educacao/temas/prevencao-combinada.html`
+- `educacao/temas/prevencao-de-ist.html`
+- `educacao/guias/acessar-atendimento-saude-sexual-sus.html`
+- `educacao/guias/violencia-sexual-onde-buscar-ajuda.html`
+
+Referência oficial: Ministério da Saúde, página de Profilaxia Pós-Exposição, que diferencia medidas para HIV, hepatite B e outras IST; e notícia institucional sobre a atualização do PCDT de PEP, atualizada em 26/10/2026. A informação foi incorporada como orientação geral, sem prescrever conduta individual.
