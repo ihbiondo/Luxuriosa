@@ -195,6 +195,21 @@ input,select{width:100%;min-width:0;border:1px solid var(--line);border-radius:8
               :"Estoque ainda não controlado. Regularize a contagem e os vínculos antes de separar.";
         const stockWarning=node("div","payment-tools");
         stockWarning.append(node("div","payment-help",message));
+        if(order.management_sales_sync_status==="synced"&&["insufficient_stock","partially_tracked","not_tracked"].includes(order.stock_control_status)){
+          const retry=node("button","primary","REPROCESSAR ESTOQUE");
+          retry.addEventListener("click",async()=>{
+            if(!window.confirm("Reavaliar o estoque do pedido #"+order.order_number+"? O sistema só fará baixas que ainda não existam para esta venda."))return;
+            retry.disabled=true;retry.textContent="REPROCESSANDO…";
+            try{
+              const result=await invokeOrdersAdmin({action:"admin_retry_paid_stock_recovery",order_id:order.id});
+              const movements=Number(result.recovery?.movements_created||0);
+              const outcome=result.stock_control_status==="deducted"?"Estoque regularizado e baixa concluída.":result.stock_control_status==="partially_tracked"?"Baixa dos itens controlados concluída; ainda há produtos sem controle ativo.":result.stock_control_status==="insufficient_stock"?"Ainda existe saldo insuficiente. Nenhuma baixa parcial foi feita.":"Estoque ainda não possui controle ativo.";
+              showNotice("Pedido #"+order.order_number+": "+outcome+" Movimentações novas: "+movements+".");
+              await load();
+            }catch(error){showNotice(error.message,true);retry.disabled=false;retry.textContent="REPROCESSAR ESTOQUE";}
+          });
+          stockWarning.append(retry);
+        }
         foot.append(stockWarning);
       }
       if(order.payment_status==="pending"&&order.status!=="cancelled"){
