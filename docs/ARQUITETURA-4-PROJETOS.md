@@ -157,3 +157,13 @@ Esta seção prevalece sobre descrições históricas anteriores neste documento
 **Portal 442:** catálogo de acesso aos quatro projetos, com distinção visual entre a Loja pública e os três ambientes administrativos. Não possui regras comerciais nem motor analítico próprio.
 
 **Infraestrutura:** Supabase, GitHub e Cloudflare são serviços compartilhados, não projetos funcionais adicionais. O desktop Tauri é um cliente legado do projeto Lux-Gestão, não outro sistema; não recebe novas funcionalidades enquanto não houver decisão explícita de retomada.
+
+
+### RFV transferido — atualização 13/11/2026
+
+- Ação de leitura: `luxuriosa-intelligence` / `customer-rfv`, protegida por JWT e papel administrativo.
+- A implementação é compartilhada em `supabase/functions/_shared/customer-rfv.mjs`, com testes unitários.
+- RFV usa histórico de vendas pagas e pedidos explicitamente vinculados; sincronizações online são deduplicadas.
+- Sugestões de produto usam apenas pedidos pagos de contas com consentimento de personalização v2 vigente.
+- Gestão mantém cadastro e histórico, e não exibe nem calcula RFV.
+- A antiga tela de Relatórios da Gestão foi substituída por Custos e despesas. A Inteligência é a tela executiva/analítica.
