@@ -1,4 +1,3 @@
-import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
@@ -59,7 +58,7 @@ function cleanItems(value: unknown) {
       unit_price: Math.round(price * 100) / 100,
       product_snapshot: {
         selected_dice_product_id: isVariableKit ? selectedDiceId : null,
-        selected_dice_product_name: isVariableKit ? DICE_VARIANT_NAMES.get(selectedDiceId) : null
+        selected_dice_product_name: isVariableKit && selectedDiceId ? (DICE_VARIANT_NAMES.get(selectedDiceId) ?? null) : null
       }
     };
   });
