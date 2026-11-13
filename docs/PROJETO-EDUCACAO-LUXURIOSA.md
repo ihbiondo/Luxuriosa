@@ -344,3 +344,16 @@ Fontes consultadas: Ministério da Saúde — Contracepção e DIU de cobre; OMS
 - [x] Reforçar que esse intervalo não deve ser usado para adiar a procura por atendimento e que outras medidas pós-exposição seguem critérios próprios.
 
 Fonte principal: Ministério da Saúde — Profilaxia Pós-Exposição, incluindo as orientações para HIV, hepatite B e outras IST. A informação foi incluída de forma geral, sem substituir a avaliação do serviço de saúde.
+
+
+## 20. Revisão editorial — Enciclopédia e Curiosidades
+
+**Revisão:** 13 de novembro de 2026.
+
+- [x] Delimitar a orientação da FDA sobre anéis de constrição como orientação técnica norte-americana de rotulagem para dispositivos destinados a manter a ereção, sem apresentá-la como norma brasileira.
+- [x] Explicar a classificação IP na página sobre resistência à água e substituir a referência que não tratava diretamente do tema por material da IEC sobre o código IP (IEC 60529).
+- [x] Ajustar a frase sobre duração do ciclo menstrual para refletir a formulação da OMS: duração média entre 21 e 35 dias, sem transformar 28 dias em regra universal.
+- [x] Conferir a correspondência entre o título da referência australiana e a página oficial que explica consentimento livre, voluntário e informado.
+- [x] Reavaliar segurança de uso, materiais, limpeza, compartilhamento, compatibilidade e limites das informações comerciais sem criar novos módulos ou páginas.
+
+Fontes consultadas: FDA (orientação de rotulagem para dispositivos de constrição), Planned Parenthood (materiais, limpeza e compartilhamento de acessórios), OMS (saúde menstrual), IEC (classificação IP), CDC e Ministério da Saúde (preservativos e prevenção de IST). As páginas permanecem educativas e não prescrevem uso individual.
