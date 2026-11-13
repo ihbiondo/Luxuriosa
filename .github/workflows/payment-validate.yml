@@ -182,12 +182,9 @@ jobs:
           if (!payment.includes('events: ["created", "paid", "settled", "refunded", "canceled", "payment_failed"]')) throw new Error("O checkout precisa assinar o evento created para monitorar a entrega do webhook.");
           if (!webhook.includes('eventName === "created"') || !webhook.includes('eventType === "created"')) throw new Error("O webhook precisa registrar o evento created sem alterar o pedido.");
           if (!webhook.includes('infinitepay-webhook.unclassified-event') || !webhook.includes("payloadKeys")) throw new Error("O webhook precisa registrar diagnóstico seguro quando não reconhecer o evento recebido.");
-          const paymentAdmin = fs.readFileSync("supabase/functions/payment-admin/index.ts", "utf8");
-          if (!admin.includes('/functions/v1/payment-admin') || !admin.includes('action:"reconcile_payment"')) throw new Error("O painel precisa acionar a conciliação administrativa da InfinitePay.");
+          if (!admin.includes('action:"admin_confirm_manual_payment"') || !ordersAdminFunction.includes('action === "admin_confirm_manual_payment"')) throw new Error("O painel precisa permitir confirmação manual do recebimento pelo administrador.");
+          if (!ordersAdminFunction.includes('payment_confirmation_source: "manual"') || !ordersAdminFunction.includes("payment_confirmed_by: userId") || !ordersAdminFunction.includes('manualPermission?.role !== "admin"')) throw new Error("A confirmação manual precisa registrar origem, operador e autorização administrativa.");
           if (!ordersFunction.includes("payment_checkout_url, payment_expires_at, payment_amount_cents")) throw new Error("O painel precisa receber link, expiração e valor da cobrança.");
-          if (!paymentAdmin.includes('action === "reconcile_payment"') || !paymentAdmin.includes('/functions/v1/payment-status')) throw new Error("A conciliação precisa consultar o verificador da InfinitePay.");
-          if (!paymentAdmin.includes('references_required') || !paymentAdmin.includes('payment_provider_events')) throw new Error("A conciliação precisa recuperar referências do webhook ou solicitar os dados manualmente.");
-          if (!paymentAdmin.includes('success=true e paid=true')) throw new Error("O sistema não pode aprovar pagamento sem confirmação positiva da InfinitePay.");
           if (!tracking.includes('.eq("customer_id",user.id)')) throw new Error("A consulta de pedidos precisa filtrar pelo usuário autenticado.");
           if (!tracking.includes("payment_checkout_url") || !tracking.includes("checkout.infinitepay.io")) throw new Error("O cliente precisa conseguir retomar uma cobrança pendente na InfinitePay.");
           for (const label of ["Aguardando pagamento", "Pagamento aprovado", "Em expedição", "Em rota de entrega", "Pedido entregue"]) {
