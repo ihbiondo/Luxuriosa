@@ -124,7 +124,7 @@ input,select{width:100%;min-width:0;border:1px solid var(--line);border-radius:8
     }
     function allowedNext(order){
       if(order.status==="cancelled")return [];
-      if(order.payment_status==="paid"){const next={confirmed:["processing"],processing:["out_for_delivery"],out_for_delivery:["delivered"]};return next[order.status]||[];}
+      if(order.payment_status==="paid"){if(order.management_sales_sync_status!=="synced"||order.stock_control_status!=="deducted")return [];const next={confirmed:["processing"],processing:["out_for_delivery"],out_for_delivery:["delivered"]};return next[order.status]||[];}
       if(order.payment_status==="pending"&&order.status==="awaiting_confirmation")return ["cancelled"];
       return [];
     }
@@ -152,6 +152,9 @@ input,select{width:100%;min-width:0;border:1px solid var(--line);border-radius:8
       if(order.payment_status==="paid"){
         const stageClass=order.status==="delivered"?"paid":["dispatched","out_for_delivery"].includes(order.status)?"delivery":"";
         badges.append(node("span","status "+stageClass,statusNames[order.status]||"Etapa em atualização"));
+        if(order.management_sales_sync_status!=="synced"||order.stock_control_status!=="deducted"){
+          badges.append(node("span","status review","EXPEDIÇÃO BLOQUEADA · ESTOQUE"));
+        }
       }else if(order.status==="cancelled"){
         badges.append(node("span","status review","Pedido cancelado"));
       }
@@ -182,6 +185,18 @@ input,select{width:100%;min-width:0;border:1px solid var(--line);border-radius:8
         price.append(sla);
       }
       amount.append(price);
+      if(order.payment_status==="paid"&&(order.management_sales_sync_status!=="synced"||order.stock_control_status!=="deducted")){
+        const message=order.management_sales_sync_status!=="synced"
+          ?"A venda ainda não foi sincronizada com o Lux-Gestão. A expedição permanece bloqueada."
+          :order.stock_control_status==="insufficient_stock"
+            ?"Estoque insuficiente: "+(order.stock_issue||"regularize o saldo físico antes de separar.")
+            :order.stock_control_status==="partially_tracked"
+              ?"Controle de estoque incompleto: "+(order.stock_issue||"verifique os componentes do pedido antes de separar.")
+              :"Estoque ainda não controlado. Regularize a contagem e os vínculos antes de separar.";
+        const stockWarning=node("div","payment-tools");
+        stockWarning.append(node("div","payment-help",message));
+        foot.append(stockWarning);
+      }
       if(order.payment_status==="pending"&&order.status!=="cancelled"){
         const paymentTools=node("div","payment-tools");
         const link=checkoutUrl(order.payment_checkout_url);
@@ -240,7 +255,7 @@ input,select{width:100%;min-width:0;border:1px solid var(--line);border-radius:8
         });
         edit.append(select,save);foot.append(edit);
       }else{
-        foot.append(node("span","muted",order.status==="delivered"?"Entrega finalizada":order.status==="cancelled"?"Pedido cancelado":order.payment_status==="review_required"?"Aguardando conciliação financeira":"Aguardando confirmação do pagamento"));
+        foot.append(node("span","muted",order.status==="delivered"?"Entrega finalizada":order.status==="cancelled"?"Pedido cancelado":order.payment_status==="review_required"?"Aguardando conciliação financeira":order.payment_status==="paid"?"Expedição bloqueada por estoque/sincronização":"Aguardando confirmação do pagamento"));
       }
       card.append(foot);return card;
     }
