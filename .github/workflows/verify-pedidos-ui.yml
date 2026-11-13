@@ -1,0 +1,46 @@
+name: Verify Pedidos operational UI
+
+on:
+  pull_request:
+    paths:
+      - "lux-gestao-pedidos/index.html"
+      - "previa/lux-gestao-pedidos/index.html"
+      - ".github/workflows/verify-pedidos-ui.yml"
+  push:
+    branches: [main]
+    paths:
+      - "lux-gestao-pedidos/index.html"
+      - "previa/lux-gestao-pedidos/index.html"
+      - ".github/workflows/verify-pedidos-ui.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Validate Pedidos inline JavaScript and ownership
+        run: |
+          node --input-type=module -e '
+            import { readFileSync, writeFileSync } from "node:fs";
+            for (const path of ["lux-gestao-pedidos/index.html", "previa/lux-gestao-pedidos/index.html"]) {
+              const html = readFileSync(path, "utf8");
+              const scripts = [...html.matchAll(/<script type="module">([\\s\\S]*?)<\\/script>/g)];
+              if (!scripts.length) throw new Error(path + ": script module not found");
+              const source = scripts[scripts.length - 1][1];
+              if (!source.includes("action:\"admin_orders_list\"")) throw new Error(path + ": operational endpoint not used");
+              for (const forbidden of ["renderSalesLedger", "allSales", "revenue_period", "average_ticket", "top_products", "admin_dashboard"]) {
+                if (html.includes(forbidden)) throw new Error(path + ": old analytics/ledger reference remains: " + forbidden);
+              }
+              writeFileSync("/tmp/pedidos-" + (path.startsWith("previa/") ? "preview" : "live") + ".mjs", source);
+            }
+          '
+          node --check /tmp/pedidos-live.mjs
+          node --check /tmp/pedidos-preview.mjs
