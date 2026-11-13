@@ -263,3 +263,17 @@ Cada edição deve adaptar serviços, nomes de métodos, legislação, orientaç
 O projeto estará maduro quando cada eixo tiver conteúdo de entrada, guias aprofundados, curiosidades bem referenciadas, ferramentas úteis e links de apoio; quando as páginas forem legíveis em dispositivos móveis; e quando a atualização das fontes puder ser mantida sem depender de imagens ou coleta de dados.
 
 **Regra final:** primeiro a qualidade e a utilidade do conhecimento. O volume de páginas vem depois.
+
+
+## 14. Arquitetura modular avançada (cinco módulos)
+
+A estrutura técnica está organizada em cinco módulos editoriais: **Temas educativos, Enciclopédia, Curiosidades, Guias e Interatividade**. A implementação e os contratos estão documentados em `docs/ARQUITETURA-MODULAR-EDUCACAO.md`.
+
+- [x] Camada JavaScript compartilhada para menu consistente e indicação do módulo atual.
+- [x] Link acessível para pular ao conteúdo principal.
+- [x] Declaração de idade nas páginas educativas, reutilizando a chave local `lux18` do site.
+- [x] Script de validação local de páginas, metadados, links e sitemap.
+- [ ] Rodar a validação em ambiente local e corrigir todos os apontamentos.
+- [ ] Testar visualmente em celular e com teclado/leitor de tela.
+
+**Nota de idade:** o controle implementado é uma autodeclaração e não uma verificação documental. A página pode ser acessada diretamente, e o controle depende de JavaScript para ser apresentado.
