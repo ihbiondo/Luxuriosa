@@ -1,5 +1,6 @@
-// Cloudflare Worker for private Luxuriosa operational interfaces.
-// Production routes serve the matching, versioned preview source from GitHub Pages.
+// Cloudflare Worker for the production Lux-Gestão route.
+// The public preview is the deployable source of truth; this Worker serves it
+// under /lux-gestao without moving the store, online-orders, or intelligence routes.
 
 const APP_SOURCE_PATH = "/previa/lux-gestao/";
 const APP_ROUTES = new Set(["/lux-gestao/", "/lux-gestao/index.html"]);
@@ -37,7 +38,8 @@ export default {
     }
 
     if (APP_ROUTES.has(path)) {
-      // Preview paths are outside the Worker routes and resolve to GitHub Pages.
+      // This path is deliberately outside the Worker routes, so it resolves
+      // to the GitHub Pages origin instead of invoking this Worker recursively.
       const sourceUrl = new URL(request.url);
       sourceUrl.pathname = APP_SOURCE_PATH;
 
