@@ -11,6 +11,7 @@ from html.parser import HTMLParser
 from pathlib import Path
 from urllib.parse import urlsplit
 import sys
+import re
 import xml.etree.ElementTree as ET
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -109,7 +110,8 @@ def main() -> int:
     for page in pages:
         audit = PageAudit()
         try:
-            audit.feed(page.read_text(encoding="utf-8"))
+            page_text = page.read_text(encoding="utf-8")
+            audit.feed(page_text)
         except (OSError, UnicodeDecodeError) as error:
             errors.append(f"{page.relative_to(ROOT)}: não foi possível ler: {error}")
             continue
@@ -126,6 +128,15 @@ def main() -> int:
             errors.append(f"{rel}: canonical ausente")
         if "/js/educacao.js" not in audit.scripts:
             errors.append(f"{rel}: script modular compartilhado ausente")
+        if 'localStorage.getItem("lux18")' not in page_text or "ed-age-pending" not in page_text:
+            errors.append(f"{rel}: proteção visual antecipada da declaração 18+ ausente")
+        if '<summary>Explorar módulos ⌄</summary>' not in page_text:
+            errors.append(f"{rel}: menu de cinco módulos ausente")
+        menu_match = re.search(r'<details class="ed-menu">([\\s\\S]*?)</details>', page_text)
+        if not menu_match or len(re.findall(r'<a\\b', menu_match.group(1))) != 5:
+            errors.append(f"{rel}: menu deve conter exatamente cinco módulos")
+        if not re.search(r'<a class="ed-brand" href="/educacao/"', page_text):
+            errors.append(f"{rel}: link da marca não retorna à Educação")
         if audit.forbidden_media:
             errors.append(f"{rel}: mídia visual não permitida: {', '.join(audit.forbidden_media)}")
 

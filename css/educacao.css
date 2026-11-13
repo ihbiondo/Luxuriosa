@@ -102,3 +102,6 @@ body.ed-age-open { overflow: hidden; }
   .ed-age-confirm { width: 100%; }
   .ed-age-exit { text-align: center; }
 }
+
+/* Evita exibir o conteúdo antes da confirmação 18+ ser apresentada. */
+html.ed-age-pending body > :not(.ed-age-gate) { visibility: hidden !important; }

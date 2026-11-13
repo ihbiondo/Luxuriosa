@@ -276,7 +276,7 @@ A estrutura técnica está organizada em cinco módulos editoriais: **Temas educ
 - [ ] Rodar a validação em ambiente local e corrigir todos os apontamentos.
 - [ ] Testar visualmente em celular e com teclado/leitor de tela.
 
-**Nota de idade:** o controle implementado é uma autodeclaração e não uma verificação documental. A página pode ser acessada diretamente, e o controle depende de JavaScript para ser apresentado.
+**Nota de idade:** o controle é uma autodeclaração, não uma verificação documental. O bloqueio visual começa no cabeçalho para evitar exibição breve do conteúdo antes do diálogo; sem JavaScript, não há como solicitar a declaração.
 
 
 ## 15. Revisão editorial inicial — prevenção pós-exposição

@@ -36,7 +36,7 @@ A Educação Luxuriosa permanece em HTML estático, CSS compartilhado e JavaScri
 
 ## Declaração de idade
 
-As páginas educativas usam a mesma chave local `lux18` do controle de idade já existente na página inicial. A confirmação é uma autodeclaração de 18 anos ou mais; **não é verificação documental nem mecanismo de segurança inviolável**. Se o armazenamento local estiver indisponível, a confirmação vale somente para a página aberta.
+As páginas educativas usam a mesma chave local `lux18` do controle de idade já existente na página inicial. Um pequeno script síncrono no início do `head` marca a página como pendente quando não há confirmação, e o CSS oculta o conteúdo até o diálogo ser apresentado; isso evita um flash de conteúdo durante o carregamento do JavaScript. A confirmação é uma autodeclaração de 18 anos ou mais; **não é verificação documental nem mecanismo de segurança inviolável**. Se o armazenamento local estiver indisponível, a confirmação vale somente para a página aberta. Sem JavaScript, a declaração não pode ser solicitada, portanto o mecanismo não deve ser tratado como controle de segurança inviolável.
 
 ## Fluxo de manutenção
 
