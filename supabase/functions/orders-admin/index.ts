@@ -231,7 +231,7 @@ Deno.serve(async (req: Request) => {
         .select("id, order_number, status, cart_session_id, payment_status, dispatch_started_at, dispatched_at, delivered_at, management_sale_id, management_sales_sync_status").eq("id", orderId).maybeSingle();
       if (currentError) throw currentError;
       if (!current) return response({ error: "Pedido não encontrado." }, 404, origin);
-      const paidStatuses = ["confirmed", "processing", "out_for_delivery", "delivered"];
+      const paidStatuses = ["confirmed", "processing", "dispatched", "out_for_delivery", "delivered"];
       if (current.status === "cancelled") {
         return response({ error: "Pedido cancelado não pode ser reaberto por este painel." }, 409, origin);
       }
@@ -244,7 +244,7 @@ Deno.serve(async (req: Request) => {
       if (nextStatus !== "cancelled" && !(allowedTransitions[current.status] || []).includes(nextStatus)) {
         return response({ error: "Avance o pedido uma etapa por vez: confirmação, separação, rota e entrega." }, 409, origin);
       }
-      if (["processing", "out_for_delivery", "delivered"].includes(nextStatus)) {
+      if (["processing", "dispatched", "out_for_delivery", "delivered"].includes(nextStatus)) {
         if (current.management_sales_sync_status !== "synced" || !current.management_sale_id) {
           return response({
             error: "Expedição bloqueada: a venda ainda não foi sincronizada com o Lux-Gestão. Atualize o painel e tente novamente.",
@@ -436,7 +436,7 @@ Deno.serve(async (req: Request) => {
     
           const validOrders = (periodOrders.data || []).filter((order: any) =>
             order.payment_status === "paid" &&
-            ["confirmed", "processing", "out_for_delivery", "delivered"].includes(order.status)
+            ["confirmed", "processing", "dispatched", "out_for_delivery", "delivered"].includes(order.status)
           );
           const revenue = validOrders.reduce((sum: number, order: any) => sum + Number(order.total_amount || 0), 0);
           const averageTicket = validOrders.length ? revenue / validOrders.length : 0;
@@ -446,7 +446,7 @@ Deno.serve(async (req: Request) => {
             if (!byDay.has(date)) byDay.set(date, { date, orders: 0, revenue: 0 });
             const day = byDay.get(date)!;
             day.orders += 1;
-            if (["confirmed", "processing", "out_for_delivery", "delivered"].includes(order.status)) day.revenue += Number(order.total_amount || 0);
+            if (["confirmed", "processing", "dispatched", "out_for_delivery", "delivered"].includes(order.status)) day.revenue += Number(order.total_amount || 0);
           }
           const topProducts = new Map<string, { name: string; quantity: number; revenue: number }>();
           const periodOrderRows = periodOrders.data || [];
@@ -458,7 +458,7 @@ Deno.serve(async (req: Request) => {
             for (const item of data || []) {
               const order: any = periodOrderMap.get(item.order_id);
               if (!order || order.payment_status !== "paid" ||
-                  !["confirmed", "processing", "out_for_delivery", "delivered"].includes(order.status)) continue;
+                  !["confirmed", "processing", "dispatched", "out_for_delivery", "delivered"].includes(order.status)) continue;
               const key = item.product_name;
               if (!topProducts.has(key)) topProducts.set(key, { name: key, quantity: 0, revenue: 0 });
               const product = topProducts.get(key)!;
