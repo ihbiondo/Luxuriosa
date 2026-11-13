@@ -155,6 +155,8 @@ def main() -> int:
                 errors.append(f"{rel}: formulário pode expor respostas na URL; use controles locais")
             if 'id="quizResult" class="ed-result" role="status"' not in page_text:
                 errors.append(f"{rel}: resultado do quiz precisa de região de status acessível")
+            if not audit.sources:
+                errors.append(f"{rel}: quiz deve indicar fontes para conferir as respostas")
 
         canonical_url = f"{BASE_URL}/{rel.as_posix()}"
         if rel.name == "index.html":
