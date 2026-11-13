@@ -145,30 +145,18 @@ Cada artigo pertence a uma seção principal e aponta para conteúdos relacionad
 - [ ] Revisar o acesso +18 em páginas abertas por link direto.
 - [ ] Revisar editorialmente os 11 artigos já existentes.
 
-### Etapa 2 — Saúde e prevenção
-- [ ] Uso correto de preservativos externos e internos.
-- [ ] O que é prevenção combinada.
-- [ ] PrEP e PEP: diferenças e quando procurar atendimento.
-- [ ] Testagem de IST: por que e quando conversar com um serviço.
-- [ ] HPV e vacinação.
-- [ ] HIV, tratamento e conceito I=I.
-- [ ] Sífilis, gonorreia e clamídia: visão geral.
-- [ ] Herpes e HPV: transmissão, prevenção e acompanhamento.
-- [ ] Hepatites virais e saúde sexual.
-- [ ] Contracepção de emergência.
-- [ ] DIU, implante e métodos hormonais: comparação informativa.
+### Etapa 2 — Saúde e prevenção (núcleo publicado)
+- [x] Visão geral de prevenção combinada: preservativos, testagem, vacinação, PrEP, PEP e tratamento.
+- [x] Orientações essenciais sobre preservativos externos e internos.
+- [x] Diferença entre PrEP e PEP e janela de urgência da PEP.
+- [x] Conceito I=I e prevenção por vacinação.
+- [x] Visão geral dos métodos contraceptivos e dupla proteção.
+- [ ] Aprofundamentos específicos somente quando houver atualização oficial ou demanda relevante.
 
-### Etapa 3 — Corpo e bem-estar
-- [ ] Anatomia sexual e reprodutiva.
-- [ ] Ciclo menstrual: fases e variações.
-- [ ] Resposta sexual: conceitos e diferenças individuais.
-- [ ] Desejo e libido: fatores físicos e emocionais.
-- [ ] Saúde vulvovaginal: cuidados e sinais de atenção.
-- [ ] Saúde peniana e testicular: cuidados gerais.
-- [ ] Dor durante atividade sexual: possíveis causas e busca por atendimento.
-- [ ] Assoalho pélvico: função e cuidados.
-- [ ] Menopausa e mudanças na saúde sexual.
-- [ ] Sexualidade e envelhecimento.
+### Etapa 3 — Corpo e bem-estar (visão geral publicada)
+- [x] Introdução à anatomia reprodutiva e às principais estruturas internas e externas.
+- [x] Noções básicas sobre o ciclo menstrual e suas variações.
+- [ ] Resposta sexual, libido, saúde urogenital, menopausa e envelhecimento ficam como aprofundamentos futuros, sem criar páginas repetitivas.
 
 ### Etapa 4 — Relações, direitos e segurança
 - [ ] Comunicação de limites e preferências.
@@ -191,15 +179,11 @@ Cada artigo pertence a uma seção principal e aponta para conteúdos relacionad
 - [ ] Irritação, alergias e quando interromper o uso.
 - [ ] Ergonomia e acessibilidade.
 
-### Etapa 6 — Interatividade
-- [ ] Quiz de mitos e fatos sobre saúde sexual.
-- [ ] Quiz de conhecimentos sobre IST e prevenção.
-- [ ] Quiz de anatomia e fisiologia.
-- [ ] Atividade sobre consentimento e limites.
-- [ ] Checklist de consulta de saúde.
-- [ ] Guia interativo de perguntas para planejamento reprodutivo.
-- [ ] Ferramentas simples de autoconhecimento.
-- [ ] Atividades recreativas identificadas como entretenimento.
+### Etapa 6 — Interatividade (primeira ferramenta educativa publicada)
+- [x] Quiz com conhecimentos essenciais sobre prevenção, consentimento e contracepção.
+- [x] Checklist local para preparar uma conversa com serviço de saúde.
+- [x] Orientador de conteúdo para localizar os módulos principais.
+- [ ] Próximas ferramentas: mitos e fatos, anatomia e autoconhecimento recreativo, sem pretensão diagnóstica.
 - [ ] Revisar acessibilidade por teclado e leitor de tela.
 - [ ] Testar em celular e confirmar que respostas não são enviadas.
 
