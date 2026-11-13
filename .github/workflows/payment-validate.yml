@@ -173,7 +173,7 @@ jobs:
           if (!customer.includes('await carregarDadosDaConta()')) throw new Error("O checkout precisa carregar automaticamente os dados cadastrados.");
           if (!payment.includes('code: "account_required"')) throw new Error("A Edge Function precisa bloquear checkout sem conta.");
           if (!ordersAdminFunction.includes('current.payment_status !== "paid"')) throw new Error("A operação administrativa precisa bloquear avanço sem pagamento confirmado.");
-          if (!ordersAdminFunction.includes('current.payment_status === "paid"') || !ordersAdminFunction.includes("Faça a conferência e o estorno na InfinitePay")) throw new Error("O painel não pode cancelar pedido pago sem conciliação de estorno.");
+          if (!ordersAdminFunction.includes('if (nextStatus === "cancelled")') || !ordersAdminFunction.includes("Use o registro auditável de cancelamento/estorno para encerrar pedidos.") || !ordersAdminFunction.includes('"refund_requested", "refund_confirmed"')) throw new Error("O cancelamento/estorno de pedido pago precisa passar pelo fluxo auditável.");
           if (!admin.includes('action:"admin_dashboard"') || !admin.includes('action:"admin_update_order_status"')) throw new Error("O painel Lux-Gestão precisa consultar e atualizar pedidos.");
           if (!admin.includes('invokeOrdersAdmin({action:"admin_dashboard"') || !ordersAdminFunction.includes('action === "admin_dashboard"')) throw new Error("O dashboard precisa usar o endpoint administrativo isolado.");
           if (!admin.includes("/functions/v1/orders-admin") || !ordersAdminFunction.includes('action === "admin_update_order_status"')) throw new Error("A atualização de etapa precisa usar o endpoint administrativo isolado.");
