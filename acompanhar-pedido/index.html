@@ -27,8 +27,8 @@
     .meta{display:flex;flex-wrap:wrap;gap:8px 22px;color:var(--muted);font-size:12px;margin:14px 0}
     .items{border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:12px 0;margin:12px 0;color:#e9dfe2}
     .items div{display:flex;justify-content:space-between;gap:12px;padding:5px 0}.total{display:flex;justify-content:space-between;font-weight:700;color:var(--gold)}
-    .steps{display:grid;grid-template-columns:repeat(5,1fr);gap:5px;margin:20px 0 8px}.step{height:5px;border-radius:9px;background:#44363b}.step.done{background:var(--gold)}
-    .step-labels{display:grid;grid-template-columns:repeat(5,1fr);gap:5px}.step-labels span{font-size:9px;line-height:1.4;color:#857a7f;text-align:center}.step-labels span.done{color:var(--pink)}.step-labels small{display:block;font-size:8px;color:#8d8288;margin-top:4px;line-height:1.4}
+    .steps{display:grid;grid-template-columns:repeat(6,1fr);gap:5px;margin:20px 0 8px}.step{height:5px;border-radius:9px;background:#44363b}.step.done{background:var(--gold)}
+    .step-labels{display:grid;grid-template-columns:repeat(6,1fr);gap:5px}.step-labels span{font-size:9px;line-height:1.4;color:#857a7f;text-align:center}.step-labels span.done{color:var(--pink)}.step-labels small{display:block;font-size:8px;color:#8d8288;margin-top:4px;line-height:1.4}
     .payment-note{font-size:11px;line-height:1.6;color:var(--muted);margin-top:12px}
     .empty{padding:28px;text-align:center}.empty strong{display:block;color:var(--pink);margin-bottom:8px}
     footer{border-top:1px solid var(--line);padding-top:18px;margin-top:34px;color:#8d8187;font-size:10px;text-align:center}
@@ -64,16 +64,17 @@
     const stages = [
       { key:"payment", label:"Aguardando pagamento", dateKey:null },
       { key:"confirmed", label:"Pagamento aprovado", dateKey:"paid_at" },
-      { key:"processing", label:"Em expedição", dateKey:"dispatch_started_at" },
-      { key:"out_for_delivery", label:"Em rota de entrega", dateKey:"dispatched_at" },
+      { key:"processing", label:"Em separação", dateKey:"dispatch_started_at" },
+      { key:"dispatched", label:"Pedido separado", dateKey:"dispatched_at" },
+      { key:"out_for_delivery", label:"Em rota de entrega", dateKey:"route_started_at" },
       { key:"delivered", label:"Pedido entregue", dateKey:"delivered_at" }
     ];
     const paymentLabels = { pending:"Aguardando pagamento", paid:"Pagamento aprovado", review_required:"Pagamento em conferência", cancelled:"Pagamento cancelado", failed:"Pagamento não concluído" };
-    const fulfillmentLabels = { awaiting_confirmation:"Aguardando pagamento", confirmed:"Pagamento aprovado", processing:"Em expedição", out_for_delivery:"Em rota de entrega", delivered:"Pedido entregue", cancelled:"Pedido cancelado" };
+    const fulfillmentLabels = { awaiting_confirmation:"Aguardando pagamento", confirmed:"Pagamento aprovado", processing:"Em separação", dispatched:"Pedido separado · aguardando saída", out_for_delivery:"Em rota de entrega", delivered:"Pedido entregue", cancelled:"Pedido cancelado" };
     function el(tag, className, text){const node=document.createElement(tag);if(className)node.className=className;if(text!==undefined)node.textContent=text;return node;}
     function stageIndex(order){
       if(order.payment_status!=="paid") return order.payment_status==="review_required"?0:0;
-      return Math.max(1,["confirmed","processing","out_for_delivery","delivered"].indexOf(order.status)+1);
+      return Math.max(1,["confirmed","processing","dispatched","out_for_delivery","delivered"].indexOf(order.status)+1);
     }
     function renderOrder(order, items){
       const card=el("article","order"), head=el("div","order-head"), title=el("div","order-number","Pedido #"+order.order_number);
@@ -131,7 +132,7 @@
         }
         const user=session.user;
         const {data:orders,error}=await supabase.from("orders")
-          .select("id,order_number,status,payment_status,payment_checkout_url,payment_expires_at,subtotal,shipping_amount,total_amount,created_at,paid_at,dispatch_started_at,dispatched_at,delivered_at,updated_at")
+          .select("id,order_number,status,payment_status,payment_checkout_url,payment_expires_at,subtotal,shipping_amount,total_amount,created_at,paid_at,dispatch_started_at,dispatched_at,route_started_at,delivered_at,updated_at")
           .eq("customer_id",user.id).order("created_at",{ascending:false}).limit(30);
         if(error)throw error;
         const ids=(orders||[]).map(o=>o.id);let items=[];
