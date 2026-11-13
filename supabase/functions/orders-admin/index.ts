@@ -1,4 +1,3 @@
-import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
@@ -50,7 +49,71 @@ Deno.serve(async (req: Request) => {
     if (error || !data.user) return response({ error: "Sessão inválida. Entre novamente." }, 401, origin);
     const userId = data.user.id;
     const action = body?.action;
-    if (!["admin_confirm_manual_payment", "admin_retry_paid_stock_recovery", "admin_update_order_status", "admin_record_order_lifecycle_event", "admin_dashboard"].includes(action)) return response({ error: "Ação inválida." }, 400, origin);
+    if (!["admin_confirm_manual_payment", "admin_retry_paid_stock_recovery", "admin_update_order_status", "admin_record_order_lifecycle_event", "admin_dashboard", "admin_orders_list", "admin_search_management_customers", "admin_link_management_customer"].includes(action)) return response({ error: "Ação inválida." }, 400, origin);
+
+    if (action === "admin_search_management_customers") {
+      const { data: permission, error: permissionError } = await admin
+        .from("user_permissions").select("role").eq("user_id", userId).maybeSingle();
+      if (permissionError) throw permissionError;
+      if (permission?.role !== "admin") return response({ error: "Acesso restrito à administração." }, 403, origin);
+
+      const q = cleanText(body.q, 100);
+      if (!q || q.length < 2) return response({ ok: true, customers: [] }, 200, origin);
+      const pattern = "%" + q + "%";
+      const [byName, byPhone, byEmail] = await Promise.all([
+        admin.from("management_customers").select("id, full_name, phone, email")
+          .eq("created_by", userId).is("archived_at", null)
+          .ilike("full_name", pattern).order("full_name").limit(20),
+        admin.from("management_customers").select("id, full_name, phone, email")
+          .eq("created_by", userId).is("archived_at", null)
+          .ilike("phone", pattern).order("full_name").limit(20),
+        admin.from("management_customers").select("id, full_name, phone, email")
+          .eq("created_by", userId).is("archived_at", null)
+          .ilike("email", pattern).order("full_name").limit(20)
+      ]);
+      for (const result of [byName, byPhone, byEmail]) {
+        if (result.error) throw result.error;
+      }
+      const found = new Map<string, any>();
+      for (const customer of [...(byName.data || []), ...(byPhone.data || []), ...(byEmail.data || [])]) {
+        found.set(customer.id, customer);
+      }
+      return response({ ok: true, customers: Array.from(found.values()).slice(0, 25) }, 200, origin);
+    }
+
+    if (action === "admin_link_management_customer") {
+      const { data: permission, error: permissionError } = await admin
+        .from("user_permissions").select("role").eq("user_id", userId).maybeSingle();
+      if (permissionError) throw permissionError;
+      if (permission?.role !== "admin") return response({ error: "Acesso restrito à administração." }, 403, origin);
+
+      const orderId = body.order_id;
+      const customerId = body.management_customer_id == null ? null : body.management_customer_id;
+      const idempotencyKey = body.idempotency_key;
+      if (!isUuid(orderId) || (customerId !== null && !isUuid(customerId)) || !isUuid(idempotencyKey)) {
+        return response({ error: "Pedido, cadastro comercial ou chave de operação inválidos." }, 400, origin);
+      }
+
+      const { data: order, error: orderError } = await admin.from("orders")
+        .select("id, order_number, source, customer_name")
+        .eq("id", orderId).maybeSingle();
+      if (orderError) throw orderError;
+      if (!order || !["website", "whatsapp"].includes(order.source)) {
+        return response({ error: "O vínculo comercial está disponível somente para pedidos originados na loja online." }, 409, origin);
+      }
+      if (HISTORICAL_TEST_ORDER_IDS.has(String(order.id)) || /^teste\b/i.test(String(order.customer_name || ""))) {
+        return response({ error: "Registros de teste não podem ser associados a cadastros comerciais." }, 409, origin);
+      }
+
+      const { data: link, error: linkError } = await admin.rpc("admin_set_order_management_customer", {
+        p_order_id: orderId,
+        p_management_customer_id: customerId,
+        p_actor_user_id: userId,
+        p_idempotency_key: idempotencyKey
+      });
+      if (linkError) throw linkError;
+      return response({ ok: true, link }, 200, origin);
+    }
     if (action === "admin_retry_paid_stock_recovery") {
       const { data: permission, error: permissionError } = await admin
         .from("user_permissions").select("role").eq("user_id", userId).maybeSingle();
@@ -330,6 +393,103 @@ Deno.serve(async (req: Request) => {
     }
 
 
+    if (action === "admin_orders_list") {
+      if (!userId) return response({ error: "Faça login para acessar os pedidos." }, 401, origin);
+      const { data: permission, error: permissionError } = await admin
+        .from("user_permissions").select("role").eq("user_id", userId).maybeSingle();
+      if (permissionError) throw permissionError;
+      if (permission?.role !== "admin") return response({ error: "Acesso restrito à administração." }, 403, origin);
+
+      const query = cleanText(body.q, 100);
+      const status = cleanText(body.status, 40);
+      const orderColumns = "id, order_number, status, payment_status, payment_method, payment_provider, payment_transaction_nsu, payment_invoice_slug, payment_checkout_url, payment_expires_at, payment_amount_cents, customer_name, customer_phone, delivery_address, subtotal, shipping_amount, total_amount, club_discount_amount_cents, club_discount_percent, created_at, dispatch_due_at, delivery_due_at, dispatch_started_at, dispatched_at, route_started_at, delivered_at, cart_session_id, management_sale_id, management_sales_sync_status, source, management_customer_id";
+      let orders: any[] = [];
+
+      if (query) {
+        const requests = [
+          admin.from("orders").select(orderColumns).ilike("customer_name", "%" + query + "%").order("created_at", { ascending: false }).limit(100),
+          admin.from("orders").select(orderColumns).ilike("customer_phone", "%" + query + "%").order("created_at", { ascending: false }).limit(100)
+        ];
+        if (/^\\d{1,12}$/.test(query)) {
+          requests.push(admin.from("orders").select(orderColumns).eq("order_number", Number(query)).order("created_at", { ascending: false }).limit(10));
+        }
+        const results = await Promise.all(requests);
+        for (const result of results) if (result.error) throw result.error;
+        const unique = new Map<string, any>();
+        for (const result of results) for (const order of result.data || []) unique.set(order.id, order);
+        orders = [...unique.values()].sort((x, y) =>
+          new Date(y.created_at).getTime() - new Date(x.created_at).getTime()
+        ).slice(0, 100);
+      } else {
+        const { data: recentOrders, error: ordersError } = await admin.from("orders")
+          .select(orderColumns).order("created_at", { ascending: false }).limit(100);
+        if (ordersError) throw ordersError;
+        orders = recentOrders || [];
+      }
+      if (status) orders = orders.filter(order => order.status === status || order.payment_status === status);
+
+      const orderIds = orders.map(order => order.id);
+      const orderItems: any[] = [];
+      const stockSalesByOrder = new Map<string, any>();
+      const lifecycleByOrder = new Map<string, any[]>();
+      if (orderIds.length) {
+        const [itemsResult, stockResult, lifecycleResult] = await Promise.all([
+          admin.from("order_items")
+            .select("order_id, product_id, product_name, quantity, unit_price, product_snapshot")
+            .in("order_id", orderIds),
+          admin.from("management_sales")
+            .select("id, source_order_id, stock_control_status, stock_issue")
+            .in("source_order_id", orderIds),
+          admin.from("order_lifecycle_events")
+            .select("order_id,event_type,reason,amount_cents,reference,created_at")
+            .in("order_id", orderIds).order("created_at", { ascending: true })
+        ]);
+        if (itemsResult.error) throw itemsResult.error;
+        if (stockResult.error) throw stockResult.error;
+        if (lifecycleResult.error) throw lifecycleResult.error;
+        orderItems.push(...(itemsResult.data || []));
+        for (const sale of stockResult.data || []) stockSalesByOrder.set(sale.source_order_id, sale);
+        for (const event of lifecycleResult.data || []) {
+          if (!lifecycleByOrder.has(event.order_id)) lifecycleByOrder.set(event.order_id, []);
+          lifecycleByOrder.get(event.order_id)!.push(event);
+        }
+      }
+
+      const linkedCustomerIds = Array.from(new Set(
+        orders.map(order => order.management_customer_id).filter((id): id is string => isUuid(id))
+      ));
+      const linkedCustomersById = new Map<string, any>();
+      if (linkedCustomerIds.length) {
+        const { data: linkedCustomers, error: linkedCustomersError } = await admin
+          .from("management_customers")
+          .select("id, full_name, phone, email, archived_at")
+          .in("id", linkedCustomerIds);
+        if (linkedCustomersError) throw linkedCustomersError;
+        for (const customer of linkedCustomers || []) linkedCustomersById.set(customer.id, customer);
+      }
+
+      const enrichedOrders = orders.map(order => ({
+        ...order,
+        is_test: HISTORICAL_TEST_ORDER_IDS.has(String(order.id || "")),
+        stock_control_status: stockSalesByOrder.get(order.id)?.stock_control_status || null,
+        stock_issue: stockSalesByOrder.get(order.id)?.stock_issue || null,
+        management_customer: linkedCustomersById.get(order.management_customer_id) || null,
+        lifecycle_events: lifecycleByOrder.get(order.id) || [],
+        items: orderItems.filter(item => item.order_id === order.id).map(item => {
+          const snapshot = item.product_snapshot && typeof item.product_snapshot === "object" && !Array.isArray(item.product_snapshot)
+            ? item.product_snapshot : {};
+          const selected = Array.isArray(snapshot.selected_components) ? snapshot.selected_components[0] : null;
+          return {
+            ...item,
+            selected_dice_product_id: cleanText(snapshot.selected_dice_product_id, 80) || cleanText(selected?.product_id, 80),
+            selected_dice_product_name: cleanText(snapshot.selected_dice_product_name, 180) || cleanText(selected?.product_name, 180)
+          };
+        })
+      }));
+
+      return response({ ok: true, orders: enrichedOrders }, 200, origin);
+    }
+
     if (action === "admin_dashboard") {
           if (!userId) return response({ error: "Faça login para acessar o painel." }, 401, origin);
           const { data: permission, error: permissionError } = await admin
@@ -348,7 +508,7 @@ Deno.serve(async (req: Request) => {
             admin.from("contact_consents").select("id", { count: "exact", head: true }).eq("channel", "whatsapp").eq("purpose", "marketing").eq("granted", true).is("revoked_at", null),
             admin.from("cart_sessions").select("id, status, item_count, subtotal, customer_name, customer_phone, city, state, marketing_whatsapp_opt_in, last_activity_at, abandoned_at, items_snapshot").in("status", ["active", "checkout_started", "checkout_reviewed", "abandoned"]).order("last_activity_at", { ascending: false }).limit(60),
             admin.from("orders").select("id, order_number, status, subtotal, total_amount, club_discount_amount_cents, club_discount_percent, created_at").gte("created_at", since).neq("status", "cancelled").order("created_at", { ascending: true }).limit(1000),
-            admin.from("orders").select("id, order_number, status, payment_status, payment_method, payment_provider, payment_transaction_nsu, payment_invoice_slug, payment_checkout_url, payment_expires_at, payment_amount_cents, customer_name, customer_phone, delivery_address, subtotal, shipping_amount, total_amount, club_discount_amount_cents, club_discount_percent, created_at, dispatch_due_at, delivery_due_at, dispatch_started_at, dispatched_at, route_started_at, delivered_at, cart_session_id, management_sale_id, management_sales_sync_status").order("created_at", { ascending: false }).limit(100),
+            admin.from("orders").select("id, order_number, status, payment_status, payment_method, payment_provider, payment_transaction_nsu, payment_invoice_slug, payment_checkout_url, payment_expires_at, payment_amount_cents, customer_name, customer_phone, delivery_address, subtotal, shipping_amount, total_amount, club_discount_amount_cents, club_discount_percent, created_at, dispatch_due_at, delivery_due_at, dispatch_started_at, dispatched_at, route_started_at, delivered_at, cart_session_id, management_sale_id, management_sales_sync_status, source, management_customer_id").order("created_at", { ascending: false }).limit(100),
             admin.from("site_events").select("session_key,event_name,page_type,product_id,quantity,created_at").gte("created_at", new Date(Date.now()-24*60*60*1000).toISOString()).order("created_at", { ascending: false }).limit(80),
             admin.from("cart_sessions").select("session_key,status,item_count,subtotal,last_activity_at,items_snapshot").gte("last_activity_at", new Date(Date.now()-5*60*1000).toISOString()).order("last_activity_at", { ascending: false }).limit(100)
           ]);
@@ -358,15 +518,15 @@ Deno.serve(async (req: Request) => {
     
           let orders = allRecentOrders.data || [];
           if (q) {
-            const nameSearch = admin.from("orders").select("id, order_number, status, payment_status, payment_method, payment_provider, payment_transaction_nsu, payment_invoice_slug, payment_checkout_url, payment_expires_at, payment_amount_cents, customer_name, customer_phone, delivery_address, subtotal, shipping_amount, total_amount, club_discount_amount_cents, club_discount_percent, created_at, dispatch_due_at, delivery_due_at, dispatch_started_at, dispatched_at, route_started_at, delivered_at, cart_session_id, management_sale_id, management_sales_sync_status").ilike("customer_name", "%" + q + "%").order("created_at", { ascending: false }).limit(100);
-            const phoneSearch = admin.from("orders").select("id, order_number, status, payment_status, payment_method, payment_provider, payment_transaction_nsu, payment_invoice_slug, payment_checkout_url, payment_expires_at, payment_amount_cents, customer_name, customer_phone, delivery_address, subtotal, shipping_amount, total_amount, club_discount_amount_cents, club_discount_percent, created_at, dispatch_due_at, delivery_due_at, dispatch_started_at, dispatched_at, route_started_at, delivered_at, cart_session_id, management_sale_id, management_sales_sync_status").ilike("customer_phone", "%" + q + "%").order("created_at", { ascending: false }).limit(100);
+            const nameSearch = admin.from("orders").select("id, order_number, status, payment_status, payment_method, payment_provider, payment_transaction_nsu, payment_invoice_slug, payment_checkout_url, payment_expires_at, payment_amount_cents, customer_name, customer_phone, delivery_address, subtotal, shipping_amount, total_amount, club_discount_amount_cents, club_discount_percent, created_at, dispatch_due_at, delivery_due_at, dispatch_started_at, dispatched_at, route_started_at, delivered_at, cart_session_id, management_sale_id, management_sales_sync_status, source, management_customer_id").ilike("customer_name", "%" + q + "%").order("created_at", { ascending: false }).limit(100);
+            const phoneSearch = admin.from("orders").select("id, order_number, status, payment_status, payment_method, payment_provider, payment_transaction_nsu, payment_invoice_slug, payment_checkout_url, payment_expires_at, payment_amount_cents, customer_name, customer_phone, delivery_address, subtotal, shipping_amount, total_amount, club_discount_amount_cents, club_discount_percent, created_at, dispatch_due_at, delivery_due_at, dispatch_started_at, dispatched_at, route_started_at, delivered_at, cart_session_id, management_sale_id, management_sales_sync_status, source, management_customer_id").ilike("customer_phone", "%" + q + "%").order("created_at", { ascending: false }).limit(100);
             const [byName, byPhone] = await Promise.all([nameSearch, phoneSearch]);
             if (byName.error) throw byName.error;
             if (byPhone.error) throw byPhone.error;
             const found = new Map<string, any>();
             for (const order of [...(byName.data || []), ...(byPhone.data || [])]) found.set(order.id, order);
             if (/^\\d+$/.test(q)) {
-              const { data, error } = await admin.from("orders").select("id, order_number, status, payment_status, payment_method, payment_provider, payment_transaction_nsu, payment_invoice_slug, payment_checkout_url, payment_expires_at, payment_amount_cents, customer_name, customer_phone, delivery_address, subtotal, shipping_amount, total_amount, club_discount_amount_cents, club_discount_percent, created_at, dispatch_due_at, delivery_due_at, dispatch_started_at, dispatched_at, route_started_at, delivered_at, cart_session_id, management_sale_id, management_sales_sync_status").eq("order_number", Number(q)).limit(1);
+              const { data, error } = await admin.from("orders").select("id, order_number, status, payment_status, payment_method, payment_provider, payment_transaction_nsu, payment_invoice_slug, payment_checkout_url, payment_expires_at, payment_amount_cents, customer_name, customer_phone, delivery_address, subtotal, shipping_amount, total_amount, club_discount_amount_cents, club_discount_percent, created_at, dispatch_due_at, delivery_due_at, dispatch_started_at, dispatched_at, route_started_at, delivered_at, cart_session_id, management_sale_id, management_sales_sync_status, source, management_customer_id").eq("order_number", Number(q)).limit(1);
               if (error) throw error;
               for (const order of data || []) found.set(order.id, order);
             }
@@ -417,6 +577,19 @@ Deno.serve(async (req: Request) => {
               recovery_allowed: recoveryAllowed
             };
           });
+          const linkedCustomerIds = Array.from(new Set(
+            orders.map((order: any) => order.management_customer_id).filter((id: any) => isUuid(id))
+          ));
+          const linkedCustomersById = new Map<string, any>();
+          if (linkedCustomerIds.length) {
+            const { data: linkedCustomers, error: linkedCustomersError } = await admin
+              .from("management_customers")
+              .select("id, full_name, phone, email, archived_at")
+              .in("id", linkedCustomerIds);
+            if (linkedCustomersError) throw linkedCustomersError;
+            for (const customer of linkedCustomers || []) linkedCustomersById.set(customer.id, customer);
+          }
+
           orders = orders.map((order: any) => {
             const stockSale = stockSalesByOrder.get(order.id);
             return {
@@ -424,6 +597,7 @@ Deno.serve(async (req: Request) => {
               is_test: HISTORICAL_TEST_ORDER_IDS.has(String(order.id || "")),
               stock_control_status: stockSale?.stock_control_status || null,
               stock_issue: stockSale?.stock_issue || null,
+              management_customer: linkedCustomersById.get(order.management_customer_id) || null,
               lifecycle_events: lifecycleByOrder.get(order.id) || [],
               items: orderItems.filter((item: any) => item.order_id === order.id).map((item: any) => {
                 const snapshot = item.product_snapshot && typeof item.product_snapshot === "object" && !Array.isArray(item.product_snapshot)
