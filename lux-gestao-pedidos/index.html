@@ -148,7 +148,7 @@ input,select{width:100%;min-width:0;border:1px solid var(--line);border-radius:8
         const stageClass=order.status==="delivered"?"paid":["dispatched","out_for_delivery"].includes(order.status)?"delivery":"";
         badges.append(node("span","status "+stageClass,statusNames[order.status]||"Etapa em atualização"));
         if(order.management_sales_sync_status!=="synced"||order.stock_control_status!=="deducted"){
-          badges.append(node("span","status review","EXPEDIÇÃO BLOQUEADA · ESTOQUE"));
+          badges.append(node("span","status review",order.status==="confirmed"?"EXPEDIÇÃO BLOQUEADA · ESTOQUE":"ALERTA DE ESTOQUE · REVISÃO MANUAL"));
         }
       }else if(order.status==="cancelled"){
         badges.append(node("span","status review","Pedido cancelado"));
@@ -181,8 +181,10 @@ input,select{width:100%;min-width:0;border:1px solid var(--line);border-radius:8
       }
       amount.append(price);
       if(order.payment_status==="paid"&&(order.management_sales_sync_status!=="synced"||order.stock_control_status!=="deducted")){
-        const message=order.management_sales_sync_status!=="synced"
-          ?"A venda ainda não foi sincronizada com o Lux-Gestão. A expedição permanece bloqueada."
+        const message=order.status!=="confirmed"
+          ?"O pedido já avançou na expedição. Não reexecute a baixa automaticamente; confira o estoque físico e registre eventual ajuste auditável."
+          :order.management_sales_sync_status!=="synced"
+            ?"A venda ainda não foi sincronizada com o Lux-Gestão. A expedição permanece bloqueada."
           :order.stock_control_status==="insufficient_stock"
             ?"Estoque insuficiente: "+(order.stock_issue||"regularize o saldo físico antes de separar.")
             :order.stock_control_status==="partially_tracked"
@@ -201,7 +203,7 @@ input,select{width:100%;min-width:0;border:1px solid var(--line);border-radius:8
               const outcome=result.stock_control_status==="deducted"?"Estoque regularizado e baixa concluída.":result.stock_control_status==="partially_tracked"?"Baixa dos itens controlados concluída; ainda há produtos sem controle ativo.":result.stock_control_status==="insufficient_stock"?"Ainda existe saldo insuficiente. Nenhuma baixa parcial foi feita.":"Estoque ainda não possui controle ativo.";
               showNotice("Pedido #"+order.order_number+": "+outcome+" Movimentações novas: "+movements+".");
               await load();
-            }catch(error){showNotice(error.message,true);retry.disabled=false;retry.textContent="REPROCESSAR ESTOQUE";}
+            }catch(error){showNotice(error.message,true);retry.disabled=false;retry.textContent="RECONCILIAR / ESTOQUE";}
           });
           stockWarning.append(retry);
         }
@@ -271,7 +273,7 @@ input,select{width:100%;min-width:0;border:1px solid var(--line);border-radius:8
         });
         edit.append(select,save);foot.append(edit);
       }else{
-        foot.append(node("span","muted",order.status==="delivered"?"Entrega finalizada":order.status==="cancelled"?"Pedido cancelado":order.payment_status==="review_required"?"Aguardando conciliação financeira":order.payment_status==="paid"?"Expedição bloqueada por estoque/sincronização":"Aguardando confirmação do pagamento"));
+        foot.append(node("span","muted",order.status==="delivered"?"Entrega finalizada":order.status==="cancelled"?"Pedido cancelado":order.payment_status==="review_required"?"Aguardando conciliação financeira":order.payment_status==="paid"?(order.status==="confirmed"?"Expedição bloqueada por estoque/sincronização":"Conferir divergência de estoque manualmente"):"Aguardando confirmação do pagamento"));
       }
       const lifecycleEvents=Array.isArray(order.lifecycle_events)?order.lifecycle_events:[];
       const hasEvent=type=>lifecycleEvents.some(event=>event.event_type===type);
