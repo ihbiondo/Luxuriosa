@@ -50,7 +50,171 @@ Deno.serve(async (req: Request) => {
     if (error || !data.user) return response({ error: "Sessão inválida. Entre novamente." }, 401, origin);
     const userId = data.user.id;
     const action = body?.action;
-    if (!["admin_update_order_status", "admin_dashboard"].includes(action)) return response({ error: "Ação inválida." }, 400, origin);
+    if (!["admin_confirm_manual_payment", "admin_retry_paid_stock_recovery", "admin_update_order_status", "admin_record_order_lifecycle_event", "admin_dashboard"].includes(action)) return response({ error: "Ação inválida." }, 400, origin);
+    if (action === "admin_retry_paid_stock_recovery") {
+      const { data: permission, error: permissionError } = await admin
+        .from("user_permissions").select("role").eq("user_id", userId).maybeSingle();
+      if (permissionError) throw permissionError;
+      if (permission?.role !== "admin") return response({ error: "Acesso restrito à administração." }, 403, origin);
+
+      const orderId = body.order_id;
+      if (!isUuid(orderId)) return response({ error: "Pedido inválido." }, 400, origin);
+      const { data: order, error: orderError } = await admin.from("orders")
+        .select("id, order_number, source, payment_provider, payment_status, management_sale_id, management_sales_sync_status")
+        .eq("id", orderId).maybeSingle();
+      if (orderError) throw orderError;
+      if (!order || order.source !== "website" || order.payment_provider !== "infinitepay") {
+        return response({ error: "Pedido online não encontrado." }, 404, origin);
+      }
+      if (order.payment_status !== "paid") {
+        return response({ error: "A recuperação de estoque exige pagamento já confirmado." }, 409, origin);
+      }
+
+      const { data: sync, error: syncError } = await admin.rpc("sync_online_order_to_management_sale", {
+        p_order_id: orderId
+      });
+      if (syncError) throw syncError;
+      if (sync?.synced !== true) {
+        return response({ ok: false, error: "O pagamento está preservado, mas a venda ainda não foi sincronizada. Tente reconciliar novamente.", sync }, 409, origin);
+      }
+
+      const { data: linkedOrder, error: linkedError } = await admin.from("orders")
+        .select("management_sale_id, management_sales_sync_status")
+        .eq("id", orderId).single();
+      if (linkedError) throw linkedError;
+      if (!linkedOrder.management_sale_id || linkedOrder.management_sales_sync_status !== "synced") {
+        return response({ ok: false, error: "Não foi possível localizar a venda gerencial vinculada.", sync }, 409, origin);
+      }
+
+      const { data: recovery, error: recoveryError } = await admin.rpc("management_retry_paid_sale_stock", {
+        p_sale_id: linkedOrder.management_sale_id,
+        p_actor_user_id: userId
+      });
+      if (recoveryError) throw recoveryError;
+
+      const { data: stockSale, error: stockError } = await admin.from("management_sales")
+        .select("stock_control_status, stock_issue")
+        .eq("id", linkedOrder.management_sale_id).single();
+      if (stockError) throw stockError;
+
+      return response({
+        ok: true,
+        order_number: order.order_number,
+        sync,
+        recovery,
+        stock_control_status: stockSale.stock_control_status,
+        stock_issue: stockSale.stock_issue
+      }, 200, origin);
+    }
+
+    if (action === "admin_confirm_manual_payment") {
+      const { data: manualPermission, error: manualPermissionError } = await admin
+        .from("user_permissions").select("role").eq("user_id", userId).maybeSingle();
+      if (manualPermissionError) throw manualPermissionError;
+      if (manualPermission?.role !== "admin") {
+        return response({ error: "Acesso restrito à administração." }, 403, origin);
+      }
+      const orderId = body.order_id;
+      if (!isUuid(orderId)) return response({ error: "Pedido inválido." }, 400, origin);
+      const { data: current, error: currentError } = await admin.from("orders")
+        .select("id, order_number, source, payment_provider, status, payment_status, payment_amount_cents, total_amount, cart_session_id")
+        .eq("id", orderId).maybeSingle();
+      if (currentError) throw currentError;
+      if (!current) return response({ error: "Pedido não encontrado." }, 404, origin);
+      if (current.source !== "website" || current.payment_provider !== "infinitepay") {
+        return response({ error: "A confirmação manual está disponível apenas para pedidos online da InfinitePay." }, 409, origin);
+      }
+      if (current.payment_status === "paid") {
+        const { data: sync, error: syncError } = await admin.rpc("sync_online_order_to_management_sale", { p_order_id: orderId });
+        if (syncError) throw syncError;
+        const { data: stockSale, error: stockError } = await admin.from("management_sales")
+          .select("stock_control_status, stock_issue")
+          .eq("source_order_id", orderId).maybeSingle();
+        if (stockError) throw stockError;
+        return response({
+          ok: true, reused: true, payment_status: "paid", sync,
+          management_sales_sync_status: sync?.synced === true ? "synced" : "error",
+          stock_control_status: stockSale?.stock_control_status || null,
+          stock_issue: stockSale?.stock_issue || null
+        }, 200, origin);
+      }
+      if (current.payment_status !== "pending" || current.status !== "awaiting_confirmation") {
+        return response({ error: "Este pedido não está pendente e elegível para confirmação manual." }, 409, origin);
+      }
+      const now = new Date().toISOString();
+      const amountCents = Number(current.payment_amount_cents ?? Math.round(Number(current.total_amount || 0) * 100));
+      if (!Number.isSafeInteger(amountCents) || amountCents <= 0) {
+        return response({ error: "O valor do pedido é inválido. Nenhuma alteração foi feita." }, 409, origin);
+      }
+      const { data: updated, error: updateError } = await admin.from("orders")
+        .update({
+          payment_status: "paid",
+          payment_paid_amount_cents: amountCents,
+          payment_confirmation_source: "manual",
+          payment_confirmed_by: userId,
+          paid_at: now,
+          status: "confirmed",
+          confirmed_at: now,
+          updated_at: now
+        })
+        .eq("id", orderId)
+        .eq("payment_status", "pending")
+        .eq("status", "awaiting_confirmation")
+        .select("id, order_number, status, payment_status, paid_at, management_sales_sync_status")
+        .maybeSingle();
+      if (updateError) throw updateError;
+      if (!updated) return response({ error: "O pedido foi alterado em outra operação. Atualize a tela antes de continuar." }, 409, origin);
+
+      if (current.cart_session_id) {
+        const { error: cartError } = await admin.from("cart_sessions").update({
+          status: "converted", converted_at: now, updated_at: now
+        }).eq("id", current.cart_session_id);
+        if (cartError) throw cartError;
+      }
+      const { data: sync, error: syncError } = await admin.rpc("sync_online_order_to_management_sale", { p_order_id: orderId });
+      if (syncError) throw syncError;
+      const { data: stockSale, error: stockError } = await admin.from("management_sales")
+        .select("stock_control_status, stock_issue")
+        .eq("source_order_id", orderId).maybeSingle();
+      if (stockError) throw stockError;
+      return response({
+        ok: true,
+        order: updated,
+        payment_status: "paid",
+        sync,
+        management_sales_sync_status: sync?.synced === true ? "synced" : "error",
+        stock_control_status: stockSale?.stock_control_status || null,
+        stock_issue: stockSale?.stock_issue || null
+      }, 200, origin);
+    }
+
+    if (action === "admin_record_order_lifecycle_event") {
+      const { data: permission, error: permissionError } = await admin
+        .from("user_permissions").select("role").eq("user_id", userId).maybeSingle();
+      if (permissionError) throw permissionError;
+      if (permission?.role !== "admin") return response({ error: "Acesso restrito à administração." }, 403, origin);
+      const orderId = body.order_id;
+      const idempotencyKey = body.idempotency_key;
+      const eventType = body.event_type;
+      const reason = cleanText(body.reason, 500);
+      const reference = cleanText(body.reference, 160);
+      const amountCents = body.amount_cents == null ? null : Number(body.amount_cents);
+      const allowedEvents = ["cancelled_unpaid", "refund_requested", "refund_confirmed", "return_received", "restock_approved"];
+      if (!isUuid(orderId) || !isUuid(idempotencyKey) || !allowedEvents.includes(eventType) || !reason) {
+        return response({ error: "Dados da ocorrência inválidos. Informe pedido, tipo, motivo e chave idempotente." }, 400, origin);
+      }
+      if (amountCents !== null && (!Number.isSafeInteger(amountCents) || amountCents <= 0)) {
+        return response({ error: "Valor informado inválido." }, 400, origin);
+      }
+      const { data: result, error: lifecycleError } = await admin.rpc("admin_record_order_lifecycle_event", {
+        p_order_id: orderId, p_actor_user_id: userId, p_event_type: eventType,
+        p_reason: reason, p_amount_cents: amountCents, p_reference: reference,
+        p_idempotency_key: idempotencyKey
+      });
+      if (lifecycleError) return response({ error: lifecycleError.message || "Não foi possível registrar a ocorrência." }, 409, origin);
+      return response({ ok: true, lifecycle: result }, 200, origin);
+    }
+
     if (action === "admin_update_order_status") {
       if (!userId) return response({ error: "Faça login para alterar pedidos." }, 401, origin);
       const { data: permission, error: permissionError } = await admin
@@ -64,20 +228,56 @@ Deno.serve(async (req: Request) => {
         return response({ error: "Pedido ou status inválido." }, 400, origin);
       }
       const { data: current, error: currentError } = await admin.from("orders")
-        .select("id, order_number, status, cart_session_id, payment_status, dispatch_started_at, dispatched_at, delivered_at").eq("id", orderId).maybeSingle();
+        .select("id, order_number, status, cart_session_id, payment_status, dispatch_started_at, dispatched_at, delivered_at, management_sale_id, management_sales_sync_status").eq("id", orderId).maybeSingle();
       if (currentError) throw currentError;
       if (!current) return response({ error: "Pedido não encontrado." }, 404, origin);
       const paidStatuses = ["confirmed", "processing", "out_for_delivery", "delivered"];
       if (current.status === "cancelled") {
         return response({ error: "Pedido cancelado não pode ser reaberto por este painel." }, 409, origin);
       }
+      const allowedTransitions: Record<string, string[]> = {
+        confirmed: ["processing"],
+        processing: ["out_for_delivery"],
+        out_for_delivery: ["delivered"]
+      };
+      if (nextStatus !== "cancelled" && !(allowedTransitions[current.status] || []).includes(nextStatus)) {
+        return response({ error: "Avance o pedido uma etapa por vez: confirmação, separação, rota e entrega." }, 409, origin);
+      }
+      if (["processing", "out_for_delivery", "delivered"].includes(nextStatus)) {
+        if (current.management_sales_sync_status !== "synced" || !current.management_sale_id) {
+          return response({
+            error: "Expedição bloqueada: a venda ainda não foi sincronizada com o Lux-Gestão. Atualize o painel e tente novamente.",
+            stock_control_status: "pending_sync"
+          }, 409, origin);
+        }
+        const { data: stockSale, error: stockSaleError } = await admin
+          .from("management_sales")
+          .select("id, stock_control_status, stock_issue")
+          .eq("id", current.management_sale_id)
+          .eq("source_order_id", orderId)
+          .maybeSingle();
+        if (stockSaleError) throw stockSaleError;
+        if (!stockSale) {
+          return response({ error: "Expedição bloqueada: não foi localizado o lançamento de estoque vinculado ao pedido." }, 409, origin);
+        }
+        if (stockSale.stock_control_status !== "deducted") {
+          const detail = stockSale.stock_issue
+            ? " " + stockSale.stock_issue
+            : " Regularize a contagem ou o vínculo dos componentes no inventário.";
+          const reason = stockSale.stock_control_status === "insufficient_stock"
+            ? "Estoque insuficiente."
+            : stockSale.stock_control_status === "partially_tracked"
+              ? "Controle de estoque incompleto."
+              : "Estoque ainda não controlado.";
+          return response({
+            error: "Expedição bloqueada: " + reason + detail,
+            stock_control_status: stockSale.stock_control_status,
+            stock_issue: stockSale.stock_issue
+          }, 409, origin);
+        }
+      }
       if (nextStatus === "cancelled") {
-        if (current.payment_status === "paid") {
-          return response({ error: "O pagamento já foi aprovado. Faça a conferência e o estorno na InfinitePay antes de encerrar este pedido." }, 409, origin);
-        }
-        if (current.payment_status === "review_required") {
-          return response({ error: "Este pagamento está em conferência. Resolva a conciliação antes de cancelar o pedido." }, 409, origin);
-        }
+        return response({ error: "Use o registro auditável de cancelamento/estorno para encerrar pedidos." }, 409, origin);
       } else if (!paidStatuses.includes(nextStatus) || current.payment_status !== "paid") {
         return response({ error: "A etapa de expedição só pode ser editada depois que a InfinitePay confirmar o pagamento." }, 409, origin);
       }
@@ -137,7 +337,7 @@ Deno.serve(async (req: Request) => {
             admin.from("contact_consents").select("id", { count: "exact", head: true }).eq("channel", "whatsapp").eq("purpose", "marketing").eq("granted", true).is("revoked_at", null),
             admin.from("cart_sessions").select("id, status, item_count, subtotal, customer_name, customer_phone, city, state, marketing_whatsapp_opt_in, last_activity_at, abandoned_at, items_snapshot").in("status", ["active", "checkout_started", "checkout_reviewed", "abandoned"]).order("last_activity_at", { ascending: false }).limit(60),
             admin.from("orders").select("id, order_number, status, subtotal, total_amount, club_discount_amount_cents, club_discount_percent, created_at").gte("created_at", since).neq("status", "cancelled").order("created_at", { ascending: true }).limit(1000),
-            admin.from("orders").select("id, order_number, status, payment_status, payment_method, payment_provider, payment_transaction_nsu, payment_invoice_slug, payment_checkout_url, payment_expires_at, payment_amount_cents, customer_name, customer_phone, delivery_address, subtotal, shipping_amount, total_amount, club_discount_amount_cents, club_discount_percent, created_at, cart_session_id").order("created_at", { ascending: false }).limit(100),
+            admin.from("orders").select("id, order_number, status, payment_status, payment_method, payment_provider, payment_transaction_nsu, payment_invoice_slug, payment_checkout_url, payment_expires_at, payment_amount_cents, customer_name, customer_phone, delivery_address, subtotal, shipping_amount, total_amount, club_discount_amount_cents, club_discount_percent, created_at, cart_session_id, management_sale_id, management_sales_sync_status").order("created_at", { ascending: false }).limit(100),
             admin.from("site_events").select("session_key,event_name,page_type,product_id,quantity,created_at").gte("created_at", new Date(Date.now()-24*60*60*1000).toISOString()).order("created_at", { ascending: false }).limit(80),
             admin.from("cart_sessions").select("session_key,status,item_count,subtotal,last_activity_at,items_snapshot").gte("last_activity_at", new Date(Date.now()-5*60*1000).toISOString()).order("last_activity_at", { ascending: false }).limit(100)
           ]);
@@ -147,15 +347,15 @@ Deno.serve(async (req: Request) => {
     
           let orders = allRecentOrders.data || [];
           if (q) {
-            const nameSearch = admin.from("orders").select("id, order_number, status, payment_status, payment_method, payment_provider, payment_transaction_nsu, payment_invoice_slug, payment_checkout_url, payment_expires_at, payment_amount_cents, customer_name, customer_phone, delivery_address, subtotal, shipping_amount, total_amount, club_discount_amount_cents, club_discount_percent, created_at, cart_session_id").ilike("customer_name", "%" + q + "%").order("created_at", { ascending: false }).limit(100);
-            const phoneSearch = admin.from("orders").select("id, order_number, status, payment_status, payment_method, payment_provider, payment_transaction_nsu, payment_invoice_slug, payment_checkout_url, payment_expires_at, payment_amount_cents, customer_name, customer_phone, delivery_address, subtotal, shipping_amount, total_amount, club_discount_amount_cents, club_discount_percent, created_at, cart_session_id").ilike("customer_phone", "%" + q + "%").order("created_at", { ascending: false }).limit(100);
+            const nameSearch = admin.from("orders").select("id, order_number, status, payment_status, payment_method, payment_provider, payment_transaction_nsu, payment_invoice_slug, payment_checkout_url, payment_expires_at, payment_amount_cents, customer_name, customer_phone, delivery_address, subtotal, shipping_amount, total_amount, club_discount_amount_cents, club_discount_percent, created_at, cart_session_id, management_sale_id, management_sales_sync_status").ilike("customer_name", "%" + q + "%").order("created_at", { ascending: false }).limit(100);
+            const phoneSearch = admin.from("orders").select("id, order_number, status, payment_status, payment_method, payment_provider, payment_transaction_nsu, payment_invoice_slug, payment_checkout_url, payment_expires_at, payment_amount_cents, customer_name, customer_phone, delivery_address, subtotal, shipping_amount, total_amount, club_discount_amount_cents, club_discount_percent, created_at, cart_session_id, management_sale_id, management_sales_sync_status").ilike("customer_phone", "%" + q + "%").order("created_at", { ascending: false }).limit(100);
             const [byName, byPhone] = await Promise.all([nameSearch, phoneSearch]);
             if (byName.error) throw byName.error;
             if (byPhone.error) throw byPhone.error;
             const found = new Map<string, any>();
             for (const order of [...(byName.data || []), ...(byPhone.data || [])]) found.set(order.id, order);
             if (/^\\d+$/.test(q)) {
-              const { data, error } = await admin.from("orders").select("id, order_number, status, payment_status, payment_method, payment_provider, payment_transaction_nsu, payment_invoice_slug, payment_checkout_url, payment_expires_at, payment_amount_cents, customer_name, customer_phone, delivery_address, subtotal, shipping_amount, total_amount, club_discount_amount_cents, club_discount_percent, created_at, cart_session_id").eq("order_number", Number(q)).limit(1);
+              const { data, error } = await admin.from("orders").select("id, order_number, status, payment_status, payment_method, payment_provider, payment_transaction_nsu, payment_invoice_slug, payment_checkout_url, payment_expires_at, payment_amount_cents, customer_name, customer_phone, delivery_address, subtotal, shipping_amount, total_amount, club_discount_amount_cents, club_discount_percent, created_at, cart_session_id, management_sale_id, management_sales_sync_status").eq("order_number", Number(q)).limit(1);
               if (error) throw error;
               for (const order of data || []) found.set(order.id, order);
             }
@@ -164,13 +364,30 @@ Deno.serve(async (req: Request) => {
           if (status) orders = orders.filter((order: any) => order.status === status);
           const orderIds = orders.map((order: any) => order.id);
           let orderItems: any[] = [];
+          const stockSalesByOrder = new Map<string, any>();
           if (orderIds.length) {
             const { data, error } = await admin.from("order_items")
               .select("order_id, product_name, quantity, unit_price").in("order_id", orderIds);
             if (error) throw error;
             orderItems = data || [];
+            const { data: stockSales, error: stockError } = await admin.from("management_sales")
+              .select("id, source_order_id, stock_control_status, stock_issue")
+              .in("source_order_id", orderIds);
+            if (stockError) throw stockError;
+            for (const sale of stockSales || []) stockSalesByOrder.set(sale.source_order_id, sale);
           }
-    
+          const lifecycleByOrder = new Map<string, any[]>();
+          if (orderIds.length) {
+            const { data: lifecycleRows, error: lifecycleError } = await admin.from("order_lifecycle_events")
+              .select("order_id,event_type,reason,amount_cents,reference,created_at")
+              .in("order_id", orderIds).order("created_at", { ascending: true });
+            if (lifecycleError) throw lifecycleError;
+            for (const event of lifecycleRows || []) {
+              if (!lifecycleByOrder.has(event.order_id)) lifecycleByOrder.set(event.order_id, []);
+              lifecycleByOrder.get(event.order_id)!.push(event);
+            }
+          }
+
           const cartIds = (recentCarts.data || []).map((cart: any) => cart.id);
           let activeConsentCartIds = new Set<string>();
           if (cartIds.length) {
@@ -189,11 +406,17 @@ Deno.serve(async (req: Request) => {
               recovery_allowed: recoveryAllowed
             };
           });
-          orders = orders.map((order: any) => ({
-            ...order,
-            is_test: HISTORICAL_TEST_ORDER_IDS.has(String(order.id || "")),
-            items: orderItems.filter((item: any) => item.order_id === order.id)
-          }));
+          orders = orders.map((order: any) => {
+            const stockSale = stockSalesByOrder.get(order.id);
+            return {
+              ...order,
+              is_test: HISTORICAL_TEST_ORDER_IDS.has(String(order.id || "")),
+              stock_control_status: stockSale?.stock_control_status || null,
+              stock_issue: stockSale?.stock_issue || null,
+              lifecycle_events: lifecycleByOrder.get(order.id) || [],
+              items: orderItems.filter((item: any) => item.order_id === order.id)
+            };
+          });
 
           const { data: managementSales, error: managementSalesError } = await admin
             .from("management_sales")
