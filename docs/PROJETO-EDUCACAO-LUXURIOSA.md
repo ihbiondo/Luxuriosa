@@ -165,6 +165,7 @@ Cada artigo pertence a uma seção principal e aponta para conteúdos relacionad
 - [x] Controle, coerção e violência: sinais e apoio.
 - [x] Privacidade e consentimento digital.
 - [x] Segurança no compartilhamento de imagens íntimas.
+- [x] Guia de atendimento após violência sexual, canais de apoio e acesso à PEP.
 - [x] Orientação sexual e identidade de gênero: conceitos sem estereótipos.
 - [x] Direitos sexuais e reprodutivos.
 - [x] Como conversar com profissionais de saúde.
