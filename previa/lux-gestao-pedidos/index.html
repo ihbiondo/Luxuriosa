@@ -104,11 +104,6 @@ input,select{width:100%;min-width:0;border:1px solid var(--line);border-radius:8
       return minutes<0?label+" atrasada há "+Math.abs(minutes)+" min":label+" em "+minutes+" min";
     }
     function showNotice(text,error=false,login=false){const box=$(login?"loginNotice":"notice");box.textContent=text;box.className="notice show"+(error?" error":"");}
-    async function invoke(body){
-      const {data:{session},error}=await supabase.auth.getSession();if(error)throw error;if(!session)throw new Error("Sua sessão expirou. Entre novamente.");
-      const response=await fetch(URL+"/functions/v1/cart-orders",{method:"POST",headers:{"content-type":"application/json","apikey":KEY,"authorization":"Bearer "+session.access_token},body:JSON.stringify(body)});
-      const result=await response.json().catch(()=>({}));if(!response.ok||!result.ok)throw new Error(result.error||"Não foi possível consultar os pedidos.");return result;
-    }
     async function invokeOrdersAdmin(body){
       const {data:{session},error}=await supabase.auth.getSession();if(error)throw error;if(!session)throw new Error("Sua sessão expirou. Entre novamente.");
       const response=await fetch(URL+"/functions/v1/orders-admin",{method:"POST",headers:{"content-type":"application/json","apikey":KEY,"authorization":"Bearer "+session.access_token},body:JSON.stringify(body)});
