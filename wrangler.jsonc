@@ -4,23 +4,5 @@
   "main": "./cloudflare/lux-gestao-worker.mjs",
   "compatibility_date": "2026-11-10",
   "workers_dev": true,
-  "keep_vars": true,
-  "routes": [
-    {
-      "pattern": "luxuriosa.com.br/lux-gestao",
-      "zone_name": "luxuriosa.com.br"
-    },
-    {
-      "pattern": "luxuriosa.com.br/lux-gestao/*",
-      "zone_name": "luxuriosa.com.br"
-    },
-    {
-      "pattern": "luxuriosa.com.br/lux-gestao-pedidos",
-      "zone_name": "luxuriosa.com.br"
-    },
-    {
-      "pattern": "luxuriosa.com.br/lux-gestao-pedidos/*",
-      "zone_name": "luxuriosa.com.br"
-    }
-  ]
+  "keep_vars": true
 }
