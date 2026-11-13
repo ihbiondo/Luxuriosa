@@ -4,6 +4,7 @@ on:
   pull_request:
     paths:
       - "previa/lux-gestao-pedidos/index.html"
+      - "lux-gestao-pedidos/index.html"
       - ".github/workflows/verify-pedidos-ui.yml"
   push:
     branches: [main]
@@ -24,21 +25,23 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Validate Pedidos preview JavaScript and ownership
+      - name: Validate both Pedidos interfaces and ownership
         run: |
           node --input-type=module -e '
             import { readFileSync, writeFileSync } from "node:fs";
-            const path = "previa/lux-gestao-pedidos/index.html";
-            const html = readFileSync(path, "utf8");
-            const startTag = "<script type=\"module\">";
-            const start = html.indexOf(startTag);
-            const end = html.indexOf("</script>", start);
-            if (start < 0 || end < 0) throw new Error("Módulo JavaScript não encontrado.");
-            const source = html.slice(start + startTag.length, end);
-            if (!source.includes("action:\"admin_orders_list\"")) throw new Error("A fila não usa o endpoint operacional.");
-            for (const forbidden of ["renderSalesLedger", "allSales", "admin_dashboard", "revenue_period", "top_products"]) {
-              if (html.includes(forbidden)) throw new Error("Referência duplicada/analítica: " + forbidden);
+            for (const [path, name] of [["lux-gestao-pedidos/index.html", "live"], ["previa/lux-gestao-pedidos/index.html", "preview"]]) {
+              const html = readFileSync(path, "utf8");
+              const startTag = "<script type=\"module\">";
+              const start = html.indexOf(startTag);
+              const end = html.indexOf("</script>", start);
+              if (start < 0 || end < 0) throw new Error(path + ": módulo JavaScript não encontrado.");
+              const source = html.slice(start + startTag.length, end);
+              if (!source.includes("action:\"admin_orders_list\"")) throw new Error(path + ": fila não usa endpoint operacional.");
+              for (const forbidden of ["renderSalesLedger", "allSales", "admin_dashboard", "revenue_period", "top_products"]) {
+                if (html.includes(forbidden)) throw new Error(path + ": referência duplicada/analítica: " + forbidden);
+              }
+              writeFileSync("/tmp/pedidos-" + name + ".mjs", source);
             }
-            writeFileSync("/tmp/pedidos-preview.mjs", source);
           '
+          node --check /tmp/pedidos-live.mjs
           node --check /tmp/pedidos-preview.mjs
