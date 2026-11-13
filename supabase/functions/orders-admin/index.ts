@@ -378,7 +378,7 @@ Deno.serve(async (req: Request) => {
           const stockSalesByOrder = new Map<string, any>();
           if (orderIds.length) {
             const { data, error } = await admin.from("order_items")
-              .select("order_id, product_name, quantity, unit_price").in("order_id", orderIds);
+              .select("order_id, product_name, quantity, unit_price, product_snapshot").in("order_id", orderIds);
             if (error) throw error;
             orderItems = data || [];
             const { data: stockSales, error: stockError } = await admin.from("management_sales")
@@ -425,7 +425,16 @@ Deno.serve(async (req: Request) => {
               stock_control_status: stockSale?.stock_control_status || null,
               stock_issue: stockSale?.stock_issue || null,
               lifecycle_events: lifecycleByOrder.get(order.id) || [],
-              items: orderItems.filter((item: any) => item.order_id === order.id)
+              items: orderItems.filter((item: any) => item.order_id === order.id).map((item: any) => {
+                const snapshot = item.product_snapshot && typeof item.product_snapshot === "object" && !Array.isArray(item.product_snapshot)
+                  ? item.product_snapshot : {};
+                const selected = Array.isArray(snapshot.selected_components) ? snapshot.selected_components[0] : null;
+                return {
+                  ...item,
+                  selected_dice_product_id: cleanText(snapshot.selected_dice_product_id, 80) || cleanText(selected?.product_id, 80),
+                  selected_dice_product_name: cleanText(snapshot.selected_dice_product_name, 180) || cleanText(selected?.product_name, 180)
+                };
+              })
             };
           });
 
