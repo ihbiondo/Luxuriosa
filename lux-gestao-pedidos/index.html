@@ -190,8 +190,8 @@ input,select{width:100%;min-width:0;border:1px solid var(--line);border-radius:8
               :"Estoque ainda não controlado. Regularize a contagem e os vínculos antes de separar.";
         const stockWarning=node("div","payment-tools");
         stockWarning.append(node("div","payment-help",message));
-        if(order.management_sales_sync_status==="synced"&&["insufficient_stock","partially_tracked","not_tracked"].includes(order.stock_control_status)){
-          const retry=node("button","primary","REPROCESSAR ESTOQUE");
+        if(order.status==="confirmed"&&(order.management_sales_sync_status!=="synced"||order.stock_control_status!=="deducted")){
+          const retry=node("button","primary","RECONCILIAR / ESTOQUE");
           retry.addEventListener("click",async()=>{
             if(!window.confirm("Reavaliar o estoque do pedido #"+order.order_number+"? O sistema só fará baixas que ainda não existam para esta venda."))return;
             retry.disabled=true;retry.textContent="REPROCESSANDO…";
