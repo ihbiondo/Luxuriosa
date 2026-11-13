@@ -1,5 +1,16 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.119.0";
-import { normalizeInventoryMovementDelta } from "../_shared/inventory.ts";
+function normalizeInventoryMovementDelta(movementType: unknown, quantity: unknown, quantityDelta: unknown): number | null {
+  const type = typeof movementType === "string" ? movementType.trim() : "";
+  if (type === "adjustment") {
+    const delta = Number(quantityDelta);
+    return Number.isSafeInteger(delta) && delta !== 0 && Math.abs(delta) <= 1_000_000 ? delta : null;
+  }
+  const signs: Record<string, number> = { opening: 1, inbound: 1, return: 1, outbound: -1, loss: -1 };
+  const sign = signs[type];
+  const amount = Number(quantity);
+  if (sign === undefined || !Number.isSafeInteger(amount) || amount <= 0 || amount > 1_000_000) return null;
+  return amount * sign;
+}
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
@@ -8,6 +19,9 @@ const admin = createClient(SUPABASE_URL, SERVICE_ROLE_KEY, {
 });
 
 const KIT_PRODUCT_IDS = new Set(["10","22","23","24","25","26","27","28","29"]);
+// Only kits with a complete, fixed recipe may receive an automatic cost snapshot.
+// Kits with customer-selected variants or incomplete recipes stay uncosted until the composition is captured.
+const KIT_VARIANT_PRODUCT_IDS = new Set(["22","23","24","27","28","29"]);
 
 const ALLOWED_ORIGINS = new Set([
   "https://luxuriosa.com.br",
@@ -64,6 +78,11 @@ function normalizeItems(value: unknown) {
     const lineTotal = quantity * unitPrice;
     const isGift = raw?.is_gift === true;
     const isKitComponent = raw?.is_kit_component === true;
+    const selectedDiceId = cleanText(raw?.selected_dice_product_id, 100);
+    const selectedDiceName = cleanText(raw?.selected_dice_product_name, 180);
+    if ((selectedDiceId && !/^[123]$/.test(selectedDiceId)) || (!!selectedDiceId !== !!selectedDiceName)) {
+      throw new ValidationError("Selecione uma versão válida do Dado do Prazer para este kit.");
+    }
     if (!Number.isSafeInteger(lineTotal) || lineTotal < 0 ||
         (lineTotal === 0 && !isGift && !isKitComponent) ||
         (isKitComponent && unitPrice !== 0)) {
@@ -77,7 +96,9 @@ function normalizeItems(value: unknown) {
       unit_price_cents: unitPrice,
       line_total_cents: lineTotal,
       is_gift: isGift,
-      is_kit_component: isKitComponent
+      is_kit_component: isKitComponent,
+      selected_dice_product_id: selectedDiceId || null,
+      selected_dice_product_name: selectedDiceName || null
     };
   });
 }
@@ -102,6 +123,16 @@ async function authorize(request: Request) {
 }
 
 
+
+function filterStandaloneCustomerSales(sales: any[], orders: any[]) {
+  const linkedOrderIds = new Set((orders || []).map((order) => String(order.id || "")).filter(Boolean));
+  const linkedSaleIds = new Set((orders || []).map((order) => String(order.management_sale_id || "")).filter(Boolean));
+  return (sales || []).filter((sale) =>
+    !(sale.source_order_id && linkedOrderIds.has(String(sale.source_order_id))) &&
+    !linkedSaleIds.has(String(sale.id))
+  );
+}
+
 function localAnalyticsParts(value: string) {
   const parts = new Intl.DateTimeFormat("pt-BR", {
     timeZone: "America/Sao_Paulo",
@@ -122,6 +153,8 @@ function summarizeSales(rows: any[]) {
     pending_count: 0,
     sold_cents: 0,
     received_cents: 0,
+    net_received_cents: 0,
+    payment_fees_cents: 0,
     pending_cents: 0,
     discount_cents: 0,
     subtotal_cents: 0,
@@ -147,7 +180,7 @@ function summarizeSales(rows: any[]) {
     hourly_activity: [] as any[]
   };
 
-  const products = new Map<string, { name: string; quantity: number; gross_cents: number }>();
+  const products = new Map<string, { name: string; quantity: number; gross_cents: number; paid_revenue_cents: number; paid_cost_cents: number; paid_cost_known: boolean; revenue_allocation_known: boolean }>();
   const methods = new Map<string, { method: string; sales_count: number; paid_count: number; pending_count: number; received_cents: number; pending_cents: number }>();
   const days = new Map<string, { date: string; sales_count: number; paid_count: number; sold_cents: number; received_cents: number; pending_cents: number }>();
   const weekdays = new Map<string, number>();
@@ -170,6 +203,11 @@ function summarizeSales(rows: any[]) {
     if (paid) {
       result.paid_count += 1;
       result.received_cents += total;
+      const fee = Number(sale.payment_fee_cents) || 0;
+      result.payment_fees_cents += fee;
+      result.net_received_cents += sale.net_received_cents !== null && sale.net_received_cents !== undefined
+        ? Number(sale.net_received_cents) || 0
+        : Math.max(0, total - fee);
     } else {
       result.pending_count += 1;
       result.pending_cents += total;
@@ -193,16 +231,28 @@ function summarizeSales(rows: any[]) {
       const name = cleanText(item?.product_name, 180) || "Item sem descrição";
       const quantity = Number(item?.quantity) || 0;
       const line = Number(item?.line_total_cents) || 0;
-      const product = products.get(name) || { name, quantity: 0, gross_cents: 0 };
+      const product = products.get(name) || {
+        name, quantity: 0, gross_cents: 0,
+        paid_revenue_cents: 0, paid_cost_cents: 0, paid_cost_known: true, revenue_allocation_known: true
+      };
       product.quantity += quantity;
       product.gross_cents += line;
-      products.set(name, product);
+      if (sale.is_historical_import && (item?.line_total_cents === null || item?.line_total_cents === undefined)) product.revenue_allocation_known = false;
       result.units_sold += quantity;
-      if (item?.unit_cost_cents === null || item?.unit_cost_cents === undefined || !Number.isSafeInteger(Number(item.unit_cost_cents))) {
+      const itemCostKnown = item?.unit_cost_cents !== null &&
+        item?.unit_cost_cents !== undefined &&
+        Number.isSafeInteger(Number(item.unit_cost_cents)) &&
+        Number(item.unit_cost_cents) >= 0;
+      if (!itemCostKnown) {
         saleCostKnown = false;
+        if (paid) product.paid_cost_known = false;
       } else {
-        saleCost += Number(item.unit_cost_cents) * quantity;
+        const itemCost = Number(item.unit_cost_cents) * quantity;
+        saleCost += itemCost;
+        if (paid) product.paid_cost_cents += itemCost;
       }
+      if (paid) product.paid_revenue_cents += line;
+      products.set(name, product);
     }
 
     if (saleCostKnown && Array.isArray(sale.items) && sale.items.length) {
@@ -248,6 +298,15 @@ function summarizeSales(rows: any[]) {
   result.discount_rate_percent = result.subtotal_cents
     ? Math.round((result.discount_cents / result.subtotal_cents) * 1000) / 10 : 0;
   result.top_products = [...products.values()]
+    .map((product) => ({
+      ...product,
+      gross_profit_cents: product.paid_cost_known
+        ? product.paid_revenue_cents - product.paid_cost_cents
+        : null,
+      gross_margin_percent: product.paid_cost_known && product.paid_revenue_cents
+        ? Math.round(((product.paid_revenue_cents - product.paid_cost_cents) / product.paid_revenue_cents) * 1000) / 10
+        : null
+    }))
     .sort((a, b) => b.quantity - a.quantity || b.gross_cents - a.gross_cents)
     .slice(0, 8);
   result.payment_methods = [...methods.values()]
@@ -283,7 +342,7 @@ async function readSalesForAnalytics(userId: string, from: string, to: string) {
 
   for (let offset = 0; offset < maximumRows; offset += pageSize) {
     const { data, error } = await admin.from("management_sales")
-      .select("created_at, items, subtotal_cents, discount_cents, total_cents, payment_method, payment_status")
+      .select("created_at, items, subtotal_cents, discount_cents, total_cents, payment_method, payment_status, payment_fee_cents, net_received_cents, is_historical_import")
       .eq("created_by", userId)
       .gte("created_at", from)
       .lte("created_at", to)
@@ -338,57 +397,315 @@ Deno.serve(async (request: Request) => {
     if ("error" in auth) return reply({ error: auth.error }, auth.status, origin);
 
     const action = body.action;
-
-    if (action === "website-sync-retry") {
-      const limit = Math.min(50, Math.max(1, Math.trunc(Number(body.limit) || 50)));
-      const { data: pendingOrders, error: pendingError } = await admin.from("orders")
-        .select("id, order_number, management_sales_sync_status")
-        .eq("source", "website")
-        .eq("payment_provider", "infinitepay")
-        .eq("payment_status", "paid")
-        .in("management_sales_sync_status", ["pending", "error", "not_applicable"])
-        .order("paid_at", { ascending: true })
-        .limit(limit);
-      if (pendingError) throw pendingError;
-
-      let synced = 0;
-      let failed = 0;
-      const results: any[] = [];
-      for (const order of pendingOrders || []) {
-        const { data, error } = await admin.rpc("sync_online_order_to_management_sale", {
-          p_order_id: order.id
-        });
-        if (error || data?.synced !== true) {
-          failed += 1;
-          results.push({
-            order_number: order.order_number,
-            outcome: "error"
-          });
-        } else {
-          synced += 1;
-          results.push({
-            order_number: order.order_number,
-            outcome: data.outcome || "synced"
-          });
+    if (action === "customers-list") {
+      const q = cleanText(body.q, 100);
+      const limit = Math.min(200, Math.max(1, Math.trunc(Number(body.limit) || 100)));
+      let customers: any[] = [];
+      if (q) {
+        const pattern = "%" + q + "%";
+        const queries = await Promise.all([
+          admin.from("management_customers").select("id, full_name, phone, email, notes, created_at, updated_at")
+            .eq("created_by", auth.user.id).is("archived_at", null).ilike("full_name", pattern).order("full_name").limit(limit),
+          admin.from("management_customers").select("id, full_name, phone, email, notes, created_at, updated_at")
+            .eq("created_by", auth.user.id).is("archived_at", null).ilike("phone", pattern).order("full_name").limit(limit),
+          admin.from("management_customers").select("id, full_name, phone, email, notes, created_at, updated_at")
+            .eq("created_by", auth.user.id).is("archived_at", null).ilike("email", pattern).order("full_name").limit(limit)
+        ]);
+        for (const result of queries) {
+          if (result.error) throw result.error;
         }
+        const unique = new Map<string, any>();
+        for (const result of queries) for (const customer of result.data || []) unique.set(customer.id, customer);
+        customers = [...unique.values()].sort((a, b) => a.full_name.localeCompare(b.full_name, "pt-BR")).slice(0, limit);
+      } else {
+        const { data, error } = await admin.from("management_customers")
+          .select("id, full_name, phone, email, notes, created_at, updated_at")
+          .eq("created_by", auth.user.id).is("archived_at", null)
+          .order("full_name", { ascending: true }).limit(limit);
+        if (error) throw error;
+        customers = data || [];
       }
-
+      const ids = customers.map((customer) => customer.id);
+      let addresses: any[] = [];
+      let sales: any[] = [];
+      let linkedOrders: any[] = [];
+      let customerSalesHistoryTruncated = false;
+      let customerOrdersHistoryTruncated = false;
+      if (ids.length) {
+        const [addressResult, salesResult, orderResult] = await Promise.all([
+          admin.from("management_customer_addresses")
+            .select("id, customer_id, address_label, postal_code, street, number, complement, district, city, state, is_primary")
+            .in("customer_id", ids).order("is_primary", { ascending: false }).order("created_at", { ascending: true }),
+          admin.from("management_sales")
+            .select("id, customer_id, source_order_id, sale_number, created_at, paid_at, total_cents, payment_status", { count: "exact" })
+            .eq("created_by", auth.user.id).in("customer_id", ids)
+            .order("created_at", { ascending: false }).limit(10000),
+          admin.from("orders")
+            .select("id, management_customer_id, management_sale_id, order_number, created_at, paid_at, total_amount, payment_status, source", { count: "exact" })
+            .in("management_customer_id", ids).in("source", ["website", "whatsapp"])
+            .order("created_at", { ascending: false }).limit(10000)
+        ]);
+        if (addressResult.error) throw addressResult.error;
+        if (salesResult.error) throw salesResult.error;
+        if (orderResult.error) throw orderResult.error;
+        addresses = addressResult.data || [];
+        sales = salesResult.data || [];
+        linkedOrders = orderResult.data || [];
+        customerSalesHistoryTruncated = (salesResult.count || 0) > sales.length;
+        customerOrdersHistoryTruncated = (orderResult.count || 0) > linkedOrders.length;
+      }
+      const addressMap = new Map<string, any[]>();
+      for (const address of addresses) {
+        const list = addressMap.get(address.customer_id) || [];
+        list.push(address);
+        addressMap.set(address.customer_id, list);
+      }
+      const salesByCustomer = new Map<string, any[]>();
+      for (const sale of sales) {
+        const list = salesByCustomer.get(sale.customer_id) || [];
+        list.push(sale);
+        salesByCustomer.set(sale.customer_id, list);
+      }
+      const ordersByCustomer = new Map<string, any[]>();
+      for (const order of linkedOrders) {
+        const list = ordersByCustomer.get(order.management_customer_id) || [];
+        list.push(order);
+        ordersByCustomer.set(order.management_customer_id, list);
+      }
       return reply({
         ok: true,
-        scanned: (pendingOrders || []).length,
-        synced,
-        failed,
-        results,
-        batch_limit: limit
+        customers: customers.map((customer) => {
+          const customerOrders = ordersByCustomer.get(customer.id) || [];
+          const cashSales = filterStandaloneCustomerSales(
+            salesByCustomer.get(customer.id) || [],
+            customerOrders
+          );
+          const lastCashSale = cashSales[0]?.created_at || null;
+          const lastOnlineOrder = customerOrders[0]?.created_at || null;
+          const lastActivity = [lastCashSale, lastOnlineOrder].filter(Boolean).sort().at(-1) || null;
+          return {
+            ...customer,
+            addresses: addressMap.get(customer.id) || [],
+            cash_sales_count: cashSales.length,
+            online_orders_count: customerOrders.length,
+            last_activity_at: lastActivity,
+            history_truncated: customerSalesHistoryTruncated || customerOrdersHistoryTruncated
+          };
+        })
       }, 200, origin);
     }
+
+    if (action === "customer-get") {
+      if (!isUuid(body.customer_id)) return reply({ error: "Cliente não encontrado." }, 400, origin);
+      const { data: customer, error: customerError } = await admin.from("management_customers")
+        .select("id, full_name, phone, email, notes, created_at, updated_at")
+        .eq("id", body.customer_id).eq("created_by", auth.user.id).is("archived_at", null).maybeSingle();
+      if (customerError) throw customerError;
+      if (!customer) return reply({ error: "Cliente não encontrado." }, 404, origin);
+      const [addressResult, salesResult, ordersResult] = await Promise.all([
+        admin.from("management_customer_addresses")
+          .select("id, address_label, postal_code, street, number, complement, district, city, state, is_primary")
+          .eq("customer_id", customer.id).order("is_primary", { ascending: false }).order("created_at", { ascending: true }),
+        admin.from("management_sales")
+          .select("id, sale_number, created_at, paid_at, source_order_id, total_cents, payment_status, payment_method, source, items", { count: "exact" })
+          .eq("created_by", auth.user.id).eq("customer_id", customer.id)
+          .order("created_at", { ascending: false }).limit(1000),
+        admin.from("orders")
+          .select("id, management_sale_id, order_number, status, payment_status, payment_method, source, total_amount, created_at, paid_at, fulfillment_type, dispatch_started_at, dispatched_at, route_started_at, delivered_at", { count: "exact" })
+          .eq("management_customer_id", customer.id).in("source", ["website", "whatsapp"])
+          .order("created_at", { ascending: false }).limit(1000)
+      ]);
+      if (addressResult.error) throw addressResult.error;
+      if (salesResult.error) throw salesResult.error;
+      if (ordersResult.error) throw ordersResult.error;
+
+      const sales = salesResult.data || [];
+      const orders = ordersResult.data || [];
+      const standaloneSales = filterStandaloneCustomerSales(sales, orders);
+      const orderIds = orders.map((order: any) => order.id);
+      let orderItems: any[] = [];
+      if (orderIds.length) {
+        const { data, error } = await admin.from("order_items")
+          .select("order_id, product_id, sku, product_name, quantity, unit_price, line_total, product_snapshot")
+          .in("order_id", orderIds).limit(30000);
+        if (error) throw error;
+        orderItems = data || [];
+      }
+      const orderItemsById = new Map<string, any[]>();
+      for (const item of orderItems) {
+        const list = orderItemsById.get(item.order_id) || [];
+        list.push(item);
+        orderItemsById.set(item.order_id, list);
+      }
+      const ordersWithItems = orders.map((order: any) => ({
+        ...order,
+        items: (orderItemsById.get(order.id) || []).map((item: any) => {
+          const snapshot = item.product_snapshot && typeof item.product_snapshot === "object" && !Array.isArray(item.product_snapshot)
+            ? item.product_snapshot : {};
+          const selected = Array.isArray(snapshot.selected_components) ? snapshot.selected_components[0] : null;
+          return {
+            product_id: item.product_id,
+            sku: item.sku,
+            product_name: item.product_name,
+            quantity: item.quantity,
+            unit_price: item.unit_price,
+            line_total: item.line_total,
+            is_gift: snapshot.is_gift === true || snapshot.is_gift === "true",
+            selected_dice_product_name: cleanText(snapshot.selected_dice_product_name, 180) || cleanText(selected?.product_name, 180)
+          };
+        })
+      }));
+      const salesForDisplay = standaloneSales.slice(0, 50).map((sale: any) => ({
+        id: sale.id,
+        sale_number: sale.sale_number,
+        created_at: sale.created_at,
+        paid_at: sale.paid_at,
+        total_cents: sale.total_cents,
+        payment_status: sale.payment_status,
+        payment_method: sale.payment_method,
+        source: sale.source,
+        items: (Array.isArray(sale.items) ? sale.items : []).map((item: any) => ({
+          product_name: cleanText(item?.product_name, 180) || "Item sem descrição",
+          quantity: Number(item?.quantity) || 0,
+          is_gift: item?.is_gift === true,
+          is_kit_component: item?.is_kit_component === true
+        }))
+      }));
+      const ordersForDisplay = ordersWithItems.slice(0, 100);
+      const salesHistoryTruncated = sales.length >= 1000 || standaloneSales.length > salesForDisplay.length;
+      const ordersHistoryTruncated = orders.length >= 1000 || ordersWithItems.length > ordersForDisplay.length || orderItems.length >= 30000;
+      return reply({
+        ok: true,
+        customer,
+        addresses: addressResult.data || [],
+        sales: salesForDisplay,
+        sales_summary: {
+          total_count: standaloneSales.length,
+          returned_count: salesForDisplay.length,
+          history_truncated: salesHistoryTruncated
+        },
+        orders: ordersForDisplay,
+        order_summary: {
+          total_count: ordersResult.count || 0,
+          returned_count: ordersForDisplay.length,
+          history_truncated: ordersHistoryTruncated
+        },
+      }, 200, origin);
+    }
+
+    if (action === "customer-insights" || action === "analytics") {
+      return reply({
+        error: "Esta análise pertence à Luxuriosa Inteligência.",
+        target: "luxuriosa-intelligence",
+        supported_actions: ["customer-insights", "customer-rfv", "analytics"]
+      }, 410, origin);
+    }
+
+    if (action === "customer-save") {
+      const customerId = body.customer_id == null || body.customer_id === "" ? null : body.customer_id;
+      if (customerId !== null && !isUuid(customerId)) return reply({ error: "Identificador do cliente inválido." }, 400, origin);
+      const fullName = cleanText(body.full_name, 150);
+      const phone = cleanText(body.phone, 30);
+      const email = cleanText(body.email, 150);
+      const notes = cleanText(body.notes, 500);
+      if (!fullName) return reply({ error: "Informe o nome do cliente." }, 400, origin);
+      if (!Array.isArray(body.addresses) || body.addresses.length > 10) {
+        return reply({ error: "Informe uma lista válida com até dez endereços." }, 400, origin);
+      }
+      const addresses = body.addresses.map((item: any) => ({
+        label: cleanText(item?.label, 80) || "Principal",
+        postal_code: cleanText(item?.postal_code, 12),
+        street: cleanText(item?.street, 180),
+        number: cleanText(item?.number, 30),
+        complement: cleanText(item?.complement, 100),
+        district: cleanText(item?.district, 100),
+        city: cleanText(item?.city, 100),
+        state: (cleanText(item?.state, 2) || "").toUpperCase(),
+        is_primary: item?.is_primary === true
+      }));
+      if (addresses.filter((address: any) => address.is_primary).length > 1) {
+        return reply({ error: "Defina somente um endereço principal." }, 400, origin);
+      }
+      const { data: saved, error: saveError } = await admin.rpc("management_save_customer", {
+        p_customer_id: customerId,
+        p_actor_user_id: auth.user.id,
+        p_full_name: fullName,
+        p_phone: phone || null,
+        p_email: email || null,
+        p_notes: notes || null,
+        p_addresses: addresses
+      });
+      if (saveError) {
+        if (saveError.code === "P0002") return reply({ error: "Cliente não encontrado. Atualize a lista." }, 404, origin);
+        if (saveError.code === "22023") return reply({ error: saveError.message }, 400, origin);
+        throw saveError;
+      }
+      const { data: customer, error: fetchError } = await admin.from("management_customers")
+        .select("id, full_name, phone, email, notes, created_at, updated_at")
+        .eq("id", saved?.id).eq("created_by", auth.user.id).single();
+      if (fetchError) throw fetchError;
+      return reply({ ok: true, customer }, 200, origin);
+    }
+
+    if (action === "customer-archive") {
+      if (!isUuid(body.customer_id)) return reply({ error: "Identificador do cliente inválido." }, 400, origin);
+      const { data: archived, error: archiveError } = await admin.rpc("management_archive_customer", {
+        p_customer_id: body.customer_id,
+        p_actor_user_id: auth.user.id
+      });
+      if (archiveError) throw archiveError;
+      if (archived?.archived !== true) return reply({ error: "Cliente não encontrado ou já arquivado." }, 404, origin);
+      return reply({ ok: true, archived: true }, 200, origin);
+    }
+
 
     if (action === "cost-list") {
       const { data, error } = await admin.from("management_product_costs")
         .select("product_id, product_name, unit_cost_cents, updated_at")
         .order("product_name", { ascending: true });
       if (error) throw error;
-      return reply({ ok: true, costs: data || [] }, 200, origin);
+      const { data: recipes, error: recipeError } = await admin.from("management_kit_components")
+        .select("kit_product_id, kit_product_name, component_product_id, component_product_name, quantity, is_variant, component_group")
+        .order("kit_product_id", { ascending: true });
+      if (recipeError) throw recipeError;
+      const costMap = new Map((data || []).map((row) => [row.product_id, Number(row.unit_cost_cents)]));
+      const grouped = new Map<string, any[]>();
+      for (const row of recipes || []) {
+        const group = grouped.get(row.kit_product_id) || [];
+        group.push(row);
+        grouped.set(row.kit_product_id, group);
+      }
+      const kits = [...KIT_PRODUCT_IDS].map((kitId) => {
+        const components = grouped.get(kitId) || [];
+        const base = components.filter((row) => row.is_variant !== true);
+        const variants = components.filter((row) => row.is_variant === true);
+        let baseCost = 0;
+        let baseComplete = base.length > 0;
+        for (const component of base) {
+          const unitCost = costMap.get(component.component_product_id);
+          if (unitCost === undefined || !Number.isSafeInteger(unitCost)) { baseComplete = false; break; }
+          baseCost += unitCost * Number(component.quantity);
+        }
+        const variantOptions = variants.map((component) => ({
+          product_id: component.component_product_id,
+          product_name: component.component_product_name,
+          unit_cost_cents: costMap.get(component.component_product_id) ?? null
+        }));
+        const allVariantsCosted = variantOptions.length > 0 && variantOptions.every((option) =>
+          option.unit_cost_cents !== null && Number.isSafeInteger(option.unit_cost_cents)
+        );
+        const fixedComplete = baseComplete && variants.length === 0;
+        return {
+          product_id: kitId,
+          product_name: components[0]?.kit_product_name || ("Kit " + kitId),
+          components_registered: components.length,
+          base_cost_cents: baseComplete ? baseCost : null,
+          variant_options: variantOptions,
+          cost_status: fixedComplete ? "complete" : (baseComplete && allVariantsCosted ? "variant_required" : "incomplete"),
+          unit_cost_cents: fixedComplete ? baseCost : null
+        };
+      });
+      return reply({ ok: true, costs: data || [], kits }, 200, origin);
     }
 
     if (action === "cost-upsert-bulk") {
@@ -568,7 +885,7 @@ Deno.serve(async (request: Request) => {
 
     if (action === "kit-recipes-list") {
       const { data, error } = await admin.from("management_kit_components")
-        .select("kit_product_id, kit_product_name, component_product_id, component_product_name, quantity, updated_at")
+        .select("kit_product_id, kit_product_name, component_product_id, component_product_name, quantity, component_group, is_variant, updated_at")
         .order("kit_product_name", { ascending: true })
         .order("component_product_name", { ascending: true });
       if (error) throw error;
@@ -687,9 +1004,8 @@ Deno.serve(async (request: Request) => {
         if (costError) throw costError;
         const costMap = new Map((costs || []).map((row) => [row.product_id, Number(row.unit_cost_cents)]));
 
-        // Fixed kits inherit their unit cost from the configured component recipe.
         const { data: kitComponents, error: kitError } = await admin.from("management_kit_components")
-          .select("kit_product_id, component_product_id, quantity")
+          .select("kit_product_id, component_product_id, component_product_name, quantity, is_variant, component_group")
           .in("kit_product_id", productIds);
         if (kitError) throw kitError;
         const componentIds = [...new Set((kitComponents || []).map((row) => row.component_product_id))];
@@ -701,39 +1017,55 @@ Deno.serve(async (request: Request) => {
           if (componentCostError) throw componentCostError;
           for (const row of componentCosts || []) componentCostMap.set(row.product_id, Number(row.unit_cost_cents));
         }
-
-        const kitCostMap = new Map<string, number | null>();
         const kitGroups = new Map<string, any[]>();
         for (const component of kitComponents || []) {
           const group = kitGroups.get(component.kit_product_id) || [];
           group.push(component);
           kitGroups.set(component.kit_product_id, group);
         }
-        for (const [kitId, components] of kitGroups) {
-          let total = 0;
-          let complete = components.length > 0;
-          for (const component of components) {
-            const unitCost = componentCostMap.get(component.component_product_id);
-            if (unitCost === undefined || !Number.isSafeInteger(unitCost)) {
-              complete = false;
-              break;
-            }
-            total += unitCost * Number(component.quantity);
-          }
-          kitCostMap.set(kitId, complete && Number.isSafeInteger(total) ? total : null);
-        }
 
         for (const item of items) {
-          if (item.product_id && kitCostMap.has(item.product_id)) {
-            item.unit_cost_cents = kitCostMap.get(item.product_id);
+          const components = item.product_id ? kitGroups.get(item.product_id) || [] : [];
+          if (components.length) {
+            const baseComponents = components.filter((component) => component.is_variant !== true);
+            const variants = components.filter((component) => component.is_variant === true);
+            let total = 0;
+            let complete = baseComponents.length > 0;
+            for (const component of baseComponents) {
+              const unitCost = componentCostMap.get(component.component_product_id);
+              if (unitCost === undefined || !Number.isSafeInteger(unitCost)) { complete = false; break; }
+              total += unitCost * Number(component.quantity);
+            }
+            if (variants.length) {
+              const selected = variants.find((component) =>
+                component.component_product_id === item.selected_dice_product_id
+              );
+              if (!selected) {
+                if (KIT_VARIANT_PRODUCT_IDS.has(item.product_id)) {
+                  return reply({ error: "Escolha a versão do Dado do Prazer para o kit " + item.product_name + "." }, 400, origin);
+                }
+                complete = false;
+              } else {
+                const variantCost = componentCostMap.get(selected.component_product_id);
+                if (variantCost === undefined || !Number.isSafeInteger(variantCost)) complete = false;
+                else total += variantCost * Number(selected.quantity);
+                item.selected_dice_product_name = selected.component_product_name;
+              }
+            } else if (item.selected_dice_product_id) {
+              return reply({ error: "Este produto não aceita variação de dado." }, 400, origin);
+            }
+            item.unit_cost_cents = complete && Number.isSafeInteger(total) ? total : null;
           } else {
+            if (item.selected_dice_product_id) return reply({ error: "Seleção de dado inválida para este produto." }, 400, origin);
             item.unit_cost_cents = item.product_id && costMap.has(item.product_id)
-              ? costMap.get(item.product_id)
-              : null;
+              ? costMap.get(item.product_id) : null;
           }
         }
       } else {
-        for (const item of items) item.unit_cost_cents = null;
+        for (const item of items) {
+          if (item.selected_dice_product_id) return reply({ error: "Seleção de dado inválida para este produto." }, 400, origin);
+          item.unit_cost_cents = null;
+        }
       }
       const subtotal = items.reduce((sum, item) => sum + item.line_total_cents, 0);
       if (!Number.isSafeInteger(subtotal) || subtotal <= 0) return reply({ error: "Subtotal inválido." }, 400, origin);
@@ -761,9 +1093,20 @@ Deno.serve(async (request: Request) => {
         return reply({ error: "Para esta forma de pagamento, o valor recebido deve ser igual ao total." }, 400, origin);
       }
 
-      const customerName = cleanText(body.customer_name, 120) || null;
+      const customerId = body.customer_id == null || body.customer_id === "" ? null : body.customer_id;
+      if (customerId !== null && !isUuid(customerId)) return reply({ error: "Cliente selecionado inválido." }, 400, origin);
+      let customerName = cleanText(body.customer_name, 120) || null;
+      if (customerId) {
+        const { data: customer, error: customerError } = await admin.from("management_customers")
+          .select("id, full_name")
+          .eq("id", customerId).eq("created_by", auth.user.id).is("archived_at", null).maybeSingle();
+        if (customerError) throw customerError;
+        if (!customer) return reply({ error: "O cliente selecionado não está disponível. Atualize o cadastro e tente novamente." }, 409, origin);
+        customerName = customer.full_name;
+      }
       const change = paymentStatus === "paid" ? received - total : 0;
       const requestHash = await hashPayload({
+        customer_id: customerId,
         customer_name: customerName,
         items,
         subtotal_cents: subtotal,
@@ -780,6 +1123,7 @@ Deno.serve(async (request: Request) => {
           created_by: auth.user.id,
           idempotency_key: body.idempotency_key,
           request_hash: requestHash,
+          customer_id: customerId,
           customer_name: customerName,
           items,
           subtotal_cents: subtotal,
@@ -791,12 +1135,12 @@ Deno.serve(async (request: Request) => {
           amount_received_cents: received,
           change_cents: change
         })
-        .select("id, sale_number, created_at, customer_name, items, subtotal_cents, discount_cents, total_cents, payment_method, payment_status, amount_received_cents, change_cents, paid_at, source, source_order_id, shipping_cents, stock_control_status, stock_issue")
+        .select("id, sale_number, created_at, customer_id, customer_name, items, subtotal_cents, discount_cents, total_cents, payment_method, payment_status, amount_received_cents, change_cents, paid_at, source, source_order_id, shipping_cents, stock_control_status, stock_issue, is_historical_import, historical_note, payment_fee_cents, net_received_cents, payment_network, payment_installments")
         .single();
 
       if (insertError?.code === "23505") {
         const { data: reused, error: retryError } = await admin.from("management_sales")
-          .select("id, sale_number, created_at, customer_name, items, subtotal_cents, discount_cents, total_cents, payment_method, payment_status, amount_received_cents, change_cents, paid_at, source, source_order_id, shipping_cents, stock_control_status, stock_issue, request_hash")
+          .select("id, sale_number, created_at, customer_id, customer_name, items, subtotal_cents, discount_cents, total_cents, payment_method, payment_status, amount_received_cents, change_cents, paid_at, source, source_order_id, shipping_cents, stock_control_status, stock_issue, request_hash")
           .eq("created_by", auth.user.id)
           .eq("idempotency_key", body.idempotency_key)
           .single();
@@ -815,12 +1159,15 @@ Deno.serve(async (request: Request) => {
       if (!isUuid(body.id)) return reply({ error: "Comprovante não encontrado." }, 400, origin);
 
       const { data: currentSale, error: currentError } = await admin.from("management_sales")
-        .select("id, sale_number, created_at, customer_name, items, subtotal_cents, discount_cents, total_cents, payment_method, payment_status, amount_received_cents, change_cents, paid_at, source, source_order_id, shipping_cents, stock_control_status, stock_issue")
+        .select("id, sale_number, created_at, customer_id, customer_name, items, subtotal_cents, discount_cents, total_cents, payment_method, payment_status, amount_received_cents, change_cents, paid_at, source, source_order_id, shipping_cents, stock_control_status, stock_issue, is_historical_import, historical_note, payment_fee_cents, net_received_cents, payment_network, payment_installments")
         .eq("id", body.id)
         .eq("created_by", auth.user.id)
         .maybeSingle();
       if (currentError) throw currentError;
       if (!currentSale) return reply({ error: "Comprovante não encontrado." }, 404, origin);
+      if (currentSale.source === "website") {
+        return reply({ error: "Pedidos online só podem ser confirmados pelo retorno validado da InfinitePay ou pela conciliação do pedido. Não use a confirmação manual do caixa." }, 409, origin);
+      }
 
       const received = Number(body.amount_received_cents ?? currentSale.total_cents);
       if (!Number.isSafeInteger(received) || received < currentSale.total_cents || received > 1000000000) {
@@ -847,14 +1194,14 @@ Deno.serve(async (request: Request) => {
         .eq("id", body.id)
         .eq("created_by", auth.user.id)
         .eq("payment_status", "pending")
-        .select("id, sale_number, created_at, customer_name, items, subtotal_cents, discount_cents, total_cents, payment_method, payment_status, amount_received_cents, change_cents, paid_at, source, source_order_id, shipping_cents, stock_control_status, stock_issue")
+        .select("id, sale_number, created_at, customer_id, customer_name, items, subtotal_cents, discount_cents, total_cents, payment_method, payment_status, amount_received_cents, change_cents, paid_at, source, source_order_id, shipping_cents, stock_control_status, stock_issue, is_historical_import, historical_note, payment_fee_cents, net_received_cents, payment_network, payment_installments")
         .maybeSingle();
 
       if (updateError) throw updateError;
       if (updated) return reply({ ok: true, sale: updated, reused: false }, 200, origin);
 
       const { data: raced, error: raceError } = await admin.from("management_sales")
-        .select("id, sale_number, created_at, customer_name, items, subtotal_cents, discount_cents, total_cents, payment_method, payment_status, amount_received_cents, change_cents, paid_at, source, source_order_id, shipping_cents, stock_control_status, stock_issue")
+        .select("id, sale_number, created_at, customer_id, customer_name, items, subtotal_cents, discount_cents, total_cents, payment_method, payment_status, amount_received_cents, change_cents, paid_at, source, source_order_id, shipping_cents, stock_control_status, stock_issue, is_historical_import, historical_note, payment_fee_cents, net_received_cents, payment_network, payment_installments")
         .eq("id", body.id)
         .eq("created_by", auth.user.id)
         .maybeSingle();
@@ -1006,6 +1353,17 @@ const PRODUCT_INTEREST_MAP: Record<string, string> = {
   "22": "kits_presentes", "23": "kits_presentes", "24": "kits_presentes",
   "25": "kits_presentes", "26": "kits_presentes", "27": "kits_presentes",
   "28": "kits_presentes", "29": "kits_presentes"
+};
+
+const CUSTOMER_COMPLEMENTARY_CATEGORIES: Record<string, string[]> = {
+  geles_lubrificantes: ["acessorios_casais", "massagem_relaxamento"],
+  acessorios_casais: ["geles_lubrificantes", "jogos_brincadeiras"],
+  estimulacao: ["geles_lubrificantes", "massagem_relaxamento"],
+  jogos_brincadeiras: ["acessorios_casais", "geles_lubrificantes"],
+  cosmeticos_sensuais: ["massagem_relaxamento", "geles_lubrificantes"],
+  massagem_relaxamento: ["cosmeticos_sensuais", "geles_lubrificantes"],
+  fantasias_acessorios: ["acessorios_casais", "kits_presentes"],
+  kits_presentes: ["geles_lubrificantes", "acessorios_casais"]
 };
 
 type CustomerInterestStat = {
@@ -1316,7 +1674,7 @@ async function readCustomerInsights(from: string, to: string, periodDays: number
     if (action === "list") {
       const limit = Math.min(50, Math.max(1, Math.trunc(Number(body.limit) || 20)));
       const { data, error } = await admin.from("management_sales")
-        .select("id, sale_number, created_at, customer_name, items, subtotal_cents, discount_cents, total_cents, payment_method, payment_status, amount_received_cents, change_cents, paid_at, source, source_order_id, shipping_cents, stock_control_status, stock_issue")
+        .select("id, sale_number, created_at, customer_id, customer_name, items, subtotal_cents, discount_cents, total_cents, payment_method, payment_status, amount_received_cents, change_cents, paid_at, source, source_order_id, shipping_cents, stock_control_status, stock_issue, is_historical_import, historical_note, payment_fee_cents, net_received_cents, payment_network, payment_installments")
         .eq("created_by", auth.user.id)
         .order("created_at", { ascending: false })
         .limit(limit);
@@ -1327,7 +1685,7 @@ async function readCustomerInsights(from: string, to: string, periodDays: number
     if (action === "get") {
       if (!isUuid(body.id)) return reply({ error: "Comprovante não encontrado." }, 400, origin);
       const { data, error } = await admin.from("management_sales")
-        .select("id, sale_number, created_at, customer_name, items, subtotal_cents, discount_cents, total_cents, payment_method, payment_status, amount_received_cents, change_cents, paid_at, source, source_order_id, shipping_cents, stock_control_status, stock_issue")
+        .select("id, sale_number, created_at, customer_id, customer_name, items, subtotal_cents, discount_cents, total_cents, payment_method, payment_status, amount_received_cents, change_cents, paid_at, source, source_order_id, shipping_cents, stock_control_status, stock_issue, is_historical_import, historical_note, payment_fee_cents, net_received_cents, payment_network, payment_installments")
         .eq("id", body.id)
         .eq("created_by", auth.user.id)
         .maybeSingle();
