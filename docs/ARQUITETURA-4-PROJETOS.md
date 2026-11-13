@@ -56,7 +56,7 @@ Este documento é a referência para separar responsabilidades e nomes. Slugs e 
 - `management_customers`, `management_customer_addresses`: cadastro comercial, contatos e endereços.
 - `management-sales`: API de operação da Gestão: caixa, vendas, comprovantes, clientes, custos, estoque, kits e despesas.
 
-**Regra:** Gestão mantém e executa registros operacionais. Seu histórico de cliente pode mostrar compras vinculadas e itens pagos/brindes separados, mas não apresenta segmentação RFV, scoring, recomendações, análise de comportamento ou oportunidades comerciais. O backend `management-sales` não calcula nem retorna esses campos; as ações analíticas antigas respondem HTTP 410 e encaminham para a Inteligência.
+**Regra:** Gestão mantém e executa registros operacionais. A lista/ficha de clientes mostra cadastro, endereços, contagem simples de registros e histórico individual de vendas/pedidos, com itens, brindes, pagamento e etapa de entrega. Não calcula nem apresenta frequência paga, valor bruto acumulado, ticket médio, recência, estágio de relacionamento, consumo agregado, RFV ou recomendações. Esses indicadores pertencem à Inteligência. O backend `management-sales` não calcula nem retorna agregados comportamentais; ações analíticas antigas respondem HTTP 410.
 
 Vendas presenciais nascem na Gestão. Pedidos online nascem em Pedidos Online e, após confirmação do pagamento e sincronização idempotente, aparecem no livro operacional sem criar uma segunda venda ou cobrança.
 
@@ -167,6 +167,7 @@ Esta seção prevalece sobre descrições históricas anteriores neste documento
 
 - Ação de leitura: `luxuriosa-intelligence` / `customer-rfv`, protegida por JWT e papel administrativo.
 - A implementação é compartilhada em `supabase/functions/_shared/customer-rfv.mjs`, com testes unitários.
+- A Gestão mantém apenas histórico individual por transação e contagens simples de registros; não faz agregação de frequência, valor, ticket, recência ou consumo de produtos por cliente.
 - RFV usa histórico de vendas pagas e pedidos explicitamente vinculados; sincronizações online são deduplicadas.
 - Sugestões de produto usam apenas pedidos pagos de contas com consentimento de personalização v2 vigente.
 - Gestão mantém cadastro e histórico, e não exibe nem calcula RFV.
