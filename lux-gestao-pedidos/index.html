@@ -50,6 +50,16 @@ input,select{width:100%;min-width:0;border:1px solid var(--line);border-radius:8
 @media(max-width:850px){.toolbar{grid-template-columns:1fr 1fr}.toolbar .search-wrap{grid-column:1/-1}.summary{grid-template-columns:repeat(2,minmax(0,1fr))}.page-head{align-items:flex-start;flex-direction:column}.order-body{grid-template-columns:1fr}.order-head{align-items:flex-start}.order-head-left{align-items:flex-start;flex-direction:column;gap:3px}.order-badges{justify-content:flex-start}}
 @media(max-width:560px){.reconcile-fields{grid-template-columns:1fr}.shell{width:calc(100% - 22px);padding-top:0}header{height:60px;margin:0 -11px;padding:0 11px}.top-link{display:none}.page-head{padding-top:20px}.summary{gap:7px}.summary-card{padding:9px}.summary-value{font-size:19px}.toolbar{grid-template-columns:1fr 1fr}.toolbar .search-wrap{grid-column:1/-1}.toolbar select:nth-of-type(1){grid-column:1}.toolbar select:nth-of-type(2){grid-column:2}.toolbar button{grid-column:1/-1}.order-head,.order-body,.order-foot{padding-left:10px;padding-right:10px}.order-foot{align-items:flex-start;flex-direction:column}.status-edit{width:100%}.status-edit select{flex:1;max-width:none}.login{grid-template-columns:1fr;margin:30px auto 0}.login-intro{padding:21px}.login-intro h1{font-size:25px}.login-form{padding:22px}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{transition:none!important}}</style>
+  <style>
+    .customer-link-panel{display:grid;grid-template-columns:minmax(190px,.8fr) minmax(300px,1.2fr);gap:12px;align-items:center;padding:10px 14px;border-bottom:1px solid var(--line);background:#fdfbfc}
+    .customer-link-info{min-width:0}.customer-link-info .label{margin:0 0 4px}.customer-link-info strong{display:block;font-size:10px;overflow-wrap:anywhere}
+    .customer-link-contact,.customer-link-empty{display:block;margin-top:3px;color:var(--muted);font-size:9px;line-height:1.45}
+    .customer-link-tools{display:grid;gap:6px;min-width:0}.customer-link-controls,.customer-link-selection{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px}
+    .customer-link-selection{grid-template-columns:minmax(0,1fr) auto auto}.customer-link-tools input,.customer-link-tools select{padding:8px 9px;font-size:10px}
+    .customer-link-tools button{padding:8px 10px;font-size:8px;white-space:nowrap}.customer-link-note{font-size:8px;color:var(--muted)}
+    @media(max-width:760px){.customer-link-panel{grid-template-columns:1fr;gap:8px}}
+    @media(max-width:520px){.customer-link-controls,.customer-link-selection{grid-template-columns:1fr 1fr}.customer-link-selection select{grid-column:1/-1}.customer-link-selection button{width:100%}}
+  </style>
 </head>
 <body>
   <main class="shell">
@@ -129,6 +139,120 @@ input,select{width:100%;min-width:0;border:1px solid var(--line);border-radius:8
         return url.protocol==="https:"&&["checkout.infinitepay.io","checkout.infinitepay.com.br"].includes(url.hostname)?url.href:"";
       }catch(_){return "";}
     }
+    function renderCustomerAssociation(order){
+      const panel=node("section","customer-link-panel"),info=node("div","customer-link-info"),tools=node("div","customer-link-tools");
+      info.append(node("div","label","CADASTRO COMERCIAL"));
+      const customer=order.management_customer;
+      if(customer){
+        info.append(node("strong","",customer.full_name||"Cliente cadastrado"));
+        info.append(node("span","customer-link-contact",[
+          customer.phone||"",customer.email||"",customer.archived_at?"CADASTRO ARQUIVADO":""
+        ].filter(Boolean).join(" · ")||"Sem contato cadastrado"));
+      }else{
+        info.append(node("span","customer-link-empty","Sem vínculo. Nome, telefone e endereço originais do pedido permanecem preservados."));
+      }
+
+      const eligible=["website","whatsapp"].includes(String(order.source||""))&&!order.is_test&&!/^teste\b/i.test(String(order.customer_name||""));
+      if(!eligible){
+        panel.append(info);
+        if(order.is_test||/^teste\b/i.test(String(order.customer_name||""))){
+          info.append(node("span","customer-link-empty","Registro de teste: associação comercial desabilitada."));
+        }
+        return panel;
+      }
+
+      const searchInput=node("input","customer-link-search");
+      searchInput.type="search";
+      searchInput.placeholder="Buscar nome, telefone ou e-mail";
+      searchInput.autocomplete="off";
+      searchInput.setAttribute("aria-label","Buscar cliente comercial");
+      const searchButton=node("button","","BUSCAR");
+      searchButton.type="button";
+      const searchRow=node("div","customer-link-controls");
+      searchRow.append(searchInput,searchButton);
+
+      const select=node("select","customer-link-select");
+      select.append(new Option("Selecione o cadastro comercial…",""));
+      select.disabled=true;
+      const saveButton=node("button","primary",customer?"ATUALIZAR VÍNCULO":"VINCULAR");
+      saveButton.type="button";
+      saveButton.disabled=true;
+      const selection=node("div","customer-link-selection");
+      selection.append(select,saveButton);
+      const note=node("span","customer-link-note","A associação só ocorre após selecionar e confirmar um cadastro específico.");
+
+      if(customer){
+        const unlinkButton=node("button","","DESVINCULAR");
+        unlinkButton.type="button";
+        unlinkButton.addEventListener("click",async()=>{
+          if(!window.confirm("Remover o vínculo comercial do pedido #"+order.order_number+"? O pedido continuará preservado."))return;
+          unlinkButton.disabled=true;
+          unlinkButton.textContent="REMOVENDO…";
+          try{
+            await invokeOrdersAdmin({action:"admin_link_management_customer",order_id:order.id,management_customer_id:null,idempotency_key:crypto.randomUUID()});
+            showNotice("Vínculo comercial removido do pedido #"+order.order_number+".");
+            await load();
+          }catch(error){
+            showNotice(error.message,true);
+            unlinkButton.disabled=false;
+            unlinkButton.textContent="DESVINCULAR";
+          }
+        });
+        selection.append(unlinkButton);
+      }
+
+      select.addEventListener("change",()=>{saveButton.disabled=!select.value;});
+      async function searchCustomers(){
+        const q=searchInput.value.trim();
+        if(q.length<2){note.textContent="Digite pelo menos dois caracteres para pesquisar.";return;}
+        searchButton.disabled=true;
+        searchButton.textContent="BUSCANDO…";
+        try{
+          const result=await invokeOrdersAdmin({action:"admin_search_management_customers",q});
+          const customers=Array.isArray(result.customers)?result.customers:[];
+          select.replaceChildren(new Option("Selecione o cadastro comercial…",""));
+          customers.forEach(item=>{
+            const contact=item.phone||item.email||"";
+            select.append(new Option(item.full_name+(contact?" — "+contact:""),item.id));
+          });
+          select.disabled=!customers.length;
+          saveButton.disabled=true;
+          note.textContent=customers.length
+            ?customers.length+" cadastro(s) encontrado(s). Confira os dados antes de vincular."
+            :"Nenhum cadastro ativo encontrado. Cadastre o cliente na aba Clientes do Lux-Gestão.";
+        }catch(error){
+          note.textContent=error.message;
+          showNotice(error.message,true);
+        }finally{
+          searchButton.disabled=false;
+          searchButton.textContent="BUSCAR";
+        }
+      }
+      searchButton.addEventListener("click",searchCustomers);
+      searchInput.addEventListener("keydown",event=>{if(event.key==="Enter"){event.preventDefault();searchCustomers();}});
+      saveButton.addEventListener("click",async()=>{
+        const customerId=select.value;
+        const selectedName=select.selectedOptions[0]?.textContent||"cadastro selecionado";
+        if(!customerId)return;
+        if(!window.confirm("Vincular "+selectedName+" ao pedido #"+order.order_number+"? Confirme que se trata do mesmo cliente."))return;
+        saveButton.disabled=true;
+        saveButton.textContent="VINCULANDO…";
+        try{
+          await invokeOrdersAdmin({action:"admin_link_management_customer",order_id:order.id,management_customer_id:customerId,idempotency_key:crypto.randomUUID()});
+          showNotice("Cadastro comercial associado ao pedido #"+order.order_number+".");
+          await load();
+        }catch(error){
+          showNotice(error.message,true);
+          saveButton.disabled=false;
+          saveButton.textContent=customer?"ATUALIZAR VÍNCULO":"VINCULAR";
+        }
+      });
+
+      tools.append(searchRow,selection,note);
+      panel.append(info,tools);
+      return panel;
+    }
+
     function renderOrder(order){
       const card=node("article","order"),head=node("div","order-head"),left=node("div","order-head-left"),meta=node("div");
       left.append(node("div","order-id","#"+order.order_number));
@@ -153,7 +277,7 @@ input,select{width:100%;min-width:0;border:1px solid var(--line);border-radius:8
       }else if(order.status==="cancelled"){
         badges.append(node("span","status review","Pedido cancelado"));
       }
-      head.append(left,badges);card.append(head);
+      head.append(left,badges);card.append(head,renderCustomerAssociation(order));
       const body=node("div","order-body"),items=node("div","order-panel"),address=node("div","order-panel");
       const itemsLabel=node("div","label","ITENS DO PEDIDO");
       itemsLabel.insertAdjacentHTML("afterbegin",'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 4h16v16H4z"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>');
@@ -282,7 +406,7 @@ input,select{width:100%;min-width:0;border:1px solid var(--line);border-radius:8
       lifecyclePanel.append(node("div","label","HISTÓRICO DE RESOLUÇÃO"));
       if(!lifecycleEvents.length) lifecyclePanel.append(node("div","muted","Nenhuma ocorrência de cancelamento, estorno ou devolução."));
       lifecycleEvents.forEach(event=>{
-        const names={cancelled_unpaid:"Pedido cancelado (não pago)",refund_requested:"Estorno solicitado",refund_confirmed:"Estorno confirmado",return_received:"Devolução física recebida",restock_approved:"Retorno ao estoque aprovado"};
+        const names={cancelled_unpaid:"Pedido cancelado (não pago)",refund_requested:"Estorno solicitado",refund_confirmed:"Estorno confirmado",return_received:"Devolução física recebida",restock_approved:"Retorno ao estoque aprovado",customer_link_changed:"Vínculo do cadastro comercial atualizado"};
         const line=node("div","item");
         const details=node("span","",(names[event.event_type]||event.event_type)+" · "+event.reason+" · "+new Date(event.created_at).toLocaleString("pt-BR"));
         const value=event.amount_cents?node("strong","",money.format(Number(event.amount_cents)/100)):node("span","muted",event.reference||"");
