@@ -150,7 +150,7 @@ Deno.serve(async (req: Request) => {
         .update({
           payment_status: "paid",
           payment_paid_amount_cents: amountCents,
-          payment_confirmation_source: "manual",
+          payment_confirmation_source: "manual_admin",
           payment_confirmed_by: userId,
           paid_at: now,
           status: "confirmed",
