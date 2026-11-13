@@ -19,7 +19,7 @@
     "5514996355924";
 
   var MAX_QUANTIDADE = 99;
-  var VARIABLE_DICE_KIT_IDS = new Set(["22","23","24","26","27","28","29"]);
+  var VARIABLE_DICE_KIT_IDS = new Set(["22","23","24","27","28","29"]);
   var DICE_VARIANTS = {
     "2": { id: "2", name: "Hétero" },
     "1": { id: "1", name: "Gay" },
