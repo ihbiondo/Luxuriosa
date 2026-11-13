@@ -332,3 +332,15 @@ Fontes oficiais consultadas nesta rodada: Ministério da Saúde (Brasil), CDC, O
 
 Fontes consultadas: Ministério da Saúde — Contracepção e DIU de cobre; OMS — Emergency contraception; Ministério da Saúde — Nota Técnica nº 10/2026; Ministério das Mulheres — Ligue 180. O conteúdo permanece educativo, sem prescrição individual ou orientação jurídica.
 
+
+
+## 19. Revisão editorial — prazos de cuidado pós-exposição
+
+**Revisão:** 13 de novembro de 2026.
+
+- [x] Manter explícito que o limite de 72 horas se refere à PEP contra HIV.
+- [x] Diferenciar a avaliação para hepatite B: histórico vacinal, possível indicação de vacina e, em situações específicas, imunoglobulina.
+- [x] Informar que o Ministério da Saúde orienta avaliação preferencial nas primeiras 24 horas para hepatite B, embora o atendimento possa ocorrer até 14 dias após a exposição.
+- [x] Reforçar que esse intervalo não deve ser usado para adiar a procura por atendimento e que outras medidas pós-exposição seguem critérios próprios.
+
+Fonte principal: Ministério da Saúde — Profilaxia Pós-Exposição, incluindo as orientações para HIV, hepatite B e outras IST. A informação foi incluída de forma geral, sem substituir a avaliação do serviço de saúde.
