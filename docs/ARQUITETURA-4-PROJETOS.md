@@ -150,7 +150,7 @@ Esta seção prevalece sobre descrições históricas anteriores neste documento
 | Lux-Gestão | Cadastro comercial, endereços, vendas, comprovantes, custos, kits, estoque e despesas | RFV, recomendações, funil digital, carrinhos abandonados ou painel executivo |
 | Luxuriosa Inteligência | Indicadores, rentabilidade analítica, RFV, comportamento, alertas, oportunidades e recuperação comercial | Gravar ou alterar transações operacionais |
 
-**Migração em andamento:** o frontend de clientes da Gestão deixou de exibir filtro RFV, score e recomendações. O backend `management-sales` ainda devolve esses campos em contratos legados; eles serão removidos somente depois que a Inteligência oferecer o endpoint equivalente e seus consumidores estiverem migrados.
+**RFV transferido:** a ação autenticada `customer-rfv` da Luxuriosa Inteligência calcula segmentação e recomendações. `management-sales` não calcula nem devolve RFV. Gestão mantém cadastro e histórico transacional.
 
 **Lux-Central:** não é um quinto sistema. Funil, eventos, abandono de carrinho e recuperação comercial são módulos da Luxuriosa Inteligência. O nome antigo permanece apenas em slugs, rotas e identificadores técnicos até migração compatível.
 
@@ -167,3 +167,10 @@ Esta seção prevalece sobre descrições históricas anteriores neste documento
 - Sugestões de produto usam apenas pedidos pagos de contas com consentimento de personalização v2 vigente.
 - Gestão mantém cadastro e histórico, e não exibe nem calcula RFV.
 - A antiga tela de Relatórios da Gestão foi substituída por Custos e despesas. A Inteligência é a tela executiva/analítica.
+
+
+### Pedidos Online — escopo operacional
+
+- A fila de Pedidos administra pedidos, confirmação/concilição do pagamento, etapas de separação/entrega, ocorrências e vínculo explícito do cliente.
+- O painel não mantém um livro de vendas do caixa nem apresenta faturamento, ticket médio, série diária ou produtos mais vendidos. O registro oficial de vendas e comprovantes pertence ao Lux-Gestão; a análise financeira pertence à Luxuriosa Inteligência.
+- A integração de Pedidos com Gestão limita-se a sincronizar a venda paga e verificar o estado da baixa de estoque para liberar a expedição. O detalhe de sincronização é exibido no pedido porque bloqueia/autoriza a operação, não para duplicar o caixa.
