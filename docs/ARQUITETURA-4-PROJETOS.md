@@ -41,7 +41,8 @@ Este documento passa a ser a referência para separar responsabilidades e nomes.
 - `status`: etapa operacional do pedido (confirmação, processamento, saída para entrega, entregue ou cancelado).
 - `payment_provider_events`: evidências/eventos recebidos do provedor.
 - `infinitepay-webhook`, `payment-status`, `create-payment-order`, `cart-orders`: funções do fluxo online.
-- `orders-admin`: endpoint autenticado para a fila de pedidos, consulta de detalhes, vínculo de cliente, confirmação financeira/operacional e atualização do ciclo de entrega. A ação `admin_orders_list` fornece apenas os dados da fila; `admin_dashboard` legado está em retirada após migração dos consumidores.
+- `orders-admin`: endpoint administrativo autenticado para a fila de pedidos, detalhes, vínculo de cliente, confirmação financeira/operacional, sincronização, bloqueios de estoque e ciclo de entrega. `admin_orders_list` retorna somente dados operacionais da fila.
+- `cart-orders`: endpoint da Loja para registrar eventos de navegação/carrinho e etapas de checkout, sempre conforme consentimentos aplicáveis; não possui painel administrativo nem motor de indicadores.
 - `payment-admin`: consulta/conciliação administrativa. O slug permanece por compatibilidade, mas pertence conceitualmente a **Pedidos Online**.
 
 **Regra:** situação financeira e etapa de entrega são dimensões independentes. Pedido não é sinônimo de pagamento. A aprovação de pagamento online depende de validação/concilição da InfinitePay. A tela Pedidos não mantém livro de vendas do caixa, métricas de faturamento, ticket médio, série diária ou ranking de produtos; isso pertence ao Lux-Gestão (registro oficial) e à Inteligência (análise).
@@ -152,7 +153,7 @@ Esta seção prevalece sobre descrições históricas anteriores neste documento
 
 **RFV transferido:** o cálculo e as recomendações pertencem à ação autenticada `customer-rfv` da `luxuriosa-intelligence`. A Gestão mantém cadastro e histórico transacional, sem scoring comercial.
 
-**Lux-Central:** não é um quinto sistema. Funil, eventos, abandono de carrinho e recuperação comercial são módulos da Luxuriosa Inteligência. O nome antigo permanece apenas em slugs, rotas e identificadores técnicos até migração compatível.
+**Lux-Central:** não é um quinto sistema. Funil, eventos, abandono de carrinho e recuperação comercial são módulos da Luxuriosa Inteligência. `cart-orders` registra eventos/snapshots de origem; a Inteligência lê essas fontes para consolidar e interpretar os indicadores. O nome antigo permanece apenas em slugs, rotas e identificadores técnicos até migração compatível.
 
 **Portal 442:** catálogo de acesso aos quatro projetos, com distinção visual entre a Loja pública e os três ambientes administrativos. Não possui regras comerciais nem motor analítico próprio.
 
