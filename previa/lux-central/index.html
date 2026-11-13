@@ -79,7 +79,7 @@ footer{display:flex;justify-content:space-between;gap:10px;border-top:1px solid 
 <div class="page-content">
 <section class="page-head" id="overview">
 <div><div class="eyebrow">VISÃO EXECUTIVA · DADOS OPERACIONAIS</div><h1>Resumo do negócio</h1><p>Veja o que merece atenção e acompanhe os números que orientam suas decisões.</p></div>
-<div class="controls"><label class="control-field"><span>PERÍODO DE ANÁLISE</span><select class="field" id="period"><option value="7">Últimos 7 dias</option><option value="30" selected>Últimos 30 dias</option><option value="90">Últimos 90 dias</option><option value="365">Últimos 12 meses</option></select></label><button class="btn primary" id="refresh"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M20 7v5h-5M4 17v-5h5"/><path d="M5.6 9A7 7 0 0 1 18 6l2 6M4 12l2 6a7 7 0 0 0 12.4-3"/></svg>Atualizar dados</button><button class="btn" id="retrySync" title="Reprocessar pedidos já pagos que ainda não foram sincronizados"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 4v6h6M20 20v-6h-6"/><path d="M5.5 14a7 7 0 0 0 12 2l2.5-2M18.5 10a7 7 0 0 0-12-2L4 10"/></svg>Reprocessar pedidos</button></div>
+<div class="controls"><label class="control-field"><span>PERÍODO DE ANÁLISE</span><select class="field" id="period"><option value="7">Últimos 7 dias</option><option value="30" selected>Últimos 30 dias</option><option value="90">Últimos 90 dias</option><option value="365">Últimos 12 meses</option></select></label><button class="btn primary" id="refresh"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M20 7v5h-5M4 17v-5h5"/><path d="M5.6 9A7 7 0 0 1 18 6l2 6M4 12l2 6a7 7 0 0 0 12.4-3"/></svg>Atualizar dados</button><a class="btn" href="/lux-gestao-pedidos/" target="_blank" rel="noopener noreferrer" style="display:inline-flex;align-items:center;text-decoration:none">Pedidos Online ↗</a></div>
 </section>
 <div class="status-line"><span><strong>Leitura:</strong> valores recebidos consideram apenas pagamentos confirmados.</span><span class="fresh" id="updated">Aguardando primeira consulta</span></div>
 <div class="section-heading"><div class="heading-kicker"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M12 3 2.8 19h18.4L12 3Z"/><path d="M12 9v4m0 3h.01"/></svg><div><h2>Atenção agora</h2><p>Prioridades geradas com base nos registros disponíveis.</p></div></div><span class="attention-count" id="attentionCount">CONSULTANDO</span></div>
@@ -279,7 +279,7 @@ function renderCustomerInsights(data){
   message("customerCoverageNote",notes.join(" · "));
 }
 async function load(){
- $("refresh").disabled=true;$("retrySync").disabled=true;message("connection","CONSULTANDO DADOS");
+ $("refresh").disabled=true;message("connection","CONSULTANDO DADOS");
  try{
   const days=Number($("period").value);
   const [analytics,stock,costs,kits,expenses,customers,sales]=await Promise.all([
@@ -357,7 +357,7 @@ async function load(){
   }
   const notices=[];
   if(!c.paid_count)notices.push("Ainda não há vendas pagas registradas no Gestão.");
-  if(Number(orders.total||0)>0 && !Number(pulse.payment_events?.total||0))notices.push("Há pedidos online, mas nenhum evento de webhook foi registrado no período. A confirmação automática de pagamentos ainda precisa de validação real.");
+  if(Number(orders.total||0)>0 && !Number(pulse.payment_events?.total||0))notices.push("Há pedidos online, mas nenhum evento de webhook foi registrado no período. A confirmação financeira é manual: confira o recebimento na InfinitePay e confirme o pedido em Pedidos Online.");
   if(Number(pulse.payment_events?.failed||0)>0)notices.push(Number(pulse.payment_events.failed)+" eventos de pagamento apresentam erro de processamento e precisam de conferência.");
   if(Number(orders.pending_expired_count||0)>0)notices.push(Number(orders.pending_expired_count)+" pedidos expiraram sem confirmação de pagamento. Revise os pedidos antes de emitir novas cobranças.");
   if(Number(orders.pending_without_checkout_link_count||0)>0)notices.push(Number(orders.pending_without_checkout_link_count)+" pedidos pendentes estão sem link de checkout salvo.");
@@ -368,7 +368,7 @@ async function load(){
   if(!kitRows.length)notices.push("Composições dos kits ainda não foram cadastradas; o consumo automático de componentes depende dessa configuração.");
   if(!activeExpenses.length)notices.push("Nenhuma despesa ativa foi lançada no período; o resultado operacional ainda não representa todos os custos do negócio.");
   if(analytics.data.truncated)notices.push("A consulta atingiu o limite de amostragem; alguns indicadores podem estar incompletos.");
-   if(websiteSync>0)notices.push(websiteSync+" pedidos pagos do site ainda precisam de sincronização ou conferência no Gestão.");
+   if(websiteSync>0)notices.push(websiteSync+" pedidos pagos do site aguardam conciliação ou regularização de estoque. Abra Pedidos Online para tratar cada pedido com segurança.");
    const paidCostCoverage=Number(c.paid_cost_coverage_percent);
    if(c.paid_count>0&&Number.isFinite(paidCostCoverage)&&paidCostCoverage<100)notices.push("Custos conhecidos cobrem "+paidCostCoverage.toLocaleString("pt-BR")+"% das vendas pagas. Lucro e margem são parciais.");
   message("dataNotice",notices.length?notices.join(" "):"Dados consultados. Indicadores calculados com os registros disponíveis.");
@@ -377,7 +377,7 @@ async function load(){
  }catch(error){
   console.error(error);message("connection","FALHA NA CONSULTA");message("dataNotice",error.message||"Não foi possível carregar os dados.");
   if(/401|403|sessão|login/i.test(error.message||"")){await supabase.auth.signOut();showLogin("Sessão inválida ou sem permissão administrativa. Entre novamente.");}
- }finally{$("refresh").disabled=false;$("retrySync").disabled=false}
+ }finally{$("refresh").disabled=false}
 }
 function showLogin(msg){$("loginView").classList.remove("hidden");$("appView").classList.add("hidden");$("logout").classList.add("hidden");message("loginMessage",msg||"");message("connection","AGUARDANDO AUTENTICAÇÃO")}
 async function showApp(){const {data:{session}}=await supabase.auth.getSession();if(!session){showLogin("");return}$("loginView").classList.add("hidden");$("appView").classList.remove("hidden");$("logout").classList.remove("hidden");load()}
