@@ -20,7 +20,7 @@ O conteúdo deve ajudar o leitor a compreender conceitos, reconhecer informaçã
 
 ## 3. Princípios editoriais obrigatórios
 
-1. **Educação, não publicidade:** sem oferta, cupom, chamada de compra, comparação promocional ou recomendação comercial dentro de artigos educativos.
+1. **Independência editorial:** sem oferta, cupom, chamada de compra, comparação promocional ou recomendação comercial dentro de artigos educativos.
 2. **Sem apelo:** títulos descritivos; sem duplo sentido, promessa de desempenho, sensacionalismo ou linguagem erotizada.
 3. **Sem imagens:** páginas textuais. Não depender de fotografias, ilustrações, banners, vídeos ou animações.
 4. **Precisão:** diferenciar fato científico, recomendação oficial, informação contextual e entretenimento.
