@@ -1,0 +1,43 @@
+name: Verify Luxuriosa Intelligence preview
+
+on:
+  pull_request:
+    paths:
+      - "previa/lux-central/index.html"
+      - ".github/workflows/verify-intelligence-preview.yml"
+  push:
+    branches: [main]
+    paths:
+      - "previa/lux-central/index.html"
+      - ".github/workflows/verify-intelligence-preview.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Extract and syntax-check the module script
+        run: |
+          node --input-type=module -e '
+            import { readFileSync, writeFileSync } from "node:fs";
+            const html = readFileSync("previa/lux-central/index.html", "utf8");
+            const startTag = "<script type=\"module\">";
+            const start = html.indexOf(startTag);
+            const end = html.indexOf("</script>", start);
+            if (start < 0 || end < 0) throw new Error("Módulo JavaScript principal não encontrado.");
+            const moduleSource = html.slice(start + startTag.length, end);
+            for (const id of ["customerRfvSearch", "customerRfvSegment", "customerRfvRows", "customerRfvNote"]) {
+              if (!html.includes("id=\"" + id + "\"")) throw new Error("Elemento RFV ausente: " + id);
+            }
+            if (!moduleSource.includes("action:\"customer-rfv\"")) throw new Error("Chamada customer-rfv ausente.");
+            writeFileSync("/tmp/luxuriosa-intelligence-preview.mjs", moduleSource);
+          '
+          node --check /tmp/luxuriosa-intelligence-preview.mjs

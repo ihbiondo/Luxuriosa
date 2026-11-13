@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex,nofollow,noarchive">
 <meta name="theme-color" content="#101014">
-<title>Lux-Central | Inteligência Empresarial</title>
+<title>Luxuriosa Inteligência | Painel executivo</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600&display=swap" rel="stylesheet">
@@ -50,6 +50,22 @@ footer{display:flex;justify-content:space-between;gap:10px;border-top:1px solid 
 @media(max-width:760px){.shell{padding:0 12px 24px}header.topbar{margin:0 -12px;padding:0 12px;height:60px}.brandmark{min-width:0}.brand-copy small{font-size:8px}.header-right{gap:6px}.header-right .btn{padding:8px}.workspace{display:flex;flex-direction:column;gap:12px;padding-top:12px}.side-nav{position:static;width:100%;padding:8px;display:flex;gap:4px;overflow-x:auto;align-items:center;white-space:nowrap}.side-intro,.nav-label,.nav-divider,.side-help{display:none}.nav-link{margin:0;padding:9px 10px;flex:none}.page-head{align-items:flex-start;flex-direction:column;padding:8px 0 12px}.controls{width:100%}.control-field{flex:1}.controls .field{width:100%}.cols{grid-template-columns:1fr}.action-grid{grid-template-columns:1fr}.page-head h1{font-size:28px}.section-heading{margin-top:17px}.login-shell{grid-template-columns:1fr}.login-intro{padding:22px}.login-intro h1{font-size:27px}.login{padding:23px}}
 @media(max-width:480px){.brand-copy strong{font-size:11px}.header-right .pill{font-size:8px;padding:6px 8px}.header-right>a{display:none}.metric-grid{gap:7px}.metric{padding:10px}.metric strong{font-size:21px}.secondary-item{padding:9px}.secondary-item strong{font-size:13px}.kpis{grid-template-columns:repeat(2,1fr)}.status-line{align-items:flex-start}.page-head h1{font-size:26px}.section-title h2{font-size:18px}.bar-row{grid-template-columns:85px minmax(50px,1fr) auto}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{transition:none!important}}</style>
+<style>
+.customer-rfv-controls{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:4px 0 14px}
+.customer-rfv-controls input{flex:1;min-width:220px}
+.customer-rfv-controls select{min-width:180px}
+.customer-rfv-table{min-width:920px}
+.customer-rfv-table td{vertical-align:middle}
+.customer-rfv-table td:first-child{font-weight:600;min-width:150px}
+.customer-rfv-table .rfv-score{font:600 12px "DM Mono",monospace;letter-spacing:1px}
+.customer-rfv-table .rfv-segment{display:inline-flex;align-items:center;border:1px solid var(--line);border-radius:999px;padding:4px 8px;font-size:11px;white-space:nowrap}
+.customer-rfv-table .rfv-segment.good{color:var(--good);background:var(--good-bg);border-color:#d5eadd}
+.customer-rfv-table .rfv-segment.warn{color:var(--warn);background:var(--warn-bg);border-color:#f3e3c8}
+.customer-rfv-table details{min-width:190px}
+.customer-rfv-table summary{cursor:pointer;color:var(--wine);font-weight:600;font-size:11px}
+.customer-rfv-table details p,.customer-rfv-table details li{font-size:11px;color:var(--muted);margin:5px 0}
+.customer-rfv-table details ul{padding-left:16px;margin:6px 0}
+</style>
 </head>
 <body>
 <div class="shell">
@@ -60,7 +76,7 @@ footer{display:flex;justify-content:space-between;gap:10px;border-top:1px solid 
 <section id="loginView" class="login-wrap">
 <div class="login-shell">
 <div class="login-intro"><div class="eyebrow">LUXURIOSA · ÁREA ADMINISTRATIVA</div><h1>Entenda o negócio.<br><em>Decida com clareza.</em></h1><p>Indicadores financeiros, clientes, pagamentos e operação reunidos em uma visão única. Entre para consultar os dados reais da empresa.</p><div class="login-feature"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg>Dados protegidos por autenticação administrativa</div></div>
-<form class="login" id="loginForm"><div class="eyebrow">ACESSO RESTRITO</div><h2>Entrar no Lux-Central</h2><p class="login-sub">Use a mesma conta administrativa da Luxuriosa.</p><label for="email">E-mail</label><input class="field" id="email" type="email" autocomplete="username" required><label for="password">Senha</label><input class="field" id="password" type="password" autocomplete="current-password" required><button class="btn primary" type="submit" id="loginButton">ENTRAR NO PAINEL</button><p id="loginMessage" role="status"></p></form>
+<form class="login" id="loginForm"><div class="eyebrow">ACESSO RESTRITO</div><h2>Entrar no Luxuriosa Inteligência</h2><p class="login-sub">Use a mesma conta administrativa da Luxuriosa.</p><label for="email">E-mail</label><input class="field" id="email" type="email" autocomplete="username" required><label for="password">Senha</label><input class="field" id="password" type="password" autocomplete="current-password" required><button class="btn primary" type="submit" id="loginButton">ENTRAR NO PAINEL</button><p id="loginMessage" role="status"></p></form>
 </div>
 </section><main id="appView" class="hidden">
 <div class="workspace">
@@ -110,6 +126,37 @@ footer{display:flex;justify-content:space-between;gap:10px;border-top:1px solid 
 <section class="panel"><div class="panel-head"><span class="panel-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 5h16v14H4z"/><path d="M4 10h16M9 5v14"/></svg></span><div><h3>Interesse × compra por categoria</h3><p class="hint">Comparação por clientes. Receita considera somente pedidos pagos.</p></div></div><div class="table-wrap"><table><thead><tr><th>Categoria</th><th>Declararam</th><th>Visualizaram</th><th>Carrinho</th><th>Compraram</th><th>Receita</th></tr></thead><tbody id="customerCategoryRows"><tr><td colspan="6" class="muted">Aguardando dados...</td></tr></tbody></table></div><p class="hint" id="customerCoverageNote" style="margin:9px 0 0">Os indicadores aparecerão após a primeira atualização.</p></section>
 <section class="panel"><div class="panel-head"><span class="panel-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 20h18M5 16l4-5 4 3 6-8"/></svg></span><div><h3>Preferências de compra</h3><p class="hint">Faixa de preço e tipo de oferta preferidos.</p></div></div><div class="bars" id="customerPriceRanges"><div class="empty">Aguardando dados...</div></div><div style="height:15px"></div><h3>Tipo de oferta</h3><div class="bars" id="customerOfferTypes"><div class="empty">Aguardando dados...</div></div></section>
 </div>
+
+<section class="panel customer-rfv-panel">
+  <div class="panel-head">
+    <span class="panel-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19V5M4 19h16M8 15l3-4 3 2 5-7"/></svg></span>
+    <div><h3>RFV e relacionamento comercial</h3><p class="hint">Clientes da Gestão, com compras pagas e vínculos explícitos. Pedidos sincronizados entram uma única vez.</p></div>
+  </div>
+  <div class="customer-rfv-controls">
+    <input class="field" id="customerRfvSearch" type="search" placeholder="Buscar cliente por nome, telefone ou e-mail">
+    <select class="field" id="customerRfvSegment">
+      <option value="">Todos os segmentos</option>
+      <option value="champion">Campeão</option>
+      <option value="loyal">Fiel</option>
+      <option value="potential_loyal">Potencial fiel</option>
+      <option value="new_customer">Novo cliente</option>
+      <option value="high_value_at_risk">Alto valor em risco</option>
+      <option value="at_risk">Em risco</option>
+      <option value="hibernating">Hibernando</option>
+      <option value="regular">Regular</option>
+      <option value="no_purchase">Sem histórico pago</option>
+    </select>
+    <button class="btn" id="customerRfvSearchButton" type="button">BUSCAR</button>
+    <button class="btn primary" id="customerRfvRefresh" type="button">ATUALIZAR</button>
+  </div>
+  <div class="table-wrap">
+    <table class="customer-rfv-table">
+      <thead><tr><th>CLIENTE</th><th>RFV</th><th>SEGMENTO</th><th>COMPRAS PAGAS</th><th>VALOR BRUTO</th><th>ÚLTIMA COMPRA</th><th>RECOMENDAÇÕES</th></tr></thead>
+      <tbody id="customerRfvRows"><tr><td colspan="7" class="muted">Aguardando dados de relacionamento...</td></tr></tbody>
+    </table>
+  </div>
+  <p class="hint" id="customerRfvNote" style="margin:10px 0 0">Somente pagamentos confirmados entram no RFV. Sugestões por produto exigem consentimento de personalização vigente; nenhuma mensagem é enviada automaticamente.</p>
+</section>
 </section>
 <section class="section-block" id="performance">
 <div class="section-title"><div class="title-left"><span class="section-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 3v18h18M7 14l4-4 3 3 6-7"/></svg></span><div><h2>Vendas e desempenho</h2><p>Receita recebida por dia e produtos que mais movimentam a operação.</p></div></div><span class="section-tag">RECORTE SELECIONADO</span></div>
@@ -136,7 +183,7 @@ footer{display:flex;justify-content:space-between;gap:10px;border-top:1px solid 
 </div>
 </div>
 </main>
-<footer><span>LUXURIOSA · LUX-CENTRAL</span><span>ACESSO RESTRITO · INDICADORES INTERNOS</span></footer>
+<footer><span>LUXURIOSA · LUXURIOSA INTELIGÊNCIA</span><span>ACESSO RESTRITO · INDICADORES INTERNOS</span></footer>
 </div>
 <script type="module">
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
@@ -146,6 +193,7 @@ const supabase=createClient(URL,KEY,{auth:{autoRefreshToken:true,persistSession:
 const $=id=>document.getElementById(id);
 const money=v=>Number(v||0).toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
 const num=v=>Number(v||0).toLocaleString("pt-BR");
+let customerRfvCache=[];
 function message(el,text){$(el).textContent=text}
 function row(label,value,kind){const div=document.createElement("div");div.className="rowitem";const a=document.createElement("span");a.textContent=label;const b=document.createElement("strong");b.textContent=value;if(kind)b.className="status "+kind;div.append(a,b);return div}
 function list(id,items,empty){const box=$(id);box.replaceChildren();if(!items.length){const p=document.createElement("div");p.className="empty";p.textContent=empty||"Sem dados no período.";box.append(p);return}items.forEach(x=>box.append(x))}
@@ -278,18 +326,94 @@ function renderCustomerInsights(data){
   if(!coverage.eligible_profiles)notes.push("Ainda não há perfis com autorização v2 ativa; salve as preferências e a autorização para começar a formar esta amostra");
   message("customerCoverageNote",notes.join(" · "));
 }
+
+function localDate(value){
+  if(!value)return "—";
+  const parsed=new Date(value);
+  return Number.isNaN(parsed.getTime())?"—":parsed.toLocaleDateString("pt-BR");
+}
+function renderCustomerRfvRows(){
+  const body=$("customerRfvRows");
+  if(!body)return;
+  body.replaceChildren();
+  const selected=$("customerRfvSegment")?.value||"";
+  const rows=customerRfvCache.filter(item=>!selected||item.relationship?.rfv?.segment===selected);
+  if(!rows.length){
+    const tr=document.createElement("tr"),td=document.createElement("td");
+    td.colSpan=7;td.className="ledger-empty";
+    td.textContent=customerRfvCache.length?"Nenhum cliente neste segmento.":"Nenhum cadastro comercial encontrado.";
+    tr.append(td);body.append(tr);return;
+  }
+  const dangerSegments=new Set(["high_value_at_risk","at_risk","hibernating"]);
+  rows.forEach(customer=>{
+    const r=customer.relationship||{},rfv=r.rfv||{};
+    const tr=document.createElement("tr");
+    const name=document.createElement("td");name.textContent=customer.full_name||"Cliente sem nome";
+    const score=document.createElement("td");score.className="rfv-score";score.textContent=rfv.score_code||"—";
+    const segment=document.createElement("td"),segmentBadge=document.createElement("span");
+    segmentBadge.className="rfv-segment "+(rfv.segment==="champion"?"good":dangerSegments.has(rfv.segment)?"warn":"");
+    segmentBadge.textContent=rfv.segment_label||"Sem histórico pago";segment.append(segmentBadge);
+    const purchases=document.createElement("td");purchases.textContent=num(r.paid_purchase_count||0);
+    const value=document.createElement("td");value.textContent=money(Number(r.paid_gross_cents||0)/100);
+    const last=document.createElement("td");last.textContent=localDate(r.last_purchase_at);
+    const recCell=document.createElement("td"),details=document.createElement("details"),summary=document.createElement("summary");
+    const suggestions=Array.isArray(customer.recommendations)?customer.recommendations:[];
+    summary.textContent=suggestions.length+" sugestão(ões)";details.append(summary);
+    if(suggestions.length){
+      const list=document.createElement("ul");
+      suggestions.forEach(item=>{const li=document.createElement("li");li.textContent=(item.title||"Recomendação")+": "+(item.reason||"");list.append(li);});
+      details.append(list);
+    }
+    const consentNote=document.createElement("p");
+    consentNote.textContent=customer.product_recommendations?.enabled
+      ?"Sugestões por produto usam pedidos pagos com consentimento vigente."
+      :"Sugestões por produto indisponíveis sem consentimento vigente.";
+    details.append(consentNote);
+    if(r.history_truncated===true){const note=document.createElement("p");note.textContent="Histórico parcial: limite de leitura atingido.";details.append(note);}
+    recCell.append(details);tr.append(name,score,segment,purchases,value,last,recCell);body.append(tr);
+  });
+}
+function renderCustomerRfv(data){
+  customerRfvCache=Array.isArray(data.customers)?data.customers:[];
+  renderCustomerRfvRows();
+  const coverage=data.coverage||{};
+  const notes=[
+    num(coverage.returned_count||0)+" cadastro(s) consultados",
+    "RFV: transações pagas + vínculo explícito",
+    "recomendações de produto: consentimento vigente"
+  ];
+  if(coverage.sales_truncated||coverage.orders_truncated)notes.push("histórico parcial por limite de leitura");
+  if(coverage.consented_order_items_truncated)notes.push("itens de pedidos elegíveis atingiram limite");
+  message("customerRfvNote",notes.join(" · "));
+}
+async function loadCustomerRfv(){
+  const button=$("customerRfvRefresh");if(button)button.disabled=true;
+  message("customerRfvNote","Consultando RFV e recomendações...");
+  try{
+    const {data,error}=await supabase.functions.invoke("luxuriosa-intelligence",{
+      body:{action:"customer-rfv",query:$("customerRfvSearch")?.value.trim()||"",limit:200}
+    });
+    if(error)throw error;
+    if(!data?.ok)throw new Error(data?.error||"Não foi possível consultar a segmentação.");
+    renderCustomerRfv(data);
+  }catch(error){
+    message("customerRfvNote",error.message||"Falha ao consultar RFV.");
+  }finally{if(button)button.disabled=false;}
+}
+
 async function load(){
  $("refresh").disabled=true;message("connection","CONSULTANDO DADOS");
  try{
   const days=Number($("period").value);
-  const [analytics,stock,costs,kits,expenses,customers,sales]=await Promise.all([
+  const [analytics,stock,costs,kits,expenses,customers,sales,customerRfv]=await Promise.all([
    supabase.functions.invoke("luxuriosa-intelligence",{body:{action:"analytics",period_days:days}}),
    supabase.functions.invoke("management-sales",{body:{action:"stock-list"}}),
    supabase.functions.invoke("management-sales",{body:{action:"cost-list"}}),
    supabase.functions.invoke("management-sales",{body:{action:"kit-recipes-list"}}),
    supabase.functions.invoke("management-sales",{body:{action:"expense-list"}}),
    supabase.functions.invoke("luxuriosa-intelligence",{body:{action:"customer-insights",period_days:days}}).catch(error=>({error})),
-   supabase.functions.invoke("management-sales",{body:{action:"list",limit:50}})
+   supabase.functions.invoke("management-sales",{body:{action:"list",limit:50}}),
+   supabase.functions.invoke("luxuriosa-intelligence",{body:{action:"customer-rfv",limit:200}}).catch(error=>({error}))
   ]);
   const responses=[["indicadores",analytics],["estoque",stock],["custos",costs],["composições dos kits",kits],["despesas",expenses],["histórico de vendas",sales]];
   for(const [label,result] of responses){
@@ -351,9 +475,15 @@ async function load(){
   if(customers.error || !customers.data?.ok){
    const customerError=customers.error?.message||customers.data?.error||"Não foi possível consultar os indicadores de clientes.";
    message("customerPeriod","INDISPONÍVEL");
-   message("customerCoverageNote","A inteligência de clientes não foi atualizada nesta consulta. Os demais indicadores do Lux-Central continuam disponíveis. "+customerError);
+   message("customerCoverageNote","A inteligência de clientes não foi atualizada nesta consulta. Os demais indicadores do Luxuriosa Inteligência continuam disponíveis. "+customerError);
   }else{
    renderCustomerInsights(customers.data);
+  }
+
+  if(customerRfv.error || !customerRfv.data?.ok){
+   message("customerRfvNote",customerRfv.error?.message||customerRfv.data?.error||"RFV indisponível nesta consulta.");
+  }else{
+   renderCustomerRfv(customerRfv.data);
   }
   const notices=[];
   if(!c.paid_count)notices.push("Ainda não há vendas pagas registradas no Gestão.");
@@ -384,6 +514,10 @@ async function showApp(){const {data:{session}}=await supabase.auth.getSession()
 $("loginForm").addEventListener("submit",async e=>{e.preventDefault();$("loginButton").disabled=true;message("loginMessage","Validando acesso...");try{const {error}=await supabase.auth.signInWithPassword({email:$("email").value.trim(),password:$("password").value});if(error)throw error;await showApp()}catch(error){message("loginMessage",error.message||"Não foi possível entrar.")}finally{$("loginButton").disabled=false}});
 $("logout").addEventListener("click",async()=>{await supabase.auth.signOut();showLogin("Sessão encerrada.")});
 $("refresh").addEventListener("click",load);$("period").addEventListener("change",load);
+$("customerRfvRefresh").addEventListener("click",loadCustomerRfv);
+$("customerRfvSearchButton").addEventListener("click",loadCustomerRfv);
+$("customerRfvSearch").addEventListener("keydown",event=>{if(event.key==="Enter"){event.preventDefault();loadCustomerRfv();}});
+$("customerRfvSegment").addEventListener("change",renderCustomerRfvRows);
 
 document.querySelectorAll(".nav-link[href^='#']").forEach(link=>{
   link.addEventListener("click",()=>{
