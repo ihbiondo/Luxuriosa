@@ -237,7 +237,8 @@ Deno.serve(async (req: Request) => {
       }
       const allowedTransitions: Record<string, string[]> = {
         confirmed: ["processing"],
-        processing: ["out_for_delivery"],
+        processing: ["dispatched"],
+        dispatched: ["out_for_delivery"],
         out_for_delivery: ["delivered"]
       };
       if (nextStatus !== "cancelled" && !(allowedTransitions[current.status] || []).includes(nextStatus)) {
@@ -290,15 +291,22 @@ Deno.serve(async (req: Request) => {
         update.confirmed_at = now;
         update.dispatch_started_at = null;
         update.dispatched_at = null;
+        update.route_started_at = null;
         update.delivered_at = null;
       }
       if (nextStatus === "processing") {
         update.dispatch_started_at = now;
         update.dispatched_at = null;
+        update.route_started_at = null;
+        update.delivered_at = null;
+      }
+      if (nextStatus === "dispatched") {
+        update.dispatched_at = now;
+        update.route_started_at = null;
         update.delivered_at = null;
       }
       if (nextStatus === "out_for_delivery") {
-        update.dispatched_at = now;
+        update.route_started_at = now;
         update.delivered_at = null;
       }
       if (nextStatus === "delivered") update.delivered_at = now;
