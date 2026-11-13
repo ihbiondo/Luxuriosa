@@ -272,6 +272,6 @@ Cada edição deve adaptar serviços, nomes de métodos, legislação, orientaç
 
 ## 13. Critério de conclusão
 
-O projeto estará maduro quando cada eixo tiver conteúdo de entrada, guias aprofundados, curiosidades bem referenciadas, ferramentas úteis e links de apoio; quando as páginas forem legíveis em dispositivos móveis; e quando a atualização das fontes puder ser mantida sem depender de imagens, publicidade ou coleta de dados.
+O projeto estará maduro quando cada eixo tiver conteúdo de entrada, guias aprofundados, curiosidades bem referenciadas, ferramentas úteis e links de apoio; quando as páginas forem legíveis em dispositivos móveis; e quando a atualização das fontes puder ser mantida sem depender de imagens ou coleta de dados.
 
 **Regra final:** primeiro a qualidade e a utilidade do conhecimento. O volume de páginas vem depois.
