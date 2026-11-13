@@ -222,12 +222,18 @@ input,select{width:100%;min-width:0;border:1px solid var(--line);border-radius:8
         confirm.type="button";
         confirm.addEventListener("click",async()=>{
           const total=money.format(Number(order.total_amount)||0);
-          if(!window.confirm("Você conferiu na sua conta InfinitePay o recebimento de "+total+" do pedido #"+order.order_number+"?\n\nA confirmação registra o pagamento, cria a venda no Lux-Gestão uma única vez e libera a expedição."))return;
+          if(!window.confirm("Você conferiu na sua conta InfinitePay o recebimento de "+total+" do pedido #"+order.order_number+"?\n\nA confirmação registra o pagamento e a venda uma única vez. O sistema verifica o estoque antes de liberar a separação."))return;
           confirm.disabled=true;confirm.textContent="CONFIRMANDO…";
           try{
             const result=await invokeOrdersAdmin({action:"admin_confirm_manual_payment",order_id:order.id});
-            if(result.management_sales_sync_status==="synced")showNotice("Recebimento confirmado. Venda sincronizada no Lux-Gestão e pedido liberado para separação.");
-            else showNotice("Recebimento confirmado, mas a sincronização da venda ficou pendente. Não confirme novamente; atualize o painel.",true);
+            if(result.management_sales_sync_status!=="synced"){
+              showNotice("Recebimento confirmado, mas a sincronização da venda ficou pendente. Não confirme novamente; atualize o painel.",true);
+            }else if(result.stock_control_status==="deducted"){
+              showNotice("Recebimento confirmado. Venda sincronizada, estoque baixado e pedido liberado para separação.");
+            }else{
+              const detail=result.stock_issue||"O estoque ainda não está integralmente controlado.";
+              showNotice("Recebimento confirmado e venda registrada, mas a expedição está bloqueada: "+detail,true);
+            }
             await load();
           }catch(error){showNotice(error.message,true);}
           finally{confirm.disabled=false;confirm.textContent="CONFIRMAR RECEBIMENTO";}
