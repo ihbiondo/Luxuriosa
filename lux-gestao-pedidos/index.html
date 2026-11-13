@@ -93,7 +93,7 @@ input,select{width:100%;min-width:0;border:1px solid var(--line);border-radius:8
     const supabase=createClient(URL,KEY,{auth:{autoRefreshToken:true,persistSession:true,detectSessionInUrl:true}});
     const $=id=>document.getElementById(id);
     const money=new Intl.NumberFormat("pt-BR",{style:"currency",currency:"BRL"});
-    const statusNames={awaiting_confirmation:"Aguardando pagamento",confirmed:"Pagamento aprovado · aguardando separação",processing:"Em separação",dispatched:"Despachado",out_for_delivery:"Em rota de entrega",delivered:"Pedido entregue",cancelled:"Pedido cancelado"};
+    const statusNames={awaiting_confirmation:"Aguardando pagamento",confirmed:"Pagamento aprovado · aguardando separação",processing:"Em separação",out_for_delivery:"Saiu para entrega",delivered:"Pedido entregue",cancelled:"Pedido cancelado"};
     const paymentNames={pending:"Aguardando pagamento",paid:"Pagamento aprovado",review_required:"Pagamento em conferência",cancelled:"Pagamento cancelado",failed:"Pagamento não concluído"};
     let allOrders=[];let allSales=[];
     function node(tag,cls,text){const e=document.createElement(tag);if(cls)e.className=cls;if(text!==undefined)e.textContent=text;return e;}
@@ -129,7 +129,7 @@ input,select{width:100%;min-width:0;border:1px solid var(--line);border-radius:8
     }
     function allowedNext(order){
       if(order.status==="cancelled")return [];
-      if(order.payment_status==="paid"){const next={confirmed:["processing"],processing:["dispatched"],dispatched:["out_for_delivery"],out_for_delivery:["delivered"]};return next[order.status]||[];}
+      if(order.payment_status==="paid"){const next={confirmed:["processing"],processing:["out_for_delivery"],out_for_delivery:["delivered"]};return next[order.status]||[];}
       if(order.payment_status==="pending"&&order.status==="awaiting_confirmation")return ["cancelled"];
       return [];
     }
@@ -210,11 +210,9 @@ input,select{width:100%;min-width:0;border:1px solid var(--line);border-radius:8
         const link=checkoutUrl(order.payment_checkout_url);
         const expires=order.payment_expires_at?new Date(order.payment_expires_at):null;
         const expired=expires&&expires.getTime()<=Date.now();
-        paymentTools.append(node("div","payment-help",order.payment_status==="review_required"
-          ?"Pagamento em conferência. Confira o recebimento no aplicativo InfinitePay antes de confirmar manualmente."
-          :expired
-            ?"O prazo do link terminou em "+expires.toLocaleString("pt-BR")+". Se o valor foi recebido, confira no aplicativo antes de confirmar."
-            :"Confira no aplicativo InfinitePay se o recebimento deste pedido entrou e está disponível. A confirmação será manual."));
+        paymentTools.append(node("div","payment-help",expired
+          ?"O prazo do link terminou em "+expires.toLocaleString("pt-BR")+". Se o valor entrou na InfinitePay, confirme manualmente abaixo."
+          :"Confira no aplicativo InfinitePay se o valor deste pedido foi efetivamente recebido. Depois, confirme aqui para liberar a separação."));
         const actionRow=node("div","payment-actions");
         if(link){
           const openLink=node("a","payment-link","ABRIR COBRANÇA");
@@ -228,20 +226,21 @@ input,select{width:100%;min-width:0;border:1px solid var(--line);border-radius:8
           actionRow.append(copy);
         }
         paymentTools.append(actionRow);
-        const reconcile=node("div","reconcile-form");
-        const note=node("p","reconcile-note","A confirmação só acontece após a InfinitePay validar o pagamento. Se os dados não chegaram pelo webhook, informe o NSU da transação e o invoice slug exibidos no retorno ou comprovante da cobrança. Se já chegaram, deixe os dois campos vazios.");
-        const fields=node("div","reconcile-fields");
-        const methodLabel=node("label","reconcile-field","Forma recebida"),methodSelect=node("select");
-        methodSelect.setAttribute("aria-label","Forma de pagamento recebida");
-        methodSelect.append(new Option("Selecione…",""),new Option("PIX","pix"),new Option("Cartão de crédito","credit_card"));methodLabel.append(methodSelect);
-        const nsuLabel=node("label","reconcile-field","NSU da transação"),transactionInput=node("input");
-        transactionInput.type="text";transactionInput.autocomplete="off";transactionInput.maxLength=160;transactionInput.placeholder="Cole o transaction_nsu";nsuLabel.append(transactionInput);
-        const slugLabel=node("label","reconcile-field","Invoice slug"),invoiceInput=node("input");
-        invoiceInput.type="text";invoiceInput.autocomplete="off";invoiceInput.maxLength=200;invoiceInput.placeholder="Cole o invoice_slug";slugLabel.append(invoiceInput);
-        fields.append(methodLabel,nsuLabel,slugLabel);
-        const confirm=node("button","primary","VERIFICAR PAGAMENTO");confirm.type="button";
-        confirm.addEventListener("click",()=>confirmPaymentManual(order,confirm,methodSelect,transactionInput,invoiceInput));
-        reconcile.append(note,fields,confirm);paymentTools.append(reconcile);amount.append(paymentTools);
+        const confirm=node("button","primary","CONFIRMAR RECEBIMENTO");
+        confirm.type="button";
+        confirm.addEventListener("click",async()=>{
+          const total=money.format(Number(order.total_amount)||0);
+          if(!window.confirm("Você conferiu na sua conta InfinitePay o recebimento de "+total+" do pedido #"+order.order_number+"?\n\nA confirmação registra o pagamento, cria a venda no Lux-Gestão uma única vez e libera a expedição."))return;
+          confirm.disabled=true;confirm.textContent="CONFIRMANDO…";
+          try{
+            const result=await invokeOrdersAdmin({action:"admin_confirm_manual_payment",order_id:order.id});
+            if(result.management_sales_sync_status==="synced")showNotice("Recebimento confirmado. Venda sincronizada no Lux-Gestão e pedido liberado para separação.");
+            else showNotice("Recebimento confirmado, mas a sincronização da venda ficou pendente. Não confirme novamente; atualize o painel.",true);
+            await load();
+          }catch(error){showNotice(error.message,true);}
+          finally{confirm.disabled=false;confirm.textContent="CONFIRMAR RECEBIMENTO";}
+        });
+        paymentTools.append(confirm);amount.append(paymentTools);
       }else if(order.payment_status==="review_required"&&order.status!=="cancelled"){
         const paymentTools=node("div","payment-tools");
         paymentTools.append(node("div","payment-help","Pagamento em conferência: a validação identificou uma divergência. O pedido continua bloqueado; não tente confirmar novamente por este painel. Revise a transação e resolva a pendência antes de liberar."));
