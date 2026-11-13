@@ -25,6 +25,21 @@ input,select{width:100%;min-width:0;border:1px solid var(--line);border-radius:8
 .quick-filters{display:flex;align-items:center;gap:7px;overflow:auto;padding:3px 0 11px}.quick-filter{display:inline-flex;align-items:center;gap:7px;white-space:nowrap;border:1px solid var(--line);background:var(--surface);padding:7px 10px;border-radius:30px;color:var(--muted);font-size:9px;font-weight:700}.quick-filter b{font:10px "DM Mono",monospace;color:var(--ink);background:#f2eef0;padding:2px 6px;border-radius:20px}.quick-filter.active{color:var(--wine);background:#f8edf1;border-color:#e4c9d3}.quick-filter.active b{background:#ecd8e0;color:var(--wine)}
 .notice{display:none;padding:11px 13px;border:1px solid var(--line);border-radius:9px;margin:10px 0;background:#fff;color:#6b3347;line-height:1.55;font-size:10px}.notice.show{display:block}.notice.error{border-color:#e6c3c8;background:var(--red-bg);color:var(--red)}
 .results-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:7px 0 8px}.results-head h2{font:500 19px "Playfair Display",Georgia,serif;margin:0}.results-head p{font-size:9px;color:var(--muted);margin:3px 0 0}.result-count{font:9px "Montserrat",sans-serif;color:var(--muted);background:#fff;border:1px solid var(--line);border-radius:30px;padding:6px 9px}
+.sales-ledger{background:var(--surface);border:1px solid var(--line);border-radius:12px;margin:9px 0 20px;overflow:hidden;box-shadow:var(--shadow)}
+.sales-ledger-head{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;padding:12px 14px;border-bottom:1px solid var(--line)}
+.sales-ledger-head h2{font:500 19px "Playfair Display",Georgia,serif;margin:0}
+.sales-ledger-head p{font-size:9px;color:var(--muted);margin:3px 0 0}
+.sales-ledger-meta{font:9px "Montserrat",sans-serif;color:var(--muted);text-align:right}
+.sales-table-wrap{overflow-x:auto}
+.sales-table{width:100%;border-collapse:collapse;min-width:690px}
+.sales-table th,.sales-table td{padding:10px 12px;border-bottom:1px solid #f0ecef;text-align:left;vertical-align:middle;font-size:10px}
+.sales-table th{font-size:8px;letter-spacing:.7px;color:var(--muted);background:var(--soft);font-weight:700}
+.sales-table tbody tr:last-child td{border-bottom:0}
+.sales-table td strong{font-size:10px}
+.sale-channel{display:block;color:var(--muted);font-size:8px;margin-top:2px}
+.sale-items{max-width:290px;color:#5f555b;line-height:1.45}
+.sales-empty{padding:16px;color:var(--muted);font-size:10px}
+
 .order{border:1px solid var(--line);background:var(--surface);border-radius:12px;margin:9px 0;overflow:hidden;box-shadow:var(--shadow)}.order-head{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:14px;padding:12px 14px;border-bottom:1px solid var(--line);align-items:center;background:linear-gradient(90deg,#fff,#fdfbfc)}.order-head-left{display:flex;align-items:center;gap:12px;min-width:0}.order-id{font:600 16px "DM Sans",sans-serif;color:var(--wine);white-space:nowrap}.customer{font-weight:700;font-size:11px;margin-top:2px}.order-meta{color:var(--muted);font-size:9px;margin-top:3px;overflow-wrap:anywhere}
 .order-badges{display:flex;justify-content:flex-end;flex-wrap:wrap;gap:6px}.status{display:inline-flex;align-items:center;gap:5px;padding:6px 8px;border-radius:30px;border:1px solid var(--line);color:var(--muted);font-size:8px;font-weight:700;letter-spacing:.02em;text-align:center;background:#faf8f9}.status:before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}.status.paid{border-color:#cce4d4;color:var(--green);background:var(--green-bg)}.status.pending{border-color:#f0dbb5;color:var(--amber);background:var(--amber-bg)}.status.review{border-color:#ecc7cc;color:var(--red);background:var(--red-bg)}.status.delivery{border-color:#ded1e8;color:#75538c;background:#f5eff9}
 .order-body{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(230px,.85fr);gap:13px;padding:12px 14px}.order-panel{min-width:0}.label{display:flex;align-items:center;gap:7px;color:var(--muted);font-size:8px;text-transform:uppercase;letter-spacing:.1em;font-weight:700;margin-bottom:7px}.label svg{width:13px;height:13px;color:var(--gold)}.items{display:grid;gap:6px;color:#4b4147}.item{display:flex;justify-content:space-between;gap:10px;font-size:10px;padding-bottom:5px;border-bottom:1px dashed #eee8ec}.item:last-child{border-bottom:0;padding-bottom:0}.item strong{color:var(--ink);white-space:nowrap}.address{color:#554b51;font-size:10px;line-height:1.6;overflow-wrap:anywhere;background:var(--soft);border:1px solid #f0eaee;padding:9px;border-radius:8px}
@@ -47,7 +62,7 @@ input,select{width:100%;min-width:0;border:1px solid var(--line);border-radius:8
 <form id="loginForm" class="login-form"><div class="eyebrow">ACESSO RESTRITO</div><h2>Entrar nos pedidos</h2><p>Use a conta administrativa Luxuriosa.</p><label for="email">E-mail</label><input id="email" type="email" autocomplete="username" required><label for="password">Senha</label><input id="password" type="password" autocomplete="current-password" required><button class="primary" type="submit">ACESSAR PEDIDOS</button><div id="loginNotice" class="notice" role="status"></div></form>
 </section>
     <section id="dashboard" class="hidden">
-<div class="page-head"><div class="page-head-copy"><div class="eyebrow">OPERAÇÃO · VENDAS ONLINE</div><h1>Pedidos e entregas</h1><p class="subtitle">Confira o recebimento no InfinitePay e confirme manualmente. Depois, avance cada pedido por separação, despacho, rota e entrega.</p></div><div class="page-head-actions"><button id="refresh" type="button" class="primary"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 7v5h-5M4 17v-5h5"/><path d="M5.6 9A7 7 0 0 1 18 6l2 6M4 12l2 6a7 7 0 0 0 12.4-3"/></svg>Atualizar pedidos</button></div></div>
+<div class="page-head"><div class="page-head-copy"><div class="eyebrow">OPERAÇÃO · VENDAS ONLINE</div><h1>Pedidos e entregas</h1><p class="subtitle">Confira o recebimento na InfinitePay. Se o webhook não trouxer as referências, informe os dados da cobrança para validar o pagamento antes de liberar o pedido.</p></div><div class="page-head-actions"><button id="refresh" type="button" class="primary"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 7v5h-5M4 17v-5h5"/><path d="M5.6 9A7 7 0 0 1 18 6l2 6M4 12l2 6a7 7 0 0 0 12.4-3"/></svg>Atualizar pedidos</button></div></div>
 <div id="summary" class="summary" aria-live="polite"><div class="summary-card"><span class="summary-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 4h16v16H4z"/><path d="M8 8h8M8 12h8M8 16h5"/></svg></span><div><div class="summary-label">Pedidos listados</div><div class="summary-value">—</div><div class="summary-note">Aguardando consulta</div></div></div></div>
 <div class="toolbar">
 <div class="search-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 5 5"/></svg><input id="search" type="search" aria-label="Buscar pedidos" placeholder="Buscar número, cliente ou telefone"></div>
@@ -59,8 +74,13 @@ input,select{width:100%;min-width:0;border:1px solid var(--line);border-radius:8
 <button class="quick-filter" type="button" data-filter="pending">Aguardando pagamento <b data-count="pending">—</b></button>
 <button class="quick-filter" type="button" data-filter="review_required">Em conferência <b data-count="review">—</b></button>
 <button class="quick-filter" type="button" data-filter="paid">Pagos <b data-count="paid">—</b></button>
+<button class="quick-filter" type="button" data-filter="test">Testes <b data-count="test">—</b></button>
 </nav>
 <div id="notice" class="notice" role="status"></div>
+<section class="sales-ledger" aria-labelledby="salesLedgerTitle">
+<div class="sales-ledger-head"><div><h2 id="salesLedgerTitle">Vendas reais registradas</h2><p>Histórico oficial do caixa Lux-Gestão. Pedidos pendentes e cancelados não entram como venda.</p></div><div class="sales-ledger-meta" id="salesLedgerMeta">Consultando histórico</div></div>
+<div class="sales-table-wrap"><table class="sales-table"><thead><tr><th>VENDA</th><th>DATA</th><th>CLIENTE</th><th>ITENS</th><th>PAGAMENTO</th><th>TOTAL</th></tr></thead><tbody id="salesRows"><tr><td colspan="6" class="sales-empty">Carregando vendas registradas…</td></tr></tbody></table></div>
+</section>
 <div class="results-head"><div><h2>Lista de pedidos</h2><p>Confira itens e endereço; avance uma etapa por vez para manter o histórico operacional correto.</p></div><span id="resultCount" class="result-count">Aguardando dados</span></div>
 <div id="orders" aria-live="polite"><div class="empty"><strong>Carregando pedidos</strong>Buscando os pedidos registrados na loja.</div></div>
 </section>
@@ -73,9 +93,9 @@ input,select{width:100%;min-width:0;border:1px solid var(--line);border-radius:8
     const supabase=createClient(URL,KEY,{auth:{autoRefreshToken:true,persistSession:true,detectSessionInUrl:true}});
     const $=id=>document.getElementById(id);
     const money=new Intl.NumberFormat("pt-BR",{style:"currency",currency:"BRL"});
-    const statusNames={awaiting_confirmation:"Aguardando pagamento",confirmed:"Pagamento aprovado · aguardando separação",processing:"Em separação",dispatched:"Despachado",out_for_delivery:"Em rota de entrega",delivered:"Pedido entregue",cancelled:"Pedido cancelado"};
+    const statusNames={awaiting_confirmation:"Aguardando pagamento",confirmed:"Pagamento aprovado · aguardando separação",processing:"Em separação",out_for_delivery:"Saiu para entrega",delivered:"Pedido entregue",cancelled:"Pedido cancelado"};
     const paymentNames={pending:"Aguardando pagamento",paid:"Pagamento aprovado",review_required:"Pagamento em conferência",cancelled:"Pagamento cancelado",failed:"Pagamento não concluído"};
-    let allOrders=[];
+    let allOrders=[];let allSales=[];
     function node(tag,cls,text){const e=document.createElement(tag);if(cls)e.className=cls;if(text!==undefined)e.textContent=text;return e;}
     function slaText(label,dueAt,doneAt){
       if(doneAt)return label+" concluída às "+new Date(doneAt).toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"});
@@ -104,39 +124,9 @@ input,select{width:100%;min-width:0;border:1px solid var(--line);border-radius:8
     }
     function allowedNext(order){
       if(order.status==="cancelled")return [];
-      if(order.payment_status==="paid"){const next={confirmed:["processing"],processing:["dispatched"],dispatched:["out_for_delivery"],out_for_delivery:["delivered"]};return next[order.status]||[];}
+      if(order.payment_status==="paid"){const next={confirmed:["processing"],processing:["out_for_delivery"],out_for_delivery:["delivered"]};return next[order.status]||[];}
       if(order.payment_status==="pending"&&order.status==="awaiting_confirmation")return ["cancelled"];
       return [];
-    }
-    async function confirmPaymentManual(order,button,methodSelect){
-      const paymentMethod=methodSelect.value;
-      if(!["pix","credit_card"].includes(paymentMethod)){
-        showNotice("Selecione PIX ou cartão conforme o recebimento que você conferiu.",true);
-        return;
-      }
-      const total=money.format(Number(order.total_amount)||0);
-      if(!window.confirm("Você conferiu no aplicativo InfinitePay o recebimento de "+total+" referente ao pedido #"+order.order_number+"?\n\nSó confirme se o valor estiver efetivamente recebido."))return;
-      button.disabled=true;button.textContent="CONFIRMANDO…";
-      try{
-        const result=await invokeOrdersAdmin({
-          action:"admin_confirm_payment_manual",
-          order_id:order.id,
-          payment_method:paymentMethod,
-          confirmation_note:"Recebimento conferido manualmente no aplicativo InfinitePay."
-        });
-        if(result.sales_sync?.synced===true){
-          showNotice("Pagamento confirmado. Venda lançada no Lux-Gestão e pedido liberado para expedição.");
-        }else{
-          showNotice("Pagamento confirmado, mas o lançamento no Lux-Gestão precisa de sincronização. Não confirme novamente.",true);
-        }
-        await load();
-        return result;
-      }catch(error){
-        showNotice(error.message,true);
-        return null;
-      }finally{
-        button.disabled=false;button.textContent="CONFIRMAR PAGAMENTO";
-      }
     }
     function checkoutUrl(value){
       try{
@@ -151,6 +141,9 @@ input,select{width:100%;min-width:0;border:1px solid var(--line);border-radius:8
       meta.append(node("div","order-meta",(order.customer_phone||"Sem telefone")+" · "+new Date(order.created_at).toLocaleString("pt-BR")));
       left.append(meta);
       const badges=node("div","order-badges");
+      if(order.is_test||/^teste\b/i.test(String(order.customer_name||""))){
+        badges.append(node("span","status review","TESTE · NÃO FATURAR"));
+      }
       const paymentClass=order.payment_status==="paid"?"paid":order.payment_status==="review_required"?"review":"pending";
       badges.append(node("span","status "+paymentClass,paymentNames[order.payment_status]||"Pagamento não identificado"));
       if(order.payment_status==="pending"&&order.status!=="cancelled"&&order.payment_expires_at&&new Date(order.payment_expires_at).getTime()<=Date.now()){
@@ -189,16 +182,14 @@ input,select{width:100%;min-width:0;border:1px solid var(--line);border-radius:8
         price.append(sla);
       }
       amount.append(price);
-      if(["pending","review_required"].includes(order.payment_status)&&order.status!=="cancelled"){
+      if(order.payment_status==="pending"&&order.status!=="cancelled"){
         const paymentTools=node("div","payment-tools");
         const link=checkoutUrl(order.payment_checkout_url);
         const expires=order.payment_expires_at?new Date(order.payment_expires_at):null;
         const expired=expires&&expires.getTime()<=Date.now();
-        paymentTools.append(node("div","payment-help",order.payment_status==="review_required"
-          ?"Pagamento em conferência. Confira o recebimento no aplicativo InfinitePay antes de confirmar manualmente."
-          :expired
-            ?"O prazo do link terminou em "+expires.toLocaleString("pt-BR")+". Se o valor foi recebido, confira no aplicativo antes de confirmar."
-            :"Confira no aplicativo InfinitePay se o recebimento deste pedido entrou e está disponível. A confirmação será manual."));
+        paymentTools.append(node("div","payment-help",expired
+          ?"O prazo do link terminou em "+expires.toLocaleString("pt-BR")+". Se o valor entrou na InfinitePay, confirme manualmente abaixo."
+          :"Confira no aplicativo InfinitePay se o valor deste pedido foi efetivamente recebido. Depois, confirme aqui para liberar a separação."));
         const actionRow=node("div","payment-actions");
         if(link){
           const openLink=node("a","payment-link","ABRIR COBRANÇA");
@@ -211,16 +202,25 @@ input,select{width:100%;min-width:0;border:1px solid var(--line);border-radius:8
           });
           actionRow.append(copy);
         }
-        const methodSelect=node("select");
-        methodSelect.setAttribute("aria-label","Forma de pagamento recebida");
-        methodSelect.append(new Option("Forma recebida…",""),new Option("PIX","pix"),new Option("Cartão de crédito","credit_card"));
-        const confirm=node("button","payment-check primary","CONFIRMAR PAGAMENTO");confirm.type="button";
-        confirm.addEventListener("click",()=>confirmPaymentManual(order,confirm,methodSelect));
-        actionRow.append(methodSelect,confirm);
         paymentTools.append(actionRow);
-        if(order.payment_confirmation_source==="manual_admin"){
-          paymentTools.append(node("div","payment-help","Confirmação manual registrada no painel."));
-        }
+        const confirm=node("button","primary","CONFIRMAR RECEBIMENTO");
+        confirm.type="button";
+        confirm.addEventListener("click",async()=>{
+          const total=money.format(Number(order.total_amount)||0);
+          if(!window.confirm("Você conferiu na sua conta InfinitePay o recebimento de "+total+" do pedido #"+order.order_number+"?\n\nA confirmação registra o pagamento, cria a venda no Lux-Gestão uma única vez e libera a expedição."))return;
+          confirm.disabled=true;confirm.textContent="CONFIRMANDO…";
+          try{
+            const result=await invokeOrdersAdmin({action:"admin_confirm_manual_payment",order_id:order.id});
+            if(result.management_sales_sync_status==="synced")showNotice("Recebimento confirmado. Venda sincronizada no Lux-Gestão e pedido liberado para separação.");
+            else showNotice("Recebimento confirmado, mas a sincronização da venda ficou pendente. Não confirme novamente; atualize o painel.",true);
+            await load();
+          }catch(error){showNotice(error.message,true);}
+          finally{confirm.disabled=false;confirm.textContent="CONFIRMAR RECEBIMENTO";}
+        });
+        paymentTools.append(confirm);amount.append(paymentTools);
+      }else if(order.payment_status==="review_required"&&order.status!=="cancelled"){
+        const paymentTools=node("div","payment-tools");
+        paymentTools.append(node("div","payment-help","Pagamento em conferência: a validação identificou uma divergência. O pedido continua bloqueado; não tente confirmar novamente por este painel. Revise a transação e resolva a pendência antes de liberar."));
         amount.append(paymentTools);
       }
       foot.append(amount);
@@ -244,14 +244,43 @@ input,select{width:100%;min-width:0;border:1px solid var(--line);border-radius:8
       }
       card.append(foot);return card;
     }
+    function renderSalesLedger(){
+      const body=$("salesRows");
+      const paid=allSales.filter(s=>s.payment_status==="paid");
+      const received=paid.reduce((sum,s)=>sum+Number(s.total_cents||0),0);
+      $("salesLedgerMeta").textContent=allSales.length+" vendas · "+money.format(received)+" recebidos";
+      body.replaceChildren();
+      if(!allSales.length){
+        const row=node("tr",""),cell=node("td","sales-empty","Nenhuma venda registrada na base oficial ainda.");
+        cell.colSpan=6;row.append(cell);body.append(row);return;
+      }
+      allSales.forEach(sale=>{
+        const row=node("tr","");
+        const saleCell=node("td",""),number=node("strong","","#"+sale.sale_number);
+        const channel=node("span","sale-channel",sale.source==="website"?"Venda online":"Venda presencial");
+        saleCell.append(number,channel);
+        const date=node("td","",new Date(sale.created_at).toLocaleString("pt-BR"));
+        const customer=node("td","",sale.customer_name||"Consumidor");
+        const itemNames=(Array.isArray(sale.items)?sale.items:[])
+          .map(item=>String(item.quantity||1)+"× "+String(item.product_name||"Item"))
+          .join(" · ");
+        const items=node("td","sale-items",itemNames||"Itens não informados");
+        const payment=node("td","");
+        payment.append(node("span","status "+(sale.payment_status==="paid"?"paid":"pending"),sale.payment_status==="paid"?"Recebido":"Pendente"));
+        const total=node("td","");
+        total.append(node("strong","",money.format(Number(sale.total_cents||0)/100)));
+        row.append(saleCell,date,customer,items,payment,total);body.append(row);
+      });
+    }
     function render(){
       const filter=$("statusFilter").value,term=$("search").value.trim().toLocaleLowerCase("pt-BR");
       const filtered=allOrders.filter(o=>{
         const statusMatch=!filter||
           (filter==="pending"&&o.payment_status==="pending"&&o.status!=="cancelled")||
           (filter==="paid"&&o.payment_status==="paid")||
-          (filter==="review_required"&&o.payment_status==="review_required")||
-          (!["pending","paid","review_required"].includes(filter)&&o.status===filter);
+          (filter==="review_required"&&!o.is_test&&o.payment_status==="review_required")||
+          (filter==="test"&&o.is_test===true)||
+          (!["pending","paid","review_required","test"].includes(filter)&&o.status===filter);
         return statusMatch&&(!term||[o.order_number,o.customer_name,o.customer_phone].some(v=>String(v||"").toLocaleLowerCase("pt-BR").includes(term)));
       });
       const box=$("orders");box.replaceChildren();
@@ -270,10 +299,13 @@ input,select{width:100%;min-width:0;border:1px solid var(--line);border-radius:8
       try{
         const data=await invokeOrdersAdmin({action:"admin_dashboard",days:Number($("period").value),q:"",status:""});
         allOrders=data.orders||[];
-        const pending=allOrders.filter(o=>o.payment_status==="pending"&&o.status!=="cancelled").length;
-        const paid=allOrders.filter(o=>o.payment_status==="paid").length;
-        const review=allOrders.filter(o=>o.payment_status==="review_required").length;
-        const moving=allOrders.filter(o=>o.payment_status==="paid"&&["processing","dispatched","out_for_delivery"].includes(o.status)).length;
+        allSales=Array.isArray(data.sales)?data.sales:[];
+        renderSalesLedger();
+        const operationalOrders=allOrders.filter(o=>!o.is_test);
+        const testOrders=allOrders.filter(o=>o.is_test);
+        const pending=operationalOrders.filter(o=>o.payment_status==="pending"&&o.status!=="cancelled").length;
+        const paid=operationalOrders.filter(o=>o.payment_status==="paid").length;
+        const review=operationalOrders.filter(o=>o.payment_status==="review_required").length;
         const metric=(label,value,note,icon,tone)=>{
           const card=node("div","summary-card"),symbol=node("span","summary-icon"+(tone?" "+tone:""));
           const paths={
@@ -287,14 +319,14 @@ input,select{width:100%;min-width:0;border:1px solid var(--line);border-radius:8
           body.append(name,number,detail);card.append(symbol,body);return card;
         };
         $("summary").replaceChildren(
-          metric("Pedidos listados",allOrders.length,"No período selecionado","list",""),
-          metric("Aguardando pagamento",pending,"Ainda sem confirmação","clock","amber"),
-          metric("Em conferência",review,"Exigem conciliação","clock","red"),
-          metric("Pagos · em andamento",moving,"Separação, despacho ou rota","route","green")
+          metric("Pedidos operacionais",operationalOrders.length,"Tentativas de teste excluídas","list",""),
+          metric("Aguardando pagamento",pending,"Pedidos reais sem confirmação","clock","amber"),
+          metric("Em conferência",review,"Pedidos reais em conciliação","clock","red"),
+          metric("Registros de teste",testOrders.length,"Fora dos indicadores comerciais","route","")
         );
         $("quickFilters").querySelectorAll("[data-count]").forEach(el=>{
           const key=el.dataset.count;
-          const count=key==="all"?allOrders.length:key==="pending"?pending:key==="review"?review:paid;
+          const count=key==="all"?allOrders.length:key==="pending"?pending:key==="review"?review:key==="test"?testOrders.length:paid;
           el.textContent=count;
         });
         $("quickFilters").querySelectorAll(".quick-filter").forEach(button=>button.classList.toggle("active",button.dataset.filter===$("statusFilter").value));
