@@ -52,6 +52,15 @@ Deno.serve(async (req: Request) => {
     const { data, error } = await admin.auth.getUser(token);
     if (error || !data.user) return response({ error: "Sessão inválida. Entre novamente." }, 401, origin);
     const userId = data.user.id;
+    const { data: permission, error: permissionError } = await admin
+      .from("user_permissions").select("role").eq("user_id", userId).maybeSingle();
+    if (permissionError) throw permissionError;
+    if (permission?.role !== "admin") return response({ error: "Acesso restrito à administração." }, 403, origin);
+    const { data: assurance, error: assuranceError } = await admin.auth.mfa.getAuthenticatorAssuranceLevel(token);
+    if (assuranceError) return response({ error: "Não foi possível validar o segundo fator de autenticação." }, 503, origin);
+    if (assurance.currentLevel !== "aal2") {
+      return response({ code: "mfa_required", error: "Confirme o código do seu autenticador para continuar." }, 403, origin);
+    }
     const action = body?.action;
     if (!["admin_confirm_manual_payment", "admin_retry_paid_stock_recovery", "admin_update_order_status", "admin_record_order_lifecycle_event", "admin_orders_list", "admin_search_management_customers", "admin_link_management_customer"].includes(action)) return response({ error: "Ação inválida." }, 400, origin);
 
