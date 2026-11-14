@@ -3,7 +3,7 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><meta name="theme-color" content="#0b090a">
 <title>Astrologia & Signos | Experiências Luxuriosa</title><meta name="description" content="Descubra seu signo solar e explore os 12 signos do zodíaco em uma experiência recreativa da Luxuriosa.">
 <link rel="icon" href="/img/site/favicon.ico" sizes="any"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600&display=swap" rel="stylesheet"><link rel="stylesheet" href="/css/experiencias.css"><link rel="stylesheet" href="/css/signos.css"><script src="/js/signos.js" defer></script>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600&display=swap" rel="stylesheet"><link rel="stylesheet" href="/css/experiencias.css"><link rel="stylesheet" href="/css/signos.css"><script src="/js/vendor/astronomy.browser.min.js" defer></script><script src="/js/signos.js" defer></script>
 </head><body>
 <a class="skip" href="#signosMain">Pular para o conteúdo</a>
 <header class="header"><a class="brand" href="/"><span>Luxuriosa</span><small>ASTROLOGIA & SIGNOS</small></a><nav aria-label="Navegação principal"><a href="/experiencias/">Experiências</a><a href="/portal/">Meu portal</a><a href="/educacao/">Educação</a></nav></header>
@@ -13,15 +13,26 @@
 <section id="signCalculator" class="zodiac-tool" aria-labelledby="calculatorTitle">
 <div class="tool-heading"><div><small>CALCULADORA DO ZODÍACO</small><h2 id="calculatorTitle">Qual é o seu signo?</h2><p>Informe sua data de nascimento para descobrir seu signo solar.</p></div><span class="tool-symbol" aria-hidden="true">✧</span></div>
 <form id="signForm" class="sign-form">
-<label for="birthDate">Sua data de nascimento</label>
-<div class="form-row"><input id="birthDate" name="birthDate" type="date" required><button class="primary" type="submit">Descobrir signo <span aria-hidden="true">→</span></button></div>
-<p class="privacy-note">A data é usada somente nesta tela para calcular o signo. Não é enviada nem salva.</p>
+<div class="solar-input-grid">
+<div><label for="birthDate">Data de nascimento</label><input id="birthDate" name="birthDate" type="date" required></div>
+<div><label for="birthTime">Horário de nascimento <span>(opcional)</span></label><input id="birthTime" name="birthTime" type="time" step="60"></div>
+</div>
+<details class="timezone-settings">
+<summary>Ajustar fuso horário do nascimento</summary>
+<label for="birthTimezone">Fuso horário</label>
+<input id="birthTimezone" name="birthTimezone" list="timezoneOptions" autocomplete="off" placeholder="America/Sao_Paulo">
+<datalist id="timezoneOptions"></datalist>
+<p>O fuso do seu dispositivo será sugerido. Altere se você nasceu em outra região ou país. Use o formato Região/Cidade.</p>
+</details>
+<button class="primary sign-submit" type="submit">Descobrir meu signo <span aria-hidden="true">→</span></button>
+<p class="privacy-note">Data, horário e fuso são processados nesta página. Não são enviados nem armazenados.</p>
+<p id="calculatorError" class="calculator-error" role="alert" hidden></p>
 </form>
 <div id="signResult" class="sign-result" role="status" aria-live="polite" hidden>
 <div class="result-symbol" id="resultSymbol" aria-hidden="true">♈</div>
-<div class="result-copy"><small>SEU SIGNO SOLAR</small><h3 id="resultName">Áries</h3><p id="resultDates">21 de março a 19 de abril</p><div class="result-tags"><span id="resultElement">Fogo</span><span id="resultModality">Cardinal</span></div><p id="resultDescription" class="result-description"></p></div>
+<div class="result-copy"><small>SEU SIGNO SOLAR</small><h3 id="resultName">Áries</h3><p id="resultDates">21 de março a 19 de abril</p><div class="result-tags"><span id="resultElement">Fogo</span><span id="resultModality">Cardinal</span><span id="resultCalculationMethod">Estimativa</span></div><p id="resultDescription" class="result-description"></p></div>
 </div>
-<p class="zodiac-disclaimer">Esta versão usa faixas convencionais do zodíaco tropical ocidental para uma estimativa recreativa do signo solar; não calcula a posição astronômica exata do Sol. Em datas próximas à mudança de signo, o resultado pode variar conforme o ano, horário e fuso do nascimento. Um mapa astral completo exige dados adicionais e cálculos específicos.</p>
+<p class="zodiac-disclaimer">Com data, horário e fuso, calculamos a posição do Sol no zodíaco tropical diretamente no navegador. Sem horário, mostramos uma estimativa pelas datas convencionais. Para Ascendente e casas astrológicas, também será necessário informar o local de nascimento.</p>
 </section>
 
 <section class="compatibility" aria-labelledby="compatibilityTitle">
