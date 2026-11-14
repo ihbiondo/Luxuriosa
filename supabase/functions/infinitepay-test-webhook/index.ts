@@ -21,27 +21,29 @@ function clean(value: unknown, max = 200): string {
 function uuid(value: string): boolean {
   return /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(value);
 }
-
-async function saveDiagnostic(orderNsu: string, values: Record<string, unknown>) {
-  const { error } = await admin.from("infinitepay_test_payments")
-    .update(values)
-    .eq("order_nsu", orderNsu)
-    .eq("status", "pending");
-  if (error) console.error("Could not persist InfinitePay test webhook diagnostic.", error.message);
+async function sha256Hex(value: string): Promise<string> {
+  const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(value));
+  return Array.from(new Uint8Array(digest)).map(byte => byte.toString(16).padStart(2, "0")).join("");
+}
+async function allowWebhookAttempt(orderNsu: string): Promise<boolean> {
+  const { data, error } = await admin.rpc("consume_edge_rate_limit", {
+    p_scope: "test_webhook_order",
+    p_key_hash: await sha256Hex(orderNsu),
+    p_window_seconds: 60,
+    p_limit: 5
+  });
+  if (error) throw error;
+  return data === true;
 }
 
 Deno.serve(async (req: Request) => {
   if (req.method !== "POST") return reply({ error: "Método não permitido." }, 405);
-  let diagnosticOrderNsu = "";
-  let diagnosticEventName = "";
   try {
     const body = await req.json();
     const orderNsu = clean(body?.order_nsu, 50);
     const transactionNsu = clean(body?.transaction_nsu, 160);
     const slug = clean(body?.invoice_slug || body?.slug, 200);
     const eventName = clean(body?.event || body?.type || body?.status, 40).toLowerCase();
-    diagnosticOrderNsu = orderNsu;
-    diagnosticEventName = eventName || "unspecified";
 
     if (!uuid(orderNsu)) {
       console.info("infinitepay-test-webhook ignored: invalid order reference", { eventName });
@@ -53,24 +55,16 @@ Deno.serve(async (req: Request) => {
       .eq("order_nsu", orderNsu).maybeSingle();
     if (lookupError) throw lookupError;
     if (!session) return reply({ ok: true, ignored: true });
+    if (!(await allowWebhookAttempt(orderNsu))) {
+      return reply({ error: "Muitas notificações para este pagamento de teste. Aguarde antes de tentar novamente." }, 429);
+    }
     if (session.status === "paid") {
       return reply({ ok: true, duplicate: true, test: true, fulfillment_released: false });
     }
 
-    await saveDiagnostic(orderNsu, {
-      last_webhook_attempt_at: new Date().toISOString(),
-      last_webhook_event: diagnosticEventName,
-      last_payment_check_http_status: null,
-      last_payment_check_provider_code: null,
-      last_webhook_error: null
-    });
-
     // The provider sends a separate "created" event before payment. Acknowledge it
     // immediately; it is not evidence of payment and must never change the status.
     if (eventName === "created" || (!transactionNsu && !slug)) {
-      await saveDiagnostic(orderNsu, {
-        last_webhook_error: "Aviso de criação recebido; nenhuma confirmação de pagamento foi verificada."
-      });
       console.info("infinitepay-test-webhook: non-payment notice acknowledged", {
         eventName: eventName || "unspecified",
         hasTransactionNsu: Boolean(transactionNsu),
@@ -80,9 +74,6 @@ Deno.serve(async (req: Request) => {
     }
 
     if (!transactionNsu || !slug) {
-      await saveDiagnostic(orderNsu, {
-        last_webhook_error: "Notificação de pagamento recebida sem transaction_nsu ou invoice_slug."
-      });
       console.warn("infinitepay-test-webhook: paid notice missing verification identifiers", {
         eventName, hasTransactionNsu: Boolean(transactionNsu), hasInvoiceSlug: Boolean(slug)
       });
@@ -112,10 +103,6 @@ Deno.serve(async (req: Request) => {
     const verified = await check.json().catch(() => ({}));
     const rawProviderError = verified?.error?.code ?? verified?.error ?? verified?.code;
     const providerCode = typeof rawProviderError === "string" ? clean(rawProviderError, 100) : "";
-    await saveDiagnostic(orderNsu, {
-      last_payment_check_http_status: check.status,
-      last_payment_check_provider_code: providerCode || null
-    });
     console.info("infinitepay-test-webhook payment_check result", {
       httpStatus: check.status,
       success: verified?.success === true,
@@ -127,10 +114,6 @@ Deno.serve(async (req: Request) => {
     });
 
     if (!check.ok) {
-      await saveDiagnostic(orderNsu, {
-        last_webhook_error: "InfinitePay payment_check HTTP " + check.status +
-          (providerCode ? " (" + providerCode + ")" : "") + "."
-      });
       console.warn("InfinitePay test payment_check rejected the verification request.", {
         httpStatus: check.status,
         providerCode: providerCode || null
@@ -138,10 +121,7 @@ Deno.serve(async (req: Request) => {
       return reply({ error: "Consulta de pagamento indisponível; a InfinitePay poderá reenviar o aviso." }, 503);
     }
     if (verified?.success !== true || verified?.paid !== true) {
-      await saveDiagnostic(orderNsu, {
-        last_webhook_error: "payment_check não confirmou success=true e paid=true."
-      });
-      return reply({ error: "A InfinitePay ainda não confirmou o pagamento. O aviso poderá ser reenviado." }, 503);
+      return reply({ ok: true, review_required: true, provider_verified: false, fulfillment_released: false });
     }
 
     const amount = Number(verified.amount);
@@ -170,9 +150,6 @@ Deno.serve(async (req: Request) => {
       receipt_url: safeReceipt,
       webhook_received_at: now,
       paid_at: validAmount ? now : null,
-      last_payment_check_http_status: check.status,
-      last_payment_check_provider_code: providerCode || null,
-      last_webhook_error: validAmount ? null : "Pagamento verificado, mas o valor cobrado não corresponde ao teste de R$ 1,00.",
       updated_at: now
     }).eq("order_nsu", orderNsu).eq("status", "pending");
     if (updateError) throw updateError;
@@ -182,15 +159,7 @@ Deno.serve(async (req: Request) => {
       fulfillment_released: false
     });
   } catch (error) {
-    const message = error instanceof Error ? error.message : "Erro desconhecido no processamento do webhook.";
-    if (diagnosticOrderNsu && uuid(diagnosticOrderNsu)) {
-      await saveDiagnostic(diagnosticOrderNsu, {
-        last_webhook_attempt_at: new Date().toISOString(),
-        last_webhook_event: diagnosticEventName,
-        last_webhook_error: clean(message, 300)
-      });
-    }
-    console.error("infinitepay-test-webhook:", message);
+    console.error("infinitepay-test-webhook:", error instanceof Error ? error.message : "unknown error");
     return reply({ error: "Falha ao processar notificação de pagamento de teste." }, 503);
   }
 });
