@@ -46,3 +46,9 @@
 .sign-detail-actions button.secondary{padding:8px 0;color:var(--muted);font-size:10px;text-decoration:underline;text-underline-offset:4px}
 .sign-detail-actions button.secondary:hover{color:var(--gold)}
 @media(max-width:700px){.sign-detail-intro{grid-column:1/-1}}
+
+.sign-deep-content>p{font-size:12px;line-height:2;color:#e7d5db}
+.sign-deep-content .sign-detail-panel{min-height:100%}
+.sign-deep-content .sign-growth-panel{margin-top:14px}
+.sign-deep-content .sign-growth-panel h3{margin:0 0 8px;font:400 21px var(--serif)}
+.sign-deep-content .sign-growth-panel p{margin:0;color:#e7d5db;font-size:10px;line-height:1.9}
