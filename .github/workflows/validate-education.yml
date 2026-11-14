@@ -1,0 +1,51 @@
+name: Validate Education and Experiences
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "educacao/**"
+      - "experiencias/**"
+      - "js/educacao.js"
+      - "js/educacao-interatividade.js"
+      - "js/experiencias.js"
+      - "js/signos.js"
+      - "js/signo-detalhe.js"
+      - "scripts/validar_educacao.py"
+      - "sitemap.xml"
+      - ".github/workflows/validate-education.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Validate education pages and local links
+        run: python scripts/validar_educacao.py
+      - name: Check JavaScript syntax
+        run: |
+          for file in \
+            js/educacao.js \
+            js/educacao-interatividade.js \
+            js/experiencias.js \
+            js/signos.js \
+            js/signo-detalhe.js; do
+            node --check "$file"
+          done
+      - name: Validate structured data and sitemap XML
+        run: |
+          python -m json.tool data/astrologia.json > /dev/null
+          python -c "import xml.etree.ElementTree as ET; ET.parse('sitemap.xml')"

@@ -132,8 +132,15 @@
       recent = JSON.parse(window.sessionStorage.getItem(key) || "[]");
       if (!Array.isArray(recent)) recent = [];
     } catch (_) { recent = []; }
-    const suggestion = options.find(item => item.href !== path && !recent.includes(item.href)) ||
-      options.find(item => item.href !== path) || options[0];
+    const normalizeCandidate = href => {
+      try { return normalizePath(new URL(href, window.location.origin).pathname); }
+      catch (_) { return normalizePath(href); }
+    };
+    recent = recent.map(normalizePath);
+    const suggestion = options.find(item => {
+      const candidatePath = normalizeCandidate(item.href);
+      return candidatePath !== path && !recent.includes(candidatePath);
+    }) || options.find(item => normalizeCandidate(item.href) !== path) || options[0];
     try {
       recent = [path, ...recent.filter(item => item !== path)].slice(0, 8);
       window.sessionStorage.setItem(key, JSON.stringify(recent));
