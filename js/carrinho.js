@@ -111,11 +111,16 @@
       );
 
 
-    window.open(
-      url,
-      "_blank",
-      "noopener,noreferrer"
-    );
+    var janela = window.open(url, "_blank");
+
+    if (janela) {
+      janela.opener = null;
+      return true;
+    }
+
+    /* Fallback para navegadores que bloqueiam novas janelas. */
+    window.location.assign(url);
+    return false;
 
   }
 
@@ -1422,6 +1427,70 @@
 
 
   /* =======================================================
+     FINALIZAÇÃO ASSISTIDA — SEM FORMULÁRIO
+     ======================================================= */
+
+  function finalizarComAtendente() {
+    if (!carrinho.length) return;
+    if (!catalogoSincronizado) {
+      window.alert("Estamos conferindo os preços e a disponibilidade. Aguarde alguns segundos e tente novamente.");
+      return;
+    }
+    if (carrinho.some(function (item) { return item.indisponivel; })) {
+      window.alert("Há itens indisponíveis no carrinho. Remova-os antes de continuar.");
+      return;
+    }
+
+    var linhas = [
+      "Olá! Quero finalizar meu pedido com ajuda de um atendente da *Luxuriosa*.",
+      "",
+      "*MINHA LISTA*"
+    ];
+    carrinho.forEach(function (item) {
+      linhas.push(
+        "• " + item.nome + " — " + item.quantidade + "x",
+        "  Unitário: " + formatarPreco(item.preco) +
+        " | Total: " + formatarPreco(item.preco * item.quantidade)
+      );
+    });
+    linhas.push(
+      "",
+      "*Subtotal dos produtos: " + formatarPreco(valorTotal()) + "*",
+      "",
+      "*Quero combinar com vocês:*",
+      "• Frete e prazo de entrega",
+      "• Forma de pagamento",
+      "",
+      "Se necessário, posso informar meu endereço e os demais dados diretamente na conversa.",
+      "_Esta mensagem é apenas uma solicitação de atendimento. O pedido só será confirmado após a equipe validar os detalhes._"
+    );
+
+    var mensagem = linhas.join("\n");
+    var numero = obterWhatsApp();
+    var url = "https://wa.me/" + numero + "?text=" + encodeURIComponent(mensagem);
+    /* Abre o WhatsApp diretamente no clique, com fallback contra bloqueio. */
+    if (!abrirWhatsApp(mensagem)) return;
+
+    /* Falha de telemetria nunca deve impedir o atendimento. */
+    try {
+      if (window.LuxuriosaMedicao && typeof window.LuxuriosaMedicao.registrar === "function") {
+        var registro = window.LuxuriosaMedicao.registrar("checkout_whatsapp", {
+          method: "manual_attendant",
+          quantity: quantidadeTotal()
+        });
+        if (registro && typeof registro.catch === "function") {
+          registro.catch(function (erroMedicao) {
+            console.warn("Não foi possível registrar a métrica do atendimento manual.", erroMedicao);
+          });
+        }
+      }
+    } catch (erroMedicao) {
+      console.warn("Não foi possível registrar a métrica do atendimento manual.", erroMedicao);
+    }
+  }
+
+
+  /* =======================================================
      WHATSAPP / PEDIDO
      ======================================================= */
 
@@ -1513,6 +1582,9 @@
     var finalizar =
       $("cartCheckout");
 
+    var finalizarComAjuda =
+      $("cartHumanCheckout");
+
     var limparCarrinho =
       $("cartClear");
 
@@ -1595,6 +1667,10 @@
         finalizarPedido
       );
 
+    }
+
+    if (finalizarComAjuda) {
+      finalizarComAjuda.addEventListener("click", finalizarComAtendente);
     }
 
 
