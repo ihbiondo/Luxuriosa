@@ -217,3 +217,9 @@ body{background:radial-gradient(ellipse at 9% 7%,rgba(114,67,132,.42),transparen
  .welcome p{font-size:10px}
 }
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{transition:none!important}}
+
+/* Marca horizontal compacta no cabeçalho: sem cartaz ou imagem adicional no conteúdo */
+.brand img{width:168px;max-height:none;height:auto;object-fit:contain;object-position:left center}
+.welcome-art{display:none!important}
+@media(max-width:700px){.brand img{width:145px;max-height:none}}
+@media(max-width:360px){.brand img{width:132px;max-height:none}}
