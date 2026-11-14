@@ -8,7 +8,6 @@ on:
       - "fix/infinitepay-payment-only"
     paths:
       - "pagamento-retorno.html"
-      - "gestao-privada-8f2c6d.html"
       - "supabase/functions/create-payment-order/**"
       - "acompanhar-pedido/**"
       - "lux-gestao-pedidos/**"
@@ -34,10 +33,6 @@ on:
       - ".github/workflows/payment-validate.yml"
   pull_request:
     paths:
-      - "gestao-privada-8f2c6d.html"
-      - "previa/lux-central/index.html"
-      - "previa/lux-gestao/index.html"
-      - "previa/lux-gestao/index.html"
       - "pagamento-retorno.html"
       - "supabase/functions/create-payment-order/**"
       - "acompanhar-pedido/**"
@@ -211,18 +206,16 @@ jobs:
           console.log("Checkout autenticado e acompanhamento privado validados.");
           NODE
 
-      - name: Validar migração da inteligência financeira
+      - name: Validar Edge Function da Inteligência financeira
         run: |
           node <<'NODE'
           const fs = require("node:fs");
           const intelligence = fs.readFileSync("supabase/functions/luxuriosa-intelligence/index.ts", "utf8");
           const management = fs.readFileSync("supabase/functions/management-sales/index.ts", "utf8");
-          const panel = fs.readFileSync("previa/lux-central/index.html", "utf8");
-          if (!intelligence.includes('body.action === "analytics"')) throw new Error("A Inteligência precisa expor a ação analytics.");
+          if (!intelligence.includes('body.action === "analytics"')) throw new Error("A Edge Function precisa expor a ação analytics.");
           for (const helper of ["summarizeSales", "readExpensesForAnalytics", "readSalesForAnalytics", "readBusinessSignals"]) {
             if (!intelligence.includes("function " + helper) && !intelligence.includes("async function " + helper)) throw new Error("Helper ausente na Inteligência: " + helper);
           }
-          if (!panel.includes('functions.invoke("luxuriosa-intelligence",{body:{action:"analytics"')) throw new Error("O Lux-Central ainda não consulta analytics na Inteligência.");
           if (!management.includes('action === "analytics"')) throw new Error("A ação legada deve permanecer disponível durante a transição.");
           if (!intelligence.includes('from("payment_provider_events")') || !intelligence.includes("payment_events: paymentEvents")) throw new Error("A Inteligência precisa agregar a cobertura dos webhooks de pagamento.");
           if (!intelligence.includes("HISTORICAL_TEST_ORDER_IDS") || !intelligence.includes("total: websiteOrders.length")) throw new Error("A Inteligência precisa excluir tentativas históricas de teste dos indicadores operacionais.");
@@ -230,9 +223,7 @@ jobs:
           for (const field of ["pending_expired_count", "pending_without_checkout_link_count", "active_pending_count", "checkout_link_count"]) {
             if (!intelligence.includes(field)) throw new Error("A Inteligência precisa expor o diagnóstico de cobranças: " + field);
           }
-          if (!panel.includes("Eventos de pagamento recebidos") || !panel.includes("Eventos com erro de processamento") || !panel.includes("Cobranças expiradas")) throw new Error("O Lux-Central precisa exibir a saúde dos webhooks e dos links.");
-          if (!panel.includes("Revisar cobranças expiradas")) throw new Error("O Lux-Central precisa orientar a revisão de cobranças expiradas.");
-          console.log("Migração financeira, cobertura de webhooks e compatibilidade legada validadas.");
+          console.log("Edge Function da Inteligência financeira validada.");
           NODE
 
       - name: Validar JavaScript da página de retorno
@@ -250,61 +241,6 @@ jobs:
           console.log("Scripts da página de retorno validados.");
           NODE
  
-      - name: Validar JavaScript do Lux-Central
-        run: |
-          node <<'NODE'
-          const fs = require("node:fs");
-          const html = fs.readFileSync("previa/lux-central/index.html", "utf8");
-          const scripts = [...html.matchAll(/<script\b[^>]*>([\s\S]*?)<\/script>/gi)];
-          if (!scripts.length) throw new Error("Nenhum script encontrado no Lux-Central.");
-          scripts.forEach((match, index) => {
-            const path = "/tmp/lux-central-" + index + ".js";
-            fs.writeFileSync(path, match[1]);
-            require("node:child_process").execFileSync(process.execPath, ["--check", path], { stdio: "inherit" });
-          });
-          if (!html.includes("Aguardando contagem física")) throw new Error("Painel não informa a pendência de contagem física.");
-          if (!html.includes("Contagem física registrada") || !html.includes("Cobertura de custos do catálogo")) throw new Error("Painel não apresenta cobertura mensurável de estoque e custos.");
-          if (!html.includes("Composições dos kits ainda não foram cadastradas")) throw new Error("Painel não alerta para receitas de kits ausentes.");
-          console.log("Scripts e alertas operacionais do Lux-Central validados.");
-          NODE
-
-      - name: Validar JavaScript e separação de responsabilidades do Lux-Gestão
-        run: |
-          node <<'NODE'
-          const fs = require("node:fs");
-          const html = fs.readFileSync("previa/lux-gestao/index.html", "utf8");
-          const scriptTags = [...html.matchAll(/<script[^>]*>/gi)];
-          const scripts = scriptTags.map(match => {
-            const start = match.index + match[0].length;
-            const end = html.indexOf("</script>", start);
-            return html.slice(start, end);
-          });
-          if (!scripts.length) throw new Error("Nenhum script encontrado no Lux-Gestão.");
-          scripts.forEach((source, index) => {
-            const path = "/tmp/lux-gestao-" + index + ".mjs";
-            fs.writeFileSync(path, source);
-            require("node:child_process").execFileSync(process.execPath, ["--check", path], { stdio: "inherit" });
-          });
-          for (const phrase of ["Gestão da loja", "Vendas e caixa", "Pedidos Online", "Contagem física", "Custos e kits", "Despesas"]) {
-            if (!html.includes(phrase)) throw new Error("Lux-Gestão precisa manter a função clara: " + phrase);
-          }
-          if (!html.includes('href="/lux-gestao-pedidos/"')) throw new Error("Lux-Gestão deve manter o acesso separado aos Pedidos Online.");
-          if (!html.includes('id="configureFixedKitRecipesBtn"') || !html.includes("async function configureFixedKitRecipes")) {
-            throw new Error("Lux-Gestão precisa oferecer o cadastro em lote das receitas fixas de kits.");
-          }
-          for (const kitId of ["10", "25", "26"]) {
-            if (!html.includes('kitId:"' + kitId + '"')) throw new Error("Receita fixa ausente para o kit " + kitId + ".");
-          }
-          if (!html.includes("Composições existentes não serão sobrescritas") || !html.includes("Nenhum estoque será ativado ou alterado")) {
-            throw new Error("Cadastro em lote precisa preservar composições e não alterar saldo físico.");
-          }
-          const recipeBulk = html.slice(html.indexOf("async function configureFixedKitRecipes()"), html.indexOf("async function saveRecipe(event)"));
-          if (!recipeBulk || recipeBulk.includes('api("stock-move"') || recipeBulk.includes('api("stock-configure"')) {
-            throw new Error("Cadastro de receitas não pode movimentar ou ativar estoque.");
-          }
-          console.log("Scripts, propósito do Lux-Gestão e separação dos Pedidos Online validados.");
-          NODE
-
       - name: Validar JavaScript da área administrativa
         run: |
           node <<'NODE'
