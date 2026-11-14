@@ -68,6 +68,10 @@
     setText("signPeriod", sign.period.label);
     setText("signArchetype", sign.archetype);
     setText("signOverview", sign.profile.overview);
+    setText("signEssence", sign.profile.essence);
+    setText("signRelationships", sign.profile.relationships);
+    setText("signIntimacy", sign.profile.intimacy);
+    setText("signGrowth", sign.profile.growth);
     setText("signElement", "Elemento: " + sign.element);
     setText("signModality", "Modalidade: " + sign.modality);
     setText("signPolarity", "Polaridade: " + sign.polarity);
@@ -126,6 +130,19 @@
         feedback.textContent = "Não foi possível compartilhar automaticamente. Copie o endereço desta página.";
       }
     });
+
+    if (globalThis.LuxuriosaSignShare) {
+      const shareStudio = globalThis.LuxuriosaSignShare.mount({
+        canvasId: "detailShareCanvas",
+        storyButtonId: "detailShareStory",
+        squareButtonId: "detailShareSquare",
+        downloadButtonId: "detailShareDownload",
+        shareButtonId: "detailShareNative",
+        whatsAppLinkId: "detailShareWhatsApp",
+        statusId: "detailShareStatus"
+      });
+      if (shareStudio) shareStudio.setSign(sign);
+    }
 
     root.hidden = false;
   }
