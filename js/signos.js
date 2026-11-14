@@ -61,9 +61,12 @@
     const year = parts[0];
     const month = parts[1];
     const day = parts[2];
-    const parsed = new Date(Date.UTC(year, month - 1, day));
+    const parsed = new Date(0);
+    parsed.setUTCHours(0, 0, 0, 0);
+    parsed.setUTCFullYear(year, month - 1, day);
 
     if (
+      year < 1 || month < 1 || month > 12 || day < 1 ||
       parsed.getUTCFullYear() !== year ||
       parsed.getUTCMonth() !== month - 1 ||
       parsed.getUTCDate() !== day
@@ -144,11 +147,12 @@
         " Nesta leitura, isso sugere pontos de identificação — sem determinar como uma relação funciona.";
     }
 
-    const pair = [a.element, b.element].sort().join("-");
-    if (pair === "Ar-Fogo") {
+    const hasAirAndFire = (a.element === "Ar" && b.element === "Fogo") || (a.element === "Fogo" && b.element === "Ar");
+    if (hasAirAndFire) {
       return "Na tradição astrológica, ar e fogo são associados a ideias, movimento e entusiasmo. É uma combinação simbólica que convida à troca e à experimentação.";
     }
-    if (pair === "Água-Terra") {
+    const hasWaterAndEarth = (a.element === "Água" && b.element === "Terra") || (a.element === "Terra" && b.element === "Água");
+    if (hasWaterAndEarth) {
       return "Na tradição astrológica, água e terra são associados a sensibilidade, cuidado e construção. É uma combinação simbólica que convida ao acolhimento e à consistência.";
     }
 
@@ -197,6 +201,10 @@
     setupAgeGate();
 
     if (!form || !dateInput || !grid || !firstSelect || !secondSelect) return;
+
+    const today = new Date();
+    const pad = function (number) { return String(number).padStart(2, "0"); };
+    dateInput.max = today.getFullYear() + "-" + pad(today.getMonth() + 1) + "-" + pad(today.getDate());
 
     try {
       const response = await fetch(DATA_URL, {
