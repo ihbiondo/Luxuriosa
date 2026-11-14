@@ -23,3 +23,5 @@ jobs:
           node-version: 22
       - name: Run repository security baseline
         run: node scripts/security-baseline.mjs
+      - name: Verify administrative surface invariants
+        run: node scripts/admin-surface-baseline.mjs
