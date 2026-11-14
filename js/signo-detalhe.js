@@ -86,6 +86,27 @@
     container.append(link);
   }
 
+
+  function addSignJourney(){
+    if(!root || root.querySelector(".sign-journey")) return;
+    const panel=el("aside","sign-journey");
+    panel.setAttribute("aria-labelledby","signJourneyTitle");
+    const kicker=el("small","sign-journey-kicker","SE QUISER CONTINUAR");
+    const title=el("h2","","A descoberta pode seguir por outros caminhos.");
+    title.id="signJourneyTitle";
+    const description=el("p","","A astrologia é uma leitura simbólica. Você também pode explorar conversas e informações sobre relações no seu próprio ritmo.");
+    const actions=el("div","sign-journey-actions");
+    const conversation=el("a","","Explorar uma conversa a dois →");
+    conversation.href="/experiencias/?tipo=couple";
+    const learning=el("a","","Ler sobre relações e comunicação →");
+    learning.href="/educacao/temas/relacoes-saudaveis-e-comunicacao.html";
+    actions.append(conversation,learning);
+    const portal=el("a","sign-journey-portal","Voltar ao meu Portal");
+    portal.href="/portal/";
+    panel.append(kicker,title,description,actions,portal);
+    root.append(panel);
+  }
+
   function render(sign, data) {
     const signs = data.signs.slice().sort(function (a, b) { return a.order - b.order; });
     const signsById = Object.fromEntries(signs.map(function (item) { return [item.id, item]; }));
@@ -177,6 +198,7 @@
       if (shareStudio) shareStudio.setSign(sign);
     }
 
+    addSignJourney();
     root.hidden = false;
   }
 

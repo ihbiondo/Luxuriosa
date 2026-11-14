@@ -122,3 +122,14 @@
  .sign-detail-meta span,.sign-keyword{font-size:11px}
  .sign-detail-actions a,.sign-detail-actions button{min-height:44px}
 }
+
+/* Continuidade editorial após a leitura do signo */
+.sign-journey{margin:0 0 46px;padding:22px;border:1px solid #e0d4e8;border-radius:15px;background:linear-gradient(115deg,#f3edf7,#fff3f8);color:#493451}
+.sign-journey-kicker{color:#987342;font-size:9px;font-weight:700;letter-spacing:.16em}
+.sign-journey h2{margin:6px 0;font:500 clamp(22px,3vw,28px)/1.25 var(--serif);color:#493451}
+.sign-journey>p{max-width:760px;margin:0;color:#665a70;font-size:13px;line-height:1.75}
+.sign-journey-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
+.sign-journey-actions a{min-height:44px;display:inline-flex;align-items:center;padding:9px 13px;border:1px solid #dfcfe8;border-radius:8px;background:#fff;color:#a72f78;font-size:11px;font-weight:700}
+.sign-journey-actions a:hover{border-color:#e3449d;background:#fff0f7}
+.sign-journey-portal{min-height:40px;display:inline-flex;align-items:center;margin-top:7px;color:#756a7d;font-size:10px;text-decoration:underline;text-underline-offset:3px}
+@media(max-width:700px){.sign-journey{padding:17px}.sign-journey>p{font-size:14px}.sign-journey-actions{display:grid}.sign-journey-actions a{min-height:46px;font-size:12px}}
