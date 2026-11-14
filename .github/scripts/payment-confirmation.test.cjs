@@ -23,12 +23,14 @@ assert.match(shared, /X-Api-Key/);
 assert.match(shared, /confirm_infinitepay_payment/);
 assert.match(shared, /AbortController/);
 assert.match(webhook, /verifyAndSettlePayment/);
-// Payment status is deliberately a read-only, owner-scoped endpoint.
-// Payment confirmation and operational synchronization happen only in trusted backend flows.
+// Payment status is a read-only, owner-scoped order query.
+// Its only RPC is the private distributed rate limiter; settlement and order mutations
+// remain restricted to trusted backend flows.
 assert.match(status, /admin\.auth\.getUser\(token\)/);
 assert.match(status, /\.eq\("customer_id", authData\.user\.id\)/);
-assert.match(status, /consume_edge_rate_limit/);
-assert.doesNotMatch(status, /\.rpc\(/);
+assert.match(status, /admin\.rpc\("consume_edge_rate_limit"/);
+assert.match(status, /p_scope:\s*"payment_status_user"/);
+assert.doesNotMatch(status, /confirm_infinitepay_payment|verifyAndSettlePayment|\.update\(|\.insert\(|\.upsert\(|\.delete\(/);
 assert.match(status, /management_sales_sync_status/);
 assert.match(page, /getAccessToken\(\)/);
 assert.match(page, /"authorization":"Bearer "\+accessToken/);
