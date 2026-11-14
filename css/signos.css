@@ -75,3 +75,59 @@
 .calculator-error{margin:10px 0 0;padding:11px 13px;border-left:2px solid var(--pink);background:#8b1e3f22;color:#f4c8d7;font-size:9px;line-height:1.7}
 .sign-result .result-tags span:last-child{color:#f4b5ca}
 @media(max-width:560px){.solar-input-grid{grid-template-columns:1fr}.sign-submit{width:100%}}
+
+
+
+/* Astrologia: componentes do mesmo universo visual, com superfícies claras */
+.zodiac-tool,.compatibility{
+ border-color:#e2d5eb;background:linear-gradient(145deg,#f9f5fb,#eee5f4);
+ color:#493451;box-shadow:0 12px 30px rgba(0,0,0,.16)
+}
+.tool-heading small,.result-copy>small,.compatibility-result>small,.sign-footer-note small{color:#896e97}
+.tool-heading h2,.compatibility .section-head h2,.sign-catalog .section-head h2{color:#493451}
+.tool-heading p,.compatibility-intro{color:#6d6175;font-size:13px;line-height:1.75}
+.tool-symbol{border-color:#dfcfe8;background:#fff2f8;color:#c43a8e}
+.sign-form label,.compatibility-form label,.solar-input-grid label,.timezone-settings label{color:#51435b;font-size:12px}
+.form-row input,.solar-input-grid input,.timezone-settings input,.compatibility-form select{
+ min-height:48px;border-color:#d8cbe1;background:#fff;color:#493451;font-size:14px
+}
+.form-row input::placeholder,.solar-input-grid input::placeholder{color:#93869b}
+.form-row .primary,.sign-submit{background:#e3449d;border-color:#e3449d;color:#fff}
+.privacy-note,.zodiac-disclaimer{color:#75697d;font-size:12px;line-height:1.7}
+.calculator-error{background:#fff0f5;color:#9d285d;border-left-color:#e3449d}
+.sign-result{border-color:#e2d5eb;background:linear-gradient(115deg,#fff1f7,#f1e9f6);color:#493451}
+.result-symbol{border-color:#dfc8e5;background:#fff;color:#9a6ea7}
+.result-copy h3{color:#493451}
+.result-copy>p,.result-copy .result-description{color:#675b70;font-size:13px;line-height:1.75}
+.result-tags span{border-color:#e0d3e8;color:#815f8c;background:#fff;font-size:10px}
+.result-tags span:last-child{color:#b52e78}
+.compatibility .section-head,.sign-catalog .section-head{color:#493451}
+.compatibility-and{color:#a47b42}
+.compatibility-result{border-left-color:#e3449d;background:#fff0f7;color:#493451}
+.compatibility-result h3{color:#493451}
+.compatibility-result p{color:#62576b;font-size:13px;line-height:1.75}
+.sign-catalog .section-head h2{color:#fff2fa}
+.catalog-count{color:#d4c4dc;font-size:10px}
+.sign-grid{gap:13px}
+.sign-card{border-color:#e0d3e8;background:linear-gradient(145deg,#faf7fc,#eee5f4);color:#493451;box-shadow:0 8px 22px rgba(0,0,0,.16)}
+.sign-card:hover{border-color:#e3449d}
+.sign-card-symbol{color:#aa7b45}
+.sign-card h3{color:#493451}
+.sign-card p{color:#6c6173;font-size:11px}
+.sign-card span:last-child,.sign-card-meta{color:#b52e78;font-size:9px}
+.sign-card-details{border-top-color:#dfd4e8}
+.sign-card-details summary,.sign-card-link{color:#b52e78;font-size:10px}
+.sign-card-details p{color:#665a70;font-size:11px;line-height:1.7}
+.sign-card-details .sign-card-overview{color:#574b61}
+.sign-card-details .sign-card-prompt{color:#876a3c}
+.sign-load-error{border-color:#e0d3e8;background:#f7f1fa;color:#665a70}
+.sign-footer-note{border-color:#dfd2e9;background:linear-gradient(110deg,#f2eaf7,#fff2f8);color:#493451}
+.sign-footer-note h2{color:#493451}
+.sign-footer-note p{color:#665a70;font-size:12px;line-height:1.75}
+.sign-footer-note>a{color:#a8327b;font-size:11px}
+@media(max-width:560px){
+ .zodiac-tool,.compatibility{padding:18px}
+ .sign-result{flex-wrap:wrap}
+ .result-copy>p,.result-copy .result-description{font-size:13px}
+ .sign-card p,.sign-card-details p{font-size:12px}
+}

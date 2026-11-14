@@ -75,3 +75,86 @@
  .age-dialog,.experience-dialog{padding:22px 18px}.experience-dialog{max-height:90vh}
 }
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{transition:none!important}}
+
+
+
+/* Luxuriosa | identidade compartilhada das áreas de conteúdo */
+:root{
+ --bg:#191020;--panel:#2a1b33;--wine:#493451;--pink:#f04fa8;--gold:#d3b477;
+ --lilac:#b99acb;--lilac-light:#eee5f4;--text:#f8f2fa;--muted:#d2c4da;
+ --line:rgba(224,205,235,.23);--serif:"Playfair Display",Georgia,serif;
+ --sans:Montserrat,Arial,sans-serif
+}
+body{background:radial-gradient(ellipse at 10% 5%,rgba(113,69,132,.4),transparent 38%),radial-gradient(ellipse at 94% 80%,rgba(240,79,168,.12),transparent 34%),linear-gradient(145deg,#130b17,#24132c 55%,#170e1c);color:var(--text);font-family:var(--sans)}
+.header{background:rgba(27,15,33,.96);border-bottom-color:var(--line)}
+.brand{color:#f8effa}.brand small{color:#d9bd8c}
+.header nav a{min-height:42px;display:inline-flex;align-items:center;color:#e3d5eb;font-size:11px}
+.header nav a:hover{color:#ff8ac7}
+.hero{background:radial-gradient(ellipse at 85% 0%,rgba(185,154,203,.22),transparent 45%),linear-gradient(120deg,rgba(37,22,46,.6),transparent 72%)}
+.hero>small,.section-head small,.note small{color:#dfc48e}
+.hero h1{color:#faf4fc}.hero h1 em{color:#ff8ac7}
+.hero>p{color:#d5c8dc;font-size:14px;line-height:1.8}
+.primary{min-height:46px;border-color:#e3449d;background:#e3449d;color:#fff;font-size:11px;letter-spacing:.02em}
+.primary:hover{border-color:#c92f85;background:#c92f85;color:#fff}
+.secondary{color:#e8d9ef;font-size:11px}
+.discovery{border-top-color:var(--line)}
+.section-head h2,.note h2{color:#f6eef9}
+.section-label{border-color:#b99acb80;background:rgba(185,154,203,.12);color:#eadcf1;font-size:9px}
+.search{border-color:rgba(224,205,235,.28);background:#2a1b33;color:#e7d9ef}
+.search input{color:#fff;font-size:13px}
+.search input::placeholder{color:#c2b3ca}
+.filters button{min-height:40px;border-color:rgba(224,205,235,.24);color:#d7c9df;font-size:11px}
+.filters button:hover,.filters button.active{border-color:#e3449d;background:rgba(240,79,168,.17);color:#fff}
+.filters button span{color:#e2c28a}
+.grid{gap:16px}
+.card,.card.pink,.card.gold,.card.soft{
+ min-height:260px;border:1px solid #e3d7eb;border-radius:16px;
+ background:linear-gradient(145deg,#fbf8fd,#eee5f4);color:#493451;
+ box-shadow:0 12px 30px rgba(0,0,0,.17)
+}
+.card:hover{border-color:#e3449d;box-shadow:0 15px 34px rgba(0,0,0,.23)}
+.card-top>small,.type{color:#866b91;font-size:10px}
+.favorite{width:40px;height:40px;border-color:#dfcfe8;background:#fff;color:#9b6fa4}
+.favorite:hover,.favorite[aria-pressed=true]{border-color:#e3449d;background:#fff0f7;color:#c72d82}
+.card h3{color:#493451;font-size:clamp(25px,3vw,29px)}
+.card p{color:#675d70;font-size:13px;line-height:1.75}
+.card-bottom{border-top:1px solid #e4d9eb;margin-top:20px;padding-top:16px}
+.card-bottom small{color:#817388;font-size:9px}
+.card-bottom button,.card-bottom a{color:#b52e78;font-size:11px}
+.card-bottom button:hover,.card-bottom a:hover{color:#7d315f}
+.empty{border-color:#cbb8d8;color:#675d70;background:#f7f2fa;font-size:13px}
+.note{border-color:#e1d3e9;background:linear-gradient(110deg,#f4edf8,#fff3f8);color:#493451}
+.note h2{color:#493451}.note p{color:#665b70;font-size:13px}
+.note>a{color:#a8327b;font-size:11px}
+.footer{border-top-color:rgba(224,205,235,.2);background:rgba(22,13,28,.86);color:#cbbdd3;font-size:10px}
+.footer a:first-child{color:#e5c68d}.footer a:last-child{color:#e4d6ed}
+.age-dialog,.experience-dialog{border-color:#e0d1e8;background:#f8f4fa;color:#493451;box-shadow:0 24px 90px rgba(0,0,0,.5)}
+.age-dialog h2,.experience-dialog h2,.experience-dialog h3{color:#493451}
+.age-dialog p,.experience-dialog p{color:#675d70;font-size:13px;line-height:1.75}
+.age-dialog>small,.dialog-head>div>small{color:#956e9f}
+.mark{border-color:#d3b477;color:#9a763e}
+.dialog-head>div>span{color:#766a7f}
+.dialog-head>button{border-color:#dfd3e7;color:#654c70}
+.experience-progress{background:#e6dceB}
+.experience-progress span{background:linear-gradient(90deg,#9a76ae,#e3449d)}
+.dialog-meta span{border-color:#e0d4e8;color:#766a7f;background:#fff}
+.step-label{color:#a23b7f}
+.experience-options button{min-height:48px;border-color:#ded2e6;background:#fff;color:#55465f;font-size:13px}
+.experience-options button:hover,.experience-options button[aria-pressed=true]{border-color:#e3449d;background:#fff0f7;color:#493451}
+.experience-feedback{border-left-color:#c08bcf;background:#f0e8f5;color:#51445b;font-size:13px}
+.result-advice{border-left-color:#c7a66a;background:#f8f1df;color:#55465f}
+.source-links{border-color:#e0d4e8;background:#fff}.source-links>small{color:#9a763e}
+.source-links a{color:#ad3279;font-size:12px}
+.secondary-button{border-color:#d8c9e2;background:#fff;color:#604b6b;font-size:11px}
+:focus-visible{outline:3px solid #ff77bd;outline-offset:3px}
+@media(max-width:680px){
+ .header{background:rgba(27,15,33,.98)}
+ .header nav a{font-size:10px}
+ .hero>p{font-size:14px;line-height:1.75}
+ .card{min-height:230px}
+ .card p{font-size:13px}
+ .card-bottom small{font-size:9px}
+ .card-bottom button,.card-bottom a{font-size:12px}
+ .age-dialog,.experience-dialog{max-height:90vh}
+}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{transition:none!important}}
