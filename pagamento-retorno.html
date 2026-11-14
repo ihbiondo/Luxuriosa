@@ -42,6 +42,7 @@
     <div class="actions">
       <button type="button" id="check">CONSULTAR PAGAMENTO</button>
       <a class="primary" href="index.html">VOLTAR À LUXURIOSA</a>
+      <a href="/login.html">ENTRAR NA MINHA CONTA</a>
       <a href="/acompanhar-pedido/">ACOMPANHAR MEUS PEDIDOS</a>
     </div>
   </main>
@@ -56,6 +57,13 @@
   var captureMethod=params.get("capture_method")||"";
   var api="https://byiykxfugvxuowueuxca.supabase.co/functions/v1/payment-status";
   var $=function(id){return document.getElementById(id)};
+  function getAccessToken(){
+    try{
+      var raw=localStorage.getItem("sb-byiykxfugvxuowueuxca-auth-token");
+      var parsed=raw?JSON.parse(raw):null;
+      return parsed&&typeof parsed.access_token==="string"?parsed.access_token:"";
+    }catch(_){return "";}
+  }
   var formatter=new Intl.DateTimeFormat("pt-BR",{timeZone:"America/Sao_Paulo",dateStyle:"short",timeStyle:"short"});
   function show(status,title,message,symbol){
     $("title").textContent=title;$("message").textContent=message;$("symbol").textContent=symbol;
@@ -74,7 +82,9 @@
     if(!orderNsu){show({},"Referência não encontrada","Não identificamos a referência deste pedido. Fale com a Luxuriosa pelo WhatsApp para conferir sua compra.","!");return}
     $("check").disabled=true;$("check").textContent="CONSULTANDO...";
     try{
-      var response=await fetch(api,{method:"POST",headers:{"content-type":"application/json","apikey":"sb_publishable_LaMbeWQ1PNANEQ85SD_35Q_wDzswy8y"},body:JSON.stringify({order_nsu:orderNsu,transaction_nsu:transactionNsu,slug:invoiceSlug,receipt_url:receiptUrl,capture_method:captureMethod})});
+      var accessToken=getAccessToken();
+      if(!accessToken)throw new Error("Entre na sua conta Luxuriosa utilizada neste pedido para consultar o pagamento.");
+      var response=await fetch(api,{method:"POST",headers:{"content-type":"application/json","apikey":"sb_publishable_LaMbeWQ1PNANEQ85SD_35Q_wDzswy8y","authorization":"Bearer "+accessToken},body:JSON.stringify({order_nsu:orderNsu})});
       var data=await response.json().catch(function(){return{}});
       if(!response.ok||!data.ok)throw new Error(data.error||"Não foi possível consultar o pagamento.");
       if(data.payment_status==="paid"){

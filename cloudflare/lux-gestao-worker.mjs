@@ -12,6 +12,11 @@ function privateHeaders(sourceHeaders = undefined) {
   headers.set("X-Robots-Tag", ROBOTS);
   headers.set("Cache-Control", "private, no-store, max-age=0");
   headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
+  headers.set("X-Content-Type-Options", "nosniff");
+  headers.set("X-Frame-Options", "DENY");
+  headers.set("Permissions-Policy", "camera=(), microphone=(), geolocation=()");
+  headers.set("Strict-Transport-Security", "max-age=31536000");
+  headers.set("Cross-Origin-Opener-Policy", "same-origin");
   headers.set("X-Luxuriosa-Worker-Version", VERSION);
   return headers;
 }
