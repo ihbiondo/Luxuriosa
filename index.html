@@ -54,11 +54,12 @@
   >
 
   <!-- CSS -->
-  <link rel="stylesheet" href="css/style.css?v=20261112-kits">
+  <link rel="stylesheet" href="css/style.css?v=20261114-pre-venda-v1">
   <link rel="stylesheet" href="css/responsive.css">
   <link rel="stylesheet" href="css/ajustes.css">
   <link rel="stylesheet" href="css/conta.css">
   <link rel="stylesheet" href="css/localizacao-avaliacao.css">
+  <link rel="stylesheet" href="css/pre-venda-carrossel.css?v=20261114-v1">
   <style>
     .delivery-fee-note {
       margin: 0 0 28px;
@@ -275,6 +276,41 @@
        HEADER
   ========================================================== -->
 
+  <!-- Vitrine de pré-venda em destaque antes da marca -->
+    <section class="section pre-venda-showcase" id="pre-venda-vitrine" aria-labelledby="pre-venda-vitrine-title">
+      <div class="container">
+        <div class="pre-venda-showcase-head">
+          <div>
+            <div class="kicker">Uma prévia do que vem por aí</div>
+            <h2 id="pre-venda-vitrine-title">Novidades em preparação</h2>
+          </div>
+          <p>Uma seleção especial que estamos preparando para a Luxuriosa. Ainda não está disponível para compra, mas você pode manifestar seu interesse e receber novidades pelo WhatsApp.</p>
+        </div>
+
+        <div class="pre-venda-status">
+          <span class="pre-venda-status-dot" aria-hidden="true"></span>
+          Coleção em apresentação <span aria-hidden="true">·</span> Disponibilidade futura
+        </div>
+
+        <div class="pre-venda-carousel" aria-label="Carrossel de novidades Luxuriosa">
+          <button class="pre-venda-arrow" id="pre-venda-prev" type="button" aria-label="Ver imagens anteriores" disabled>
+            <span aria-hidden="true">‹</span>
+          </button>
+
+          <div class="pre-venda-track" id="pre-venda-track" tabindex="0" role="region" aria-label="25 imagens de novidades em preparação"></div>
+
+          <button class="pre-venda-arrow" id="pre-venda-next" type="button" aria-label="Ver próximas imagens">
+            <span aria-hidden="true">›</span>
+          </button>
+        </div>
+
+        <div class="pre-venda-carousel-footer">
+          <span id="pre-venda-count" aria-live="polite">Imagens 01–03 de 25</span>
+          <span>Deslize para explorar a seleção</span>
+        </div>
+      </div>
+    </section>
+
   <header>
 
     <div class="container nav">
@@ -463,6 +499,8 @@
         </div>
       </div>
     </section>
+
+
 
     <section class="section featured-section" id="destaques">
       <div class="container">
@@ -862,12 +900,13 @@
        JAVASCRIPT
   ========================================================== -->
 
-  <script src="js/catalogo.js?v=20261114-cards-square-v1"></script>
+  <script src="js/catalogo.js?v=20261114-pre-venda-v1"></script>
   <script src="js/inteligencia.js"></script>
   <script src="js/carrinho.js"></script>
   <script src="js/clientes.js"></script>
   <script src="js/app.js?v=20261112-1900"></script>
 
   <script src="js/consentimento.js?v=20261114-clube-convite-v2"></script>
+  <script src="js/pre-venda-carrossel.js?v=20261114-v1"></script>
 </body>
 </html>
