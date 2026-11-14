@@ -58,3 +58,7 @@
 .sign-card-details .sign-card-prompt{color:#e8c98f}
 .sign-load-error{grid-column:1/-1;padding:18px;border:1px solid var(--line);border-radius:10px;color:var(--muted);font-size:10px;line-height:1.7}
 @media(max-width:560px){.sign-card-details{margin-top:10px}.sign-card-details p{font-size:8px;line-height:1.7}}
+
+.sign-card-meta{display:block;margin-top:auto;padding-top:9px;color:#f1a5bd;font-size:7px;font-weight:700;letter-spacing:.1em;text-transform:uppercase}
+.sign-card-link{display:inline-flex;align-items:center;gap:7px;margin-top:12px;color:#f2a5bd;font-size:9px;font-weight:700}
+.sign-card-link:hover{color:var(--gold)}
