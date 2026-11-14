@@ -89,8 +89,8 @@
     ctx.fillStyle = "rgba(248,239,241,.68)";
     ctx.fillText("EXPERIÊNCIAS  ·  ASTROLOGIA", centerX, top + 42);
 
-    const glyphY = story ? 720 : 390;
-    const glyphSize = story ? 310 : 230;
+    const glyphY = story ? 720 : 270;
+    const glyphSize = story ? 310 : 175;
     ctx.save();
     ctx.strokeStyle = "rgba(212,175,124,.64)";
     ctx.lineWidth = 3;
@@ -103,7 +103,7 @@
     ctx.fillText(sign.glyph, centerX, glyphY - glyphSize * 0.35);
     ctx.restore();
 
-    const titleY = story ? 1125 : 640;
+    const titleY = story ? 1125 : 410;
     ctx.fillStyle = "#d4af7c";
     ctx.font = "700 24px Montserrat, Arial, sans-serif";
     ctx.fillText("SEU SIGNO SOLAR", centerX, titleY);
@@ -115,7 +115,7 @@
     ctx.font = "italic " + (story ? 34 : 27) + "px Georgia, serif";
     wrapText(ctx, sign.archetype, centerX, titleY + (story ? 220 : 172), contentWidth, story ? 47 : 38, 2);
 
-    const tagY = titleY + (story ? 360 : 282);
+    const tagY = story ? 1435 : 680;
     const tags = [sign.element, sign.modality, sign.period.shortLabel];
     const tagWidth = story ? 230 : 210;
     const gap = 16;
@@ -134,12 +134,12 @@
       x += tagWidth + gap;
     });
 
-    const quoteY = tagY + (story ? 190 : 140);
+    const quoteY = story ? 1560 : 780;
     ctx.fillStyle = "#f8eff1";
     ctx.font = "400 " + (story ? 31 : 26) + "px 'Playfair Display', Georgia, serif";
-    wrapText(ctx, sign.shareLine || sign.profile.overview, centerX, quoteY, contentWidth, story ? 48 : 39, story ? 4 : 3);
+    wrapText(ctx, sign.shareLine || sign.profile.overview, centerX, quoteY, contentWidth, story ? 48 : 34, story ? 3 : 2);
 
-    const footerY = story ? h - 180 : h - 100;
+    const footerY = story ? h - 120 : h - 120;
     ctx.strokeStyle = "rgba(212,175,124,.42)";
     ctx.lineWidth = 2;
     ctx.beginPath();
