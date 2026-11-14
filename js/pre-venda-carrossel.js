@@ -38,14 +38,14 @@
     var media = criarElemento("div", "pre-venda-card-media");
     var image = document.createElement("img");
     image.src = "img/pre-venda-carrosel/" + numero + ".jpeg";
-    image.alt = "Prévia de novidade Luxuriosa, imagem " + numeroFormatado;
+    image.alt = "Prévia de uma peça de lingerie da coleção Luxuriosa.";
     image.width = 720;
     image.height = 900;
     image.loading = numero <= 3 ? "eager" : "lazy";
     image.decoding = "async";
     media.appendChild(image);
     media.appendChild(
-      criarElemento("span", "pre-venda-card-number", "Lingerie")
+      criarElemento("span", "pre-venda-card-label", "Lingerie")
     );
 
     var body = criarElemento("div", "pre-venda-card-body");
@@ -72,7 +72,7 @@
     action.rel = "noopener noreferrer";
     action.setAttribute(
       "aria-label",
-      "Manifestar interesse futuro pela imagem " + numeroFormatado + " no WhatsApp"
+      "Manifestar interesse futuro nesta peça de lingerie pelo WhatsApp"
     );
 
     body.appendChild(action);
@@ -90,17 +90,7 @@
     if (previousButton) previousButton.disabled = track.scrollLeft <= 2;
     if (nextButton) nextButton.disabled = track.scrollLeft >= maxScroll - 2;
 
-    if (countLabel && track.firstElementChild) {
-      var card = track.firstElementChild;
-      var style = window.getComputedStyle(track);
-      var gap = parseFloat(style.columnGap || style.gap) || 0;
-      var step = card.getBoundingClientRect().width + gap;
-      var first = step > 0 ? Math.round(track.scrollLeft / step) + 1 : 1;
-      var visible = step > 0 ? Math.max(1, Math.round(track.clientWidth / step)) : 1;
-      var last = Math.min(total, first + visible - 1);
-      var format = function (value) {
-        return String(value).padStart(2, "0");
-      };
+    if (countLabel) {
       countLabel.textContent = "Coleção de lingerie";
     }
   }
