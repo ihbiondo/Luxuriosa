@@ -25,6 +25,20 @@ function reply(body: unknown, status = 200, origin = "") {
 function validUuid(value: string): boolean {
   return /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(value);
 }
+async function sha256Hex(value: string): Promise<string> {
+  const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(value));
+  return Array.from(new Uint8Array(digest)).map(byte => byte.toString(16).padStart(2, "0")).join("");
+}
+async function allowPaymentStatusRequest(userId: string): Promise<boolean> {
+  const { data, error } = await admin.rpc("consume_edge_rate_limit", {
+    p_scope: "payment_status_user",
+    p_key_hash: await sha256Hex(userId),
+    p_window_seconds: 60,
+    p_limit: 30
+  });
+  if (error) throw error;
+  return data === true;
+}
 
 Deno.serve(async (req: Request) => {
   const origin = req.headers.get("origin") || "";
@@ -53,6 +67,13 @@ Deno.serve(async (req: Request) => {
     if (!token) return reply({ error: "Entre na conta utilizada neste pedido para acompanhar o pagamento." }, 401, origin);
     const { data: authData, error: authError } = await admin.auth.getUser(token);
     if (authError || !authData.user) return reply({ error: "Sua sessão expirou. Entre novamente para consultar este pedido." }, 401, origin);
+    let withinRateLimit = false;
+    try { withinRateLimit = await allowPaymentStatusRequest(authData.user.id); }
+    catch (rateError) {
+      console.error("payment-status rate limiter unavailable:", rateError);
+      return reply({ error: "Proteção contra abuso temporariamente indisponível. Tente novamente." }, 503, origin);
+    }
+    if (!withinRateLimit) return reply({ error: "Muitas consultas em sequência. Aguarde um minuto e tente novamente." }, 429, origin);
     const { data: order, error } = await admin.from("orders")
       .select("order_number, payment_status, paid_at, dispatch_due_at, delivery_due_at, status, management_sales_sync_status")
       .eq("id", orderNsu)
