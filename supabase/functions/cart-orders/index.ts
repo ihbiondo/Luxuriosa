@@ -7,25 +7,31 @@ const admin = createClient(SUPABASE_URL, SERVICE_ROLE_KEY, {
 });
 const allowedOrigins = new Set(["https://luxuriosa.com.br", "https://www.luxuriosa.com.br"]);
 const CATALOG_URL = "https://luxuriosa.com.br/data/produtos.json";
-const rateBuckets = new Map<string, { startedAt: number; count: number }>();
 
-// Best-effort per-isolate throttling; distributed abuse requires an edge/WAF limit too.
-function allowRate(key: string, maximum: number, windowMs = 60_000): boolean {
-  const now = Date.now();
-  const current = rateBuckets.get(key);
-  if (!current || now - current.startedAt >= windowMs) rateBuckets.set(key, { startedAt: now, count: 1 });
-  else if (current.count >= maximum) return false;
-  else current.count += 1;
-  if (rateBuckets.size > 5_000) {
-    for (const [bucketKey, bucket] of rateBuckets) if (now - bucket.startedAt > windowMs * 2) rateBuckets.delete(bucketKey);
-  }
-  return true;
+async function sha256Hex(value: string): Promise<string> {
+  const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(value));
+  return Array.from(new Uint8Array(digest)).map((byte) => byte.toString(16).padStart(2, "0")).join("");
 }
-function rateLimitRequest(req: Request, sessionKey: string, eventsOnly: boolean): boolean {
-  const ip = req.headers.get("cf-connecting-ip") || req.headers.get("x-real-ip") ||
+
+async function consumeRateLimit(scope: "cart_ip" | "cart_session", identifier: string, maximum: number): Promise<boolean> {
+  const keyHash = await sha256Hex(identifier);
+  const { data, error } = await admin.rpc("consume_edge_rate_limit", {
+    p_scope: scope,
+    p_key_hash: keyHash,
+    p_window_seconds: 60,
+    p_limit: maximum
+  });
+  if (error) throw new Error("Não foi possível validar o limite de requisições.");
+  return data === true;
+}
+
+// Atomic Postgres-backed fixed-window throttling is shared across Edge Function instances.
+async function rateLimitRequest(req: Request, sessionKey: string, eventsOnly: boolean): Promise<boolean> {
+  const ip = req.headers.get("cf-connecting-ip") ||
+    req.headers.get("x-real-ip") ||
     req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "";
-  if (ip && !allowRate("ip:" + ip, eventsOnly ? 180 : 90)) return false;
-  return allowRate("session:" + sessionKey, eventsOnly ? 120 : 30);
+  if (ip && !(await consumeRateLimit("cart_ip", ip, eventsOnly ? 180 : 90))) return false;
+  return await consumeRateLimit("cart_session", sessionKey, eventsOnly ? 120 : 30);
 }
 const VARIABLE_DICE_KIT_IDS = new Set(["22", "23", "24", "27", "28", "29"]);
 const DICE_VARIANT_NAMES = new Map([
@@ -170,7 +176,13 @@ Deno.serve(async (req: Request) => {
       if (!isUuid(sessionKey) || !allowedEvents.includes(eventName) || !allowedPages.includes(pageType)) {
         return response({ error: "Evento inválido." }, 400, origin);
       }
-      if (!rateLimitRequest(req, sessionKey, true)) return response({ error: "Muitas solicitações. Aguarde um instante e tente novamente." }, 429, origin);
+      let withinRateLimit = false;
+      try { withinRateLimit = await rateLimitRequest(req, sessionKey, true); }
+      catch (rateError) {
+        console.error("cart-orders rate limiter unavailable:", rateError);
+        return response({ error: "Proteção contra abuso temporariamente indisponível. Tente novamente." }, 503, origin);
+      }
+      if (!withinRateLimit) return response({ error: "Muitas solicitações. Aguarde um instante e tente novamente." }, 429, origin);
       const productId = eventName === "product_view" || eventName === "add_to_cart"
         ? cleanText(body.product_id, 100) : null;
       if ((eventName === "product_view" || eventName === "add_to_cart") && !productId) {
@@ -194,7 +206,13 @@ Deno.serve(async (req: Request) => {
     if (!["cart_snapshot", "checkout_started", "checkout_reviewed", "whatsapp_opened"].includes(action)) return response({ error: "Ação inválida." }, 400, origin);
     const sessionKey = body?.session_key;
     if (!isUuid(sessionKey)) return response({ error: "Sessão inválida." }, 400, origin);
-    if (!rateLimitRequest(req, sessionKey, false)) return response({ error: "Muitas solicitações. Aguarde um instante e tente novamente." }, 429, origin);
+    let withinRateLimit = false;
+    try { withinRateLimit = await rateLimitRequest(req, sessionKey, false); }
+    catch (rateError) {
+      console.error("cart-orders rate limiter unavailable:", rateError);
+      return response({ error: "Proteção contra abuso temporariamente indisponível. Tente novamente." }, 503, origin);
+    }
+    if (!withinRateLimit) return response({ error: "Muitas solicitações. Aguarde um instante e tente novamente." }, 429, origin);
     const catalog = await loadCatalog();
     const items = cleanItems(body.items || [], catalog);
     const subtotal = total(items);
