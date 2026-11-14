@@ -3,7 +3,7 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><meta name="theme-color" content="#0b090a">
 <title>Astrologia & Signos | Experiências Luxuriosa</title><meta name="description" content="Descubra seu signo solar e explore os 12 signos do zodíaco em uma experiência recreativa da Luxuriosa.">
 <link rel="icon" href="/img/site/favicon.ico" sizes="any"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600&display=swap" rel="stylesheet"><link rel="stylesheet" href="/css/experiencias.css"><link rel="stylesheet" href="/css/signos.css"><script src="/js/vendor/astronomy.browser.min.js" defer></script><script src="/js/signos.js" defer></script>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600&display=swap" rel="stylesheet"><link rel="stylesheet" href="/css/experiencias.css"><link rel="stylesheet" href="/css/signos.css"><link rel="stylesheet" href="/css/sign-share.css"><script src="/js/vendor/astronomy.browser.min.js" defer></script><script src="/js/sign-share.js" defer></script><script src="/js/signos.js" defer></script>
 </head><body>
 <a class="skip" href="#signosMain">Pular para o conteúdo</a>
 <header class="header"><a class="brand" href="/"><span>Luxuriosa</span><small>ASTROLOGIA & SIGNOS</small></a><nav aria-label="Navegação principal"><a href="/experiencias/">Experiências</a><a href="/portal/">Meu portal</a><a href="/educacao/">Educação</a></nav></header>
@@ -31,7 +31,24 @@
 <div id="signResult" class="sign-result" role="status" aria-live="polite" hidden>
 <div class="result-symbol" id="resultSymbol" aria-hidden="true">♈</div>
 <div class="result-copy"><small>SEU SIGNO SOLAR</small><h3 id="resultName">Áries</h3><p id="resultDates">21 de março a 19 de abril</p><div class="result-tags"><span id="resultElement">Fogo</span><span id="resultModality">Cardinal</span><span id="resultCalculationMethod">Estimativa</span></div><p id="resultDescription" class="result-description"></p></div>
+</div><section id="solarShareStudio" class="sign-share-studio" aria-labelledby="solarShareTitle" hidden>
+<p class="share-eyebrow">SEU RESULTADO, DO SEU JEITO</p>
+<h2 id="solarShareTitle">Crie uma arte para compartilhar.</h2>
+<p>Escolha o formato, veja a prévia e salve a imagem no seu dispositivo.</p>
+<div class="share-format-picker" role="group" aria-label="Formato da imagem">
+<button id="solarShareStory" type="button" aria-pressed="true">Story / Status · 9:16</button>
+<button id="solarShareSquare" type="button" aria-pressed="false">Feed · 1:1</button>
 </div>
+<div class="share-preview-shell"><canvas id="solarShareCanvas" width="1080" height="1920" role="img" aria-label="Arte compartilhável do resultado do signo"></canvas></div>
+<div class="share-actions">
+<button id="solarShareDownload" class="share-download" type="button" disabled>Baixar imagem PNG</button>
+<button id="solarShareNative" class="share-native" type="button" disabled>Compartilhar imagem</button>
+<a id="solarShareWhatsApp" class="share-whatsapp" href="https://wa.me/" target="_blank" rel="noopener">Enviar link pelo WhatsApp</a>
+</div>
+<p id="solarShareStatus" class="share-status" role="status" aria-live="polite"></p>
+<p class="share-guidance">No Instagram, publique a imagem baixada no Story ou Feed. Em celulares compatíveis, “Compartilhar imagem” abre os aplicativos disponíveis. A arte é gerada no próprio navegador.</p>
+</section>
+
 <p class="zodiac-disclaimer">Com data, horário e fuso, calculamos a posição do Sol no zodíaco tropical diretamente no navegador. Sem horário, mostramos uma estimativa pelas datas convencionais. Para Ascendente e casas astrológicas, também será necessário informar o local de nascimento.</p>
 </section>
 
