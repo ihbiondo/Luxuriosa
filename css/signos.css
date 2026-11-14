@@ -46,3 +46,15 @@
 :focus-visible{outline:2px solid var(--pink);outline-offset:3px}
 @media(max-width:800px){.sign-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.compatibility-form{grid-template-columns:1fr 24px 1fr}.compatibility-form .primary{grid-column:1/-1}}
 @media(max-width:560px){.zodiac-tool,.compatibility{padding:19px}.form-row{flex-direction:column}.form-row .primary{width:100%}.sign-result{align-items:flex-start;gap:13px;padding:15px}.result-symbol{width:65px;height:65px;flex-basis:65px;font-size:40px}.result-copy h3{font-size:27px}.sign-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.sign-card{min-height:124px}.compatibility-form{grid-template-columns:1fr}.compatibility-and{display:none}.compatibility-form .primary{grid-column:auto;width:100%}.sign-footer-note{align-items:flex-start;flex-direction:column;padding:19px}}
+
+.sign-card-meta{display:block}
+.sign-card-details{width:100%;margin-top:12px;padding-top:9px;border-top:1px solid var(--line)}
+.sign-card-details summary{color:var(--pink);font-size:8px;font-weight:700;cursor:pointer;list-style:none}
+.sign-card-details summary::-webkit-details-marker{display:none}
+.sign-card-details summary::after{content:"+";float:right;color:var(--gold);font-size:12px}
+.sign-card-details[open] summary::after{content:"−"}
+.sign-card-details p{margin:9px 0 0;color:var(--muted);font-size:8px;line-height:1.75}
+.sign-card-details .sign-card-overview{color:#e7d5db}
+.sign-card-details .sign-card-prompt{color:#e8c98f}
+.sign-load-error{grid-column:1/-1;padding:18px;border:1px solid var(--line);border-radius:10px;color:var(--muted);font-size:10px;line-height:1.7}
+@media(max-width:560px){.sign-card-details{margin-top:10px}.sign-card-details p{font-size:8px;line-height:1.7}}
