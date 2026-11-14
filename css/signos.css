@@ -62,3 +62,16 @@
 .sign-card-meta{display:block;margin-top:auto;padding-top:9px;color:#f1a5bd;font-size:7px;font-weight:700;letter-spacing:.1em;text-transform:uppercase}
 .sign-card-link{display:inline-flex;align-items:center;gap:7px;margin-top:12px;color:#f2a5bd;font-size:9px;font-weight:700}
 .sign-card-link:hover{color:var(--gold)}
+
+.solar-input-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px;max-width:570px}
+.solar-input-grid label,.timezone-settings label{display:block;margin:0 0 7px;color:var(--text);font-size:10px;font-weight:600}
+.solar-input-grid label span{color:var(--muted);font-weight:400}
+.solar-input-grid input,.timezone-settings input{width:100%;min-height:44px;padding:0 12px;border:1px solid var(--line);border-radius:7px;background:#100b0e;color:var(--text);font:11px var(--sans)}
+.timezone-settings{max-width:570px;margin-top:14px;padding:12px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.timezone-settings summary{color:#f1a5bd;font-size:9px;font-weight:700;cursor:pointer}
+.timezone-settings label{margin-top:13px}
+.timezone-settings p{margin:7px 0 0;color:var(--muted);font-size:8px;line-height:1.7}
+.sign-submit{margin-top:16px}
+.calculator-error{margin:10px 0 0;padding:11px 13px;border-left:2px solid var(--pink);background:#8b1e3f22;color:#f4c8d7;font-size:9px;line-height:1.7}
+.sign-result .result-tags span:last-child{color:#f4b5ca}
+@media(max-width:560px){.solar-input-grid{grid-template-columns:1fr}.sign-submit{width:100%}}
