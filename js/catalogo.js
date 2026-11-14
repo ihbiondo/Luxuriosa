@@ -1715,7 +1715,9 @@
           ) {
 
             produtos =
-              dados.produtos;
+              dados.produtos.filter(function (produto) {
+                return !produto.preVenda || config.preVendaVisivel === true;
+              });
 
           } else {
 
@@ -1747,9 +1749,13 @@
           renderizarProdutos();
           renderizarColecao("destaques-grid", "destaque");
           renderizarColecao("mais-vendidos-grid", "maisVendido");
-          renderizarColecao("pre-venda-grid", "preVenda");
-
           var secaoPreVenda = $("pre-venda");
+          if (config.preVendaVisivel === true) {
+            renderizarColecao("pre-venda-grid", "preVenda");
+          } else {
+            var gradePreVenda = $("pre-venda-grid");
+            if (gradePreVenda) gradePreVenda.textContent = "";
+          }
           if (secaoPreVenda) {
             secaoPreVenda.hidden = config.preVendaVisivel !== true ||
               !produtos.some(function (produto) { return produto.preVenda === true; });
