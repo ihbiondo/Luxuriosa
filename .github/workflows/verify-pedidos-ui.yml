@@ -3,7 +3,6 @@ name: Verify Pedidos operational UI
 on:
   pull_request:
     paths:
-      - "previa/lux-gestao-pedidos/index.html"
       - "lux-gestao-pedidos/index.html"
       - ".github/workflows/verify-pedidos-ui.yml"
   push:
@@ -29,7 +28,7 @@ jobs:
         run: |
           node --input-type=module -e '
             import { readFileSync, writeFileSync } from "node:fs";
-            for (const [path, name] of [["lux-gestao-pedidos/index.html", "live"], ["previa/lux-gestao-pedidos/index.html", "preview"]]) {
+            for (const [path, name] of [["lux-gestao-pedidos/index.html", "live"]]) {
               const html = readFileSync(path, "utf8");
               const startTag = "<script type=\"module\">";
               const start = html.indexOf(startTag);
@@ -44,4 +43,3 @@ jobs:
             }
           '
           node --check /tmp/pedidos-live.mjs
-          node --check /tmp/pedidos-preview.mjs
