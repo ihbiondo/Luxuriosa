@@ -2315,3 +2315,44 @@ footer {
 .cat-catalog-art .catalog-detail { fill:none; stroke:rgba(242,205,190,.62); stroke-width:1.5; stroke-linecap:round; }
 .cat-catalog-art .catalog-cover-mark { fill:rgba(212,175,124,.12); stroke:rgba(212,175,124,.42); stroke-width:1; }
 .cat-editorial-mark { z-index:0; right:7px; top:2px; color:rgba(212,175,124,.2); font-size:66px; }
+
+
+/* =========================================================
+   PRÉ-VENDA — VITRINE EDITORIAL
+   ========================================================= */
+
+.pre-venda-section {
+  position: relative;
+  overflow: hidden;
+  border-top: 1px solid rgba(212, 175, 124, 0.18);
+  border-bottom: 1px solid rgba(212, 175, 124, 0.18);
+  background:
+    radial-gradient(ellipse at 12% 0%, rgba(139, 30, 63, 0.22), transparent 58%),
+    linear-gradient(135deg, #120b0e 0%, #1a0e13 52%, #100b0d 100%);
+}
+
+.pre-venda-section[hidden] {
+  display: none !important;
+}
+
+.pre-venda-section .section-head {
+  align-items: end;
+}
+
+.pre-venda-section .section-head h2 {
+  color: var(--text);
+}
+
+.product-pre-venda .price {
+  color: var(--gold);
+  font-size: 0.78rem;
+  letter-spacing: 0.02em;
+}
+
+.product-pre-venda .product-purchase-row {
+  gap: 12px;
+}
+
+.product-pre-venda .product-purchase-row .btn {
+  white-space: normal;
+}
