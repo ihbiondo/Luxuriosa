@@ -152,6 +152,11 @@ Deno.serve(async (req: Request) => {
       .select("role").eq("user_id", authData.user.id).maybeSingle();
     if (permissionError) throw permissionError;
     if (permission?.role !== "admin") return reply({ error: "Acesso restrito à administração." }, 403, origin);
+    const { data: assurance, error: assuranceError } = await admin.auth.mfa.getAuthenticatorAssuranceLevel(token);
+    if (assuranceError) return reply({ error: "Não foi possível validar o segundo fator de autenticação." }, 503, origin);
+    if (assurance.currentLevel !== "aal2") {
+      return reply({ code: "mfa_required", error: "Confirme o código do seu autenticador para continuar." }, 403, origin);
+    }
 
     const rawBody = await req.text();
     if (new TextEncoder().encode(rawBody).byteLength > 16 * 1024) {
