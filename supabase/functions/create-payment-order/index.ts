@@ -15,8 +15,8 @@ const admin = createClient(SUPABASE_URL, SERVICE_ROLE_KEY, {
 const ALLOWED_ORIGINS = new Set(["https://luxuriosa.com.br", "https://www.luxuriosa.com.br"]);
 const CATALOG_URL = "https://luxuriosa.com.br/data/produtos.json";
 const CHECKOUT_URL = "https://api.checkout.infinitepay.io/links";
-const PAYMENT_CHECKOUT_PAYLOAD_VERSION = 5;
-const VARIABLE_DICE_KIT_IDS = new Set(["22", "23", "24", "26", "27", "28", "29"]);
+const PAYMENT_CHECKOUT_PAYLOAD_VERSION = 6;
+const VARIABLE_DICE_KIT_IDS = new Set(["22", "23", "24", "27", "28", "29"]);
 const ALLOWED_DICE_VARIANT_IDS = new Set(["1", "2", "3"]);
 const CLUB_DISCOUNT_THRESHOLD_CENTS = 10000;
 const CLUB_DISCOUNT_PERCENT = 10;
@@ -191,10 +191,25 @@ Deno.serve(async (req: Request) => {
   if (req.method === "OPTIONS") return reply({}, 204, origin);
   if (req.method !== "POST") return reply({ error: "Método não permitido." }, 405, origin);
   if (!ALLOWED_ORIGINS.has(origin)) return reply({ error: "Origem não autorizada." }, 403, origin);
+  if (!/^application\/json(?:\s*;|$)/i.test(req.headers.get("content-type") || "")) {
+    return reply({ error: "Formato de requisição inválido." }, 415, origin);
+  }
+  if (Number(req.headers.get("content-length") || 0) > 32 * 1024) {
+    return reply({ error: "Solicitação muito grande." }, 413, origin);
+  }
   if (!INFINITEPAY_API_KEY || !INFINITEPAY_HANDLE) return reply({ error: "O pagamento automático precisa da API Key e da InfiniteTag configuradas no servidor." }, 503, origin);
   
   try {
-    const body = await req.json();
+    const rawBody = await req.text();
+    if (new TextEncoder().encode(rawBody).byteLength > 32 * 1024) {
+      return reply({ error: "Solicitação muito grande." }, 413, origin);
+    }
+    let body: any;
+    try { body = JSON.parse(rawBody); }
+    catch { return reply({ error: "Corpo da solicitação inválido." }, 400, origin); }
+    if (!body || typeof body !== "object" || Array.isArray(body)) {
+      return reply({ error: "Corpo da solicitação inválido." }, 400, origin);
+    }
     const sessionKey = body?.session_key;
     if (!isUuid(sessionKey)) return reply({ error: "Sessão inválida. Atualize a página e tente novamente." }, 400, origin);
 
@@ -285,7 +300,9 @@ Deno.serve(async (req: Request) => {
           id: productId,
           name: productName,
           category: product.categoria || product.tipoProduto || null,
-          selected_components: selectedComponents
+          selected_components: selectedComponents,
+          selected_dice_product_id: selectedVariantId || null,
+          selected_dice_product_name: selectedComponents[0]?.product_name || null
         }
       });
     }
@@ -299,7 +316,7 @@ Deno.serve(async (req: Request) => {
     let kitRecipes: any[] = [];
     if (kitIds.length) {
       const { data, error } = await admin.from("management_kit_components")
-        .select("kit_product_id, component_product_id, component_product_name, quantity")
+        .select("kit_product_id, component_product_id, component_product_name, quantity, is_variant")
         .in("kit_product_id", kitIds);
       if (error) throw error;
       kitRecipes = data || [];
@@ -324,7 +341,9 @@ Deno.serve(async (req: Request) => {
         continue;
       }
 
-      const components = kitRecipes.filter(recipe => String(recipe.kit_product_id) === String(item.product_id));
+      const components = kitRecipes.filter(recipe =>
+        String(recipe.kit_product_id) === String(item.product_id) && recipe.is_variant !== true
+      );
       if (!components.length) {
         return reply({
           code: "kit_recipe_missing",
@@ -510,7 +529,9 @@ Deno.serve(async (req: Request) => {
       quantidade: item.quantity,
       preco: item.unit_price,
       sku: item.sku,
-      selected_components: item.product_snapshot?.selected_components || []
+      selected_components: item.product_snapshot?.selected_components || [],
+      selected_dice_product_id: item.product_snapshot?.selected_dice_product_id || null,
+      selected_dice_product_name: item.product_snapshot?.selected_dice_product_name || null
     }));
 
     const { data: cart, error: cartError } = await admin.from("cart_sessions")
