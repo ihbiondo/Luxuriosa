@@ -1,56 +1,246 @@
-(function(){
-"use strict";
-const signs=[
-{name:"Áries",glyph:"♈",dates:"21 mar — 19 abr",start:321,element:"Fogo",modality:"Cardinal",description:"Iniciativa, movimento e impulso para começar."},
-{name:"Touro",glyph:"♉",dates:"20 abr — 20 mai",start:420,element:"Terra",modality:"Fixo",description:"Constância, sensorialidade e apreço pelo conforto."},
-{name:"Gêmeos",glyph:"♊",dates:"21 mai — 20 jun",start:521,element:"Ar",modality:"Mutável",description:"Curiosidade, troca de ideias e versatilidade."},
-{name:"Câncer",glyph:"♋",dates:"21 jun — 22 jul",start:621,element:"Água",modality:"Cardinal",description:"Acolhimento, memória e sensibilidade."},
-{name:"Leão",glyph:"♌",dates:"23 jul — 22 ago",start:723,element:"Fogo",modality:"Fixo",description:"Expressividade, criatividade e presença."},
-{name:"Virgem",glyph:"♍",dates:"23 ago — 22 set",start:823,element:"Terra",modality:"Mutável",description:"Observação, organização e atenção aos detalhes."},
-{name:"Libra",glyph:"♎",dates:"23 set — 22 out",start:923,element:"Ar",modality:"Cardinal",description:"Equilíbrio, diálogo e senso de harmonia."},
-{name:"Escorpião",glyph:"♏",dates:"23 out — 21 nov",start:1023,element:"Água",modality:"Fixo",description:"Profundidade, intensidade e transformação."},
-{name:"Sagitário",glyph:"♐",dates:"22 nov — 21 dez",start:1122,element:"Fogo",modality:"Mutável",description:"Expansão, espontaneidade e busca por horizontes."},
-{name:"Capricórnio",glyph:"♑",dates:"22 dez — 19 jan",start:1222,element:"Terra",modality:"Cardinal",description:"Planejamento, persistência e construção."},
-{name:"Aquário",glyph:"♒",dates:"20 jan — 18 fev",start:120,element:"Ar",modality:"Fixo",description:"Originalidade, independência e visão coletiva."},
-{name:"Peixes",glyph:"♓",dates:"19 fev — 20 mar",start:219,element:"Água",modality:"Mutável",description:"Imaginação, empatia e sensibilidade."}
-];
-const byName=new Map(signs.map(s=>[s.name,s]));
-const form=document.getElementById("signForm"),dateInput=document.getElementById("birthDate"),result=document.getElementById("signResult");
-function signForDate(value){
-const parts=value.split("-").map(Number);if(parts.length!==3||!parts.every(Number.isFinite))return null;
-const monthDay=parts[1]*100+parts[2];
-const starts=[{name:"Capricórnio",start:0},...signs.map(s=>({name:s.name,start:s.start}))].sort((a,b)=>a.start-b.start);
-let found=starts[0];for(const item of starts){if(monthDay>=item.start)found=item;else break;}
-return byName.get(found.name)||null;
-}
-function renderSign(sign){
-document.getElementById("resultSymbol").textContent=sign.glyph;
-document.getElementById("resultName").textContent=sign.name;
-document.getElementById("resultDates").textContent=sign.dates;
-document.getElementById("resultElement").textContent="Elemento: "+sign.element;
-document.getElementById("resultModality").textContent="Modalidade: "+sign.modality;
-document.getElementById("resultDescription").textContent=sign.description;
-result.hidden=false;
-}
-form.addEventListener("submit",event=>{event.preventDefault();const value=dateInput.value;if(!value||!dateInput.validity.valid){dateInput.reportValidity();return;}const sign=signForDate(value);if(sign)renderSign(sign);});
-const first=document.getElementById("signOne"),second=document.getElementById("signTwo");
-signs.forEach(sign=>{[first,second].forEach(select=>{const option=document.createElement("option");option.value=sign.name;option.textContent=sign.glyph+" "+sign.name;select.append(option);});});
-function combination(a,b){
-if(a.element===b.element)return "Os dois signos compartilham o elemento "+a.element.toLowerCase()+". Na leitura astrológica, isso sugere uma linguagem simbólica parecida e pontos de identificação — sem determinar como uma relação funciona.";
-const fireAir=(a.element==="Ar"&&b.element==="Fogo")||(a.element==="Fogo"&&b.element==="Ar");
-if(fireAir)return "Na tradição astrológica, ar e fogo são associados a movimento, ideias e entusiasmo. É uma combinação simbólica que convida à troca e à experimentação.";
-const earthWater=(a.element==="Água"&&b.element==="Terra")||(a.element==="Terra"&&b.element==="Água");
-if(earthWater)return "Na tradição astrológica, água e terra são associados a sensibilidade, cuidado e construção. É uma combinação simbólica que convida ao acolhimento e à consistência.";
-return "Elementos diferentes trazem símbolos e ritmos distintos nesta leitura astrológica. A curiosidade pode estar justamente em conhecer e respeitar essas diferenças.";
-}
-document.getElementById("compatibilityForm").addEventListener("submit",event=>{
-event.preventDefault();const a=byName.get(first.value),b=byName.get(second.value);if(!a||!b){first.reportValidity();second.reportValidity();return;}
-document.getElementById("compatibilityHeading").textContent=a.name+" + "+b.name;
-document.getElementById("compatibilityText").textContent=combination(a,b);
-document.getElementById("compatibilityResult").hidden=false;
-});
-const grid=document.getElementById("signGrid");
-signs.forEach(sign=>{const card=document.createElement("article");card.className="sign-card";const glyph=document.createElement("span");glyph.className="sign-card-symbol";glyph.textContent=sign.glyph;const title=document.createElement("h3");title.textContent=sign.name;const dates=document.createElement("p");dates.textContent=sign.dates;const element=document.createElement("span");element.textContent=sign.element+" · "+sign.modality;card.append(glyph,title,dates,element);grid.append(card);});
-const AGE_KEY="lux18";let approved=false;try{approved=localStorage.getItem(AGE_KEY)==="1"}catch(_){}
-if(!approved){const gate=document.getElementById("ageGate");gate.showModal();document.getElementById("ageConfirm").addEventListener("click",()=>{try{localStorage.setItem(AGE_KEY,"1")}catch(_){}gate.close();});}
+(function () {
+  "use strict";
+
+  const DATA_URL = "/data/astrologia.json";
+  const AGE_KEY = "lux18";
+  const form = document.getElementById("signForm");
+  const dateInput = document.getElementById("birthDate");
+  const result = document.getElementById("signResult");
+  const firstSelect = document.getElementById("signOne");
+  const secondSelect = document.getElementById("signTwo");
+  const grid = document.getElementById("signGrid");
+
+  function setupAgeGate() {
+    let approved = false;
+    try {
+      approved = localStorage.getItem(AGE_KEY) === "1";
+    } catch (_) {
+      // A experiência continua disponível mesmo quando o armazenamento local é bloqueado.
+    }
+
+    if (approved) return;
+
+    const gate = document.getElementById("ageGate");
+    const confirm = document.getElementById("ageConfirm");
+    if (!gate || !confirm || typeof gate.showModal !== "function") return;
+
+    gate.showModal();
+    confirm.addEventListener("click", function () {
+      try {
+        localStorage.setItem(AGE_KEY, "1");
+      } catch (_) {
+        // A declaração de idade não depende de persistência local.
+      }
+      gate.close();
+    });
+  }
+
+  function appendTextElement(parent, tagName, className, value) {
+    const element = document.createElement(tagName);
+    if (className) element.className = className;
+    element.textContent = value;
+    parent.append(element);
+    return element;
+  }
+
+  function populateSignSelects(signs) {
+    [firstSelect, secondSelect].forEach(function (select) {
+      signs.forEach(function (sign) {
+        const option = document.createElement("option");
+        option.value = sign.id;
+        option.textContent = sign.glyph + " " + sign.name;
+        select.append(option);
+      });
+    });
+  }
+
+  function findSignForDate(value, signsById, signs) {
+    const parts = value.split("-").map(Number);
+    if (parts.length !== 3 || !parts.every(Number.isFinite)) return null;
+
+    const year = parts[0];
+    const month = parts[1];
+    const day = parts[2];
+    const parsed = new Date(Date.UTC(year, month - 1, day));
+
+    if (
+      parsed.getUTCFullYear() !== year ||
+      parsed.getUTCMonth() !== month - 1 ||
+      parsed.getUTCDate() !== day
+    ) {
+      return null;
+    }
+
+    const monthDay = month * 100 + day;
+    const ordered = signs.slice().sort(function (a, b) {
+      return a.period.startMonthDay - b.period.startMonthDay;
+    });
+
+    // O período de Capricórnio atravessa a virada do ano.
+    let current = signsById.capricorn || ordered[ordered.length - 1];
+
+    ordered.forEach(function (sign) {
+      if (monthDay >= sign.period.startMonthDay) current = sign;
+    });
+
+    return current || null;
+  }
+
+  function renderSign(sign) {
+    document.getElementById("resultSymbol").textContent = sign.glyph;
+    document.getElementById("resultName").textContent = sign.name;
+    document.getElementById("resultDates").textContent = sign.period.label;
+    document.getElementById("resultElement").textContent = "Elemento: " + sign.element;
+    document.getElementById("resultModality").textContent = "Modalidade: " + sign.modality;
+    document.getElementById("resultDescription").textContent = sign.profile.overview;
+    result.hidden = false;
+  }
+
+  function fillCatalog(signs, signsById) {
+    grid.replaceChildren();
+
+    signs.forEach(function (sign) {
+      const card = document.createElement("article");
+      card.className = "sign-card";
+
+      appendTextElement(card, "span", "sign-card-symbol", sign.glyph);
+      appendTextElement(card, "h3", "", sign.name);
+      appendTextElement(card, "p", "", sign.period.shortLabel);
+      appendTextElement(card, "span", "sign-card-meta", sign.element + " · " + sign.modality);
+
+      const details = document.createElement("details");
+      details.className = "sign-card-details";
+      appendTextElement(details, "summary", "", "Explorar signo");
+      appendTextElement(details, "p", "sign-card-overview", sign.profile.overview);
+      appendTextElement(details, "p", "sign-card-detail", "Potenciais simbólicos: " + sign.profile.strengths.join(", ") + ".");
+      appendTextElement(details, "p", "sign-card-detail", "Pontos de atenção: " + sign.profile.challenges.join(", ") + ".");
+      appendTextElement(details, "p", "sign-card-detail", "Comunicação: " + sign.profile.communication);
+      appendTextElement(details, "p", "sign-card-detail", "Afetividade: " + sign.profile.affection);
+      appendTextElement(details, "p", "sign-card-prompt", "Para refletir: " + sign.profile.reflectionPrompt);
+
+      const opposite = signsById[sign.oppositeSignId];
+      if (opposite) {
+        appendTextElement(details, "p", "sign-card-detail", "Signo oposto: " + opposite.name + ".");
+      }
+
+      const rulers = sign.rulers.modern
+        ? "Regência tradicional: " + sign.rulers.traditional + " · Correspondência moderna: " + sign.rulers.modern + "."
+        : "Regência tradicional: " + sign.rulers.traditional + ".";
+      appendTextElement(details, "p", "sign-card-detail", rulers);
+
+      card.append(details);
+      grid.append(card);
+    });
+  }
+
+  function describeCombination(a, b, classification) {
+    if (a.id === b.id) {
+      return "Você escolheu o mesmo signo nas duas opções. A leitura pode servir como convite para observar diferentes formas de expressar os temas simbólicos de " + a.name + ".";
+    }
+
+    if (a.element === b.element) {
+      return "Os dois signos compartilham o elemento " + a.element.toLowerCase() + ". " +
+        classification.elements[a.element] +
+        " Nesta leitura, isso sugere pontos de identificação — sem determinar como uma relação funciona.";
+    }
+
+    const pair = [a.element, b.element].sort().join("-");
+    if (pair === "Ar-Fogo") {
+      return "Na tradição astrológica, ar e fogo são associados a ideias, movimento e entusiasmo. É uma combinação simbólica que convida à troca e à experimentação.";
+    }
+    if (pair === "Água-Terra") {
+      return "Na tradição astrológica, água e terra são associados a sensibilidade, cuidado e construção. É uma combinação simbólica que convida ao acolhimento e à consistência.";
+    }
+
+    if (a.modality === b.modality) {
+      return "Os dois signos compartilham a modalidade " + a.modality.toLowerCase() + ". " +
+        classification.modalities[a.modality] +
+        " A semelhança pode ser um ponto interessante para explorar nesta leitura simbólica.";
+    }
+
+    return "Esses signos combinam elementos diferentes: " + a.element.toLowerCase() + " e " + b.element.toLowerCase() +
+      ". Na astrologia, essa diferença é tratada como um convite para conhecer ritmos, perspectivas e formas de expressão distintas.";
+  }
+
+  function setupCompatibility(signs, data) {
+    populateSignSelects(signs);
+
+    document.getElementById("compatibilityForm").addEventListener("submit", function (event) {
+      event.preventDefault();
+
+      const a = data.signsById[firstSelect.value];
+      const b = data.signsById[secondSelect.value];
+      if (!a || !b) {
+        firstSelect.reportValidity();
+        secondSelect.reportValidity();
+        return;
+      }
+
+      document.getElementById("compatibilityHeading").textContent = a.name + " + " + b.name;
+      document.getElementById("compatibilityText").textContent = describeCombination(a, b, data.classification);
+      document.getElementById("compatibilityResult").hidden = false;
+    });
+  }
+
+  function showLoadError() {
+    grid.replaceChildren();
+    appendTextElement(grid, "p", "sign-load-error", "Não foi possível carregar as informações dos signos agora. Atualize a página para tentar novamente.");
+    [form, document.getElementById("compatibilityForm")].forEach(function (element) {
+      if (!element) return;
+      element.querySelectorAll("button, input, select").forEach(function (control) {
+        control.disabled = true;
+      });
+    });
+  }
+
+  async function init() {
+    setupAgeGate();
+
+    if (!form || !dateInput || !grid || !firstSelect || !secondSelect) return;
+
+    try {
+      const response = await fetch(DATA_URL, {
+        headers: { Accept: "application/json" },
+        cache: "no-cache"
+      });
+      if (!response.ok) throw new Error("Falha ao carregar a base astrológica.");
+
+      const data = await response.json();
+      if (
+        data.schemaVersion !== 1 ||
+        !Array.isArray(data.signs) ||
+        data.signs.length !== 12 ||
+        !data.classification
+      ) {
+        throw new Error("A base astrológica não possui o formato esperado.");
+      }
+
+      const signs = data.signs.slice().sort(function (a, b) {
+        return a.order - b.order;
+      });
+      const signsById = Object.fromEntries(signs.map(function (sign) {
+        return [sign.id, sign];
+      }));
+      data.signsById = signsById;
+
+      form.addEventListener("submit", function (event) {
+        event.preventDefault();
+        if (!dateInput.value || !dateInput.validity.valid) {
+          dateInput.reportValidity();
+          return;
+        }
+
+        const sign = findSignForDate(dateInput.value, signsById, signs);
+        if (sign) renderSign(sign);
+      });
+
+      setupCompatibility(signs, data);
+      fillCatalog(signs, signsById);
+    } catch (error) {
+      console.error("[Luxuriosa] Não foi possível iniciar a experiência de signos:", error);
+      showLoadError();
+    }
+  }
+
+  init();
 })();
