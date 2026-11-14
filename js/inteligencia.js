@@ -34,7 +34,7 @@
   function readConsent() {
     try {
       var consent = JSON.parse(localStorage.getItem("lux_cookie_consent_v1") || "null");
-      if (!consent || consent.version !== 1 || !consent.updatedAt) return null;
+      if (!consent || consent.version !== 2 || !consent.updatedAt) return null;
       var updated = new Date(consent.updatedAt).getTime();
       if (!Number.isFinite(updated) || updated > Date.now() || Date.now() - updated > 180 * 86400000) return null;
       return consent;
