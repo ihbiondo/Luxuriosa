@@ -18,8 +18,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/css/experiencias.css">
 <link rel="stylesheet" href="/css/signos.css">
-<link rel="stylesheet" href="/css/signo-detalhe.css">
-<script src="/js/signo-detalhe.js" defer></script>
+<link rel="stylesheet" href="/css/signo-detalhe.css"><link rel="stylesheet" href="/css/sign-share.css">
+<script src="/js/sign-share.js" defer></script><script src="/js/signo-detalhe.js" defer></script>
 </head>
 <body data-sign-id="capricorn">
 <a class="skip" href="#signDetailMain">Pular para o conteúdo</a>
@@ -46,6 +46,23 @@
 <a class="secondary" href="/experiencias/signos.html">Voltar ao catálogo</a>
 <span id="shareFeedback" role="status" aria-live="polite"></span>
 </div>
+<section id="detailShareStudio" class="sign-share-studio" aria-labelledby="detailShareTitle">
+<p class="share-eyebrow">LEVE SEU SIGNO COM VOCÊ</p>
+<h2 id="detailShareTitle">Uma arte pronta para compartilhar.</h2>
+<p>Escolha o formato, veja a prévia e salve a imagem no seu dispositivo.</p>
+<div class="share-format-picker" role="group" aria-label="Formato da imagem">
+<button id="detailShareStory" type="button" aria-pressed="true">Story / Status · 9:16</button>
+<button id="detailShareSquare" type="button" aria-pressed="false">Feed · 1:1</button>
+</div>
+<div class="share-preview-shell"><canvas id="detailShareCanvas" width="1080" height="1920" role="img" aria-label="Arte compartilhável do signo"></canvas></div>
+<div class="share-actions">
+<button id="detailShareDownload" class="share-download" type="button" disabled>Baixar imagem PNG</button>
+<button id="detailShareNative" class="share-native" type="button" disabled>Compartilhar imagem</button>
+<a id="detailShareWhatsApp" class="share-whatsapp" href="https://wa.me/" target="_blank" rel="noopener">Enviar link pelo WhatsApp</a>
+</div>
+<p id="detailShareStatus" class="share-status" role="status" aria-live="polite"></p>
+<p class="share-guidance">No Instagram, publique a imagem baixada no Story ou Feed. Em celulares compatíveis, “Compartilhar imagem” abre os aplicativos disponíveis. A arte é gerada no próprio navegador.</p>
+</section>
 <section class="sign-detail-section" aria-labelledby="signProfileTitle">
 <small>O JEITO DESTE SIGNO</small>
 <h2 id="signProfileTitle">Características simbólicas</h2>
