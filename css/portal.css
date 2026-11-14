@@ -132,3 +132,20 @@ button{font:inherit}
  .priority-copy strong{font-size:22px}
 }
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{transition:none!important}}
+
+
+/* Identidade lavanda, ameixa e rosa luminoso nas áreas autenticadas */
+:root{--page:#f8f5fa;--lav:#eee5f4;--lav2:#e2d3eb;--lavdeep:#654b72;--pink:#e3449d;--pinksoft:#fff0f8;--gold:#c7a66a;--ink:#34283a;--muted:#756a7b;--line:#e8deeb}
+body{background:radial-gradient(ellipse at 78% 5%,rgba(178,137,196,.18),transparent 34%),radial-gradient(ellipse at 5% 85%,rgba(240,79,168,.06),transparent 30%),linear-gradient(145deg,#fbf9fc,#f3edf7 65%,#fbf8fc)}
+.topbar{background:rgba(255,255,255,.94);border-color:#e6dbea;backdrop-filter:blur(12px)}
+.welcome{background:linear-gradient(112deg,#eee5f4 0%,#faf6fc 65%,#fff2f8 100%);border-color:#e2d4e9}
+.welcome h1 span{color:#654b72}.welcome-mark{border-color:#d9c4e3;background:rgba(255,255,255,.78);color:#c7a66a}
+.priority-card--store{background:linear-gradient(120deg,#fff0f8,#fff 78%);border-color:#ecc6dc}
+.priority-card--orders{background:linear-gradient(120deg,#f0e8f5,#fff 78%);border-color:#e2d5e9}
+.priority-icon{background:#fff8fc;color:#d83c91;border-color:#ecc6dc}
+.priority-card--orders .priority-icon{background:#faf6fc;color:#654b72;border-color:#ded1e7}
+.priority-action{color:#b83280}.priority-card--orders .priority-action{color:#654b72}
+.secondary-icon{background:#eee5f4;color:#654b72}.secondary-card--experience .secondary-icon{background:#fff0f8;color:#d83c91}
+.secondary-card--club .secondary-icon{background:#faf5e9;color:#a17d42}
+:focus-visible{outline-color:#f04fa8}
+
