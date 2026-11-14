@@ -37,7 +37,8 @@
       "Vibradores",
       "Anéis penianos",
       "Plugs anais",
-      "Próteses"
+      "Próteses",
+      "Acessórios e fetiches"
     ],
     "Jogos e masturbadores": [
       "Jogos eróticos",
@@ -45,7 +46,8 @@
     ],
     "Perfumes e higiene": [
       "Perfumes sensuais",
-      "Higiene íntima"
+      "Higiene íntima",
+      "Óleos de massagem"
     ]
   };
 
