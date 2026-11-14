@@ -1,11 +1,11 @@
 // Cloudflare Worker for the production Lux-Gestão route.
-// The public preview is the deployable source of truth; this Worker serves it
-// under /lux-gestao without moving the store, online-orders, or intelligence routes.
+// The preview source is protected by Cloudflare Access and is fetched with a
+// dedicated service token stored only as Worker secrets.
 
 const APP_SOURCE_PATH = "/previa/lux-gestao/";
 const APP_ROUTES = new Set(["/lux-gestao/", "/lux-gestao/index.html"]);
 const ROBOTS = "noindex, nofollow, noarchive, nosnippet";
-const VERSION = "2026-11-11.1";
+const VERSION = "2026-11-14.1";
 
 function privateHeaders(sourceHeaders = undefined) {
   const headers = new Headers(sourceHeaders);
@@ -43,8 +43,18 @@ export default {
     }
 
     if (APP_ROUTES.has(path)) {
-      // This path is deliberately outside the Worker routes, so it resolves
-      // to the GitHub Pages origin instead of invoking this Worker recursively.
+      const accessClientId = env?.LUX_ACCESS_SERVICE_TOKEN_CLIENT_ID;
+      const accessClientSecret = env?.LUX_ACCESS_SERVICE_TOKEN_CLIENT_SECRET;
+
+      // Fail closed: never fetch a protected origin without the dedicated
+      // Cloudflare Access service token.
+      if (!accessClientId || !accessClientSecret) {
+        return textResponse("Lux-Gestão temporariamente indisponível: proteção de origem não configurada.", 503);
+      }
+
+      // The source path is protected by a Cloudflare Access Service Auth policy.
+      // These credentials exist only as Cloudflare Worker secrets and are never
+      // returned to the browser or written to logs.
       const sourceUrl = new URL(request.url);
       sourceUrl.pathname = APP_SOURCE_PATH;
 
@@ -52,14 +62,19 @@ export default {
       try {
         sourceResponse = await fetch(sourceUrl.toString(), {
           method: request.method,
-          headers: { Accept: request.headers.get("Accept") || "text/html" }
+          headers: {
+            Accept: request.headers.get("Accept") || "text/html",
+            "CF-Access-Client-Id": accessClientId,
+            "CF-Access-Client-Secret": accessClientSecret
+          }
         });
       } catch {
         return textResponse("Lux-Gestão temporariamente indisponível. Tente novamente em instantes.", 502);
       }
 
       if (!sourceResponse.ok) {
-        return textResponse("Não foi possível carregar a versão publicada do Lux-Gestão.", 503);
+        // Do not forward the Access login page, token details, or origin response.
+        return textResponse("Não foi possível validar ou carregar a origem protegida do Lux-Gestão.", 503);
       }
 
       const headers = privateHeaders(sourceResponse.headers);
@@ -70,8 +85,6 @@ export default {
       });
     }
 
-    // Keep the existing ASSETS binding available for any future route-local
-    // static files, while the app itself is served from the versioned Pages source.
     if (path.startsWith("/lux-gestao/") && env?.ASSETS?.fetch) {
       const assetUrl = new URL(request.url);
       assetUrl.pathname = path.slice("/lux-gestao".length) || "/";
