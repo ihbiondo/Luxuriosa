@@ -272,14 +272,37 @@
       return;
     }
 
+    /*
+     * Cards usam enquadramento quadrado para dar protagonismo ao produto.
+     * As artes originais da Luxuriosa são verticais (9:16); em cards 1:1,
+     * "contain" reduzia demais o produto. "cover" amplia o conteúdo sem
+     * alterar o arquivo original. A página/modal mantém a imagem integral.
+     *
+     * Se um produto ganhar uma miniatura própria, informe imagemCard no JSON.
+     * Ajustes opcionais por produto: imagemCardAjuste e imagemCardPosicao.
+     */
+    var imagemCard = !permitirGaleria &&
+      typeof produto.imagemCard === "string" &&
+      produto.imagemCard.trim();
+    var caminhoPrincipal = imagemCard ? produto.imagemCard : imagens[0];
+
     var imagemPrincipal = criarElemento("img");
-    imagemPrincipal.src = imagens[0];
+    imagemPrincipal.className = permitirGaleria
+      ? "product-detail-main-image"
+      : "product-card-main-image";
+    imagemPrincipal.src = caminhoPrincipal;
     imagemPrincipal.alt = produto.nome || "Produto Luxuriosa";
     imagemPrincipal.loading = "lazy";
     imagemPrincipal.decoding = "async";
+    imagemPrincipal.style.width = "100%";
     imagemPrincipal.style.maxWidth = "100%";
     imagemPrincipal.style.height = "100%";
-    imagemPrincipal.style.objectFit = "contain";
+    imagemPrincipal.style.objectFit = permitirGaleria
+      ? "contain"
+      : (produto.imagemCardAjuste === "contain" ? "contain" : "cover");
+    imagemPrincipal.style.objectPosition = permitirGaleria
+      ? "center center"
+      : (produto.imagemCardPosicao || "50% 66%");
 
     imagemPrincipal.onerror = function () {
       this.style.display = "none";
