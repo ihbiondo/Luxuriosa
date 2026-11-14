@@ -11,6 +11,7 @@
     { label: "Enciclopédia", href: "/educacao/enciclopedia/", section: "enciclopedia" },
     { label: "Curiosidades", href: "/educacao/curiosidades/", section: "curiosidades" },
     { label: "Guias", href: "/educacao/guias/", section: "guias" },
+    { label: "Interatividade", href: "/educacao/interatividade/", section: "interatividade" },
   ];
 
   function normalizePath(path) {
