@@ -17,3 +17,10 @@
 .share-status:empty{display:none}
 .share-guidance{margin-top:6px!important;color:#9d8990!important;font-size:8px!important}
 @media(max-width:560px){.sign-share-studio{padding:18px}.share-preview-shell{min-height:160px;padding:10px}.share-preview-shell canvas{max-height:420px}.share-actions{display:grid;grid-template-columns:1fr}.share-actions button,.share-actions a{justify-content:center;width:100%}}
+
+/* Ajuste mobile: mantém as artes 9:16 e 1:1 inteiras dentro da tela. */
+@media(max-width:560px){
+  .share-preview-shell{box-sizing:border-box;width:100%;min-width:0;padding:10px;}
+  .share-preview-shell canvas{width:100%;height:auto;max-width:260px;max-height:390px;flex:0 1 auto;}
+  .share-actions button,.share-actions a{box-sizing:border-box;min-width:0;}
+}
