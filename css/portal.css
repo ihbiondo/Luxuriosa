@@ -321,3 +321,74 @@ body{background:radial-gradient(ellipse at 82% 4%,rgba(223,204,235,.38),transpar
  .priority-description{font-size:12px}
  .secondary-card,.secondary-card:last-child{padding:14px 12px}
 }
+
+
+/* Tema equilibrado: atmosfera ameixa com superfícies claras e acessíveis */
+:root{
+ color-scheme:dark;
+ --page:#1a1020;--white:#fff;--ice:#f8f4fa;--lav:#eee5f4;--lav2:#e3d5ec;
+ --lavdeep:#493451;--pink:#f04fa8;--pinksoft:#fff0f7;--gold:#d3b477;
+ --ink:#f7effa;--muted:#d0c0d8;--line:rgba(230,207,241,.2)
+}
+body{
+ background:radial-gradient(ellipse at 9% 7%,rgba(114,67,132,.42),transparent 38%),
+ radial-gradient(ellipse at 92% 80%,rgba(224,54,151,.13),transparent 34%),
+ linear-gradient(145deg,#130b17,#24132c 54%,#170e1c);
+ color:#f7effa
+}
+.loading{background:#1a1020;color:#d0c0d8}.loading strong{color:#fff0fa}
+.topbar{background:rgba(27,15,33,.94);border-color:rgba(230,207,241,.18);box-shadow:0 5px 24px rgba(0,0,0,.2)}
+.desktop-nav a{color:#e4d5ec}.desktop-nav a span{color:#ff75bd}
+.desktop-nav a:hover,.account-link:hover{color:#ff91ca}
+.account-link{color:#e9d8f0}
+.top-actions button,.mobile-menu>summary{border-color:rgba(230,207,241,.25);background:#35203f;color:#f5eafa}
+.top-actions button:hover,.mobile-menu>summary:hover{border-color:#f04fa8;background:#48213e}
+.mobile-menu-panel{border-color:rgba(230,207,241,.2);background:#281831;box-shadow:0 18px 42px rgba(0,0,0,.4)}
+.mobile-menu-panel a{color:#eee2f4}
+.mobile-menu-panel a:hover,.mobile-menu-panel .mobile-main-link--featured{background:rgba(240,79,168,.16);color:#ff8ac7}
+.main{color:#f7effa}
+.welcome{
+ border:1px solid rgba(240,79,168,.28);
+ background:radial-gradient(ellipse at 88% 50%,rgba(226,63,155,.18),transparent 38%),linear-gradient(112deg,#2b1935,#3a2345 62%,#2b1936);
+ box-shadow:0 16px 46px rgba(0,0,0,.2)
+}
+.welcome .eyebrow{color:#e0c4eb}.welcome h1{color:#fff2fa}.welcome h1 span{color:#ff8ac7}.welcome p{color:#e0d2e8}
+.welcome-mark{border-color:rgba(240,79,168,.35);background:rgba(240,79,168,.1);color:#e5c68d}
+.priority-card{
+ border-color:#e2d5eb;background:linear-gradient(135deg,#f8f3fa,#eee5f4);
+ box-shadow:0 12px 30px rgba(0,0,0,.2)
+}
+.priority-card:hover{border-color:#f04fa8;box-shadow:0 15px 36px rgba(0,0,0,.28)}
+.priority-card--store{border-color:#edc4dc;background:linear-gradient(120deg,#fff0f7,#f5edf8 78%)}
+.priority-card--orders{border-color:#ded0e9;background:linear-gradient(120deg,#eee5f4,#faf7fc 78%)}
+.priority-icon{border-color:#efc6dd;background:#fff7fb;color:#d93691}
+.priority-card--orders .priority-icon{border-color:#d9c9e5;background:#faf6fc;color:#654b72}
+.priority-kicker{color:#806b8a}.priority-copy strong{color:#493451}
+.priority-description{color:#6f6378}.priority-action{color:#b52e78}
+.priority-card--orders .priority-action{color:#654b72}
+.discover-section .section-heading h2{color:#fff0fa}
+.section-heading .eyebrow{color:#dec2e9}
+.secondary-card{border-color:#dfd1e8;background:linear-gradient(130deg,#f6f0f9,#eee5f4);box-shadow:0 8px 24px rgba(0,0,0,.16)}
+.secondary-card:hover{border-color:#ef9dcc;background:#fff5fb}
+.secondary-icon{background:#e5d9ed;color:#60486d}
+.secondary-card--experience .secondary-icon{background:#ffe7f3;color:#d83c91}
+.secondary-card--club .secondary-icon{background:#f7efdc;color:#98743d}
+.secondary-copy strong{color:#493451}.secondary-copy>span{color:#706579}
+.secondary-arrow{color:#bd3c8a}
+.footnote{color:#d0c0d8}
+.footer{border-color:rgba(230,207,241,.17);background:rgba(25,14,30,.72);color:#d0c0d8}
+.footer a:first-child{color:#f4c8e7}
+:focus-visible{outline:3px solid #ff70ba;outline-offset:4px}
+@media(max-width:700px){
+ .main{width:min(100% - 28px,560px)}
+ .welcome{background:linear-gradient(112deg,#2b1935,#382143 62%,#2b1936)}
+ .priority-card{min-height:142px}
+ .priority-icon{width:70px;height:70px;flex-basis:70px}
+ .priority-icon svg{width:43px;height:43px}
+ .priority-copy strong{font-size:25px}
+ .priority-description{font-size:13px}
+ .secondary-card,.secondary-card:last-child{min-height:92px;padding:17px}
+ .secondary-icon{width:52px;height:52px;flex-basis:52px;font-size:26px}
+ .secondary-copy strong{font-size:18px}
+ .secondary-copy>span{font-size:12px}
+}
