@@ -93,35 +93,51 @@
     if (!main || main.querySelector(".ed-next-step")) return;
 
     const path = normalizePath(window.location.pathname);
-    const routes = [
+    const journeys = [
       {
         paths: ["/educacao/temas/consentimento-e-limites.html", "/educacao/temas/relacoes-saudaveis-e-comunicacao.html"],
-        title: "Levar a reflexão para uma conversa",
-        description: "Depois da leitura, uma atividade a dois pode abrir espaço para escuta, diálogo e respeito aos limites.",
-        href: "/experiencias/?tipo=couple",
-        label: "Explorar Conexão a dois"
+        options: [
+          { title: "Levar a reflexão para uma conversa", description: "Uma atividade a dois pode abrir espaço para escuta, diálogo e respeito aos limites.", href: "/experiencias/?tipo=couple", label: "Explorar Conexão a dois" },
+          { title: "Conhecer outras formas de se comunicar", description: "Explore conteúdos sobre relações saudáveis e comunicação respeitosa.", href: "/educacao/temas/relacoes-saudaveis-e-comunicacao.html", label: "Ler sobre comunicação" },
+          { title: "Explorar novas descobertas", description: "Uma experiência leve pode transformar reflexão em conversa, no seu ritmo.", href: "/experiencias/", label: "Conhecer Experiências" }
+        ]
       },
       {
         paths: ["/educacao/temas/prevencao-de-ist.html", "/educacao/temas/prevencao-combinada.html", "/educacao/temas/contracepcao.html", "/educacao/temas/corpo-humano-e-ciclo-menstrual.html", "/educacao/temas/saude-sexual-e-bem-estar.html"],
-        title: "Revisar o que você aprendeu",
-        description: "Atividades educativas ajudam a retomar conceitos com calma, sem nota e sem salvar respostas.",
-        href: "/educacao/interatividade/",
-        label: "Abrir atividades educativas"
+        options: [
+          { title: "Revisar o que você aprendeu", description: "Atividades educativas ajudam a retomar conceitos com calma, sem nota.", href: "/educacao/interatividade/", label: "Abrir atividades educativas" },
+          { title: "Aprofundar seus conhecimentos", description: "Consulte outros temas de saúde sexual e prevenção em uma leitura tranquila.", href: "/educacao/temas/", label: "Explorar temas educativos" },
+          { title: "Organizar suas dúvidas", description: "Os guias ajudam a preparar perguntas e encontrar orientações confiáveis.", href: "/educacao/guias/", label: "Consultar guias" }
+        ]
       },
       {
         paths: ["/educacao/enciclopedia/aneis-penianos.html", "/educacao/enciclopedia/gels-e-lubrificantes.html", "/educacao/enciclopedia/jogos-de-casal.html", "/educacao/enciclopedia/masturbadores.html", "/educacao/enciclopedia/plugs-anais.html", "/educacao/enciclopedia/vibradores.html", "/educacao/curiosidades/materiais-dos-acessorios.html"],
-        title: "Conhecer cuidados e escolhas com mais contexto",
-        description: "Você pode continuar pela biblioteca ou consultar orientações práticas de conservação e uso responsável.",
-        href: "/educacao/guias/",
-        label: "Explorar guias educativos"
+        options: [
+          { title: "Conhecer cuidados e escolhas com mais contexto", description: "Orientações práticas ajudam a conservar acessórios e fazer escolhas responsáveis.", href: "/educacao/guias/", label: "Explorar guias educativos" },
+          { title: "Consultar outros itens da enciclopédia", description: "Continue conhecendo materiais, características e cuidados de diferentes acessórios.", href: "/educacao/enciclopedia/", label: "Voltar à enciclopédia" },
+          { title: "Aprender sobre segurança e bem-estar", description: "Explore temas relacionados à saúde, privacidade e uso responsável.", href: "/educacao/temas/saude-sexual-e-bem-estar.html", label: "Ler sobre bem-estar" }
+        ]
       }
     ];
-    const suggestion = routes.find(item => item.paths.includes(path)) || {
-      title: "Quando quiser, continue explorando.",
-      description: "Você pode mudar do texto para uma atividade gratuita, sem cadastro e no seu ritmo.",
-      href: "/experiencias/",
-      label: "Conhecer Experiências"
-    };
+    const journey = journeys.find(item => item.paths.includes(path));
+    const options = journey ? journey.options : [
+      { title: "Quando quiser, continue explorando.", description: "Você pode mudar do texto para uma atividade gratuita, sem cadastro e no seu ritmo.", href: "/experiencias/", label: "Conhecer Experiências" },
+      { title: "Encontre outro assunto para descobrir.", description: "A biblioteca reúne temas, guias e explicações para consultar quando quiser.", href: "/educacao/", label: "Explorar Educação" }
+    ];
+
+    // Contexto efêmero por aba: não cria perfil, conta ou histórico persistente.
+    const key = "lux_journey_session_v1";
+    let recent = [];
+    try {
+      recent = JSON.parse(window.sessionStorage.getItem(key) || "[]");
+      if (!Array.isArray(recent)) recent = [];
+    } catch (_) { recent = []; }
+    const suggestion = options.find(item => item.href !== path && !recent.includes(item.href)) ||
+      options.find(item => item.href !== path) || options[0];
+    try {
+      recent = [path, ...recent.filter(item => item !== path)].slice(0, 8);
+      window.sessionStorage.setItem(key, JSON.stringify(recent));
+    } catch (_) {}
 
     const panel = document.createElement("aside");
     panel.className = "ed-next-step";
@@ -156,7 +172,6 @@
     const tool = main.querySelector(".ed-tool");
     if (tool) {
       const section = tool.closest(".ed-section") || tool.parentElement;
-      // Em quizzes, o convite só aparece depois que todas as respostas forem conferidas.
       if (tool.querySelector("#knowledgeQuiz")) panel.hidden = true;
       section.parentElement.insertBefore(panel, section.nextSibling);
     }
