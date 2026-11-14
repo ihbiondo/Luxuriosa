@@ -52,3 +52,16 @@
 .sign-deep-content .sign-growth-panel{margin-top:14px}
 .sign-deep-content .sign-growth-panel h3{margin:0 0 8px;font:400 21px var(--serif)}
 .sign-deep-content .sign-growth-panel p{margin:0;color:#e7d5db;font-size:10px;line-height:1.9}
+
+/* Leitura confortável nas páginas individuais em telas pequenas. */
+@media(max-width:700px){
+  .breadcrumbs{font-size:10px;gap:7px;}
+  .sign-detail-intro{font-size:14px;line-height:1.85;}
+  .sign-detail-section>p,.sign-deep-content>p{font-size:13px;line-height:1.9;}
+  .sign-detail-panel p,.sign-deep-content .sign-growth-panel p{font-size:13px;line-height:1.85;}
+  .sign-detail-panel ul{font-size:13px;line-height:1.85;}
+  .sign-classification p{font-size:12px;line-height:1.8;}
+  .sign-detail-meta span,.sign-keyword{font-size:10px;}
+  .related-copy small{font-size:10px;}
+  .sign-detail-actions button.secondary{font-size:11px;}
+}
