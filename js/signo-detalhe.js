@@ -65,6 +65,7 @@
     document.title = sign.name + " | Signos & Astrologia — Luxuriosa";
     setText("signGlyph", sign.glyph);
     setText("signName", sign.name);
+    setText("signNameInEssence", sign.name);
     setText("signPeriod", sign.period.label);
     setText("signArchetype", sign.archetype);
     setText("signOverview", sign.profile.overview);
