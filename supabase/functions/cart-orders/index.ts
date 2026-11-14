@@ -6,6 +6,27 @@ const admin = createClient(SUPABASE_URL, SERVICE_ROLE_KEY, {
   auth: { persistSession: false, autoRefreshToken: false }
 });
 const allowedOrigins = new Set(["https://luxuriosa.com.br", "https://www.luxuriosa.com.br"]);
+const CATALOG_URL = "https://luxuriosa.com.br/data/produtos.json";
+const rateBuckets = new Map<string, { startedAt: number; count: number }>();
+
+// Best-effort per-isolate throttling; distributed abuse requires an edge/WAF limit too.
+function allowRate(key: string, maximum: number, windowMs = 60_000): boolean {
+  const now = Date.now();
+  const current = rateBuckets.get(key);
+  if (!current || now - current.startedAt >= windowMs) rateBuckets.set(key, { startedAt: now, count: 1 });
+  else if (current.count >= maximum) return false;
+  else current.count += 1;
+  if (rateBuckets.size > 5_000) {
+    for (const [bucketKey, bucket] of rateBuckets) if (now - bucket.startedAt > windowMs * 2) rateBuckets.delete(bucketKey);
+  }
+  return true;
+}
+function rateLimitRequest(req: Request, sessionKey: string, eventsOnly: boolean): boolean {
+  const ip = req.headers.get("cf-connecting-ip") || req.headers.get("x-real-ip") ||
+    req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "";
+  if (ip && !allowRate("ip:" + ip, eventsOnly ? 180 : 90)) return false;
+  return allowRate("session:" + sessionKey, eventsOnly ? 120 : 30);
+}
 const VARIABLE_DICE_KIT_IDS = new Set(["22", "23", "24", "27", "28", "29"]);
 const DICE_VARIANT_NAMES = new Map([
   ["1", "Dado do Prazer — Gay"],
@@ -21,7 +42,9 @@ function response(body: unknown, status = 200, origin = "") {
       "access-control-allow-origin": allowedOrigins.has(origin) ? origin : "https://luxuriosa.com.br",
       "access-control-allow-headers": "authorization, x-client-info, apikey, content-type",
       "access-control-allow-methods": "POST, OPTIONS",
-      "vary": "Origin"
+      "vary": "Origin",
+      "cache-control": "no-store",
+      "x-content-type-options": "nosniff"
     }
   });
 }
@@ -33,36 +56,46 @@ function cleanText(value: unknown, max = 160): string | null {
   const result = value.trim().slice(0, max);
   return result || null;
 }
-function cleanItems(value: unknown) {
+async function loadCatalog(): Promise<Map<string, any>> {
+  const response = await fetch(CATALOG_URL, { headers: { "cache-control": "no-cache" } });
+  if (!response.ok) throw new Error("Não foi possível validar o catálogo. Tente novamente.");
+  const data = await response.json();
+  if (!Array.isArray(data?.produtos)) throw new Error("Catálogo indisponível.");
+  return new Map(data.produtos.map((product: any) => [String(product.id), product]));
+}
+function cleanItems(value: unknown, catalog: Map<string, any>) {
   if (!Array.isArray(value) || value.length > 80) throw new Error("Carrinho inválido.");
   return value.map((raw: any) => {
-    const name = cleanText(raw?.nome, 180);
-    const productId = cleanText(raw?.id, 100);
+    const productId = cleanText(String(raw?.id ?? ""), 100);
     const quantity = Math.trunc(Number(raw?.quantidade));
-    const price = Number(raw?.preco);
     const selectedDiceId = cleanText(raw?.kit_variant_id, 10);
-    const isVariableKit = Boolean(productId && VARIABLE_DICE_KIT_IDS.has(productId));
-    if (!name || !Number.isInteger(quantity) || quantity < 1 || quantity > 999 ||
-        !Number.isFinite(price) || price < 0 || price > 100000) throw new Error("Item inválido.");
-    if (isVariableKit && (!selectedDiceId || !DICE_VARIANT_NAMES.has(selectedDiceId))) {
-      throw new Error("Escolha o Dado do Prazer incluído neste kit antes de registrar o pedido.");
-    }
-    if (!isVariableKit && selectedDiceId) {
-      throw new Error("A variante informada não pertence a este produto. Atualize o carrinho.");
-    }
+    const product = productId ? catalog.get(productId) : null;
+    if (!product || product.esgotado === true) throw new Error("Um produto do carrinho está indisponível. Atualize o carrinho.");
+    if (!Number.isInteger(quantity) || quantity < 1 || quantity > 999) throw new Error("Quantidade inválida.");
+    const price = Number(product.preco);
+    if (!Number.isFinite(price) || price < 0 || price > 100000) throw new Error("Preço inválido no catálogo.");
+    const isVariableKit = VARIABLE_DICE_KIT_IDS.has(productId);
+    let selectedDiceName: string | null = null;
+    if (isVariableKit) {
+      if (!selectedDiceId || !DICE_VARIANT_NAMES.has(selectedDiceId)) throw new Error("Escolha o Dado do Prazer incluído neste kit antes de registrar o pedido.");
+      const selectedDice = catalog.get(selectedDiceId);
+      if (!selectedDice || selectedDice.esgotado === true) throw new Error("A variante escolhida está indisponível. Atualize o carrinho.");
+      selectedDiceName = cleanText(selectedDice.nome, 180);
+    } else if (selectedDiceId) throw new Error("A variante informada não pertence a este produto. Atualize o carrinho.");
     return {
       product_id: productId,
-      product_name: name,
-      sku: cleanText(raw?.sku, 80),
+      product_name: cleanText(product.nome, 180),
+      sku: cleanText(product.sku, 80),
       quantity,
       unit_price: Math.round(price * 100) / 100,
       product_snapshot: {
         selected_dice_product_id: isVariableKit ? selectedDiceId : null,
-        selected_dice_product_name: isVariableKit && selectedDiceId ? (DICE_VARIANT_NAMES.get(selectedDiceId) ?? null) : null
+        selected_dice_product_name: isVariableKit ? selectedDiceName : null
       }
     };
   });
 }
+
 function total(items: ReturnType<typeof cleanItems>) {
   return Math.round(items.reduce((sum, item) => sum + item.quantity * item.unit_price, 0) * 100) / 100;
 }
@@ -97,17 +130,27 @@ async function recordMarketingConsent(cartId: string, userId: string | null, cus
 
 Deno.serve(async (req: Request) => {
   const origin = req.headers.get("origin") || "";
-  if (req.method === "OPTIONS") return new Response(null, { status: 204, headers: {
-    "access-control-allow-origin": allowedOrigins.has(origin) ? origin : "https://luxuriosa.com.br",
-    "access-control-allow-headers": "authorization, x-client-info, apikey, content-type",
-    "access-control-allow-methods": "POST, OPTIONS",
-    "vary": "Origin"
-  }});
+  if (req.method === "OPTIONS") {
+    if (!allowedOrigins.has(origin)) return new Response(null, { status: 403 });
+    return new Response(null, { status: 204, headers: {
+      "access-control-allow-origin": origin,
+      "access-control-allow-headers": "authorization, x-client-info, apikey, content-type",
+      "access-control-allow-methods": "POST, OPTIONS",
+      "vary": "Origin",
+      "cache-control": "no-store"
+    }});
+  }
   if (req.method !== "POST") return response({ error: "Método não permitido." }, 405, origin);
-  if (origin && !allowedOrigins.has(origin)) return response({ error: "Origem não autorizada." }, 403, origin);
+  if (!allowedOrigins.has(origin)) return response({ error: "Origem não autorizada." }, 403, origin);
+  if (!/^application\/json(?:\s*;|$)/i.test(req.headers.get("content-type") || "")) return response({ error: "Formato de requisição inválido." }, 415, origin);
+  if (Number(req.headers.get("content-length") || 0) > 16 * 1024) return response({ error: "Solicitação muito grande." }, 413, origin);
 
   try {
-    const body = await req.json();
+    const rawBody = await req.text();
+    if (new TextEncoder().encode(rawBody).byteLength > 16 * 1024) return response({ error: "Solicitação muito grande." }, 413, origin);
+    let body: any;
+    try { body = JSON.parse(rawBody); } catch { return response({ error: "Corpo da solicitação inválido." }, 400, origin); }
+    if (!body || typeof body !== "object" || Array.isArray(body)) return response({ error: "Corpo da solicitação inválido." }, 400, origin);
     const action = body?.action;
     const token = (req.headers.get("authorization") || "").replace(/^Bearer\s+/i, "");
     let userId: string | null = null;
@@ -126,6 +169,7 @@ Deno.serve(async (req: Request) => {
       if (!isUuid(sessionKey) || !allowedEvents.includes(eventName) || !allowedPages.includes(pageType)) {
         return response({ error: "Evento inválido." }, 400, origin);
       }
+      if (!rateLimitRequest(req, sessionKey, true)) return response({ error: "Muitas solicitações. Aguarde um instante e tente novamente." }, 429, origin);
       const productId = eventName === "product_view" || eventName === "add_to_cart"
         ? cleanText(body.product_id, 100) : null;
       if ((eventName === "product_view" || eventName === "add_to_cart") && !productId) {
@@ -146,19 +190,18 @@ Deno.serve(async (req: Request) => {
       return response({ ok: true }, 200, origin);
     }
 
+    if (!["cart_snapshot", "checkout_started", "checkout_reviewed", "whatsapp_opened"].includes(action)) return response({ error: "Ação inválida." }, 400, origin);
     const sessionKey = body?.session_key;
     if (!isUuid(sessionKey)) return response({ error: "Sessão inválida." }, 400, origin);
-    const items = cleanItems(body.items || []);
+    if (!rateLimitRequest(req, sessionKey, false)) return response({ error: "Muitas solicitações. Aguarde um instante e tente novamente." }, 429, origin);
+    const catalog = await loadCatalog();
+    const items = cleanItems(body.items || [], catalog);
     const subtotal = total(items);
     if (subtotal > 1000000) return response({ error: "Valor do carrinho inválido." }, 400, origin);
 
     if (token && !userId) {
       const { data } = await admin.auth.getUser(token);
       userId = data.user?.id || null;
-    }
-
-    if (!["cart_snapshot", "checkout_started", "checkout_reviewed", "whatsapp_opened"].includes(action)) {
-      return response({ error: "Ação inválida." }, 400, origin);
     }
 
     const now = new Date().toISOString();
@@ -201,12 +244,10 @@ Deno.serve(async (req: Request) => {
     }
     const address = body.customer?.address && typeof body.customer.address === "object"
       ? body.customer.address : {};
-    const shipping = body.shipping_amount == null ? null : Number(body.shipping_amount);
-    if (shipping !== null && (!Number.isFinite(shipping) || shipping < 0 || shipping > 10000)) {
-      return response({ error: "Frete inválido." }, 400, origin);
-    }
+    // WhatsApp is a request for human confirmation, not a final checkout.
+    // Never persist a shipping amount supplied by the browser as an authoritative quote.
     const subtotalCents = Math.round(subtotal * 100);
-    const shippingCents = shipping === null ? null : Math.round(shipping * 100);
+    const shippingCents = null;
     let isClubMember = false;
     if (userId) {
       const { data: membership, error: membershipError } = await admin.from("club_memberships")
