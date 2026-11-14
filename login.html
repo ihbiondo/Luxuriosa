@@ -78,12 +78,70 @@
     .profile-progress small{color:var(--muted);font-size:10px;line-height:1.5}
     @media(max-width:560px){.account-home{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.account-home a{min-height:82px;padding:11px 9px;grid-template-columns:27px minmax(0,1fr);column-gap:8px}.account-home .tile-icon{width:27px;height:27px;font-size:15px}.account-home strong{font-size:10px}.account-home span:not(.tile-icon){font-size:8px}.account-home .account-tile-featured{grid-column:1/-1;min-height:86px}}
 
+  
+    /* Identidade clara Luxuriosa — branco-gelo, lavanda, rosa neon e dourado */
+    :root{
+      color-scheme:light;
+      --wine:#d92791;--wine2:#b91f7a;--black:#f5f3f7;--surface:#ffffff;--surface2:#f5f1f8;
+      --gold:#b58a42;--blush:#493c50;--text:#39333e;--muted:#766e7c;--line:#e6ddec;
+    }
+    body{background:radial-gradient(ellipse at 78% 8%,rgba(225,190,239,.32),transparent 36%),linear-gradient(135deg,#fbfafc 0%,#f3f0f6 100%);color:var(--text)}
+    a{color:#bd2385}
+    .top{padding:20px 0}
+    .brand-logo{display:flex;align-items:center;gap:13px;color:var(--text);font:inherit;letter-spacing:0}
+    .brand-logo img{display:block;width:clamp(142px,18vw,190px);height:auto;max-height:62px;object-fit:contain;object-position:left center}
+    .brand-logo span{padding-left:13px;border-left:1px solid #ded3e5;color:#786b80;font:600 9px var(--sans);letter-spacing:.15em}
+    .back{color:#766e7c}
+    .back:hover{color:#c51c88}
+    .intro .eyebrow{color:#b58a42}
+    .intro h1{color:#493c50}
+    .intro h1 em{color:#d92791}
+    .intro p{color:#766e7c}
+    .panel{border:1px solid #e5dbea;border-radius:20px;background:rgba(255,255,255,.94);box-shadow:0 22px 65px rgba(74,53,83,.10)}
+    .tabs{border-color:#e8e0ed;background:#f4f0f7}
+    .tab{color:#756b7d}
+    .tab[aria-selected=true]{background:#d92791;color:#fff;box-shadow:0 5px 14px rgba(217,39,145,.2)}
+    h2{color:#493c50}
+    .lead{color:#766e7c}
+    label{color:#514657}
+    input,select{border:1px solid #ded5e5;background:#fbfafc;color:#39333e}
+    input:focus,select:focus{border-color:#d92791;box-shadow:0 0 0 3px rgba(217,39,145,.10)}
+    input::placeholder{color:#a39aa8}
+    .section-label{border-color:#e8e0ed;color:#a47a37}
+    .color-option{border-color:#e4dce9;background:#faf8fb;color:#625969}
+    .color-option input{accent-color:#d92791}
+    .primary{border-color:#d92791;background:#d92791;color:#fff;box-shadow:0 7px 18px rgba(217,39,145,.16)}
+    .primary:hover{border-color:#b91f7a;background:#b91f7a}
+    .text-action{color:#bd2385}
+    .legal{color:#817887}
+    .message{border-color:#e6ddec;background:#f7f1fa;color:#514657}
+    .message.error{border-color:#efc4d8;background:#fff2f7;color:#a52b60}
+    .account-box,.orders-panel,.order-card,.account-section,.account-club,.profile-progress{border-color:#e6ddec;background:#fff}
+    .account-box p,.orders-intro,.orders-empty,.email-change-help,.order-meta,.account-section>summary,.account-club p,.profile-progress small{color:#766e7c}
+    .account-email strong,.order-number,.account-home strong{color:#493c50}
+    .order-status{color:#c32787}
+    .order-products{color:#514657}
+    .secondary{border-color:#d9cce1;background:#faf8fc;color:#9a6d2b}
+    .account-home a{border-color:#e5dbea;background:linear-gradient(145deg,#fff,#f6f1f9)}
+    .account-home a:hover{border-color:#d92791;background:#fff5fb}
+    .account-home .tile-icon{border-color:#ead9e8;background:#fff1f8;color:#d92791}
+    .account-home .account-tile-featured{border-color:#e5c6dd;background:linear-gradient(110deg,#fff1f8,#f7f2fb)}
+    .account-welcome,.account-club{border-color:#e5dbea;background:linear-gradient(120deg,#f8eff8,#fff)}
+    .account-section{border-color:#e5dbea;background:#fff}
+    .account-section>summary{color:#493c50}
+    .account-section>summary:after{color:#d92791}
+    .profile-progress-track{background:#eee8f1}
+    .profile-progress-track span{background:linear-gradient(90deg,#d92791,#b58a42)}
+    footer{border-color:#e6ddec;color:#817887}
+    @media(max-width:560px){.brand-logo img{width:clamp(120px,38vw,150px);max-height:48px}.brand-logo span{font-size:8px;padding-left:9px}}
+    @media(max-width:360px){.brand-logo span{display:none}}
+
   </style>
 </head>
 <body>
   <div class="shell">
     <header class="top">
-      <a class="brand" href="index.html" aria-label="Luxuriosa — início">Luxuriosa<small>LINGERIE &amp; INTIMIDADE</small></a>
+      <a class="brand brand-logo" href="index.html" aria-label="Luxuriosa — início"><img src="img/site/logo-luxuriosa.webp" alt="Luxuriosa"><span>ÁREA DO CLIENTE</span></a>
       <a class="back" href="index.html">← Voltar à loja</a>
     </header>
 
