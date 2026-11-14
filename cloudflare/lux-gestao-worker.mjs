@@ -1,11 +1,11 @@
 // Cloudflare Worker for the production Lux-Gestão route.
-// The preview source is protected by Cloudflare Access and is fetched with a
-// dedicated service token stored only as Worker secrets.
+// The HTML source is fetched from a fixed, public GitHub Raw URL so the
+// preview route can be protected by Cloudflare Access without breaking the Worker.
 
-const APP_SOURCE_PATH = "/previa/lux-gestao/";
+const APP_SOURCE_URL = "https://raw.githubusercontent.com/ihbiondo/Luxuriosa/main/previa/lux-gestao/index.html";
 const APP_ROUTES = new Set(["/lux-gestao/", "/lux-gestao/index.html"]);
 const ROBOTS = "noindex, nofollow, noarchive, nosnippet";
-const VERSION = "2026-11-14.1";
+const VERSION = "2026-11-14.2";
 
 function privateHeaders(sourceHeaders = undefined) {
   const headers = new Headers(sourceHeaders);
@@ -43,29 +43,15 @@ export default {
     }
 
     if (APP_ROUTES.has(path)) {
-      const accessClientId = env?.LUX_ACCESS_SERVICE_TOKEN_CLIENT_ID;
-      const accessClientSecret = env?.LUX_ACCESS_SERVICE_TOKEN_CLIENT_SECRET;
-
-      // Fail closed: never fetch a protected origin without the dedicated
-      // Cloudflare Access service token.
-      if (!accessClientId || !accessClientSecret) {
-        return textResponse("Lux-Gestão temporariamente indisponível: proteção de origem não configurada.", 503);
-      }
-
-      // The source path is protected by a Cloudflare Access Service Auth policy.
-      // These credentials exist only as Cloudflare Worker secrets and are never
-      // returned to the browser or written to logs.
-      const sourceUrl = new URL(request.url);
-      sourceUrl.pathname = APP_SOURCE_PATH;
-
       let sourceResponse;
       try {
-        sourceResponse = await fetch(sourceUrl.toString(), {
+        // Fixed origin: never derive the upstream host/path from user input.
+        // Redirects are rejected to avoid silently following an unexpected host.
+        sourceResponse = await fetch(APP_SOURCE_URL, {
           method: request.method,
+          redirect: "error",
           headers: {
-            Accept: request.headers.get("Accept") || "text/html",
-            "CF-Access-Client-Id": accessClientId,
-            "CF-Access-Client-Secret": accessClientSecret
+            Accept: request.headers.get("Accept") || "text/html"
           }
         });
       } catch {
@@ -73,8 +59,7 @@ export default {
       }
 
       if (!sourceResponse.ok) {
-        // Do not forward the Access login page, token details, or origin response.
-        return textResponse("Não foi possível validar ou carregar a origem protegida do Lux-Gestão.", 503);
+        return textResponse("Não foi possível carregar a versão publicada do Lux-Gestão.", 503);
       }
 
       const headers = privateHeaders(sourceResponse.headers);
