@@ -37,9 +37,10 @@ const first=document.getElementById("signOne"),second=document.getElementById("s
 signs.forEach(sign=>{[first,second].forEach(select=>{const option=document.createElement("option");option.value=sign.name;option.textContent=sign.glyph+" "+sign.name;select.append(option);});});
 function combination(a,b){
 if(a.element===b.element)return "Os dois signos compartilham o elemento "+a.element.toLowerCase()+". Na leitura astrológica, isso sugere uma linguagem simbólica parecida e pontos de identificação — sem determinar como uma relação funciona.";
-const pair=[a.element,b.element].sort().join("-");
-if(pair==="Ar-Fogo")return "Na tradição astrológica, ar e fogo são associados a movimento, ideias e entusiasmo. É uma combinação simbólica que convida à troca e à experimentação.";
-if(pair==="Água-Terra")return "Na tradição astrológica, água e terra são associados a sensibilidade, cuidado e construção. É uma combinação simbólica que convida ao acolhimento e à consistência.";
+const fireAir=(a.element==="Ar"&&b.element==="Fogo")||(a.element==="Fogo"&&b.element==="Ar");
+if(fireAir)return "Na tradição astrológica, ar e fogo são associados a movimento, ideias e entusiasmo. É uma combinação simbólica que convida à troca e à experimentação.";
+const earthWater=(a.element==="Água"&&b.element==="Terra")||(a.element==="Terra"&&b.element==="Água");
+if(earthWater)return "Na tradição astrológica, água e terra são associados a sensibilidade, cuidado e construção. É uma combinação simbólica que convida ao acolhimento e à consistência.";
 return "Elementos diferentes trazem símbolos e ritmos distintos nesta leitura astrológica. A curiosidade pode estar justamente em conhecer e respeitar essas diferenças.";
 }
 document.getElementById("compatibilityForm").addEventListener("submit",event=>{
