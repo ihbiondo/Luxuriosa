@@ -1,70 +1,146 @@
 <!doctype html>
 <html lang="pt-BR">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="robots" content="noindex,nofollow"><meta name="theme-color" content="#0b090a">
-<title>Meu Portal | Luxuriosa</title><meta name="description" content="Seu espaço na Luxuriosa: conta, pedidos, Clube, conhecimento e experiências.">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#f7f4fa">
+<title>Meu Portal | Luxuriosa</title>
+<meta name="description" content="Seu espaço na Luxuriosa: experiências, educação, pedidos e conta.">
 <link rel="icon" href="/img/site/favicon.ico" sizes="any">
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/css/portal.css"><script type="module" src="/js/portal.js"></script>
+<link rel="stylesheet" href="/css/portal.css">
+<script type="module" src="/js/portal.js"></script>
 </head>
 <body>
 <a class="skip" href="#portalMain">Pular para o conteúdo</a>
-<div id="portalLoading" class="loading" role="status" aria-live="polite"><span class="monogram">L</span><strong>Abrindo seu espaço</strong><small>Preparando sua experiência Luxuriosa.</small></div>
+<div id="portalLoading" class="loading" role="status" aria-live="polite">
+  <img src="/img/site/logo-luxuriosa.webp" alt="" class="loading-logo">
+  <strong>Abrindo seu espaço</strong>
+  <small>Preparando sua experiência Luxuriosa.</small>
+</div>
 <div id="portalApp" hidden>
-<header class="topbar"><a class="brand" href="/"><span>Luxuriosa</span><small>PORTAL DO CLIENTE</small></a><div class="top-actions"><a href="/loja.html">Voltar à loja <b>↗</b></a><button id="portalSignOut" type="button">Sair da conta</button></div></header>
+<header class="topbar">
+  <a class="brand" href="/" aria-label="Luxuriosa — página inicial">
+    <img src="/img/site/logo-luxuriosa.webp" alt="Luxuriosa">
+    <span>PORTAL DO CLIENTE</span>
+  </a>
+  <details class="mobile-menu">
+    <summary aria-label="Abrir menu de navegação"><span class="menu-lines" aria-hidden="true"></span><span>Menu</span></summary>
+    <nav class="mobile-menu-panel" aria-label="Navegação do portal">
+      <a class="mobile-main-link mobile-main-link--featured" href="/experiencias/">✦ Experiências</a>
+      <a href="/experiencias/?tipo=quiz#experienceGrid">Quizzes e testes</a>
+      <a href="/experiencias/?tipo=couple#experienceGrid">A dois</a>
+      <a href="/experiencias/?tipo=challenge#experienceGrid">Desafios</a>
+      <a href="/experiencias/?tipo=astrology#experienceGrid">Astrologia e signos</a>
+      <a href="/experiencias/?tipo=favorites#experienceGrid">Favoritos</a>
+      <div class="mobile-menu-divider"></div>
+      <a class="mobile-main-link" href="/educacao/">Educação</a>
+      <a href="/educacao/temas/">Temas educativos</a>
+      <a href="/educacao/enciclopedia/">Enciclopédia</a>
+      <a href="/educacao/curiosidades/">Curiosidades</a>
+      <a href="/educacao/guias/">Guias</a>
+      <div class="mobile-menu-divider"></div>
+      <a href="/clube.html">Clube de Vantagens</a>
+      <a href="/login.html#account-orders-section">Meus pedidos</a>
+      <a href="/login.html#account-profile-section">Minha conta</a>
+      <a href="/login.html#account-consent-section">Privacidade</a>
+    </nav>
+  </details>
+  <div class="top-actions">
+    <a class="store-link" href="/loja.html">Voltar à loja <span aria-hidden="true">↗</span></a>
+    <button id="portalSignOut" type="button">Sair da conta</button>
+  </div>
+</header>
 <div class="layout">
-<aside class="sidebar" aria-label="Navegação do portal">
-<div class="sidebar-heading"><small>SEU ESPAÇO</small><strong id="portalSidebarName">Minha conta</strong></div>
-<nav class="side-nav" aria-label="Seções do portal">
-<a class="active" href="/portal/" aria-current="page"><i>⌂</i>Início</a>
-<details class="nav-group nav-group--experiences" open>
-<summary><i>✦</i><span>Experiências</span><b class="nav-chevron">⌄</b></summary>
-<div class="nav-submenu">
-<a href="/experiencias/">Todas as experiências</a>
-<a href="/experiencias/?tipo=quiz#experienceGrid">Quizzes e testes</a>
-<a href="/experiencias/?tipo=couple#experienceGrid">A dois</a>
-<a href="/experiencias/?tipo=challenge#experienceGrid">Desafios</a>
-<a href="/experiencias/?tipo=astrology#experienceGrid">Astrologia e signos</a>
-<a href="/experiencias/?tipo=favorites#experienceGrid">Favoritos salvos</a>
+  <aside class="sidebar" aria-label="Navegação do portal">
+    <div class="sidebar-heading">
+      <small>SEU ESPAÇO</small>
+      <strong id="portalSidebarName">Minha conta</strong>
+    </div>
+    <nav class="side-nav" aria-label="Seções do portal">
+      <a class="nav-home active" href="/portal/" aria-current="page"><span aria-hidden="true">⌂</span>Início</a>
+      <details class="nav-group nav-group--experiences" open>
+        <summary><span class="nav-symbol" aria-hidden="true">✦</span><span>Experiências</span><span class="nav-chevron" aria-hidden="true">⌄</span></summary>
+        <div class="nav-submenu">
+          <a href="/experiencias/">Todas as experiências</a>
+          <a href="/experiencias/?tipo=quiz#experienceGrid">Quizzes e testes</a>
+          <a href="/experiencias/?tipo=couple#experienceGrid">A dois</a>
+          <a href="/experiencias/?tipo=challenge#experienceGrid">Desafios</a>
+          <a href="/experiencias/?tipo=astrology#experienceGrid">Astrologia e signos</a>
+          <a href="/experiencias/?tipo=favorites#experienceGrid">Favoritos salvos</a>
+        </div>
+      </details>
+      <details class="nav-group nav-group--education">
+        <summary><span class="nav-symbol" aria-hidden="true">◇</span><span>Educação</span><span class="nav-chevron" aria-hidden="true">⌄</span></summary>
+        <div class="nav-submenu">
+          <a href="/educacao/">Visão geral</a>
+          <a href="/educacao/temas/">Temas educativos</a>
+          <a href="/educacao/enciclopedia/">Enciclopédia</a>
+          <a href="/educacao/curiosidades/">Curiosidades</a>
+          <a href="/educacao/guias/">Guias</a>
+        </div>
+      </details>
+      <a href="/clube.html"><span aria-hidden="true">♛</span>Clube de Vantagens</a>
+      <div class="nav-divider"></div>
+      <a href="/login.html#account-orders-section"><span aria-hidden="true">▤</span>Meus pedidos</a>
+      <a href="/login.html#account-profile-section"><span aria-hidden="true">♙</span>Minha conta</a>
+      <a href="/login.html#account-consent-section"><span aria-hidden="true">♡</span>Privacidade</a>
+    </nav>
+    <a class="help" href="/atendimento.html">Precisa de ajuda? <span aria-hidden="true">→</span></a>
+  </aside>
+  <main id="portalMain" class="main">
+    <section class="welcome" aria-labelledby="welcomeTitle">
+      <div class="welcome-copy">
+        <span class="eyebrow">SEU ESPAÇO NA LUXURIOSA</span>
+        <h1 id="welcomeTitle">Olá, <span id="portalGreetingName">por aqui</span>.</h1>
+        <p>Um lugar leve para descobrir, aprender e aproveitar no seu ritmo.</p>
+        <a class="primary" href="/experiencias/">Explorar experiências <span aria-hidden="true">→</span></a>
+      </div>
+      <div class="welcome-art" aria-hidden="true"><span>✦</span></div>
+    </section>
+
+    <section class="discover-section" aria-labelledby="discoverTitle">
+      <div class="section-heading">
+        <div>
+          <span class="eyebrow">ESCOLHA SEU CAMINHO</span>
+          <h2 id="discoverTitle">Por onde começar?</h2>
+        </div>
+      </div>
+      <div class="feature-grid">
+        <a class="feature feature--experiences" href="/experiencias/">
+          <span class="feature-icon" aria-hidden="true">✦</span>
+          <span class="feature-kicker">EM DESTAQUE</span>
+          <strong>Experiências</strong>
+          <p>Quizzes, momentos a dois, desafios e descobertas.</p>
+          <span class="feature-link">Explorar agora <span aria-hidden="true">→</span></span>
+        </a>
+        <a class="feature feature--education" href="/educacao/">
+          <span class="feature-icon" aria-hidden="true">◇</span>
+          <span class="feature-kicker">NO SEU TEMPO</span>
+          <strong>Educação</strong>
+          <p>Informações, guias e curiosidades em linguagem clara.</p>
+          <span class="feature-link">Consultar conteúdos <span aria-hidden="true">→</span></span>
+        </a>
+      </div>
+    </section>
+
+    <section class="quick-section" aria-labelledby="quickTitle">
+      <div class="section-heading">
+        <div><span class="eyebrow">ACESSO RÁPIDO</span><h2 id="quickTitle">Sua conta</h2></div>
+      </div>
+      <div class="quick-links">
+        <a href="/login.html#account-orders-section"><span class="quick-icon" aria-hidden="true">▤</span><span>Meus pedidos</span><span class="quick-arrow" aria-hidden="true">→</span></a>
+        <a href="/login.html#account-profile-section"><span class="quick-icon" aria-hidden="true">♙</span><span>Meus dados</span><span class="quick-arrow" aria-hidden="true">→</span></a>
+        <a href="/clube.html"><span class="quick-icon" aria-hidden="true">♛</span><span>Clube de Vantagens</span><span class="quick-arrow" aria-hidden="true">→</span></a>
+      </div>
+    </section>
+    <p class="footnote">Suas escolhas são opcionais. Gerencie seus dados e autorizações na área da conta.</p>
+  </main>
 </div>
-</details>
-<details class="nav-group nav-group--education">
-<summary><i>◇</i><span>Educação</span><b class="nav-chevron">⌄</b></summary>
-<div class="nav-submenu">
-<a href="/educacao/">Visão geral</a>
-<a href="/educacao/temas/">Temas educativos</a>
-<a href="/educacao/enciclopedia/">Enciclopédia</a>
-<a href="/educacao/curiosidades/">Curiosidades</a>
-<a href="/educacao/guias/">Guias</a>
-</div>
-</details>
-<a href="/clube.html"><i>♛</i>Clube de Vantagens</a>
-<a href="/login.html#account-orders-section"><i>▤</i>Meus pedidos</a>
-<a href="/login.html#account-profile-section"><i>♙</i>Minha conta</a>
-<a href="/login.html#account-consent-section"><i>♡</i>Privacidade</a>
-</nav>
-<a class="help" href="/atendimento.html">Precisa de ajuda? →</a>
-</aside>
-<main id="portalMain" class="main">
-<div class="page-heading"><div><small>PORTAL DO CLIENTE</small><h1>Seu espaço na Luxuriosa.</h1><p>Um lugar para acompanhar, descobrir e aproveitar no seu ritmo.</p></div><span class="private-label">✧ Seu espaço pessoal</span></div>
-<section class="welcome"><div><small>BEM-VINDA(O) DE VOLTA</small><h2>Olá, <span id="portalGreetingName">por aqui</span>.</h2><p>Seu espaço para descobrir, se conectar e aproveitar novas experiências.</p><a class="primary" href="/experiencias/">Descobrir experiências <b>→</b></a></div><div class="welcome-mark" aria-hidden="true"><span>L</span></div></section>
-<section class="section"><div class="section-head"><div><small>DESCUBRA</small><h2>Explore seu universo.</h2></div><span>Conhecimento e interação</span></div>
-<div class="feature-grid">
-<a class="feature experiences" href="/experiencias/"><span class="feature-icon">✦</span><small>DESCUBRA ALGO NOVO</small><strong>Experiências Luxuriosa</strong><p>Quizzes, astrologia, atividades e descobertas para aproveitar no seu ritmo.</p><b>Explorar experiências <em>→</em></b><span class="feature-tag">EM DESTAQUE</span></a>
-<a class="feature education" href="/educacao/"><span class="feature-icon">◇</span><small>CONHECIMENTO LEVE</small><strong>Educação Luxuriosa</strong><p>Informações, guias e curiosidades organizados para consultar quando quiser.</p><b>Explorar Educação <em>→</em></b></a>
-</div></section>
-<section class="club"><span class="club-symbol">♛</span><div><small>VANTAGENS</small><h2>Tem mais para aproveitar.</h2><p>Conheça o Clube Luxuriosa e veja as modalidades e vantagens disponíveis.</p></div><a href="/clube.html">Conhecer o Clube →</a></section>
-<section class="section"><div class="section-head"><div><small>SUA CONTA</small><h2>Tudo organizado.</h2></div></div>
-<div class="shortcuts">
-<a href="/login.html#account-orders-section"><i>▤</i><span><strong>Meus pedidos</strong><small>Acompanhe suas compras.</small></span><b>→</b></a>
-<a href="/login.html#account-profile-section"><i>♙</i><span><strong>Meus dados</strong><small>Atualize cadastro e preferências.</small></span><b>→</b></a>
-<a href="/login.html#account-consent-section"><i>♡</i><span><strong>Privacidade</strong><small>Revise suas autorizações.</small></span><b>→</b></a>
-</div></section>
-<section class="activity"><div><small>COMECE POR AQUI</small><h2>Uma descoberta de cada vez.</h2><p>Escolha um quiz rápido, abra uma conversa a dois ou experimente um desafio. Você participa sem cadastro e suas respostas não são armazenadas.</p></div><a href="/experiencias/?tipo=quiz#experienceGrid">Escolher um quiz →</a></section>
-<p class="footnote">Suas escolhas são opcionais e podem ser gerenciadas na área de privacidade.</p>
-</main></div>
 <footer class="footer"><a href="/">Luxuriosa</a><span>Sinta-se ainda mais você.</span><a href="/privacidade.html">Privacidade</a></footer>
 </div>
-</body></html>
+</body>
+</html>
