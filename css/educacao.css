@@ -153,3 +153,152 @@ html.ed-age-pending body > :not(.ed-age-gate) { visibility: hidden !important; }
 @media(prefers-reduced-motion:reduce) {
   .ed-progress span { transition: none; }
 }
+
+
+/* Educação: atmosfera mais leve, acolhedora e editorial, sem competir com Experiências. */
+:root {
+  --ed-lilac: #bba3ce;
+  --ed-lilac-light: #e4d6ed;
+  --ed-plum: #241b2b;
+  --ed-plum-deep: #17121b;
+}
+.ed-header {
+  border-bottom-color: #bba3ce35;
+  background: linear-gradient(90deg,#100c12f7,#15101af7);
+}
+.ed-brand small,
+.ed-menu nav a:hover,
+.ed-menu nav a[aria-current=page],
+.ed-menu nav a[aria-current=location] {
+  color: var(--ed-lilac);
+}
+.ed-adult {
+  border-bottom-color: #bba3ce30;
+  background: #1a1420;
+  color: #d8c9e0;
+}
+.ed-hero {
+  background:
+    radial-gradient(ellipse at 86% 10%,#bba3ce38,transparent 43%),
+    radial-gradient(ellipse at 10% 90%,#8b1e3f20,transparent 50%),
+    linear-gradient(120deg,#1d1522,#0d0a10 72%);
+}
+.ed-kicker { color: var(--ed-lilac); }
+.ed-hero h1 em,
+.ed-article h1 em { color: var(--ed-lilac-light); }
+.ed-button {
+  border-color: var(--ed-lilac);
+  background: var(--ed-lilac);
+  color: #1b1220;
+}
+.ed-button:hover {
+  border-color: #d2bee0;
+  background: #d2bee0;
+  color: #1b1220;
+}
+.ed-button--ghost {
+  background: transparent;
+  color: var(--ed-lilac-light);
+}
+.ed-button--ghost:hover {
+  background: #bba3ce18;
+  color: var(--ed-lilac-light);
+}
+.ed-section--soft {
+  background: linear-gradient(180deg,#bba3ce0d,transparent);
+}
+.ed-card {
+  border-color: #bba3ce35;
+  background: linear-gradient(145deg,#241b2b,#151118);
+}
+.ed-card:hover {
+  border-color: #bba3ceaa;
+}
+.ed-card-index,
+.ed-arrow { color: var(--ed-lilac); }
+.ed-card--feature {
+  border-color: #bba3ce70;
+  background: radial-gradient(circle at 100% 0%,#bba3ce22,transparent 50%),
+    linear-gradient(145deg,#30243a,#17121b);
+}
+.ed-card--feature .ed-arrow { color: var(--ed-lilac-light); }
+.ed-page-intro .ed-kicker { color: var(--ed-lilac); }
+.ed-breadcrumb a,
+.ed-article-body h3,
+.ed-sources strong,
+.ed-related a { color: var(--ed-lilac); }
+.ed-article-body {
+  max-width: 100%;
+  color: #e4dce9;
+  font-size: 17px;
+  line-height: 1.9;
+  letter-spacing: .005em;
+}
+.ed-article-body h2 {
+  color: #f2eaf6;
+  margin-top: 39px;
+}
+.ed-article-body h3 {
+  font-size: 16px;
+  line-height: 1.5;
+}
+.ed-article-body a,
+.ed-sources a {
+  color: var(--ed-lilac-light);
+}
+.ed-note {
+  border-left-color: var(--ed-lilac);
+  background: #bba3ce17;
+  color: #e8e0ec;
+}
+.ed-related {
+  border-color: #bba3ce45;
+  background: linear-gradient(145deg,#241b2b,#17121b);
+}
+.ed-related h2 { color: #f2eaf6; }
+.ed-search {
+  border-color: #bba3ce55;
+  background: #19131f;
+}
+.ed-search span { color: var(--ed-lilac); }
+.ed-search:focus-within { border-color: var(--ed-lilac); box-shadow: 0 0 0 3px #bba3ce20; }
+.ed-tool {
+  border-color: #bba3ce50;
+  background: linear-gradient(145deg,#241b2b,#17121b);
+}
+.ed-question,
+.ed-check { border-color: #bba3ce30; background: #17121c; }
+.ed-option input,
+.ed-check input { accent-color: var(--ed-lilac); }
+.ed-feedback { background: #bba3ce18; color: #e9deef; }
+.ed-progress { background: #392c41; }
+.ed-progress span { background: linear-gradient(90deg,#8d6ca3,#c5add7); }
+.ed-tool select { border-color: #bba3ce55; background: #17121c; }
+.ed-tool select:focus { outline-color: var(--ed-lilac); }
+.ed-footer { border-top-color: #bba3ce35; background: #0d0a10; }
+.ed-footer-brand { color: #f2eaf6; }
+.ed-footer-bottom { border-top-color: #bba3ce24; }
+.ed-skip-link { background: var(--ed-lilac); }
+:focus-visible { outline-color: var(--ed-lilac); }
+.ed-age-confirm {
+  border-color: var(--ed-lilac);
+  background: var(--ed-lilac);
+  color: #1b1220;
+}
+@media(max-width:820px) {
+  .ed-menu nav { border-color: #bba3ce55; background: #17121c; }
+}
+@media(max-width:540px) {
+  .ed-article-body { font-size: 16px; line-height: 1.85; }
+  .ed-card { border-radius: 14px; }
+}
+
+/* Acesso rápido à área de experiências a partir da Educação. */
+.ed-nav-experiences {
+  color: var(--ed-lilac-light) !important;
+  font-weight: 700;
+}
+.ed-nav-experiences:hover {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
