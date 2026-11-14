@@ -26,10 +26,11 @@ const worker = read(workerPath);
 requireMatch(workerPath, worker, /APP_SOURCE_URL\s*=\s*["']https:\/\/raw\.githubusercontent\.com\/ihbiondo\/Luxuriosa\/main\/previa\/lux-gestao\/index\.html["']/, "the production app source must be a fixed GitHub Raw URL.");
 requireMatch(workerPath, worker, /fetch\(APP_SOURCE_URL,\s*\{/, "the Worker must fetch only the fixed source URL.");
 requireMatch(workerPath, worker, /redirect:\s*["']error["']/, "the upstream fetch must reject redirects.");
+requireMatch(workerPath, worker, /Response\.redirect\(["']https:\/\/luxuriosa\.com\.br\/lux-gestao\/["'],\s*308\)/, "the short route must redirect to the canonical host.");
 requireMatch(workerPath, worker, /APP_ROUTES\s*=\s*new Set\(\[["']\/lux-gestao\/["'],\s*["']\/lux-gestao\/index\.html["']\]\)/, "the production worker must keep an explicit, narrow route allowlist.");
 requireMatch(workerPath, worker, /request\.method !== ["']GET["'] && request\.method !== ["']HEAD["']/, "the worker must reject methods other than GET/HEAD.");
 
-if (/LUX_ACCESS_SERVICE_TOKEN|CF-Access-Client-(?:Id|Secret)|new URL\(request\.url\).*APP_SOURCE/i.test(worker)) {
+if (/LUX_ACCESS_SERVICE_TOKEN|CF-Access-Client-(?:Id|Secret)|APP_SOURCE_URL\s*=\s*new URL|sourceUrl\.pathname/i.test(worker)) {
   failures.push(`${workerPath}: obsolete service-token forwarding or request-derived upstream source found.`);
 }
 
