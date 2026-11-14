@@ -392,3 +392,23 @@ body{
  .secondary-copy strong{font-size:18px}
  .secondary-copy>span{font-size:12px}
 }
+
+
+/* Ajustes finais de legibilidade e toque para telas pequenas */
+@media(max-width:700px){
+ .priority-copy strong{font-size:clamp(21px,5.6vw,26px);line-height:1.2}
+ .priority-description{font-size:14px;line-height:1.5}
+ .priority-action{font-size:14px}
+ .secondary-copy strong{font-size:19px;line-height:1.3}
+ .secondary-copy>span{font-size:14px;line-height:1.45}
+ .secondary-card{min-height:100px}
+ .secondary-icon{width:54px;height:54px;flex-basis:54px}
+ .desktop-nav a,.mobile-menu-panel a{min-height:48px}
+}
+@media(max-width:380px){
+ .priority-copy strong{font-size:21px}
+ .priority-description,.priority-action{font-size:13px}
+ .secondary-copy strong{font-size:18px}
+ .secondary-copy>span{font-size:13px}
+ .secondary-card{min-height:96px}
+}
