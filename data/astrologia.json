@@ -30,12 +30,26 @@
     }
   },
   "calculation": {
-    "kind": "conventional-solar-sign",
-    "input": "date-only",
-    "method": "Conventional month-and-day date ranges for the tropical western zodiac.",
-    "precision": "approximate",
-    "boundaryWarning": "As datas de referência são aproximadas. Pessoas nascidas próximas à mudança de signo podem precisar do horário, fuso e local de nascimento para determinar a posição do Sol com precisão.",
-    "privacy": "A data de nascimento é processada somente no navegador nesta experiência e não é enviada nem armazenada."
+    "kind": "tropical-geocentric-sun-longitude",
+    "preciseInput": {
+      "required": [
+        "birthDate",
+        "birthTime",
+        "birthTimezone"
+      ],
+      "timezoneFormat": "IANA time zone",
+      "method": "Convert the entered local birth date and time to UTC using the selected IANA time zone, then calculate the apparent geocentric ecliptic longitude of the Sun and map it to one of the twelve equal 30-degree tropical signs.",
+      "engine": "Astronomy Engine",
+      "engineLicense": "MIT",
+      "engineSource": "https://github.com/cosinekitty/astronomy",
+      "engineAccuracy": "The Astronomy Engine project states its calculations are accurate within approximately ±1 arcminute against NOVAS."
+    },
+    "fallbackInput": "date-only",
+    "fallbackMethod": "Conventional month-and-day ranges for the tropical western zodiac.",
+    "fallbackPrecision": "approximate",
+    "boundaryWarning": "When date, time, or historical timezone information is missing, use the conventional date range only as an estimate. Times repeated or skipped during daylight-saving transitions cannot be inferred without clarification.",
+    "privacy": "Birth date, birth time, and timezone are processed in the browser. The page does not submit or persist these values.",
+    "locationRequirement": "Birthplace coordinates are not required to calculate the geocentric solar sign. They are required, together with a correct local time and timezone, for horizon-dependent chart factors such as the Ascendant and houses."
   },
   "signs": [
     {
@@ -43,18 +57,38 @@
       "order": 1,
       "name": "Áries",
       "glyph": "♈",
-      "period": { "label": "21 de março a 19 de abril", "shortLabel": "21 mar — 19 abr", "startMonthDay": 321 },
+      "period": {
+        "label": "21 de março a 19 de abril",
+        "shortLabel": "21 mar — 19 abr",
+        "startMonthDay": 321
+      },
       "element": "Fogo",
       "modality": "Cardinal",
       "polarity": "Yang",
-      "rulers": { "traditional": "Marte", "modern": null },
+      "rulers": {
+        "traditional": "Marte",
+        "modern": null
+      },
       "oppositeSignId": "libra",
-      "keywords": ["iniciativa", "coragem", "movimento", "espontaneidade"],
+      "keywords": [
+        "iniciativa",
+        "coragem",
+        "movimento",
+        "espontaneidade"
+      ],
       "archetype": "A força simbólica do começo",
       "profile": {
         "overview": "Áries representa o impulso de começar, experimentar e abrir caminhos. Sua linguagem simbólica valoriza iniciativa, franqueza e movimento.",
-        "strengths": ["iniciativa", "espontaneidade", "coragem para tentar"],
-        "challenges": ["impaciência", "agir antes de refletir", "dificuldade com esperas"],
+        "strengths": [
+          "iniciativa",
+          "espontaneidade",
+          "coragem para tentar"
+        ],
+        "challenges": [
+          "impaciência",
+          "agir antes de refletir",
+          "dificuldade com esperas"
+        ],
         "communication": "Direta, rápida e orientada à ação.",
         "affection": "Demonstra interesse por presença, entusiasmo e experiências compartilhadas.",
         "reflectionPrompt": "Como transformar seu impulso de começar em energia para também continuar?"
@@ -65,18 +99,38 @@
       "order": 2,
       "name": "Touro",
       "glyph": "♉",
-      "period": { "label": "20 de abril a 20 de maio", "shortLabel": "20 abr — 20 mai", "startMonthDay": 420 },
+      "period": {
+        "label": "20 de abril a 20 de maio",
+        "shortLabel": "20 abr — 20 mai",
+        "startMonthDay": 420
+      },
       "element": "Terra",
       "modality": "Fixo",
       "polarity": "Yin",
-      "rulers": { "traditional": "Vênus", "modern": null },
+      "rulers": {
+        "traditional": "Vênus",
+        "modern": null
+      },
       "oppositeSignId": "scorpio",
-      "keywords": ["constância", "prazer", "segurança", "sensorialidade"],
+      "keywords": [
+        "constância",
+        "prazer",
+        "segurança",
+        "sensorialidade"
+      ],
       "archetype": "A construção do que tem valor",
       "profile": {
         "overview": "Touro simboliza a relação com o que é concreto, confortável e duradouro. Sua linguagem valoriza constância, presença e experiências sensoriais.",
-        "strengths": ["persistência", "lealdade", "apreço pelos detalhes e pelo conforto"],
-        "challenges": ["resistência a mudanças", "apego", "teimosia"],
+        "strengths": [
+          "persistência",
+          "lealdade",
+          "apreço pelos detalhes e pelo conforto"
+        ],
+        "challenges": [
+          "resistência a mudanças",
+          "apego",
+          "teimosia"
+        ],
         "communication": "Prática, cuidadosa e construída com tempo e confiança.",
         "affection": "Valoriza estabilidade, demonstrações consistentes e carinho nos pequenos gestos.",
         "reflectionPrompt": "O que merece permanecer na sua vida e o que já pode mudar?"
@@ -87,18 +141,38 @@
       "order": 3,
       "name": "Gêmeos",
       "glyph": "♊",
-      "period": { "label": "21 de maio a 20 de junho", "shortLabel": "21 mai — 20 jun", "startMonthDay": 521 },
+      "period": {
+        "label": "21 de maio a 20 de junho",
+        "shortLabel": "21 mai — 20 jun",
+        "startMonthDay": 521
+      },
       "element": "Ar",
       "modality": "Mutável",
       "polarity": "Yang",
-      "rulers": { "traditional": "Mercúrio", "modern": null },
+      "rulers": {
+        "traditional": "Mercúrio",
+        "modern": null
+      },
       "oppositeSignId": "sagittarius",
-      "keywords": ["curiosidade", "comunicação", "versatilidade", "troca"],
+      "keywords": [
+        "curiosidade",
+        "comunicação",
+        "versatilidade",
+        "troca"
+      ],
       "archetype": "A mente que explora possibilidades",
       "profile": {
         "overview": "Gêmeos representa curiosidade, circulação de ideias e descoberta por meio das trocas. Sua linguagem simbólica valoriza perguntas, variedade e aprendizado.",
-        "strengths": ["adaptabilidade", "comunicação", "curiosidade"],
-        "challenges": ["dispersão", "inquietação", "dificuldade em aprofundar uma única escolha"],
+        "strengths": [
+          "adaptabilidade",
+          "comunicação",
+          "curiosidade"
+        ],
+        "challenges": [
+          "dispersão",
+          "inquietação",
+          "dificuldade em aprofundar uma única escolha"
+        ],
         "communication": "Versátil, questionadora e movida por conversas.",
         "affection": "Encontra conexão em leveza, humor, novidades e diálogo.",
         "reflectionPrompt": "Que assunto ou experiência desperta sua curiosidade neste momento?"
@@ -109,18 +183,38 @@
       "order": 4,
       "name": "Câncer",
       "glyph": "♋",
-      "period": { "label": "21 de junho a 22 de julho", "shortLabel": "21 jun — 22 jul", "startMonthDay": 621 },
+      "period": {
+        "label": "21 de junho a 22 de julho",
+        "shortLabel": "21 jun — 22 jul",
+        "startMonthDay": 621
+      },
       "element": "Água",
       "modality": "Cardinal",
       "polarity": "Yin",
-      "rulers": { "traditional": "Lua", "modern": null },
+      "rulers": {
+        "traditional": "Lua",
+        "modern": null
+      },
       "oppositeSignId": "capricorn",
-      "keywords": ["acolhimento", "memória", "cuidado", "sensibilidade"],
+      "keywords": [
+        "acolhimento",
+        "memória",
+        "cuidado",
+        "sensibilidade"
+      ],
       "archetype": "O espaço simbólico do acolhimento",
       "profile": {
         "overview": "Câncer simboliza cuidado, pertencimento e vínculos afetivos. Sua linguagem valoriza memória, proteção e a criação de espaços de confiança.",
-        "strengths": ["empatia", "imaginação", "capacidade de acolher"],
-        "challenges": ["sensibilidade a críticas", "nostalgia", "tendência a se fechar quando se sente vulnerável"],
+        "strengths": [
+          "empatia",
+          "imaginação",
+          "capacidade de acolher"
+        ],
+        "challenges": [
+          "sensibilidade a críticas",
+          "nostalgia",
+          "tendência a se fechar quando se sente vulnerável"
+        ],
         "communication": "Afetiva, intuitiva e atenta ao contexto emocional.",
         "affection": "Valoriza segurança emocional, intimidade e gestos de cuidado.",
         "reflectionPrompt": "Que atitudes ajudam você a se sentir acolhido e seguro?"
@@ -131,18 +225,38 @@
       "order": 5,
       "name": "Leão",
       "glyph": "♌",
-      "period": { "label": "23 de julho a 22 de agosto", "shortLabel": "23 jul — 22 ago", "startMonthDay": 723 },
+      "period": {
+        "label": "23 de julho a 22 de agosto",
+        "shortLabel": "23 jul — 22 ago",
+        "startMonthDay": 723
+      },
       "element": "Fogo",
       "modality": "Fixo",
       "polarity": "Yang",
-      "rulers": { "traditional": "Sol", "modern": null },
+      "rulers": {
+        "traditional": "Sol",
+        "modern": null
+      },
       "oppositeSignId": "aquarius",
-      "keywords": ["criatividade", "expressão", "generosidade", "presença"],
+      "keywords": [
+        "criatividade",
+        "expressão",
+        "generosidade",
+        "presença"
+      ],
       "archetype": "A expressão autêntica",
       "profile": {
         "overview": "Leão representa criatividade, presença e desejo de expressar aquilo que torna cada pessoa singular. Sua linguagem simbólica valoriza generosidade e reconhecimento.",
-        "strengths": ["generosidade", "criatividade", "entusiasmo"],
-        "challenges": ["orgulho", "necessidade de reconhecimento", "dificuldade em dividir o protagonismo"],
+        "strengths": [
+          "generosidade",
+          "criatividade",
+          "entusiasmo"
+        ],
+        "challenges": [
+          "orgulho",
+          "necessidade de reconhecimento",
+          "dificuldade em dividir o protagonismo"
+        ],
         "communication": "Expressiva, calorosa e marcada pela criatividade.",
         "affection": "Gosta de demonstrações claras, celebração e atenção compartilhada.",
         "reflectionPrompt": "De que maneira você pode expressar sua individualidade com autenticidade?"
@@ -153,18 +267,38 @@
       "order": 6,
       "name": "Virgem",
       "glyph": "♍",
-      "period": { "label": "23 de agosto a 22 de setembro", "shortLabel": "23 ago — 22 set", "startMonthDay": 823 },
+      "period": {
+        "label": "23 de agosto a 22 de setembro",
+        "shortLabel": "23 ago — 22 set",
+        "startMonthDay": 823
+      },
       "element": "Terra",
       "modality": "Mutável",
       "polarity": "Yin",
-      "rulers": { "traditional": "Mercúrio", "modern": null },
+      "rulers": {
+        "traditional": "Mercúrio",
+        "modern": null
+      },
       "oppositeSignId": "pisces",
-      "keywords": ["organização", "observação", "cuidado", "aperfeiçoamento"],
+      "keywords": [
+        "organização",
+        "observação",
+        "cuidado",
+        "aperfeiçoamento"
+      ],
       "archetype": "A atenção ao que pode florescer",
       "profile": {
         "overview": "Virgem simboliza observação, organização e aprimoramento. Sua linguagem valoriza atenção aos detalhes e o cuidado expresso em ações práticas.",
-        "strengths": ["discernimento", "organização", "dedicação"],
-        "challenges": ["autocrítica", "perfeccionismo", "preocupação excessiva com detalhes"],
+        "strengths": [
+          "discernimento",
+          "organização",
+          "dedicação"
+        ],
+        "challenges": [
+          "autocrítica",
+          "perfeccionismo",
+          "preocupação excessiva com detalhes"
+        ],
         "communication": "Clara, analítica e orientada a soluções.",
         "affection": "Demonstra carinho por atitudes concretas, presença e atenção às necessidades.",
         "reflectionPrompt": "Como reconhecer seu progresso sem exigir perfeição?"
@@ -175,18 +309,38 @@
       "order": 7,
       "name": "Libra",
       "glyph": "♎",
-      "period": { "label": "23 de setembro a 22 de outubro", "shortLabel": "23 set — 22 out", "startMonthDay": 923 },
+      "period": {
+        "label": "23 de setembro a 22 de outubro",
+        "shortLabel": "23 set — 22 out",
+        "startMonthDay": 923
+      },
       "element": "Ar",
       "modality": "Cardinal",
       "polarity": "Yang",
-      "rulers": { "traditional": "Vênus", "modern": null },
+      "rulers": {
+        "traditional": "Vênus",
+        "modern": null
+      },
       "oppositeSignId": "aries",
-      "keywords": ["harmonia", "diálogo", "reciprocidade", "estética"],
+      "keywords": [
+        "harmonia",
+        "diálogo",
+        "reciprocidade",
+        "estética"
+      ],
       "archetype": "A arte simbólica do encontro",
       "profile": {
         "overview": "Libra representa encontro, diálogo e busca por equilíbrio. Sua linguagem simbólica valoriza reciprocidade, beleza e consideração por diferentes perspectivas.",
-        "strengths": ["diplomacia", "cooperação", "senso estético"],
-        "challenges": ["indecisão", "evitar conflitos necessários", "priorizar a aprovação externa"],
+        "strengths": [
+          "diplomacia",
+          "cooperação",
+          "senso estético"
+        ],
+        "challenges": [
+          "indecisão",
+          "evitar conflitos necessários",
+          "priorizar a aprovação externa"
+        ],
         "communication": "Diplomática, ponderada e aberta à escuta.",
         "affection": "Valoriza parceria, gentileza, troca equilibrada e momentos a dois.",
         "reflectionPrompt": "Como preservar suas próprias vontades enquanto constrói acordos?"
@@ -197,18 +351,38 @@
       "order": 8,
       "name": "Escorpião",
       "glyph": "♏",
-      "period": { "label": "23 de outubro a 21 de novembro", "shortLabel": "23 out — 21 nov", "startMonthDay": 1023 },
+      "period": {
+        "label": "23 de outubro a 21 de novembro",
+        "shortLabel": "23 out — 21 nov",
+        "startMonthDay": 1023
+      },
       "element": "Água",
       "modality": "Fixo",
       "polarity": "Yin",
-      "rulers": { "traditional": "Marte", "modern": "Plutão" },
+      "rulers": {
+        "traditional": "Marte",
+        "modern": "Plutão"
+      },
       "oppositeSignId": "taurus",
-      "keywords": ["profundidade", "intensidade", "transformação", "privacidade"],
+      "keywords": [
+        "profundidade",
+        "intensidade",
+        "transformação",
+        "privacidade"
+      ],
       "archetype": "A profundidade das transformações",
       "profile": {
         "overview": "Escorpião simboliza profundidade, transformação e busca por significado além da superfície. Sua linguagem valoriza confiança, privacidade e intensidade emocional.",
-        "strengths": ["determinação", "lealdade", "capacidade de se reinventar"],
-        "challenges": ["desconfiança", "controle", "dificuldade em deixar situações para trás"],
+        "strengths": [
+          "determinação",
+          "lealdade",
+          "capacidade de se reinventar"
+        ],
+        "challenges": [
+          "desconfiança",
+          "controle",
+          "dificuldade em deixar situações para trás"
+        ],
         "communication": "Reservada, intensa e interessada no que está por trás das palavras.",
         "affection": "Valoriza confiança, intimidade, cumplicidade e sinceridade.",
         "reflectionPrompt": "O que você gostaria de transformar ao abrir espaço para confiar?"
@@ -219,18 +393,38 @@
       "order": 9,
       "name": "Sagitário",
       "glyph": "♐",
-      "period": { "label": "22 de novembro a 21 de dezembro", "shortLabel": "22 nov — 21 dez", "startMonthDay": 1122 },
+      "period": {
+        "label": "22 de novembro a 21 de dezembro",
+        "shortLabel": "22 nov — 21 dez",
+        "startMonthDay": 1122
+      },
       "element": "Fogo",
       "modality": "Mutável",
       "polarity": "Yang",
-      "rulers": { "traditional": "Júpiter", "modern": null },
+      "rulers": {
+        "traditional": "Júpiter",
+        "modern": null
+      },
       "oppositeSignId": "gemini",
-      "keywords": ["expansão", "liberdade", "aventura", "aprendizado"],
+      "keywords": [
+        "expansão",
+        "liberdade",
+        "aventura",
+        "aprendizado"
+      ],
       "archetype": "A busca por novos horizontes",
       "profile": {
         "overview": "Sagitário representa expansão, exploração e busca por sentido. Sua linguagem simbólica valoriza liberdade, aprendizado e abertura a novas experiências.",
-        "strengths": ["otimismo", "generosidade", "entusiasmo para aprender"],
-        "challenges": ["exagero", "inquietação", "falar sem medir o impacto"],
+        "strengths": [
+          "otimismo",
+          "generosidade",
+          "entusiasmo para aprender"
+        ],
+        "challenges": [
+          "exagero",
+          "inquietação",
+          "falar sem medir o impacto"
+        ],
         "communication": "Franca, espontânea e movida por ideias amplas.",
         "affection": "Valoriza liberdade, confiança, bom humor e descobertas compartilhadas.",
         "reflectionPrompt": "Que novo horizonte você gostaria de explorar sem perder o que já importa?"
@@ -241,18 +435,38 @@
       "order": 10,
       "name": "Capricórnio",
       "glyph": "♑",
-      "period": { "label": "22 de dezembro a 19 de janeiro", "shortLabel": "22 dez — 19 jan", "startMonthDay": 1222 },
+      "period": {
+        "label": "22 de dezembro a 19 de janeiro",
+        "shortLabel": "22 dez — 19 jan",
+        "startMonthDay": 1222
+      },
       "element": "Terra",
       "modality": "Cardinal",
       "polarity": "Yin",
-      "rulers": { "traditional": "Saturno", "modern": null },
+      "rulers": {
+        "traditional": "Saturno",
+        "modern": null
+      },
       "oppositeSignId": "cancer",
-      "keywords": ["planejamento", "persistência", "responsabilidade", "construção"],
+      "keywords": [
+        "planejamento",
+        "persistência",
+        "responsabilidade",
+        "construção"
+      ],
       "archetype": "A construção de algo duradouro",
       "profile": {
         "overview": "Capricórnio simboliza planejamento, responsabilidade e construção gradual. Sua linguagem valoriza consistência, compromisso e objetivos de longo prazo.",
-        "strengths": ["disciplina", "persistência", "confiabilidade"],
-        "challenges": ["rigidez", "autocobrança", "dificuldade em desacelerar"],
+        "strengths": [
+          "disciplina",
+          "persistência",
+          "confiabilidade"
+        ],
+        "challenges": [
+          "rigidez",
+          "autocobrança",
+          "dificuldade em desacelerar"
+        ],
         "communication": "Objetiva, ponderada e orientada a compromissos.",
         "affection": "Demonstra carinho por confiança, presença e atitudes consistentes.",
         "reflectionPrompt": "Como equilibrar suas ambições com o cuidado consigo mesmo?"
@@ -263,18 +477,38 @@
       "order": 11,
       "name": "Aquário",
       "glyph": "♒",
-      "period": { "label": "20 de janeiro a 18 de fevereiro", "shortLabel": "20 jan — 18 fev", "startMonthDay": 120 },
+      "period": {
+        "label": "20 de janeiro a 18 de fevereiro",
+        "shortLabel": "20 jan — 18 fev",
+        "startMonthDay": 120
+      },
       "element": "Ar",
       "modality": "Fixo",
       "polarity": "Yang",
-      "rulers": { "traditional": "Saturno", "modern": "Urano" },
+      "rulers": {
+        "traditional": "Saturno",
+        "modern": "Urano"
+      },
       "oppositeSignId": "leo",
-      "keywords": ["originalidade", "independência", "ideias", "coletividade"],
+      "keywords": [
+        "originalidade",
+        "independência",
+        "ideias",
+        "coletividade"
+      ],
       "archetype": "A imaginação de novos caminhos",
       "profile": {
         "overview": "Aquário representa ideias, independência e interesse pelo coletivo. Sua linguagem simbólica valoriza originalidade, experimentação e novas perspectivas.",
-        "strengths": ["criatividade", "visão ampla", "abertura a novas ideias"],
-        "challenges": ["distanciamento", "resistência a convenções sem avaliar o contexto", "imprevisibilidade"],
+        "strengths": [
+          "criatividade",
+          "visão ampla",
+          "abertura a novas ideias"
+        ],
+        "challenges": [
+          "distanciamento",
+          "resistência a convenções sem avaliar o contexto",
+          "imprevisibilidade"
+        ],
         "communication": "Conceitual, inventiva e aberta a conversas pouco convencionais.",
         "affection": "Valoriza amizade, respeito à individualidade e conexão intelectual.",
         "reflectionPrompt": "Como colocar suas ideias originais em contato com as necessidades reais das pessoas?"
@@ -285,18 +519,38 @@
       "order": 12,
       "name": "Peixes",
       "glyph": "♓",
-      "period": { "label": "19 de fevereiro a 20 de março", "shortLabel": "19 fev — 20 mar", "startMonthDay": 219 },
+      "period": {
+        "label": "19 de fevereiro a 20 de março",
+        "shortLabel": "19 fev — 20 mar",
+        "startMonthDay": 219
+      },
       "element": "Água",
       "modality": "Mutável",
       "polarity": "Yin",
-      "rulers": { "traditional": "Júpiter", "modern": "Netuno" },
+      "rulers": {
+        "traditional": "Júpiter",
+        "modern": "Netuno"
+      },
       "oppositeSignId": "virgo",
-      "keywords": ["imaginação", "empatia", "sensibilidade", "inspiração"],
+      "keywords": [
+        "imaginação",
+        "empatia",
+        "sensibilidade",
+        "inspiração"
+      ],
       "archetype": "A imaginação que conecta mundos",
       "profile": {
         "overview": "Peixes simboliza imaginação, sensibilidade e conexão com o mundo interior. Sua linguagem valoriza empatia, inspiração e abertura ao intangível.",
-        "strengths": ["imaginação", "compaixão", "sensibilidade artística"],
-        "challenges": ["idealização", "dificuldade em estabelecer limites", "dispersão"],
+        "strengths": [
+          "imaginação",
+          "compaixão",
+          "sensibilidade artística"
+        ],
+        "challenges": [
+          "idealização",
+          "dificuldade em estabelecer limites",
+          "dispersão"
+        ],
         "communication": "Intuitiva, imaginativa e sensível a nuances.",
         "affection": "Valoriza delicadeza, acolhimento e conexão emocional.",
         "reflectionPrompt": "Como acolher sua sensibilidade sem deixar de proteger seus próprios limites?"
