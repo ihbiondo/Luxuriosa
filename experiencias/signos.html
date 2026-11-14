@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="pt-BR"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><meta name="theme-color" content="#0b090a">
+<title>Astrologia & Signos | Experiências Luxuriosa</title><meta name="description" content="Descubra seu signo solar e explore os 12 signos do zodíaco em uma experiência recreativa da Luxuriosa.">
+<link rel="icon" href="/img/site/favicon.ico" sizes="any"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600&display=swap" rel="stylesheet"><link rel="stylesheet" href="/css/experiencias.css"><link rel="stylesheet" href="/css/signos.css"><link rel="stylesheet" href="/css/sign-share.css"><script src="/js/vendor/astronomy.browser.min.js" defer></script><script src="/js/sign-share.js" defer></script><script src="/js/signos.js" defer></script>
+</head><body>
+<a class="skip" href="#signosMain">Pular para o conteúdo</a>
+<header class="header"><a class="brand" href="/"><span>Luxuriosa</span><small>ASTROLOGIA & SIGNOS</small></a><nav aria-label="Navegação principal"><a href="/experiencias/">Experiências</a><a href="/portal/">Meu portal</a><a href="/educacao/">Educação</a></nav></header>
+<main id="signosMain" class="wrap">
+<section class="hero sign-hero"><small>ASTROLOGIA · UM JEITO LEVE DE SE DESCOBRIR</small><h1>O universo dos signos, <em>do seu jeito.</em></h1><p>Descubra seu signo solar, explore os elementos do zodíaco e compare combinações astrológicas por diversão.</p><div class="hero-actions"><a class="primary" href="#signCalculator">Descobrir meu signo ↓</a><a class="secondary" href="/experiencias/">Voltar às experiências</a></div></section>
+
+<section id="signCalculator" class="zodiac-tool" aria-labelledby="calculatorTitle">
+<div class="tool-heading"><div><small>CALCULADORA DO ZODÍACO</small><h2 id="calculatorTitle">Qual é o seu signo?</h2><p>Informe sua data de nascimento para descobrir seu signo solar.</p></div><span class="tool-symbol" aria-hidden="true">✧</span></div>
+<form id="signForm" class="sign-form">
+<div class="solar-input-grid">
+<div><label for="birthDate">Data de nascimento</label><input id="birthDate" name="birthDate" type="date" required></div>
+<div><label for="birthTime">Horário de nascimento <span>(opcional)</span></label><input id="birthTime" name="birthTime" type="time" step="60"></div>
+</div>
+<details class="timezone-settings">
+<summary>Ajustar fuso horário do nascimento</summary>
+<label for="birthTimezone">Fuso horário</label>
+<input id="birthTimezone" name="birthTimezone" list="timezoneOptions" autocomplete="off" placeholder="America/Sao_Paulo">
+<datalist id="timezoneOptions"></datalist>
+<p>O fuso do seu dispositivo será sugerido. Altere se você nasceu em outra região ou país. Use o formato Região/Cidade.</p>
+</details>
+<button class="primary sign-submit" type="submit">Descobrir meu signo <span aria-hidden="true">→</span></button>
+<p class="privacy-note">Data, horário e fuso são processados nesta página. Não são enviados nem armazenados.</p>
+<p id="calculatorError" class="calculator-error" role="alert" hidden></p>
+</form>
+<div id="signResult" class="sign-result" role="status" aria-live="polite" hidden>
+<div class="result-symbol" id="resultSymbol" aria-hidden="true">♈</div>
+<div class="result-copy"><small>SEU SIGNO SOLAR</small><h3 id="resultName">Áries</h3><p id="resultDates">21 de março a 19 de abril</p><div class="result-tags"><span id="resultElement">Fogo</span><span id="resultModality">Cardinal</span><span id="resultCalculationMethod">Estimativa</span></div><p id="resultDescription" class="result-description"></p></div>
+</div><section id="solarShareStudio" class="sign-share-studio" aria-labelledby="solarShareTitle" hidden>
+<p class="share-eyebrow">SEU RESULTADO, DO SEU JEITO</p>
+<h2 id="solarShareTitle">Crie uma arte para compartilhar.</h2>
+<p>Escolha o formato, veja a prévia e salve a imagem no seu dispositivo.</p>
+<div class="share-format-picker" role="group" aria-label="Formato da imagem">
+<button id="solarShareStory" type="button" aria-pressed="true">Story / Status · 9:16</button>
+<button id="solarShareSquare" type="button" aria-pressed="false">Feed · 1:1</button>
+</div>
+<div class="share-preview-shell"><canvas id="solarShareCanvas" width="1080" height="1920" role="img" aria-label="Arte compartilhável do resultado do signo"></canvas></div>
+<div class="share-actions">
+<button id="solarShareDownload" class="share-download" type="button" disabled>Baixar imagem PNG</button>
+<button id="solarShareNative" class="share-native" type="button" disabled>Compartilhar imagem</button>
+<a id="solarShareWhatsApp" class="share-whatsapp" href="https://wa.me/" target="_blank" rel="noopener">Enviar link pelo WhatsApp</a>
+</div>
+<p id="solarShareStatus" class="share-status" role="status" aria-live="polite"></p>
+<p class="share-guidance">No Instagram, publique a imagem baixada no Story ou Feed. Em celulares compatíveis, “Compartilhar imagem” abre os aplicativos disponíveis. A arte é gerada no próprio navegador.</p>
+</section>
+
+<p class="zodiac-disclaimer">Com data, horário e fuso, calculamos a posição do Sol no zodíaco tropical diretamente no navegador. Sem horário, mostramos uma estimativa pelas datas convencionais. Para Ascendente e casas astrológicas, também será necessário informar o local de nascimento.</p>
+</section>
+
+<section class="compatibility" aria-labelledby="compatibilityTitle">
+<div class="section-head"><div><small>COMBINAÇÕES ASTROLÓGICAS</small><h2 id="compatibilityTitle">Como esses signos se encontram?</h2></div><span class="demo-label">POR DIVERSÃO</span></div>
+<p class="compatibility-intro">Escolha dois signos para ver uma leitura simbólica baseada nos elementos. Não é uma avaliação de relacionamento nem determina compatibilidade real.</p>
+<form id="compatibilityForm" class="compatibility-form">
+<div><label for="signOne">Primeiro signo</label><select id="signOne" required><option value="">Escolha um signo</option></select></div>
+<span class="compatibility-and" aria-hidden="true">+</span>
+<div><label for="signTwo">Segundo signo</label><select id="signTwo" required><option value="">Escolha outro signo</option></select></div>
+<button type="submit" class="primary">Ver combinação <span aria-hidden="true">→</span></button>
+</form>
+<div id="compatibilityResult" class="compatibility-result" role="status" aria-live="polite" hidden><small>LEITURA SIMBÓLICA</small><h3 id="compatibilityHeading"></h3><p id="compatibilityText"></p></div>
+</section>
+
+<section class="sign-catalog" aria-labelledby="catalogTitle">
+<div class="section-head"><div><small>OS DOZE SIGNOS</small><h2 id="catalogTitle">Explore o zodíaco.</h2></div><span class="catalog-count">12 SIGNOS</span></div>
+<div id="signGrid" class="sign-grid"></div>
+</section>
+<section class="sign-footer-note"><div><small>UM TOQUE DE CURIOSIDADE</small><h2>Astrologia como entretenimento.</h2><p>Os textos e as interpretações desta página são apresentados como conteúdo recreativo e simbólico, sem pretensão científica ou determinista.</p></div><a href="/experiencias/">Ver outras experiências →</a></section>
+</main>
+<footer class="footer"><a href="/">Luxuriosa</a><span>Sinta-se ainda mais você.</span><a href="/privacidade.html">Privacidade</a></footer>
+<dialog id="ageGate" class="age-dialog" aria-labelledby="ageTitle" aria-describedby="ageDescription"><div class="mark">L</div><small>EXPERIÊNCIAS LUXURIOSA</small><h2 id="ageTitle">Conteúdo para adultos.</h2><p id="ageDescription">Esta área é destinada a pessoas com 18 anos ou mais. Ao continuar, você declara ter pelo menos 18 anos.</p><div class="dialog-actions"><button id="ageConfirm" class="primary" type="button">Tenho 18 anos ou mais</button><a href="/">Sair</a></div></dialog>
+</body></html>
