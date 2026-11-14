@@ -1,11 +1,11 @@
 // Cloudflare Worker for the production Lux-Gestão route.
 // The HTML source is fetched from a fixed, public GitHub Raw URL so the
-// preview route can be protected by Cloudflare Access without breaking the Worker.
+// preview path can be protected by Cloudflare Access without breaking this Worker.
 
 const APP_SOURCE_URL = "https://raw.githubusercontent.com/ihbiondo/Luxuriosa/main/previa/lux-gestao/index.html";
 const APP_ROUTES = new Set(["/lux-gestao/", "/lux-gestao/index.html"]);
 const ROBOTS = "noindex, nofollow, noarchive, nosnippet";
-const VERSION = "2026-11-14.2";
+const VERSION = "2026-11-14.3";
 
 function privateHeaders(sourceHeaders = undefined) {
   const headers = new Headers(sourceHeaders);
@@ -38,8 +38,9 @@ export default {
     }
 
     if (path === "/lux-gestao") {
-      url.pathname = "/lux-gestao/";
-      return Response.redirect(url.toString(), 308);
+      // Use the canonical host and discard query parameters to avoid an
+      // attacker-controlled host or query value in the redirect destination.
+      return Response.redirect("https://luxuriosa.com.br/lux-gestao/", 308);
     }
 
     if (APP_ROUTES.has(path)) {
