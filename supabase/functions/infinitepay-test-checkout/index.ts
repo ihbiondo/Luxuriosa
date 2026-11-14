@@ -26,6 +26,11 @@ async function requireAdmin(req: Request) {
     .select("role").eq("user_id",data.user.id).maybeSingle();
   if(permissionError) throw permissionError;
   if(permission?.role!=="admin") throw new Error("Acesso restrito à administração.");
+  const {data:assurance,error:assuranceError}=await admin.auth.mfa.getAuthenticatorAssuranceLevel(token);
+  if(assuranceError) throw new Error("Não foi possível validar o segundo fator de autenticação.");
+  if(assurance.currentLevel!=="aal2") {
+    throw new Error("Confirme o código do seu autenticador para continuar.");
+  }
   return data.user;
 }
 function clean(v: unknown,max=200){return typeof v==="string"?v.trim().slice(0,max):"";}
@@ -95,7 +100,7 @@ Deno.serve(async(req:Request)=>{
   if(body?.action==="status"){
    const id=clean(body?.order_nsu,40);
    const {data,error}=await admin.from("infinitepay_test_payments")
-    .select("order_nsu,amount_cents,status,checkout_url,invoice_slug,transaction_nsu,paid_amount_cents,capture_method,provider_verified,webhook_received_at,paid_at,created_at,last_webhook_attempt_at,last_webhook_event,last_payment_check_http_status,last_payment_check_provider_code,last_webhook_error")
+    .select("order_nsu,amount_cents,status,checkout_url,invoice_slug,transaction_nsu,paid_amount_cents,capture_method,provider_verified,webhook_received_at,paid_at,created_at")
     .eq("order_nsu",id).eq("created_by",user.id).maybeSingle();
    if(error) throw error;
    if(!data) return reply({error:"Teste não encontrado."},404,origin);
