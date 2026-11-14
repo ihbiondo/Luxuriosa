@@ -99,7 +99,21 @@
       combined: ["Prevenção combinada", "/educacao/temas/prevencao-combinada.html"],
       contraception: ["Métodos contraceptivos", "/educacao/temas/contracepcao.html"],
       products: ["Enciclopédia e materiais", "/educacao/enciclopedia/"],
-      guides: ["Guias de cuidados", "/educacao/guias/"]
+      guides: ["Guias de cuidados", "/educacao/guias/"],
+
+      rights: ["Direitos, diversidade e acesso à saúde", "/educacao/temas/direitos-diversidade-e-acesso-a-saude.html"],
+      relationships: ["Relações saudáveis e comunicação", "/educacao/temas/relacoes-saudaveis-e-comunicacao.html"],
+      privacy: ["Segurança digital e privacidade íntima", "/educacao/temas/seguranca-digital-e-privacidade.html"],
+      services: ["Como acessar atendimento no SUS", "/educacao/guias/acessar-atendimento-saude-sexual-sus.html"],
+      violence: ["Violência sexual: onde buscar ajuda", "/educacao/guias/violencia-sexual-onde-buscar-ajuda.html"],
+      materials: ["Materiais dos acessórios", "/educacao/curiosidades/materiais-dos-acessorios.html"],
+      water: ["Resistência à água e código IP", "/educacao/curiosidades/a-prova-dagua.html"],
+      rings: ["Anéis penianos e segurança", "/educacao/enciclopedia/aneis-penianos.html"],
+      anal: ["Plugs anais e base de segurança", "/educacao/enciclopedia/plugs-anais.html"],
+      vibrators: ["Vibradores e cuidados", "/educacao/enciclopedia/vibradores.html"],
+      masturbators: ["Masturbadores e higiene", "/educacao/enciclopedia/masturbadores.html"],
+      cleaning: ["Limpeza e conservação", "/educacao/guias/limpeza-e-conservacao.html"],
+      lube: ["Como escolher um lubrificante", "/educacao/guias/escolher-lubrificante.html"]
     };
 
     button.addEventListener("click", function () {

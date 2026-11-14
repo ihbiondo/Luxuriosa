@@ -357,3 +357,38 @@ Fonte principal: Ministério da Saúde — Profilaxia Pós-Exposição, incluind
 - [x] Reavaliar segurança de uso, materiais, limpeza, compartilhamento, compatibilidade e limites das informações comerciais sem criar novos módulos ou páginas.
 
 Fontes consultadas: FDA (orientação de rotulagem para dispositivos de constrição), Planned Parenthood (materiais, limpeza e compartilhamento de acessórios), OMS (saúde menstrual), IEC (classificação IP), CDC e Ministério da Saúde (preservativos e prevenção de IST). As páginas permanecem educativas e não prescrevem uso individual.
+
+
+## 21. Auditoria profunda e expansão de conteúdo
+
+**Rodada:** 14 de novembro de 2026.  
+**Escopo:** auditoria estrutural e editorial das 23 páginas de artigos já existentes, das entradas dos cinco módulos, das ferramentas interativas e das Experiências.
+
+### Diagnóstico da auditoria
+
+- [x] Conferir títulos, descrições, H1, estrutura de seções, canonical, dados estruturados, fontes, leituras relacionadas e links internos.
+- [x] Identificar textos introdutórios que terminavam cedo demais, especialmente em Enciclopédia, Curiosidades e Guias de uso e conservação.
+- [x] Distinguir páginas realmente incompletas de campos de busca com o atributo HTML `placeholder`.
+- [x] Identificar sobreposição temática entre prevenção de IST e prevenção combinada e reforçar a função complementar de cada artigo.
+- [x] Rever a clareza de orientações sobre janelas de testagem, consentimento digital, compatibilidade de materiais, limpeza, segurança elétrica e situações de urgência.
+- [x] Conferir referências brasileiras de PEP para HIV e hepatite B, atendimento após violência sexual, contracepção de emergência, acolhimento no SUS e legislação sobre divulgação não consentida de imagens íntimas.
+
+### Expansão aplicada sem criar novas páginas
+
+- [x] Ampliar os 9 artigos da seção Temas com explicações práticas, critérios de decisão, sinais de atenção, exemplos de conversa e limites das orientações.
+- [x] Ampliar os 6 verbetes da Enciclopédia com critérios de escolha, inspeção, compatibilidade, higiene, riscos e sinais para interromper o uso.
+- [x] Ampliar os 5 Guias com checklists, preparação para atendimento, passos de cuidado e distinção entre urgência e rotina.
+- [x] Ampliar as 3 Curiosidades, incluindo uma segunda série de mitos e fatos e explicações técnicas sobre materiais e classificação IP.
+- [x] Atualizar datas de revisão e metadados estruturados nas páginas alteradas; atualizar lastmod no sitemap.
+- [x] Ampliar o quiz de conhecimentos essenciais de 7 para 21 questões, com feedback explicativo.
+- [x] Ampliar o checklist de preparação para consulta de 5 para 10 itens.
+- [x] Ampliar o orientador de conteúdo com rotas para Temas, Guias, Enciclopédia, Curiosidades e Interatividade.
+- [x] Ampliar os bancos das Experiências: Descubra seu estilo (15 perguntas), Conexão a dois (18 cartas), Mitos ou verdades (15 perguntas) e Pequenas descobertas (15 passos).
+- [x] Ajustar os convites de continuidade para considerar somente caminhos recentes da sessão nesta aba, sem perfil, cadastro, analytics ou envio de respostas.
+- [x] Manter astrologia identificada como atividade simbólica e recreativa; dados de nascimento continuam processados localmente pelo navegador.
+
+### Limites e manutenção
+
+Esta rodada é uma expansão editorial substancial, mas não equivale a revisão clínica, jurídica ou psicológica por profissional habilitado. A Luxuriosa não deve declarar validação profissional que não ocorreu. Informações de saúde, serviços e legislação precisam ser reconferidas antes de atualizações futuras. As instruções do fabricante continuam determinantes para limpeza e compatibilidade de acessórios específicos.
+
+**Fontes primárias prioritárias conferidas nesta rodada:** Ministério da Saúde (PEP, prevenção combinada e acolhimento no SUS), OMS, IEC, FDA, Planalto/Código Penal e Marco Civil da Internet. Quando a fonte for estrangeira, o texto deve identificá-la como referência técnica estrangeira, e não como norma brasileira.

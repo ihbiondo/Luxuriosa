@@ -37,6 +37,19 @@
   }
 
   setupExperienceNavigation();
+  (function recordLocalJourney() {
+    try {
+      const key = "lux_journey_session_v1";
+      const path = window.location.pathname.replace(/index\\.html$/, "");
+      const current = path || "/";
+      const stored = JSON.parse(window.sessionStorage.getItem(key) || "[]");
+      const recent = Array.isArray(stored) ? stored.filter(item => typeof item === "string" && item !== current) : [];
+      window.sessionStorage.setItem(key, JSON.stringify([current, ...recent].slice(0, 12)));
+    } catch (_) {
+      // O histórico contextual é opcional e permanece apenas nesta aba.
+    }
+  })();
+
 
   function el(tag, className, value) {
     const node = document.createElement(tag);
