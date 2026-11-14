@@ -67,9 +67,10 @@ function cleanItems(value: unknown, catalog: Map<string, any>) {
   if (!Array.isArray(value) || value.length > 80) throw new Error("Carrinho inválido.");
   return value.map((raw: any) => {
     const productId = cleanText(String(raw?.id ?? ""), 100);
+    if (!productId) throw new Error("Produto inválido no carrinho.");
     const quantity = Math.trunc(Number(raw?.quantidade));
     const selectedDiceId = cleanText(raw?.kit_variant_id, 10);
-    const product = productId ? catalog.get(productId) : null;
+    const product = catalog.get(productId);
     if (!product || product.esgotado === true) throw new Error("Um produto do carrinho está indisponível. Atualize o carrinho.");
     if (!Number.isInteger(quantity) || quantity < 1 || quantity > 999) throw new Error("Quantidade inválida.");
     const price = Number(product.preco);
