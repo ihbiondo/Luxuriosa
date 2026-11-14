@@ -205,3 +205,14 @@ body{background:radial-gradient(ellipse at 10% 5%,rgba(113,69,132,.4),transparen
  .header nav{max-width:100%;width:100%;justify-content:flex-start}
  .header nav a{min-height:38px;font-size:10px}
 }
+
+/* Próximo passo opcional após concluir uma experiência */
+.journey-panel{display:grid;gap:13px;margin:23px 0 8px;padding:18px;border:1px solid #e0d4e8;border-radius:13px;background:linear-gradient(120deg,#f1e9f6,#fff5fa);color:#493451}
+.journey-panel>div:first-child small{color:#987342;font-size:9px;font-weight:700;letter-spacing:.15em}
+.journey-panel h3{margin:5px 0;font:500 21px/1.25 var(--serif);color:#493451}
+.journey-panel p{margin:0;color:#675b70;font-size:12px;line-height:1.65}
+.journey-links{display:flex;flex-wrap:wrap;gap:9px}
+.journey-links a{min-height:42px;display:inline-flex;align-items:center;padding:9px 13px;border:1px solid #dfcfe8;border-radius:8px;background:#fff;color:#a72f78;font-size:11px;font-weight:700}
+.journey-links a:hover{border-color:#e3449d;background:#fff0f7}
+.journey-portal{justify-self:start;min-height:36px;display:inline-flex;align-items:center;color:#756a7d;font-size:10px;text-decoration:underline;text-underline-offset:3px}
+@media(max-width:560px){.journey-panel{padding:15px}.journey-links{display:grid}.journey-links a{min-height:46px;font-size:12px}.journey-panel p{font-size:13px}}

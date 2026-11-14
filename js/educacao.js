@@ -87,6 +87,79 @@
     });
   }
 
+
+  function setupReadingJourney() {
+    const main = document.querySelector(".ed-main");
+    if (!main || main.querySelector(".ed-next-step")) return;
+
+    const path = normalizePath(window.location.pathname);
+    const routes = [
+      {
+        paths: ["/educacao/temas/consentimento-e-limites.html", "/educacao/temas/relacoes-saudaveis-e-comunicacao.html"],
+        title: "Levar a reflexão para uma conversa",
+        description: "Depois da leitura, uma atividade a dois pode abrir espaço para escuta, diálogo e respeito aos limites.",
+        href: "/experiencias/?tipo=couple",
+        label: "Explorar Conexão a dois"
+      },
+      {
+        paths: ["/educacao/temas/prevencao-de-ist.html", "/educacao/temas/prevencao-combinada.html", "/educacao/temas/contracepcao.html", "/educacao/temas/corpo-humano-e-ciclo-menstrual.html", "/educacao/temas/saude-sexual-e-bem-estar.html"],
+        title: "Revisar o que você aprendeu",
+        description: "Atividades educativas ajudam a retomar conceitos com calma, sem nota e sem salvar respostas.",
+        href: "/educacao/interatividade/",
+        label: "Abrir atividades educativas"
+      },
+      {
+        paths: ["/educacao/enciclopedia/aneis-penianos.html", "/educacao/enciclopedia/gels-e-lubrificantes.html", "/educacao/enciclopedia/jogos-de-casal.html", "/educacao/enciclopedia/masturbadores.html", "/educacao/enciclopedia/plugs-anais.html", "/educacao/enciclopedia/vibradores.html", "/educacao/curiosidades/materiais-dos-acessorios.html"],
+        title: "Conhecer cuidados e escolhas com mais contexto",
+        description: "Você pode continuar pela biblioteca ou consultar orientações práticas de conservação e uso responsável.",
+        href: "/educacao/guias/",
+        label: "Explorar guias educativos"
+      }
+    ];
+    const suggestion = routes.find(item => item.paths.includes(path)) || {
+      title: "Quando quiser, continue explorando.",
+      description: "Você pode mudar do texto para uma atividade gratuita, sem cadastro e no seu ritmo.",
+      href: "/experiencias/",
+      label: "Conhecer Experiências"
+    };
+
+    const panel = document.createElement("aside");
+    panel.className = "ed-next-step";
+    panel.setAttribute("aria-labelledby", "edNextStepTitle");
+    const eyebrow = document.createElement("small");
+    eyebrow.textContent = "UM PRÓXIMO PASSO, SEM PRESSA";
+    const heading = document.createElement("h2");
+    heading.id = "edNextStepTitle";
+    heading.textContent = suggestion.title;
+    const description = document.createElement("p");
+    description.textContent = suggestion.description;
+    const actions = document.createElement("div");
+    actions.className = "ed-next-step-actions";
+    const primary = document.createElement("a");
+    primary.href = suggestion.href;
+    primary.textContent = suggestion.label;
+    const portal = document.createElement("a");
+    portal.href = "/portal/";
+    portal.textContent = "Voltar ao meu Portal";
+    portal.className = "ed-next-step-portal";
+    actions.append(primary, portal);
+    panel.append(eyebrow, heading, description, actions);
+
+    const article = main.querySelector(".ed-article");
+    if (article) {
+      const back = article.querySelector(".ed-backtop");
+      if (back) article.insertBefore(panel, back);
+      else article.append(panel);
+      return;
+    }
+
+    const tool = main.querySelector(".ed-tool");
+    if (tool) {
+      const section = tool.closest(".ed-section") || tool.parentElement;
+      section.parentElement.insertBefore(panel, section.nextSibling);
+    }
+  }
+
   function setupSkipLink() {
     const main = document.querySelector(".ed-main");
     if (!main) return;
@@ -204,6 +277,7 @@
 
   function initialize() {
     setupNavigation();
+    setupReadingJourney();
     setupSkipLink();
     setupAgeDeclaration();
   }

@@ -173,6 +173,7 @@ function clearDialogState(){
   byId("experienceProgressBar").style.width="0%";
   byId("experienceCounter").textContent="";
   byId("experienceSources").hidden=true;
+  byId("experienceJourney").hidden=true;
 }
 function openExperience(id,opener){
   const experience=experiences[id];
@@ -249,6 +250,55 @@ byId("experienceNext").addEventListener("click",()=>{
   if(questionIndex<current.questions.length-1){questionIndex++;renderQuestion();return;}
   finishExperience();
 });
+
+function renderExperienceJourney(){
+  const suggestions={
+    discovery:{
+      title:"Quer explorar de outro jeito?",
+      description:"Uma boa conversa ou uma descoberta simbólica podem ser um próximo passo leve.",
+      links:[
+        {href:"/experiencias/?tipo=couple",label:"Abrir uma conversa a dois"},
+        {href:"/experiencias/signos.html",label:"Explorar os signos"}
+      ]
+    },
+    connection:{
+      title:"A conversa pode continuar no conhecimento.",
+      description:"Se fizer sentido, aprofunde temas de autonomia e comunicação ou experimente outro quiz.",
+      links:[
+        {href:"/educacao/temas/consentimento-e-limites.html",label:"Ler sobre consentimento e limites"},
+        {href:"/experiencias/?tipo=quiz",label:"Experimentar outro quiz"}
+      ]
+    },
+    curiosity:{
+      title:"Informação também pode abrir novas conversas.",
+      description:"Você pode aprofundar o tema com uma leitura ou revisar outros assuntos em atividades educativas.",
+      links:[
+        {href:"/educacao/temas/consentimento-e-limites.html",label:"Aprofundar consentimento e autonomia"},
+        {href:"/educacao/interatividade/",label:"Explorar atividades educativas"}
+      ]
+    },
+    challenge:{
+      title:"Pequenos passos podem continuar em outro formato.",
+      description:"Escolha entre conhecer orientações práticas ou fazer uma atividade diferente.",
+      links:[
+        {href:"/educacao/guias/",label:"Conhecer os guias educativos"},
+        {href:"/experiencias/?tipo=quiz",label:"Fazer outro quiz"}
+      ]
+    }
+  };
+  const suggestion=suggestions[current.id]||{
+    title:"Continue explorando no seu ritmo.",
+    description:"Há outras experiências e conteúdos gratuitos para descobrir.",
+    links:[{href:"/experiencias/",label:"Ver experiências"},{href:"/educacao/",label:"Explorar Educação"}]
+  };
+  byId("experienceJourneyTitle").textContent=suggestion.title;
+  byId("experienceJourneyDescription").textContent=suggestion.description;
+  [byId("experienceJourneyLinkOne"),byId("experienceJourneyLinkTwo")].forEach((link,index)=>{
+    link.href=suggestion.links[index].href;
+    link.textContent=suggestion.links[index].label;
+  });
+  byId("experienceJourney").hidden=false;
+}
 function finishExperience(){
   byId("experienceRunner").hidden=true;
   byId("experienceResult").hidden=false;
@@ -273,6 +323,7 @@ function finishExperience(){
     byId("experienceResultDescription").textContent=current.result.description;
     byId("experienceResultAdvice").textContent=current.result.advice;
   }
+  renderExperienceJourney();
   byId("experienceRestart").focus();
 }
 function restartExperience(){
