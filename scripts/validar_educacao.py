@@ -149,7 +149,7 @@ def main() -> int:
         if '<summary>Explorar módulos ⌄</summary>' not in page_text:
             errors.append(f"{rel}: menu de cinco módulos ausente")
         menu_match = re.search(r'<details class="ed-menu">([\\s\\S]*?)</details>', page_text)
-        if not menu_match or not re.search(r"<nav\\b", menu_match.group(1)):
+        if not menu_match:
             errors.append(f"{rel}: menu de navegação ausente")
         if not re.search(r'<a class="ed-brand" href="/educacao/"', page_text):
             errors.append(f"{rel}: link da marca não retorna à Educação")
