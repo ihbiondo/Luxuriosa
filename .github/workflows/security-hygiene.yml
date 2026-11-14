@@ -1,0 +1,27 @@
+name: Security hygiene baseline
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  security-baseline:
+    name: Scan tracked files for common secret exposures
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Run repository security baseline
+        run: node scripts/security-baseline.mjs
+      - name: Verify administrative surface invariants
+        run: node scripts/admin-surface-baseline.mjs

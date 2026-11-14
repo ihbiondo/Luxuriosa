@@ -1,0 +1,34 @@
+# Local credentials and environment files
+.env
+.env.*
+!.env.example
+.dev.vars
+.dev.vars.*
+*.pem
+*.key
+*.p12
+*.pfx
+*.jks
+secrets/
+.secret/
+
+# Cloudflare Wrangler local state
+.wrangler/
+
+# Supabase local state
+supabase/.temp/
+supabase/.branches/
+supabase/.env
+
+# Database dumps and local backups
+*.dump
+*.sql.gz
+*.backup
+*.bak
+
+# Dependencies and local tooling
+node_modules/
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
