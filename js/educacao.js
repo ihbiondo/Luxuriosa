@@ -11,7 +11,6 @@
     { label: "Enciclopédia", href: "/educacao/enciclopedia/", section: "enciclopedia" },
     { label: "Curiosidades", href: "/educacao/curiosidades/", section: "curiosidades" },
     { label: "Guias", href: "/educacao/guias/", section: "guias" },
-    { label: "Interatividade", href: "/educacao/interatividade/", section: "interatividade" }
   ];
 
   function normalizePath(path) {
@@ -56,7 +55,7 @@
     });
 
     nav.replaceChildren(...links);
-    nav.setAttribute("aria-label", "Cinco módulos da Educação Luxuriosa");
+    nav.setAttribute("aria-label", "Quatro módulos da Educação Luxuriosa");
 
     menu.addEventListener("click", event => {
       if (event.target.closest("a")) menu.open = false;

@@ -219,6 +219,7 @@
               <p>Escolha uma opção. Você pode voltar a esta página quando quiser.</p>
             </div>
             <nav class="account-home" aria-label="Atalhos da sua conta">
+              <a href="/portal/"><span class="tile-icon" aria-hidden="true">✦</span><strong>Abrir meu Portal</strong><span>Descubra conteúdos, experiências e vantagens.</span></a>
               <a href="#account-profile-section" data-open-account="account-profile-section"><span class="tile-icon" aria-hidden="true">♙</span><strong>Meus dados</strong><span>Confira seu cadastro, contato e endereço.</span></a>
               <a href="#account-orders-section" data-open-account="account-orders-section"><span class="tile-icon" aria-hidden="true">▤</span><strong>Meus pedidos</strong><span>Acompanhe suas compras e solicitações.</span></a>
               <a href="/clube.html"><span class="tile-icon" aria-hidden="true">♛</span><strong>Clube e vantagens</strong><span>Conheça o Clube gratuito, Apoiadores e Privilegie.</span></a>
@@ -384,6 +385,12 @@
           if (target) target.open = true;
         });
       });
+      const requestedSectionId = window.location.hash.slice(1);
+      const requestedSection = requestedSectionId ? document.getElementById(requestedSectionId) : null;
+      if (requestedSection && requestedSection.matches("details.account-section")) {
+        requestedSection.open = true;
+        window.setTimeout(() => requestedSection.scrollIntoView({ behavior: "smooth", block: "start" }), 100);
+      }
     }
 
     function attachCepLookup({ inputId, statusId, streetId, neighborhoodId, cityId, stateId, complementId }) {
@@ -721,6 +728,7 @@
         const requestedPage = new URLSearchParams(window.location.search).get("redirect");
         let resumeCheckout = false;
         let returnToClub = new URLSearchParams(window.location.search).get("next") === "clube.html";
+        const returnToPortal = new URLSearchParams(window.location.search).get("next") === "portal/";
         try {
           resumeCheckout = localStorage.getItem("luxuriosa_checkout_after_login") === "1";
           if (resumeCheckout) localStorage.removeItem("luxuriosa_checkout_after_login");
@@ -733,6 +741,10 @@
         }
         if (returnToClub) {
           window.location.replace("/clube.html");
+          return;
+        }
+        if (returnToPortal) {
+          window.location.replace("/portal/");
           return;
         }
         if (requestedPage === "acompanhar-pedido/") window.location.replace("/acompanhar-pedido/");
@@ -954,7 +966,8 @@
           password: $("signupPassword").value,
           options: {
             emailRedirectTo: window.location.origin + window.location.pathname +
-              (new URLSearchParams(window.location.search).get("next") === "clube.html" ? "?next=clube.html" : ""),
+              (new URLSearchParams(window.location.search).get("next") === "clube.html" ? "?next=clube.html" :
+                new URLSearchParams(window.location.search).get("next") === "portal/" ? "?next=portal%2F" : ""),
             data: {
               username,
               display_name: firstName,
