@@ -245,6 +245,126 @@ input,select{background:#fcfafd;border-color:#ded3e5;color:#302936}input:focus,s
     }
     @media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;transition:none!important}}
 
+
+/* Painel da conta: distribuição horizontal no desktop e leitura ampliada no celular */
+:root{
+  --account-page:#faf8fc;--account-white:#fff;--account-lav:#f1eaf6;
+  --account-lav-strong:#e5d8ee;--account-plum:#493451;--account-pink:#e83f9b;
+  --account-pink-soft:#fff0f8;--account-gold:#c7a66a;--account-ink:#352b3b;
+  --account-muted:#716879;--account-line:#e7deeb;
+}
+body{background:radial-gradient(ellipse at 82% 5%,rgba(216,190,231,.24),transparent 34%),linear-gradient(135deg,#fcfbfd,#f5f0f8 65%,#fbf9fc);color:var(--account-ink)}
+.top{padding:18px 0}
+.brand-logo img{width:clamp(138px,16vw,170px);height:auto;max-height:none;object-fit:contain}
+.shell{width:min(100% - 40px,1120px)}
+.panel{background:rgba(255,255,255,.97);border:1px solid var(--account-line);box-shadow:0 20px 60px rgba(69,50,80,.09)}
+.primary{background:var(--account-plum);border-color:var(--account-plum);box-shadow:0 7px 18px rgba(73,52,81,.15)}
+.primary:hover{background:#60476a;border-color:#60476a}
+.text-action,.back{color:#a3377d}
+input,select{background:#fff;border-color:#ded4e5;color:#352b3b}
+input:focus,select:focus{border-color:var(--account-pink);box-shadow:0 0 0 3px rgba(232,63,155,.12)}
+:focus-visible{outline:3px solid var(--account-pink);outline-offset:3px}
+.account-home a{background:linear-gradient(145deg,#fff,#f8f3fa);border-color:#e5dbea}
+.account-home a:hover{background:#fff5fa;border-color:#e2a8cb}
+.account-home .tile-icon{background:#fff0f8;border-color:#f1cde1;color:#d83c91}
+.account-welcome{background:linear-gradient(110deg,#f1eaf6,#fff5fa);border-color:#e6d9ec}
+.account-section{background:#fff;border-color:#e7deeb}
+.account-section>summary{min-height:58px;color:var(--account-plum);font-size:14px}
+.account-section>summary:after{color:var(--account-pink)}
+.secondary{background:#fbf8fc;border-color:#dfd3e6;color:#80602f}
+.orders-panel,.order-card,.account-box{background:#fff;border-color:#e7deeb}
+.account-box p,.orders-intro,.orders-empty,.email-change-help{color:#716879}
+.order-number{color:#493451}.order-status{color:#c02d83}
+.danger-help{color:#8a526b}
+
+@media (min-width: 821px){
+  body:has(#signedInArea:not(.hidden)) .shell{width:min(100% - 72px,1400px)}
+  body:has(#signedInArea:not(.hidden)) main{display:block;min-height:0;padding:16px 0 42px}
+  body:has(#signedInArea:not(.hidden)) .intro{display:none}
+  body:has(#signedInArea:not(.hidden)) .panel{max-width:none;justify-self:stretch;padding:clamp(24px,3vw,42px)}
+  #signedInArea>.eyebrow{display:block;color:#8b7197;font-size:11px;letter-spacing:.16em}
+  #signedInArea>h2{margin:7px 0 4px;color:#493451;font-size:34px}
+  #signedInArea>.lead{margin-bottom:22px;color:#716879;font-size:14px}
+  #signedInArea .account-box{
+    display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:16px;
+    padding:24px;border:1px solid #e7deeb;border-radius:18px;background:#fff;
+  }
+  #signedInArea .account-email{grid-column:1/-1;margin:0;padding:0 0 12px;border-bottom:1px solid #eee7f1;font-size:13px}
+  #signedInArea .account-box>p:has(#adminDashboardLink){grid-column:1/-1;margin:0}
+  #signedInArea .account-welcome{
+    grid-column:1/-1;display:flex;align-items:center;justify-content:space-between;gap:16px;
+    margin:0;padding:17px 20px;border-radius:13px
+  }
+  #signedInArea .account-welcome strong{color:#493451;font:500 22px var(--serif)}
+  #signedInArea .account-welcome p{margin:0;color:#716879;font-size:13px}
+  #signedInArea .account-home{
+    grid-column:1/-1;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin:0 0 5px
+  }
+  #signedInArea .account-home a{
+    min-height:124px;padding:20px;grid-template-columns:52px minmax(0,1fr);
+    column-gap:15px;row-gap:5px;border-radius:15px
+  }
+  #signedInArea .account-home .account-tile-featured{grid-column:span 2;min-height:124px}
+  #signedInArea .account-home .tile-icon{width:50px;height:50px;border-radius:14px;font-size:24px}
+  #signedInArea .account-home .tile-icon svg{width:30px;height:30px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  #signedInArea .account-home strong{font-size:16px;line-height:1.3;color:#493451}
+  #signedInArea .account-home span:not(.tile-icon){font-size:12px;line-height:1.5;color:#716879}
+  #signedInArea .account-section{grid-column:span 4;margin:0;border-radius:13px}
+  #signedInArea #account-orders-section,#signedInArea #account-profile-section{grid-column:span 8}
+  #signedInArea #account-consent-section,#signedInArea #account-delete-section{grid-column:span 4}
+  #signedInArea .account-section>summary{padding:18px 20px;font-size:14px}
+  #signedInArea .account-section>.account-section-content{padding:0 20px 20px}
+  #signedInArea .account-section .orders-panel{padding:0}
+  #signedInArea .account-section .orders-intro{font-size:13px}
+  #signedInArea .account-section .account-form .grid{gap:14px}
+  #signedInArea .account-section input,#signedInArea .account-section select{min-height:48px;font-size:13px}
+  #signedInArea .account-actions{grid-column:1/-1;margin-top:2px}
+}
+@media (max-width: 820px){
+  .shell{width:min(100% - 28px,680px)}
+  body:has(#signedInArea:not(.hidden)) main{display:block;min-height:0;padding:10px 0 34px}
+  body:has(#signedInArea:not(.hidden)) .intro{display:none}
+  body:has(#signedInArea:not(.hidden)) .panel{max-width:none;justify-self:stretch;padding:22px 18px}
+  #signedInArea>.eyebrow{color:#8b7197;font-size:10px}
+  #signedInArea>h2{color:#493451;font-size:30px}
+  #signedInArea>.lead{color:#716879;font-size:13px;margin-bottom:17px}
+  #signedInArea .account-box{padding:16px;background:#fff;border-color:#e7deeb}
+  #signedInArea .account-email{font-size:12px;overflow-wrap:anywhere}
+  #signedInArea .account-welcome{padding:16px;border-color:#e5d8ec;background:linear-gradient(110deg,#f1eaf6,#fff5fa)}
+  #signedInArea .account-welcome strong{font-size:18px;color:#493451}
+  #signedInArea .account-welcome p{font-size:12px;color:#716879}
+  #signedInArea .account-home{grid-template-columns:1fr;gap:11px;margin:14px 0 20px}
+  #signedInArea .account-home .account-tile-featured{grid-column:auto;min-height:100px}
+  #signedInArea .account-home a{
+    min-height:96px;padding:16px;grid-template-columns:54px minmax(0,1fr);
+    column-gap:14px;row-gap:4px;border-radius:14px
+  }
+  #signedInArea .account-home .tile-icon{width:50px;height:50px;border-radius:14px;font-size:24px}
+  #signedInArea .account-home .tile-icon svg{width:31px;height:31px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  #signedInArea .account-home strong{font-size:16px;line-height:1.35;color:#493451}
+  #signedInArea .account-home span:not(.tile-icon){font-size:12px;line-height:1.5;color:#716879}
+  #signedInArea .account-section{margin:11px 0;border-color:#e5dcea;background:#fff}
+  #signedInArea .account-section>summary{min-height:58px;padding:16px;font-size:14px;color:#493451}
+  #signedInArea .account-section>.account-section-content{padding:0 15px 17px}
+  #signedInArea .account-section .section-label{font-size:10px}
+  #signedInArea .account-section input,#signedInArea .account-section select{min-height:49px;font-size:14px}
+  #signedInArea .account-section .orders-intro{font-size:12px}
+  #signedInArea .account-actions{margin-top:8px}
+  #signedInArea .secondary{min-height:48px;font-size:11px}
+  .top{padding:14px 0}
+  .brand-logo img{width:138px}
+}
+@media (max-width: 380px){
+  .shell{width:calc(100% - 22px)}
+  body:has(#signedInArea:not(.hidden)) .panel{padding:18px 12px}
+  #signedInArea .account-box{padding:12px}
+  #signedInArea .account-home a{min-height:92px;padding:13px;grid-template-columns:48px minmax(0,1fr);column-gap:11px}
+  #signedInArea .account-home .tile-icon{width:45px;height:45px}
+  #signedInArea .account-home .tile-icon svg{width:27px;height:27px}
+  #signedInArea .account-home strong{font-size:15px}
+  #signedInArea .account-home span:not(.tile-icon){font-size:11px}
+}
+
   </style>
 </head>
 <body>
@@ -391,13 +511,13 @@ input,select{background:#fcfafd;border-color:#ded3e5;color:#302936}input:focus,s
               <p>Seus atalhos principais estão aqui.</p>
             </div>
             <nav class="account-home" aria-label="Painel de atalhos da sua conta">
-              <a class="account-tile account-tile-featured" href="/portal/"><span class="tile-icon" aria-hidden="true">✦</span><strong>Abrir meu Portal</strong><span>Seu espaço com conteúdos, ferramentas e experiências.</span></a>
-              <a href="/loja.html"><span class="tile-icon" aria-hidden="true">◇</span><strong>Explorar a loja</strong><span>Produtos, kits e novidades.</span></a>
-              <a href="#account-orders-section" data-open-account="account-orders-section"><span class="tile-icon" aria-hidden="true">▤</span><strong>Meus pedidos</strong><span>Acompanhe suas compras.</span></a>
-              <a href="#account-profile-section" data-open-account="account-profile-section"><span class="tile-icon" aria-hidden="true">♙</span><strong>Meu cadastro</strong><span>Dados pessoais e endereço.</span></a>
-              <a href="/clube.html"><span class="tile-icon" aria-hidden="true">♛</span><strong>Clube de Vantagens</strong><span>Benefícios e modalidades.</span></a>
+              <a class="account-tile account-tile-featured" href="/portal/"><span class="tile-icon" aria-hidden="true"><svg viewBox="0 0 48 48" focusable="false"><path d="M24 5 29 19 43 24 29 29 24 43 19 29 5 24 19 19Z"/></svg></span><strong>Abrir meu Portal</strong><span>Seu espaço com conteúdos, ferramentas e experiências.</span></a>
+              <a href="/loja.html"><span class="tile-icon" aria-hidden="true"><svg viewBox="0 0 48 48" focusable="false"><path d="M7 20 11 9h26l4 11v3a6 6 0 0 1-11 3 6 6 0 0 1-12 0 6 6 0 0 1-11-3z"/><path d="M10 28v12h28V28M19 40V28h10v12"/></svg></span><strong>Explorar a loja</strong><span>Produtos, kits e novidades.</span></a>
+              <a href="#account-orders-section" data-open-account="account-orders-section"><span class="tile-icon" aria-hidden="true"><svg viewBox="0 0 48 48" focusable="false"><path d="M12 16h24l2.5 25h-29L12 16Z"/><path d="M17 18v-5a7 7 0 0 1 14 0v5M18 26h12M18 32h8"/></svg></span><strong>Meus pedidos</strong><span>Acompanhe suas compras.</span></a>
+              <a href="#account-profile-section" data-open-account="account-profile-section"><span class="tile-icon" aria-hidden="true"><svg viewBox="0 0 48 48" focusable="false"><circle cx="24" cy="15" r="8"/><path d="M9 41c1-9 6-14 15-14s14 5 15 14Z"/></svg></span><strong>Meu cadastro</strong><span>Dados pessoais e endereço.</span></a>
+              <a href="/clube.html"><span class="tile-icon" aria-hidden="true"><svg viewBox="0 0 48 48" focusable="false"><path d="m8 15 9 8 7-14 7 14 9-8-4 24H12Z"/><path d="M13 33h22M8 42h32"/></svg></span><strong>Clube de Vantagens</strong><span>Benefícios e modalidades.</span></a>
               <a href="/educacao/"><span class="tile-icon" aria-hidden="true">◇</span><strong>Educação</strong><span>Guias, informações e conhecimento.</span></a>
-              <a href="/experiencias/"><span class="tile-icon" aria-hidden="true">✧</span><strong>Experiências</strong><span>Quizzes, calculadoras, signos e atividades.</span></a>
+              <a href="/experiencias/"><span class="tile-icon" aria-hidden="true"><svg viewBox="0 0 48 48" focusable="false"><path d="M8 7h22l10 10v24H8z"/><path d="M30 7v11h10M14 25h20M14 32h20"/></svg></span><strong>Experiências</strong><span>Quizzes, calculadoras, signos e atividades.</span></a>
             </nav>
             <section class="orders-panel" aria-labelledby="ordersHeading">
               <div class="section-label" id="ordersHeading">Meus pedidos</div>
