@@ -1,0 +1,19 @@
+.sign-share-studio{margin:22px 0 34px;padding:25px;border:1px solid var(--line);border-radius:15px;background:radial-gradient(circle at 100% 0%,#8b1e3f2b,transparent 45%),linear-gradient(145deg,#21141a,#120d10)}
+.sign-share-studio h2{margin:5px 0 7px;font:400 clamp(24px,3.5vw,33px)/1.2 var(--serif)}
+.sign-share-studio p{max-width:720px;margin:0;color:var(--muted);font-size:10px;line-height:1.8}
+.share-eyebrow{color:var(--gold)!important;font-size:8px!important;font-weight:700;letter-spacing:.17em}
+.share-format-picker{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0}
+.share-format-picker button{min-height:37px;padding:0 13px;border:1px solid var(--line);border-radius:99px;background:transparent;color:var(--muted);font-size:9px;font-weight:600;cursor:pointer}
+.share-format-picker button[aria-pressed="true"]{border-color:var(--pink);background:#8b1e3f40;color:#fff}
+.share-preview-shell{display:flex;justify-content:center;align-items:center;min-height:190px;max-height:560px;padding:18px;border:1px solid #d4af7c33;border-radius:12px;background:#080708;overflow:hidden}
+.share-preview-shell canvas{display:block;width:auto;height:auto;max-width:100%;max-height:510px;object-fit:contain;border-radius:5px;box-shadow:0 12px 40px #0009}
+.share-actions{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-top:16px}
+.share-actions button,.share-actions a{min-height:40px;padding:0 14px;border-radius:7px;font:700 9px var(--sans);cursor:pointer}
+.share-actions button:disabled{opacity:.45;cursor:not-allowed}
+.share-download{border:1px solid var(--gold);background:var(--gold);color:#1b0d12}
+.share-native{border:1px solid var(--pink);background:transparent;color:#f4b5ca}
+.share-whatsapp{display:inline-flex;align-items:center;border:1px solid var(--line);color:var(--muted)}
+.share-status{min-height:20px;margin-top:10px!important;color:#e7d5db!important;font-size:9px!important}
+.share-status:empty{display:none}
+.share-guidance{margin-top:6px!important;color:#9d8990!important;font-size:8px!important}
+@media(max-width:560px){.sign-share-studio{padding:18px}.share-preview-shell{min-height:160px;padding:10px}.share-preview-shell canvas{max-height:420px}.share-actions{display:grid;grid-template-columns:1fr}.share-actions button,.share-actions a{justify-content:center;width:100%}}
