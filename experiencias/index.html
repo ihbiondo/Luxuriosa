@@ -1,33 +1,145 @@
 <!doctype html>
-<html lang="pt-BR"><head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><meta name="theme-color" content="#0b090a">
-<title>Experiências Luxuriosa</title><meta name="description" content="Quizzes, testes e experiências interativas da Luxuriosa.">
-<link rel="icon" href="/img/site/favicon.ico" sizes="any"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600&display=swap" rel="stylesheet"><link rel="stylesheet" href="/css/experiencias.css"><script src="/js/experiencias.js" defer></script>
-</head><body>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="index,follow">
+<meta name="theme-color" content="#21172a">
+<title>Experiências para descobrir | Luxuriosa</title>
+<meta name="description" content="Quizzes, conversas a dois, desafios e astrologia para descobrir novas possibilidades no seu ritmo. Experiências gratuitas da Luxuriosa.">
+<link rel="canonical" href="https://luxuriosa.com.br/experiencias/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Luxuriosa">
+<meta property="og:title" content="Experiências para descobrir | Luxuriosa">
+<meta property="og:description" content="Quizzes, conversas a dois, desafios e astrologia para descobrir novas possibilidades no seu ritmo.">
+<meta property="og:url" content="https://luxuriosa.com.br/experiencias/">
+<meta property="og:image" content="https://luxuriosa.com.br/img/site/og-luxuriosa.jpg">
+<meta property="og:image:alt" content="Luxuriosa — experiências e descobertas">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Experiências para descobrir | Luxuriosa">
+<meta name="twitter:description" content="Quizzes, conversas a dois, desafios e astrologia para descobrir novas possibilidades no seu ritmo.">
+<meta name="twitter:image" content="https://luxuriosa.com.br/img/site/og-luxuriosa.jpg">
+<link rel="icon" href="/img/site/favicon.ico" sizes="any">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/experiencias.css">
+<script src="/js/experiencias.js" defer></script>
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"CollectionPage",
+  "name":"Experiências Luxuriosa",
+  "description":"Quizzes, conversas a dois, desafios e astrologia para descobrir novas possibilidades no seu ritmo.",
+  "url":"https://luxuriosa.com.br/experiencias/",
+  "inLanguage":"pt-BR",
+  "isPartOf":{"@type":"WebSite","name":"Luxuriosa","url":"https://luxuriosa.com.br/"},
+  "mainEntity":{"@type":"ItemList","itemListElement":[
+    {"@type":"ListItem","position":1,"name":"Descubra seu estilo","url":"https://luxuriosa.com.br/experiencias/?tipo=quiz"},
+    {"@type":"ListItem","position":2,"name":"Conexão a dois","url":"https://luxuriosa.com.br/experiencias/?tipo=couple"},
+    {"@type":"ListItem","position":3,"name":"Mitos ou verdades","url":"https://luxuriosa.com.br/experiencias/?tipo=quiz"},
+    {"@type":"ListItem","position":4,"name":"Pequenas descobertas","url":"https://luxuriosa.com.br/experiencias/?tipo=challenge"},
+    {"@type":"ListItem","position":5,"name":"Astrologia e signos","url":"https://luxuriosa.com.br/experiencias/signos.html"}
+  ]}
+}
+</script>
+</head>
+<body>
 <a class="skip" href="#experienceMain">Pular para o conteúdo</a>
-<header class="header"><a class="brand" href="/"><span>Luxuriosa</span><small>EXPERIÊNCIAS</small></a><nav aria-label="Navegação principal"><a href="/portal/">Meu portal</a><a href="/educacao/">Educação</a><a href="/clube.html">Clube</a></nav></header>
+<header class="header">
+<a class="brand" href="/"><span>Luxuriosa</span><small>EXPERIÊNCIAS</small></a>
+<nav aria-label="Navegação principal"><a href="/portal/">Meu portal</a><a href="/educacao/">Educação</a><a href="/clube.html">Clube</a></nav>
+</header>
 <main id="experienceMain" class="wrap">
-<section class="hero"><small>EXPLORE NO SEU RITMO</small><h1>Experiências que despertam <em>descobertas.</em></h1><p>Um espaço para quizzes, testes, desafios e atividades interativas. Sem pressa e sem julgamentos.</p><div class="hero-actions"><a class="primary" href="#experienceGrid">Explorar experiências ↓</a><a class="secondary" href="/portal/">Voltar ao meu portal</a></div></section>
-<section class="discovery"><div class="section-head"><div><small>ESCOLHA COMO EXPLORAR</small><h2>O que combina com seu momento?</h2></div><span class="demo-label">PRÉVIA FUNCIONAL</span></div>
-<div class="controls"><label class="search"><span>⌕</span><input id="experienceSearch" type="search" placeholder="Buscar uma experiência" autocomplete="off"></label>
-<div class="filters" role="group" aria-label="Filtrar experiências"><button class="active" type="button" data-filter="all" aria-pressed="true">Todas</button><button type="button" data-filter="quiz" aria-pressed="false">Quizzes</button><button type="button" data-filter="couple" aria-pressed="false">A dois</button><button type="button" data-filter="challenge" aria-pressed="false">Desafios</button><button type="button" data-filter="astrology" aria-pressed="false">Astrologia</button><button type="button" data-filter="favorites" aria-pressed="false">Salvas <span id="favoriteCount">0</span></button></div></div>
+<section class="hero">
+<small>UM ESPAÇO PARA DESCOBRIR</small>
+<h1>Experiências que despertam <em>descobertas.</em></h1>
+<p>Quizzes, conversas a dois, desafios e astrologia. Escolha o que combina com seu momento e aproveite sem pressa, sem julgamentos.</p>
+<div class="hero-actions"><a class="primary" href="#experienceGrid">Encontrar uma experiência ↓</a><a class="secondary" href="/portal/">Voltar ao meu portal</a></div>
+</section>
+<section class="discovery" aria-labelledby="discoveryTitle">
+<div class="section-head"><div><small>ESCOLHA COMO EXPLORAR</small><h2 id="discoveryTitle">O que combina com seu momento?</h2></div><span class="section-label">GRATUITO · NO SEU RITMO</span></div>
+<div class="controls">
+<label class="search"><span aria-hidden="true">⌕</span><input id="experienceSearch" type="search" placeholder="Buscar uma experiência" autocomplete="off" aria-label="Buscar uma experiência"></label>
+<div class="filters" role="group" aria-label="Filtrar experiências">
+<button class="active" type="button" data-filter="all" aria-pressed="true">Todas</button>
+<button type="button" data-filter="quiz" aria-pressed="false">Quizzes</button>
+<button type="button" data-filter="couple" aria-pressed="false">A dois</button>
+<button type="button" data-filter="challenge" aria-pressed="false">Desafios</button>
+<button type="button" data-filter="astrology" aria-pressed="false">Astrologia</button>
+<button type="button" data-filter="favorites" aria-pressed="false">Salvas <span id="favoriteCount">0</span></button>
+</div>
+</div>
 <div id="experienceGrid" class="grid">
-<article class="card" data-id="discovery" data-category="quiz" data-title="autoconhecimento descubra seu estilo"><div class="card-top"><small>01</small><button type="button" class="favorite" data-favorite="discovery" aria-pressed="false" aria-label="Salvar Autoconhecimento">♡</button></div><span class="type">QUIZ · AUTOCONHECIMENTO</span><h3>Descubra seu estilo.</h3><p>Uma experiência leve para explorar preferências e curiosidades.</p><div class="card-bottom"><small>MODELO DEMONSTRATIVO</small><button type="button" data-demo="discovery">Ver demonstração →</button></div></article>
-<article class="card pink" data-id="connection" data-category="couple" data-title="conexão a dois conversa afinidades"><div class="card-top"><small>02</small><button type="button" class="favorite" data-favorite="connection" aria-pressed="false" aria-label="Salvar Conexão a dois">♡</button></div><span class="type">EXPERIÊNCIA · A DOIS</span><h3>Conexão a dois.</h3><p>Um formato interativo para incentivar conversas e novas descobertas.</p><div class="card-bottom"><small>MODELO DEMONSTRATIVO</small><button type="button" data-demo="connection">Ver demonstração →</button></div></article>
-<article class="card gold" data-id="curiosity" data-category="quiz" data-title="mitos ou verdades curiosidades"><div class="card-top"><small>03</small><button type="button" class="favorite" data-favorite="curiosity" aria-pressed="false" aria-label="Salvar Mitos ou verdades">♡</button></div><span class="type">QUIZ · CURIOSIDADES</span><h3>Mitos ou verdades?</h3><p>Uma dinâmica de perguntas rápidas com espaço para descobrir.</p><div class="card-bottom"><small>MODELO DEMONSTRATIVO</small><button type="button" data-demo="curiosity">Ver demonstração →</button></div></article>
-<article class="card soft" data-id="challenge" data-category="challenge" data-title="pequenas descobertas desafio individual"><div class="card-top"><small>04</small><button type="button" class="favorite" data-favorite="challenge" aria-pressed="false" aria-label="Salvar Pequenas descobertas">♡</button></div><span class="type">DESAFIO · DESCOBERTAS</span><h3>Pequenas descobertas.</h3><p>Atividades curtas para explorar ideias, preferências e possibilidades.</p><div class="card-bottom"><small>MODELO DEMONSTRATIVO</small><button type="button" data-demo="challenge">Ver demonstração →</button></div></article>
-<article class="card astrology" data-id="astrology" data-category="astrology" data-title="astrologia signos zodíaco descobrir signo solar compatibilidade">
-<div class="card-top"><small>05</small><button type="button" class="favorite" data-favorite="astrology" aria-pressed="false" aria-label="Salvar Astrologia e Signos">♡</button></div>
-<span class="type">ASTROLOGIA · SIGNOS</span><h3>Seu signo, suas descobertas.</h3>
-<p>Descubra seu signo solar, conheça os 12 signos e compare combinações astrológicas por diversão.</p>
-<div class="card-bottom"><small>CALCULADORA INTERATIVA</small><a href="/experiencias/signos.html">Abrir signos →</a></div></article></div><p id="emptyState" class="empty" hidden>Nenhuma experiência encontrada com esse filtro.</p></section>
-<section class="note"><div><small>SEU ESPAÇO, SUAS ESCOLHAS</small><h2>Participar deve ser simples.</h2><p>As demonstrações não registram respostas. Nesta prévia, apenas os identificadores das experiências salvas ficam neste dispositivo para testar a função de favoritos.</p></div><a href="/privacidade.html">Conhecer a privacidade →</a></section>
+<article class="card" data-id="discovery" data-category="quiz" data-title="autoconhecimento descubra seu estilo curiosidade conexão reflexão criatividade">
+<div class="card-top"><small>01 · QUIZ</small><button type="button" class="favorite" data-favorite="discovery" aria-pressed="false" aria-label="Salvar Descubra seu estilo">♡</button></div>
+<span class="type">AUTOCONHECIMENTO</span><h3>Descubra seu estilo.</h3>
+<p>Responda a cinco perguntas leves e descubra qual caminho de descoberta combina mais com você.</p>
+<div class="card-bottom"><small>5 PERGUNTAS · 2 MIN</small><button type="button" data-experience="discovery">Começar quiz →</button></div>
+</article>
+<article class="card pink" data-id="connection" data-category="couple" data-title="conexão a dois conversa afinidades relacionamento casal">
+<div class="card-top"><small>02 · A DOIS</small><button type="button" class="favorite" data-favorite="connection" aria-pressed="false" aria-label="Salvar Conexão a dois">♡</button></div>
+<span class="type">CONVERSA E AFINIDADE</span><h3>Conexão a dois.</h3>
+<p>Seis perguntas para criar espaço para boas conversas, escuta e novas descobertas em conjunto.</p>
+<div class="card-bottom"><small>6 CARTAS · NO SEU TEMPO</small><button type="button" data-experience="connection">Abrir cartas →</button></div>
+</article>
+<article class="card gold" data-id="curiosity" data-category="quiz" data-title="mitos ou verdades consentimento respeito limites comunicação">
+<div class="card-top"><small>03 · QUIZ</small><button type="button" class="favorite" data-favorite="curiosity" aria-pressed="false" aria-label="Salvar Mitos ou verdades">♡</button></div>
+<span class="type">RESPEITO E CONSENTIMENTO</span><h3>Mitos ou verdades?</h3>
+<p>Teste seus conhecimentos sobre consentimento, respeito e limites em cinco perguntas rápidas.</p>
+<div class="card-bottom"><small>5 PERGUNTAS · COM EXPLICAÇÕES</small><button type="button" data-experience="curiosity">Fazer o quiz →</button></div>
+</article>
+<article class="card soft" data-id="challenge" data-category="challenge" data-title="pequenas descobertas desafio individual bem-estar reflexão cuidado">
+<div class="card-top"><small>04 · DESAFIO</small><button type="button" class="favorite" data-favorite="challenge" aria-pressed="false" aria-label="Salvar Pequenas descobertas">♡</button></div>
+<span class="type">PAUSA E AUTOCONHECIMENTO</span><h3>Pequenas descobertas.</h3>
+<p>Complete cinco passos simples para observar suas preferências, reconhecer limites e fazer escolhas no seu ritmo.</p>
+<div class="card-bottom"><small>5 PASSOS · SEM PRESSA</small><button type="button" data-experience="challenge">Começar desafio →</button></div>
+</article>
+<article class="card astrology" data-id="astrology" data-category="astrology" data-title="astrologia signos zodíaco descobrir signo solar compatibilidade mapa">
+<div class="card-top"><small>05 · ASTROLOGIA</small><button type="button" class="favorite" data-favorite="astrology" aria-pressed="false" aria-label="Salvar Astrologia e Signos">♡</button></div>
+<span class="type">OS 12 SIGNOS DO ZODÍACO</span><h3>Seu signo, suas descobertas.</h3>
+<p>Descubra seu signo solar, explore os 12 signos e crie uma arte do seu resultado para compartilhar.</p>
+<div class="card-bottom"><small>CALCULADORA · PERFIS · COMPATIBILIDADE</small><a href="/experiencias/signos.html">Explorar signos →</a></div>
+</article>
+</div>
+<p id="emptyState" class="empty" hidden>Nenhuma experiência encontrada com esse filtro. Experimente outra categoria ou busca.</p>
+</section>
+<section class="note">
+<div><small>SEU ESPAÇO, SUAS ESCOLHAS</small><h2>Você decide o que compartilhar.</h2><p>As respostas dos quizzes e desafios são processadas nesta página e não são enviadas nem armazenadas. Seus favoritos ficam somente neste dispositivo. Não é necessário criar cadastro para participar.</p></div>
+<a href="/privacidade.html">Conhecer a privacidade →</a>
+</section>
 </main>
 <footer class="footer"><a href="/">Luxuriosa</a><span>Sinta-se ainda mais você.</span><a href="/atendimento.html">Atendimento</a></footer>
-<dialog id="ageGate" class="age-dialog" aria-labelledby="ageTitle" aria-describedby="ageDescription"><div class="mark">L</div><small>EXPERIÊNCIAS LUXURIOSA</small><h2 id="ageTitle">Conteúdo para adultos.</h2><p id="ageDescription">Esta área é destinada a pessoas com 18 anos ou mais. Ao continuar, você declara ter pelo menos 18 anos.</p><div class="dialog-actions"><button id="ageConfirm" class="primary" type="button">Tenho 18 anos ou mais</button><a href="/">Sair</a></div></dialog>
-<dialog id="demoDialog" class="demo-dialog" aria-labelledby="demoTitle"><div class="dialog-head"><small>PRÉVIA INTERATIVA</small><button id="demoClose" type="button" aria-label="Fechar demonstração">×</button></div>
-<div id="demoIntro"><span class="type" id="demoCategory">EXPERIÊNCIA</span><h2 id="demoTitle">Demonstração da experiência.</h2><p id="demoDescription">Veja como será a navegação. O conteúdo definitivo será configurado em outra etapa.</p><div class="demo-summary"><span>03 etapas ilustrativas</span><span>Sem salvar respostas</span></div><button id="demoStart" class="primary" type="button">Iniciar demonstração →</button></div>
-<div id="demoRunner" hidden><div class="progress-head"><span id="stepLabel">ETAPA 1 DE 3</span><span>DEMONSTRAÇÃO</span></div><div class="progress"><span id="progressFill"></span></div><h2 id="demoQuestion">Pergunta de demonstração 1.</h2><p>Escolha uma opção para avançar nesta simulação.</p><div class="options"><button type="button" data-choice="a">Opção A</button><button type="button" data-choice="b">Opção B</button><button type="button" data-choice="c">Opção C</button></div><button id="demoNext" class="primary" type="button" disabled>Continuar →</button></div>
-<div id="demoResult" hidden><span class="type">SIMULAÇÃO CONCLUÍDA</span><h2>É assim que seu resultado aparecerá.</h2><p>Esta é apenas uma prévia visual. Nenhuma resposta foi enviada ou armazenada.</p><button id="demoRestart" class="primary" type="button">Ver demonstração novamente</button></div></dialog>
-</body></html>
+<dialog id="ageGate" class="age-dialog" aria-labelledby="ageTitle" aria-describedby="ageDescription">
+<div class="mark" aria-hidden="true">L</div><small>EXPERIÊNCIAS LUXURIOSA</small><h2 id="ageTitle">Conteúdo para adultos.</h2>
+<p id="ageDescription">Esta área é destinada a pessoas com 18 anos ou mais. Ao continuar, você declara ter pelo menos 18 anos.</p>
+<div class="dialog-actions"><button id="ageConfirm" class="primary" type="button">Tenho 18 anos ou mais</button><a href="/">Sair</a></div>
+</dialog>
+<dialog id="experienceDialog" class="experience-dialog" aria-labelledby="experienceTitle" aria-describedby="experienceDescription">
+<div class="dialog-head"><div><small id="experienceEyebrow">EXPERIÊNCIA LUXURIOSA</small><span id="experienceCounter"></span></div><button id="experienceClose" type="button" aria-label="Fechar experiência">×</button></div>
+<div class="experience-progress" aria-hidden="true"><span id="experienceProgressBar"></span></div>
+<section id="experienceIntro">
+<h2 id="experienceTitle">Vamos começar?</h2><p id="experienceDescription">Escolha uma experiência e aproveite no seu ritmo.</p>
+<div class="dialog-meta"><span id="experienceDuration"></span><span>Suas respostas não são salvas</span></div>
+<button id="experienceStart" class="primary" type="button">Começar agora →</button>
+</section>
+<section id="experienceRunner" hidden>
+<small id="experienceStepLabel" class="step-label"></small>
+<h3 id="experienceQuestion"></h3><p id="experiencePrompt" class="question-prompt"></p>
+<div id="experienceOptions" class="experience-options"></div>
+<div id="experienceFeedback" class="experience-feedback" role="status" aria-live="polite" hidden></div>
+<button id="experienceNext" class="primary" type="button" disabled>Continuar →</button>
+</section>
+<section id="experienceResult" aria-live="polite" hidden>
+<small class="step-label">EXPERIÊNCIA CONCLUÍDA</small>
+<h2 id="experienceResultTitle"></h2><p id="experienceResultDescription"></p><p id="experienceResultAdvice" class="result-advice"></p>
+<div id="experienceSources" class="source-links" hidden>
+<small>FONTES PARA APROFUNDAR</small>
+<a href="https://www.gov.br/agu/pt-br/assuntos-1/agu-sem-assedio-e-sem-discriminacao/publicacoes/cartilha-pgfn-sem-assedio.pdf" target="_blank" rel="noopener noreferrer">Cartilha da Advocacia-Geral da União sobre consentimento ↗</a>
+<a href="https://rainn.org/5-rules-for-getting-consent/" target="_blank" rel="noopener noreferrer">RAINN — respeito, limites e consentimento ↗</a>
+</div>
+<div class="result-actions"><button id="experienceRestart" class="primary" type="button">Refazer experiência</button><button id="experienceDone" class="secondary-button" type="button">Voltar à lista</button></div>
+</section>
+</dialog>
+</body>
+</html>
