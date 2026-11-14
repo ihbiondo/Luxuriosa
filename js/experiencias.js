@@ -2,7 +2,7 @@
 "use strict";
 const AGE_KEY="lux18",FAVORITES_KEY="lux_experiencias_favoritos_v1";
 const cards=[...document.querySelectorAll(".card")],search=document.getElementById("experienceSearch"),filters=[...document.querySelectorAll("[data-filter]")],empty=document.getElementById("emptyState"),favoriteCount=document.getElementById("favoriteCount"),ageGate=document.getElementById("ageGate"),demoDialog=document.getElementById("demoDialog");
-const allowed=["discovery","connection","curiosity","challenge"];
+const allowed=["discovery","connection","curiosity","challenge","astrology"];
 function readFavorites(){try{const value=JSON.parse(localStorage.getItem(FAVORITES_KEY)||"[]");return Array.isArray(value)?value.filter(id=>allowed.includes(id)):[]}catch(_){return[]}}
 let favorites=readFavorites(),activeFilter="all",activeExperience=null,step=1;
 function renderFavorites(){document.querySelectorAll("[data-favorite]").forEach(button=>{const saved=favorites.includes(button.dataset.favorite);button.setAttribute("aria-pressed",String(saved));button.textContent=saved?"♥":"♡"});favoriteCount.textContent=String(favorites.length)}
