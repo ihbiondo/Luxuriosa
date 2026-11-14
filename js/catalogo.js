@@ -52,6 +52,7 @@
   };
 
   function produtoPertenceCategoria(produto, categoria) {
+    if (produto.preVenda && config.preVendaVisivel !== true) return false;
     if (categoria === "Todos") return true;
     if (categoria === "Ofertas") {
       return produtoEmOferta(produto) || produto.categoria === "Ofertas";
@@ -65,7 +66,8 @@
   }
 
   var config = {
-    whatsapp: FALLBACK_WHATSAPP
+    whatsapp: FALLBACK_WHATSAPP,
+    preVendaVisivel: false
   };
 
   var produtos = [];
@@ -174,6 +176,12 @@
 
 
   function mensagemConsulta(produto) {
+    if (produto.preVenda) {
+      return "Olá! Tenho interesse neste item da pré-venda Luxuriosa: " +
+        produto.nome +
+        ". Poderiam me informar as condições e a disponibilidade?";
+    }
+
     return "Olá! Tenho interesse em " +
       produto.nome +
       ". Poderiam me informar a composição, o preço e a disponibilidade?";
@@ -466,8 +474,9 @@
     }
 
 
-    container.textContent =
-      "Consulte valores";
+    container.textContent = produto.preVenda
+      ? "Disponibilidade sob consulta"
+      : "Consulte valores";
   }
 
 
@@ -759,7 +768,8 @@
             produto.esgotado
               ? " out"
               : ""
-          )
+          ) +
+          (produto.preVenda ? " product-pre-venda" : "")
       );
 
 
@@ -875,9 +885,11 @@
     var textoBotao =
       produto.esgotado
         ? "Avise-me quando voltar"
-        : produto.sobConsulta
-          ? "Consultar no WhatsApp"
-          : "Adicionar ao carrinho";
+        : produto.preVenda
+          ? "Consultar disponibilidade"
+          : produto.sobConsulta
+            ? "Consultar no WhatsApp"
+            : "Adicionar ao carrinho";
 
 
     var botao = criarElemento(
@@ -922,9 +934,11 @@
       "aria-label",
       produto.esgotado
         ? "Avise-me quando voltar: " + produto.nome
-        : produto.sobConsulta
-          ? "Consultar no WhatsApp sobre " + produto.nome
-          : "Adicionar " + produto.nome + " ao carrinho"
+        : produto.preVenda
+          ? "Consultar disponibilidade de " + produto.nome
+          : produto.sobConsulta
+            ? "Consultar no WhatsApp sobre " + produto.nome
+            : "Adicionar " + produto.nome + " ao carrinho"
     );
 
 
@@ -954,7 +968,7 @@
         }
 
 
-        if (produto.sobConsulta) {
+        if (produto.sobConsulta || produto.preVenda) {
           abrirWhatsApp(mensagemConsulta(produto));
           return;
         }
@@ -1053,13 +1067,12 @@
     });
 
     if (!lista.length) {
-      var vazio = criarElemento(
-        "div",
-        "empty",
-        propriedade === "destaque"
+      var mensagemVazia = propriedade === "preVenda"
+        ? "Estamos preparando novidades especiais para a pré-venda."
+        : propriedade === "destaque"
           ? "Estamos preparando nossa seleção especial."
-          : "Nossa seleção de mais vendidos será atualizada em breve."
-      );
+          : "Nossa seleção de mais vendidos será atualizada em breve.";
+      var vazio = criarElemento("div", "empty", mensagemVazia);
 
       grid.appendChild(vazio);
       return;
@@ -1287,8 +1300,13 @@
 
 
     if (tamanhos) {
+      tamanhos.hidden = produto.preVenda === true;
 
-      if (Array.isArray(produto.itens) && produto.itens.length) {
+      if (produto.preVenda) {
+        tamanhos.textContent = "";
+        tamanhos.style.whiteSpace = "";
+        tamanhos.style.textAlign = "";
+      } else if (Array.isArray(produto.itens) && produto.itens.length) {
 
         tamanhos.textContent =
           "Itens incluídos:\n" +
@@ -1330,9 +1348,11 @@
       botao.textContent =
         produto.esgotado
           ? "Avise-me quando voltar"
-          : produto.sobConsulta
-            ? "Consultar no WhatsApp"
-            : "Adicionar ao carrinho";
+          : produto.preVenda
+            ? "Consultar disponibilidade"
+            : produto.sobConsulta
+              ? "Consultar no WhatsApp"
+              : "Adicionar ao carrinho";
 
 
       botao.onclick =
@@ -1350,7 +1370,7 @@
             return;
           }
 
-          if (produto.sobConsulta) {
+          if (produto.sobConsulta || produto.preVenda) {
             fecharModal();
             abrirWhatsApp(mensagemConsulta(produto));
             return;
@@ -1675,14 +1695,11 @@
            * Configuração
            */
 
-          if (
-            dados &&
-            dados.config &&
-            dados.config.whatsapp
-          ) {
-
-            config.whatsapp =
-              dados.config.whatsapp;
+          if (dados && dados.config) {
+            if (dados.config.whatsapp) {
+              config.whatsapp = dados.config.whatsapp;
+            }
+            config.preVendaVisivel = dados.config.preVendaVisivel === true;
           }
 
 
@@ -1730,6 +1747,13 @@
           renderizarProdutos();
           renderizarColecao("destaques-grid", "destaque");
           renderizarColecao("mais-vendidos-grid", "maisVendido");
+          renderizarColecao("pre-venda-grid", "preVenda");
+
+          var secaoPreVenda = $("pre-venda");
+          if (secaoPreVenda) {
+            secaoPreVenda.hidden = config.preVendaVisivel !== true ||
+              !produtos.some(function (produto) { return produto.preVenda === true; });
+          }
         }
       )
 
