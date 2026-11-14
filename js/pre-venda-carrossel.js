@@ -45,7 +45,7 @@
     image.decoding = "async";
     media.appendChild(image);
     media.appendChild(
-      criarElemento("span", "pre-venda-card-number", "Imagem " + numeroFormatado)
+      criarElemento("span", "pre-venda-card-number", "Lingerie")
     );
 
     var body = criarElemento("div", "pre-venda-card-body");
@@ -101,8 +101,7 @@
       var format = function (value) {
         return String(value).padStart(2, "0");
       };
-      countLabel.textContent =
-        "Imagens " + format(first) + "–" + format(last) + " de " + total;
+      countLabel.textContent = "Coleção de lingerie";
     }
   }
 
