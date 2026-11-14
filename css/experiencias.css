@@ -158,3 +158,33 @@ body{background:radial-gradient(ellipse at 10% 5%,rgba(113,69,132,.4),transparen
  .age-dialog,.experience-dialog{max-height:90vh}
 }
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{transition:none!important}}
+
+
+/* Acessibilidade de interação — área de toque, foco e leitura */
+.header nav a{min-height:44px;padding:5px 3px}
+.filters button{min-height:44px;font-size:11px}
+.search{min-height:48px}
+.search input{min-height:46px;font-size:16px}
+.favorite{width:44px;height:44px;flex:0 0 44px}
+.card-bottom button,.card-bottom a{min-height:44px;padding:8px 4px;display:inline-flex;align-items:center}
+.primary,.secondary-button{min-height:46px}
+.dialog-head>button{width:44px;height:44px}
+@media(max-width:680px){
+ .header nav{gap:7px}
+ .header nav a{padding:5px 4px;font-size:10px}
+ .card p{font-size:14px;line-height:1.75}
+ .card-bottom{align-items:flex-end}
+ .card-bottom small{font-size:9px;line-height:1.5}
+ .card-bottom button,.card-bottom a{font-size:12px}
+ .favorite{width:44px;height:44px}
+ .experience-options button{min-height:50px;padding:12px 14px;font-size:14px;line-height:1.5}
+ .dialog-actions a{min-height:44px;display:inline-flex;align-items:center}
+ .result-actions button,.result-actions a{min-height:44px}
+ .note p{font-size:13px;line-height:1.75}
+}
+@media(max-width:360px){
+ .header{gap:8px}
+ .brand{font-size:20px}
+ .header nav{gap:4px}
+ .header nav a{font-size:9px}
+}
