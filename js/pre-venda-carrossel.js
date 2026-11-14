@@ -32,7 +32,6 @@
   }
 
   function criarCartao(numero) {
-    var numeroFormatado = String(numero).padStart(2, "0");
     var card = criarElemento("article", "pre-venda-card");
 
     var media = criarElemento("div", "pre-venda-card-media");
@@ -50,29 +49,28 @@
 
     var body = criarElemento("div", "pre-venda-card-body");
     body.appendChild(
-      criarElemento("p", "pre-venda-card-eyebrow", "Coleção em preparação")
+      criarElemento("p", "pre-venda-card-eyebrow", "Pré-venda")
     );
     body.appendChild(
-      criarElemento("h3", "pre-venda-card-title", "Uma novidade a caminho")
+      criarElemento("h3", "pre-venda-card-title", "Lingerie")
     );
     body.appendChild(
       criarElemento(
         "p",
         "pre-venda-card-note",
-        "Ainda não disponível para compra. Manifeste seu interesse."
+        "Peça em pré-venda. Consulte nossos canais de atendimento para informações."
       )
     );
 
     var message =
-      "Olá! Vi a imagem " + numeroFormatado +
-      " no carrossel de novidades da Luxuriosa. Tenho interesse em receber informações quando essa novidade estiver disponível.";
-    var action = criarElemento("a", "pre-venda-card-action", "Tenho interesse");
+      "Olá! Vi a seleção de lingerie em pré-venda no site da Luxuriosa e gostaria de consultar disponibilidade, previsão e condições.";
+    var action = criarElemento("a", "pre-venda-card-action", "Consultar pelo WhatsApp");
     action.href = "https://wa.me/" + whatsapp + "?text=" + encodeURIComponent(message);
     action.target = "_blank";
     action.rel = "noopener noreferrer";
     action.setAttribute(
       "aria-label",
-      "Manifestar interesse futuro nesta peça de lingerie pelo WhatsApp"
+      "Consultar informações sobre a pré-venda de lingerie pelo WhatsApp"
     );
 
     body.appendChild(action);
