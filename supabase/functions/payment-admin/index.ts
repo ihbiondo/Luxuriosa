@@ -129,9 +129,18 @@ async function notifyOwnerByEmail(order: any, items: any[]) {
 
 Deno.serve(async (req: Request) => {
   const origin = req.headers.get("origin") || "";
-  if (req.method === "OPTIONS") return reply({}, 204, origin);
+  if (req.method === "OPTIONS") {
+    if (!ALLOWED_ORIGINS.has(origin)) return new Response(null, { status: 403 });
+    return reply({}, 204, origin);
+  }
   if (req.method !== "POST") return reply({ error: "Método não permitido." }, 405, origin);
-  if (origin && !ALLOWED_ORIGINS.has(origin)) return reply({ error: "Origem não autorizada." }, 403, origin);
+  if (!ALLOWED_ORIGINS.has(origin)) return reply({ error: "Origem não autorizada." }, 403, origin);
+  if (!/^application\/json(?:\s*;|$)/i.test(req.headers.get("content-type") || "")) {
+    return reply({ error: "Formato de requisição inválido." }, 415, origin);
+  }
+  if (Number(req.headers.get("content-length") || 0) > 16 * 1024) {
+    return reply({ error: "Solicitação muito grande." }, 413, origin);
+  }
 
   try {
     const token = (req.headers.get("authorization") || "").replace(/^Bearer\s+/i, "");
@@ -144,7 +153,16 @@ Deno.serve(async (req: Request) => {
     if (permissionError) throw permissionError;
     if (permission?.role !== "admin") return reply({ error: "Acesso restrito à administração." }, 403, origin);
 
-    const body = await req.json();
+    const rawBody = await req.text();
+    if (new TextEncoder().encode(rawBody).byteLength > 16 * 1024) {
+      return reply({ error: "Solicitação muito grande." }, 413, origin);
+    }
+    let body: any;
+    try { body = JSON.parse(rawBody); }
+    catch { return reply({ error: "Corpo da solicitação inválido." }, 400, origin); }
+    if (!body || typeof body !== "object" || Array.isArray(body)) {
+      return reply({ error: "Corpo da solicitação inválido." }, 400, origin);
+    }
     const action = body?.action;
 
 
