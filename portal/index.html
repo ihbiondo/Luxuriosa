@@ -17,10 +17,26 @@
 <div class="layout">
 <aside class="sidebar" aria-label="Navegação do portal">
 <div class="sidebar-heading"><small>SEU ESPAÇO</small><strong id="portalSidebarName">Minha conta</strong></div>
-<nav class="side-nav">
-<a class="active" href="/portal/" aria-current="page"><i>⌂</i>Visão geral</a>
-<a href="/educacao/"><i>◇</i>Educação</a>
-<a href="/experiencias/"><i>✦</i>Experiências</a>
+<nav class="side-nav" aria-label="Seções do portal">
+<a class="active" href="/portal/" aria-current="page"><i>⌂</i>Início</a>
+<details class="nav-group nav-group--experiences" open>
+<summary><i>✦</i><span>Experiências</span><b class="nav-chevron">⌄</b></summary>
+<div class="nav-submenu">
+<a href="/experiencias/">Explorar experiências</a>
+<a href="/experiencias/#experienceGrid">Quizzes e atividades</a>
+<a href="/experiencias/signos.html">Astrologia e signos</a>
+</div>
+</details>
+<details class="nav-group nav-group--education">
+<summary><i>◇</i><span>Educação</span><b class="nav-chevron">⌄</b></summary>
+<div class="nav-submenu">
+<a href="/educacao/">Visão geral</a>
+<a href="/educacao/temas/">Temas educativos</a>
+<a href="/educacao/enciclopedia/">Enciclopédia</a>
+<a href="/educacao/curiosidades/">Curiosidades</a>
+<a href="/educacao/guias/">Guias</a>
+</div>
+</details>
 <a href="/clube.html"><i>♛</i>Clube de Vantagens</a>
 <a href="/login.html#account-orders-section"><i>▤</i>Meus pedidos</a>
 <a href="/login.html#account-profile-section"><i>♙</i>Minha conta</a>
@@ -30,11 +46,11 @@
 </aside>
 <main id="portalMain" class="main">
 <div class="page-heading"><div><small>PORTAL DO CLIENTE</small><h1>Seu espaço na Luxuriosa.</h1><p>Um lugar para acompanhar, descobrir e aproveitar no seu ritmo.</p></div><span class="private-label">✧ Seu espaço pessoal</span></div>
-<section class="welcome"><div><small>BEM-VINDA(O) DE VOLTA</small><h2>Olá, <span id="portalGreetingName">por aqui</span>.</h2><p>O que você gostaria de explorar hoje?</p><a class="primary" href="/experiencias/">Descobrir experiências <b>→</b></a></div><div class="welcome-mark" aria-hidden="true"><span>L</span></div></section>
+<section class="welcome"><div><small>BEM-VINDA(O) DE VOLTA</small><h2>Olá, <span id="portalGreetingName">por aqui</span>.</h2><p>Seu espaço para descobrir, se conectar e aproveitar novas experiências.</p><a class="primary" href="/experiencias/">Descobrir experiências <b>→</b></a></div><div class="welcome-mark" aria-hidden="true"><span>L</span></div></section>
 <section class="section"><div class="section-head"><div><small>DESCUBRA</small><h2>Explore seu universo.</h2></div><span>Conhecimento e interação</span></div>
 <div class="feature-grid">
-<a class="feature education" href="/educacao/"><span class="feature-icon">◇</span><small>CONHECIMENTO</small><strong>Universo Luxuriosa</strong><p>Informação, guias e descobertas para consultar no seu ritmo.</p><b>Explorar Educação <em>→</em></b></a>
-<a class="feature experiences" href="/experiencias/"><span class="feature-icon">✦</span><small>INTERATIVIDADE</small><strong>Experiências Luxuriosa</strong><p>Quizzes, testes e atividades em um espaço próprio.</p><b>Conhecer experiências <em>→</em></b></a>
+<a class="feature experiences" href="/experiencias/"><span class="feature-icon">✦</span><small>DESCUBRA ALGO NOVO</small><strong>Experiências Luxuriosa</strong><p>Quizzes, astrologia, atividades e descobertas para aproveitar no seu ritmo.</p><b>Explorar experiências <em>→</em></b><span class="feature-tag">EM DESTAQUE</span></a>
+<a class="feature education" href="/educacao/"><span class="feature-icon">◇</span><small>CONHECIMENTO LEVE</small><strong>Educação Luxuriosa</strong><p>Informações, guias e curiosidades organizados para consultar quando quiser.</p><b>Explorar Educação <em>→</em></b></a>
 </div></section>
 <section class="club"><span class="club-symbol">♛</span><div><small>VANTAGENS</small><h2>Tem mais para aproveitar.</h2><p>Conheça o Clube Luxuriosa e veja as modalidades e vantagens disponíveis.</p></div><a href="/clube.html">Conhecer o Clube →</a></section>
 <section class="section"><div class="section-head"><div><small>SUA CONTA</small><h2>Tudo organizado.</h2></div></div>
