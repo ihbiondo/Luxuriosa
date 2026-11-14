@@ -8,7 +8,7 @@ on:
   push:
     branches: [main]
     paths:
-      - "previa/lux-gestao-pedidos/index.html"
+      - "lux-gestao-pedidos/index.html"
       - ".github/workflows/verify-pedidos-ui.yml"
 
 permissions:
@@ -24,7 +24,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Validate both Pedidos interfaces and ownership
+      - name: Validate active Pedidos interface and ownership
         run: |
           node --input-type=module -e '
             import { readFileSync, writeFileSync } from "node:fs";
