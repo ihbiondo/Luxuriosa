@@ -696,10 +696,15 @@
 
     } else {
 
-      if (
-        produto.novo
-      ) {
-
+      if (produto.preVenda) {
+        badges.appendChild(
+          criarElemento(
+            "span",
+            "badge",
+            "Pré-venda"
+          )
+        );
+      } else if (produto.novo) {
         badges.appendChild(
           criarElemento(
             "span",
