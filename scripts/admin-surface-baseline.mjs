@@ -23,9 +23,15 @@ requireMatch(configPath, config, /"preview_urls"\s*:\s*false\b/, "preview_urls m
 
 const workerPath = "cloudflare/lux-gestao-worker.mjs";
 const worker = read(workerPath);
-requireMatch(workerPath, worker, /APP_SOURCE_PATH\s*=\s*["']\/previa\/lux-gestao\/["']/, "the production app source path must be explicit.");
+requireMatch(workerPath, worker, /APP_SOURCE_PATH\s*=\s*["']\/previa\/lux-gestao\/["']/, "the protected production app source path must be explicit.");
 requireMatch(workerPath, worker, /APP_ROUTES\s*=\s*new Set\(\[["']\/lux-gestao\/["'],\s*["']\/lux-gestao\/index\.html["']\]\)/, "the production worker must keep an explicit, narrow route allowlist.");
 requireMatch(workerPath, worker, /request\.method !== ["']GET["'] && request\.method !== ["']HEAD["']/, "the worker must reject methods other than GET/HEAD.");
+requireMatch(workerPath, worker, /LUX_ACCESS_SERVICE_TOKEN_CLIENT_ID/, "the Access service-token client ID binding is missing.");
+requireMatch(workerPath, worker, /LUX_ACCESS_SERVICE_TOKEN_CLIENT_SECRET/, "the Access service-token secret binding is missing.");
+requireMatch(workerPath, worker, /CF-Access-Client-Id/, "the Worker does not forward the Access service-token client ID.");
+requireMatch(workerPath, worker, /CF-Access-Client-Secret/, "the Worker does not forward the Access service-token secret.");
+requireMatch(workerPath, worker, /if\s*\(!accessClientId\s*\|\|\s*!accessClientSecret\)/, "the origin request must fail closed when either service-token secret is missing.");
+
 for (const header of [
   /Cache-Control["'],\s*["']private, no-store, max-age=0["']/,
   /X-Content-Type-Options["'],\s*["']nosniff["']/,
