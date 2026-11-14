@@ -3,6 +3,9 @@
   "name": "lux-gestao",
   "main": "./cloudflare/lux-gestao-worker.mjs",
   "compatibility_date": "2026-11-10",
-  "workers_dev": true,
+  // The administration terminal must be reachable only through its intended custom domain.
+  // Dashboard-managed custom-domain bindings remain separate from workers.dev exposure.
+  "workers_dev": false,
+  "preview_urls": false,
   "keep_vars": true
 }
