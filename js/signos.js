@@ -14,6 +14,38 @@
   const grid = document.getElementById("signGrid");
   let solarShare = null;
 
+  function setupExperienceNavigation() {
+    const nav = document.querySelector(".header nav");
+    if (!nav) return;
+
+    const items = [{"label":"Meu Portal","href":"/portal/"},{"label":"Experiências","href":"/experiencias/"},{"label":"Astrologia & Signos","href":"/experiencias/signos.html","current":"page"},{"label":"Educação","href":"/educacao/"}];
+    const links = items.map(item => {
+      const link = document.createElement("a");
+      link.href = item.href;
+      link.textContent = item.label;
+      if (item.current) link.setAttribute("aria-current", item.current);
+      return link;
+    });
+    nav.replaceChildren(...links);
+    nav.setAttribute("aria-label", "Navegação entre Portal, Experiências e Educação");
+
+    const footer = document.querySelector(".footer");
+    if (footer) {
+      [
+        { href: "/portal/", label: "Meu Portal" },
+        { href: "/educacao/", label: "Educação" }
+      ].forEach(item => {
+        if (footer.querySelector('a[href="' + item.href + '"]')) return;
+        const link = document.createElement("a");
+        link.href = item.href;
+        link.textContent = item.label;
+        footer.append(link);
+      });
+    }
+  }
+
+  setupExperienceNavigation();
+
   function setupAgeGate() {
     let approved = false;
     try {

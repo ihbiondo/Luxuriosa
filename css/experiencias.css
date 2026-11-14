@@ -188,3 +188,20 @@ body{background:radial-gradient(ellipse at 10% 5%,rgba(113,69,132,.4),transparen
  .header nav{gap:4px}
  .header nav a{font-size:9px}
 }
+
+/* Navegação consistente entre Portal, Experiências e Educação */
+.header{position:sticky;top:0;z-index:50;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+.header nav{display:flex;align-items:center;justify-content:flex-end;flex-wrap:wrap;gap:6px 12px}
+.header nav a{min-height:44px;padding:7px 9px;border-radius:8px;font-size:11px;display:inline-flex;align-items:center;justify-content:center;white-space:nowrap}
+.header nav a:hover{background:rgba(240,79,168,.12)}
+.header nav a[aria-current="page"],.header nav a[aria-current="location"]{color:#ff8ac7;background:rgba(240,79,168,.13);font-weight:700}
+@media(max-width:680px){
+ .header{align-items:center;gap:8px}
+ .header nav{max-width:65%;gap:4px;row-gap:2px}
+ .header nav a{min-height:40px;padding:5px 7px;font-size:10px}
+}
+@media(max-width:390px){
+ .header{align-items:flex-start;flex-wrap:wrap}
+ .header nav{max-width:100%;width:100%;justify-content:flex-start}
+ .header nav a{min-height:38px;font-size:10px}
+}
