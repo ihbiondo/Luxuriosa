@@ -340,3 +340,81 @@
     transition: none;
   }
 }
+
+
+/* Destaque explícito de pré-venda e acesso aos canais de atendimento */
+.pre-venda-showcase {
+  padding-top: clamp(30px, 4vw, 48px);
+}
+
+.pre-venda-showcase-head .kicker {
+  color: var(--gold);
+  font-weight: 700;
+  letter-spacing: .2em;
+}
+
+.pre-venda-showcase-head h2 {
+  text-transform: uppercase;
+  letter-spacing: .015em;
+}
+
+.pre-venda-status {
+  flex-wrap: wrap;
+  border-color: rgba(212, 175, 124, .62);
+  background: linear-gradient(110deg, rgba(139, 30, 63, .42), rgba(11, 11, 11, .72));
+  color: #f7d7d9;
+  font-weight: 700;
+}
+
+.pre-venda-status-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 28px;
+  margin-left: 5px;
+  padding: 4px 10px;
+  border: 1px solid rgba(212, 175, 124, .55);
+  border-radius: 999px;
+  color: var(--gold);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .06em;
+  text-decoration: none;
+  transition: background .2s ease, color .2s ease;
+}
+
+.pre-venda-status-link:hover,
+.pre-venda-status-link:focus-visible {
+  background: var(--gold);
+  color: #1a0b11;
+}
+
+.pre-venda-status-link:focus-visible {
+  outline: 2px solid var(--blush);
+  outline-offset: 3px;
+}
+
+.pre-venda-card-eyebrow {
+  font-size: 10px;
+  letter-spacing: .18em;
+}
+
+.pre-venda-card-title {
+  text-transform: uppercase;
+  letter-spacing: .04em;
+}
+
+@media (max-width: 600px) {
+  .pre-venda-showcase {
+    padding-top: 28px;
+  }
+
+  .pre-venda-status {
+    align-items: flex-start;
+    border-radius: 14px;
+    line-height: 1.5;
+  }
+
+  .pre-venda-status-link {
+    margin-left: 0;
+  }
+}
