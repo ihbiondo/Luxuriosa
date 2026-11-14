@@ -25,3 +25,5 @@ jobs:
         run: node scripts/security-baseline.mjs
       - name: Verify administrative surface invariants
         run: node scripts/admin-surface-baseline.mjs
+      - name: Test Lux-Gestão Worker runtime behavior
+        run: node scripts/test-lux-gestao-worker.mjs
