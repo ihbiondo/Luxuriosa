@@ -23,14 +23,15 @@ requireMatch(configPath, config, /"preview_urls"\s*:\s*false\b/, "preview_urls m
 
 const workerPath = "cloudflare/lux-gestao-worker.mjs";
 const worker = read(workerPath);
-requireMatch(workerPath, worker, /APP_SOURCE_PATH\s*=\s*["']\/previa\/lux-gestao\/["']/, "the protected production app source path must be explicit.");
+requireMatch(workerPath, worker, /APP_SOURCE_URL\s*=\s*["']https:\/\/raw\.githubusercontent\.com\/ihbiondo\/Luxuriosa\/main\/previa\/lux-gestao\/index\.html["']/, "the production app source must be a fixed GitHub Raw URL.");
+requireMatch(workerPath, worker, /fetch\(APP_SOURCE_URL,\s*\{/, "the Worker must fetch only the fixed source URL.");
+requireMatch(workerPath, worker, /redirect:\s*["']error["']/, "the upstream fetch must reject redirects.");
 requireMatch(workerPath, worker, /APP_ROUTES\s*=\s*new Set\(\[["']\/lux-gestao\/["'],\s*["']\/lux-gestao\/index\.html["']\]\)/, "the production worker must keep an explicit, narrow route allowlist.");
 requireMatch(workerPath, worker, /request\.method !== ["']GET["'] && request\.method !== ["']HEAD["']/, "the worker must reject methods other than GET/HEAD.");
-requireMatch(workerPath, worker, /LUX_ACCESS_SERVICE_TOKEN_CLIENT_ID/, "the Access service-token client ID binding is missing.");
-requireMatch(workerPath, worker, /LUX_ACCESS_SERVICE_TOKEN_CLIENT_SECRET/, "the Access service-token secret binding is missing.");
-requireMatch(workerPath, worker, /CF-Access-Client-Id/, "the Worker does not forward the Access service-token client ID.");
-requireMatch(workerPath, worker, /CF-Access-Client-Secret/, "the Worker does not forward the Access service-token secret.");
-requireMatch(workerPath, worker, /if\s*\(!accessClientId\s*\|\|\s*!accessClientSecret\)/, "the origin request must fail closed when either service-token secret is missing.");
+
+if (/LUX_ACCESS_SERVICE_TOKEN|CF-Access-Client-(?:Id|Secret)|new URL\(request\.url\).*APP_SOURCE/i.test(worker)) {
+  failures.push(`${workerPath}: obsolete service-token forwarding or request-derived upstream source found.`);
+}
 
 for (const header of [
   /Cache-Control["'],\s*["']private, no-store, max-age=0["']/,
@@ -53,7 +54,7 @@ for (const path of adminPages) {
   requireMatch(path, html, /signInWithPassword/, "Supabase sign-in flow is missing.");
   requireMatch(path, html, /supabase\.auth\.getSession/, "initial session check is missing.");
   requireMatch(path, html, /sb_publishable_[A-Za-z0-9_-]+/, "expected publishable Supabase key not found.");
-  requireMatch(path, html, /X-Luxuriosa|functions\.invoke|\/functions\/v1\//, "expected backend API integration marker not found.");
+  requireMatch(path, html, /functions\.invoke|\/functions\/v1\//, "expected backend API integration marker not found.");
 
   if (/SUPABASE_SERVICE_ROLE_KEY|service_role|sb_secret_[A-Za-z0-9_-]+|eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+/.test(html)) {
     failures.push(`${path}: privileged Supabase credential or JWT-like secret pattern appears in browser source.`);
