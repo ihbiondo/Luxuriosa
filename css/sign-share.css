@@ -24,3 +24,11 @@
   .share-preview-shell canvas{width:100%;height:auto;max-width:260px;max-height:390px;flex:0 1 auto;}
   .share-actions button,.share-actions a{box-sizing:border-box;min-width:0;}
 }
+
+@media(max-width:560px){
+  .sign-share-studio p{font-size:12px;line-height:1.8;}
+  .share-eyebrow{font-size:9px!important;}
+  .share-format-picker button{font-size:10px;}
+  .share-actions button,.share-actions a{font-size:10px;}
+  .share-guidance{font-size:10px!important;line-height:1.7!important;}
+}
