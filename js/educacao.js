@@ -26,8 +26,8 @@
     menu.setAttribute("data-ed-module-menu", "");
     const summary = menu.querySelector("summary");
     if (summary) {
-      summary.textContent = "Explorar módulos ⌄";
-      summary.setAttribute("aria-label", "Abrir navegação dos módulos educativos");
+      summary.textContent = "Navegação da Luxuriosa ⌄";
+      summary.setAttribute("aria-label", "Abrir navegação do Portal, Experiências e módulos educativos");
     }
 
     const brand = document.querySelector(".ed-brand");
@@ -54,8 +54,33 @@
       return link;
     });
 
-    nav.replaceChildren(...links);
-    nav.setAttribute("aria-label", "Quatro módulos da Educação Luxuriosa");
+    const portalLink = document.createElement("a");
+    portalLink.href = "/portal/";
+    portalLink.textContent = "Meu Portal";
+    portalLink.className = "ed-global-link ed-global-link--portal";
+
+    const experiencesLink = document.createElement("a");
+    experiencesLink.href = "/experiencias/";
+    experiencesLink.textContent = "Experiências";
+    experiencesLink.className = "ed-global-link ed-global-link--experiences";
+
+    nav.replaceChildren(portalLink, experiencesLink, ...links);
+    nav.setAttribute("aria-label", "Portal, Experiências e módulos da Educação Luxuriosa");
+
+    const footerNav = document.querySelector(".ed-footer-links");
+    if (footerNav) {
+      const footerLinks = [
+        { href: "/portal/", label: "Meu Portal" },
+        { href: "/experiencias/", label: "Experiências" }
+      ];
+      footerLinks.forEach(item => {
+        if (footerNav.querySelector('a[href="' + item.href + '"]')) return;
+        const footerLink = document.createElement("a");
+        footerLink.href = item.href;
+        footerLink.textContent = item.label;
+        footerNav.append(footerLink);
+      });
+    }
 
     menu.addEventListener("click", event => {
       if (event.target.closest("a")) menu.open = false;
