@@ -106,6 +106,22 @@ def main() -> int:
     else:
         errors.append("sitemap.xml ausente")
 
+    required_modules = {
+        "/educacao/temas/",
+        "/educacao/enciclopedia/",
+        "/educacao/curiosidades/",
+        "/educacao/guias/",
+        "/educacao/interatividade/",
+    }
+    navigation_script = ROOT / "js" / "educacao.js"
+    try:
+        navigation_text = navigation_script.read_text(encoding="utf-8")
+        for href in required_modules:
+            if f'href: "{href}"' not in navigation_text:
+                errors.append(f"js/educacao.js: módulo ausente na navegação global: {href}")
+    except OSError as error:
+        errors.append(f"js/educacao.js: não foi possível validar a navegação: {error}")
+
     audits: dict[Path, PageAudit] = {}
     for page in pages:
         audit = PageAudit()
@@ -133,18 +149,8 @@ def main() -> int:
         if '<summary>Explorar módulos ⌄</summary>' not in page_text:
             errors.append(f"{rel}: menu de cinco módulos ausente")
         menu_match = re.search(r'<details class="ed-menu">([\\s\\S]*?)</details>', page_text)
-        required_modules = {
-            "/educacao/temas/",
-            "/educacao/enciclopedia/",
-            "/educacao/curiosidades/",
-            "/educacao/guias/",
-            "/educacao/interatividade/",
-        }
-        menu_hrefs = set(
-            re.findall(r"""<a\b[^>]*href=["']([^"']+)""", menu_match.group(1))
-        ) if menu_match else set()
-        if not menu_match or not required_modules.issubset(menu_hrefs):
-            errors.append(f"{rel}: menu deve disponibilizar os cinco módulos educativos")
+        if not menu_match or not re.search(r"<nav\\b", menu_match.group(1)):
+            errors.append(f"{rel}: menu de navegação ausente")
         if not re.search(r'<a class="ed-brand" href="/educacao/"', page_text):
             errors.append(f"{rel}: link da marca não retorna à Educação")
         if audit.forbidden_media:
