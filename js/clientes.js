@@ -1,6 +1,6 @@
 /* =========================================================
-   LUXURIOSA — CADASTRO LOCAL E REVISÃO DO PEDIDO
-   Sem conta, servidor, API ou sincronização.
+   LUXURIOSA — DADOS DO CLIENTE, ENTREGA E CHECKOUT
+   Validação local e integração segura com o servidor.
    ========================================================= */
 (function () {
   "use strict";
@@ -11,6 +11,7 @@
   var mensagemAtual = "";
   var cepConsultaId = 0;
   var ultimoEnderecoViaCep = "";
+  var checkoutRetryTimer = null;
 
   function $(id) { return document.getElementById(id); }
   function texto(id) { var el = $(id); return el ? String(el.value || "").trim() : ""; }
@@ -647,6 +648,30 @@
       });
       var result = await response.json().catch(function () { return {}; });
       if (!response.ok || !result.ok || !result.checkout_url) {
+        if (response.status === 409 && result.code === "active_checkout_contact_mismatch") {
+          var expiry = result.expires_at ? new Date(result.expires_at) : null;
+          var retryAt = expiry && Number.isFinite(expiry.getTime()) ? expiry.getTime() : null;
+
+          if (button) {
+            button.disabled = true;
+            button.textContent = "LINK ANTERIOR AINDA ATIVO";
+            button.setAttribute("aria-disabled", "true");
+          }
+
+          avisar(result.error || "Há um link de pagamento anterior ainda ativo. Fale com a Luxuriosa pelo WhatsApp antes de tentar novamente.", "error");
+
+          if (checkoutRetryTimer) window.clearTimeout(checkoutRetryTimer);
+          if (button && retryAt && retryAt > Date.now()) {
+            checkoutRetryTimer = window.setTimeout(function () {
+              button.disabled = false;
+              button.textContent = "PAGAR COM PIX OU CARTÃO";
+              button.removeAttribute("aria-disabled");
+              avisar("O prazo do link anterior terminou. Confira novamente os dados e tente preparar um novo pagamento.", "info");
+            }, Math.min(retryAt - Date.now() + 1000, 2147483000));
+          }
+          return;
+        }
+
         throw new Error(result.error || "Não foi possível preparar o pagamento. Tente novamente.");
       }
 
