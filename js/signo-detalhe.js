@@ -68,9 +68,12 @@
     setText("signPeriod", sign.period.label);
     setText("signArchetype", sign.archetype);
     setText("signOverview", sign.profile.overview);
-    setText("signElement", sign.element);
-    setText("signModality", sign.modality);
-    setText("signPolarity", sign.polarity);
+    setText("signElement", "Elemento: " + sign.element);
+    setText("signModality", "Modalidade: " + sign.modality);
+    setText("signPolarity", "Polaridade: " + sign.polarity);
+    setText("signElementHeading", sign.element);
+    setText("signModalityHeading", sign.modality);
+    setText("signPolarityHeading", sign.polarity);
     setText("signTraditionalRuler", sign.rulers.traditional);
     setText("signModernRuler", sign.rulers.modern ? sign.rulers.modern : "Sem correspondência moderna destacada nesta ficha");
     setText("signElementDescription", data.classification.elements[sign.element]);
