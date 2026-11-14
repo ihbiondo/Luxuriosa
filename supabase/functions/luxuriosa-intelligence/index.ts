@@ -1,4 +1,5 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.119.0";
+import { buildCustomerRecommendations, excludeKnownTestTransactions, summarizeConsentedPaidProducts, summarizeCustomerRelationship } from "../_shared/customer-rfv.mjs";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
@@ -60,6 +61,12 @@ async function authorize(request: Request) {
   if (permissionError) return { error: "Não foi possível validar a permissão administrativa.", status: 500 };
   if (permission?.role !== "admin") return { error: "Acesso restrito à administração.", status: 403 };
 
+  const { data: assurance, error: assuranceError } = await admin.auth.mfa.getAuthenticatorAssuranceLevel(token);
+  if (assuranceError) return { error: "Não foi possível validar o segundo fator de autenticação.", status: 503 };
+  if (assurance.currentLevel !== "aal2") {
+    return { error: "Confirme o código do seu autenticador para continuar.", status: 403, code: "mfa_required" };
+  }
+
   return { user: data.user };
 }
 const CUSTOMER_INTERESTS = [
@@ -71,6 +78,7 @@ const CUSTOMER_INTERESTS = [
   { key: "massagem_relaxamento", label: "Massagem e relaxamento" },
   { key: "estimulacao", label: "Produtos de estimulação" },
   { key: "fantasias_acessorios", label: "Fantasias e acessórios" },
+  { key: "higiene_intima", label: "Higiene íntima" },
   { key: "kits_presentes", label: "Kits e presentes" },
   { key: "novidades_lancamentos", label: "Novidades e lançamentos" }
 ];
@@ -93,6 +101,7 @@ const CUSTOMER_OFFER_TYPES = [
 const PRODUCT_INTEREST_MAP: Record<string, string> = {
   "1": "jogos_brincadeiras", "2": "jogos_brincadeiras", "3": "jogos_brincadeiras",
   "4": "acessorios_casais", "5": "acessorios_casais",
+  "6": "higiene_intima", "21": "higiene_intima",
   "7": "geles_lubrificantes", "8": "estimulacao", "9": "estimulacao",
   "10": "kits_presentes", "11": "estimulacao", "12": "geles_lubrificantes",
   "13": "geles_lubrificantes", "14": "estimulacao", "15": "estimulacao",
@@ -119,6 +128,172 @@ function createCustomerInterestStats() {
   }]))
 }
 
+
+
+async function readCustomerRfv(userId: string, queryText = "", requestedLimit = 100, customerId: string | null = null) {
+  const limit = Math.min(200, Math.max(1, Math.trunc(Number(requestedLimit) || 100)));
+  const q = cleanText(queryText, 100);
+  let customers: any[] = [];
+
+  if (customerId) {
+    if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(customerId)) {
+      throw new Error("Identificador de cliente inválido.");
+    }
+    const { data, error } = await admin.from("management_customers")
+      .select("id, full_name, created_at")
+      .eq("id", customerId).eq("created_by", userId).is("archived_at", null).maybeSingle();
+    if (error) throw error;
+    if (data) customers = [data];
+  } else if (q) {
+    const pattern = "%" + q.replace(/[\\%_]/g, "\\$&") + "%";
+    const queries = await Promise.all([
+      admin.from("management_customers").select("id, full_name, created_at")
+        .eq("created_by", userId).is("archived_at", null).ilike("full_name", pattern).order("full_name").limit(limit),
+      admin.from("management_customers").select("id, full_name, created_at")
+        .eq("created_by", userId).is("archived_at", null).ilike("phone", pattern).order("full_name").limit(limit),
+      admin.from("management_customers").select("id, full_name, created_at")
+        .eq("created_by", userId).is("archived_at", null).ilike("email", pattern).order("full_name").limit(limit)
+    ]);
+    for (const result of queries) if (result.error) throw result.error;
+    const unique = new Map<string, any>();
+    for (const result of queries) for (const customer of result.data || []) unique.set(customer.id, customer);
+    customers = [...unique.values()]
+      .sort((a, b) => String(a.full_name).localeCompare(String(b.full_name), "pt-BR"))
+      .slice(0, limit);
+  } else {
+    const { data, error } = await admin.from("management_customers")
+      .select("id, full_name, created_at")
+      .eq("created_by", userId).is("archived_at", null)
+      .order("full_name", { ascending: true }).limit(limit);
+    if (error) throw error;
+    customers = data || [];
+  }
+
+  const customerIds = customers.map(customer => customer.id);
+  if (!customerIds.length) {
+    return {
+      ok: true,
+      generated_at: new Date().toISOString(),
+      customers: [],
+      coverage: { customer_count: 0, returned_count: 0, sales_truncated: false, orders_truncated: false, product_recommendations_require_active_consent: true }
+    };
+  }
+
+  const [salesResult, ordersResult] = await Promise.all([
+    admin.from("management_sales")
+      .select("id, customer_id, source_order_id, created_at, paid_at, total_cents, payment_status", { count: "exact" })
+      .eq("created_by", userId).in("customer_id", customerIds)
+      .order("created_at", { ascending: false }).limit(10000),
+    admin.from("orders")
+      .select("id, management_customer_id, management_sale_id, customer_id, payment_status, total_amount, created_at, paid_at, source", { count: "exact" })
+      .in("management_customer_id", customerIds).in("source", ["website", "whatsapp"])
+      .order("created_at", { ascending: false }).limit(10000)
+  ]);
+  if (salesResult.error) throw salesResult.error;
+  if (ordersResult.error) throw ordersResult.error;
+
+  const filteredTransactions = excludeKnownTestTransactions(
+    salesResult.data || [],
+    ordersResult.data || [],
+    [...HISTORICAL_TEST_ORDER_IDS]
+  );
+  const sales = filteredTransactions.sales;
+  const orders = filteredTransactions.orders;
+  const salesByCustomer = new Map<string, any[]>();
+  for (const sale of sales) {
+    const rows = salesByCustomer.get(sale.customer_id) || [];
+    rows.push(sale);
+    salesByCustomer.set(sale.customer_id, rows);
+  }
+  const ordersByCustomer = new Map<string, any[]>();
+  for (const order of orders) {
+    const rows = ordersByCustomer.get(order.management_customer_id) || [];
+    rows.push(order);
+    ordersByCustomer.set(order.management_customer_id, rows);
+  }
+
+  // Product-level suggestions require current, explicit v2 personalization consent.
+  // RFV itself uses only paid transaction count, paid gross value and last paid date.
+  const consentUserIds = [...new Set(orders.map(order => order.customer_id).filter(Boolean))];
+  let latestConsent = new Map<string, any>();
+  if (consentUserIds.length) {
+    const { data: consents, error: consentError } = await admin.from("account_data_consents")
+      .select("user_id, granted, consent_text_version, created_at")
+      .eq("purpose", "experience_personalization")
+      .in("user_id", consentUserIds)
+      .order("created_at", { ascending: false }).limit(20000);
+    if (consentError) throw consentError;
+    latestConsent = new Map();
+    for (const consent of consents || []) {
+      if (!latestConsent.has(consent.user_id)) latestConsent.set(consent.user_id, consent);
+    }
+  }
+  const consentedUserIds = new Set([...latestConsent.entries()]
+    .filter(([, consent]) => consent.granted === true && consent.consent_text_version === "luxuriosa-account-data-v2-2026-11")
+    .map(([userId]) => userId));
+  const consentedOrders = orders.filter(order =>
+    order.customer_id && consentedUserIds.has(order.customer_id) && order.payment_status === "paid"
+  );
+  let consentedOrderItems: any[] = [];
+  if (consentedOrders.length) {
+    const { data, error } = await admin.from("order_items")
+      .select("order_id, product_id, product_name, quantity, unit_price, line_total, product_snapshot")
+      .in("order_id", consentedOrders.map(order => order.id)).limit(30000);
+    if (error) throw error;
+    consentedOrderItems = data || [];
+  }
+  const consentedItemsByCustomer = new Map<string, any[]>();
+  const orderOwnerById = new Map(consentedOrders.map(order => [String(order.id), String(order.management_customer_id)] as const));
+  for (const item of consentedOrderItems) {
+    const owner = orderOwnerById.get(String(item.order_id));
+    if (!owner) continue;
+    const rows = consentedItemsByCustomer.get(owner) || [];
+    rows.push(item);
+    consentedItemsByCustomer.set(owner, rows);
+  }
+
+  const salesTruncated = (salesResult.count || 0) > sales.length;
+  const ordersTruncated = (ordersResult.count || 0) > (ordersResult.data || []).length;
+  const rows = customers.map(customer => {
+    const customerSales = salesByCustomer.get(customer.id) || [];
+    const customerOrders = ordersByCustomer.get(customer.id) || [];
+    const relationship = summarizeCustomerRelationship(customerSales, customerOrders).summary;
+    const customerConsentedOrders = customerOrders.filter(order =>
+      order.payment_status === "paid" && order.customer_id && consentedUserIds.has(order.customer_id)
+    );
+    const products = summarizeConsentedPaidProducts(customerConsentedOrders, consentedItemsByCustomer.get(customer.id) || []);
+    return {
+      id: customer.id,
+      full_name: customer.full_name,
+      relationship: {
+        ...relationship,
+        history_truncated: salesTruncated || ordersTruncated
+      },
+      recommendations: buildCustomerRecommendations(relationship, products),
+      product_recommendations: {
+        consented_paid_orders: customerConsentedOrders.length,
+        enabled: customerConsentedOrders.length > 0
+      }
+    };
+  });
+
+  return {
+    ok: true,
+    generated_at: new Date().toISOString(),
+    source: "explicit_management_customer_links_and_confirmed_paid_transactions",
+    customers: rows,
+    coverage: {
+      customer_count: customerIds.length,
+      returned_count: rows.length,
+      limit_reached: customerIds.length >= limit,
+      sales_truncated: salesTruncated,
+      orders_truncated: ordersTruncated,
+      consented_product_orders: consentedOrders.length,
+      consented_order_items_truncated: consentedOrderItems.length >= 30000,
+      product_recommendations_require_active_consent: true
+    }
+  };
+}
 
 async function readCustomerInsights(from: string, to: string, periodDays: number) {
   const [
@@ -349,39 +524,34 @@ function localAnalyticsParts(value: string) {
 
 function summarizeSales(rows: any[]) {
   const result = {
-    sales_count: 0,
-    paid_count: 0,
-    pending_count: 0,
-    sold_cents: 0,
-    received_cents: 0,
-    pending_cents: 0,
-    discount_cents: 0,
-    subtotal_cents: 0,
-    average_paid_ticket_cents: 0,
-    paid_rate_percent: 0,
-    discount_rate_percent: 0,
-    units_sold: 0,
-    costed_sales_count: 0,
-    paid_costed_sales_count: 0,
+    sales_count: 0, paid_count: 0, pending_count: 0,
+    sold_cents: 0, received_cents: 0, net_received_cents: 0,
+    payment_fees_cents: 0, pending_cents: 0, discount_cents: 0,
+    subtotal_cents: 0, average_paid_ticket_cents: 0,
+    paid_rate_percent: 0, discount_rate_percent: 0, units_sold: 0,
+    costed_sales_count: 0, costed_paid_sales_count: 0,
     paid_cost_coverage_percent: null as number | null,
-    sales_without_cost_count: 0,
-    sold_cost_of_goods_cents: 0,
-    paid_cost_of_goods_cents: 0,
-    gross_profit_cents: 0,
-    costed_paid_revenue_cents: 0,
+    sales_without_cost_count: 0, sold_cost_of_goods_cents: 0,
+    paid_cost_of_goods_cents: 0, gross_profit_cents: 0,
+    costed_paid_revenue_cents: 0, costed_paid_payment_fees_cents: 0,
     gross_margin_percent: null as number | null,
-    recorded_expenses_cents: 0,
-    expense_count: 0,
+    recorded_expenses_cents: 0, expense_count: 0,
     partial_operating_result_cents: null as number | null,
-    expense_categories: [] as any[],
-    top_products: [] as any[],
-    payment_methods: [] as any[],
-    trend: [] as any[],
-    weekday_activity: [] as any[],
-    hourly_activity: [] as any[]
+    expense_categories: [] as any[], top_products: [] as any[],
+    product_profitability: [] as any[], kit_profitability: [] as any[], sales_profitability: [] as any[],
+    payment_methods: [] as any[], trend: [] as any[],
+    weekday_activity: [] as any[], hourly_activity: [] as any[]
   };
 
-  const products = new Map<string, { name: string; quantity: number; gross_cents: number }>();
+  const products = new Map<string, {
+    product_id: string | null; name: string; quantity: number;
+    gross_cents: number; paid_revenue_cents: number;
+    paid_cost_cents: number; paid_payment_fee_cents: number;
+    costed_paid_revenue_cents: number; costed_paid_cost_cents: number;
+    costed_paid_payment_fee_cents: number; costed_paid_units: number;
+    unknown_cost_units: number; unknown_revenue_units: number;
+    revenue_allocation_known: boolean;
+  }>();
   const methods = new Map<string, { method: string; sales_count: number; paid_count: number; pending_count: number; received_cents: number; pending_cents: number }>();
   const days = new Map<string, { date: string; sales_count: number; paid_count: number; sold_cents: number; received_cents: number; pending_cents: number }>();
   const weekdays = new Map<string, number>();
@@ -393,8 +563,25 @@ function summarizeSales(rows: any[]) {
     const subtotal = Number(sale.subtotal_cents) || 0;
     const paid = sale.payment_status === "paid";
     const methodName = cleanText(sale.payment_method, 30) || "OUTRO";
-    let saleCostKnown = true;
+    const items = Array.isArray(sale.items) ? sale.items : [];
+    let saleCostKnown = items.length > 0;
     let saleCost = 0;
+    let costKnownQuantity = 0;
+    const totalSaleQuantity = items.reduce((sum: number, item: any) => sum + Math.max(0, Number(item?.quantity) || 0), 0);
+    const validLines = items.every((item: any) =>
+      item?.line_total_cents !== null &&
+      item?.line_total_cents !== undefined &&
+      Number.isSafeInteger(Number(item.line_total_cents)) &&
+      Number(item.line_total_cents) >= 0
+    );
+    const lineBase = validLines
+      ? items.reduce((sum: number, item: any) => sum + Number(item.line_total_cents), 0)
+      : 0;
+    const canAllocateRevenue = validLines && lineBase > 0 && discount <= lineBase;
+    const fee = paid ? Math.max(0, Number(sale.payment_fee_cents) || 0) : 0;
+    let cumulativeBase = 0;
+    let cumulativeDiscount = 0;
+    let cumulativeFee = 0;
 
     result.sales_count += 1;
     result.sold_cents += total;
@@ -404,6 +591,10 @@ function summarizeSales(rows: any[]) {
     if (paid) {
       result.paid_count += 1;
       result.received_cents += total;
+      result.payment_fees_cents += fee;
+      result.net_received_cents += sale.net_received_cents !== null && sale.net_received_cents !== undefined
+        ? Number(sale.net_received_cents) || 0
+        : Math.max(0, total - fee);
     } else {
       result.pending_count += 1;
       result.pending_cents += total;
@@ -414,43 +605,113 @@ function summarizeSales(rows: any[]) {
       received_cents: 0, pending_cents: 0
     };
     method.sales_count += 1;
-    if (paid) {
-      method.paid_count += 1;
-      method.received_cents += total;
-    } else {
-      method.pending_count += 1;
-      method.pending_cents += total;
-    }
+    if (paid) { method.paid_count += 1; method.received_cents += total; }
+    else { method.pending_count += 1; method.pending_cents += total; }
     methods.set(methodName, method);
 
-    for (const item of (Array.isArray(sale.items) ? sale.items : [])) {
+    for (const item of items) {
       const name = cleanText(item?.product_name, 180) || "Item sem descrição";
-      const quantity = Number(item?.quantity) || 0;
-      const line = Number(item?.line_total_cents) || 0;
-      const product = products.get(name) || { name, quantity: 0, gross_cents: 0 };
+      const productId = item?.product_id === null || item?.product_id === undefined
+        ? null : String(item.product_id);
+      const key = productId ? `id:${productId}` : `name:${name}`;
+      const quantity = Math.max(0, Number(item?.quantity) || 0);
+      const lineValid = item?.line_total_cents !== null &&
+        item?.line_total_cents !== undefined &&
+        Number.isSafeInteger(Number(item.line_total_cents)) &&
+        Number(item.line_total_cents) >= 0;
+      const line = lineValid ? Number(item.line_total_cents) : 0;
+      const product = products.get(key) || {
+        product_id: productId, name, quantity: 0, gross_cents: 0,
+        paid_revenue_cents: 0, paid_cost_cents: 0,
+        paid_payment_fee_cents: 0, costed_paid_revenue_cents: 0,
+        costed_paid_cost_cents: 0, costed_paid_payment_fee_cents: 0,
+        costed_paid_units: 0, unknown_cost_units: 0, unknown_revenue_units: 0,
+        revenue_allocation_known: true
+      };
       product.quantity += quantity;
       product.gross_cents += line;
-      products.set(name, product);
       result.units_sold += quantity;
-      if (item?.unit_cost_cents === null || item?.unit_cost_cents === undefined || !Number.isSafeInteger(Number(item.unit_cost_cents))) {
+      if (!lineValid) product.revenue_allocation_known = false;
+
+      const itemCostKnown = item?.unit_cost_cents !== null &&
+        item?.unit_cost_cents !== undefined &&
+        Number.isSafeInteger(Number(item.unit_cost_cents)) &&
+        Number(item.unit_cost_cents) >= 0;
+      if (!itemCostKnown) {
         saleCostKnown = false;
+        if (paid) product.unknown_cost_units += quantity;
       } else {
-        saleCost += Number(item.unit_cost_cents) * quantity;
+        const itemCost = Number(item.unit_cost_cents) * quantity;
+        saleCost += itemCost;
+        costKnownQuantity += quantity;
+        if (paid) {
+          product.paid_cost_cents += itemCost;
+        }
       }
+
+      if (paid && !canAllocateRevenue && itemCostKnown) {
+        product.unknown_revenue_units += quantity;
+      }
+      if (paid && canAllocateRevenue && lineValid) {
+        cumulativeBase += line;
+        const nextDiscount = Math.round(discount * cumulativeBase / lineBase);
+        const discountShare = nextDiscount - cumulativeDiscount;
+        cumulativeDiscount = nextDiscount;
+        const nextFee = Math.round(fee * cumulativeBase / lineBase);
+        const feeShare = nextFee - cumulativeFee;
+        cumulativeFee = nextFee;
+        const allocatedRevenue = Math.max(0, line - discountShare);
+        product.paid_revenue_cents += allocatedRevenue;
+        product.paid_payment_fee_cents += feeShare;
+        if (itemCostKnown) {
+          product.costed_paid_revenue_cents += allocatedRevenue;
+          product.costed_paid_cost_cents += Number(item.unit_cost_cents) * quantity;
+          product.costed_paid_payment_fee_cents += feeShare;
+          product.costed_paid_units += quantity;
+        }
+      } else if (paid) {
+        product.revenue_allocation_known = false;
+      }
+      products.set(key, product);
     }
 
-    if (saleCostKnown && Array.isArray(sale.items) && sale.items.length) {
+    if (saleCostKnown) {
       result.costed_sales_count += 1;
       result.sold_cost_of_goods_cents += saleCost;
       if (paid) {
-        result.paid_costed_sales_count += 1;
+        result.costed_paid_sales_count += 1;
         result.paid_cost_of_goods_cents += saleCost;
         result.costed_paid_revenue_cents += total;
+        result.costed_paid_payment_fees_cents += fee;
         result.gross_profit_cents += total - saleCost;
       }
     } else {
       result.sales_without_cost_count += 1;
     }
+    const saleNetReceived = paid
+      ? (sale.net_received_cents !== null && sale.net_received_cents !== undefined
+        ? Number(sale.net_received_cents) || 0 : Math.max(0, total - fee))
+      : 0;
+    const saleProfitKnown = paid && saleCostKnown;
+    result.sales_profitability.push({
+      sale_number: Number(sale.sale_number) || null,
+      created_at: sale.created_at,
+      total_cents: total,
+      received_cents: paid ? total : 0,
+      net_received_cents: saleNetReceived,
+      cost_of_goods_cents: saleCostKnown ? saleCost : null,
+      payment_fee_cents: fee,
+      gross_profit_cents: saleProfitKnown ? total - saleCost : null,
+      net_contribution_cents: saleProfitKnown ? total - saleCost - fee : null,
+      gross_margin_percent: saleProfitKnown && total
+        ? Math.round(((total - saleCost) / total) * 1000) / 10 : null,
+      net_contribution_margin_percent: saleProfitKnown && total
+        ? Math.round(((total - saleCost - fee) / total) * 1000) / 10 : null,
+      cost_coverage_percent: totalSaleQuantity
+        ? Math.round((costKnownQuantity / totalSaleQuantity) * 1000) / 10 : null,
+      payment_status: sale.payment_status,
+      is_historical_import: sale.is_historical_import === true
+    });
 
     const local = localAnalyticsParts(sale.created_at);
     const dayKey = `${local.year}-${local.month}-${local.day}`;
@@ -460,28 +721,17 @@ function summarizeSales(rows: any[]) {
     };
     day.sales_count += 1;
     day.sold_cents += total;
-    if (paid) {
-      day.paid_count += 1;
-      day.received_cents += total;
-    } else {
-      day.pending_cents += total;
-    }
+    if (paid) { day.paid_count += 1; day.received_cents += total; }
+    else day.pending_cents += total;
     days.set(dayKey, day);
-
     const weekday = local.weekday || "—";
     weekdays.set(weekday, (weekdays.get(weekday) || 0) + 1);
-    const hasExactTime = !(
-      Array.isArray(sale.items) &&
-      sale.items.some((item: any) => item?.date_precision === "date_only")
-    );
-    if (hasExactTime) {
-      const hour = local.hour || "00";
-      hours.set(hour, (hours.get(hour) || 0) + 1);
-    }
+    const hour = local.hour || "00";
+    hours.set(hour, (hours.get(hour) || 0) + 1);
   }
 
   result.paid_cost_coverage_percent = result.paid_count
-    ? Math.round((result.paid_costed_sales_count / result.paid_count) * 1000) / 10 : null;
+    ? Math.round((result.costed_paid_sales_count / result.paid_count) * 1000) / 10 : null;
   result.gross_margin_percent = result.costed_paid_revenue_cents
     ? Math.round((result.gross_profit_cents / result.costed_paid_revenue_cents) * 1000) / 10 : null;
   result.average_paid_ticket_cents = result.paid_count
@@ -490,9 +740,35 @@ function summarizeSales(rows: any[]) {
     ? Math.round((result.paid_count / result.sales_count) * 1000) / 10 : 0;
   result.discount_rate_percent = result.subtotal_cents
     ? Math.round((result.discount_cents / result.subtotal_cents) * 1000) / 10 : 0;
-  result.top_products = [...products.values()]
-    .sort((a, b) => b.quantity - a.quantity || b.gross_cents - a.gross_cents)
-    .slice(0, 8);
+  const productRows = [...products.values()].map((product) => {
+    const marginKnown = product.costed_paid_units > 0 &&
+      product.costed_paid_revenue_cents >= 0;
+    const grossProfit = marginKnown
+      ? product.costed_paid_revenue_cents - product.costed_paid_cost_cents : null;
+    const paidUnits = product.costed_paid_units + product.unknown_cost_units + product.unknown_revenue_units;
+    return {
+      ...product,
+      cost_coverage_percent: paidUnits
+        ? Math.round((product.costed_paid_units / paidUnits) * 1000) / 10 : null,
+      gross_profit_cents: grossProfit,
+      gross_margin_percent: marginKnown && product.costed_paid_revenue_cents
+        ? Math.round((grossProfit! / product.costed_paid_revenue_cents) * 1000) / 10 : null,
+      net_contribution_cents: marginKnown
+        ? product.costed_paid_revenue_cents - product.costed_paid_cost_cents - product.costed_paid_payment_fee_cents : null,
+      net_contribution_margin_percent: marginKnown && product.costed_paid_revenue_cents
+        ? Math.round(((product.costed_paid_revenue_cents - product.costed_paid_cost_cents - product.costed_paid_payment_fee_cents) / product.costed_paid_revenue_cents) * 1000) / 10
+        : null
+    };
+  });
+  result.product_profitability = [...productRows]
+    .sort((a, b) => b.quantity - a.quantity || b.gross_cents - a.gross_cents);
+  result.top_products = result.product_profitability.slice(0, 8);
+  result.kit_profitability = productRows
+    .filter((product) => product.product_id !== null && ["10","22","23","24","25","26","27","28","29"].includes(product.product_id))
+    .sort((a, b) => b.quantity - a.quantity); 
+  result.sales_profitability = result.sales_profitability
+    .sort((a: any, b: any) => String(b.created_at).localeCompare(String(a.created_at)))
+    .slice(0, 30);
   result.payment_methods = [...methods.values()]
     .sort((a, b) => b.received_cents + b.pending_cents - (a.received_cents + a.pending_cents));
   result.trend = [...days.values()].sort((a, b) => a.date.localeCompare(b.date));
@@ -504,7 +780,6 @@ function summarizeSales(rows: any[]) {
     .sort((a, b) => b.sales_count - a.sales_count);
   return result;
 }
-
 async function readExpensesForAnalytics(userId: string, from: string, to: string) {
   const { data, error } = await admin.from("management_expenses")
     .select("expense_date, category, amount_cents")
@@ -526,7 +801,7 @@ async function readSalesForAnalytics(userId: string, from: string, to: string) {
 
   for (let offset = 0; offset < maximumRows; offset += pageSize) {
     const { data, error } = await admin.from("management_sales")
-      .select("created_at, items, subtotal_cents, discount_cents, total_cents, payment_method, payment_status")
+      .select("sale_number, created_at, items, subtotal_cents, discount_cents, total_cents, payment_method, payment_status, payment_fee_cents, net_received_cents, is_historical_import")
       .eq("created_by", userId)
       .gte("created_at", from)
       .lte("created_at", to)
@@ -736,6 +1011,17 @@ Deno.serve(async (request: Request) => {
     const now = new Date();
     const from = new Date(now.getTime() - periodDays * 86400000).toISOString();
 
+    if (body.action === "customer-rfv") {
+      const customerId = body.customer_id == null || body.customer_id === "" ? null : cleanText(body.customer_id, 64);
+      const result = await readCustomerRfv(
+        authorization.user.id,
+        cleanText(body.query, 100),
+        body.limit ?? 100,
+        customerId
+      );
+      return reply(result, 200, origin);
+    }
+
     if (body.action === "customer-insights") {
       const result = await readCustomerInsights(from, now.toISOString(), periodDays);
       return reply(result, 200, origin);
@@ -771,7 +1057,7 @@ Deno.serve(async (request: Request) => {
         summary.expense_count = expenseSummary.count;
         summary.expense_categories = expenseSummary.categories;
         summary.partial_operating_result_cents = summary.costed_paid_revenue_cents > 0
-          ? summary.gross_profit_cents - expenseSummary.total : null;
+          ? summary.gross_profit_cents - summary.costed_paid_payment_fees_cents - expenseSummary.total : null;
       }
       const businessPulse = await readBusinessSignals(currentStart.toISOString(), now.toISOString());
       return reply({
