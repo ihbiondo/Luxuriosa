@@ -98,7 +98,7 @@ def main() -> int:
             xml = ET.parse(sitemap_path)
             sitemap_urls = {
                 node.text.strip()
-                for node in xml.getroot()
+                for node in xml.getroot().iter()
                 if node.tag.endswith("loc") and node.text
             }
         except ET.ParseError as error:
@@ -132,9 +132,19 @@ def main() -> int:
             errors.append(f"{rel}: proteção visual antecipada da declaração 18+ ausente")
         if '<summary>Explorar módulos ⌄</summary>' not in page_text:
             errors.append(f"{rel}: menu de cinco módulos ausente")
-        menu_match = re.search(r'<details class="ed-menu">([\s\S]*?)</details>', page_text)
-        if not menu_match or len(re.findall(r'<a\b', menu_match.group(1))) != 5:
-            errors.append(f"{rel}: menu deve conter exatamente cinco módulos")
+        menu_match = re.search(r'<details class="ed-menu">([\\s\\S]*?)</details>', page_text)
+        required_modules = {
+            "/educacao/temas/",
+            "/educacao/enciclopedia/",
+            "/educacao/curiosidades/",
+            "/educacao/guias/",
+            "/educacao/interatividade/",
+        }
+        menu_hrefs = set(
+            re.findall(r'<a\\b[^>]*href=["\\']([^"\\']+)', menu_match.group(1))
+        ) if menu_match else set()
+        if not menu_match or not required_modules.issubset(menu_hrefs):
+            errors.append(f"{rel}: menu deve disponibilizar os cinco módulos educativos")
         if not re.search(r'<a class="ed-brand" href="/educacao/"', page_text):
             errors.append(f"{rel}: link da marca não retorna à Educação")
         if audit.forbidden_media:
