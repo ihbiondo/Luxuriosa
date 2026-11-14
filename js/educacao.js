@@ -156,6 +156,8 @@
     const tool = main.querySelector(".ed-tool");
     if (tool) {
       const section = tool.closest(".ed-section") || tool.parentElement;
+      // Em quizzes, o convite só aparece depois que todas as respostas forem conferidas.
+      if (tool.querySelector("#knowledgeQuiz")) panel.hidden = true;
       section.parentElement.insertBefore(panel, section.nextSibling);
     }
   }
