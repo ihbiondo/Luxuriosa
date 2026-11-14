@@ -9,20 +9,30 @@ const page = fs.readFileSync("pagamento-retorno.html", "utf8");
 const createOrder = fs.readFileSync("supabase/functions/create-payment-order/index.ts", "utf8");
 const testCheckout = fs.readFileSync("supabase/functions/infinitepay-test-checkout/index.ts", "utf8");
 const config = fs.readFileSync("supabase/config.toml", "utf8");
+const rateLimitMigration = fs.readFileSync("supabase/migrations/20261114110000_distributed_edge_rate_limit.sql", "utf8");
+const rateLimitExtension = fs.readFileSync("supabase/migrations/20261114113000_extend_distributed_rate_limit_scopes.sql", "utf8");
+assert.match(rateLimitMigration, /create table if not exists private\.edge_rate_limits/i);
+assert.match(rateLimitMigration, /security definer/i);
+assert.match(rateLimitMigration, /grant execute on function[\s\S]*to service_role/i);
+assert.match(rateLimitExtension, /payment_status_user/);
+assert.match(rateLimitExtension, /test_webhook_order/);
+
 
 assert.match(shared, /api\.checkout\.infinitepay\.io\/payment_check/);
 assert.match(shared, /X-Api-Key/);
 assert.match(shared, /confirm_infinitepay_payment/);
 assert.match(shared, /AbortController/);
 assert.match(webhook, /verifyAndSettlePayment/);
-assert.match(status, /verifyAndSettlePayment/);
-assert.match(status, /transaction_nsu/);
-assert.match(status, /invoiceSlug/);
-assert.match(status, /payment_transaction_nsu/);
-assert.match(status, /already_paid/);
-assert.match(page, /transaction_nsu:transactionNsu/);
-assert.match(page, /slug:invoiceSlug/);
-assert.match(page, /receipt_url:receiptUrl/);
+// Payment status is deliberately a read-only, owner-scoped endpoint.
+// Payment confirmation and operational synchronization happen only in trusted backend flows.
+assert.match(status, /admin\.auth\.getUser\(token\)/);
+assert.match(status, /\.eq\("customer_id", authData\.user\.id\)/);
+assert.match(status, /consume_edge_rate_limit/);
+assert.doesNotMatch(status, /\.rpc\(/);
+assert.match(status, /management_sales_sync_status/);
+assert.match(page, /getAccessToken\(\)/);
+assert.match(page, /"authorization":"Bearer "\+accessToken/);
+assert.match(page, /body:JSON\.stringify\(\{order_nsu:orderNsu\}\)/);
 assert.doesNotMatch(page, /payment_status\s*:\s*["']paid["']/);
 assert.match(migration, /for update/i);
 assert.match(migration, /request\.jwt\.claim\.role/);
