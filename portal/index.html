@@ -25,146 +25,70 @@
 <header class="topbar">
   <a class="brand" href="/" aria-label="Luxuriosa — página inicial">
     <img src="/img/site/logo-luxuriosa.webp" alt="Luxuriosa">
-    <span>PORTAL DO CLIENTE</span>
   </a>
+  <nav class="desktop-nav" aria-label="Navegação principal">
+    <a href="/loja.html"><span aria-hidden="true">▦</span> Explorar loja</a>
+    <a href="/login.html#account-orders-section"><span aria-hidden="true">▱</span> Meus pedidos</a>
+    <a href="/experiencias/"><span aria-hidden="true">✦</span> Experiências</a>
+    <a href="/educacao/"><span aria-hidden="true">◇</span> Educação</a>
+  </nav>
   <details class="mobile-menu">
     <summary aria-label="Abrir menu de navegação"><span class="menu-lines" aria-hidden="true"></span><span>Menu</span></summary>
     <nav class="mobile-menu-panel" aria-label="Navegação do portal">
-      <a class="mobile-main-link mobile-main-link--featured" href="/experiencias/">✦ Experiências</a>
-      <a href="/experiencias/?tipo=quiz#experienceGrid">Quizzes e testes</a>
-      <a href="/experiencias/?tipo=couple#experienceGrid">A dois</a>
-      <a href="/experiencias/?tipo=challenge#experienceGrid">Desafios</a>
-      <a href="/experiencias/?tipo=astrology#experienceGrid">Astrologia e signos</a>
-      <a href="/experiencias/?tipo=favorites#experienceGrid">Favoritos</a>
-      <div class="mobile-menu-divider"></div>
-      <a class="mobile-main-link" href="/educacao/">Educação</a>
-      <a href="/educacao/temas/">Temas educativos</a>
-      <a href="/educacao/enciclopedia/">Enciclopédia</a>
-      <a href="/educacao/curiosidades/">Curiosidades</a>
-      <a href="/educacao/guias/">Guias</a>
-      <div class="mobile-menu-divider"></div>
-      <a href="/clube.html">Clube de Vantagens</a>
-      <a href="/login.html#account-orders-section">Meus pedidos</a>
+      <a class="mobile-main-link mobile-main-link--featured" href="/loja.html">▦ Explorar loja</a>
+      <a href="/login.html#account-orders-section">▱ Meus pedidos</a>
+      <a href="/experiencias/">✦ Experiências</a>
+      <a href="/educacao/">◇ Educação</a>
+      <a href="/clube.html">♛ Clube de Vantagens</a>
       <a href="/login.html#account-profile-section">Minha conta</a>
       <a href="/login.html#account-consent-section">Privacidade</a>
+      <a href="/atendimento.html">Atendimento</a>
     </nav>
   </details>
-  <div class="top-actions">
-    <a class="store-link" href="/loja.html"><span class="store-link-icon" aria-hidden="true">⌕</span> Explorar loja <span aria-hidden="true">↗</span></a>
-    <button id="portalSignOut" type="button">Sair da conta</button>
-  </div>
+  <div class="top-actions"><a class="account-link" href="/login.html#account-profile-section">Minha conta</a><button id="portalSignOut" type="button">Sair</button></div>
 </header>
-<div class="layout">
-  <aside class="sidebar" aria-label="Navegação do portal">
-    <div class="sidebar-heading">
-      <small>SEU ESPAÇO</small>
-      <strong id="portalSidebarName">Minha conta</strong>
+<main id="portalMain" class="main">
+  <section class="welcome" aria-labelledby="welcomeTitle">
+    <div class="welcome-copy">
+      <span class="eyebrow">SEU ESPAÇO NA LUXURIOSA</span>
+      <h1 id="welcomeTitle">Olá, <span id="portalGreetingName">por aqui</span>.</h1>
+      <p>Que bom ter você por perto. Descubra, aprenda e aproveite no seu ritmo.</p>
     </div>
-    <nav class="side-nav" aria-label="Seções do portal">
-      <a class="nav-home active" href="/portal/" aria-current="page"><span aria-hidden="true">⌂</span>Início</a>
-      <details class="nav-group nav-group--experiences" open>
-        <summary><span class="nav-symbol" aria-hidden="true">✦</span><span>Experiências</span><span class="nav-chevron" aria-hidden="true">⌄</span></summary>
-        <div class="nav-submenu">
-          <a href="/experiencias/">Todas as experiências</a>
-          <a href="/experiencias/?tipo=quiz#experienceGrid">Quizzes e testes</a>
-          <a href="/experiencias/?tipo=couple#experienceGrid">A dois</a>
-          <a href="/experiencias/?tipo=challenge#experienceGrid">Desafios</a>
-          <a href="/experiencias/?tipo=astrology#experienceGrid">Astrologia e signos</a>
-          <a href="/experiencias/?tipo=favorites#experienceGrid">Favoritos salvos</a>
-        </div>
-      </details>
-      <details class="nav-group nav-group--education">
-        <summary><span class="nav-symbol" aria-hidden="true">◇</span><span>Educação</span><span class="nav-chevron" aria-hidden="true">⌄</span></summary>
-        <div class="nav-submenu">
-          <a href="/educacao/">Visão geral</a>
-          <a href="/educacao/temas/">Temas educativos</a>
-          <a href="/educacao/enciclopedia/">Enciclopédia</a>
-          <a href="/educacao/curiosidades/">Curiosidades</a>
-          <a href="/educacao/guias/">Guias</a>
-        </div>
-      </details>
-      <a href="/clube.html"><span aria-hidden="true">♛</span>Clube de Vantagens</a>
-      <div class="nav-divider"></div>
-      <a href="/login.html#account-orders-section"><span aria-hidden="true">▤</span>Meus pedidos</a>
-      <a href="/login.html#account-profile-section"><span aria-hidden="true">♙</span>Minha conta</a>
-      <a href="/login.html#account-consent-section"><span aria-hidden="true">♡</span>Privacidade</a>
-    </nav>
-    <a class="help" href="/atendimento.html">Precisa de ajuda? <span aria-hidden="true">→</span></a>
-  </aside>
-  <main id="portalMain" class="main">
-    <section class="welcome" aria-labelledby="welcomeTitle">
-      <div class="welcome-copy">
-        <span class="eyebrow">SEU ESPAÇO NA LUXURIOSA</span>
-        <h1 id="welcomeTitle">Olá, <span id="portalGreetingName">por aqui</span>.</h1>
-        <p>Um lugar leve para descobrir, aprender e aproveitar no seu ritmo.</p>
-        <a class="primary" href="/experiencias/">Explorar experiências <span aria-hidden="true">→</span></a>
-      </div>
-      <div class="welcome-art" aria-hidden="true"><span>✦</span></div>
-    </section>
+    <span class="welcome-mark" aria-hidden="true">✦</span>
+  </section>
 
-    <section class="priority-actions" aria-label="Acessos principais">
-      <a class="priority-card priority-card--store" href="/loja.html">
-        <span class="priority-icon" aria-hidden="true">
-          <svg viewBox="0 0 48 48" focusable="false"><path d="M7 20.5 10.5 8h27L41 20.5v3a6 6 0 0 1-6 6 6 6 0 0 1-5-2.7 6 6 0 0 1-10 0 6 6 0 0 1-5 2.7 6 6 0 0 1-6-6v-3Z"/><path d="M10 29v11h28V29M19 40V28h10v12M8 20h32"/></svg>
-        </span>
-        <span class="priority-copy">
-          <span class="priority-kicker">DESCUBRA A COLEÇÃO</span>
-          <strong>Explorar produtos</strong>
-          <span class="priority-description">Conheça a loja e encontre algo especial para você.</span>
-          <span class="priority-action">Ir para a loja <span aria-hidden="true">→</span></span>
-        </span>
+  <section class="priority-section" aria-label="Acessos principais">
+    <a class="priority-card priority-card--store" href="/loja.html">
+      <span class="priority-icon" aria-hidden="true">
+        <svg viewBox="0 0 48 48" focusable="false"><path d="M7 20.5 10.5 8h27L41 20.5v3a6 6 0 0 1-6 6 6 6 0 0 1-5-2.7 6 6 0 0 1-10 0 6 6 0 0 1-5 2.7 6 6 0 0 1-6-6v-3Z"/><path d="M10 29v11h28V29M19 40V28h10v12M8 20h32"/></svg>
+      </span>
+      <span class="priority-copy"><span class="priority-kicker">DESCUBRA A COLEÇÃO</span><strong>Explorar produtos</strong><span class="priority-description">Encontre novidades e escolhas especiais para você.</span><span class="priority-action">Conhecer a loja <span aria-hidden="true">→</span></span></span>
+    </a>
+    <a class="priority-card priority-card--orders" href="/login.html#account-orders-section">
+      <span class="priority-icon" aria-hidden="true">
+        <svg viewBox="0 0 48 48" focusable="false"><path d="M12 16h24l2.5 25h-29L12 16Z"/><path d="M17 18v-5a7 7 0 0 1 14 0v5M18 26h12M18 32h8"/></svg>
+      </span>
+      <span class="priority-copy"><span class="priority-kicker">ACOMPANHE SUAS COMPRAS</span><strong>Meus pedidos</strong><span class="priority-description">Veja o andamento e os detalhes das suas compras.</span><span class="priority-action">Consultar pedidos <span aria-hidden="true">→</span></span></span>
+    </a>
+  </section>
+
+  <section class="discover-section" aria-labelledby="discoverTitle">
+    <div class="section-heading"><span class="eyebrow">UM UNIVERSO PARA DESCOBRIR</span><h2 id="discoverTitle">Explore também</h2></div>
+    <div class="secondary-grid">
+      <a class="secondary-card secondary-card--experience" href="/experiencias/">
+        <span class="secondary-icon" aria-hidden="true">✦</span><span class="secondary-copy"><strong>Experiências</strong><span>Quizzes, descobertas e momentos a dois.</span></span><span class="secondary-arrow" aria-hidden="true">→</span>
       </a>
-      <a class="priority-card priority-card--orders" href="/login.html#account-orders-section">
-        <span class="priority-icon" aria-hidden="true">
-          <svg viewBox="0 0 48 48" focusable="false"><path d="M12 16h24l2.5 25h-29L12 16Z"/><path d="M17 18v-5a7 7 0 0 1 14 0v5M18 26h12M18 32h8"/></svg>
-        </span>
-        <span class="priority-copy">
-          <span class="priority-kicker">ACOMPANHE SUAS COMPRAS</span>
-          <strong>Meus pedidos</strong>
-          <span class="priority-description">Consulte compras, pagamentos e atualizações do seu pedido.</span>
-          <span class="priority-action">Acessar pedidos <span aria-hidden="true">→</span></span>
-        </span>
+      <a class="secondary-card secondary-card--education" href="/educacao/">
+        <span class="secondary-icon" aria-hidden="true">◇</span><span class="secondary-copy"><strong>Educação e bem-estar</strong><span>Conteúdos, guias e informação confiável.</span></span><span class="secondary-arrow" aria-hidden="true">→</span>
       </a>
-    </section>
-
-    <section class="discover-section" aria-labelledby="discoverTitle">
-      <div class="section-heading">
-        <div>
-          <span class="eyebrow">ESCOLHA SEU CAMINHO</span>
-          <h2 id="discoverTitle">Por onde começar?</h2>
-        </div>
-      </div>
-      <div class="feature-grid">
-        <a class="feature feature--experiences" href="/experiencias/">
-          <span class="feature-icon" aria-hidden="true">✦</span>
-          <span class="feature-kicker">EM DESTAQUE</span>
-          <strong>Experiências</strong>
-          <p>Quizzes, momentos a dois, desafios e descobertas.</p>
-          <span class="feature-link">Explorar agora <span aria-hidden="true">→</span></span>
-        </a>
-        <a class="feature feature--education" href="/educacao/">
-          <span class="feature-icon" aria-hidden="true">◇</span>
-          <span class="feature-kicker">NO SEU TEMPO</span>
-          <strong>Educação</strong>
-          <p>Informações, guias e curiosidades em linguagem clara.</p>
-          <span class="feature-link">Consultar conteúdos <span aria-hidden="true">→</span></span>
-        </a>
-      </div>
-    </section>
-
-    <section class="quick-section" aria-labelledby="quickTitle">
-      <div class="section-heading">
-        <div><span class="eyebrow">ACESSO RÁPIDO</span><h2 id="quickTitle">Sua conta</h2></div>
-      </div>
-      <div class="quick-links">
-        <a href="/login.html#account-orders-section"><span class="quick-icon" aria-hidden="true">▤</span><span>Meus pedidos</span><span class="quick-arrow" aria-hidden="true">→</span></a>
-        <a href="/login.html#account-profile-section"><span class="quick-icon" aria-hidden="true">♙</span><span>Meus dados</span><span class="quick-arrow" aria-hidden="true">→</span></a>
-        <a href="/clube.html"><span class="quick-icon" aria-hidden="true">♛</span><span>Clube de Vantagens</span><span class="quick-arrow" aria-hidden="true">→</span></a>
-      </div>
-    </section>
-    <p class="footnote">Suas escolhas são opcionais. Gerencie seus dados e autorizações na área da conta.</p>
-  </main>
-</div>
+      <a class="secondary-card secondary-card--club" href="/clube.html">
+        <span class="secondary-icon" aria-hidden="true">♛</span><span class="secondary-copy"><strong>Clube de Vantagens</strong><span>Conheça os benefícios disponíveis.</span></span><span class="secondary-arrow" aria-hidden="true">→</span>
+      </a>
+    </div>
+  </section>
+  <p class="footnote">Sua privacidade importa. Você pode revisar seus dados e autorizações a qualquer momento na área da conta.</p>
+  <span id="portalSidebarName" hidden aria-hidden="true">Minha conta</span>
+</main>
 <footer class="footer"><a href="/">Luxuriosa</a><span>Sinta-se ainda mais você.</span><a href="/privacidade.html">Privacidade</a></footer>
 </div>
 </body>
