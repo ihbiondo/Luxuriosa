@@ -26,11 +26,13 @@ function readFavorites(){
   }catch(_){return[];}
 }
 function renderFavorites(){
+  const names={discovery:"Descubra seu estilo",connection:"Conexão a dois",curiosity:"Mitos ou verdades",challenge:"Pequenas descobertas",astrology:"Astrologia e signos"};
   document.querySelectorAll("[data-favorite]").forEach(button=>{
-    const saved=favorites.includes(button.dataset.favorite);
+    const id=button.dataset.favorite;
+    const saved=favorites.includes(id);
     button.setAttribute("aria-pressed",String(saved));
     button.textContent=saved?"♥":"♡";
-    button.setAttribute("aria-label",(saved?"Remover dos favoritos: ":"Salvar: ")+button.dataset.favorite);
+    button.setAttribute("aria-label",(saved?"Remover dos favoritos: ":"Salvar nos favoritos: ")+(names[id]||"experiência"));
   });
   favoriteCount.textContent=String(favorites.length);
 }
