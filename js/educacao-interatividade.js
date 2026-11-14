@@ -34,15 +34,18 @@
         feedback.textContent = (correct ? "Correto. " : "Para revisar. ") + question.dataset.explain;
       });
 
+      const journey = document.querySelector(".ed-next-step");
       if (answered === questions.length) {
         result.textContent = "Resultado: " + score + " de " + questions.length +
           " respostas corretas. " +
           (score === questions.length
             ? "Ótimo trabalho."
             : "Revise as explicações para consolidar o conteúdo.");
+        if (journey) journey.hidden = false;
       } else {
         result.textContent = "Você respondeu " + answered + " de " + questions.length +
           " questões. Complete as respostas para conferir sua pontuação.";
+        if (journey) journey.hidden = true;
       }
     });
 
@@ -55,6 +58,8 @@
         feedback.textContent = "";
       });
       result.textContent = "";
+      const journey = document.querySelector(".ed-next-step");
+      if (journey) journey.hidden = true;
     });
   }
 
