@@ -132,6 +132,13 @@
       appendTextElement(details, "p", "sign-card-detail", rulers);
 
       card.append(details);
+
+      const profileLink = document.createElement("a");
+      profileLink.className = "sign-card-link";
+      profileLink.href = "/experiencias/signos/" + sign.id + ".html";
+      profileLink.textContent = "Conhecer " + sign.name + " →";
+      card.append(profileLink);
+
       grid.append(card);
     });
   }
