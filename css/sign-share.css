@@ -54,3 +54,14 @@
  .share-format-picker button,.share-actions button,.share-actions a{font-size:12px}
  .share-guidance{font-size:11px!important}
 }
+
+
+/* Controles de formato e compartilhamento: alvos confortáveis */
+.share-format-picker button{min-height:44px;padding-inline:15px;font-size:11px}
+.share-actions button,.share-actions a{min-height:46px;display:inline-flex;align-items:center;justify-content:center}
+@media(max-width:560px){
+ .share-format-picker{gap:9px}
+ .share-format-picker button{min-height:46px;font-size:12px}
+ .share-actions button,.share-actions a{min-height:48px;font-size:12px}
+ .share-status{font-size:13px!important;line-height:1.65}
+}

@@ -131,3 +131,21 @@
  .result-copy>p,.result-copy .result-description{font-size:13px}
  .sign-card p,.sign-card-details p{font-size:12px}
 }
+
+
+/* Acessibilidade do calculador, catálogo e detalhes expansíveis */
+.sign-form label,.compatibility-form label,.solar-input-grid label,.timezone-settings label{font-size:13px}
+.form-row input,.solar-input-grid input,.timezone-settings input,.compatibility-form select{min-height:48px;font-size:16px}
+.form-row .primary,.sign-submit{min-height:48px}
+.sign-card-details summary{min-height:44px;display:flex;align-items:center;font-size:11px}
+.sign-card-link{min-height:44px;align-items:center;font-size:11px}
+.sign-card{min-height:145px}
+@media(max-width:560px){
+ .sign-card{min-height:140px;padding:14px}
+ .sign-card p,.sign-card-details p{font-size:13px;line-height:1.75}
+ .sign-card-details summary{font-size:12px}
+ .sign-card-link{font-size:12px}
+ .solar-input-grid label,.timezone-settings label,.sign-form label,.compatibility-form label{font-size:14px}
+ .privacy-note,.zodiac-disclaimer{font-size:13px;line-height:1.75}
+ .catalog-count{font-size:11px}
+}

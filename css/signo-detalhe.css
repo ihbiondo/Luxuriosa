@@ -109,3 +109,16 @@
  .sign-detail-panel p,.sign-deep-content .sign-growth-panel p,.sign-detail-panel ul{font-size:13px;line-height:1.8}
  .sign-classification p{font-size:13px;line-height:1.75}
 }
+
+
+/* Ações e navegação acessíveis nas páginas individuais */
+.sign-detail-actions .secondary,.sign-detail-actions button.secondary{min-height:44px;display:inline-flex;align-items:center;padding:8px 10px;font-size:12px}
+.sign-related-link{min-height:76px}
+.related-copy small{font-size:11px;line-height:1.45}
+@media(max-width:700px){
+ .sign-detail-section>p,.sign-deep-content>p{font-size:14px;line-height:1.9}
+ .sign-detail-panel ul,.sign-detail-panel p,.sign-deep-content .sign-growth-panel p{font-size:14px;line-height:1.8}
+ .sign-classification p{font-size:13px;line-height:1.8}
+ .sign-detail-meta span,.sign-keyword{font-size:11px}
+ .sign-detail-actions a,.sign-detail-actions button{min-height:44px}
+}

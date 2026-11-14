@@ -426,3 +426,26 @@ body{background:radial-gradient(ellipse at 10% 5%,rgba(113,69,132,.38),transpare
  .ed-footer-links{gap:11px 15px}
 }
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{transition:none!important}}
+
+
+/* Acessibilidade consistente para navegação, leitura e atividades */
+.ed-menu nav a{min-height:44px;display:inline-flex;align-items:center;padding:7px 4px}
+.ed-related a{min-height:44px;display:inline-flex;align-items:center;padding:7px 5px}
+.ed-footer-links a{min-height:42px;display:inline-flex;align-items:center}
+.ed-button,.ed-age-confirm{min-height:48px}
+.ed-search input{min-height:48px;font-size:16px}
+.ed-tool select{min-height:48px;font-size:16px}
+.ed-option,.ed-check{min-height:48px}
+@media(max-width:820px){
+ .ed-menu nav a{min-height:46px;padding:9px 8px;font-size:13px}
+}
+@media(max-width:540px){
+ .ed-article-body{font-size:16px;line-height:1.9}
+ .ed-article-body h2{font-size:25px}
+ .ed-article-body h3{font-size:16px}
+ .ed-meta{font-size:12px;line-height:1.6}
+ .ed-footer-links a{min-height:44px;font-size:12px}
+ .ed-related a{font-size:13px}
+ .ed-menu summary{min-height:44px;display:flex;align-items:center;font-size:14px}
+ .ed-age-exit{min-height:44px;display:flex;align-items:center;justify-content:center}
+}
