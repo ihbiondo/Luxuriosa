@@ -149,3 +149,71 @@ body{background:radial-gradient(ellipse at 78% 5%,rgba(178,137,196,.18),transpar
 .secondary-card--club .secondary-icon{background:#faf5e9;color:#a17d42}
 :focus-visible{outline-color:#f04fa8}
 
+
+
+/* Tema de marca das áreas autenticadas — inspirado nas artes aprovadas */
+:root{
+ --page:#160d1a;--white:#25172d;--ice:#2b1b34;--lav:#4a3154;--lav2:#64416b;--lavdeep:#ead8f3;
+ --pink:#f04fa8;--pinksoft:#48203d;--gold:#d3b477;--ink:#f7effa;--muted:#cfbfd7;--line:rgba(230,207,241,.19)
+}
+body{background:radial-gradient(ellipse at 9% 7%,rgba(114,67,132,.42),transparent 38%),radial-gradient(ellipse at 92% 80%,rgba(224,54,151,.13),transparent 34%),linear-gradient(145deg,#130b17,#24132c 54%,#170e1c);color:var(--ink)}
+.loading{background:transparent;color:#cfbfd7}.loading strong{color:#f4e9fa}
+.topbar{background:rgba(27,15,33,.92);border-color:rgba(230,207,241,.16);backdrop-filter:blur(14px)}
+.desktop-nav a{color:#dfd0e7}.desktop-nav a span{color:#f05cab}
+.desktop-nav a:hover,.account-link:hover{color:#ff80c3}
+.account-link{color:#e2cbed}
+.top-actions button{border-color:rgba(230,207,241,.24);background:#2c1b35;color:#f0e3f6}
+.top-actions button:hover{border-color:#f04fa8;background:#40203a}
+.mobile-menu>summary{border-color:rgba(230,207,241,.24);background:#2c1b35;color:#f0dff7}
+.mobile-menu-panel{border-color:rgba(230,207,241,.2);background:#25162d;box-shadow:0 18px 42px rgba(0,0,0,.4)}
+.mobile-menu-panel a{color:#e9ddef}
+.mobile-menu-panel a:hover,.mobile-menu-panel .mobile-main-link--featured{background:rgba(240,79,168,.15);color:#ff88c8}
+.main{color:var(--ink)}
+.welcome{min-height:186px;border-color:rgba(240,79,168,.25);background:radial-gradient(ellipse at 85% 50%,rgba(226,63,155,.17),transparent 38%),linear-gradient(112deg,#26152f,#35203f 62%,#29182f);box-shadow:0 16px 46px rgba(0,0,0,.18)}
+.welcome .eyebrow{color:#d7b8e5}
+.welcome h1{color:#f7effa}
+.welcome h1 span{color:#ff85c5}
+.welcome p{color:#d1c1d9}
+.welcome-art{width:154px;height:154px;flex:0 0 154px;overflow:hidden;border:1px solid rgba(240,79,168,.35);border-radius:17px;background:#1b1020;box-shadow:0 0 28px rgba(240,79,168,.14),0 12px 32px rgba(0,0,0,.26)}
+.welcome-art img{display:block;width:100%;height:100%;object-fit:cover}
+.priority-card{border-color:rgba(230,207,241,.17);background:linear-gradient(130deg,#2b1a34,#21142a);box-shadow:0 12px 30px rgba(0,0,0,.18)}
+.priority-card:hover{border-color:rgba(240,79,168,.45);box-shadow:0 14px 34px rgba(0,0,0,.27)}
+.priority-card--store{border-color:rgba(240,79,168,.35);background:linear-gradient(120deg,#3b1d36,#27162f 78%)}
+.priority-card--orders{border-color:rgba(205,177,224,.26);background:linear-gradient(120deg,#33213d,#22162b 78%)}
+.priority-icon{border-color:rgba(240,79,168,.34);background:rgba(240,79,168,.1);color:#ff73bd}
+.priority-card--orders .priority-icon{border-color:rgba(214,190,231,.32);background:rgba(213,180,230,.1);color:#e5c9f0}
+.priority-kicker{color:#d5b8e2}
+.priority-copy strong{color:#f6eefa}
+.priority-description{color:#d0c1d7}
+.priority-action{color:#ff84c5}
+.priority-card--orders .priority-action{color:#e5c9f0}
+.discover-section .section-heading h2{color:#f5eafa}
+.section-heading .eyebrow{color:#d5b8e2}
+.secondary-card{border-color:rgba(230,207,241,.17);background:linear-gradient(130deg,#2a1a33,#21152a)}
+.secondary-card:hover{border-color:rgba(240,79,168,.38);background:#321d37}
+.secondary-icon{background:rgba(203,168,221,.13);color:#e4c8f0}
+.secondary-card--experience .secondary-icon{background:rgba(240,79,168,.13);color:#ff83c4}
+.secondary-card--club .secondary-icon{background:rgba(211,180,119,.13);color:#e0c48b}
+.secondary-copy strong{color:#f3e7f8}
+.secondary-copy>span{color:#cdbed5}
+.secondary-arrow{color:#f08abd}
+.footnote{color:#c5b5cd}
+.footer{border-color:rgba(230,207,241,.15);background:rgba(25,14,30,.74);color:#c7b8cf}
+.footer a:first-child{color:#f4cbec}
+:focus-visible{outline:3px solid #ff70ba;outline-offset:4px}
+@media(max-width:700px){
+ .welcome{min-height:136px;padding:18px 16px;gap:12px}
+ .welcome-art{width:104px;height:104px;flex-basis:104px;border-radius:13px}
+ .welcome h1{font-size:30px}
+ .welcome p{font-size:11px}
+ .priority-card{background:linear-gradient(130deg,#2b1a34,#21142a)}
+ .priority-card--store{background:linear-gradient(120deg,#3b1d36,#27162f)}
+ .priority-card--orders{background:linear-gradient(120deg,#33213d,#22162b)}
+}
+@media(max-width:390px){
+ .welcome{gap:9px;padding:16px 12px}
+ .welcome-art{width:84px;height:84px;flex-basis:84px}
+ .welcome h1{font-size:26px}
+ .welcome p{font-size:10px}
+}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{transition:none!important}}
