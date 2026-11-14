@@ -119,6 +119,12 @@ async function authorize(request: Request) {
   if (permissionError) return { error: "Não foi possível validar a permissão administrativa.", status: 500 };
   if (permission?.role !== "admin") return { error: "Acesso restrito à administração.", status: 403 };
 
+  const { data: assurance, error: assuranceError } = await admin.auth.mfa.getAuthenticatorAssuranceLevel(token);
+  if (assuranceError) return { error: "Não foi possível validar o segundo fator de autenticação.", status: 503 };
+  if (assurance.currentLevel !== "aal2") {
+    return { error: "Confirme o código do seu autenticador para continuar.", status: 403, code: "mfa_required" };
+  }
+
   return { user: data.user };
 }
 
