@@ -154,3 +154,7 @@ button{font:inherit}
  html{scroll-behavior:auto}
  *,*:before,*:after{transition:none!important}
 }
+/* Pequenos textos seguem legíveis no fundo claro. */
+.footnote{color:#6f6576}
+.footer{color:#706676}
+.footer a:last-child{color:#655a70}
