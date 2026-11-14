@@ -141,7 +141,7 @@ def main() -> int:
             "/educacao/interatividade/",
         }
         menu_hrefs = set(
-            re.findall(r'<a\\b[^>]*href=["\\']([^"\\']+)', menu_match.group(1))
+            re.findall(r"""<a\b[^>]*href=["']([^"']+)""", menu_match.group(1))
         ) if menu_match else set()
         if not menu_match or not required_modules.issubset(menu_hrefs):
             errors.append(f"{rel}: menu deve disponibilizar os cinco módulos educativos")
