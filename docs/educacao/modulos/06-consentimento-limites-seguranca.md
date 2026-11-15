@@ -1,6 +1,6 @@
 # Módulo 6 — Consentimento, limites e segurança
 
-**Status:** rascunho editorial v0.1 — material interno para revisão; não publicado  
+**Status:** rascunho editorial v0.2 — material interno para revisão; não publicado  
 **Público:** pessoas adultas  
 **Extensão planejada:** cerca de 10 páginas equivalentes  
 **Revisão jurídica e clínica externa:** não realizada
@@ -164,12 +164,13 @@ Conforme a necessidade, os cuidados podem incluir:
 - exames e acompanhamento;
 - informação sobre direitos e serviços disponíveis.
 
-Algumas medidas são sensíveis ao tempo. A avaliação para PEP contra HIV deve ocorrer o mais rápido possível — preferencialmente nas primeiras duas horas, conforme orientação do Ministério da Saúde — e, no máximo, em até 72 horas após possível exposição. A indicação depende de avaliação do serviço de saúde; não espere sintomas nem tente decidir sozinho se a profilaxia é necessária. A indicação depende de avaliação do serviço de saúde; não espere sintomas nem tente decidir sozinho se a profilaxia é necessária. A equipe também pode avaliar contracepção de emergência, outras profilaxias e seguimento. Mesmo se já passou esse prazo, procure atendimento: ainda pode haver cuidados importantes.
+Algumas medidas são sensíveis ao tempo. A avaliação para PEP-HIV deve ocorrer o mais rápido possível — preferencialmente nas primeiras duas horas, conforme orientação do Ministério da Saúde — e, no máximo, em até 72 horas após possível exposição. A indicação depende de avaliação do serviço de saúde; não espere sintomas nem tente decidir sozinho se a profilaxia é necessária. A equipe também pode avaliar contracepção de emergência, prevenção de outras IST e hepatite B, testagem e seguimento. O limite de 72 horas é específico para iniciar PEP-HIV, não para todos os cuidados pós-exposição. Mesmo se já passou esse prazo, procure atendimento: ainda pode haver cuidados importantes. Para detalhes clínicos, consulte o Módulo 5; para direitos, acolhimento e rede de proteção, consulte o Módulo 11.
 
 O atendimento deve respeitar privacidade, autonomia e decisões da pessoa, com explicação clara dos procedimentos. Em situações concretas, peça ao serviço que explique quais informações serão registradas e quais comunicações são obrigatórias.
 
 Para informações de apoio e encaminhamento, consulte:
 - [Ministério da Saúde — Violência sexual](https://www.gov.br/saude/pt-br/assuntos/saude-de-a-a-z/s/saude-da-mulher/saude-sexual-e-reprodutiva/violencia-sexual/violencia-sexual)
+- [Ministério da Saúde — Nota Técnica nº 222/2025 sobre prevenção pós-exposição após violência sexual](https://azt.aids.gov.br/documentos/nota_tecnica/Nota%20Tecnica%20222.pdf)
 - [Lei nº 15.516/2026 — texto legal](https://normas.leg.br/?urn=urn%3Alex%3Abr%3Afederal%3Alei%3A2026-09-22%3B15516)
 - [Ministério das Mulheres — Lei do Minuto Seguinte](https://www.gov.br/mulheres/pt-br/central-de-conteudos/noticias/2026/agosto-defeso-eleitoral/lei-do-minuto-seguinte-conheca-os-direitos-de-quem-sofre-violencia-sexual)
 - [Guia prático de cuidado à mulher em situação de violência — Ministério da Saúde (2025)](https://www.gov.br/saude/pt-br/centrais-de-conteudo/publicacoes/guias-e-manuais/2025/guia-pratico-de-cuidado-a-mulher-em-situacao-de-violencia.pdf)
