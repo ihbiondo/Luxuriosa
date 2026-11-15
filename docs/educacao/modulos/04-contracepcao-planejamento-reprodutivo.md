@@ -1,6 +1,6 @@
 # Módulo 4 — Contracepção e planejamento reprodutivo
 
-**Status:** rascunho editorial v0.1 — material interno para revisão; não publicado  
+**Status:** rascunho editorial v0.2 — revisão documental realizada em 15/11/2026; material interno, não publicado  
 **Público:** pessoas adultas  
 **Função na biblioteca:** apresentar categorias de métodos, eficácia, uso, limitações, acesso no SUS e decisão informada  
 **Extensão planejada:** cerca de 10 páginas equivalentes  
@@ -59,13 +59,13 @@ Pode aumentar o fluxo e as cólicas, especialmente nos primeiros meses, embora a
 
 Libera levonorgestrel no útero. Seu efeito inclui espessamento do muco cervical e alterações do endométrio; alguns modelos também reduzem a ovulação em parte das usuárias. Pode reduzir o fluxo e as cólicas, e algumas pessoas deixam de menstruar. Isso não significa que o sangue fique acumulado no útero.
 
-A duração depende do modelo e da indicação aprovada. Não se deve generalizar o tempo de uso de um dispositivo para todos os modelos.
+A duração depende do modelo, da bula brasileira vigente e da finalidade de uso. Para o sistema intrauterino de levonorgestrel 52 mg (Mirena), a atualização regulatória brasileira ampliou para até oito anos o uso exclusivamente contraceptivo. Esse prazo não deve ser aplicado automaticamente a outros modelos, concentrações ou indicações clínicas; por exemplo, o tempo aprovado para controle de sangramento ou outras condições pode ser diferente. Confirmar a bula vigente e a indicação individual antes de orientar troca ou manutenção.
 
 ### 3.3 Implante subdérmico
 
 É uma pequena haste colocada sob a pele do braço por profissional habilitado. Libera progestagênio e inibe a ovulação na maioria dos ciclos, além de alterar o muco cervical. Tem alta eficácia e não exige ação diária.
 
-Sangramento irregular ou imprevisível é um efeito possível e pode ser motivo de desconforto. Outros efeitos variam. A colocação e retirada são procedimentos de saúde; não tente manipular ou remover o implante em casa. A duração depende do produto e da diretriz vigente.
+Sangramento irregular ou imprevisível é um efeito possível e pode ser motivo de desconforto. Outros efeitos variam. A colocação e retirada são procedimentos de saúde; não tente manipular ou remover o implante em casa. Em 26/10/2026, a Anvisa aprovou a ampliação da duração contraceptiva do implante de etonogestrel 68 mg (Implanon NXT) de três para até cinco anos de uso contínuo do mesmo dispositivo. A atualização também passou a admitir inserção imediatamente após o parto e após aborto, conforme avaliação e condições da bula. Não generalizar esses prazos para outros implantes, produtos ou indicações; conferir a bula vigente e a orientação do serviço.
 
 ## 4. Métodos hormonais de curta duração
 
@@ -119,23 +119,23 @@ No Brasil, o Ministério da Saúde descreve o levonorgestrel oral e o DIU de cob
 
 A contracepção oral de emergência atua principalmente atrasando ou impedindo a ovulação. Não interrompe uma gestação já estabelecida e não deve ser confundida com aborto. O DIU de cobre também pode ser usado como contracepção de emergência e oferece contracepção contínua após a colocação.
 
-Depois de usar contracepção de emergência, procure orientação sobre quando iniciar ou retomar o método regular e quando fazer teste de gravidez. A pílula de emergência não protege relações posteriores no mesmo ciclo e não previne IST.
+Depois de usar contracepção de emergência, procure orientação sobre quando iniciar ou retomar o método regular e quando fazer teste de gravidez. A pílula de emergência não protege relações posteriores no mesmo ciclo e não previne IST. Se a situação envolveu violência sexual, a avaliação deve considerar também prevenção de IST, HIV, hepatite B, cuidados para hepatite C, vacinação, acolhimento e seguimento. O limite de 72 horas é específico para iniciar PEP-HIV; ultrapassá-lo não encerra o acesso aos demais cuidados. Consulte os Módulos 5 e 11.
 
 ## 8. Métodos definitivos
 
 Laqueadura e vasectomia são procedimentos cirúrgicos destinados à esterilização. Devem ser considerados como decisões pessoais, livres e informadas, porque a reversão não é garantida e pode não ser possível.
 
-A Lei nº 14.443/2022 alterou critérios brasileiros: a esterilização voluntária pode ser realizada em pessoas com capacidade civil plena que atendam aos critérios legais, incluindo idade mínima de 21 anos ou pelo menos dois filhos vivos, observadas as condições da lei. O prazo mínimo entre manifestação da vontade e cirurgia é de 60 dias. A autorização do cônjuge não é exigida. A regra legal e os fluxos do SUS devem ser confirmados na fonte oficial antes de qualquer orientação individual.
+A Lei nº 14.443/2022 alterou critérios brasileiros: a esterilização voluntária pode ser realizada em pessoas com capacidade civil plena que atendam aos critérios legais, incluindo idade superior a 21 anos ou pelo menos dois filhos vivos, observadas as condições da lei. O prazo mínimo entre manifestação da vontade e cirurgia é de 60 dias. A autorização do cônjuge não é exigida. A regra legal e os fluxos do SUS devem ser confirmados na fonte oficial antes de qualquer orientação individual.
 
 Vasectomia não produz esterilidade imediata. É necessário seguir orientações clínicas e realizar exame de controle até confirmação de ausência de espermatozoides no sêmen. Até essa confirmação, deve-se usar outro método. Laqueadura também não elimina risco de gravidez ectópica se ocorrer falha; sintomas de possível gestação após esterilização exigem avaliação.
 
 ## 9. Acesso pelo SUS no Brasil
 
-O Ministério da Saúde informa oferta de métodos na Atenção Primária e em serviços especializados, incluindo preservativos internos e externos, DIU de cobre, contraceptivos orais, injetáveis, pílula de emergência e implante subdérmico, além de laqueadura e vasectomia conforme critérios e fluxos aplicáveis.
+O Ministério da Saúde informa oferta de métodos na Atenção Primária e em serviços especializados, incluindo preservativos internos e externos, DIU de cobre, contraceptivos orais, injetáveis, contracepção oral de emergência e implante subdérmico de etonogestrel 68 mg, além de laqueadura e vasectomia conforme critérios e fluxos aplicáveis. A incorporação nacional do implante foi acompanhada por notas técnicas de programação, distribuição, qualificação profissional e monitoramento, inclusive as Notas Técnicas Conjuntas nº 198/2026 e nº 343/2026. Isso não significa estoque imediato em toda UBS: a disponibilidade local depende da remessa, organização da rede, qualificação de profissionais e gestão municipal.
 
 A disponibilidade concreta pode depender de implantação local, estoque, treinamento da equipe e encaminhamento. A UBS é um ponto de partida para orientação, avaliação e encaminhamento. A pessoa tem direito a receber informação sobre opções, benefícios, riscos, possíveis efeitos e alternativas, sem discriminação ou coerção.
 
-A oferta do método não deve ser condicionada a exigências sem base legal ou técnica. A Nota Técnica nº 2/2025 do Ministério da Saúde reforça o acesso de adolescentes a informações, atendimento e contracepção sem barreiras indevidas, respeitando avaliação clínica e direitos aplicáveis.
+A oferta do método não deve ser condicionada a exigências sem base legal ou técnica. A Nota Técnica nº 2/2025 do Ministério da Saúde reforça o acesso de adolescentes a informações, atendimento e contracepção sem barreiras indevidas, respeitando avaliação clínica e direitos aplicáveis. A Nota Técnica Conjunta nº 419/2025 e as notas de distribuição de 2026 orientam a implantação progressiva do implante de etonogestrel no SUS; a equipe local deve confirmar fluxo e disponibilidade atualizados.
 
 ## 10. Como escolher com apoio profissional
 
@@ -162,7 +162,7 @@ Leve perguntas e informe medicamentos, alergias, tabagismo e condições de saú
 
 **Implante pode alterar a menstruação?** Sim. Sangramento irregular ou ausência de sangramento podem ocorrer.
 
-**Contracepção de emergência é abortiva?** Não. A pílula atua principalmente antes da ovulação; o DIU de cobre impede a fecundação. Não interrompe uma gestação estabelecida.
+**Contracepção de emergência é abortiva?** Não. A contracepção oral de emergência atua principalmente antes da ovulação; o DIU de cobre também pode ser utilizado para esse fim. Não interrompe uma gestação já estabelecida.
 
 **Posso usar dois preservativos para ficar mais protegido?** Não. O atrito pode aumentar o risco de ruptura ou deslocamento.
 
@@ -181,7 +181,12 @@ Este capítulo não prescreve métodos, não substitui avaliação de elegibilid
 - Organização Mundial da Saúde. **Medical eligibility criteria for contraceptive use**, 6ª edição, 3 nov. 2025. https://www.who.int/publications/i/item/9789240115583
 - Organização Mundial da Saúde. **Selected practice recommendations for contraceptive use**, 4ª edição, 3 nov. 2025. https://www.who.int/publications/i/item/9789240115606
 - Organização Mundial da Saúde. **WHO guidelines on expanding contraceptive options**, 23 set. 2026. https://www.who.int/publications/i/item/9789240124578
-- Ministério da Saúde. **Nota Técnica Conjunta nº 419/2025** — métodos contraceptivos e planejamento reprodutivo. https://www.gov.br/saude/pt-br/centrais-de-conteudo/publicacoes/notas-tecnicas/2025/nota-tecnica-no-419-2025-dgci-desco-saps-ms.pdf
+- Ministério da Saúde. **Nota Técnica Conjunta nº 419/2025** — incorporação e organização da oferta do implante de etonogestrel 68 mg no SUS. https://www.gov.br/saude/pt-br/centrais-de-conteudo/publicacoes/notas-tecnicas/2025/nota-tecnica-no-419-2025-dgci-desco-saps-ms.pdf
+- Ministério da Saúde. **Nota Técnica Conjunta nº 198/2026** — gestão, monitoramento, registro, distribuição e acesso ao implante no SUS (24 ago. 2026). https://www.gov.br/saude/pt-br/centrais-de-conteudo/publicacoes/notas-tecnicas/2026/nota-tecnica-conjunta-no-198-2026-cgesmu-dgci-saps-ms.pdf/view
+- Ministério da Saúde. **Nota Técnica Conjunta nº 343/2026** — consolidação da quinta remessa de implantes (3 nov. 2026). https://www.gov.br/saude/pt-br/centrais-de-conteudo/publicacoes/notas-tecnicas/2026/nota-tecnica-conjunta-no-343-2026-cgesmu-dgci-saps-cgafb-daf-sctie-ms.pdf/view
+- Anvisa. **Anvisa aprova ampliação do uso do Implanon para cinco anos** (26 out. 2026). https://www.gov.br/anvisa/pt-br/assuntos/noticias-anvisa/2026/anvisa-aprova-ampliacao-do-uso-do-implanon-para-cinco-anos
+- Prefeitura de São Paulo, Secretaria Municipal da Saúde. **Nota Técnica nº 01/2026** — atualização do SIU de levonorgestrel 52 mg para até oito anos de uso contraceptivo (11 nov. 2026). https://prefeitura.sp.gov.br/documents/d/saude/atualizacao-mirena-para-8-anos-pdf
+- Anvisa. **Bulário Eletrônico** — consulta à bula brasileira vigente de cada produto. https://consultas.anvisa.gov.br/#/bulario/
 - Brasil. **Lei nº 14.443/2022** — planejamento familiar e esterilização voluntária. https://www.planalto.gov.br/ccivil_03/_ato2019-2022/2022/lei/l14443.htm
 
-**Pendências antes de publicação:** revisão por ginecologista ou profissional habilitado em planejamento reprodutivo; conferência de contraindicações e critérios de elegibilidade com a 6ª edição do MEC da OMS e diretrizes nacionais; atualização de disponibilidade e fluxos do SUS; validação jurídica da seção sobre esterilização; revisão de linguagem inclusiva.
+**Pendências antes de publicação:** revisão por ginecologista ou profissional habilitado em planejamento reprodutivo; conferência das novas bulas brasileiras do Implanon NXT e do SIU-LNG 52 mg e de suas indicações específicas; verificação de como as atualizações de duração serão operacionalizadas no SUS; conferência das remessas e da disponibilidade local do implante; revisão das contraindicações e critérios de elegibilidade com a 6ª edição do MEC da OMS e diretrizes nacionais; validação jurídica da seção sobre esterilização; revisão de linguagem inclusiva.
