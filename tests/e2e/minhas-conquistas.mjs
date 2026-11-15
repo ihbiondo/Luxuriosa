@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import fs from "node:fs/promises";
 import { chromium } from "playwright";
 
 const BASE_URL = process.env.E2E_BASE_URL || "http://127.0.0.1:4173";
@@ -85,6 +86,18 @@ async function completeDiscovery(page, saveResult) {
     "A interface não confirmou o salvamento do resultado."
   );
   await page.locator("#experienceDone").click();
+}
+
+const SCREENSHOT_DIR = process.env.E2E_SCREENSHOT_DIR || "";
+
+async function captureScreenshot(page, filename) {
+  if (!SCREENSHOT_DIR) return;
+  await fs.mkdir(SCREENSHOT_DIR, { recursive: true });
+  await page.screenshot({
+    path: `${SCREENSHOT_DIR}/${filename}.png`,
+    fullPage: true,
+    animations: "disabled"
+  });
 }
 
 async function assertNoHorizontalOverflow(page, label) {
@@ -192,6 +205,11 @@ try {
   assert.equal(await pageA.locator("#conquistasActivities").innerText(), "1");
   assert.equal(await pageA.locator("#conquistasSaved").innerText(), "2");
 
+  // Captura de desktop com resultados sintéticos preenchidos no fluxo E2E.
+  await pageA.setViewportSize({ width: 1440, height: 1000 });
+  await assertNoHorizontalOverflow(pageA, "Histórico desktop em 1440 px");
+  await captureScreenshot(pageA, "dashboard-historico-desktop-1440");
+
   // 6. Conta B recebe seu próprio painel vazio, sem enxergar os resultados de A.
   const userB = await createTestUser("B");
   contextB = await browser.newContext();
@@ -203,19 +221,29 @@ try {
   await pageB.goto(`${BASE_URL}/portal/conquistas/`, { waitUntil: "domcontentloaded" });
   await pageB.locator("#conquistasTermsGate").waitFor({ state: "visible", timeout: 15000 });
   await assertNoHorizontalOverflow(pageB, "Gate de aceite em 390 px");
+  const gateButtonColors = await pageB.locator("#conquistasAcceptTerms").evaluate(element => ({
+    background: getComputedStyle(element).backgroundColor,
+    color: getComputedStyle(element).color
+  }));
+  assert.notEqual(gateButtonColors.background, "rgba(0, 0, 0, 0)",
+    "Botão de aceite deve possuir fundo visível.");
+  await captureScreenshot(pageB, "gate-aceite-mobile-390");
   await pageB.setViewportSize({ width: 320, height: 740 });
   await assertNoHorizontalOverflow(pageB, "Gate de aceite em 320 px");
   await pageB.setViewportSize({ width: 390, height: 844 });
   await acceptTerms(pageB);
   await assertNoHorizontalOverflow(pageB, "Painel de conquistas em 390 px");
+  await captureScreenshot(pageB, "dashboard-vazio-mobile-390");
   const mobileColumns = await pageB.locator("#conquistasBadges").evaluate(element =>
     getComputedStyle(element).gridTemplateColumns.split(" ").length
   );
   assert.equal(mobileColumns, 2, "Em celular, os emblemas devem ficar em duas colunas.");
   await pageB.setViewportSize({ width: 320, height: 740 });
   await assertNoHorizontalOverflow(pageB, "Painel de conquistas em 320 px");
+  await captureScreenshot(pageB, "dashboard-vazio-mobile-320");
   await pageB.setViewportSize({ width: 1440, height: 900 });
   await assertNoHorizontalOverflow(pageB, "Painel de conquistas em desktop");
+  await captureScreenshot(pageB, "dashboard-vazio-desktop-1440");
   assert.equal(await pageB.locator("#conquistasPoints").innerText(), "0");
   assert.equal(await pageB.locator("#conquistasSaved").innerText(), "0");
   assert.equal(await pageB.locator("#conquistasHistory").evaluate(element => element.children.length), 0);
