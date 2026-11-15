@@ -328,6 +328,8 @@
     if (studio) studio.hidden = true;
     const journey = document.getElementById("signJourney");
     if (journey) journey.hidden = true;
+    const savePanel = document.getElementById("experienceSavePanel");
+    if (savePanel) savePanel.hidden = true;
   }
 
   function fillCatalog(signs, signsById) {
