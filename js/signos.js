@@ -284,6 +284,8 @@
     secondLink.href = journey.links[1].href;
     secondLink.textContent = journey.links[1].label + " →";
     if (journey.anchor) journey.anchor.after(panel);
+    const savePanel = document.getElementById("experienceSavePanel");
+    if (savePanel) panel.after(savePanel);
     panel.hidden = false;
   }
 
