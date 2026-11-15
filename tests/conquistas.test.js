@@ -105,6 +105,15 @@ test("repetir uma atividade adiciona histórico, mas não pontos", () => {
   assert.equal(stats.saved, 4);
   assert.equal(stats.badges.find(item => item.title === "Curiosidade em movimento").unlocked, true);
   assert.equal(stats.badges.find(item => item.title === "Olhar diverso").unlocked, true);
+
+  const unknownCategory = calculateAchievementStats([
+    { activity_id: "discovery", category: "ferramentas" },
+    { activity_id: "not_integrated", category: "astrologia" }
+  ]);
+  assert.equal(
+    unknownCategory.badges.find(item => item.title === "Olhar diverso").unlocked,
+    false
+  );
 });
 
 test("a jornada completa exige as quatro experiências principais", () => {
