@@ -75,7 +75,7 @@ A paginação é uma referência de profundidade editorial, não uma obrigação
 |---:|---|---:|---|
 | 1 | Fundamentos da sexualidade e saúde sexual | 10 p. | Conceitos, dimensões da saúde sexual, direitos, autonomia, diversidade, prazer, segurança e determinantes sociais. |
 | 2 | Anatomia, fisiologia e desenvolvimento corporal | 10 p. | Anatomia externa e interna, variações corporais, puberdade, resposta fisiológica e linguagem anatômica correta. |
-| 3 | Ciclo menstrual, fertilidade e reprodução | 10 p. | Fases do ciclo, variações, ovulação, fertilidade, fecundação, gravidez e sinais que pedem avaliação. |
+| 3 | Ciclo menstrual, fertilidade e reprodução | 10 p. | Fases do ciclo, variações por idade, ovulação e janela fértil, fecundação, gravidez, avaliação da fertilidade e sinais de alerta. | v0.2 documental; artigo público atualizado; revisão clínica externa pendente.
 | 4 | Contracepção e planejamento reprodutivo | 10 p. | Métodos, funcionamento, eficácia, uso, limitações, contracepção de emergência e decisão compartilhada. |
 | 5 | IST, HIV e prevenção combinada | 12 p. | Infecções prioritárias, transmissão, sintomas, testagem, janela diagnóstica, preservativos, vacinação, PrEP, PEP, tratamento e parcerias. |
 | 6 | Consentimento, limites e segurança | 10 p. | Consentimento contínuo, comunicação, coerção, vulnerabilidade, privacidade e segurança presencial/digital. |
