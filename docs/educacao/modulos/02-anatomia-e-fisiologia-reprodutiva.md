@@ -166,6 +166,7 @@ A anatomia pode variar por condições congênitas, cirurgias, tratamentos hormo
 - MedlinePlus. **Vulva**. Revisão indicada: 1 out. 2025. https://medlineplus.gov/ency/article/002343.htm
 - Sociedade Brasileira de Pediatria. **Puberdade precoce** e **Puberdade atrasada**. Departamento Científico de Endocrinologia, atualização mar. 2023. https://www.sbp.com.br/pediatria-para-familias/doencas/puberdade-precoce/ e https://www.sbp.com.br/pediatria-para-familias/doencas/puberdade-atrasada/
 - Ministério da Saúde / UFRGS. **Protocolo de Atenção Especializada — Endocrinologia Pediátrica, Protocolo 6: Alterações da Puberdade**. https://bvsms.saude.gov.br/bvs/publicacoes/protocolo_atencao_especializada_v12_endocrinologia_pediatrica.pdf
+- OMS. **Gender and health** — distinção entre características sexuais, variações intersexo e identidade de gênero. https://www.who.int/news-room/questions-and-answers/item/gender-and-health
 - OMS, UN Women e OHCHR. **Eliminating virginity testing: an interagency statement** (2018). https://www.who.int/publications-detail-redirect/WHO-RHR-18.15
 - American College of Obstetricians and Gynecologists. **Virginity Testing** (reaffirmed 2023). https://www.acog.org/clinical-information/policy-and-position-statements/statements-of-policy/2020/virginity-testing
 - NHS. **Testicle pain** (reviewed 26 jun. 2025). https://www.nhs.uk/symptoms/testicle-pain/
