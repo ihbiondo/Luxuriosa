@@ -110,8 +110,8 @@ jobs:
           assert "buildExperienceResult" in save_module
           assert "calculateAchievementStats" in Path("js/conquistas.js").read_text()
           assert "birthDate" not in core_module and "answers" not in core_module
-          assert 'sign_profile: { title: "Descubra seu signo solar", category: "astrologia" }' in save_module
-          assert 'sign_compatibility: { title: "Combinação entre signos", category: "astrologia" }' in save_module
+          assert 'sign_profile: { title: "Descubra seu signo solar", category: "astrologia" }' in core_module
+          assert 'sign_compatibility: { title: "Combinação entre signos", category: "astrologia" }' in core_module
           assert 'activity_id: "sign_profile"' in signs_module
           assert 'activity_id: "sign_compatibility"' in signs_module
           assert "sign_profile:" in achievements_module and "sign_compatibility:" in achievements_module
