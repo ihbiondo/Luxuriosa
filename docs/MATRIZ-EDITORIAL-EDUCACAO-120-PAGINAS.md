@@ -20,7 +20,7 @@ Cada página deve identificar fontes, data real de revisão, escopo e limites. N
 
 | Módulo | Situação | Próximo requisito |
 |---|---|---|
-| 1. Fundamentos da saúde sexual | Rascunho interno v0.1 | Revisão editorial e clínica |
+| 1. Fundamentos da saúde sexual | Rascunho interno v0.2 — revisão documental em 15/11/2026 | Revisão clínica, psicossocial e jurídica externa |
 | 2. Anatomia e fisiologia | Rascunho interno v0.2 — revisão documental em 15/11/2026 | Revisão clínica externa; leitura especializada sobre variações intersexo; decidir política para diagramas didáticos |
 | 3. Ciclo, fertilidade e reprodução | Rascunho interno v0.1 | Revisão clínica; validar sinais de alerta e limites de estimativas de fertilidade |
 | 4. Contracepção | Rascunho interno v0.2 — revisão documental em 15/11/2026 | Revisão clínica externa; conferir bulas 2026 do implante e SIU-LNG, implementação no SUS e critérios de elegibilidade |
@@ -33,7 +33,7 @@ Cada página deve identificar fontes, data real de revisão, escopo e limites. N
 | 11. Violência sexual, apoio e direitos | Rascunho interno v0.1 | Revisão jurídica, clínica e psicossocial; delimitar corretamente a Lei nº 15.516/2026 |
 | 12. Mitos e caminhos de atendimento | Rascunho interno v0.1 | Revisão clínica e checagem individual das afirmações |
 
-Os doze módulos possuem rascunhos internos v0.1, ainda não publicados e sem revisão profissional externa. Os conteúdos não devem ser tratados como material clinicamente validado.
+Os doze módulos possuem rascunhos internos em versões diferentes, ainda não publicados e sem revisão profissional externa. As versões v0.2 indicam revisão documental interna, não validação clínica, jurídica ou psicossocial. Nenhum conteúdo deve ser tratado como material profissionalmente validado.
 
 ## 2. Matriz dos 23 artigos existentes
 
