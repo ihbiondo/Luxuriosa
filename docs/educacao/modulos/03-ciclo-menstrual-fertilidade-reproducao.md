@@ -199,6 +199,4 @@ A definição geral da OMS considera infertilidade a ausência de gravidez após
 - ASRM. **Fertility evaluation of infertile women: a committee opinion (2026)**. https://www.asrm.org/practice-guidance/practice-committee-documents/fertility-evaluation-of-infertile-women-a-committee-opinion-2026
 - OMS. **Guideline for the prevention, diagnosis and treatment of infertility**, 28/11/2025. https://www.who.int/publications/i/item/9789240115774
 - OMS. **Infertility**, 28/11/2025. https://www.who.int/news-room/fact-sheets/detail/infertility
-- Ministério da Saúde. **Ciclo menstrual e os sinais do corpo**, Programa Dignidade Menstrual, 2025. https://www.gov.br/saude/pt-br/centrais-de-conteudo/publicacoes/cartilhas/2025/programa-dignidade-menstrual-novembro-2025.pdf
-
 **Limites:** revisão documental, não revisão clínica profissional. As referências não substituem protocolos brasileiros locais nem avaliação individual. Revisão por ginecologista ou especialista em reprodução humana permanece pendente.
