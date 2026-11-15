@@ -486,8 +486,8 @@
       if (reviewCity === "bauru" && reviewState === "SP") {
         paymentMinimumInfo.hidden = false;
         paymentMinimumInfo.textContent = integridade.subtotal < 50
-          ? "Atenção: para pagar pelo site com Pix ou cartão em Bauru, o subtotal mínimo de produtos é R$ 50,00. Seu pedido está em " + formatarPreco(integridade.subtotal) + "; faltam " + formatarPreco(50 - integridade.subtotal) + ". O frete grátis por incluir kit não elimina o mínimo. Você também pode encaminhar a solicitação pelo WhatsApp e consultar as condições."
-          : "Para pagamento automático pelo site com Pix ou cartão em Bauru, o subtotal mínimo de produtos é R$ 50,00. O frete grátis por incluir kit continua válido, mas não elimina esse mínimo.";
+          ? "Atenção: para pagar pelo site com Pix ou cartão em Bauru, o subtotal mínimo de produtos é R$ 50,00. Seu pedido está em " + formatarPreco(integridade.subtotal) + "; faltam " + formatarPreco(50 - integridade.subtotal) + ". O benefício de entrega do Clube não altera o mínimo do checkout. Você também pode encaminhar a solicitação pelo WhatsApp e consultar as condições."
+          : "Para pagamento automático pelo site com Pix ou cartão em Bauru, o subtotal mínimo de produtos é R$ 50,00. A condição de entrega do Clube não altera esse mínimo.";
       } else {
         paymentMinimumInfo.hidden = true;
         paymentMinimumInfo.textContent = "";
@@ -584,7 +584,7 @@
       .replace(/[\u0300-\u036f]/g, "").trim().toLowerCase();
     var estadoPagamento = String(dadosAtuais.address.state || "").trim().toUpperCase();
     if (cidadePagamento === "bauru" && estadoPagamento === "SP" && integridade.subtotal < 50) {
-      avisar("Para pagamento automático com Pix ou cartão em Bauru, o subtotal mínimo de produtos é R$ 50,00. O frete grátis por incluir kit continua válido, mas não elimina o mínimo. Abaixo desse valor, revise o carrinho ou encaminhe o pedido pelo WhatsApp para consultar as condições.", "error");
+      avisar("Para pagamento automático com Pix ou cartão em Bauru, o subtotal mínimo de produtos é R$ 50,00. A condição de entrega do Clube não altera o mínimo. Abaixo desse valor, revise o carrinho ou encaminhe o pedido pelo WhatsApp para consultar as condições.", "error");
       return;
     }
 
