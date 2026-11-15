@@ -423,3 +423,17 @@ A Nota Técnica 222/2025 foi formulada com foco na rede de atenção a mulheres 
 - Criado `docs/AUDITORIA-ANATOMIA-FISIOLOGIA-2026-11-15.md` com fontes, achados e limitações.
 - Fontes centrais: NCBI Bookshelf/StatPearls, MedlinePlus, Sociedade Brasileira de Pediatria, Ministério da Saúde/UFRGS, OMS, ACOG, NHS e Associação Europeia de Urologia.
 - Revisão documental; validação clínica externa, revisão especializada de linguagem sobre variações intersexo e decisão sobre diagramas acessíveis permanecem pendentes. Nenhuma alteração foi publicada em produção.
+
+
+## 19. Revisão documental — fundamentos da sexualidade e da saúde sexual (15/11/2026)
+
+- Módulo 1 atualizado para v0.2: refinada a apresentação da definição de trabalho da OMS, explicitando que a organização não a caracteriza como posição oficial formal.
+- Diferenciadas sexualidade, atividade sexual, saúde sexual e saúde reprodutiva.
+- Incluídas distinções entre características sexuais, identidade de gênero, expressão de gênero e orientação sexual, sem inferência de uma dimensão pela outra.
+- Consentimento tratado como estrutura educativa (liberdade, informação, especificidade, continuidade e possibilidade de retirada), sem apresentá-lo como fórmula jurídica completa.
+- Reforçado que resposta fisiológica, silêncio, ausência de resistência, vínculo afetivo ou consentimento anterior não autorizam presumir vontade atual.
+- Incluída referência à Lei nº 12.845/2013 e esclarecido que o prazo máximo de 72h da PEP-HIV não encerra outras formas de atendimento após violência sexual.
+- Artigo público `educacao/temas/saude-sexual-e-bem-estar.html` atualizado com conceitos, autonomia, consentimento e referência legal, preservando a URL.
+- Criado `docs/AUDITORIA-FUNDAMENTOS-SAÚDE-SEXUAL-2026-11-15.md`.
+- Fontes: OMS, Ministério da Saúde, Lei nº 12.845/2013 e Ministério das Mulheres.
+- Revisão documental; validação clínica, psicossocial e jurídica externa permanece pendente. Nenhuma alteração foi publicada em produção.
