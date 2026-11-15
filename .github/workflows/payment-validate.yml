@@ -45,12 +45,12 @@ jobs:
           const pages = ["index.html","loja.html","login.html","pagamento-retorno.html","acompanhar-pedido/index.html"];
           for (const page of pages) {
             const html = fs.readFileSync(page, "utf8");
-            const scripts = [...html.matchAll(/<script\\b([^>]*)>([\\s\\S]*?)<\\/script>/gi)];
+            const scripts = [...html.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/gi)];
             let checked = 0;
             for (let i = 0; i < scripts.length; i++) {
               const attrs = scripts[i][1] || "";
-              if (/\\bsrc\\s*=/i.test(attrs)) continue;
-              const type = attrs.match(/\\btype\\s*=\\s*["']([^"']+)["']/i)?.[1]?.toLowerCase();
+              if (/\bsrc\s*=/.test(attrs)) continue;
+              const type = attrs.match(/\btype\s*=\s*["']([^"']+)["']/i)?.[1]?.toLowerCase();
               if (type && !["module","text/javascript","application/javascript"].includes(type)) continue;
               const ext = type === "module" ? ".mjs" : ".js";
               const file = "/tmp/site-" + page.replace(/[^a-z0-9]/gi,"-") + "-" + i + ext;
