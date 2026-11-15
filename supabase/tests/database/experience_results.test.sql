@@ -115,7 +115,7 @@ select extensions.ok(
   'o aceite válido é registrado com horário e sem revogação'
 );
 select extensions.throws_ok(
-  $insert into public.experience_results
+  $$insert into public.experience_results
     (user_id, attempt_id, activity_id, activity_title, category, result_title, result_summary)
     values (
       '10000000-0000-4000-8000-000000000001',
@@ -125,13 +125,13 @@ select extensions.throws_ok(
       'ferramentas',
       'Resultado falso',
       'O banco não deve aceitar atividades fora do catálogo.'
-    )$,
+    )$$,
   '23514',
   null,
   'o banco rejeita identificador de atividade fora da lista integrada'
 );
 select extensions.throws_ok(
-  $insert into public.experience_results
+  $$insert into public.experience_results
     (user_id, attempt_id, activity_id, activity_title, category, result_title, result_summary)
     values (
       '10000000-0000-4000-8000-000000000001',
@@ -141,13 +141,13 @@ select extensions.throws_ok(
       'astrologia',
       'Categoria alterada',
       'A categoria precisa corresponder à definição da atividade.'
-    )$,
+    )$$,
   '23514',
   null,
   'o banco rejeita categoria incompatível com a atividade'
 );
 select extensions.throws_ok(
-  $insert into public.experience_results
+  $$insert into public.experience_results
     (user_id, attempt_id, activity_id, activity_title, category, result_title, result_summary)
     values (
       '10000000-0000-4000-8000-000000000001',
@@ -157,7 +157,7 @@ select extensions.throws_ok(
       'ferramentas',
       'Título alterado',
       'O título da atividade precisa corresponder ao catálogo.'
-    )$,
+    )$$,
   '23514',
   null,
   'o banco rejeita título incompatível com a atividade'
