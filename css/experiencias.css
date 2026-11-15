@@ -216,3 +216,17 @@ body{background:radial-gradient(ellipse at 10% 5%,rgba(113,69,132,.4),transparen
 .journey-links a:hover{border-color:#e3449d;background:#fff0f7}
 .journey-portal{justify-self:start;min-height:36px;display:inline-flex;align-items:center;color:#756a7d;font-size:10px;text-decoration:underline;text-underline-offset:3px}
 @media(max-width:560px){.journey-panel{padding:15px}.journey-links{display:grid}.journey-links a{min-height:46px;font-size:12px}.journey-panel p{font-size:13px}}
+
+
+/* Salvamento voluntário do resumo na área autenticada */
+.save-result-panel{display:grid;gap:12px;margin:18px 0 8px;padding:17px;border:1px solid #e0d4e8;border-radius:13px;background:linear-gradient(120deg,#f1e9f6,#fff5fa);color:#493451}
+.save-result-panel>div{display:grid;gap:5px}
+.save-result-panel>div>small{color:#987342;font-size:8px;font-weight:700;letter-spacing:.15em}
+.save-result-panel>div>strong{font:500 20px/1.25 var(--serif);color:#493451}
+.save-result-panel>div>p{margin:0;color:#675b70;font-size:11px;line-height:1.65}
+.save-result-panel>.primary{justify-self:start}
+#experienceSaveStatus{margin:0;color:#675b70;font-size:10px;line-height:1.6}
+#experienceSaveStatus[data-kind="success"]{color:#245c3c}
+#experienceSaveStatus[data-kind="error"]{color:#8d3030}
+.save-result-link{color:#a72f78;font-weight:700;text-decoration:underline;text-underline-offset:3px}
+@media(max-width:560px){.save-result-panel{padding:15px}.save-result-panel>.primary{width:100%;font-size:10px}.save-result-panel>div>p{font-size:12px}}
