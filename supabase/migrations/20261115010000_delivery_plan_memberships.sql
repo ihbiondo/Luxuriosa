@@ -22,10 +22,10 @@ comment on table public.delivery_plan_memberships is
 comment on column public.delivery_plan_memberships.plan_code is
   'supporter = Apoiador; vip = Privilégio VIP.';
 
--- Pedido mínimo estritamente acima de R$ 10,00 em Bauru e R$ 49,00 fora de Bauru.
+-- Pedido mínimo de R$ 20,00 em Bauru e R$ 50,00 fora de Bauru.
 update public.fulfillment_sla_rules
 set minimum_order_up_to_12km_cents = case when city_normalized = 'bauru' then 2000 else 5000 end,
     minimum_order_up_to_35km_cents = 5000,
-    minimum_order_up_to_55km_cents = 4901,
+    minimum_order_up_to_55km_cents = 5000,
     updated_at = now()
 where active = true and fulfillment_mode = 'delivery';
