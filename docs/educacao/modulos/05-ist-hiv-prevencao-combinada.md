@@ -1,6 +1,6 @@
 # Módulo 5 — Infecções sexualmente transmissíveis, HIV e prevenção combinada
 
-**Status:** rascunho editorial v0.1 — material interno para revisão; não publicado  
+**Status:** rascunho editorial v0.2 — material interno para revisão; não publicado  
 **Público:** pessoas adultas  
 **Extensão planejada:** cerca de 12 páginas equivalentes  
 **Revisão clínica externa:** não realizada. Este texto não deve ser apresentado como protocolo clínico ou orientação individual.
@@ -18,7 +18,7 @@ Não existe uma única medida capaz de prevenir todas as IST em todas as situaç
 2. Preservativos reduzem o risco de várias infecções, mas não eliminam todos os riscos.
 3. Vacinas protegem contra algumas infecções, especialmente HPV e hepatite B, conforme indicação e calendário.
 4. PrEP previne HIV antes de possíveis exposições; não previne outras IST nem gravidez.
-5. PEP é uma medida de urgência após possível exposição ao HIV e precisa ser avaliada em até 72 horas.
+5. PEP para HIV é uma medida de urgência após possível exposição e precisa ser avaliada em até 72 horas; outras medidas pós-exposição têm critérios próprios.
 6. Testes diferentes detectam infecções diferentes; o momento adequado depende do exame e da exposição.
 7. Diagnóstico de IST é uma questão de saúde, não motivo para estigma ou julgamento.
 
@@ -165,7 +165,7 @@ Pontos importantes:
 
 O Ministério da Saúde disponibiliza o [PCDT de PrEP oral](https://www.gov.br/saude/pt-br/assuntos/pcdt/p/profilaxia-pre-exposicao-prep-oral-a-infeccao-pelo-hiv/view), com anexo atualizado em 20 de março de 2025, e uma [ferramenta oficial de apoio à decisão clínica](https://portal.aids.gov.br/prep). Essas ferramentas são destinadas a orientar a atuação dos serviços e não substituem avaliação individual. Protocolos podem mudar; a equipe deve consultar a versão vigente.
 
-### 4.2 PEP — profilaxia pós-exposição ao HIV
+### 4.2 PEP para HIV e cuidado pós-exposição
 
 PEP é uma medida de urgência para reduzir o risco de infecção pelo HIV após uma exposição potencialmente relevante. A avaliação também pode envolver hepatites virais, outras IST, vacinação e contracepção de emergência, conforme a situação.
 
@@ -178,7 +178,26 @@ Procure atendimento imediatamente se houve, por exemplo:
 
 A indicação depende da avaliação da exposição. Não espere sintomas e não tente decidir sozinho se o risco foi suficiente. Se já passaram mais de 72 horas, ainda assim procure atendimento para avaliação de outras medidas, testagem, vacinação e acompanhamento; não conclua que não há nada a fazer.
 
-A PEP não protege exposições futuras depois do período do esquema. Se houver possibilidade de novas exposições, converse com a equipe sobre transição para PrEP quando apropriado.
+A PEP para HIV não protege exposições futuras depois do período do esquema. Se houver possibilidade de novas exposições, converse com a equipe sobre PrEP quando apropriado. **PrEP não substitui a avaliação de PEP depois de uma exposição já ocorrida**; em caso de evento recente, procure atendimento urgente primeiro.
+
+### 4.2.1 Violência sexual: o cuidado não se resume ao prazo da PEP-HIV
+
+Após violência sexual, a avaliação deve ser integral, acolhedora, individualizada e sem julgamento. A pessoa não precisa apresentar boletim de ocorrência para receber atendimento de saúde. O serviço deve respeitar sua autonomia, privacidade e limites, evitar perguntas ou procedimentos desnecessários e explicar cada etapa. A abordagem se conecta ao Módulo 6 (consentimento e autonomia) e ao Módulo 11 (acolhimento, direitos e rede de proteção).
+
+A Nota Técnica nº 222/2025-CGHA/.DATHI/SVSA/MS, publicada em janeiro de 2026, reforça orientações para a rede de cuidado de mulheres e meninas sobreviventes de violência sexual. Ela trata a prevenção pós-exposição de forma integrada — HIV, hepatites virais, sífilis e outras IST — e não deve ser interpretada como autorização para automedicação ou como protocolo universal para todas as idades e situações. A equipe deve aplicar o PCDT vigente e os fluxos adequados à pessoa atendida.
+
+**O que precisa ser avaliado pelo serviço:**
+
+- **HIV:** se a exposição tiver potencial risco, avaliar PEP imediatamente. O início deve ocorrer o mais rápido possível e no máximo em 72 horas; quando indicada, dura 28 dias. Se já passaram 72 horas, a Nota Técnica orienta não iniciar antirretrovirais para PEP-HIV, mas realizar testagem no primeiro atendimento e seguimento, incluindo repetição em um e três meses. A ausência de indicação de PEP-HIV não encerra o cuidado.
+- **Exposições repetidas ou violência recorrente:** o histórico não deve levar o serviço a descartar automaticamente a PEP. Se o episódio mais recente potencialmente relevante ocorreu há menos de 72 horas, a equipe deve avaliar esse evento. Para risco contínuo ou recorrente, pode ser considerada avaliação de PrEP após o atendimento da exposição aguda.
+- **Hepatite B:** verificar vacinação e, quando necessário, evidência de imunidade. Conforme histórico e avaliação, podem ser indicadas vacina e imunoglobulina específica. A Nota Técnica recomenda administração da imunoglobulina o mais cedo possível, preferencialmente nas primeiras 24 horas e até 14 dias após exposição sexual. Não se deve presumir que todas as pessoas precisem de imunoglobulina.
+- **Sífilis, gonorreia, clamídia e tricomoníase:** a Nota Técnica recomenda avaliação clínica e testagem no primeiro atendimento, com amostras compatíveis com os locais de exposição (por exemplo, genital, anal ou oral). Em violência sexual, o tratamento preventivo/preemptivo de IST não virais é recomendado pelo documento e não fica limitado a uma janela única; a equipe define indicação, contraindicações e momento. Quando testes iniciais para sífilis ou CT/NG forem negativos, o documento orienta repetição de CT/NG em quatro a seis semanas; a equipe define o seguimento individual.
+- **Hepatite C:** não há profilaxia medicamentosa pós-exposição. A equipe avalia testagem inicial e seguimento conforme protocolo.
+- **HPV:** conferir histórico vacinal e elegibilidade segundo o Calendário Nacional de Vacinação e critérios vigentes; vacinação não substitui avaliação de outras IST.
+- **Possibilidade de gravidez:** avaliar contracepção de emergência quando indicada. A Nota Técnica cita opções que podem ser utilizadas em até 120 horas; a escolha depende da avaliação e das preferências da pessoa.
+- **Acompanhamento:** organizar testagem inicial, retornos, resultados, vacinação, apoio psicológico/social e encaminhamentos. Se já passou o prazo da PEP-HIV, ainda pode haver medidas relevantes para hepatite B, outras IST, gravidez, diagnóstico e cuidado emocional.
+
+Esses pontos descrevem o que deve ser avaliado por profissionais; não são uma lista de medicamentos para a pessoa escolher. Não use sobras, não compre antibióticos para profilaxia e não atrase o atendimento para tentar descobrir o status da outra pessoa ou reunir documentos.
 
 Fontes oficiais: [Ministério da Saúde — PEP](https://www.gov.br/saude/pt-br/assuntos/saude-de-a-a-z/a/aids-hiv/pep), [PCDT de PEP](https://www.gov.br/saude/pt-br/assuntos/pcdt/p/profilaxia-pos-exposicao-de-risco-pep-a-infeccao-pelo-hiv/view) e [lista de PCDTs vigentes](https://www.gov.br/aids/pt-br/central-de-conteudo/pcdts).
 
@@ -230,6 +249,7 @@ Para PEP, não espere uma consulta agendada: procure imediatamente um serviço q
 - [Ministério da Saúde — PCDT de PrEP](https://www.gov.br/saude/pt-br/assuntos/pcdt/p/profilaxia-pre-exposicao-prep-oral-a-infeccao-pelo-hiv/view)
 - [Ministério da Saúde — Ferramenta de apoio à decisão clínica para PrEP](https://portal.aids.gov.br/prep)
 - [Ministério da Saúde — Nota Técnica sobre I=I e risco zero de transmissão sexual](https://www.gov.br/aids/pt-br/central-de-conteudo/notas-tecnicas/2023/nota-tecnica-no-376-2023-cgahv-dathi-svsa-ms.pdf)
+- [Ministério da Saúde — Nota Técnica nº 222/2025 sobre PEP em sobreviventes de violência sexual](https://azt.aids.gov.br/documentos/nota_tecnica/Nota%20Tecnica%20222.pdf)
 - [Ministério da Saúde — PCDTs vigentes](https://www.gov.br/aids/pt-br/central-de-conteudo/pcdts)
 - [Ministério da Saúde — Calendário Nacional de Vacinação 2026](https://www.gov.br/saude/pt-br/vacinacao/publicacoes/instrucao-normativa-que-instrui-o-calendario-nacional-de-vacinacao-2026.pdf/view)
 
@@ -265,7 +285,7 @@ Não é recomendado. O diagnóstico e o tratamento dependem do agente, do local 
 
 ## 9. Síntese do capítulo
 
-A prevenção de IST combina informação, barreiras, vacinação, testagem, diagnóstico, tratamento e acesso a serviços. PrEP e PEP são ferramentas importantes para o HIV, mas têm indicações diferentes e não substituem o cuidado com outras infecções.
+A prevenção de IST combina informação, barreiras, vacinação, testagem, diagnóstico, tratamento e acesso a serviços. PrEP e PEP-HIV são ferramentas diferentes; após violência sexual, o cuidado é mais amplo e pode envolver hepatite B, sífilis, outras IST, contracepção de emergência, apoio e seguimento.
 
 Não espere sintomas para buscar orientação. Não use um resultado isolado sem considerar o momento do exame e a infecção investigada. Em possível exposição ao HIV, o tempo é decisivo: a avaliação para PEP deve ocorrer o quanto antes e dentro de 72 horas.
 
@@ -275,6 +295,7 @@ Não espere sintomas para buscar orientação. Não use um resultado isolado sem
 2. **World Health Organization.** *WHO launches landmark consolidated operational handbook to strengthen the global STI response amid rising infections.* 12 fev. 2026. https://www.who.int/news/item/12-02-2026-who-launches-landmark-consolidated-operational-handbook-to-strengthen-the-global-sti-response-amid-rising-infections
 3. **Ministério da Saúde (Brasil).** *Prevenção — HIV/Aids.* Inclui orientações sobre PEP, PrEP e prevenção. https://www.gov.br/saude/pt-br/assuntos/saude-de-a-a-z/a/aids-hiv/prevencao
 4. **Ministério da Saúde (Brasil).** *Profilaxia Pós-Exposição de Risco (PEP) à Infecção pelo HIV, IST e Hepatites Virais — PCDT.* Anexo atualizado em 20 mar. 2025. https://www.gov.br/saude/pt-br/assuntos/pcdt/p/profilaxia-pos-exposicao-de-risco-pep-a-infeccao-pelo-hiv/view
+5. **Ministério da Saúde (Brasil).** *Nota Técnica nº 222/2025-CGHA/.DATHI/SVSA/MS — reforço de recomendações para PEP em pessoas sobreviventes de violência sexual.* Assinada em novembro de 2025 e publicada em 28 jan. 2026. https://azt.aids.gov.br/documentos/nota_tecnica/Nota%20Tecnica%20222.pdf
 5. **Ministério da Saúde (Brasil).** *Profilaxia Pré-Exposição (PrEP) Oral à Infecção pelo HIV — PCDT.* Anexo atualizado em 20 mar. 2025. https://www.gov.br/saude/pt-br/assuntos/pcdt/p/profilaxia-pre-exposicao-prep-oral-a-infeccao-pelo-hiv/view
 6. **Ministério da Saúde (Brasil).** *PCDTs — Protocolos Clínicos e Diretrizes Terapêuticas.* Página de referência para localizar versões vigentes. https://www.gov.br/aids/pt-br/central-de-conteudo/pcdts
 7. **World Health Organization.** *HIV and AIDS — Questions and answers.* Explica tratamento antirretroviral e ausência de transmissão sexual quando a carga viral é indetectável. https://www.who.int/news-room/questions-and-answers/item/HIV-AIDS
