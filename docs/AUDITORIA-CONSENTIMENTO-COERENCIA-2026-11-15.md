@@ -6,13 +6,13 @@
 
 ## Síntese
 
-A leitura cruzada identificou boa coerência geral entre autonomia, comunicação, segurança e resposta sexual. Foram feitos ajustes pontuais no Módulo 6 para explicitar as conexões, evitar formalismo mecânico na ideia de consentimento contínuo e alinhar a orientação sobre PEP ao padrão usado no Módulo 5.
+A leitura cruzada identificou boa coerência geral entre autonomia, comunicação, segurança e resposta sexual. Foram feitos ajustes pontuais no Módulo 6 para explicitar as conexões, evitar formalismo mecânico na ideia de consentimento contínuo e explicitar a orientação vigente do Ministério da Saúde para PEP.
 
 ## Alterações
 
 - Consentimento contínuo: não exige confirmação verbal repetida a cada instante, mas exige atenção à comunicação, interrupção diante de hesitação/desconforto e respeito imediato à recusa.
 - Capacidade: se substâncias prejudicarem compreensão, decisão ou comunicação, ou houver dúvida sobre a capacidade no momento, não avançar; avaliação jurídica depende do contexto.
-- PEP-HIV: avaliação o mais rápido possível, no máximo em 72 horas; sem prazo preferencial de duas horas neste texto.
+- PEP-HIV: avaliação o mais rápido possível, preferencialmente nas primeiras duas horas, e no máximo em 72 horas, conforme orientação do Ministério da Saúde.
 - Relações: diálogo e negociação não são recomendação adequada quando há medo, coerção, controle ou violência; priorizar segurança e apoio independente.
 - Resposta sexual: desejo responsivo, ereção, lubrificação e orgasmo não equivalem a consentimento; resposta física não cria obrigação de continuar.
 - Limite jurídico: a estrutura educativa não é apresentada como definição legal universal brasileira.
@@ -41,6 +41,7 @@ A página `educacao/temas/consentimento-e-limites.html` foi conferida. Sua abord
 - OMS — Violence against women (18/06/2026): https://www.who.int/news-room/fact-sheets/detail/violence-against-women
 - UNESCO — International technical guidance on sexuality education (2018): https://unesdoc.unesco.org/ark:/48223/pf0000260770
 - Ministério da Saúde — PEP: https://www.gov.br/saude/pt-br/assuntos/saude-de-a-a-z/a/aids-hiv/pep
+- Ministério da Saúde — Prevenção (orientação sobre início preferencial nas primeiras duas horas): https://www.gov.br/saude/pt-br/assuntos/saude-de-a-a-z/a/aids-hiv/prevencao
 
 ## Limitações e pendências
 
