@@ -437,3 +437,19 @@ A Nota Técnica 222/2025 foi formulada com foco na rede de atenção a mulheres 
 - Criado `docs/AUDITORIA-FUNDAMENTOS-SAÚDE-SEXUAL-2026-11-15.md`.
 - Fontes: OMS, Ministério da Saúde, Lei nº 12.845/2013 e Ministério das Mulheres.
 - Revisão documental; validação clínica, psicossocial e jurídica externa permanece pendente. Nenhuma alteração foi publicada em produção.
+
+
+## 18. Auditoria editorial geral dos 12 módulos — 15/11/2026
+
+Foi criada a auditoria consolidada `docs/AUDITORIA-EDITORIAL-GERAL-12-MODULOS-2026-11-15.md`, com escopo, estado real de cada módulo, comparação estrutural dos 23 artigos públicos e registro das correções transversais.
+
+Correções aplicadas:
+- Módulo 4: removida referência à Nota Técnica nº 01/2026 da SMS-SP, cujo PDF tem título sobre Mirena, mas conteúdo sobre Implanon; substituída pela Nota Técnica nº 02/2025 específica de Mirena e pela página oficial da Bayer.
+- Módulos 5 e 11 e páginas públicas de prevenção combinada e violência sexual: alinhado o alerta de PEP-HIV ao início o mais rápido possível, preferencialmente nas primeiras duas horas, e no máximo em 72 horas.
+- Módulos 1, 3 e 8: removidas referências duplicadas e corrigida a sequência bibliográfica.
+- Matriz: estados v0.1/v0.2 corrigidos para refletir os arquivos atuais.
+- Esta auditoria cruzada: corrigida a síntese das faixas de referência do ciclo menstrual (FIGO 24–38 dias; outras referências 21–35 dias), sem tratar os intervalos como diagnóstico.
+
+A leitura estrutural dos 23 artigos confirmou avisos informativos e referências nas páginas examinadas, mas não equivale a auditoria clínica e jurídica linha a linha de cada afirmação. Permanecem pendentes revisão clínica, psicossocial, jurídica e técnica profissional; revisão integral do Módulo 12; revisão técnica do Módulo 10; rastreabilidade individual das afirmações públicas; e política para diagramas anatômicos.
+
+**Decisão:** a arquitetura dos módulos está coerente nos principais cruzamentos, mas a biblioteca completa não deve ser apresentada como profissionalmente validada. Os rascunhos internos permanecem fora da publicação pública.
