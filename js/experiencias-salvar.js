@@ -1,4 +1,5 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { buildExperienceResult } from "./conquistas-core.js";
 
 const supabase = createClient(
   "https://byiykxfugvxuowueuxca.supabase.co",
@@ -14,16 +15,6 @@ let currentResult = null;
 let saved = false;
 let activeUser = null;
 let accessReady = Promise.resolve(false);
-
-const allowedActivities = {
-  discovery: { title: "Descubra seu estilo", category: "ferramentas" },
-  connection: { title: "Conexão a dois", category: "relacionamento" },
-  curiosity: { title: "Mitos ou verdades?", category: "ferramentas" },
-  challenge: { title: "Pequenas descobertas", category: "ferramentas" },
-  knowledge_quiz: { title: "Conhecimentos essenciais sobre saúde sexual", category: "educacao" },
-  sign_profile: { title: "Descubra seu signo solar", category: "astrologia" },
-  sign_compatibility: { title: "Combinação entre signos", category: "astrologia" }
-};
 
 function showStatus(message, kind) {
   status.textContent = message;
@@ -131,7 +122,7 @@ window.addEventListener("lux:experience-finished", async (event) => {
     return;
   }
 
-  currentResult = buildResult(event.detail);
+  currentResult = buildExperienceResult(event.detail);
   saved = false;
   if (!currentResult) {
     panel.hidden = true;
