@@ -5,7 +5,7 @@
 **Extensão planejada:** cerca de 12 páginas equivalentes  
 **Revisão clínica externa:** não realizada. Este texto não deve ser apresentado como protocolo clínico ou orientação individual.
 
-> **Se houve possível exposição ao HIV nas últimas 72 horas:** procure atendimento de saúde imediatamente para avaliação de PEP. A profilaxia deve começar o mais cedo possível, preferencialmente nas primeiras duas horas, e no máximo em até 72 horas. Não espere sintomas, resultado de teste ou confirmação da situação da outra pessoa. A PEP é oferecida pelo SUS e, quando indicada, dura 28 dias. [Ministério da Saúde — Prevenção](https://www.gov.br/saude/pt-br/assuntos/saude-de-a-a-z/a/aids-hiv/prevencao)
+> **Se houve possível exposição ao HIV nas últimas 72 horas:** procure atendimento de saúde imediatamente para avaliação de PEP. A profilaxia deve começar o mais cedo possível e no máximo em até 72 horas. Não espere sintomas, resultado de teste ou confirmação da situação da outra pessoa. A PEP é oferecida pelo SUS e, quando indicada, dura 28 dias. [Ministério da Saúde — PEP](https://www.gov.br/saude/pt-br/assuntos/saude-de-a-a-z/a/aids-hiv/pep)
 
 ## Resumo essencial
 
@@ -130,7 +130,7 @@ O Ministério da Saúde disponibiliza o [PCDT de PrEP oral](https://www.gov.br/s
 
 PEP é uma medida de urgência para reduzir o risco de infecção pelo HIV após uma exposição potencialmente relevante. A avaliação também pode envolver hepatites virais, outras IST, vacinação e contracepção de emergência, conforme a situação.
 
-**Prazo essencial:** iniciar o mais rápido possível, preferencialmente nas primeiras duas horas e no máximo em até 72 horas após a exposição. Quando indicada, a PEP é tomada por 28 dias, com acompanhamento da equipe de saúde.
+**Prazo essencial:** iniciar o mais rápido possível e no máximo em até 72 horas após a exposição. Quando indicada, a PEP é tomada por 28 dias, com acompanhamento da equipe de saúde.
 
 Procure atendimento imediatamente se houve, por exemplo:
 - relação sexual sem preservativo ou com rompimento/escape, quando houver possível exposição;
@@ -141,7 +141,7 @@ A indicação depende da avaliação da exposição. Não espere sintomas e não
 
 A PEP não protege exposições futuras depois do período do esquema. Se houver possibilidade de novas exposições, converse com a equipe sobre transição para PrEP quando apropriado.
 
-Fonte oficial: [Ministério da Saúde — PEP e prevenção](https://www.gov.br/saude/pt-br/assuntos/saude-de-a-a-z/a/aids-hiv/prevencao) e [PCDT de PEP](https://www.gov.br/saude/pt-br/assuntos/pcdt/p/profilaxia-pos-exposicao-de-risco-pep-a-infeccao-pelo-hiv/view).
+Fontes oficiais: [Ministério da Saúde — PEP](https://www.gov.br/saude/pt-br/assuntos/saude-de-a-a-z/a/aids-hiv/pep), [PCDT de PEP](https://www.gov.br/saude/pt-br/assuntos/pcdt/p/profilaxia-pos-exposicao-de-risco-pep-a-infeccao-pelo-hiv/view) e [lista de PCDTs vigentes](https://www.gov.br/aids/pt-br/central-de-conteudo/pcdts).
 
 ### 4.3 Tratamento do HIV e prevenção
 
@@ -189,6 +189,8 @@ Para PEP, não espere uma consulta agendada: procure imediatamente um serviço q
 - [Ministério da Saúde — Prevenção combinada](https://www.gov.br/aids/pt-br/assuntos/prevencao-combinada)
 - [Ministério da Saúde — PCDT de PEP](https://www.gov.br/saude/pt-br/assuntos/pcdt/p/profilaxia-pos-exposicao-de-risco-pep-a-infeccao-pelo-hiv/view)
 - [Ministério da Saúde — PCDT de PrEP](https://www.gov.br/saude/pt-br/assuntos/pcdt/p/profilaxia-pre-exposicao-prep-oral-a-infeccao-pelo-hiv/view)
+- [Ministério da Saúde — PCDTs vigentes](https://www.gov.br/aids/pt-br/central-de-conteudo/pcdts)
+- [Ministério da Saúde — Calendário Nacional de Vacinação 2026](https://www.gov.br/saude/pt-br/vacinacao/publicacoes/instrucao-normativa-que-instrui-o-calendario-nacional-de-vacinacao-2026.pdf/view)
 
 ## 8. Perguntas frequentes
 
