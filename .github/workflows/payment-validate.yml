@@ -114,7 +114,7 @@ jobs:
           assert 'sign_compatibility: { title: "Combinação entre signos", category: "astrologia" }' in core_module
           assert 'activity_id: "sign_profile"' in signs_module
           assert 'activity_id: "sign_compatibility"' in signs_module
-          assert "sign_profile:" in achievements_module and "sign_compatibility:" in achievements_module
+          assert "sign_profile:" in core_module and "sign_compatibility:" in core_module
           assert 'src="/js/experiencias-salvar.js"' in signs_page
           assert 'id="experienceSavePanel"' in signs_page
           assert "dateInput.value" not in signs_module[signs_module.index('activity_id: "sign_profile"'):signs_module.index("const studio = document.getElementById(\"solarShareStudio\")", signs_module.index('activity_id: "sign_profile"'))]
