@@ -99,3 +99,20 @@
  .conquistas-terms-check{font-size:11px}
  #conquistasAcceptTerms{width:100%;white-space:normal}
 }
+
+
+/* Contraste explícito nas superfícies claras sobre o tema escuro do Portal. */
+.conquistas-hero h1,
+.conquistas-stat strong,
+.conquista-badge strong,
+.conquista-result h3,
+.conquistas-empty h3,
+.conquistas-privacy strong,
+.conquistas-terms-card h1{color:#493451}
+.conquistas-stat small,
+.conquista-badge small,
+.conquista-result time,
+.conquista-result p,
+.conquista-result-meta span,
+.conquistas-empty p{color:#6e6475}
+.conquista-badge-state{color:#75677e}
