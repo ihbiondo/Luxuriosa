@@ -175,10 +175,10 @@ Não necessariamente. Sentir insegurança pode acontecer, mas vigilância, contr
 Não. Autonomia e interesses individuais podem coexistir com compromisso e proximidade.
 
 ### Como saber se um acordo é justo?
-As pessoas envolvidas devem compreender o acordo, participar livremente e poder expressar dúvidas ou recusar mudanças sem ameaça. Acordos não anulam direitos individuais.
+As pessoas envolvidas devem compreender o acordo, participar livremente e poder expressar dúvidas ou recusar mudanças sem ameaça. Acordos não anulam direitos individuais nem substituem consentimento em cada situação.
 
 ### Como resolver uma discussão?
-Tente abordar um tema por vez, ouvir as perspectivas, formular pedidos concretos e combinar mudanças observáveis. Se houver medo, ameaça ou violência, priorize segurança e apoio especializado.
+Se houver segurança e liberdade para ambas as pessoas, tente abordar um tema por vez, ouvir as perspectivas, formular pedidos concretos e combinar mudanças observáveis. Se houver medo, ameaça, coerção ou violência, não trate a situação como uma simples falha de comunicação: priorize segurança e apoio especializado.
 
 ### Preciso compartilhar minhas senhas para provar confiança?
 Não. Privacidade continua sendo um direito dentro de uma relação.
@@ -195,7 +195,7 @@ Relacionamentos e intimidade são construídos por pessoas reais, com necessidad
 4. **Ministério da Saúde (Brasil).** *Saúde sexual e saúde reprodutiva.* Cadernos de Atenção Básica, nº 26. https://bvsms.saude.gov.br/bvs/publicacoes/saude_sexual_saude_reprodutiva.pdf
 5. **World Health Organization (WHO).** *Violence against women.* 18 jun. 2026. Definições de violência por parceiro íntimo, coerção sexual, abuso psicológico e comportamentos de controle. https://www.who.int/news-room/fact-sheets/detail/violence-against-women
 6. **Centers for Disease Control and Prevention (CDC).** *About Intimate Partner Violence.* 19 ago. 2026. Formas de violência por parceiro íntimo, incluindo agressão psicológica, perseguição e violência sexual. https://www.cdc.gov/intimate-partner-violence/about/
-7. **American College of Obstetricians and Gynecologists (ACOG).** *Healthy Relationships.* Limites, autonomia, escolha sexual e ausência de pressão. https://www.acog.org/womens-health/faqs/healthy-relationships
+7. **American College of Obstetricians and Gynecologists (ACOG).** *Intimate Partner Violence.* Padrões de abuso psicológico, violência sexual e coerção reprodutiva. https://www.acog.org/clinical/clinical-guidance/committee-opinion/articles/2012/02/intimate-partner-violence
 8. **Ministério das Mulheres (Brasil).** *Especial Lei Maria da Penha: saiba onde buscar ajuda em casos de violência doméstica e familiar contra mulheres.* 5 ago. 2026. Rede de atendimento, Ligue 180 e emergência 190. https://www.gov.br/mulheres/pt-br/central-de-conteudos/noticias/2026/agosto-defeso-eleitoral/especial-lei-maria-da-penha-saiba-onde-e-como-buscar-ajuda-em-casos-de-violencia-domestica-e-familiar
 9. **Ministério da Saúde (Brasil).** *Guia prático de cuidado à mulher em situação de violência.* 2025, versão preliminar. Escuta acolhedora, autonomia, não culpabilização e limites da atuação profissional. https://www.gov.br/saude/pt-br/centrais-de-conteudo/publicacoes/guias-e-manuais/2025/guia-pratico-de-cuidado-a-mulher-em-situacao-de-violencia.pdf
 
