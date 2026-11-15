@@ -216,6 +216,10 @@ function clearDialogState(){
   byId("experienceCounter").textContent="";
   byId("experienceSources").hidden=true;
   byId("experienceJourney").hidden=true;
+  const savePanel=byId("experienceSavePanel");
+  if(savePanel)savePanel.hidden=true;
+  const saveStatus=byId("experienceSaveStatus");
+  if(saveStatus){saveStatus.hidden=true;saveStatus.textContent="";}
 }
 function openExperience(id,opener){
   const experience=experiences[id];
@@ -387,6 +391,9 @@ function finishExperience(){
   byId("experienceCounter").textContent="CONCLUÍDA";
   byId("experienceProgressBar").style.width="100%";
   byId("experienceSources").hidden=current.id!=="curiosity";
+  let score=null;
+  let scoreMax=null;
+
   if(current.id==="discovery"){
     const counts={curiosity:0,connection:0,reflection:0,exploration:0};
     answers.forEach(value=>{if(Object.prototype.hasOwnProperty.call(counts,value))counts[value]++;});
@@ -396,7 +403,8 @@ function finishExperience(){
     byId("experienceResultDescription").textContent=result.description;
     byId("experienceResultAdvice").textContent=result.advice;
   }else if(current.id==="curiosity"){
-    const score=current.questions.reduce((total,item,index)=>total+(answers[index]===item.answer?1:0),0);
+    score=current.questions.reduce((total,item,index)=>total+(answers[index]===item.answer?1:0),0);
+    scoreMax=current.questions.length;
     byId("experienceResultTitle").textContent=current.result.title;
     byId("experienceResultDescription").textContent="Você acertou "+score+" de "+current.questions.length+" perguntas. "+current.result.description;
     byId("experienceResultAdvice").textContent=current.result.advice;
@@ -405,10 +413,23 @@ function finishExperience(){
     byId("experienceResultDescription").textContent=current.result.description;
     byId("experienceResultAdvice").textContent=current.result.advice;
   }
+
   renderExperienceJourney();
+
+  // O evento contém somente o resumo exibido ao visitante, nunca as respostas individuais.
+  window.dispatchEvent(new CustomEvent("lux:experience-finished",{detail:{
+    attempt_id:crypto.randomUUID(),
+    activity_id:current.id,
+    result_title:byId("experienceResultTitle").textContent.slice(0,120),
+    result_summary:(byId("experienceResultDescription").textContent+" "+byId("experienceResultAdvice").textContent).trim().slice(0,800),
+    score,
+    score_max:scoreMax
+  }}));
+
   byId("experienceRestart").focus();
 }
 function restartExperience(){
+  byId("experienceSavePanel").hidden=true;
   byId("experienceResult").hidden=true;
   byId("experienceRunner").hidden=false;
   questionIndex=0;

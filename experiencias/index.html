@@ -25,6 +25,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/css/experiencias.css">
 <script src="/js/experiencias.js" defer></script>
+<script type="module" src="/js/experiencias-salvar.js"></script>
 <script type="application/ld+json">
 {
   "@context":"https://schema.org",
@@ -105,7 +106,7 @@
 <p id="emptyState" class="empty" hidden>Nenhuma experiência encontrada com esse filtro. Experimente outra categoria ou busca.</p>
 </section>
 <section class="note">
-<div><small>SEU ESPAÇO, SUAS ESCOLHAS</small><h2>Você decide o que compartilhar.</h2><p>As respostas dos quizzes, cartas e desafios são processadas nesta página e não são enviadas nem armazenadas. Seus favoritos ficam somente neste dispositivo. A calculadora de signo processa data, horário e fuso no navegador, sem enviar ou persistir esses dados. As recomendações podem considerar apenas os caminhos visitados nesta aba durante a sessão; esse contexto temporário não é associado a uma conta nem enviado a servidores. Não é necessário criar cadastro para participar.</p></div>
+<div><small>SEU ESPAÇO, SUAS ESCOLHAS</small><h2>Você decide o que compartilhar.</h2><p>As respostas dos quizzes, cartas e desafios são processadas nesta página e não são enviadas nem armazenadas. O salvamento opcional de resumos é disponibilizado apenas a clientes cadastrados, com sessão ativa e aceite vigente dos termos de Minhas conquistas; não inclui respostas individuais. Seus favoritos ficam somente neste dispositivo. A calculadora de signo processa data, horário e fuso no navegador, sem enviar ou persistir esses dados. As recomendações podem considerar apenas os caminhos visitados nesta aba durante a sessão; esse contexto temporário não é associado a uma conta nem enviado a servidores. Não é necessário criar cadastro para participar.</p></div>
 <a href="/privacidade.html">Conhecer a privacidade →</a>
 </section>
 </main>
@@ -120,7 +121,7 @@
 <div class="experience-progress" aria-hidden="true"><span id="experienceProgressBar"></span></div>
 <section id="experienceIntro">
 <h2 id="experienceTitle">Vamos começar?</h2><p id="experienceDescription">Escolha uma experiência e aproveite no seu ritmo.</p>
-<div class="dialog-meta"><span id="experienceDuration"></span><span>Suas respostas não são salvas</span></div>
+<div class="dialog-meta"><span id="experienceDuration"></span><span>Suas respostas não são armazenadas</span></div>
 <button id="experienceStart" class="primary" type="button">Começar agora →</button>
 </section>
 <section id="experienceRunner" hidden>
@@ -142,6 +143,11 @@
 <div><small>SE QUISER CONTINUAR</small><h3 id="experienceJourneyTitle">Uma próxima descoberta, no seu ritmo.</h3><p id="experienceJourneyDescription">Escolha livremente se deseja explorar outro assunto.</p></div>
 <div class="journey-links"><a id="experienceJourneyLinkOne" href="/experiencias/">Continuar explorando</a><a id="experienceJourneyLinkTwo" href="/educacao/">Conhecer a Educação</a></div>
 <a class="journey-portal" href="/portal/">Voltar ao meu Portal</a>
+</aside>
+<aside id="experienceSavePanel" class="save-result-panel" aria-labelledby="experienceSaveTitle" hidden>
+<div><small>SUA JORNADA</small><strong id="experienceSaveTitle">Guardar esta descoberta?</strong><p>Salve somente este resumo na sua conta. As respostas individuais não são armazenadas.</p></div>
+<button id="experienceSaveButton" class="primary" type="button">Salvar resultado na minha conta</button>
+<p id="experienceSaveStatus" role="status" aria-live="polite" hidden></p>
 </aside>
 <div class="result-actions"><button id="experienceRestart" class="primary" type="button">Refazer experiência</button><button id="experienceDone" class="secondary-button" type="button">Voltar à lista</button></div>
 </section>

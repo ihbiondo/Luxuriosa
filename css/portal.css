@@ -50,7 +50,7 @@ button{font:inherit}
 .discover-section{margin-top:39px}
 .section-heading{margin-bottom:14px}
 .section-heading h2{margin:5px 0 0;font:400 28px/1.2 var(--serif)}
-.secondary-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.secondary-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
 .secondary-card{display:flex;align-items:center;gap:13px;min-height:92px;padding:17px;border:1px solid var(--line);border-radius:14px;background:#fff;transition:border-color .15s,transform .15s}
 .secondary-card:hover{transform:translateY(-1px);border-color:#d2bfdc}
 .secondary-icon{display:grid;place-items:center;width:43px;height:43px;flex:0 0 43px;border-radius:13px;background:var(--lav);color:var(--lavdeep);font-size:22px}
@@ -65,6 +65,7 @@ button{font:inherit}
 .footer a:first-child{color:var(--lavdeep);font-weight:700}
 :focus-visible{outline:3px solid #e83f9b;outline-offset:4px}
 @media(max-width:900px){
+ .secondary-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
  .topbar{gap:18px;padding-inline:18px}
  .desktop-nav{gap:13px}
  .desktop-nav a{font-size:10px}
@@ -412,3 +413,96 @@ body{
  .secondary-copy>span{font-size:13px}
  .secondary-card{min-height:96px}
 }
+
+
+/* Acabamento claro do Portal autenticado: lavanda suave, superfícies gelo e alto contraste. */
+:root{
+ color-scheme:light;
+ --page:#f8f6fa;--white:#fff;--ice:#fdfbfe;
+ --lav:#eee7f4;--lav2:#e4d8ec;--lavdeep:#654b72;
+ --pink:#d83c91;--pinksoft:#fff0f7;--gold:#b99a58;
+ --ink:#34283a;--muted:#756a7b;--line:#e8deeb
+}
+body{
+ background:
+  radial-gradient(ellipse at 8% 5%,rgba(187,157,207,.22),transparent 34%),
+  radial-gradient(ellipse at 94% 88%,rgba(240,79,168,.07),transparent 30%),
+  linear-gradient(145deg,#fcfbfd,#f4eef8 64%,#fbf8fc);
+ color:#34283a
+}
+.loading{background:#f8f6fa;color:#756a7b}
+.loading strong{color:#34283a}
+.topbar{
+ background:rgba(255,255,255,.96);
+ border-color:#e8deeb;
+ box-shadow:0 3px 18px rgba(64,45,72,.045)
+}
+.desktop-nav a{color:#655b6c}
+.desktop-nav a span{color:#a63b82}
+.desktop-nav a:hover,.account-link:hover{color:#bd347f}
+.account-link{color:#654b72}
+.top-actions button,.mobile-menu>summary{
+ border-color:#dfd5e6;background:#fff;color:#654b72
+}
+.top-actions button:hover,.mobile-menu>summary:hover{
+ border-color:#e3a7ca;background:#fff2f8;color:#ad3279
+}
+.mobile-menu-panel{
+ border-color:#e8deeb;background:#fff;
+ box-shadow:0 16px 38px rgba(48,41,54,.13)
+}
+.mobile-menu-panel a{color:#594d62}
+.mobile-menu-panel a:hover,.mobile-menu-panel .mobile-main-link--featured{
+ background:#fff0f7;color:#ad3279
+}
+.main{color:#34283a}
+.welcome{
+ border-color:#e5dbea;
+ background:linear-gradient(108deg,#efe7f5 0%,#faf7fc 66%,#fff3f8 100%);
+ box-shadow:0 8px 28px rgba(64,45,72,.05)
+}
+.welcome .eyebrow{color:#826d90}
+.welcome h1{color:#382d40}
+.welcome h1 span{color:#685174}
+.welcome p{color:#706579}
+.welcome-mark{
+ border-color:#d9c9e2;background:rgba(255,255,255,.82);color:#b99a58
+}
+.priority-card{
+ border-color:#e6dce9;background:#fff;
+ box-shadow:0 9px 30px rgba(64,45,72,.06)
+}
+.priority-card--store{
+ border-color:#edc8dc;background:linear-gradient(120deg,#fff1f7,#fff 78%)
+}
+.priority-card--orders{
+ border-color:#e4d9eb;background:linear-gradient(120deg,#f3edf7,#fff 78%)
+}
+.priority-icon{
+ border-color:#edc7dc;background:#fff8fc;color:#d53c91
+}
+.priority-card--orders .priority-icon{
+ border-color:#ded1e8;background:#faf7fc;color:#6c557c
+}
+.priority-kicker{color:#8a758f}
+.priority-copy strong{color:#382d40}
+.priority-description{color:#6e6375}
+.priority-action{color:#b52e78}
+.priority-card--orders .priority-action{color:#665078}
+.discover-section .section-heading h2{color:#382d40}
+.section-heading .eyebrow{color:#826d90}
+.secondary-card{
+ border-color:#dfd1e8;background:linear-gradient(130deg,#fff,#f8f4fa);
+ box-shadow:0 5px 20px rgba(64,45,72,.035)
+}
+.secondary-card:hover{border-color:#dfb3d0;background:#fffafd}
+.secondary-icon{background:#f0e9f5;color:#675078}
+.secondary-copy strong{color:#382d40}
+.secondary-copy>span{color:#706579}
+.secondary-arrow{color:#a17caa}
+.footnote{color:#706579}
+.footer{
+ border-color:#e8e0ec;background:rgba(255,255,255,.92);color:#706579
+}
+.footer a:first-child{color:#5c4469}
+:focus-visible{outline:3px solid #d83c91;outline-offset:4px}
