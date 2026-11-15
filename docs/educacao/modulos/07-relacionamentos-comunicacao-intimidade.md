@@ -1,6 +1,6 @@
 # Módulo 7 — Relacionamentos, comunicação e intimidade
 
-**Status:** rascunho editorial v0.1 — material interno para revisão; não publicado  
+**Status:** rascunho editorial v0.2 — material interno para revisão; não publicado  
 **Público:** pessoas adultas  
 **Extensão planejada:** cerca de 10 páginas equivalentes  
 **Revisão psicossocial externa:** não realizada
@@ -47,13 +47,13 @@ O que importa é que as pessoas envolvidas compreendam os acordos, possam partic
 
 Comunicar-se bem não significa adivinhar pensamentos nem evitar assuntos difíceis. Significa criar condições para que necessidades, expectativas e limites possam ser expressos sem medo de punição.
 
-Uma conversa útil pode seguir quatro movimentos:
+Uma conversa útil, **quando existe segurança e liberdade para conversar**, pode seguir quatro movimentos:
 1. **Descrever:** explicar o que aconteceu sem começar por insultos ou acusações.
 2. **Expressar:** dizer como a situação foi percebida e o que despertou.
 3. **Pedir:** formular um pedido concreto, possível e negociável.
 4. **Escutar:** permitir que a outra pessoa explique sua perspectiva e responda livremente.
 
-Exemplo: em vez de “você nunca se importa comigo”, experimentar “quando nossos planos mudam sem aviso, fico frustrado; podemos combinar como avisar um ao outro?”. A formulação não garante concordância, mas torna a necessidade mais compreensível.
+Exemplo: em vez de “você nunca se importa comigo”, experimentar “quando nossos planos mudam sem aviso, fico frustrado; podemos combinar como avisar um ao outro?”. A formulação não garante concordância, mas torna a necessidade mais compreensível. Ela não obriga a outra pessoa a aceitar o pedido nem substitui o direito de cada um manter seus limites.
 
 ### 2.1 Escuta ativa e perguntas abertas
 
@@ -70,7 +70,7 @@ Escutar não significa concordar com tudo. É possível reconhecer a experiênci
 
 Assuntos como exclusividade, prevenção de IST, contracepção, dinheiro, tempo, família, privacidade, frequência de contato e expectativas sexuais podem gerar desconforto. Adiar indefinidamente a conversa pode aumentar mal-entendidos.
 
-Escolha um momento em que as pessoas possam conversar com privacidade e sem pressa. Se a conversa ficar agressiva, uma pausa combinada pode ajudar. A pausa não deve ser usada como ameaça, punição ou forma de impedir que o assunto seja retomado.
+Escolha um momento em que as pessoas possam conversar com privacidade e sem pressa. Se a conversa ficar tensa, uma pausa combinada pode ajudar quando ambas as pessoas conseguem pedi-la e respeitá-la. A pausa não deve ser usada como ameaça, punição ou forma de impedir que o assunto seja retomado. **Essa orientação não é adequada como estratégia de negociação quando há medo, intimidação, coerção ou violência:** nesses contextos, a prioridade é a segurança e o apoio independente, não melhorar a comunicação com a pessoa que exerce controle.
 
 ## 3. Intimidade emocional e física
 
@@ -82,13 +82,13 @@ A intimidade física também pode assumir muitas formas: abraço, beijo, carinho
 
 Vontade de proximidade, desejo sexual e disponibilidade emocional não são constantes. Podem mudar com saúde, estresse, sono, medicamentos, fases da vida, experiências anteriores, contexto e qualidade da relação.
 
-Uma diferença de desejo não prova falta de amor, atração ou compromisso. Em vez de tratar a diferença como falha de alguém, pode ser útil conversar sobre necessidades, alternativas de proximidade e limites. A solução não é pressionar uma pessoa a fazer sexo para evitar conflito.
+Uma diferença de desejo não prova falta de amor, atração ou compromisso. Desejo também pode variar ao longo do tempo e não precisa ser igual entre as pessoas. Em vez de tratar a diferença como falha de alguém, pode ser útil conversar sobre necessidades, alternativas de proximidade e limites — desde que a conversa seja livre de pressão. Ninguém deve sexo, toque ou demonstração física para evitar conflito, provar amor ou impedir o fim da relação. Consentimento não pode ser negociado como dívida.
 
 ### 3.2 Acordos e expectativas
 
 Acordos podem tratar de exclusividade, encontros, comunicação, privacidade digital, prevenção, uso de acessórios, divisão de tarefas e tempo individual. Devem ser compreensíveis, voluntários e passíveis de revisão.
 
-Um acordo saudável não pode retirar o direito de recusar uma atividade, controlar o corpo da outra pessoa ou justificar vigilância permanente. Se um acordo deixou de funcionar, é legítimo conversar sobre mudanças — e também reconhecer que as pessoas podem desejar caminhos diferentes.
+Um acordo saudável não pode retirar o direito de recusar uma atividade, controlar o corpo da outra pessoa ou justificar vigilância permanente. Acordos não substituem consentimento específico e atual. Se um acordo deixou de funcionar, é legítimo conversar sobre mudanças — e também reconhecer que as pessoas podem desejar caminhos diferentes ou decidir encerrar a relação. Ninguém é obrigado a aceitar uma mudança proposta, mas também não pode impor a continuidade de um acordo pela força, ameaça ou chantagem.
 
 ## 4. Conflitos, reparação e limites
 
@@ -106,6 +106,8 @@ Pedir desculpas é apenas uma parte da reparação. Também importa reconhecer o
 
 ### 4.1 Quando o conflito vira controle ou violência
 
+Conflito é uma divergência; violência envolve comportamentos que causam ou procuram causar dano, medo, submissão ou perda de autonomia. Não é necessário haver agressão física para existir violência psicológica, sexual, patrimonial ou controle coercitivo. Um episódio isolado pode ser grave, e padrões repetidos também podem restringir progressivamente a liberdade.
+
 Sinais preocupantes incluem:
 - monitorar localização, mensagens ou contatos sem consentimento;
 - afastar alguém de amigos e familiares;
@@ -113,9 +115,13 @@ Sinais preocupantes incluem:
 - humilhar, ameaçar, intimidar ou destruir objetos;
 - insistir em atividade sexual após uma recusa;
 - usar chantagem, medo ou exposição íntima para obter obediência;
+- controlar contracepção, sabotar preservativos ou outros métodos, pressionar por gravidez ou aborto, ou impedir acesso a cuidados reprodutivos;
+- controlar dinheiro, documentos, medicamentos ou acesso a serviços de saúde;
 - perseguir ou ameaçar após uma tentativa de afastamento.
 
-Ciúme não é prova de amor e não legitima controle. A pessoa afetada não é responsável por administrar a violência de outra pessoa. Terapia de casal não deve ser indicada automaticamente em contextos de violência ou coerção; a segurança e a avaliação especializada vêm primeiro.
+Ciúme não é prova de amor e não legitima controle. A pessoa afetada não é responsável por administrar a violência de outra pessoa nem por encontrar a frase certa para fazê-la parar. Controle coercitivo pode incluir um conjunto de ações que, ao longo do tempo, reduz a autonomia, o acesso a recursos e a possibilidade de discordar.
+
+Terapia de casal, mediação ou exercícios de comunicação não devem ser indicados automaticamente em contextos de violência, coerção ou medo: podem expor a pessoa afetada a retaliação ou criar uma falsa simetria de responsabilidade. A avaliação individual e a segurança vêm primeiro. Não confronte a pessoa agressora nem anuncie planos de saída se isso puder aumentar o risco.
 
 ## 5. Intimidade digital e privacidade
 
@@ -129,7 +135,7 @@ Boas práticas incluem:
 - usar senhas únicas e autenticação em duas etapas;
 - encerrar sessões em dispositivos que deixaram de ser compartilhados.
 
-Enviar uma imagem íntima não autoriza sua divulgação. Em caso de ameaça ou exposição, preserve evidências apenas se isso for seguro, evite confrontar a pessoa agressora quando houver risco e procure orientação de serviços especializados.
+Enviar uma imagem íntima não autoriza sua divulgação. Em caso de ameaça ou exposição, preserve evidências apenas se isso for seguro, evite confrontar a pessoa agressora quando houver risco e procure orientação de serviços especializados. Não há obrigação de manter, copiar ou armazenar imagens íntimas para provar o ocorrido se isso aumentar o risco ou o sofrimento.
 
 ## 6. Conversas práticas sobre intimidade
 
@@ -146,11 +152,13 @@ Não existe frase perfeita. A qualidade da conversa depende também de a outra p
 
 ## 7. Quando buscar apoio
 
-Considere buscar apoio profissional quando houver sofrimento persistente, dificuldade de comunicação que não melhora, conflitos recorrentes, impacto importante na saúde mental, dúvidas sobre sexualidade ou dificuldades relacionadas à intimidade.
+Considere buscar apoio profissional quando houver sofrimento persistente, dificuldade de comunicação que não melhora, conflitos recorrentes, impacto importante na saúde mental, dúvidas sobre sexualidade ou dificuldades relacionadas à intimidade. Buscar ajuda não significa que a pessoa precise terminar ou manter a relação; o apoio deve respeitar suas decisões e seu ritmo.
+
+Em situações de controle ou violência, priorize atendimento individual e confidencial. Se for seguro, procure uma pessoa de confiança e serviços especializados. A pessoa que oferece apoio deve escutar sem culpar, evitar impor decisões e perguntar que tipo de ajuda é desejada. O plano de segurança precisa considerar o risco concreto e não deve ser reduzido a uma lista universal.
 
 Psicólogos, médicos e outros profissionais habilitados podem ajudar conforme a necessidade. Terapia individual pode ser uma opção quando alguém precisa compreender seus limites ou avaliar sua segurança. Em situações de violência, procure serviços especializados e orientação independente; não espere que a relação se resolva apenas com uma conversa.
 
-No Brasil, a rede de saúde pode ser acessada pela UBS. Em situações de violência contra mulheres, o Ligue 180 oferece orientação e encaminhamento; em emergência, acione o serviço de emergência adequado. O Disque 100 recebe denúncias de violações de direitos humanos. Confirme canais e funcionamento antes da publicação deste capítulo.
+No Brasil, a rede de saúde pode ser acessada pela UBS. **Para mulheres em situação de violência**, o Ligue 180 oferece acolhimento, orientação e encaminhamento; em emergência ou risco imediato, a Polícia Militar pode ser acionada pelo 190. O Disque 100 recebe denúncias de violações de direitos humanos. Os canais têm públicos e finalidades diferentes; não apresente o Ligue 180 como canal universal para todas as pessoas. Pessoas de outros gêneros também podem procurar UBS, serviços de saúde, assistência social, Defensoria Pública, Ministério Público e serviços locais de proteção. Confirme canais, disponibilidade e funcionamento antes da publicação deste capítulo.
 
 ## 8. Perguntas frequentes
 
@@ -185,9 +193,17 @@ Relacionamentos e intimidade são construídos por pessoas reais, com necessidad
 2. **World Health Organization / UNESCO.** *International technical guidance on sexuality education: an evidence-informed approach.* 2018. Seções sobre comunicação, negociação, relações e limites. https://www.who.int/publications/i/item/9789231002595
 3. **World Health Organization.** *Comprehensive sexuality education.* 11 mar. 2026. Informação científica, relações respeitosas, direitos e tomada de decisões. https://www.who.int/news-room/fact-sheets/detail/comprehensive-sexuality-education
 4. **Ministério da Saúde (Brasil).** *Saúde sexual e saúde reprodutiva.* Cadernos de Atenção Básica, nº 26. https://bvsms.saude.gov.br/bvs/publicacoes/saude_sexual_saude_reprodutiva.pdf
+5. **World Health Organization (WHO).** *Violence against women.* 18 jun. 2026. Definições de violência por parceiro íntimo, coerção sexual, abuso psicológico e comportamentos de controle. https://www.who.int/news-room/fact-sheets/detail/violence-against-women
+6. **Centers for Disease Control and Prevention (CDC).** *About Intimate Partner Violence.* 19 ago. 2026. Formas de violência por parceiro íntimo, incluindo agressão psicológica, perseguição e violência sexual. https://www.cdc.gov/intimate-partner-violence/about/
+7. **American College of Obstetricians and Gynecologists (ACOG).** *Healthy Relationships.* Limites, autonomia, escolha sexual e ausência de pressão. https://www.acog.org/womens-health/faqs/healthy-relationships
+8. **Ministério das Mulheres (Brasil).** *Especial Lei Maria da Penha: saiba onde buscar ajuda em casos de violência doméstica e familiar contra mulheres.* 5 ago. 2026. Rede de atendimento, Ligue 180 e emergência 190. https://www.gov.br/mulheres/pt-br/central-de-conteudos/noticias/2026/agosto-defeso-eleitoral/especial-lei-maria-da-penha-saiba-onde-e-como-buscar-ajuda-em-casos-de-violencia-domestica-e-familiar
+9. **Ministério da Saúde (Brasil).** *Guia prático de cuidado à mulher em situação de violência.* 2025, versão preliminar. Escuta acolhedora, autonomia, não culpabilização e limites da atuação profissional. https://www.gov.br/saude/pt-br/centrais-de-conteudo/publicacoes/guias-e-manuais/2025/guia-pratico-de-cuidado-a-mulher-em-situacao-de-violencia.pdf
 
 **Controle editorial antes da publicação**
 - Submeter a revisão psicossocial por profissional habilitado.
+- Confirmar se as recomendações de comunicação estão sempre condicionadas à segurança e à ausência de coerção.
+- Validar a distinção entre canais de apoio para mulheres e serviços gerais acessíveis a outras pessoas.
+- Conferir a linguagem sobre controle coercitivo, coerção reprodutiva e risco de retaliação com profissional especializado em violência.
 - Revisar orientações brasileiras sobre violência, privacidade e canais de apoio.
 - Conferir se a linguagem contempla diferentes configurações de relacionamento sem hierarquizá-las.
 - Evitar sugerir terapia de casal quando houver violência, coerção ou risco.
