@@ -164,7 +164,7 @@ Conforme a necessidade, os cuidados podem incluir:
 - exames e acompanhamento;
 - informação sobre direitos e serviços disponíveis.
 
-Algumas medidas são sensíveis ao tempo. A avaliação para PEP contra HIV deve ocorrer o mais rápido possível e, no máximo, em até 72 horas após possível exposição. A indicação depende de avaliação do serviço de saúde; não espere sintomas nem tente decidir sozinho se a profilaxia é necessária. A equipe também pode avaliar contracepção de emergência, outras profilaxias e seguimento. Mesmo se já passou esse prazo, procure atendimento: ainda pode haver cuidados importantes.
+Algumas medidas são sensíveis ao tempo. A avaliação para PEP contra HIV deve ocorrer o mais rápido possível — preferencialmente nas primeiras duas horas, conforme orientação do Ministério da Saúde — e, no máximo, em até 72 horas após possível exposição. A indicação depende de avaliação do serviço de saúde; não espere sintomas nem tente decidir sozinho se a profilaxia é necessária. A indicação depende de avaliação do serviço de saúde; não espere sintomas nem tente decidir sozinho se a profilaxia é necessária. A equipe também pode avaliar contracepção de emergência, outras profilaxias e seguimento. Mesmo se já passou esse prazo, procure atendimento: ainda pode haver cuidados importantes.
 
 O atendimento deve respeitar privacidade, autonomia e decisões da pessoa, com explicação clara dos procedimentos. Em situações concretas, peça ao serviço que explique quais informações serão registradas e quais comunicações são obrigatórias.
 
