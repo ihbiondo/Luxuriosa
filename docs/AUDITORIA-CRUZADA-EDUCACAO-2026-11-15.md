@@ -114,3 +114,45 @@ A decisão continua sendo preservar as 23 URLs. Não há base suficiente nesta e
 4. Decidir política de diagramas educativos antes de introduzir mídia.
 5. Fazer checagem individual de fontes, datas e alegações clínicas nos 23 artigos.
 6. Manter PR #132 em rascunho até a revisão e autorização explícita.
+
+
+## 9. Produção dos módulos 2, 3 e 4 — 15/11/2026
+
+Foram criados três rascunhos internos na branch da PR:
+
+- `docs/educacao/modulos/02-anatomia-e-fisiologia-reprodutiva.md`
+- `docs/educacao/modulos/03-ciclo-menstrual-fertilidade-reproducao.md`
+- `docs/educacao/modulos/04-contracepcao-planejamento-reprodutivo.md`
+
+### Escopo coberto
+
+- **Módulo 2:** anatomia externa e interna, vulva/vagina, clitóris, útero, ovários, tubas, pênis, testículos, estruturas acessórias, resposta corporal, variações anatômicas e sinais de alerta.
+- **Módulo 3:** eixo hormonal, fases ovarianas e uterinas, ovulação, janela fértil, fecundação, implantação, testes, variações ao longo da vida e limites de aplicativos/calendários.
+- **Módulo 4:** métodos LARC, hormonais, barreira, comportamentais, contracepção de emergência, esterilização, dupla proteção, elegibilidade e acesso no SUS.
+
+### Cuidados específicos
+
+- Não afirmar que a ovulação ocorre sempre no 14º dia.
+- Não apresentar aplicativos como confirmação de ovulação ou método contraceptivo garantido.
+- Não confundir lubrificação ou ereção com consentimento.
+- Não apresentar contracepção de emergência como método abortivo.
+- Não sugerir que métodos hormonais, DIU ou implante protejam contra IST.
+- Não transformar taxas de falha de fontes diferentes em comparação direta sem padronizar metodologia.
+- Não prescrever método nem substituir critérios de elegibilidade clínica da OMS.
+
+### Fontes-base consultadas
+
+- Ministério da Saúde — contracepção e métodos ofertados no SUS.
+- Ministério da Saúde — Nota Técnica nº 2/2025 sobre acesso, contracepção de emergência em até 120 horas e atendimento a adolescentes.
+- Ministério da Saúde — materiais do Programa Dignidade Menstrual 2025 e página de ciclo menstrual atualizada em outubro de 2026.
+- OMS — Medical eligibility criteria for contraceptive use, 6ª edição (3/11/2025).
+- OMS — Selected practice recommendations for contraceptive use, 4ª edição (3/11/2025).
+- OMS — Guidelines on expanding contraceptive options (23/09/2026).
+- MedlinePlus e NHS — anatomia reprodutiva e ciclo menstrual.
+- ACOG — métodos de percepção da fertilidade.
+
+Os links e datas completos constam ao final de cada módulo. As fontes servem como base para revisão, não como prova de revisão profissional.
+
+### Situação
+
+Os três capítulos são rascunhos v0.1. Não houve revisão clínica externa, não foram adicionados à navegação pública e não foram publicados. Os próximos passos são revisão técnica, verificação de cada afirmação contra a fonte primária e execução da validação automatizada da PR.
