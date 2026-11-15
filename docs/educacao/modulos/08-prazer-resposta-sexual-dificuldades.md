@@ -216,14 +216,14 @@ Prazer e resposta sexual são individuais e contextuais. Desejo, excitação, re
 1. **Ministério da Saúde (Brasil).** *Saúde sexual e saúde reprodutiva.* Cadernos de Atenção Básica, nº 26. Apresenta modelos de resposta sexual e reconhece fatores biológicos, psicológicos e socioculturais. https://bvsms.saude.gov.br/bvs/publicacoes/saude_sexual_saude_reprodutiva.pdf
 2. **American College of Obstetricians and Gynecologists (ACOG).** *Your Sexual Health.* Informações sobre desejo, excitação, orgasmo, dor e quando conversar com profissional. https://www.acog.org/womens-health/faqs/your-sexual-health
 3. **ACOG.** *Female Sexual Dysfunction.* Practice Bulletin nº 213, julho de 2019; reafirmado em 2025. https://www.acog.org/clinical/clinical-guidance/practice-bulletin/articles/2019/07/female-sexual-dysfunction
-8. **European Association of Urology (EAU).** *Guidelines on Sexual and Reproductive Health — Management of Erectile Dysfunction.* Edição 2026. https://uroweb.org/guidelines/sexual-and-reproductive-health/chapter/management-of-erectile-dysfunction
-9. **International Society for the Study of Women’s Sexual Health (ISSWSH).** *Clinical Practice Guideline for the Use of Systemic Testosterone for Hypoactive Sexual Desire Disorder in Women.* 2021. https://pmc.ncbi.nlm.nih.gov/articles/PMC8064950/
-10. **Fifth International Consultation on Sexual Medicine (ICSM).** *Definitions, classification, and epidemiology of sexual dysfunction: a consensus statement.* 2026. https://academic.oup.com/smr/article/14/2/qeag028/8685686
-11. **U.S. Food and Drug Administration (FDA).** *Sexual Enhancement and Energy Product Notifications.* Consultar alertas atualizados; alertas de 2026 incluem produtos com ingredientes farmacológicos não declarados. https://www.fda.gov/drugs/medication-health-fraud-notifications/sexual-enhancement-and-energy-product-notifications
 4. **American Academy of Family Physicians (AAFP).** *Female Sexual Dysfunction: Common Questions and Answers.* American Family Physician, 2025;111(5):433–442. https://www.aafp.org/afp/2025/0500/female-sexual-dysfunction
 5. **NHS.** *Low sex drive (loss of libido).* Fatores associados e quando buscar avaliação. https://www.nhs.uk/symptoms/loss-of-libido/
 6. **NHS.** *Erectile dysfunction (impotence).* Causas possíveis e indicação de avaliação quando recorrente. https://www.nhs.uk/conditions/erection-problems-erectile-dysfunction/
 7. **MedlinePlus.** *Women and sexual problems.* Sinais que justificam procurar atendimento. https://medlineplus.gov/ency/patientinstructions/000663.htm
+8. **European Association of Urology (EAU).** *Guidelines on Sexual and Reproductive Health — Management of Erectile Dysfunction.* Edição 2026. https://uroweb.org/guidelines/sexual-and-reproductive-health/chapter/management-of-erectile-dysfunction
+9. **International Society for the Study of Women’s Sexual Health (ISSWSH).** *Clinical Practice Guideline for the Use of Systemic Testosterone for Hypoactive Sexual Desire Disorder in Women.* 2021. https://pmc.ncbi.nlm.nih.gov/articles/PMC8064950/
+10. **Fifth International Consultation on Sexual Medicine (ICSM).** *Definitions, classification, and epidemiology of sexual dysfunction: a consensus statement.* 2026. https://academic.oup.com/smr/article/14/2/qeag028/8685686
+11. **U.S. Food and Drug Administration (FDA).** *Sexual Enhancement and Energy Product Notifications.* Consultar alertas atualizados; alertas de 2026 incluem produtos com ingredientes farmacológicos não declarados. https://www.fda.gov/drugs/medication-health-fraud-notifications/sexual-enhancement-and-energy-product-notifications
 
 **Controle editorial antes da publicação**
 - Revisão por profissional habilitado em saúde sexual, ginecologia/urologia ou área pertinente.
