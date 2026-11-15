@@ -453,3 +453,16 @@ Correções aplicadas:
 A leitura estrutural dos 23 artigos confirmou avisos informativos e referências nas páginas examinadas, mas não equivale a auditoria clínica e jurídica linha a linha de cada afirmação. Permanecem pendentes revisão clínica, psicossocial, jurídica e técnica profissional; revisão integral do Módulo 12; revisão técnica do Módulo 10; rastreabilidade individual das afirmações públicas; e política para diagramas anatômicos.
 
 **Decisão:** a arquitetura dos módulos está coerente nos principais cruzamentos, mas a biblioteca completa não deve ser apresentada como profissionalmente validada. Os rascunhos internos permanecem fora da publicação pública.
+
+
+## 19. Revisão documental complementar dos Módulos 10 e 12 — 15/11/2026
+
+Os Módulos 10 e 12 foram revisados documentalmente e atualizados para v0.2:
+- Módulo 10: bibliografia ampliada com ACOG, Planned Parenthood e literatura de recomendações de uso seguro de vibradores; explicitados os limites de evidência para limpeza universal, materiais, anéis constritivos, bombas e práticas de contenção.
+- Módulo 12: incluídas as orientações do Ministério da Saúde sobre início preferencial da PEP-HIV nas primeiras duas horas (máximo 72h; 28 dias quando indicada), a orientação de contracepção de emergência em até 120 horas com delimitação do escopo da Nota Técnica nº 2/2025, e fontes específicas de I=I.
+- Corrigido o mapa interno do Módulo 12: os 12 módulos estão em v0.2 após a revisão documental, mas nenhum foi validado externamente por profissionais.
+- Matriz editorial atualizada.
+
+Registro completo: `docs/AUDITORIA-COMPLEMENTAR-MODULOS-10-E-12-2026-11-15.md`.
+
+A revisão documental não substitui revisão clínica, técnica, psicossocial ou jurídica. A página pública de mitos permanece resumida e não deve ser confundida com a versão interna de 24 afirmações.
