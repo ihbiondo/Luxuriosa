@@ -3,3 +3,5 @@
 # Ela não deve ser copiada nem convertida para o site público.
 exclude:
   - docs/
+  - supabase/
+  - tests/
