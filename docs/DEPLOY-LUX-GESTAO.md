@@ -1,26 +1,13 @@
-# Publicação do Lux-Gestão
+# Redirecionamento do antigo Lux-Gestão
 
-O Worker de produção é publicado a partir de `cloudflare/lux-gestao-worker.mjs`, usando `wrangler.jsonc`.
+O painel administrativo foi transferido para o ambiente privado 442:
 
-## Configuração inicial (uma única vez)
+- Gestão e Vendas: https://442.luxuriosa.com.br/apps/gestao/
+- Pedidos do Site: https://442.luxuriosa.com.br/apps/pedidos-site/
+- Inteligência: https://442.luxuriosa.com.br/apps/inteligencia/
 
-No GitHub, abra **Settings → Secrets and variables → Actions → New repository secret** e cadastre:
+O Worker legado lux-gestao permanece apenas para compatibilidade com o endereço antigo /lux-gestao/. Ele serve uma página mínima que redireciona para o hostname privado. A autenticação e autorização acontecem no Cloudflare Access e no Supabase MFA do 442.
 
-- `CLOUDFLARE_API_TOKEN`: token da Cloudflare com permissão de edição de Workers Scripts na conta correta.
-- `CLOUDFLARE_ACCOUNT_ID`: ID da conta Cloudflare onde existe o Worker `lux-gestao`.
+Não incluir lógica administrativa, código de Edge Functions, dados operacionais, tokens ou credenciais no repositório público. O código-fonte do backend está no repositório privado ihbiondo/442, em supabase/.
 
-Não coloque esses valores em arquivos, commits, issues ou mensagens.
-
-Depois de cadastrar os dois secrets, execute **Actions → Deploy Lux-Gestão Worker → Run workflow** ou faça merge da alteração que dispara o deploy.
-
-## Publicação contínua
-
-Após a configuração inicial, alterações em `cloudflare/lux-gestao-worker.mjs`, `wrangler.jsonc` ou neste workflow na branch `main` publicam o Worker automaticamente.
-
-## Cuidados
-
-- O nome do Worker permanece `lux-gestao`.
-- A configuração não declara nem altera rotas do domínio; as rotas existentes continuam administradas no painel Cloudflare.
-- `keep_vars: true` preserva variáveis já configuradas no Worker.
-- O Worker busca a aplicação publicada em `/previa/lux-gestao/`.
-- Não execute o deploy antes de confirmar que os dois secrets apontam para a conta que contém o Worker correto.
+As URLs antigas de Pedidos e Inteligência também permanecem como redirecionamentos, preservando favoritos e links existentes. O site público continua responsável pela vitrine, conta do cliente, checkout e acompanhamento de pedidos.

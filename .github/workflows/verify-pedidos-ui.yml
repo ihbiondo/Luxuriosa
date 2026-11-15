@@ -1,47 +1,28 @@
-name: Verify Pedidos operational UI
-
+name: Verify legacy Pedidos redirect
 on:
   pull_request:
-    paths:
-      - "previa/lux-gestao-pedidos/index.html"
-      - "lux-gestao-pedidos/index.html"
-      - ".github/workflows/verify-pedidos-ui.yml"
+    paths: ["lux-gestao-pedidos/index.html","previa/lux-gestao-pedidos/index.html",".github/workflows/verify-pedidos-ui.yml"]
   push:
     branches: [main]
-    paths:
-      - "previa/lux-gestao-pedidos/index.html"
-      - ".github/workflows/verify-pedidos-ui.yml"
-
+    paths: ["lux-gestao-pedidos/index.html","previa/lux-gestao-pedidos/index.html",".github/workflows/verify-pedidos-ui.yml"]
 permissions:
   contents: read
-
 jobs:
   verify:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v6
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
-          node-version: 22
-      - name: Validate both Pedidos interfaces and ownership
+          node-version: "22"
+      - name: Confirmar que URLs antigas não expõem o painel
         run: |
-          node --input-type=module -e '
-            import { readFileSync, writeFileSync } from "node:fs";
-            for (const [path, name] of [["lux-gestao-pedidos/index.html", "live"], ["previa/lux-gestao-pedidos/index.html", "preview"]]) {
-              const html = readFileSync(path, "utf8");
-              const startTag = "<script type=\"module\">";
-              const start = html.indexOf(startTag);
-              const end = html.indexOf("</script>", start);
-              if (start < 0 || end < 0) throw new Error(path + ": módulo JavaScript não encontrado.");
-              const source = html.slice(start + startTag.length, end);
-              if (!source.includes("action:\"admin_orders_list\"")) throw new Error(path + ": fila não usa endpoint operacional.");
-              for (const forbidden of ["sales-ledger", "sales-table", "renderSalesLedger", "allSales", "admin_dashboard", "revenue_period", "top_products"]) {
-                if (html.includes(forbidden)) throw new Error(path + ": referência duplicada/analítica: " + forbidden);
-              }
-              writeFileSync("/tmp/pedidos-" + name + ".mjs", source);
-            }
-          '
-          node --check /tmp/pedidos-live.mjs
-          node --check /tmp/pedidos-preview.mjs
+          node --input-type=module <<'NODE'
+          import fs from "node:fs";
+          for (const path of ["lux-gestao-pedidos/index.html","previa/lux-gestao-pedidos/index.html"]) {
+            const html = fs.readFileSync(path,"utf8");
+            if (!html.includes("https://442.luxuriosa.com.br/apps/pedidos-site/")) throw new Error(path + ": redirecionamento ausente.");
+            if (html.includes("admin_orders_list") || html.includes("SUPABASE") || html.includes("signInWithPassword")) throw new Error(path + ": código administrativo ainda público.");
+          }
+          console.log("URLs antigas de Pedidos seguras e redirecionadas.");
+          NODE
