@@ -188,7 +188,45 @@ Fontes:
 
 A formulação de consentimento livre, informado, específico, contínuo e revogável é útil como estrutura educativa. Capacidade, idade, vulnerabilidade, intoxicação e validade jurídica da manifestação dependem do contexto e da legislação aplicável. O módulo já contém ressalvas; mantê-las e evitar apresentar a lista como transcrição literal de uma definição legal brasileira única. Revisão jurídica permanece pendente.
 
-## 10. Decisão
+## 10. Revisão de contracepção e ciclo menstrual — 15/11/2026
+
+### P1 — Contracepção de emergência: reforçar fonte oficial brasileira
+
+**Arquivos:** `educacao/temas/contracepcao.html` e `docs/educacao/modulos/04-contracepcao-planejamento-reprodutivo.md`.
+
+A Nota Técnica nº 2/2025 do Ministério da Saúde confirma que a contracepção de emergência deve ser disponibilizada em até 120 horas (cinco dias) após relação desprotegida ou violência sexual, idealmente no menor intervalo possível, e descreve as opções ofertadas no SUS: levonorgestrel 1,5 mg em dose única ou DIU de cobre. O artigo público já apresentava a janela de cinco dias, mas citava a OMS sem associar a orientação à nota técnica nacional.
+
+**Correção realizada na PR:** acrescentada a Nota Técnica nº 2/2025 às referências do artigo público; removida uma referência duplicada à OMS. O texto mantém a ressalva de que a escolha e a indicação dependem do método e da avaliação em saúde. O módulo 4 já descrevia a orientação brasileira e não precisou de alteração nesta rodada.
+
+**Limite:** não generalizar a mesma eficácia ao longo de toda a janela de 120 horas; a orientação é procurar o serviço o quanto antes. Não confundir contracepção de emergência com PEP-HIV.
+
+Fonte primária: [Ministério da Saúde — Nota Técnica nº 2/2025](https://www.gov.br/saude/pt-br/centrais-de-conteudo/publicacoes/notas-tecnicas/2025/nota-tecnica-no-2-2025-cosaj-cgcriaj-dgci-saps-ms).
+
+### P2 — Critérios legais de esterilização voluntária estavam ausentes do artigo público
+
+**Arquivo:** `educacao/temas/contracepcao.html`.
+
+O artigo mencionava laqueadura e vasectomia, mas não apresentava os critérios legais básicos. O módulo 4 já trazia resumo da Lei nº 14.443/2022. A lei estabelece capacidade civil plena e idade superior a 21 anos ou pelo menos dois filhos vivos, prazo mínimo de 60 dias entre manifestação de vontade e cirurgia, e revogou a exigência de consentimento do cônjuge. Também prevê esterilização durante o período do parto, observados prazo de 60 dias entre manifestação de vontade e parto e condições médicas.
+
+**Correção realizada na PR:** incluída seção informativa curta no artigo público, com ressalva de que o texto não substitui legislação ou orientação do serviço; adicionada referência ao texto atualizado da Lei nº 14.443/2022. A redação evita transformar o resumo em avaliação de elegibilidade individual.
+
+Fontes:
+- [Lei nº 14.443/2022 — texto atual](https://normas.leg.br/?urn=urn%3Alex%3Abr%3Afederal%3Alei%3A2022-09-02%3B14443).
+- [Ministério da Saúde — orientações sobre laqueadura e vasectomia no SUS](https://www.gov.br/saude/pt-br/assuntos/noticias/2023/junho/ministerio-da-saude-orienta-gestores-sobre-laqueadura-e-vasectomia-no-sus).
+
+### P2 — Ciclo menstrual: limites das estimativas estão adequadamente explicitados
+
+**Arquivos:** `educacao/temas/corpo-humano-e-ciclo-menstrual.html` e `docs/educacao/modulos/03-ciclo-menstrual-fertilidade-reproducao.md`.
+
+A página pública e o módulo distinguem menstruação, ciclo e ovulação; evitam tratar 28 dias ou o 14º dia como regra; explicam que a janela fértil e aplicativos/calendários não confirmam a ovulação nem garantem contracepção. A faixa de 21 a 35 dias é apresentada como referência geral para adultos, com ressalvas sobre idade, amamentação, condições clínicas e hormônios no módulo.
+
+**Resultado:** nenhuma correção substantiva identificada nesta leitura pontual. Antes da publicação, ainda é necessário validar individualmente a referência citada para a faixa de duração e a linguagem sobre variações por idade e estágio reprodutivo. Esta checagem não substitui revisão ginecológica.
+
+### Escopo desta rodada
+
+Foram examinados o artigo público de contracepção, o artigo de ciclo menstrual, os módulos internos 3 e 4 e as referências oficiais brasileiras sobre contracepção de emergência, DIU de cobre e esterilização voluntária. Não é uma revisão clínica integral dos 23 artigos. Nenhuma alteração foi feita em produção; as correções estão apenas na branch da PR #132.
+
+## 11. Decisão
 
 Os 12 módulos formam uma arquitetura coerente para a biblioteca e têm separação temática razoável. As repetições identificadas são, em geral, úteis como alertas breves, desde que os aprofundamentos permaneçam nos capítulos de referência e os links internos sejam inseridos apenas quando as páginas estiverem efetivamente revisadas e publicadas.
 
