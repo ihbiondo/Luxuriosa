@@ -24,8 +24,8 @@ comment on column public.delivery_plan_memberships.plan_code is
 
 -- Pedido mínimo estritamente acima de R$ 10,00 em Bauru e R$ 49,00 fora de Bauru.
 update public.fulfillment_sla_rules
-set minimum_order_up_to_12km_cents = case when city_normalized = 'bauru' then 1001 else 4901 end,
-    minimum_order_up_to_35km_cents = 4901,
+set minimum_order_up_to_12km_cents = case when city_normalized = 'bauru' then 2000 else 5000 end,
+    minimum_order_up_to_35km_cents = 5000,
     minimum_order_up_to_55km_cents = 4901,
     updated_at = now()
 where active = true and fulfillment_mode = 'delivery';
