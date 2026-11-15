@@ -26,9 +26,9 @@ Nos 23 artigos públicos mapeados, foram conferidos estruturalmente título, H1,
 | 7. Relacionamentos, comunicação e intimidade | v0.2; revisão documental | Relações saudáveis e comunicação; jogos de casal | Revisão psicossocial especializada |
 | 8. Prazer, resposta sexual e dificuldades | v0.2; revisão documental | Saúde sexual e bem-estar; enciclopédia e guias de acessórios | Revisão clínica; confirmar tratamento e contraindicações no Brasil |
 | 9. Saúde íntima, higiene e autocuidado | v0.2; revisão documental | Saúde sexual e bem-estar; limpeza e conservação | Revisão clínica; validar alertas e encaminhamentos |
-| 10. Acessórios íntimos e segurança | v0.1; sem revisão ampliada nesta rodada | Enciclopédia, guias e curiosidades de acessórios | Revisão técnica e clínica; materiais, compatibilidade, limpeza, dispositivos e urgências |
+| 10. Acessórios íntimos e segurança | v0.2; revisão documental complementar | Enciclopédia, guias e curiosidades de acessórios | Revisão técnica e clínica externa; materiais, compatibilidade, limpeza, dispositivos e urgências |
 | 11. Violência sexual, apoio e direitos | v0.2; revisão documental | Guia de atendimento após violência sexual; direitos e acesso | Revisão jurídica, clínica e psicossocial; confirmar fluxos locais |
-| 12. Mitos, dúvidas e caminhos de atendimento | v0.1; sem revisão integral nesta rodada | Mitos e fatos; páginas temáticas relacionadas | Revisão de cada afirmação e de cada encaminhamento |
+| 12. Mitos, dúvidas e caminhos de atendimento | v0.2; revisão documental complementar | Mitos e fatos; páginas temáticas relacionadas | Revisão clínica externa das afirmações e dos encaminhamentos |
 
 ## 3. Achados e correções realizadas
 
@@ -56,9 +56,9 @@ O conteúdo já orientava início o mais rápido possível e limite máximo de 7
 
 ### P2 — Divergência entre matriz e estado real dos módulos
 
-A matriz ainda marcava módulos 3 e 5 a 9 e 11 como v0.1, embora os documentos já estivessem em v0.2. A situação do Módulo 12 também não distinguia que ele continua em v0.1 sem revisão integral.
+A matriz ainda marcava módulos 3 e 5 a 9 e 11 como v0.1, embora os documentos já estivessem em v0.2. Os Módulos 10 e 12 também estavam em v0.1 antes da revisão complementar.
 
-**Correção:** matriz atualizada com as versões e estados reais. O Módulo 10 permanece v0.1; o Módulo 12 permanece v0.1 e sem revisão documental integral.
+**Correção:** matriz atualizada com as versões e estados reais. Os Módulos 10 e 12 avançaram para v0.2 após revisão documental complementar; a revisão profissional externa permanece pendente.
 
 ### P2 — Faixas de referência do ciclo menstrual
 
@@ -100,7 +100,11 @@ Pontos que exigem continuidade:
 - Anvisa — ampliação do Implanon NXT para cinco anos (26/10/2026): https://www.gov.br/anvisa/pt-br/assuntos/noticias-anvisa/2026/anvisa-aprova-ampliacao-do-uso-do-implanon-para-cinco-anos
 - FIGO — sistemas de classificação do sangramento uterino (2018): https://doi.org/10.1002/ijgo.12666
 
-## 7. Pendências que impedem declarar a biblioteca integralmente pronta
+## 7. Proteção dos documentos internos no site público
+
+A inspeção do artefato do GitHub Pages da implantação de 15/11/2026 identificou que a pasta `docs/` era incluída no pacote gerado, embora não estivesse na navegação nem no sitemap. Foi adicionado `_config.yml` com exclusão explícita de `docs/` na geração Jekyll. A correção depende da confirmação no próximo artefato de deploy. Como o repositório GitHub é público, a exclusão do Pages não oculta os arquivos-fonte do GitHub; armazenamento privado separado é necessário para confidencialidade real.
+
+## 8. Pendências que impedem declarar a biblioteca integralmente pronta
 
 1. Revisão clínica independente dos módulos 1 a 5, 8 e 9.
 2. Revisão psicossocial dos módulos 6, 7 e 11.
@@ -111,7 +115,7 @@ Pontos que exigem continuidade:
 7. Política aprovada para diagramas anatômicos, acessibilidade e direitos de uso.
 8. Nova execução dos workflows após as correções desta auditoria.
 
-## 8. Decisão editorial
+## 9. Decisão editorial
 
 A auditoria documental encontrou e corrigiu inconsistências de fonte, atualização de status, bibliografia e alinhamento da orientação de PEP-HIV. A arquitetura temática dos 12 módulos está coerente em seus principais cruzamentos.
 
