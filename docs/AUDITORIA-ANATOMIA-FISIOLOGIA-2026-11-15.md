@@ -57,11 +57,12 @@ A revisão foi documental. Não houve exame clínico, revisão por especialista 
 3. Sociedade Brasileira de Pediatria, Departamento Científico de Endocrinologia. **Puberdade precoce**. Atualização mar. 2023. https://www.sbp.com.br/pediatria-para-familias/doencas/puberdade-precoce/
 4. Sociedade Brasileira de Pediatria, Departamento Científico de Endocrinologia. **Puberdade atrasada**. Atualização mar. 2023. https://www.sbp.com.br/pediatria-para-familias/doencas/puberdade-atrasada/
 5. Ministério da Saúde / UFRGS. **Protocolo de Atenção Especializada — Endocrinologia Pediátrica**, Protocolo 6: Alterações da Puberdade. https://bvsms.saude.gov.br/bvs/publicacoes/protocolo_atencao_especializada_v12_endocrinologia_pediatrica.pdf
-6. OMS, UN Women e OHCHR. **Eliminating virginity testing: an interagency statement**. 16/10/2018. https://www.who.int/publications-detail-redirect/WHO-RHR-18.15
-7. American College of Obstetricians and Gynecologists. **Virginity Testing**. Reafirmado em jul. 2023. https://www.acog.org/clinical-information/policy-and-position-statements/statements-of-policy/2020/virginity-testing
-8. NHS. **Testicle pain**. Revisado em 26/06/2025. https://www.nhs.uk/symptoms/testicle-pain/
-9. European Association of Urology. **I want to know about paraphimosis**. Atualizado em set. 2026. https://patients.uroweb.org/condition/phimosis/i-want-to-know-about-paraphimosis
-10. NHS. **Tight foreskin (phimosis)**. https://www.nhs.uk/conditions/phimosis/
+6. OMS. **Gender and health** — distinção entre características sexuais, variações intersexo e identidade de gênero. https://www.who.int/news-room/questions-and-answers/item/gender-and-health
+7. OMS, UN Women e OHCHR. **Eliminating virginity testing: an interagency statement**. 16/10/2018. https://www.who.int/publications-detail-redirect/WHO-RHR-18.15
+8. American College of Obstetricians and Gynecologists. **Virginity Testing**. Reafirmado em jul. 2023. https://www.acog.org/clinical-information/policy-and-position-statements/statements-of-policy/2020/virginity-testing
+9. NHS. **Testicle pain**. Revisado em 26/06/2025. https://www.nhs.uk/symptoms/testicle-pain/
+10. European Association of Urology. **I want to know about paraphimosis**. Atualizado em set. 2026. https://patients.uroweb.org/condition/phimosis/i-want-to-know-about-paraphimosis
+11. NHS. **Tight foreskin (phimosis)**. https://www.nhs.uk/conditions/phimosis/
 
 ## 4. Limitações e pendências
 
