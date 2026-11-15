@@ -218,7 +218,7 @@ Fontes:
 
 **Arquivos:** `educacao/temas/corpo-humano-e-ciclo-menstrual.html` e `docs/educacao/modulos/03-ciclo-menstrual-fertilidade-reproducao.md`.
 
-A página pública e o módulo distinguem menstruação, ciclo e ovulação; evitam tratar 28 dias ou o 14º dia como regra; explicam que a janela fértil e aplicativos/calendários não confirmam a ovulação nem garantem contracepção. A faixa de 21 a 35 dias é apresentada como referência geral para adultos, com ressalvas sobre idade, amamentação, condições clínicas e hormônios no módulo.
+A página pública e o módulo distinguem menstruação, ciclo e ovulação; evitam tratar 28 dias ou o 14º dia como regra; explicam que a janela fértil e aplicativos/calendários não confirmam a ovulação nem garantem contracepção. A classificação FIGO de 24 a 38 dias é apresentada como referência para adultos; o texto também informa que outras referências utilizam faixas como 21 a 35 dias. A diferença entre sistemas é explicitada e nenhum intervalo é usado isoladamente como diagnóstico.
 
 **Resultado:** nenhuma correção substantiva identificada nesta leitura pontual. Antes da publicação, ainda é necessário validar individualmente a referência citada para a faixa de duração e a linguagem sobre variações por idade e estágio reprodutivo. Esta checagem não substitui revisão ginecológica.
 
