@@ -319,6 +319,18 @@ try {
   assert.ok(!solarResult.result_summary.includes("America/Sao_Paulo"),
     "Data, horário e fuso de nascimento não podem entrar no histórico.");
 
+  // Uma falha em um novo cálculo deve esconder o salvamento da leitura anterior.
+  await pageA.locator(".timezone-settings summary").click();
+  await pageA.locator("#birthTime").fill("08:30");
+  await pageA.locator("#birthTimezone").fill("Invalid/TimeZone");
+  await pageA.locator('#signForm button[type="submit"]').click();
+  await pageA.locator("#calculatorError").waitFor({ state: "visible", timeout: 10000 });
+  assert.equal(await pageA.locator("#signResult").evaluate(element => element.hidden), true);
+  assert.equal(await pageA.locator("#signJourney").evaluate(element => element.hidden), true);
+  assert.equal(await pageA.locator("#experienceSavePanel").evaluate(element => element.hidden), true);
+  assert.equal((await readResultsForUser(userA.id)).length, 4,
+    "Uma falha de cálculo não deve permitir salvar novamente o resultado anterior.");
+
   await completeSignCompatibility(pageA);
   const savedAfterSigns = await readResultsForUser(userA.id);
   assert.equal(savedAfterSigns.length, 5, "A compatibilidade deve acrescentar um quinto registro.");
