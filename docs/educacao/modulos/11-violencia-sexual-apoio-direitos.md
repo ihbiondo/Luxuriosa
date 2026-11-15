@@ -1,6 +1,6 @@
 # Módulo 11 — Violência sexual, apoio e direitos
 
-**Status:** rascunho editorial v0.1 — material interno para revisão; não publicado  
+**Status:** rascunho editorial v0.2 — material interno para revisão; não publicado  
 **Público:** pessoas adultas; inclui orientação de proteção para situações envolvendo crianças e adolescentes  
 **Extensão planejada:** cerca de 8 páginas equivalentes  
 **Revisão clínica, psicossocial e jurídica externa:** não realizada
@@ -221,9 +221,9 @@ Crianças e adolescentes exigem proteção integral e acionamento da rede apropr
 3. **Ministério da Saúde (Brasil).** *Violência sexual.* Orientações sobre acolhimento e atendimento na rede de saúde. https://www.gov.br/saude/pt-br/assuntos/saude-de-a-a-z/s/saude-da-mulher/saude-sexual-e-reprodutiva/violencia-sexual
 4. **Ministério da Saúde (Brasil).** *Profilaxia Pós-Exposição (PEP).* https://www.gov.br/saude/pt-br/assuntos/saude-de-a-a-z/a/aids-hiv/pep
 5. **Ministério da Saúde (Brasil).** *Nota Técnica nº 222/2025-CGHA/.DATHI/SVSA/MS — reforço de recomendações para PEP em pessoas sobreviventes de violência sexual.* Publicada em 28 jan. 2026. https://azt.aids.gov.br/documentos/nota_tecnica/Nota%20Tecnica%20222.pdf
-5. **Ministério das Mulheres (Brasil).** *Ligue 180 — Central de Atendimento à Mulher.* https://www.gov.br/mulheres/pt-br/ligue180
-6. **Ministério dos Direitos Humanos e da Cidadania (Brasil).** *Denunciar violação de direitos humanos — Disque 100.* https://www.gov.br/pt-br/servicos/denunciar-violacao-de-direitos-humanos
-7. **Ministério dos Direitos Humanos e da Cidadania (Brasil).** *Saiba quando e como acionar o Disque 100.* 21 jul. 2026. https://www.gov.br/mdh/pt-br/assuntos/noticias/2026/defeso-eleitoral/julho/saiba-quando-e-como-acionar-o-disque-100
+6. **Ministério das Mulheres (Brasil).** *Ligue 180 — Central de Atendimento à Mulher.* https://www.gov.br/mulheres/pt-br/ligue180
+7. **Ministério dos Direitos Humanos e da Cidadania (Brasil).** *Denunciar violação de direitos humanos — Disque 100.* https://www.gov.br/pt-br/servicos/denunciar-violacao-de-direitos-humanos
+8. **Ministério dos Direitos Humanos e da Cidadania (Brasil).** *Saiba quando e como acionar o Disque 100.* 21 jul. 2026. https://www.gov.br/mdh/pt-br/assuntos/noticias/2026/defeso-eleitoral/julho/saiba-quando-e-como-acionar-o-disque-100
 
 **Controle editorial antes da publicação**
 - Revisar juridicamente a interpretação da Lei nº 15.516/2026, especialmente a comunicação obrigatória em até 24 horas, o alcance do protocolo e os fluxos aplicáveis a adultos, crianças e adolescentes.
