@@ -205,7 +205,10 @@ try {
   assert.equal(await pageA.locator("#conquistasActivities").innerText(), "1");
   assert.equal(await pageA.locator("#conquistasSaved").innerText(), "2");
 
-  // Captura de desktop com resultados sintéticos preenchidos no fluxo E2E.
+  // Capturas do histórico com resultados sintéticos em celular e desktop.
+  await pageA.setViewportSize({ width: 390, height: 844 });
+  await assertNoHorizontalOverflow(pageA, "Histórico mobile em 390 px");
+  await captureScreenshot(pageA, "dashboard-historico-mobile-390");
   await pageA.setViewportSize({ width: 1440, height: 1000 });
   await assertNoHorizontalOverflow(pageA, "Histórico desktop em 1440 px");
   await captureScreenshot(pageA, "dashboard-historico-desktop-1440");
@@ -221,6 +224,12 @@ try {
   await pageB.goto(`${BASE_URL}/portal/conquistas/`, { waitUntil: "domcontentloaded" });
   await pageB.locator("#conquistasTermsGate").waitFor({ state: "visible", timeout: 15000 });
   await assertNoHorizontalOverflow(pageB, "Gate de aceite em 390 px");
+  const gateTheme = await pageB.evaluate(() => ({
+    colorScheme: getComputedStyle(document.documentElement).colorScheme,
+    checkboxAccent: getComputedStyle(document.querySelector("#conquistasTermsCheckbox")).accentColor
+  }));
+  assert.equal(gateTheme.colorScheme, "light", "O Portal autenticado deve usar tema claro.");
+  assert.notEqual(gateTheme.checkboxAccent, "auto", "O checkbox deve ter cor de destaque definida.");
   const gateButtonColors = await pageB.locator("#conquistasAcceptTerms").evaluate(element => ({
     background: getComputedStyle(element).backgroundColor,
     color: getComputedStyle(element).color
