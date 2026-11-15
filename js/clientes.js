@@ -478,12 +478,12 @@
       if (reviewCity === "bauru" && reviewState === "SP") {
         paymentMinimumInfo.hidden = false;
         paymentMinimumInfo.textContent = integridade.subtotal < 20
-          ? "Atenção: o pedido em Bauru deve ter mínimo de R$ 20,00 em produtos. Seu pedido está em " + formatarPreco(integridade.subtotal) + "; acrescente pelo menos " + formatarPreco(10.01 - integridade.subtotal) + "."
+          ? "Atenção: o pedido em Bauru deve ter mínimo de R$ 20,00 em produtos. Seu pedido está em " + formatarPreco(integridade.subtotal) + "; acrescente pelo menos " + formatarPreco(20 - integridade.subtotal) + "."
           : "Pedido mínimo em Bauru: mínimo de R$ 20,00 em produtos.";
       } else {
         paymentMinimumInfo.hidden = false;
         paymentMinimumInfo.textContent = integridade.subtotal < 50
-          ? "Atenção: para entregas fora de Bauru, o pedido deve ter mínimo de R$ 50,00 em produtos. Seu pedido está em " + formatarPreco(integridade.subtotal) + "; acrescente pelo menos " + formatarPreco(49.01 - integridade.subtotal) + "."
+          ? "Atenção: para entregas fora de Bauru, o pedido deve ter mínimo de R$ 50,00 em produtos. Seu pedido está em " + formatarPreco(integridade.subtotal) + "; acrescente pelo menos " + formatarPreco(50 - integridade.subtotal) + "."
           : "Pedido mínimo fora de Bauru: mínimo de R$ 50,00 em produtos.";
       }
     }
@@ -579,7 +579,7 @@
     var estadoPagamento = String(dadosAtuais.address.state || "").trim().toUpperCase();
     var minimoProdutos = cidadePagamento === "bauru" && estadoPagamento === "SP" ? 20 : 50;
     if (integridade.subtotal < minimoProdutos) {
-      avisar("O pedido deve ter mais de R$ " + minimoProdutos.toFixed(2).replace(".", ",") + " em produtos para entrega nesse destino. Abaixo desse valor, acrescente produtos ao carrinho.", "error");
+      avisar("O pedido deve ter no mínimo R$ " + minimoProdutos.toFixed(2).replace(".", ",") + " em produtos para entrega nesse destino. Abaixo desse valor, acrescente produtos ao carrinho.", "error");
       return;
     }
 
