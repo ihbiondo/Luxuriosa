@@ -2106,6 +2106,10 @@ footer {
 .footer-brand .footer-logo { display:inline-block; text-decoration:none; font-size:29px; }
 .footer-brand p { margin:3px 0 9px; color:var(--blush); }
 .footer-brand > span { color:var(--muted); font-size:10px; }
+.footer-social-links { display:flex; flex-wrap:wrap; align-items:center; gap:8px 14px; margin-top:13px; font-size:11px; }
+.footer-social-links strong { flex-basis:100%; color:var(--blush); font-family:var(--serif); font-size:15px; font-weight:400; }
+.footer-social-links a { color:var(--gold); text-decoration:underline; text-underline-offset:3px; }
+.footer-social-links a:hover { color:var(--blush); }
 .footer-navigation { display:flex; flex-direction:column; align-items:flex-start; gap:10px; }
 .footer-navigation strong { margin-bottom:4px; color:var(--blush); font-family:var(--serif); font-size:17px; font-weight:400; }
 .footer-navigation a,.footer-navigation button { padding:0; border:0; background:none; color:var(--muted); font:inherit; font-size:11px; text-decoration:none; cursor:pointer; }
