@@ -170,6 +170,11 @@ async function completeSolarSign(page) {
     "#compatibilityForm",
     "Após descobrir o signo solar, a próxima etapa deve oferecer a comparação de combinações."
   );
+  assert.equal(
+    await page.locator("#signJourney").evaluate(element => element.nextElementSibling?.id),
+    "experienceSavePanel",
+    "A opção de salvar deve ficar imediatamente junto ao resultado e ao próximo passo."
+  );
   await page.locator("#experienceSavePanel").waitFor({ state: "visible", timeout: 15000 });
   await page.locator("#experienceSaveButton").click();
   await page.locator("#experienceSaveStatus").waitFor({ state: "visible", timeout: 15000 });
@@ -186,6 +191,11 @@ async function completeSignCompatibility(page) {
     await page.locator("#signJourneyLinkOne").getAttribute("href"),
     "/educacao/temas/relacoes-saudaveis-e-comunicacao.html",
     "Após a compatibilidade, a próxima etapa deve sugerir conteúdo contextual sobre relações saudáveis."
+  );
+  assert.equal(
+    await page.locator("#signJourney").evaluate(element => element.nextElementSibling?.id),
+    "experienceSavePanel",
+    "A opção de salvar deve acompanhar a recomendação da compatibilidade."
   );
   await page.locator("#experienceSavePanel").waitFor({ state: "visible", timeout: 15000 });
   await page.locator("#experienceSaveButton").click();
