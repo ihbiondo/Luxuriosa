@@ -272,3 +272,18 @@ Foram examinados os conceitos de prazer, desejo espontâneo e responsivo, excita
 - A evidência e as recomendações podem variar por anatomia, condição, idade, menopausa, comorbidades e medicamentos. O texto mantém linguagem geral e não inclui doses.
 - A página pública `educacao/temas/saude-sexual-e-bem-estar.html` já contém uma síntese introdutória de desejo, resposta corporal e dor; foi lida e não recebeu alteração nesta rodada para evitar duplicação. Não existe, entre os arquivos públicos revisados nesta PR, artigo específico sobre tratamento de disfunções sexuais.
 - O Módulo 8 permanece interno. Revisão profissional clínica e validação editorial final são obrigatórias antes de qualquer publicação.
+
+
+## 13. Revisão psicossocial documental — Módulo 7: relacionamentos, comunicação e intimidade (15/11/2026)
+
+- Módulo interno atualizado para rascunho v0.2.
+- Comunicação e resolução de conflitos agora são explicitamente condicionadas à segurança e à liberdade; em contextos de medo, coerção ou violência, a prioridade é apoio independente, não uma técnica de comunicação melhor.
+- Reforçada a distinção entre diferença de desejo e falta de compromisso; ninguém deve sexo, toque ou demonstração física para evitar conflito ou provar amor.
+- Acordos relacionais são voluntários e não substituem consentimento específico e atual.
+- Acrescentadas referências a controle coercitivo, violência psicológica, sexual e patrimonial e coerção reprodutiva, incluindo sabotagem contraceptiva e controle de acesso à saúde.
+- Explicitado que terapia de casal/mediação não é indicação automática em contextos de violência, coerção ou medo.
+- Reforçado apoio sem culpabilização ou imposição de denúncia/separação; plano de segurança deve ser individualizado.
+- Delimitado o Ligue 180 para mulheres em situação de violência; 190 para emergência; Disque 100 para violações de direitos humanos, sem apresentar o 180 como canal universal.
+- Página pública `educacao/temas/consentimento-e-limites.html` foi conferida e não alterada; não foram encontrados conflitos que exigissem mudança pública nesta rodada.
+- Auditoria específica em `docs/AUDITORIA-PSICOSSOCIAL-RELACIONAMENTOS-2026-11-15.md`.
+- Revisão documental; avaliação profissional psicossocial e revisão especializada em violência permanecem pendentes. Nenhuma publicação em produção.
