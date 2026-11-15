@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#f8f5fa">
+<title>Minhas conquistas | Luxuriosa</title>
+<meta name="description" content="Acompanhe suas descobertas, conquistas e resultados salvos na Luxuriosa.">
+<link rel="icon" href="/img/site/favicon.ico" sizes="any">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/portal.css">
+<link rel="stylesheet" href="/css/conquistas.css">
+<script type="module" src="/js/conquistas.js"></script>
+</head>
+<body>
+<a class="skip" href="#conquistasMain">Pular para o conteúdo</a>
+<div id="conquistasLoading" class="loading" role="status" aria-live="polite">
+  <strong>Abrindo suas conquistas</strong>
+  <small>Carregando seu histórico privado.</small>
+</div>
+<div id="conquistasApp" hidden>
+<header class="topbar">
+  <a class="brand" href="/" aria-label="Luxuriosa — página inicial">
+    <img src="/img/site/logo-usuario-luxuriosa.webp" alt="Luxuriosa">
+  </a>
+  <nav class="desktop-nav" aria-label="Navegação principal">
+    <a href="/portal/">Meu Portal</a>
+    <a href="/experiencias/">Experiências</a>
+    <a href="/educacao/">Educação</a>
+  </nav>
+  <div class="top-actions">
+    <a class="account-link" href="/portal/">Voltar ao Portal</a>
+  </div>
+</header>
+
+<main id="conquistasTermsGate" class="main conquistas-terms-gate" hidden>
+  <a class="conquistas-back" href="/portal/">← Meu Portal</a>
+  <section class="conquistas-terms-card" aria-labelledby="conquistasTermsTitle">
+    <span class="eyebrow">ACESSO PESSOAL E OPCIONAL</span>
+    <h1 id="conquistasTermsTitle">Ative Minhas conquistas</h1>
+    <p>Você já entrou na sua conta. Para abrir seu histórico, pontos e emblemas, é necessário ler e aceitar os termos específicos desta área.</p>
+    <div class="conquistas-terms-links">
+      <a href="/termos-experiencias.html" target="_blank" rel="noopener">Ler Termos de Uso das Experiências e Minhas conquistas ↗</a>
+      <a href="/privacidade.html" target="_blank" rel="noopener">Ler Política de Privacidade ↗</a>
+    </div>
+    <label class="conquistas-terms-check">
+      <input id="conquistasTermsCheckbox" type="checkbox">
+      <span>Li e aceito os Termos de Uso das Experiências e Minhas conquistas, versão de 15/11/2026.</span>
+    </label>
+    <p id="conquistasGateStatus" class="conquistas-status" role="status" aria-live="polite" hidden></p>
+    <button id="conquistasAcceptTerms" class="primary" type="button" disabled>Aceitar e ativar Minhas conquistas</button>
+    <p class="conquistas-terms-note">A ativação é opcional. Recusar ou revogar o aceite não impede o uso da loja, do Portal ou das Experiências públicas.</p>
+  </section>
+</main>
+<main id="conquistasMain" class="main" hidden>
+  <a class="conquistas-back" href="/portal/">← Meu Portal</a>
+
+  <section class="conquistas-hero" aria-labelledby="conquistasTitle">
+    <div>
+      <span class="eyebrow">SUA JORNADA NA LUXURIOSA</span>
+      <h1 id="conquistasTitle">Minhas conquistas</h1>
+      <p>Cada descoberta conta. Acompanhe seus passos e revisite os resultados que escolheu guardar.</p>
+    </div>
+    <span class="conquistas-hero-mark" aria-hidden="true">✦</span>
+  </section>
+
+  <p id="conquistasStatus" class="conquistas-status" role="status" aria-live="polite" hidden></p>
+
+  <section class="conquistas-stats" aria-label="Resumo da sua jornada">
+    <article class="conquistas-stat conquistas-stat--points">
+      <span class="conquistas-stat-icon" aria-hidden="true">✧</span>
+      <strong id="conquistasPoints">0</strong>
+      <small>pontos</small>
+    </article>
+    <article class="conquistas-stat">
+      <span class="conquistas-stat-icon" aria-hidden="true">◇</span>
+      <strong id="conquistasActivities">0</strong>
+      <small>atividades diferentes</small>
+    </article>
+    <article class="conquistas-stat">
+      <span class="conquistas-stat-icon" aria-hidden="true">♡</span>
+      <strong id="conquistasSaved">0</strong>
+      <small>resultados guardados</small>
+    </article>
+  </section>
+  <p class="conquistas-points-note">Você recebe 10 pontos por atividade diferente concluída e salva. Refazer a mesma atividade não gera pontos extras.</p>
+
+  <section class="conquistas-section" aria-labelledby="badgesTitle">
+    <div class="conquistas-section-head">
+      <div><span class="eyebrow">PEQUENAS VITÓRIAS</span><h2 id="badgesTitle">Suas conquistas</h2></div>
+      <span class="conquistas-section-note">Desbloqueie no seu ritmo</span>
+    </div>
+    <div id="conquistasBadges" class="conquistas-badges"></div>
+  </section>
+
+  <section class="conquistas-section" aria-labelledby="historyTitle">
+    <div class="conquistas-section-head">
+      <div><span class="eyebrow">SEU CAMINHO</span><h2 id="historyTitle">Resultados salvos</h2></div>
+      <a class="conquistas-explore" href="/experiencias/">Explorar experiências →</a>
+    </div>
+    <div id="conquistasEmpty" class="conquistas-empty" hidden>
+      <span aria-hidden="true">✦</span>
+      <h3>Sua jornada começa com uma descoberta.</h3>
+      <p>Quando concluir uma atividade, escolha salvar o resultado para encontrá-lo aqui depois.</p>
+      <a href="/experiencias/">Encontrar uma experiência →</a>
+    </div>
+    <div id="conquistasHistory" class="conquistas-history" hidden></div>
+  </section>
+
+  <aside class="conquistas-privacy">
+    <span class="conquistas-privacy-icon" aria-hidden="true">♡</span>
+    <div>
+      <strong>Seu histórico é privado.</strong>
+      <p>Somente salvamos um resultado quando você escolhe essa opção. Guardamos o resumo e a pontuação, quando houver — não as respostas individuais. Você pode excluir cada registro quando quiser.</p>
+      <a href="/privacidade.html">Conhecer a política de privacidade →</a>
+      <button id="conquistasDeactivate" class="conquistas-delete" type="button">Desativar e apagar meu histórico</button>
+    </div>
+  </aside>
+</main>
+
+<footer class="footer"><a href="/">Luxuriosa</a><span>Sinta-se ainda mais você.</span><a href="/privacidade.html">Privacidade</a></footer>
+</div>
+</body>
+</html>
