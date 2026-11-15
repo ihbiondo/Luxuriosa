@@ -27,18 +27,10 @@
       ? cidade.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase()
       : cidade.toLowerCase();
 
-    if (cidadeNormalizada === "bauru" && estado === "SP") {
-      var condicoes = [
-        "Destino: " + cidade + "/" + estado,
-        "Frete padrão fixo: R$ 15,00."
-      ];
-      condicoes.push("Pedidos que incluam pelo menos um kit promocional têm frete grátis exclusivamente em Bauru.");
-      return condicoes;
-    }
-
     return [
       "Destino: " + (cidade || "cidade não informada") + (estado ? "/" + estado : ""),
-      "Condição: disponibilidade e valor do frete serão confirmados no atendimento."
+      "Condição: frete calculado conforme endereço, distância pela rota e modalidade de participação no Clube.",
+      "Limite operacional: até 55 km pela rota de motocicleta. Pedágio, quando houver, é informado separadamente."
     ];
   }
 
@@ -204,13 +196,9 @@
       ? cidade.normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim().toLowerCase()
       : cidade.trim().toLowerCase();
     if (cidadeNormalizada === "bauru" && estado === "SP") {
-      var items = api && typeof api.obterItens === "function" ? api.obterItens() : [];
-      var temKit = pedidoContemKit(items);
-      var avisoFrete = temKit
-        ? "Entrega em Bauru-SP: seu pedido inclui um kit promocional e tem frete grátis."
-        : "Entrega em Bauru-SP: frete fixo de R$ 15,00. Pedidos com pelo menos um kit promocional têm frete grátis.";
+      var avisoFrete = "Entrega em Bauru-SP: tarifa conforme sua modalidade de participação no Clube.";
       var avisoPrazo = " Prazo operacional previsto: até 30 minutos após a confirmação do pagamento, contado dentro da janela de entrega. Pagamentos fora da janela entram na próxima abertura.";
-      var avisoMinimo = " O subtotal mínimo para pagamento automático é R$ 50,00, inclusive quando há kit.";
+      var avisoMinimo = " O subtotal mínimo para pagamento automático é R$ 50,00.";
       if (subtotal > 0 && subtotal < 50) {
         avisoMinimo += " Faltam " + formatarPreco(50 - subtotal) + " em produtos para atingir o mínimo.";
       }
@@ -220,7 +208,7 @@
 
     var cidadesCheckout = ["agudos", "pederneiras", "piratininga", "lencois paulista"];
     if (estado === "SP" && cidadesCheckout.indexOf(cidadeNormalizada) !== -1) {
-      aviso.textContent = "Entrega em " + cidade + "/SP: checkout automático disponível. O frete e o pedido mínimo são calculados pela rota do endereço e aparecem antes do pagamento. Prazo operacional previsto: até 2 horas de operação após a confirmação, contado dentro da janela de entrega. Pedidos com kit podem zerar a tarifa-base; pedágios, se houver, são calculados à parte.";
+      aviso.textContent = "Entrega em " + cidade + "/SP: o frete e o pedido mínimo são calculados pela rota do endereço e aparecem antes do pagamento. Limite operacional: até 55 km pela rota. Pedágios, quando houver, são informados separadamente."
       return;
     }
 
@@ -375,9 +363,7 @@
       ? cidade.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase()
       : cidade.toLowerCase();
     var emBauru = cidadeNormalizada === "bauru" && estado === "SP";
-    var freteGratis = emBauru && temKit;
-    var frete = emBauru && !freteGratis ? 15 : 0;
-    var totalEstimado = Math.round((totalProdutos + frete) * 100) / 100;
+    var frete = null;
 
     var lines = [
       "Olá! Quero fazer um pedido na *Luxuriosa*. ❤️",
@@ -394,16 +380,8 @@
 
     lines.push("", "*Subtotal: " + formatarPreco(subtotal) + "*");
 
-    if (freteGratis) {
-      lines.push("Frete: grátis (benefício automático por incluir kit)");
-      lines.push("*Total estimado: " + formatarPreco(totalEstimado) + "*");
-    } else if (emBauru) {
-      lines.push("Frete: " + formatarPreco(frete));
-      lines.push("*Total estimado: " + formatarPreco(totalEstimado) + "*");
-    } else {
-      lines.push("Frete: a confirmar conforme o destino");
-      lines.push("*Total estimado dos produtos: " + formatarPreco(totalProdutos) + "*");
-    }
+    lines.push("Frete: a calcular conforme endereço e modalidade do Clube");
+    lines.push("*Total estimado dos produtos: " + formatarPreco(totalProdutos) + "*");
 
     lines.push("", "*ENTREGA*");
     lines.push("• " + data.name + " — " + data.phone);
