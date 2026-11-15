@@ -125,7 +125,7 @@ Crianças e adolescentes precisam de proteção integral e de atendimento adequa
 - procure imediatamente serviço de saúde e a rede de proteção;
 - se houver risco imediato, acione a emergência.
 
-A Lei nº 15.516/2026 prevê comunicação ao Conselho Tutelar nos casos envolvendo criança ou adolescente, além de medidas específicas de acolhimento e proteção. O Disque 100 recebe denúncias de violações de direitos e pode orientar encaminhamentos. A atuação deve evitar exposição e repetição desnecessária do relato.
+Quando o primeiro atendimento for realizado por profissional de segurança pública, a Lei nº 15.516/2026 prevê comunicação ao Conselho Tutelar nos casos envolvendo criança ou adolescente. Outros deveres de proteção e comunicação podem decorrer do Estatuto da Criança e do Adolescente e dos protocolos aplicáveis; o alcance concreto deve ser confirmado em revisão jurídica especializada. O Disque 100 recebe denúncias de violações de direitos e pode orientar encaminhamentos. A atuação deve evitar exposição e repetição desnecessária do relato.
 
 Não publique, encaminhe ou armazene imagens íntimas de crianças ou adolescentes. Não tente investigar por conta própria nem peça à criança que repita o relato para várias pessoas.
 
