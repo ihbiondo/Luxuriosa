@@ -361,3 +361,39 @@ O material diferenciava PrEP (antes da exposição) e PEP-HIV (após exposição
 - [PCDT de IST](https://www.gov.br/saude/pt-br/assuntos/pcdt/a/atencao-integral-as-pessoas-com-infeccoes-sexualmente-transmissiveis/view).
 
 A Nota Técnica 222/2025 foi formulada com foco na rede de atenção a mulheres e meninas. Os critérios clínicos devem ser aplicados por profissionais conforme a situação individual e os protocolos vigentes. A revisão é documental; revisão clínica, pediátrica e jurídica externa permanece pendente. Nenhuma publicação em produção foi feita.
+
+
+## 16. Revisão documental — contracepção e planejamento reprodutivo (15/11/2026)
+
+**Escopo:** Módulo 4 e artigo público `educacao/temas/contracepcao.html`; coerência com Módulos 3, 5, 6 e 11. Revisão documental, sem validação clínica profissional.
+
+### Achados e correções
+
+- Atualizado o Módulo 4 para v0.2 e alinhado o artigo público à informação regulatória disponível em 15/11/2026.
+- Anvisa aprovou em 26/10/2026 a ampliação da duração contraceptiva do implante de etonogestrel 68 mg (Implanon NXT) de três para até cinco anos de uso contínuo; a mesma decisão admite inserção imediatamente após o parto e após aborto, conforme bula e avaliação clínica. O texto não generaliza a mudança para outros implantes.
+- A duração de até oito anos do sistema intrauterino de levonorgestrel 52 mg refere-se ao uso contraceptivo conforme bula atualizada; não se aplica automaticamente a outras concentrações, marcas ou indicações clínicas. A equipe deve conferir a bula vigente e a finalidade do uso.
+- A incorporação do implante ao SUS não equivale à disponibilidade imediata em toda UBS. As Notas Técnicas Conjuntas nº 198/2026 e nº 343/2026 tratam de gestão, distribuição, monitoramento e remessas; o artigo agora recomenda confirmar a oferta na rede local.
+- Corrigida no Módulo 4 a expressão “idade mínima de 21 anos” para “idade superior a 21 anos” na síntese do critério legal de esterilização, preservando a alternativa de pelo menos dois filhos vivos e o prazo de 60 dias. O texto público já utilizava “mais de 21 anos”.
+- Reforçada a distinção entre contracepção de emergência e PEP-HIV. Após violência sexual, o limite de 72 horas refere-se ao início da PEP-HIV; ultrapassá-lo não encerra a necessidade de avaliação de outras medidas, como profilaxias pertinentes, contracepção de emergência, vacinação, acolhimento e seguimento.
+- A seção de emergência permanece alinhada à Nota Técnica nº 2/2025: acesso em até 120 horas, o mais cedo possível, com avaliação da opção adequada.
+
+### Fontes oficiais e normativas consultadas
+
+- Anvisa. **Anvisa aprova ampliação do uso do Implanon para cinco anos**, 26/10/2026: https://www.gov.br/anvisa/pt-br/assuntos/noticias-anvisa/2026/anvisa-aprova-ampliacao-do-uso-do-implanon-para-cinco-anos
+- Anvisa. **Bulário Eletrônico**: https://consultas.anvisa.gov.br/#/bulario/
+- Prefeitura de São Paulo, Secretaria Municipal da Saúde. **Nota Técnica nº 01/2026 — atualização do SIU-LNG 52 mg para até oito anos de uso contraceptivo**, 11/11/2026: https://prefeitura.sp.gov.br/documents/d/saude/atualizacao-mirena-para-8-anos-pdf
+- Ministério da Saúde. **Nota Técnica Conjunta nº 198/2026**, 24/08/2026: https://www.gov.br/saude/pt-br/centrais-de-conteudo/publicacoes/notas-tecnicas/2026/nota-tecnica-conjunta-no-198-2026-cgesmu-dgci-saps-ms.pdf/view
+- Ministério da Saúde. **Nota Técnica Conjunta nº 343/2026**, 03/11/2026: https://www.gov.br/saude/pt-br/centrais-de-conteudo/publicacoes/notas-tecnicas/2026/nota-tecnica-conjunta-no-343-2026-cgesmu-dgci-saps-cgafb-daf-sctie-ms.pdf/view
+- Ministério da Saúde. **Contracepção — Saúde Sexual e Reprodutiva**: https://www.gov.br/saude/pt-br/assuntos/saude-de-a-a-z/s/saude-da-mulher/saude-sexual-e-reprodutiva/contracepcao
+- Ministério da Saúde. **Nota Técnica nº 2/2025 — contracepção de emergência e acesso de adolescentes**: https://www.gov.br/saude/pt-br/centrais-de-conteudo/publicacoes/notas-tecnicas/2025/nota-tecnica-no-2-2025-cosaj-cgcriaj-dgci-saps-ms
+- OMS. **Medical eligibility criteria for contraceptive use**, 6ª edição, 03/11/2025: https://www.who.int/publications/i/item/9789240115583
+- OMS. **Selected practice recommendations for contraceptive use**, 4ª edição, 03/11/2025: https://www.who.int/publications/i/item/9789240115606
+- Brasil. **Lei nº 9.263/1996**, art. 10, com redação da Lei nº 14.443/2022: https://www.planalto.gov.br/ccivil_03/leis/l9263.htm
+
+### Limites e pendências
+
+- A aprovação regulatória de uma duração maior não substitui a conferência da bula vigente, do produto efetivamente utilizado, da indicação clínica e da orientação profissional.
+- A atualização de bula não significa que a logística, os registros e os protocolos locais do SUS já tenham sido atualizados em todos os municípios. Não afirmar disponibilidade ou duração operacional local sem confirmação da rede.
+- Não foi feita avaliação individual de contraindicações, interações, elegibilidade, início/retomada após contracepção de emergência ou condutas pós-parto.
+- Revisão por ginecologista ou profissional habilitado em planejamento reprodutivo e revisão jurídica da seção de esterilização continuam pendentes.
+- Nenhuma alteração foi publicada em produção.
