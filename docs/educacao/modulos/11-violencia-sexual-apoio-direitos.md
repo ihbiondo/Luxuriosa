@@ -70,6 +70,12 @@ A Lei nº 12.845/2013 garante atendimento emergencial, integral e gratuito às p
 
 Não tente escolher medicamentos ou iniciar profilaxias por conta própria. A equipe de saúde avalia a exposição, o histórico, as contraindicações e o protocolo vigente. Mesmo que já tenham passado 72 horas, procure atendimento: ainda pode haver cuidados importantes.
 
+A **Nota Técnica nº 222/2025-CGHA/.DATHI/SVSA/MS** reforça que o atendimento não deve se limitar à PEP-HIV: também pode envolver avaliação da hepatite B (vacina e imunoglobulina quando indicadas), prevenção/tratamento preemptivo de IST não virais, testagem em locais anatômicos compatíveis com a exposição, avaliação de HPV e contracepção de emergência. O documento orienta que, mesmo quando o prazo de 72 horas para iniciar PEP-HIV já passou, a pessoa seja acolhida, testada e acompanhada; a equipe também deve avaliar os episódios mais recentes em situações de violência recorrente e considerar PrEP quando houver risco futuro contínuo.
+
+O prazo de 72 horas é específico para PEP-HIV, não para todos os cuidados. A Nota Técnica descreve medidas para hepatite B que podem ser avaliadas até 14 dias após a exposição sexual e recomendações para profilaxia de IST não virais sem uma janela única. A decisão depende da avaliação profissional, do histórico vacinal, da exposição e dos protocolos vigentes. Para detalhes clínicos e fontes, consulte o **Módulo 5 — IST, HIV e prevenção combinada**.
+
+A Nota Técnica nº 222/2025 foi elaborada com foco na organização da rede de atenção a mulheres e meninas em situação de violência sexual. Seus critérios não devem ser generalizados sem avaliação para todas as faixas etárias e situações; a equipe deve aplicar as diretrizes específicas pertinentes à pessoa atendida.
+
 ### 2.3 E se a pessoa já tomou banho, trocou de roupa ou demorou para procurar ajuda?
 
 Ainda assim, deve procurar atendimento. Não se deve adiar o cuidado por acreditar que “já perdeu a chance” ou que não há mais o que fazer. A equipe pode avaliar necessidades clínicas, oferecer apoio e explicar se ainda há possibilidade de coleta de vestígios ou outras medidas.
@@ -214,6 +220,7 @@ Crianças e adolescentes exigem proteção integral e acionamento da rede apropr
 2. **Brasil. Lei nº 15.516, de 22 de setembro de 2026.** Institui o Protocolo Intersetorial de Atendimento e Resposta Integrada em Situações de Violência e altera a Lei nº 12.845/2013. https://www2.camara.leg.br/legin/fed/lei/2026/lei-15516-22-setembro-2026-800011-norma-pl.html
 3. **Ministério da Saúde (Brasil).** *Violência sexual.* Orientações sobre acolhimento e atendimento na rede de saúde. https://www.gov.br/saude/pt-br/assuntos/saude-de-a-a-z/s/saude-da-mulher/saude-sexual-e-reprodutiva/violencia-sexual
 4. **Ministério da Saúde (Brasil).** *Profilaxia Pós-Exposição (PEP).* https://www.gov.br/saude/pt-br/assuntos/saude-de-a-a-z/a/aids-hiv/pep
+5. **Ministério da Saúde (Brasil).** *Nota Técnica nº 222/2025-CGHA/.DATHI/SVSA/MS — reforço de recomendações para PEP em pessoas sobreviventes de violência sexual.* Publicada em 28 jan. 2026. https://azt.aids.gov.br/documentos/nota_tecnica/Nota%20Tecnica%20222.pdf
 5. **Ministério das Mulheres (Brasil).** *Ligue 180 — Central de Atendimento à Mulher.* https://www.gov.br/mulheres/pt-br/ligue180
 6. **Ministério dos Direitos Humanos e da Cidadania (Brasil).** *Denunciar violação de direitos humanos — Disque 100.* https://www.gov.br/pt-br/servicos/denunciar-violacao-de-direitos-humanos
 7. **Ministério dos Direitos Humanos e da Cidadania (Brasil).** *Saiba quando e como acionar o Disque 100.* 21 jul. 2026. https://www.gov.br/mdh/pt-br/assuntos/noticias/2026/defeso-eleitoral/julho/saiba-quando-e-como-acionar-o-disque-100
