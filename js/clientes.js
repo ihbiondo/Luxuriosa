@@ -27,18 +27,10 @@
       ? cidade.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase()
       : cidade.toLowerCase();
 
-    if (cidadeNormalizada === "bauru" && estado === "SP") {
-      var condicoes = [
-        "Destino: " + cidade + "/" + estado,
-        "Frete padrão fixo: R$ 15,00."
-      ];
-      condicoes.push("Pedidos que incluam pelo menos um kit promocional têm frete grátis exclusivamente em Bauru.");
-      return condicoes;
-    }
-
     return [
       "Destino: " + (cidade || "cidade não informada") + (estado ? "/" + estado : ""),
-      "Condição: disponibilidade e valor do frete serão confirmados no atendimento."
+      "Condição: frete calculado conforme endereço, distância pela rota e modalidade de participação no Clube.",
+      "Limite operacional: até 55 km pela rota de motocicleta. Pedágio, quando houver, é informado separadamente."
     ];
   }
 
@@ -204,15 +196,11 @@
       ? cidade.normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim().toLowerCase()
       : cidade.trim().toLowerCase();
     if (cidadeNormalizada === "bauru" && estado === "SP") {
-      var items = api && typeof api.obterItens === "function" ? api.obterItens() : [];
-      var temKit = pedidoContemKit(items);
-      var avisoFrete = temKit
-        ? "Entrega em Bauru-SP: seu pedido inclui um kit promocional e tem frete grátis."
-        : "Entrega em Bauru-SP: frete fixo de R$ 15,00. Pedidos com pelo menos um kit promocional têm frete grátis.";
+      var avisoFrete = "Entrega em Bauru-SP: tarifa conforme sua modalidade de participação no Clube.";
       var avisoPrazo = " Prazo operacional previsto: até 30 minutos após a confirmação do pagamento, contado dentro da janela de entrega. Pagamentos fora da janela entram na próxima abertura.";
-      var avisoMinimo = " O subtotal mínimo para pagamento automático é R$ 50,00, inclusive quando há kit.";
-      if (subtotal > 0 && subtotal < 50) {
-        avisoMinimo += " Faltam " + formatarPreco(50 - subtotal) + " em produtos para atingir o mínimo.";
+      var avisoMinimo = " O pedido deve ter mínimo de R$ 20,00 em produtos.";
+      if (subtotal > 0 && subtotal < 20) {
+        avisoMinimo += " Faltam " + formatarPreco(20 - subtotal) + " para atingir o mínimo.";
       }
       aviso.textContent = avisoFrete + avisoPrazo + avisoMinimo;
       return;
@@ -220,7 +208,7 @@
 
     var cidadesCheckout = ["agudos", "pederneiras", "piratininga", "lencois paulista"];
     if (estado === "SP" && cidadesCheckout.indexOf(cidadeNormalizada) !== -1) {
-      aviso.textContent = "Entrega em " + cidade + "/SP: checkout automático disponível. O frete e o pedido mínimo são calculados pela rota do endereço e aparecem antes do pagamento. Prazo operacional previsto: até 2 horas de operação após a confirmação, contado dentro da janela de entrega. Pedidos com kit podem zerar a tarifa-base; pedágios, se houver, são calculados à parte.";
+      aviso.textContent = "Entrega em " + cidade + "/SP: o frete e o pedido mínimo são calculados pela rota do endereço e aparecem antes do pagamento. Pedido mínimo: mínimo de R$ 50,00 em produtos. Limite operacional: até 55 km pela rota."
       return;
     }
 
@@ -367,17 +355,7 @@
     var subtotal = integridade.subtotal;
     if (!items.length) return "";
 
-    var temKit = pedidoContemKit(items);
     var totalProdutos = subtotal;
-    var cidade = String(data.address.city || "").trim();
-    var estado = String(data.address.state || "").trim().toUpperCase();
-    var cidadeNormalizada = cidade.normalize
-      ? cidade.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase()
-      : cidade.toLowerCase();
-    var emBauru = cidadeNormalizada === "bauru" && estado === "SP";
-    var freteGratis = emBauru && temKit;
-    var frete = emBauru && !freteGratis ? 15 : 0;
-    var totalEstimado = Math.round((totalProdutos + frete) * 100) / 100;
 
     var lines = [
       "Olá! Quero fazer um pedido na *Luxuriosa*. ❤️",
@@ -394,16 +372,8 @@
 
     lines.push("", "*Subtotal: " + formatarPreco(subtotal) + "*");
 
-    if (freteGratis) {
-      lines.push("Frete: grátis (benefício automático por incluir kit)");
-      lines.push("*Total estimado: " + formatarPreco(totalEstimado) + "*");
-    } else if (emBauru) {
-      lines.push("Frete: " + formatarPreco(frete));
-      lines.push("*Total estimado: " + formatarPreco(totalEstimado) + "*");
-    } else {
-      lines.push("Frete: a confirmar conforme o destino");
-      lines.push("*Total estimado dos produtos: " + formatarPreco(totalProdutos) + "*");
-    }
+    lines.push("Frete: a calcular conforme endereço e modalidade do Clube");
+    lines.push("*Total estimado dos produtos: " + formatarPreco(totalProdutos) + "*");
 
     lines.push("", "*ENTREGA*");
     lines.push("• " + data.name + " — " + data.phone);
@@ -507,12 +477,14 @@
       var reviewState = String(dadosAtuais.address.state || "").trim().toUpperCase();
       if (reviewCity === "bauru" && reviewState === "SP") {
         paymentMinimumInfo.hidden = false;
-        paymentMinimumInfo.textContent = integridade.subtotal < 50
-          ? "Atenção: para pagar pelo site com Pix ou cartão em Bauru, o subtotal mínimo de produtos é R$ 50,00. Seu pedido está em " + formatarPreco(integridade.subtotal) + "; faltam " + formatarPreco(50 - integridade.subtotal) + ". O frete grátis por incluir kit não elimina o mínimo. Você também pode encaminhar a solicitação pelo WhatsApp e consultar as condições."
-          : "Para pagamento automático pelo site com Pix ou cartão em Bauru, o subtotal mínimo de produtos é R$ 50,00. O frete grátis por incluir kit continua válido, mas não elimina esse mínimo.";
+        paymentMinimumInfo.textContent = integridade.subtotal < 20
+          ? "Atenção: o pedido em Bauru deve ter mínimo de R$ 20,00 em produtos. Seu pedido está em " + formatarPreco(integridade.subtotal) + "; acrescente pelo menos " + formatarPreco(20 - integridade.subtotal) + "."
+          : "Pedido mínimo em Bauru: mínimo de R$ 20,00 em produtos.";
       } else {
-        paymentMinimumInfo.hidden = true;
-        paymentMinimumInfo.textContent = "";
+        paymentMinimumInfo.hidden = false;
+        paymentMinimumInfo.textContent = integridade.subtotal < 50
+          ? "Atenção: para entregas fora de Bauru, o pedido deve ter mínimo de R$ 50,00 em produtos. Seu pedido está em " + formatarPreco(integridade.subtotal) + "; acrescente pelo menos " + formatarPreco(50 - integridade.subtotal) + "."
+          : "Pedido mínimo fora de Bauru: mínimo de R$ 50,00 em produtos.";
       }
     }
 
@@ -605,8 +577,9 @@
     var cidadePagamento = String(dadosAtuais.address.city || "").normalize("NFD")
       .replace(/[\u0300-\u036f]/g, "").trim().toLowerCase();
     var estadoPagamento = String(dadosAtuais.address.state || "").trim().toUpperCase();
-    if (cidadePagamento === "bauru" && estadoPagamento === "SP" && integridade.subtotal < 50) {
-      avisar("Para pagamento automático com Pix ou cartão em Bauru, o subtotal mínimo de produtos é R$ 50,00. O frete grátis por incluir kit continua válido, mas não elimina o mínimo. Abaixo desse valor, revise o carrinho ou encaminhe o pedido pelo WhatsApp para consultar as condições.", "error");
+    var minimoProdutos = cidadePagamento === "bauru" && estadoPagamento === "SP" ? 20 : 50;
+    if (integridade.subtotal < minimoProdutos) {
+      avisar("O pedido deve ter no mínimo R$ " + minimoProdutos.toFixed(2).replace(".", ",") + " em produtos para entrega nesse destino. Abaixo desse valor, acrescente produtos ao carrinho.", "error");
       return;
     }
 
