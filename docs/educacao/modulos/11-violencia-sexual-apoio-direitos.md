@@ -64,7 +64,7 @@ A prioridade é proteger a pessoa e acessar cuidados. Não é necessário organi
 A Lei nº 12.845/2013 garante atendimento emergencial, integral e gratuito às pessoas em situação de violência sexual nos hospitais integrantes da rede do SUS. Os cuidados podem incluir avaliação e tratamento de lesões, apoio médico, psicológico e social, prevenção de gravidez, profilaxias para infecções, exames, coleta e preservação de vestígios e orientação sobre direitos.
 
 **Não espere aparecerem sintomas.** Algumas medidas são sensíveis ao tempo:
-- **PEP para HIV:** deve ser avaliada imediatamente e iniciada o mais cedo possível, no máximo até 72 horas após a exposição. Quando indicada, dura 28 dias e exige acompanhamento.
+- **PEP para HIV:** deve ser avaliada imediatamente e iniciada o mais cedo possível — preferencialmente nas primeiras duas horas, conforme orientação do Ministério da Saúde — e, no máximo, até 72 horas após a exposição. Quando indicada, dura 28 dias e exige acompanhamento.
 - **Contracepção de emergência:** pode ser avaliada quando houver possibilidade de gravidez; determinadas opções podem ser utilizadas em até cinco dias, com maior eficácia quanto mais cedo forem utilizadas.
 - **Hepatite B e outras IST:** a equipe pode avaliar vacinação, imunoglobulina, profilaxias, exames e acompanhamento conforme a situação.
 
