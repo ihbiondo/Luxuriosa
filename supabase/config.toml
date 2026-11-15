@@ -1,0 +1,25 @@
+# Configuração local destinada ao desenvolvimento e aos testes automatizados.
+# Não contém credenciais nem referencia o projeto Supabase de produção.
+project_id = "luxuriosa-local"
+
+[api]
+enabled = true
+port = 54321
+schemas = ["public", "graphql_public"]
+extra_search_path = ["public", "extensions"]
+max_rows = 1000
+
+[db]
+port = 54322
+shadow_port = 54320
+# Mantém a mesma geração principal do Postgres do projeto hospedado.
+major_version = 17
+
+[db.seed]
+enabled = false
+
+[studio]
+enabled = false
+
+[analytics]
+enabled = false
