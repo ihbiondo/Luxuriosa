@@ -87,6 +87,19 @@ async function completeDiscovery(page, saveResult) {
   await page.locator("#experienceDone").click();
 }
 
+async function assertNoHorizontalOverflow(page, label) {
+  const dimensions = await page.evaluate(() => ({
+    viewport: document.documentElement.clientWidth,
+    document: document.documentElement.scrollWidth,
+    body: document.body.scrollWidth
+  }));
+  assert.ok(
+    dimensions.document <= dimensions.viewport + 1 &&
+      dimensions.body <= dimensions.viewport + 1,
+    label + ": conteúdo excedeu a largura da tela (" + JSON.stringify(dimensions) + ")."
+  );
+}
+
 async function acceptTerms(page) {
   await page.locator("#conquistasTermsGate").waitFor({ state: "visible", timeout: 15000 });
   assert.equal(
@@ -186,8 +199,23 @@ try {
   await pageB.goto(`${BASE_URL}/login.html?next=portal%2F`, { waitUntil: "domcontentloaded" });
   await login(pageB, userB.email, "/portal/");
   await pageB.locator("#portalAchievementsActivationCard").waitFor({ state: "visible", timeout: 15000 });
+  await pageB.setViewportSize({ width: 390, height: 844 });
   await pageB.goto(`${BASE_URL}/portal/conquistas/`, { waitUntil: "domcontentloaded" });
+  await pageB.locator("#conquistasTermsGate").waitFor({ state: "visible", timeout: 15000 });
+  await assertNoHorizontalOverflow(pageB, "Gate de aceite em 390 px");
+  await pageB.setViewportSize({ width: 320, height: 740 });
+  await assertNoHorizontalOverflow(pageB, "Gate de aceite em 320 px");
+  await pageB.setViewportSize({ width: 390, height: 844 });
   await acceptTerms(pageB);
+  await assertNoHorizontalOverflow(pageB, "Painel de conquistas em 390 px");
+  const mobileColumns = await pageB.locator("#conquistasBadges").evaluate(element =>
+    getComputedStyle(element).gridTemplateColumns.split(" ").length
+  );
+  assert.equal(mobileColumns, 2, "Em celular, os emblemas devem ficar em duas colunas.");
+  await pageB.setViewportSize({ width: 320, height: 740 });
+  await assertNoHorizontalOverflow(pageB, "Painel de conquistas em 320 px");
+  await pageB.setViewportSize({ width: 1440, height: 900 });
+  await assertNoHorizontalOverflow(pageB, "Painel de conquistas em desktop");
   assert.equal(await pageB.locator("#conquistasPoints").innerText(), "0");
   assert.equal(await pageB.locator("#conquistasSaved").innerText(), "0");
   assert.equal(await pageB.locator("#conquistasHistory").evaluate(element => element.children.length), 0);
