@@ -132,3 +132,15 @@
 .conquista-result-meta span,
 .conquistas-empty p{color:#6e6475}
 .conquista-badge-state{color:#75677e}
+
+/* A tela possui folha própria: não depende dos botões da área de Experiências. */
+.primary{
+ display:inline-flex;align-items:center;justify-content:center;gap:8px;
+ min-height:46px;padding:0 18px;border:1px solid #d83c91;border-radius:10px;
+ background:#d83c91;color:#fff;font:700 11px/1.3 var(--sans);
+ text-align:center;text-decoration:none;cursor:pointer;
+ transition:background .15s,border-color .15s,opacity .15s
+}
+.primary:hover:not(:disabled){border-color:#b52e78;background:#b52e78;color:#fff}
+.primary:disabled{border-color:#eadfea;background:#eee8f1;color:#8c8291;opacity:1;cursor:not-allowed}
+.conquistas-terms-card>.primary{width:100%}
