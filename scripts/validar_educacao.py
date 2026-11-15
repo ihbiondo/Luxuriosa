@@ -201,7 +201,7 @@ def main() -> int:
                 if not answer or answer.group(1) not in options:
                     errors.append(f"{rel}: questão {index} sem alternativa correta válida")
                 if len(options) != 3:
-                    errors.append(f"{rel}: questão {index} deve apresentar três alternativas")                    errors.append(f"{rel}: questão {index} deve apresentar três alternativas")
+                    errors.append(f"{rel}: questão {index} deve apresentar três alternativas")
 
         canonical_url = f"{BASE_URL}/{rel.as_posix()}"
         if rel.name == "index.html":
