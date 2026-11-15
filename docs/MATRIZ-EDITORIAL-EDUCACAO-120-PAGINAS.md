@@ -29,11 +29,11 @@ Cada página deve identificar fontes, data real de revisão, escopo e limites. N
 | 7. Relações e intimidade | Rascunho interno v0.1 | Revisão psicossocial externa |
 | 8. Prazer e resposta sexual | Rascunho interno v0.1 | Revisão clínica externa; conferir critérios de avaliação e sinais de alerta |
 | 9. Saúde íntima e autocuidado | Rascunho interno v0.1 | Revisão clínica externa; validar recomendações de higiene e alertas |
-| 10. Acessórios e segurança | Não produzido | Produzir com documentação técnica e critérios de materiais |
+| 10. Acessórios e segurança | Rascunho interno v0.1 | Revisão clínica e técnica; validar materiais, compatibilidade, limpeza, dispositivos eletrônicos e alertas |
 | 11. Violência sexual, apoio e direitos | Rascunho interno v0.1 | Revisão jurídica, clínica e psicossocial; delimitar corretamente a Lei nº 15.516/2026 |
 | 12. Mitos e caminhos de atendimento | Rascunho interno v0.1 | Revisão clínica e checagem individual das afirmações |
 
-Os onze rascunhos (módulos 1 a 9, 11 e 12) são documentação interna, não páginas públicas nem conteúdo revisado externamente. O Módulo 10 ainda não existe como capítulo.
+Os doze módulos possuem rascunhos internos v0.1, ainda não publicados e sem revisão profissional externa. Os conteúdos não devem ser tratados como material clinicamente validado.
 
 ## 2. Matriz dos 23 artigos existentes
 
@@ -82,7 +82,7 @@ A paginação é uma referência de profundidade editorial, não uma obrigação
 | 7 | Relações, comunicação e intimidade | 10 p. | Vínculos, diálogo, desejo, expectativas, conflitos, acordos, intimidade e relações respeitosas. |
 | 8 | Prazer, resposta sexual e dificuldades | 10 p. | Resposta sexual sem modelo rígido, desejo, excitação, orgasmo, dor, dificuldades comuns e quando buscar cuidado. |
 | 9 | Saúde íntima, higiene e autocuidado | 10 p. | Higiene sem excessos, saúde genital, sintomas, prevenção, saúde do assoalho pélvico e fases da vida. |
-| 10 | Acessórios íntimos: materiais e segurança | 10 p. | Materiais, qualidade, rotulagem, formatos, compatibilidade, limpeza, armazenamento e uso seguro. |
+| 10 | Acessórios íntimos: materiais e segurança | 10 p. | Materiais, qualidade, rotulagem, formatos, compatibilidade, limpeza, armazenamento, privacidade digital, uso seguro e sinais de alerta. |
 | 11 | Violência sexual, acolhimento e direitos | 8 p. | Tipos de violência, resposta acolhedora, atendimento, direitos, rede de apoio e serviços brasileiros. |
 | 12 | Mitos, dúvidas frequentes e caminhos de cuidado | 10 p. | Perguntas objetivas, checagem de mitos, glossário, fluxos de decisão e encaminhamento para capítulos. |
 | | **Total** | **120 p.** | |
@@ -138,7 +138,7 @@ Para cada afirmação clínica importante, registrar fonte específica, data da 
 
 **Fase 1 — Inventário e arquitetura (agora):** matriz dos 23 artigos, distinção entre verbete e guia, identificação de lacunas e política de preservação de URLs.
 
-**Fase 2 — Conteúdo prioritário:** os módulos 1 a 9, 11 e 12 têm rascunhos internos. Produzir em seguida o Módulo 10. Antes de qualquer publicação, revisar todos os rascunhos com profissionais habilitados conforme o tema.
+**Fase 2 — Conteúdo prioritário:** os doze módulos têm rascunhos internos v0.1. A etapa seguinte é a revisão cruzada integral, seguida de revisão clínica, psicossocial, jurídica e técnica por profissionais habilitados conforme o tema. Nenhum módulo deve ser publicado antes dessas revisões e da aprovação editorial.
 
 **Fase 3 — Produção e navegação:** criar páginas-pilar, sumários, links contextuais, glossário e trilhas de leitura. Cada página terá resumo visível no início e aprofundamento organizado em seções.
 
