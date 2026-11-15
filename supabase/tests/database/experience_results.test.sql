@@ -2,7 +2,7 @@ begin;
 
 create extension if not exists pgtap with schema extensions;
 
-select extensions.plan(42);
+select extensions.plan(45);
 
 -- Estrutura e privilégios: o banco precisa bloquear acesso anônimo e escrita
 -- direta de aceite, mas permitir que o titular consulte seus próprios dados.
@@ -113,6 +113,54 @@ select extensions.ok(
   (select accepted_at is not null and revoked_at is null
    from public.experience_terms_acceptances),
   'o aceite válido é registrado com horário e sem revogação'
+);
+select extensions.throws_ok(
+  $insert into public.experience_results
+    (user_id, attempt_id, activity_id, activity_title, category, result_title, result_summary)
+    values (
+      '10000000-0000-4000-8000-000000000001',
+      '20000000-0000-4000-8000-000000000010',
+      'invented_activity',
+      'Atividade não integrada',
+      'ferramentas',
+      'Resultado falso',
+      'O banco não deve aceitar atividades fora do catálogo.'
+    )$,
+  '23514',
+  null,
+  'o banco rejeita identificador de atividade fora da lista integrada'
+);
+select extensions.throws_ok(
+  $insert into public.experience_results
+    (user_id, attempt_id, activity_id, activity_title, category, result_title, result_summary)
+    values (
+      '10000000-0000-4000-8000-000000000001',
+      '20000000-0000-4000-8000-000000000011',
+      'discovery',
+      'Descubra seu estilo',
+      'astrologia',
+      'Categoria alterada',
+      'A categoria precisa corresponder à definição da atividade.'
+    )$,
+  '23514',
+  null,
+  'o banco rejeita categoria incompatível com a atividade'
+);
+select extensions.throws_ok(
+  $insert into public.experience_results
+    (user_id, attempt_id, activity_id, activity_title, category, result_title, result_summary)
+    values (
+      '10000000-0000-4000-8000-000000000001',
+      '20000000-0000-4000-8000-000000000012',
+      'discovery',
+      'Atividade renomeada',
+      'ferramentas',
+      'Título alterado',
+      'O título da atividade precisa corresponder ao catálogo.'
+    )$,
+  '23514',
+  null,
+  'o banco rejeita título incompatível com a atividade'
 );
 select extensions.lives_ok(
   $$insert into public.experience_results
