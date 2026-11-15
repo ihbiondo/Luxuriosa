@@ -117,22 +117,6 @@
 .conquistas-empty p{color:#6e6475}
 .conquista-badge-state{color:#75677e}
 
-/* Contraste explícito nas superfícies claras sobre o tema escuro do Portal. */
-.conquistas-hero h1,
-.conquistas-stat strong,
-.conquista-badge strong,
-.conquista-result h3,
-.conquistas-empty h3,
-.conquistas-privacy strong,
-.conquistas-terms-card h1{color:#493451}
-.conquistas-stat small,
-.conquista-badge small,
-.conquista-result time,
-.conquista-result p,
-.conquista-result-meta span,
-.conquistas-empty p{color:#6e6475}
-.conquista-badge-state{color:#75677e}
-
 /* A tela possui folha própria: não depende dos botões da área de Experiências. */
 .primary{
  display:inline-flex;align-items:center;justify-content:center;gap:8px;
@@ -144,3 +128,27 @@
 .primary:hover:not(:disabled){border-color:#b52e78;background:#b52e78;color:#fff}
 .primary:disabled{border-color:#eadfea;background:#eee8f1;color:#8c8291;opacity:1;cursor:not-allowed}
 .conquistas-terms-card>.primary{width:100%}
+
+
+/* Leitura confortável em telas pequenas, sem alterar a identidade clara da área. */
+@media(max-width:700px){
+ .conquistas-back{font-size:12px}
+ .conquistas-section-note{font-size:11px}
+ .conquistas-explore{font-size:11px}
+ .conquistas-stat small{font-size:10px}
+ .conquista-badge small{font-size:10px}
+ .conquista-badge-state{font-size:9px}
+ .conquista-result time{font-size:10px}
+ .conquista-category{font-size:10px}
+ .conquista-result p{font-size:12px}
+ .conquista-result-meta span{font-size:10px}
+ .conquista-delete{font-size:10px}
+ .conquistas-empty p{font-size:12px}
+ .conquistas-empty a{font-size:11px}
+ .conquistas-privacy p{font-size:11px}
+ .conquistas-privacy a{font-size:10px}
+ .conquistas-points-note{font-size:11px}
+ .conquistas-terms-links a{font-size:12px}
+ .conquistas-terms-check{font-size:12px}
+ .conquistas-terms-note{font-size:11px!important}
+}
