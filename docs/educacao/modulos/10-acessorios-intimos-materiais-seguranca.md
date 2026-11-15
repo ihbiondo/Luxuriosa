@@ -1,9 +1,9 @@
 # Módulo 10 — Acessórios íntimos: materiais, compatibilidade, conservação e segurança
 
-**Status:** rascunho editorial v0.1 — material interno para revisão; não publicado  
+**Status:** rascunho editorial v0.2 — revisão documental em 15/11/2026; material interno, não publicado  
 **Público:** pessoas adultas  
 **Extensão planejada:** cerca de 10 páginas equivalentes  
-**Revisão clínica e técnica externa:** não realizada
+**Revisão clínica e técnica externa:** não realizada; esta revisão documental não certifica produtos nem substitui avaliação especializada
 
 > **Nota de cuidado:** este capítulo oferece informação geral de segurança e não certifica marcas, materiais ou produtos. Siga sempre o manual do modelo específico. Se houver dor, lesão, reação alérgica ou objeto preso, interrompa o uso e procure atendimento adequado.
 
@@ -267,6 +267,16 @@ A segurança de acessórios íntimos começa antes da compra: identificar finali
 4. **Brown University — BWell.** *Sex Toys.* Orientações gerais de limpeza e conservação por tipo de material; conferir sempre o manual do produto. https://bwell.brown.edu/resource/sex-toys
 5. **Sexual Health Malta.** *Sex Toys.* Prevenção de transmissão de IST, limpeza, barreiras e inspeção de danos. https://sexualhealth.gov.mt/sexual-health-topic/sex/sex-toys/
 6. **National Institute for Public Health and the Environment (RIVM), Países Baixos.** *Hygiene guidelines for sex businesses and sex workers.* Orientações sobre limpeza, desinfecção e separação de materiais limpos e usados. https://www.rivm.nl/en/hygiene-guidelines-sex-businesses-sex-workers
+7. **Society of Obstetricians and Gynaecologists / PubMed.** Rubin ES et al. *A Clinical Reference Guide on Sexual Devices for Obstetrician–Gynecologists.* Obstetrics & Gynecology. 2019;133(6):1259–1268. DOI: 10.1097/AOG.0000000000003262. Revisão clínica sobre seleção de materiais, limpeza, compartilhamento, infecção e trauma. https://pubmed.ncbi.nlm.nih.gov/31135743/
+8. **Herbenick D et al.** *Genital vibration for sexual function and enhancement: best practice recommendations for choosing and safely using a vibrator.* Journal of Sex & Marital Therapy. 2018. https://pmc.ncbi.nlm.nih.gov/articles/PMC7678780/
+9. **Planned Parenthood.** *Sex Toys.* Recomendações ao público sobre materiais, base para uso anal, lubrificantes, barreiras e limpeza. https://www.plannedparenthood.org/learn/sex-pleasure-and-sexual-dysfunction/sex-and-pleasure/sex-toys
+
+**Limites desta revisão documental (15/11/2026)**
+- As fontes clínicas disponíveis são limitadas e não estabelecem um protocolo universal de limpeza, desinfecção ou compatibilidade para todos os produtos e materiais.
+- A orientação de limpeza deve continuar subordinada ao manual do modelo; não converter recomendações gerais de uma fonte em instrução universal.
+- As orientações sobre anéis constritivos, bombas de vácuo e práticas BDSM são precauções gerais, não protocolos clínicos validados para cada dispositivo ou pessoa.
+- A menção a materiais não porosos e porosos é uma orientação de seleção e higienização, não certificação de composição, qualidade ou segurança de marca.
+- A fonte ACOG de 2019 e a literatura de vibração são referências clínicas úteis, mas não substituem avaliação de evidência atual nem revisão técnica de produtos comercializados no Brasil.
 
 **Controle editorial antes da publicação**
 - Revisão por profissional de saúde sexual e especialista em prevenção de infecções.
