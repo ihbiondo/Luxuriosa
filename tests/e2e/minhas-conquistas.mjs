@@ -156,6 +156,41 @@ async function completeKnowledgeQuiz(page) {
   assert.match(await page.locator("#experienceSaveStatus").innerText(), /salvo no seu histórico privado/i);
 }
 
+async function completeSolarSign(page) {
+  await page.goto(`${BASE_URL}/experiencias/signos.html`, { waitUntil: "domcontentloaded" });
+  await confirmAgeGate(page);
+  await page.locator("#birthDate").fill("1990-05-01");
+  await page.locator("#signForm button[type=submit]").click();
+  await page.locator("#signResult").waitFor({ state: "visible", timeout: 15000 });
+  await page.locator("#signJourney").waitFor({ state: "visible", timeout: 15000 });
+  assert.equal(
+    await page.locator("#signJourneyLinkOne").getAttribute("href"),
+    "#compatibilityForm",
+    "Após descobrir o signo solar, a próxima etapa deve oferecer a comparação de combinações."
+  );
+  await page.locator("#experienceSavePanel").waitFor({ state: "visible", timeout: 15000 });
+  await page.locator("#experienceSaveButton").click();
+  await page.locator("#experienceSaveStatus").waitFor({ state: "visible", timeout: 15000 });
+  assert.match(await page.locator("#experienceSaveStatus").innerText(), /salvo no seu histórico privado/i);
+}
+
+async function completeSignCompatibility(page) {
+  await page.locator("#signOne").selectOption("aries");
+  await page.locator("#signTwo").selectOption("leo");
+  await page.locator('#compatibilityForm button[type="submit"]').click();
+  await page.locator("#compatibilityResult").waitFor({ state: "visible", timeout: 15000 });
+  await page.locator("#signJourney").waitFor({ state: "visible", timeout: 15000 });
+  assert.equal(
+    await page.locator("#signJourneyLinkOne").getAttribute("href"),
+    "/educacao/temas/relacoes-saudaveis-e-comunicacao.html",
+    "Após a compatibilidade, a próxima etapa deve sugerir conteúdo contextual sobre relações saudáveis."
+  );
+  await page.locator("#experienceSavePanel").waitFor({ state: "visible", timeout: 15000 });
+  await page.locator("#experienceSaveButton").click();
+  await page.locator("#experienceSaveStatus").waitFor({ state: "visible", timeout: 15000 });
+  assert.match(await page.locator("#experienceSaveStatus").innerText(), /salvo no seu histórico privado/i);
+}
+
 async function readResultsForUser(userId) {
   const url = new URL(`${SUPABASE_URL}/rest/v1/experience_results`);
   url.searchParams.set("select", "*");
@@ -245,11 +280,31 @@ try {
   assert.equal(quizResult.score_max, 21);
   assert.match(quizResult.result_summary, /21 de 21 questões/i);
 
+  // 7. As duas leituras astrológicas também salvam resumos e oferecem próximos passos.
+  await completeSolarSign(pageA);
+  const savedAfterSolar = await readResultsForUser(userA.id);
+  assert.equal(savedAfterSolar.length, 4, "O signo solar deve acrescentar um quarto registro.");
+  const solarResult = savedAfterSolar.find(row => row.activity_id === "sign_profile");
+  assert.ok(solarResult, "A leitura solar deve usar o identificador oficial sign_profile.");
+  assert.equal(solarResult.category, "astrologia");
+  assert.equal(solarResult.score, null);
+  assert.doesNotMatch(solarResult.result_summary, /1990-05-01|08:30|America\\/Sao_Paulo/i,
+    "Data, horário e fuso de nascimento não podem entrar no histórico.");
+
+  await completeSignCompatibility(pageA);
+  const savedAfterSigns = await readResultsForUser(userA.id);
+  assert.equal(savedAfterSigns.length, 5, "A compatibilidade deve acrescentar um quinto registro.");
+  const compatibilityResult = savedAfterSigns.find(row => row.activity_id === "sign_compatibility");
+  assert.ok(compatibilityResult, "A leitura de compatibilidade deve usar o identificador sign_compatibility.");
+  assert.equal(compatibilityResult.category, "astrologia");
+  assert.equal(compatibilityResult.score, null);
+  assert.match(compatibilityResult.result_title, /Áries \\+ Leão/);
+
   await pageA.goto(`${BASE_URL}/portal/conquistas/`, { waitUntil: "domcontentloaded" });
   await pageA.locator("#conquistasMain").waitFor({ state: "visible", timeout: 15000 });
-  assert.equal(await pageA.locator("#conquistasPoints").innerText(), "20");
-  assert.equal(await pageA.locator("#conquistasActivities").innerText(), "2");
-  assert.equal(await pageA.locator("#conquistasSaved").innerText(), "3");
+  assert.equal(await pageA.locator("#conquistasPoints").innerText(), "40");
+  assert.equal(await pageA.locator("#conquistasActivities").innerText(), "4");
+  assert.equal(await pageA.locator("#conquistasSaved").innerText(), "5");
 
   // Capturas do histórico com resultados de teste em celular e desktop.
   await pageA.setViewportSize({ width: 390, height: 844 });
