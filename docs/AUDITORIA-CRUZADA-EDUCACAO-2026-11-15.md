@@ -55,11 +55,11 @@ A leitura estrutural dos 23 artigos mapeados identificou dois problemas transver
 
 ### P2 — Navegação com nomenclatura antiga
 
-**Escopo:** os 23 artigos em temas, guias, enciclopédia e curiosidades.
+**Escopo:** os 30 arquivos HTML da Educação verificados pelo validador (23 artigos e sete páginas de índice/política).
 
 O menu apresentava o texto “Explorar módulos” e o rótulo acessível “Navegação dos cinco módulos”, apesar de a navegação reunir cinco seções da biblioteca (Temas, Enciclopédia, Curiosidades, Guias e Interatividade), não cinco módulos editoriais.
 
-**Correção realizada:** em todos os 23 artigos, o menu agora usa “Explorar a biblioteca” e o rótulo acessível “Navegação da biblioteca”. URLs, destinos, conteúdo educativo, canonical e metadados de indexação foram preservados.
+**Correção realizada:** nos 30 arquivos HTML, o menu agora usa “Explorar a biblioteca” e o rótulo acessível “Navegação da biblioteca”. URLs, destinos, conteúdo educativo, canonical e metadados de indexação foram preservados.
 
 ### P2 — Marcadores internos de auditoria no HTML
 
