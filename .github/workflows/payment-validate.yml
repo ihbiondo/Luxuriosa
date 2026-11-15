@@ -63,3 +63,57 @@ jobs:
           JSON.parse(fs.readFileSync("data/produtos.json","utf8"));
           console.log("Catálogo público válido.");
           NODE
+      - name: Validar módulos de Minhas conquistas
+        run: |
+          python -m pip install "pglast>=7,<8"
+          node --check js/educacao.js
+          node --check js/educacao-interatividade.js
+          node --check js/experiencias.js
+          node --check --input-type=module < js/portal.js
+          node --check --input-type=module < js/experiencias-salvar.js
+          node --check --input-type=module < js/conquistas.js
+          python - <<'PY'
+          from pathlib import Path
+
+          migration = Path("supabase/migrations/20261115140000_create_experience_results.sql").read_text()
+          terms = Path("termos-experiencias.html").read_text()
+          dashboard = Path("portal/conquistas/index.html").read_text()
+          portal = Path("portal/index.html").read_text()
+          save_module = Path("js/experiencias-salvar.js").read_text()
+          signs_module = Path("js/signos.js").read_text()
+          achievements_module = Path("js/conquistas.js").read_text()
+          signs_page = Path("experiencias/signos.html").read_text()
+
+          migration_lower = migration.lower()
+          assert "experience_terms_acceptances" in migration_lower
+          assert "enable row level security" in migration_lower
+          assert "revoke_my_experience_terms" in migration_lower
+          assert "accept_my_experience_terms" in migration_lower
+          assert "revoke all on public.experience_terms_acceptances from public, anon, authenticated;" in migration_lower
+          assert "revoke all on public.experience_results from public, anon, authenticated;" in migration_lower
+          assert "grant select on public.experience_terms_acceptances to authenticated;" in migration_lower
+          assert "grant select, insert, update on public.experience_terms_acceptances" not in migration_lower
+          assert "experience_terms_acceptances_insert_own" not in migration_lower
+          assert "experience_terms_acceptances_update_own" not in migration_lower
+          assert migration_lower.count("security definer") == 2
+          assert migration_lower.count("set search_path = ''") == 2
+          assert "revoke all on function public.accept_my_experience_terms(text) from public;" in migration_lower
+          assert "revoke all on function public.revoke_my_experience_terms() from public;" in migration_lower
+          assert "luxuriosa-experiencias-v1-2026-11" in terms
+          assert "conquistasTermsCheckbox" in dashboard
+          assert "portalAchievementsActivationCard" in portal
+          assert "lux_pending_experience_result" not in save_module
+          assert 'sign_profile: { title: "Descubra seu signo solar", category: "astrologia" }' in save_module
+          assert 'sign_compatibility: { title: "Combinação entre signos", category: "astrologia" }' in save_module
+          assert 'activity_id: "sign_profile"' in signs_module
+          assert 'activity_id: "sign_compatibility"' in signs_module
+          assert "sign_profile:" in achievements_module and "sign_compatibility:" in achievements_module
+          assert 'src="/js/experiencias-salvar.js"' in signs_page
+          assert 'id="experienceSavePanel"' in signs_page
+          assert "dateInput.value" not in signs_module[signs_module.index('activity_id: "sign_profile"'):signs_module.index("const studio = document.getElementById(\"solarShareStudio\")", signs_module.index('activity_id: "sign_profile"'))]
+          print("Regras básicas de aceite, privacidade e atividades atuais verificadas.")
+
+          from pglast import parse_sql
+          parse_sql(migration)
+          print("Sintaxe SQL da migração validada.")
+          PY
