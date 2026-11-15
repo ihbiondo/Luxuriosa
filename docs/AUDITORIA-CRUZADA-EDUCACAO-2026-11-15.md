@@ -3,156 +3,117 @@
 **Data:** 15/11/2026  
 **Branch:** `content/auditoria-editorial-fase-1`  
 **PR:** [#132](https://github.com/ihbiondo/Luxuriosa/pull/132)  
-**Status:** revisão interna; não publicado; sem revisão externa.
+**Status:** auditoria interna dos 12 rascunhos; não publicada; sem revisão profissional externa.
 
-## 1. Escopo e estado confirmado
+## 1. Escopo e método
 
-- Inventário editorial de 23 artigos existentes, preservando todas as URLs.
-- Cinco módulos internos em rascunho: 1, 5, 6, 11 e 12.
-- Sete módulos ainda não produzidos: 2, 3, 4, 7, 8, 9 e 10.
-- O conteúdo público continua separado dos rascunhos internos.
-- A PR permanece aberta e em rascunho. Esta auditoria não autoriza merge ou publicação.
+Nesta rodada foram lidos integralmente os 12 arquivos de módulos em `docs/educacao/modulos/`, conferidos contra a matriz editorial dos 120 equivalentes de páginas e examinados os pontos de sobreposição, segurança, encaminhamento e atualização normativa. A matriz dos 23 artigos públicos foi usada para verificar a arquitetura e as intenções editoriais; esta rodada não equivale a uma revisão clínica linha a linha de todos os 23 artigos.
+
+A auditoria considera:
+- consistência de conceitos e terminologia entre módulos;
+- repetição necessária versus duplicação que prejudica a navegação;
+- sinais de alerta e encaminhamentos;
+- atualidade de referências clínicas e legais;
+- separação entre informação educativa e conteúdo comercial;
+- clareza sobre limites, incertezas e ausência de revisão profissional.
+
+**Estado dos 12 módulos:** todos existem como rascunhos internos v0.1. Nenhum está publicado ou clinicamente, psicossocialmente, juridicamente ou tecnicamente validado por revisão profissional externa.
 
 ## 2. Achados prioritários
 
-### P1 — Guia público sobre violência sexual precisava refletir a lei de 2026
+### P1 — Atualizar a seção legal do Módulo 6
 
-O guia `educacao/guias/violencia-sexual-onde-buscar-ajuda.html` explicava que a notificação em saúde não equivale automaticamente a denúncia policial, mas não mencionava a alteração legal posterior. A Lei nº 15.516, de 22/09/2026, alterou a Lei nº 12.845/2013 e acrescentou comunicação obrigatória à autoridade policial, em até 24 horas, nos casos com indícios ou confirmação de violência sexual. A ausência dessa informação poderia deixar o texto incompleto e induzir interpretação equivocada.
+**Arquivo:** `docs/educacao/modulos/06-consentimento-limites-seguranca.md`, seção “Atendimento e direitos no Brasil”.
 
-**Correção proposta nesta PR:** explicitar que a comunicação é feita institucionalmente pelo serviço de saúde e não transforma o BO registrado pessoalmente pela pessoa em requisito para atendimento; acrescentar a referência oficial à lei. A redação ainda requer revisão jurídica externa.
+A seção explicava corretamente que o atendimento de saúde não depende de BO pessoal, mas citava somente a Lei nº 12.845/2013 e não mencionava a alteração trazida pela Lei nº 15.516/2026. Isso cria uma diferença relevante em relação ao Módulo 11 e pode deixar incompleta a explicação sobre comunicação institucional obrigatória.
 
-Fonte primária: [Lei nº 15.516/2026 — publicação original, Câmara dos Deputados](https://www2.camara.leg.br/legin/fed/lei/2026/lei-15516-22-setembro-2026-800011-publicacaooriginal-181456-pl.html).
+**Correção realizada nesta etapa:** incluir a atualização de 2026, explicitar que a comunicação à autoridade policial em até 24 horas é obrigação institucional do serviço nos casos previstos em lei e distinguir essa obrigação da apresentação de BO pela pessoa atendida. Acrescentada referência à publicação legal. A redação continua condicionada à revisão jurídica especializada.
 
-### P1 — Delimitar o alcance da comunicação ao Conselho Tutelar no Módulo 11
+Fonte primária: [Lei nº 15.516/2026 — LexML, texto da norma](https://normas.leg.br/?urn=urn%3Alex%3Abr%3Afederal%3Alei%3A2026-09-22%3B15516).
 
-O rascunho dizia genericamente que a Lei nº 15.516/2026 prevê comunicação ao Conselho Tutelar em casos envolvendo crianças e adolescentes. No texto legal, essa previsão aparece no contexto em que o primeiro atendimento é realizado por profissional de segurança pública. A formulação ampla precisa ser delimitada para não atribuir à lei uma obrigação fora do contexto descrito no dispositivo.
+### P1 — Rastreabilidade das afirmações clínicas
 
-**Correção proposta nesta PR:** restringir a frase ao contexto expresso no art. 2º, § 1º, e registrar que outros deveres podem decorrer do ECA e dos protocolos aplicáveis. Revisão jurídica especializada continua obrigatória.
+**Escopo:** módulos 1 a 5 e 8 a 10 e 12, com atenção especial aos módulos 3, 4, 5, 8, 9 e 10.
 
-Fonte primária: [Lei nº 15.516/2026 — publicação original](https://www2.camara.leg.br/legin/fed/lei/2026/lei-15516-22-setembro-2026-800011-publicacaooriginal-181456-pl.html).
+Os módulos apresentam referências ao final, mas a presença de uma bibliografia não demonstra, por si só, que cada afirmação clínica importante está sustentada pela fonte citada. Antes da publicação, cada afirmação sobre eficácia, janela diagnóstica, prazo, contraindicação, sintoma, urgência, material ou compatibilidade precisa ser associada à fonte específica que a sustenta.
 
-### P1 — Datas do sitemap
+**Ação necessária:** revisão afirmação por afirmação, com link, instituição/autoria, título, versão/data, data de consulta e localização do trecho relevante. Se a fonte não sustentar a afirmação, reescrever, qualificar ou remover. Não inventar estatísticas, recomendações ou referências.
 
-Oito artigos alterados nesta PR exibiam data editorial de 15/11/2026, mas seus registros `lastmod` no sitemap ainda estavam em 14/11/2026:
-- anéis penianos;
-- jogos de casal;
-- masturbadores;
-- plugs anais;
-- limpeza e conservação;
-- corpo humano e ciclo menstrual;
-- prevenção combinada;
-- prevenção de IST.
+### P1 — Revisão jurídica do Módulo 11 e do guia público
 
-**Correção proposta nesta PR:** alinhar os oito `lastmod` para 15/11/2026. A data deve representar alteração material do conteúdo, não uma atualização automática sem revisão.
+**Arquivos:** `docs/educacao/modulos/11-violencia-sexual-apoio-direitos.md` e `educacao/guias/violencia-sexual-onde-buscar-ajuda.html`.
 
-## 3. Achados de arquitetura e validação
+O Módulo 11 diferencia a assistência em saúde da comunicação institucional prevista na Lei nº 15.516/2026 e delimita a referência ao Conselho Tutelar ao contexto descrito no dispositivo legal. A direção está alinhada ao texto normativo consultado, mas o tema envolve direitos, deveres institucionais, sigilo, proteção de crianças e adolescentes e fluxos de atendimento.
 
-### P2 — Workflow não executava validação em pull requests
+**Ação necessária:** revisão jurídica especializada da redação integral, inclusive da relação entre Lei nº 12.845/2013, Lei nº 15.516/2026, ECA e demais deveres de notificação/comunicação. A checagem automatizada não valida interpretação jurídica.
 
-O workflow `.github/workflows/validate-education.yml` estava configurado para `push` em `main` e `workflow_dispatch`, sem evento `pull_request`. Portanto, alterações em PR não recebiam validação automática antes do merge.
+Fonte primária: [Lei nº 15.516/2026 — texto integral](https://normas.leg.br/?urn=urn%3Alex%3Abr%3Afederal%3Alei%3A2026-09-22%3B15516).
 
-**Correção proposta nesta PR:** adicionar `pull_request` para a branch `main`, mantendo os mesmos filtros de caminhos. A execução só poderá ser considerada aprovada depois de o GitHub Actions concluir a execução gerada pelo novo commit.
+## 3. Achados de consistência e arquitetura
 
-### P2 — Regra de mídia do validador precisa de decisão editorial
+### P2 — Mapa do Módulo 12 estava incompleto
 
-O script `scripts/validar_educacao.py` reprova qualquer elemento `img`, `picture`, `video`, `iframe`, `embed` ou `object` em páginas educativas. Isso é uma regra absoluta, não apenas uma verificação de mídia explícita ou sem texto alternativo.
+**Arquivo:** `docs/educacao/modulos/12-mitos-duvidas-e-caminhos-para-atendimento.md`, seção “Mapa de leitura”.
 
-A arquitetura planejada para anatomia e fisiologia pode se beneficiar de diagramas anatômicos didáticos, não explícitos e acessíveis. Antes do Módulo 2, decidir se a biblioteca será estritamente textual ou se aceitará diagramas educativos com texto alternativo, fonte e revisão. Não afrouxar a regra automaticamente sem política aprovada.
+O mapa listava os módulos 1 a 11, omitia o próprio Módulo 12 e dizia que alguns módulos ainda estavam em elaboração. Os doze rascunhos já existem.
 
-### P2 — O validador não substitui revisão clínica nem verificação de fontes
+**Correção realizada nesta etapa:** incluir o Módulo 12 no mapa e esclarecer que os doze arquivos são rascunhos internos, não páginas públicas nem conteúdo clinicamente revisado.
 
-O script verifica estrutura HTML, metadados, navegação, presença de blocos de fontes/leituras, sitemap e links locais. Não confirma:
-- se a fonte realmente sustenta a afirmação ao lado;
-- se a diretriz continua vigente;
-- se números, prazos e contraindicações estão corretos;
-- se uma referência legal foi interpretada corretamente;
-- se o conteúdo é adequado para monetização ou políticas de anúncios.
+### P2 — Repetições que devem ser mantidas com links, não copiadas em blocos extensos
 
-Esses pontos exigem revisão humana e, nos assuntos de saúde, profissionais habilitados.
+Há temas transversais que aparecem em mais de um módulo. A repetição curta é justificável quando protege o leitor; o aprofundamento deve permanecer no módulo de referência.
 
-## 4. Mapa de sobreposição entre os 23 artigos
+| Tema | Módulo de referência | Onde aparece também | Diretriz |
+|---|---|---|---|
+| Consentimento, autonomia e respostas fisiológicas | 6 | 1, 7, 8 e 12 | Manter lembretes curtos; aprofundar consentimento no 6. |
+| Ciclo, fertilidade e contracepção de emergência | 3 e 4 | 12 | Manter perguntas-resumo no 12 com remissão aos capítulos. |
+| IST, HIV, PrEP e PEP | 5 | 1, 4, 11 e 12 | Preservar alertas urgentes; centralizar protocolos e detalhes no 5. |
+| Violência sexual e acesso ao atendimento | 11 | 6, 7 e 12 | Manter orientação de segurança essencial; centralizar lei, serviços e canais no 11. |
+| Higiene, lubrificantes e acessórios | 9 e 10 | 5, 8 e 12 | Separar higiene corporal, resposta sexual e segurança dos dispositivos. |
 
-Os conteúdos têm funções distintas e devem ser conectados, não fundidos indiscriminadamente:
+### P2 — Política de diagramas anatômicos permanece pendente
 
-- **Prevenção de IST** = guia de situação, testagem, sintomas, tratamento e próximos passos. **Prevenção combinada** = visão integrada das estratégias complementares.
-- **Saúde sexual e bem-estar** = porta de entrada conceitual. **Direitos, diversidade e acesso** = direitos, privacidade, não discriminação e acesso a serviços.
-- **Consentimento e limites** = consentimento nas interações. **Segurança digital e privacidade** = autorização, proteção e exposição no ambiente digital.
-- **Materiais dos acessórios** = propriedades e composição. **Limpeza e conservação** = procedimento prático. **Primeiro acessório** = critérios de escolha.
-- **Géis e lubrificantes** = verbete de referência. **Como escolher um lubrificante** = guia prático de decisão.
+O Módulo 2 é textual e a regra atual do validador reprova elementos de mídia em páginas educativas. Diagramas didáticos podem melhorar a compreensão anatômica, mas não devem ser adicionados antes de uma decisão editorial sobre acessibilidade, texto alternativo, fonte, direitos de uso e revisão técnica. Não alterar o validador sem política aprovada.
 
-A decisão continua sendo preservar as 23 URLs. Não há base suficiente nesta etapa para excluir, aplicar `noindex` ou redirecionar qualquer artigo.
+### P2 — Escopo de revisão dos artigos públicos
 
-## 5. Riscos editoriais e lacunas
+A matriz mapeia 23 artigos e preserva suas URLs. Oito artigos foram revisados para reduzir repetição nesta PR. Ainda falta uma revisão individual dos 23 textos, incluindo atualização de fontes, afirmações clínicas, links, intenção de busca, acessibilidade e metadados. A matriz não substitui essa leitura.
 
-1. Os cinco módulos existentes são rascunhos v0.1, não conteúdo clinicamente, psicossocialmente ou juridicamente revisado.
-2. Os módulos 2, 3 e 4 devem receber prioridade de produção, com fontes clínicas atuais e cuidado especial com fertilidade, contracepção e limites de estimativas de ciclo.
-3. Os módulos 7, 8 e 9 exigem revisão de linguagem e clínica, sem transformar variações individuais em diagnóstico.
-4. O Módulo 10 exige documentação de materiais, rotulagem, compatibilidade e limites de alegações comerciais.
-5. O Módulo 11 exige revisão jurídica e clínica antes de qualquer publicação, especialmente após a Lei nº 15.516/2026.
-6. O Módulo 12 deve funcionar como índice de consulta, com cada afirmação curta ligada ao capítulo e à fonte específica que a sustenta.
+## 4. Verificação pontual de orientações de urgência
 
-## 6. Publicidade e independência editorial
+- **PEP para HIV:** o Ministério da Saúde informa início o mais rápido possível, preferencialmente nas primeiras duas horas e no máximo em 72 horas; quando indicada, a profilaxia dura 28 dias. Os módulos 5 e 11 devem manter o alerta para procurar atendimento imediatamente, sem transformar o texto em prescrição. Fonte: [Ministério da Saúde — Prevenção](https://www.gov.br/saude/pt-br/assuntos/saude-de-a-a-z/a/aids-hiv/prevencao).
+- **Contracepção de emergência:** a Nota Técnica nº 2/2025 do Ministério da Saúde orienta acesso em até 120 horas e indica levonorgestrel oral ou DIU de cobre como opções disponíveis no SUS. A adequação depende da avaliação e do método. Fonte: [Nota Técnica nº 2/2025 — Ministério da Saúde](https://www.gov.br/saude/pt-br/centrais-de-conteudo/publicacoes/notas-tecnicas/2025/nota-tecnica-no-2-2025-cosaj-cgcriaj-dgci-saps-ms/%40%40download/file).
+- **Lei nº 15.516/2026:** o texto legal prevê comunicação obrigatória à autoridade policial, em até 24 horas, dos casos com indícios ou confirmação de violência sexual, e contém regra específica sobre Conselho Tutelar no contexto descrito na própria lei. O texto do Módulo 11 foi delimitado nesse ponto; a revisão jurídica especializada continua pendente. Fonte: [Lei nº 15.516/2026](https://normas.leg.br/?urn=urn%3Alex%3Abr%3Afederal%3Alei%3A2026-09-22%3B15516).
 
-- Loja, checkout, produtos e páginas operacionais continuam fora da estratégia de anúncios.
-- Páginas educativas sobre acessórios e práticas íntimas podem ter restrições de publicidade; não prometer aprovação ou monetização.
-- Recomendações clínicas não devem ser intercaladas com chamadas de compra.
-- O conteúdo comercial deve permanecer identificado e separado da informação de saúde.
+## 5. Separação editorial e publicidade
 
-## 7. Situação da validação
+- Conteúdo educativo não deve inserir chamadas de compra no meio de recomendações clínicas.
+- Enciclopédia de acessórios deve ser informativa, sem transformar descrição comercial em recomendação médica.
+- Loja, checkout, páginas de produto e páginas operacionais permanecem fora da estratégia de anúncios.
+- Conteúdo sobre acessórios, lubrificantes e práticas íntimas pode sofrer restrições de publicidade. Não prometer aprovação ou monetização.
+- A revisão de elegibilidade para anúncios é separada da revisão de qualidade editorial, clínica e jurídica.
 
-- Inventário e leitura cruzada realizados sobre a matriz, os cinco rascunhos e os artigos públicos prioritários.
-- A validação automatizada completa ainda não foi executada em checkout integral do branch.
-- A mudança do workflow cria execução automática em PR; aguardar o resultado do Actions antes de afirmar que os testes passaram.
-- Nenhuma revisão externa foi realizada.
-- Nenhuma alteração desta auditoria deve ser publicada sem aprovação expressa.
+## 6. Validação automatizada
 
-## 8. Próximos passos
+A execução do workflow **Validate Education and Experiences**, run nº 18, associada ao commit `de0c6cc17bf19ee132109728f4125408fb5a6e1c`, terminou com conclusão `success`.
 
-1. Aguardar e corrigir o resultado do GitHub Actions.
-2. Fazer revisão jurídica e clínica do guia público e do Módulo 11.
-3. Produzir os Módulos 2, 3 e 4.
-4. Decidir política de diagramas educativos antes de introduzir mídia.
-5. Fazer checagem individual de fontes, datas e alegações clínicas nos 23 artigos.
-6. Manter PR #132 em rascunho até a revisão e autorização explícita.
+Isso confirma somente que as verificações automatizadas configuradas passaram naquele commit. Não comprova precisão clínica, validade jurídica, revisão profissional, elegibilidade para anúncios ou aprovação para publicação. As alterações desta atualização ainda precisam gerar nova execução do workflow.
 
+## 7. Pendências obrigatórias antes de publicação
 
-## 9. Produção dos módulos 2, 3 e 4 — 15/11/2026
+1. Revisão clínica por profissionais habilitados dos módulos 1 a 5 e 8 a 10 e 12.
+2. Revisão psicossocial dos módulos 6, 7 e 11.
+3. Revisão jurídica do Módulo 11, do guia público de violência sexual e dos trechos legais do Módulo 6.
+4. Revisão técnica de materiais, compatibilidade, limpeza e dispositivos do Módulo 10.
+5. Rastreabilidade de cada afirmação clínica importante até a fonte específica que a sustenta.
+6. Revisão individual dos 23 artigos públicos mapeados.
+7. Decisão formal sobre diagramas anatômicos e atualização correspondente do validador, se aprovada.
+8. Nova execução do GitHub Actions após os commits desta auditoria.
+9. Revisão de acessibilidade, navegação, links, metadados, sitemap e políticas de publicidade por URL.
+10. Aprovação editorial expressa antes de qualquer merge ou publicação.
 
-Foram criados três rascunhos internos na branch da PR:
+## 8. Decisão
 
-- `docs/educacao/modulos/02-anatomia-e-fisiologia-reprodutiva.md`
-- `docs/educacao/modulos/03-ciclo-menstrual-fertilidade-reproducao.md`
-- `docs/educacao/modulos/04-contracepcao-planejamento-reprodutivo.md`
+Os 12 módulos formam uma arquitetura coerente para a biblioteca e têm separação temática razoável. As repetições identificadas são, em geral, úteis como alertas breves, desde que os aprofundamentos permaneçam nos capítulos de referência e os links internos sejam inseridos apenas quando as páginas estiverem efetivamente revisadas e publicadas.
 
-### Escopo coberto
-
-- **Módulo 2:** anatomia externa e interna, vulva/vagina, clitóris, útero, ovários, tubas, pênis, testículos, estruturas acessórias, resposta corporal, variações anatômicas e sinais de alerta.
-- **Módulo 3:** eixo hormonal, fases ovarianas e uterinas, ovulação, janela fértil, fecundação, implantação, testes, variações ao longo da vida e limites de aplicativos/calendários.
-- **Módulo 4:** métodos LARC, hormonais, barreira, comportamentais, contracepção de emergência, esterilização, dupla proteção, elegibilidade e acesso no SUS.
-
-### Cuidados específicos
-
-- Não afirmar que a ovulação ocorre sempre no 14º dia.
-- Não apresentar aplicativos como confirmação de ovulação ou método contraceptivo garantido.
-- Não confundir lubrificação ou ereção com consentimento.
-- Não apresentar contracepção de emergência como método abortivo.
-- Não sugerir que métodos hormonais, DIU ou implante protejam contra IST.
-- Não transformar taxas de falha de fontes diferentes em comparação direta sem padronizar metodologia.
-- Não prescrever método nem substituir critérios de elegibilidade clínica da OMS.
-
-### Fontes-base consultadas
-
-- Ministério da Saúde — contracepção e métodos ofertados no SUS.
-- Ministério da Saúde — Nota Técnica nº 2/2025 sobre acesso, contracepção de emergência em até 120 horas e atendimento a adolescentes.
-- Ministério da Saúde — materiais do Programa Dignidade Menstrual 2025 e página de ciclo menstrual atualizada em outubro de 2026.
-- OMS — Medical eligibility criteria for contraceptive use, 6ª edição (3/11/2025).
-- OMS — Selected practice recommendations for contraceptive use, 4ª edição (3/11/2025).
-- OMS — Guidelines on expanding contraceptive options (23/09/2026).
-- MedlinePlus e NHS — anatomia reprodutiva e ciclo menstrual.
-- ACOG — métodos de percepção da fertilidade.
-
-Os links e datas completos constam ao final de cada módulo. As fontes servem como base para revisão, não como prova de revisão profissional.
-
-### Situação
-
-Os três capítulos são rascunhos v0.1. Não houve revisão clínica externa, não foram adicionados à navegação pública e não foram publicados. Os próximos passos são revisão técnica, verificação de cada afirmação contra a fonte primária e execução da validação automatizada da PR.
+**A auditoria não considera os módulos prontos para publicação.** A PR #132 deve permanecer aberta e em rascunho. Nenhuma alteração desta etapa autoriza merge, deploy ou publicação em produção.
