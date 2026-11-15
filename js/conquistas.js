@@ -1,4 +1,5 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { ACTIVITY_NAMES, calculateAchievementStats } from "./conquistas-core.js";
 
 const supabase = createClient(
   "https://byiykxfugvxuowueuxca.supabase.co",
@@ -7,15 +8,6 @@ const supabase = createClient(
 );
 
 const TERMS_VERSION = "luxuriosa-experiencias-v1-2026-11";
-const activityNames = {
-  discovery: "Descubra seu estilo",
-  connection: "Conexão a dois",
-  curiosity: "Mitos ou verdades?",
-  challenge: "Pequenas descobertas",
-  knowledge_quiz: "Conhecimentos essenciais sobre saúde sexual",
-  sign_profile: "Descubra seu signo solar",
-  sign_compatibility: "Combinação entre signos"
-};
 const categoryNames = {
   prazer: "Prazer",
   relacionamento: "Relacionamento",
@@ -127,17 +119,13 @@ async function loadResults() {
   if (error) throw error;
 
   const results = Array.isArray(data) ? data : [];
-  const distinctActivities = new Set(
-    results.map(item => item.activity_id).filter(id => Object.prototype.hasOwnProperty.call(activityNames, id))
-  );
-  const distinctCategories = new Set(results.map(item => item.category));
-  const points = distinctActivities.size * 10;
+  const stats = calculateAchievementStats(results);
 
-  document.getElementById("conquistasPoints").textContent = String(points);
-  document.getElementById("conquistasActivities").textContent = String(distinctActivities.size);
-  document.getElementById("conquistasSaved").textContent = String(results.length);
+  document.getElementById("conquistasPoints").textContent = String(stats.points);
+  document.getElementById("conquistasActivities").textContent = String(stats.activities);
+  document.getElementById("conquistasSaved").textContent = String(stats.saved);
 
-  renderBadges(distinctActivities, distinctCategories.size);
+  renderBadges(stats.badges);
 
   if (!results.length) {
     emptyState.hidden = false;
@@ -148,16 +136,7 @@ async function loadResults() {
   historyList.hidden = false;
 }
 
-function renderBadges(distinctActivities, categoryCount) {
-  const activityCount = distinctActivities.size;
-  const badges = [
-    { icon: "✦", title: "Primeira descoberta", description: "Salve seu primeiro resultado.", unlocked: activityCount >= 1 },
-    { icon: "◇", title: "Curiosidade em movimento", description: "Explore duas atividades diferentes.", unlocked: activityCount >= 2 },
-    { icon: "♡", title: "Olhar diverso", description: "Experimente dois segmentos diferentes.", unlocked: categoryCount >= 2 },
-    { icon: "✧", title: "Explorador(a)", description: "Salve três atividades diferentes.", unlocked: activityCount >= 3 },
-    { icon: "♛", title: "Jornada completa", description: "Conclua as quatro experiências iniciais.", unlocked: ["discovery", "connection", "curiosity", "challenge"].every(id => distinctActivities.has(id)) }
-  ];
-
+function renderBadges(badges) {
   const grid = document.getElementById("conquistasBadges");
   grid.replaceChildren();
 
@@ -210,7 +189,7 @@ function createResultCard(item) {
   meta.className = "conquista-result-meta";
 
   const activity = document.createElement("span");
-  activity.textContent = activityNames[item.activity_id] || item.activity_title || "Atividade";
+  activity.textContent = ACTIVITY_NAMES[item.activity_id] || item.activity_title || "Atividade";
   meta.append(activity);
 
   if (Number.isInteger(item.score) && Number.isInteger(item.score_max)) {
