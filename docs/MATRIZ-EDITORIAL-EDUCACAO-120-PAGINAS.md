@@ -21,9 +21,9 @@ Cada página deve identificar fontes, data real de revisão, escopo e limites. N
 | Módulo | Situação | Próximo requisito |
 |---|---|---|
 | 1. Fundamentos da saúde sexual | Rascunho interno v0.1 | Revisão editorial e clínica |
-| 2. Anatomia e fisiologia | Não produzido | Produzir com terminologia precisa e decidir política para diagramas didáticos |
-| 3. Ciclo, fertilidade e reprodução | Não produzido | Produzir com fontes clínicas e limites de métodos de percepção da fertilidade |
-| 4. Contracepção | Não produzido | Produzir comparação baseada em diretrizes atuais |
+| 2. Anatomia e fisiologia | Rascunho interno v0.1 | Revisão clínica; decidir política para diagramas didáticos |
+| 3. Ciclo, fertilidade e reprodução | Rascunho interno v0.1 | Revisão clínica; validar sinais de alerta e limites de estimativas de fertilidade |
+| 4. Contracepção | Rascunho interno v0.1 | Revisão clínica e checagem de elegibilidade, protocolos e oferta atual do SUS |
 | 5. IST, HIV e prevenção combinada | Rascunho interno v0.1 | Revisão clínica e checagem de protocolos |
 | 6. Consentimento, limites e segurança | Rascunho interno v0.1 | Revisão psicossocial e jurídica |
 | 7. Relações e intimidade | Não produzido | Produzir com foco em comunicação e relações respeitosas |
@@ -33,7 +33,7 @@ Cada página deve identificar fontes, data real de revisão, escopo e limites. N
 | 11. Violência sexual, apoio e direitos | Rascunho interno v0.1 | Revisão jurídica, clínica e psicossocial; delimitar corretamente a Lei nº 15.516/2026 |
 | 12. Mitos e caminhos de atendimento | Rascunho interno v0.1 | Revisão clínica e checagem individual das afirmações |
 
-Os cinco rascunhos são documentação interna, não páginas públicas nem conteúdo revisado externamente. Os sete módulos restantes ainda não existem como capítulos.
+Os oito rascunhos (módulos 1 a 6, 11 e 12) são documentação interna, não páginas públicas nem conteúdo revisado externamente. Os módulos 7, 8, 9 e 10 ainda não existem como capítulos.
 
 ## 2. Matriz dos 23 artigos existentes
 
@@ -138,7 +138,7 @@ Para cada afirmação clínica importante, registrar fonte específica, data da 
 
 **Fase 1 — Inventário e arquitetura (agora):** matriz dos 23 artigos, distinção entre verbete e guia, identificação de lacunas e política de preservação de URLs.
 
-**Fase 2 — Conteúdo prioritário:** os módulos 1, 5, 6, 11 e 12 já têm rascunhos internos. Produzir agora módulos 2, 3 e 4; em seguida 7, 8 e 9; por último 10. Antes de qualquer publicação, revisar os cinco rascunhos existentes e os novos capítulos com profissionais habilitados conforme o tema.
+**Fase 2 — Conteúdo prioritário:** os módulos 1 a 6, 11 e 12 já têm rascunhos internos. Produzir em seguida os módulos 7, 8 e 9; por último o 10. Antes de qualquer publicação, revisar os oito rascunhos e os novos capítulos com profissionais habilitados conforme o tema.
 
 **Fase 3 — Produção e navegação:** criar páginas-pilar, sumários, links contextuais, glossário e trilhas de leitura. Cada página terá resumo visível no início e aprofundamento organizado em seções.
 
