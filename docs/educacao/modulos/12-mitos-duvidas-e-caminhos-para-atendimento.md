@@ -92,7 +92,7 @@ Desconfie de páginas que:
 
 ### Mito 11 — Contracepção de emergência é abortiva
 
-**Fato:** os métodos orais de contracepção de emergência atuam principalmente atrasando ou impedindo a ovulação; não interrompem uma gravidez já estabelecida. A contracepção de emergência deve ser procurada o quanto antes; a orientação do Ministério da Saúde prevê acesso em até 120 horas (cinco dias), conforme o método disponível e a avaliação do serviço. Não espere a menstruação atrasar para buscar orientação.
+**Fato:** os métodos orais de contracepção de emergência atuam principalmente atrasando ou impedindo a ovulação; não interrompem uma gravidez já estabelecida. A contracepção de emergência deve ser procurada o quanto antes. A OMS recomenda o uso de métodos de emergência dentro de 120 horas (cinco dias), mas o prazo e a eficácia variam conforme o método; não se deve presumir que todas as opções tenham a mesma janela. No SUS, a equipe orienta sobre as opções disponíveis e adequadas. Não espere a menstruação atrasar para buscar orientação.
 
 ### Mito 12 — Existe um método contraceptivo ideal para todas as pessoas
 
@@ -250,13 +250,14 @@ Na dúvida, procure fontes institucionais, observe a data e a finalidade do cont
 7. **Organização Mundial da Saúde (OMS).** *Comprehensive sexuality education.* 11 mar. 2026. https://www.who.int/news-room/fact-sheets/detail/comprehensive-sexuality-education
 8. **Ministério da Saúde (Brasil).** *Prevenção — HIV/Aids.* Orientação atual sobre PEP, início preferencial nas primeiras duas horas, limite de 72 horas e duração de 28 dias. https://www.gov.br/saude/pt-br/assuntos/saude-de-a-a-z/a/aids-hiv/prevencao
 9. **Ministério da Saúde (Brasil).** *Nota Técnica nº 376/2023-CGAHV/.DATHI/SVSA/MS.* Incorporação do conceito I=I e risco zero de transmissão sexual com carga viral indetectável sustentada. https://www.gov.br/aids/pt-br/central-de-conteudo/notas-tecnicas/2023/nota-tecnica-no-376-2023-cgahv-dathi-svsa-ms.pdf
-10. **Ministério da Saúde (Brasil).** *Nota Técnica nº 2/2025-COSAJ/CGCRIAJ/DGCI/SAPS/MS.* Orientações de saúde sexual e reprodutiva para adolescentes, incluindo contracepção de emergência em até 120 horas; aplicar apenas dentro do escopo da nota e das orientações nacionais vigentes. https://www.gov.br/saude/pt-br/centrais-de-conteudo/publicacoes/notas-tecnicas/2025/nota-tecnica-no-2-2025-cosaj-cgcriaj-dgci-saps-ms/@@download/file
-11. **American College of Obstetricians and Gynecologists (ACOG).** *Female Sexual Dysfunction: Common Questions and Answers.* American Family Physician, 2025;111(5):433–442. https://www.aafp.org/afp/2025/0500/female-sexual-dysfunction
+10. **Organização Mundial da Saúde (OMS).** *Emergency contraception.* Recomenda o uso de contracepção de emergência dentro de 120 horas, o quanto antes; prazos e eficácia variam conforme o método. https://www.who.int/news-room/fact-sheets/detail/emergency-contraception
+11. **Ministério da Saúde (Brasil).** *Nota Técnica nº 2/2025-COSAJ/CGCRIAJ/DGCI/SAPS/MS.* Orientações de saúde sexual e reprodutiva para adolescentes, incluindo acesso à contracepção de emergência em até 120 horas; referência aplicada dentro do escopo da nota. https://www.gov.br/saude/pt-br/centrais-de-conteudo/publicacoes/notas-tecnicas/2025/nota-tecnica-no-2-2025-cosaj-cgcriaj-dgci-saps-ms/@@download/file
+12. **American College of Obstetricians and Gynecologists (ACOG).** *Female Sexual Dysfunction: Common Questions and Answers.* American Family Physician, 2025;111(5):433–442. https://www.aafp.org/afp/2025/0500/female-sexual-dysfunction
 
 **Limites desta revisão documental (15/11/2026)**
 - Os mitos foram conferidos por coerência com os módulos temáticos e fontes institucionais, mas não houve revisão clínica externa de cada resposta.
 - A janela diagnóstica varia conforme agente, teste e exposição; não usar este capítulo para definir datas individuais de testagem.
-- A orientação de contracepção de emergência em até 120 horas foi vinculada à Nota Técnica nº 2/2025, cujo escopo específico é saúde sexual e reprodutiva de adolescentes; não extrapolar automaticamente critérios de elegibilidade ou fluxos além desse escopo.
+- A orientação geral de uso de contracepção de emergência em até 120 horas está apoiada na OMS; a Nota Técnica nº 2/2025 do Ministério da Saúde é específica para saúde sexual e reprodutiva de adolescentes e não deve ter seus critérios ou fluxos extrapolados automaticamente.
 - A PEP-HIV é distinta das medidas pós-exposição para hepatites e outras IST; a janela de 72 horas refere-se à PEP para HIV.
 - Canais e disponibilidade dos serviços devem ser reconfirmados na rede local antes de qualquer publicação ou atualização.
 
