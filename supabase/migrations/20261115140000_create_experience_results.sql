@@ -69,7 +69,10 @@ create table if not exists public.experience_results (
   user_id uuid not null references auth.users(id) on delete cascade,
   attempt_id uuid not null,
   activity_id text not null
-    check (activity_id ~ '^[a-z0-9_-]{2,60}$'),
+    check (activity_id in (
+      'discovery', 'connection', 'curiosity', 'challenge',
+      'knowledge_quiz', 'sign_profile', 'sign_compatibility'
+    )),
   activity_title text not null
     check (char_length(btrim(activity_title)) between 2 and 100),
   category text not null
@@ -81,6 +84,15 @@ create table if not exists public.experience_results (
   score smallint,
   score_max smallint,
   created_at timestamptz not null default now(),
+  constraint experience_results_activity_metadata_check check (
+    (activity_id = 'discovery' and activity_title = 'Descubra seu estilo' and category = 'ferramentas')
+    or (activity_id = 'connection' and activity_title = 'Conexão a dois' and category = 'relacionamento')
+    or (activity_id = 'curiosity' and activity_title = 'Mitos ou verdades?' and category = 'ferramentas')
+    or (activity_id = 'challenge' and activity_title = 'Pequenas descobertas' and category = 'ferramentas')
+    or (activity_id = 'knowledge_quiz' and activity_title = 'Conhecimentos essenciais sobre saúde sexual' and category = 'educacao')
+    or (activity_id = 'sign_profile' and activity_title = 'Descubra seu signo solar' and category = 'astrologia')
+    or (activity_id = 'sign_compatibility' and activity_title = 'Combinação entre signos' and category = 'astrologia')
+  ),
   constraint experience_results_score_pair check (
     (score is null and score_max is null)
     or (
