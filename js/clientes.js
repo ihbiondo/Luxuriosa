@@ -355,15 +355,7 @@
     var subtotal = integridade.subtotal;
     if (!items.length) return "";
 
-    var temKit = pedidoContemKit(items);
     var totalProdutos = subtotal;
-    var cidade = String(data.address.city || "").trim();
-    var estado = String(data.address.state || "").trim().toUpperCase();
-    var cidadeNormalizada = cidade.normalize
-      ? cidade.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase()
-      : cidade.toLowerCase();
-    var emBauru = cidadeNormalizada === "bauru" && estado === "SP";
-    var frete = null;
 
     var lines = [
       "Olá! Quero fazer um pedido na *Luxuriosa*. ❤️",
