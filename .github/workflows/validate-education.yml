@@ -55,6 +55,7 @@ on:
       - "js/signos.js"
       - "js/signo-detalhe.js"
       - "scripts/validar_educacao.py"
+      - "scripts/validar_experiencias.py"
       - "sitemap.xml"
       - ".github/workflows/validate-education.yml"
   workflow_dispatch:
