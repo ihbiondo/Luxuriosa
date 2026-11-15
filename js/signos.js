@@ -262,7 +262,7 @@
           { href: "#compatibilityForm", label: "Comparar combinações" },
           { href: "#signGrid", label: "Explorar os 12 signos" }
         ],
-        anchor: document.getElementById("solarShareStudio")
+        anchor: document.getElementById("signResult")
       },
       compatibility: {
         title: "Uma leitura simbólica pode abrir espaço para uma boa conversa.",
