@@ -146,7 +146,49 @@ Isso confirma somente que as verificações automatizadas configuradas passaram 
 9. Revisão de acessibilidade, navegação, links, metadados, sitemap e políticas de publicidade por URL.
 10. Aprovação editorial expressa antes de qualquer merge ou publicação.
 
-## 9. Decisão
+## 9. Revisão jurídica e clínica pontual — 15/11/2026
+
+### P1 — Comunicação policial e sigilo: separar obrigações distintas
+
+**Arquivos:** `docs/educacao/modulos/11-violencia-sexual-apoio-direitos.md`, `docs/educacao/modulos/06-consentimento-limites-seguranca.md` e `educacao/guias/violencia-sexual-onde-buscar-ajuda.html`.
+
+**Verificado em fonte primária:** a Lei nº 15.516/2026 acrescentou ao art. 3º da Lei nº 12.845/2013 a comunicação obrigatória à autoridade policial, em até 24 horas, dos casos com indícios ou confirmação de violência sexual. A mesma lei também prevê encaminhamento imediato à unidade pública de saúde e registro da ocorrência quando o primeiro atendimento for feito por profissional de segurança pública. O texto legal não transforma a apresentação de BO pessoal em requisito para o atendimento de saúde.
+
+**Nuance jurídica obrigatória:** o art. 3º do projeto que determinaria o encaminhamento do laudo médico à autoridade competente foi vetado. As razões do veto mencionam intimidade, vida privada, sigilo profissional e proteção de dados. Portanto, os textos não devem sugerir que a comunicação policial equivale ao envio automático do laudo ou do prontuário integral. A forma, o conteúdo e o tratamento dos dados da comunicação exigem confirmação jurídica especializada; não presumir anonimização nem divulgação integral.
+
+**Risco de fonte secundária desatualizada:** a página do Ministério da Saúde intitulada “Violência sexual” ainda descreve a notificação em 24 horas como comunicação à autoridade de saúde e afirma que ela não é encaminhada à segurança pública. Essa explicação não incorpora a alteração posterior da Lei nº 15.516/2026. A página continua útil para orientações assistenciais e para a informação de que não é necessário BO para acessar o cuidado, mas não deve ser usada isoladamente para explicar o fluxo legal atual de comunicação policial.
+
+**Contexto local:** o Protocolo de Atendimento à Vítima de Violência Sexual de Bauru disponível é a versão 2025, anterior à Lei nº 15.516/2026. Serve como referência de rede e fluxo municipal, mas não confirma como o município implementou a nova obrigação federal. Não publicar contatos/fluxos locais sem confirmação atualizada.
+
+**Status:** a redação atual dos módulos 6 e 11 e do guia público distingue BO pessoal de comunicação institucional. Não foi identificada, nesta leitura, afirmação explícita de que o laudo completo é enviado automaticamente. Manter a distinção e acrescentar, na próxima revisão editorial, uma nota curta de que a comunicação legal não deve ser confundida com remessa automática do prontuário/laudo integral. Exigir revisão jurídica especializada antes de publicar.
+
+Fontes:
+- [Lei nº 15.516/2026 — texto legal](https://normas.leg.br/?urn=urn%3Alex%3Abr%3Afederal%3Alei%3A2026-09-22%3B15516).
+- [Lei nº 15.516/2026 — veto parcial e razões do veto](https://www2.camara.leg.br/legin/fed/lei/2026/lei-15516-22-setembro-2026-800011-veto-181457-pl.html).
+- [Ministério da Saúde — Violência sexual](https://www.gov.br/saude/pt-br/assuntos/saude-de-a-a-z/s/saude-da-mulher/saude-sexual-e-reprodutiva/violencia-sexual).
+- [Prefeitura de Bauru — Protocolo de Atendimento à Vítima de Violência Sexual, versão 2025](https://www2.bauru.sp.gov.br/arquivos/arquivos_site/sec_saude/protocolos_saude/Atendimento_%C3%A0_V%C3%ADtima_de_Viol%C3%AAncia_Sexual/Protocolo%20de%20Atendimento%20%C3%A0%20v%C3%ADtima%20de%20Viol%C3%AAncia%20Sexual%202025.pdf).
+
+### P1 — Janela da PEP e contracepção de emergência
+
+**Arquivos:** módulos 4, 5 e 11; guia público de violência sexual; páginas públicas de prevenção de IST e prevenção combinada.
+
+- **PEP-HIV:** fonte atual do Ministério da Saúde confirma início o mais rápido possível, preferencialmente nas primeiras duas horas e no máximo em 72 horas; duração de 28 dias quando indicada. A redação dos módulos 5 e 11 está alinhada. Não converter o prazo em prescrição nem sugerir que a pessoa avalie sozinha a indicação.
+- **Hepatite B:** a página atual do Ministério da Saúde informa atendimento inicial preferencialmente até 24 horas, com possibilidade de avaliação até 14 dias em determinadas situações, conforme histórico vacinal e indicação. Os textos corretamente distinguem esse intervalo da janela da PEP-HIV; manter a busca imediata.
+- **Contracepção de emergência:** a Nota Técnica nº 2/2025 do Ministério da Saúde recomenda acesso até 120 horas (cinco dias), o mais cedo possível, e descreve levonorgestrel 1,5 mg em dose única ou DIU de cobre. A indicação depende do método e de avaliação. O módulo 4 e o artigo público distinguem corretamente contracepção de emergência de PEP-HIV; manter a ressalva de que a eficácia varia conforme o método e o tempo.
+
+Fontes:
+- [Ministério da Saúde — PEP](https://www.gov.br/saude/pt-br/assuntos/saude-de-a-a-z/a/aids-hiv/pep).
+- [Ministério da Saúde — Prevenção, incluindo início preferencial da PEP nas primeiras duas horas](https://www.gov.br/saude/pt-br/assuntos/saude-de-a-a-z/a/aids-hiv/prevencao).
+- [Nota Técnica nº 2/2025 — Ministério da Saúde](https://www.gov.br/saude/pt-br/centrais-de-conteudo/publicacoes/notas-tecnicas/2025/nota-tecnica-no-2-2025-cosaj-cgcriaj-dgci-saps-ms).
+- [Ministério da Saúde — DIU de cobre e uso como contracepção de emergência](https://www.gov.br/saude/pt-br/assuntos/saude-de-a-a-z/s/saude-da-mulher/saude-sexual-e-reprodutiva/contracepcao/diu-de-cobre/diu-de-cobre).
+
+### P2 — Consentimento e limites: evitar transformar princípios educativos em definição jurídica universal
+
+**Arquivo:** `docs/educacao/modulos/06-consentimento-limites-seguranca.md`.
+
+A formulação de consentimento livre, informado, específico, contínuo e revogável é útil como estrutura educativa. Capacidade, idade, vulnerabilidade, intoxicação e validade jurídica da manifestação dependem do contexto e da legislação aplicável. O módulo já contém ressalvas; mantê-las e evitar apresentar a lista como transcrição literal de uma definição legal brasileira única. Revisão jurídica permanece pendente.
+
+## 10. Decisão
 
 Os 12 módulos formam uma arquitetura coerente para a biblioteca e têm separação temática razoável. As repetições identificadas são, em geral, úteis como alertas breves, desde que os aprofundamentos permaneçam nos capítulos de referência e os links internos sejam inseridos apenas quando as páginas estiverem efetivamente revisadas e publicadas.
 
