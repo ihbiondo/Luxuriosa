@@ -209,6 +209,9 @@ async function completeSolarSign(page) {
 }
 
 async function completeSignCompatibility(page) {
+  // Começa uma sessão visual limpa após o teste anterior de fuso inválido.
+  await page.goto(`${BASE_URL}/experiencias/signos.html`, { waitUntil: "domcontentloaded" });
+  await confirmAgeGate(page);
   await page.locator("#signOne").selectOption("aries");
   await page.locator("#signTwo").selectOption("leo");
   await page.locator('#compatibilityForm button[type="submit"]').click();
