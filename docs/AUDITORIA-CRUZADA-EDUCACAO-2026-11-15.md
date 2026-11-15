@@ -301,7 +301,7 @@ Foram examinados os conceitos de prazer, desejo espontâneo e responsivo, excita
 
 1. **Consentimento contínuo sem formalismo mecânico:** esclarecido que não se exige uma confirmação verbal repetida a cada instante; exige-se atenção à comunicação e aos limites, interrupção diante de hesitação/desconforto e respeito absoluto à recusa verbal.
 2. **Capacidade para decidir:** substituída a formulação genérica sobre “incapacitação importante” por orientação funcional: se álcool ou outras substâncias prejudicarem compreensão, decisão ou comunicação, ou houver dúvida sobre a capacidade naquele momento, não avançar. Idade, capacidade e validade jurídica continuam sujeitas à legislação e ao contexto.
-3. **Alinhamento clínico da PEP:** removida a referência às “primeiras duas horas” como prazo preferencial neste módulo. Mantida a orientação de avaliação o mais rápido possível e no máximo em 72 horas, coerente com o padrão documental adotado no Módulo 5; não é orientação de autoseleção nem substitui avaliação.
+3. **Alinhamento clínico da PEP:** o Módulo 6 orienta avaliação o mais rápido possível, preferencialmente nas primeiras duas horas, e no máximo em 72 horas, conforme a página vigente do Ministério da Saúde. A redação não é orientação de autoseleção nem substitui avaliação.
 4. **Articulação explícita com os Módulos 7 e 8:** acrescentada seção que distingue negociação segura de coerção, esclarece que acordos não substituem consentimento atual e reforça que desejo responsivo e respostas fisiológicas não equivalem a consentimento.
 5. **Limite jurídico:** explicitado que a estrutura livre, informada, específica, contínua e revogável é educativa e não deve ser apresentada como transcrição de uma definição legal brasileira universal.
 
@@ -318,5 +318,6 @@ Foram examinados os conceitos de prazer, desejo espontâneo e responsivo, excita
 - [OMS — Violence against women, 18/06/2026](https://www.who.int/news-room/fact-sheets/detail/violence-against-women): violência por parceiro íntimo inclui coerção sexual, abuso psicológico e comportamentos controladores.
 - [UNESCO — International technical guidance on sexuality education, 2018](https://unesdoc.unesco.org/ark:/48223/pf0000260770): consentimento, privacidade, integridade corporal e fatores que afetam a capacidade de consentir, incluindo substâncias, violência, pobreza e relações de poder.
 - [Ministério da Saúde — PEP](https://www.gov.br/saude/pt-br/assuntos/saude-de-a-a-z/a/aids-hiv/pep): avaliação e início o mais rápido possível, até 72 horas.
+- [Ministério da Saúde — Prevenção](https://www.gov.br/saude/pt-br/assuntos/saude-de-a-a-z/a/aids-hiv/prevencao): início preferencial nas primeiras duas horas e limite de 72 horas.
 
 A revisão é documental e de coerência editorial; não equivale a revisão jurídica, clínica ou psicossocial profissional. A página pública foi apenas conferida, sem alteração. O Módulo 6 continua interno e não está aprovado para publicação.
