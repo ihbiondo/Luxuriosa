@@ -57,10 +57,10 @@ jobs:
             echo "Tags depois: $(git for-each-ref refs/tags --format='%(refname)' | wc -l)"
             echo "Commits alcançáveis depois: $(git rev-list --all --count)"
             echo "Refs alteradas:"
-            cat .git/filter-repo/changed-refs
+            cat filter-repo/changed-refs
             echo
             echo "PR refs alteradas:"
-            (grep -E '^refs/pull/[0-9]+/head$' .git/filter-repo/changed-refs || true)
+            (grep -E '^refs/pull/[0-9]+/head$' filter-repo/changed-refs || true)
             echo
             echo "Primeiros commits reescritos e LFS:"
             (grep -E 'First Changed Commit|LFS Objects Orphaned|NOTE:' /tmp/filter-repo-audit.log || true)
