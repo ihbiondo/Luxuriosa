@@ -160,7 +160,7 @@ const experiences={
   },
   curiosity:{
     id:"curiosity",title:"Mitos ou verdades?",eyebrow:"QUIZ · RESPEITO E CONSENTIMENTO",
-    description:"Quinze perguntas para revisar informações sobre consentimento, prevenção, saúde sexual, privacidade e segurança.",
+    description:"Quinze afirmações para revisar ideias sobre consentimento, prevenção, saúde sexual, privacidade e cuidados com acessórios.",
     duration:"15 perguntas · com explicações",mode:"truth",
     questions:[
       {question:"Se alguém consentiu em uma ocasião, isso significa que consentiu automaticamente em outra.",prompt:"Esta afirmação é verdadeira ou falsa?",answer:false,explanation:"Falso. O consentimento em uma ocasião não autoriza automaticamente outra ocasião. A vontade precisa ser respeitada em cada situação."},
