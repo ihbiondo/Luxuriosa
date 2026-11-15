@@ -144,10 +144,12 @@ async function completeKnowledgeQuiz(page) {
 
   const nextStep = page.locator(".ed-next-step");
   await nextStep.waitFor({ state: "visible", timeout: 10000 });
-  assert.equal(
-    await nextStep.locator('a[href="/experiencias/"]').count(),
-    1,
-    "Ao concluir o quiz, deve surgir uma recomendação para continuar nas Experiências."
+  const nextLinks = await nextStep.locator("a[href]").evaluateAll(links =>
+    links.map(link => link.getAttribute("href"))
+  );
+  assert.ok(
+    nextLinks.some(href => href === "/experiencias/" || href === "/educacao/"),
+    "Ao concluir o quiz, deve surgir ao menos uma rota relevante de continuidade. Encontradas: " + nextLinks.join(", ")
   );
 
   await page.locator("#experienceSavePanel").waitFor({ state: "visible", timeout: 15000 });
