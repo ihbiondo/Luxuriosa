@@ -127,9 +127,11 @@ A matriz mapeia 23 artigos e preserva suas URLs. Oito artigos foram revisados pa
 
 ## 7. Validação automatizada
 
-A execução do workflow **Validate Education and Experiences**, run nº 18, associada ao commit `de0c6cc17bf19ee132109728f4125408fb5a6e1c`, terminou com conclusão `success`.
+A execução mais recente concluída com sucesso nesta etapa foi o workflow **Validate Education and Experiences**, run nº 38, associada ao commit `a8be8f6b17b17f26e70908f3dd169d77cbe015b2`. Passaram as etapas de validação das 30 páginas HTML e links locais, sintaxe JavaScript e dados estruturados/XML do sitemap.
 
-Isso confirma somente que as verificações automatizadas configuradas passaram naquele commit. Não comprova precisão clínica, validade jurídica, revisão profissional, elegibilidade para anúncios ou aprovação para publicação. As alterações desta atualização ainda precisam gerar nova execução do workflow.
+As primeiras execuções após a mudança do texto do menu falharam porque o próprio validador ainda exigia a nomenclatura antiga. O script `scripts/validar_educacao.py` foi atualizado para reconhecer “Explorar a biblioteca”; a execução nº 38 passou depois da correção. O commit posterior `918cb8b77cb26dbb9c6b8ef2fe675da4b20e2d01` alterou apenas este documento de auditoria.
+
+Isso confirma somente que as verificações automatizadas configuradas passaram no commit validado. Não comprova precisão clínica, validade jurídica, revisão profissional, elegibilidade para anúncios ou aprovação para publicação.
 
 ## 8. Pendências obrigatórias antes de publicação
 
