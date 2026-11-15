@@ -21,3 +21,11 @@ comment on table public.delivery_plan_memberships is
   'Assinaturas de entrega Apoiador e Privilégio VIP. Gerenciada exclusivamente pelo backend/service role.';
 comment on column public.delivery_plan_memberships.plan_code is
   'supporter = Apoiador; vip = Privilégio VIP.';
+
+-- Pedido mínimo estritamente acima de R$ 10,00 em Bauru e R$ 49,00 fora de Bauru.
+update public.fulfillment_sla_rules
+set minimum_order_up_to_12km_cents = case when city_normalized = 'bauru' then 1001 else 4901 end,
+    minimum_order_up_to_35km_cents = 4901,
+    minimum_order_up_to_55km_cents = 4901,
+    updated_at = now()
+where active = true and fulfillment_mode = 'delivery';
