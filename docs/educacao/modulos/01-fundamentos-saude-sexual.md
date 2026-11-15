@@ -1,10 +1,10 @@
 # Módulo 1 — Fundamentos da sexualidade e da saúde sexual
 
-**Status:** rascunho editorial v0.1 — material interno para revisão; não publicado  
+**Status:** rascunho editorial v0.2 — revisão documental em 15/11/2026; material interno, não publicado  
 **Público:** pessoas adultas  
 **Função na biblioteca:** capítulo de abertura e referência conceitual para os demais módulos  
 **Extensão planejada:** cerca de 10 páginas equivalentes  
-**Revisão clínica externa:** não realizada; não apresentar como conteúdo revisado por profissional de saúde
+**Revisão clínica externa:** não realizada. Esta revisão documental não equivale à validação clínica, jurídica ou psicossocial por profissionais habilitados.
 
 > **Aviso ao leitor:** este material oferece informação geral. Não substitui consulta, diagnóstico, tratamento ou orientação individual de profissionais habilitados. Se houver dor persistente, sintomas, exposição a uma infecção, violência ou risco imediato, procure um serviço de saúde ou de proteção adequado.
 
@@ -24,7 +24,7 @@ Cinco ideias orientam este capítulo:
 
 ## 1. O que significa saúde sexual?
 
-A Organização Mundial da Saúde descreve a saúde sexual como parte fundamental da saúde e do bem-estar geral. Essa perspectiva exige uma abordagem positiva e respeitosa da sexualidade e das relações sexuais, incluindo a possibilidade de experiências prazerosas e seguras, livres de coerção, discriminação e violência.
+A OMS mantém uma definição de trabalho segundo a qual saúde sexual envolve bem-estar físico, emocional, mental e social em relação à sexualidade — não apenas ausência de doença, disfunção ou enfermidade. Essa definição destaca uma abordagem positiva e respeitosa, com possibilidade de experiências prazerosas e seguras, livres de coerção, discriminação e violência. A própria OMS esclarece que essa formulação é uma definição de trabalho e não deve ser citada como posição oficial formal da organização. Neste módulo, ela é usada como referência conceitual, não como norma jurídica ou diagnóstico.
 
 Essa definição amplia a compreensão do tema. Uma pessoa pode não apresentar uma doença diagnosticada e, ainda assim, enfrentar problemas relevantes para sua saúde sexual: medo, sofrimento, falta de informação, dificuldade de acesso a cuidados, violência, discriminação ou ausência de liberdade para expressar limites.
 
@@ -60,6 +60,17 @@ Também é importante distinguir conceitos que costumam ser confundidos:
 
 Esses conceitos se conectam, mas não são intercambiáveis. Uma pessoa pode desejar intimidade sem desejar reprodução; pode desejar reprodução sem estar buscando atividade sexual naquele momento; pode escolher não ter relações sexuais. O cuidado em saúde deve respeitar essas diferenças.
 
+### 2.1 Características sexuais, identidade e orientação
+
+É importante não usar como sinônimos conceitos diferentes:
+
+- **Características sexuais:** aspectos corporais, como anatomia reprodutiva e genital, gônadas, hormônios, cromossomos e características sexuais secundárias. Esses aspectos não aparecem em uma única combinação universal; existem variações intersexo.
+- **Identidade de gênero:** experiência interna e individual de gênero de uma pessoa.
+- **Expressão de gênero:** formas pelas quais alguém expressa gênero socialmente, por exemplo, por roupas, comportamento ou apresentação.
+- **Orientação sexual:** padrões de atração afetiva, romântica e/ou sexual; não pode ser deduzida pela aparência ou pela identidade de gênero.
+
+Essas dimensões podem se relacionar, mas uma não permite presumir a outra. Nem toda pessoa intersexo se identifica da mesma forma, e variações de características sexuais não são, por si, doença ou indicação automática de intervenção. Termos, necessidades e decisões de cuidado devem respeitar a pessoa e o contexto clínico.
+
 ## 3. Prazer, conforto e ausência de obrigação
 
 O prazer pode fazer parte de uma experiência sexual positiva, mas não deve ser tratado como obrigação, desempenho ou prova de saúde. Não existe uma frequência universal de relações, masturbação, desejo ou orgasmo que determine se alguém está saudável.
@@ -80,20 +91,24 @@ Não há um padrão único que determine:
 
 Comparações com pornografia, publicidade, redes sociais ou relatos isolados podem criar expectativas irreais. Conteúdos encenados não são uma referência confiável para anatomia, desempenho, consentimento ou resposta sexual.
 
+Uma pessoa não deve ser pressionada a praticar determinada atividade para provar amor, maturidade, experiência, orientação, masculinidade, feminilidade ou compromisso. Também não existe obrigação de compartilhar imagens íntimas, aceitar práticas, manter uma relação ou justificar a recusa. O direito de estabelecer limites vale em relacionamentos novos ou antigos, casamentos e relações não monogâmicas.
+
 ## 4. Autonomia, direitos e responsabilidade
 
 Autonomia corporal significa reconhecer que cada pessoa tem o direito de tomar decisões sobre o próprio corpo e sua intimidade. Isso inclui escolher se deseja uma experiência, estabelecer limites, pedir mudanças, interromper uma atividade e buscar informação ou atendimento.
 
 Autonomia não elimina responsabilidade com outras pessoas. Relações respeitosas exigem comunicação, escuta e consideração pelos limites de todas as partes envolvidas.
 
-O consentimento deve ser:
-- **Livre:** sem ameaça, intimidação, chantagem ou pressão indevida.
-- **Informado:** com compreensão suficiente sobre o que está sendo proposto.
-- **Específico:** concordar com uma atividade não significa concordar com todas.
-- **Contínuo:** pode ser revisto durante a experiência.
-- **Revogável:** qualquer pessoa pode mudar de ideia e interromper.
+O consentimento, como ferramenta educativa para pensar relações respeitosas, pode ser analisado por cinco perguntas:
+- **Há liberdade?** A decisão ocorre sem ameaça, intimidação, chantagem, medo ou pressão indevida?
+- **Há informação suficiente?** A pessoa compreende a atividade proposta e aspectos relevantes para decidir?
+- **É específico?** Concordar com uma atividade, pessoa, momento ou contexto não autoriza automaticamente outros.
+- **É atual e contínuo?** A vontade pode mudar durante a experiência.
+- **Pode ser retirado?** A pessoa pode interromper ou mudar de ideia.
 
-Silêncio, medo, imobilidade, ausência de resistência ou consentimento anterior não devem ser tratados como autorização automática. Situações de incapacidade de decidir, coerção ou violência exigem cuidado e proteção, não interpretações convenientes.
+Esses elementos são uma estrutura educativa de compreensão e não uma fórmula jurídica completa para classificar todos os fatos. A avaliação legal depende da legislação aplicável e das circunstâncias concretas. Não cabe à biblioteca determinar, por questionário ou checklist, se um episódio configura crime.
+
+Silêncio, medo, imobilidade, ausência de resistência ou consentimento anterior não devem ser tratados como autorização automática. Relação afetiva, casamento, namoro, pagamento, uso anterior de acessórios ou compartilhamento prévio de imagens também não significam autorização permanente. Situações de incapacidade de decidir, coerção ou violência exigem cuidado e proteção, não interpretações convenientes.
 
 A dimensão digital também faz parte da intimidade. Compartilhar uma imagem íntima com alguém não significa autorizar que essa pessoa a encaminhe, publique ou utilize de outra forma. Consentimento para uma situação não se estende automaticamente a outra.
 
@@ -119,7 +134,7 @@ Procure um serviço de saúde quando houver sintomas novos ou persistentes, dor,
 
 Em possível exposição ao HIV, a avaliação para PEP é urgente e não deve ser adiada para aguardar sintomas ou uma consulta de rotina. O serviço de saúde avaliará a indicação e o prazo adequado.
 
-Em caso de violência sexual, procure atendimento de saúde e apoio o quanto antes. O atendimento deve ser acolhedor e respeitar a autonomia e os direitos da pessoa. Não é necessário resolver tudo sozinho nem ter certeza sobre como classificar o ocorrido para pedir ajuda.
+Em caso de violência sexual, procure atendimento de saúde e apoio o quanto antes. No Brasil, a Lei nº 12.845/2013 garante atendimento emergencial, integral e multidisciplinar nos hospitais do SUS, incluindo medidas de prevenção de gravidez e IST, exames e apoio, sem exigir boletim de ocorrência como condição para atendimento. A assistência deve respeitar a autonomia e os direitos da pessoa. Não é necessário resolver tudo sozinho nem ter certeza sobre como classificar o ocorrido para pedir ajuda. A PEP para HIV, quando indicada, tem prazo máximo de 72 horas; esse limite específico não encerra nem substitui outros cuidados possíveis após violência.
 
 ## 6. Informação confiável: como avaliar o que você lê
 
@@ -132,7 +147,7 @@ A internet reúne materiais de qualidade muito diferente. Uma página bem escrit
 5. **Há interesse comercial?** A página vende o produto ou serviço que está recomendando?
 6. **A linguagem é proporcional?** Desconfie de promessas absolutas, curas garantidas, medo como argumento ou resultados milagrosos.
 
-Uma informação responsável distingue evidência estabelecida, hipótese, experiência individual e opinião. Quando houver incerteza ou divergência científica, isso deve ser dito claramente.
+Uma informação responsável distingue evidência estabelecida, hipótese, experiência individual e opinião. Quando houver incerteza ou divergência científica, isso deve ser dito claramente. Em temas de saúde, priorize protocolos e páginas oficiais atuais, diretrizes de sociedades científicas reconhecidas e revisões sistemáticas; observe data, população estudada, limitações e conflitos de interesse. Um estudo feito em grupo específico não deve ser generalizado automaticamente para todas as pessoas.
 
 ### 6.1 O papel desta biblioteca
 
@@ -166,6 +181,10 @@ Não. Saúde sexual não depende de um modelo específico de relacionamento. Pes
 
 Não. A biblioteca pode explicar conceitos gerais e indicar caminhos de atendimento, mas diagnóstico e tratamento dependem de avaliação individual por profissional habilitado.
 
+### A aparência ou a resposta do corpo revela identidade, desejo ou consentimento?
+
+Não. Aparência corporal não determina identidade ou orientação. Ereção, lubrificação, excitação física ou orgasmo podem ocorrer sem uma decisão consciente e não provam consentimento ou desejo. A vontade deve ser comunicada e respeitada.
+
 ## 8. Síntese do capítulo
 
 Saúde sexual é uma dimensão do bem-estar que combina corpo, emoções, relações, autonomia, direitos e contexto social. Não se resume à ausência de doenças nem segue um padrão universal de desejo, frequência ou desempenho.
@@ -179,5 +198,11 @@ Uma abordagem responsável une informação confiável, prevenção, consentimen
 3. **World Health Organization (WHO).** *Comprehensive sexuality education.* 11 mar. 2026. Disponível em: https://www.who.int/news-room/fact-sheets/detail/comprehensive-sexuality-education
 4. **Ministério da Saúde (Brasil).** *Saúde Sexual e Reprodutiva.* Disponível em: https://www.gov.br/saude/pt-br/assuntos/saude-de-a-a-z/s/saude-da-mulher/saude-sexual-e-reprodutiva/
 5. **Ministério da Saúde (Brasil).** *Prevenção — Infecções Sexualmente Transmissíveis.* Disponível em: https://www.gov.br/saude/pt-br/assuntos/saude-de-a-a-z/i/ist/prevencao
+6. **Ministério da Saúde (Brasil).** *Infecções Sexualmente Transmissíveis — IST: diagnóstico e tratamento no SUS.* Disponível em: https://www.gov.br/saude/pt-br/assuntos/saude-de-a-a-z/i/ist/ist
+7. **OMS.** *Defining sexual health.* Define a formulação como definição de trabalho e descreve sua natureza não formal como posição oficial. https://www.who.int/teams/sexual-and-reproductive-health-and-research/key-areas-of-work/sexual-health/defining-sexual-health
+8. **OMS.** *Comprehensive sexuality education.* Fact sheet, 2026. https://www.who.int/news-room/fact-sheets/detail/comprehensive-sexuality-education
+9. **OMS.** *Sexual and reproductive health and rights.* https://www.who.int/health-topics/sexual-and-reproductive-health-and-rights
+10. **Brasil.** Lei nº 12.845, de 1º de agosto de 2013 — atendimento obrigatório e integral às pessoas em situação de violência sexual. https://www.planalto.gov.br/ccivil_03/_ato2011-2014/2013/lei/l12845.htm
+11. **Ministério das Mulheres (Brasil).** *Lei do Minuto Seguinte: conheça os direitos de quem sofre violência sexual.* 03 ago. 2026. https://www.gov.br/mulheres/pt-br/central-de-conteudos/noticias/2026/agosto-defeso-eleitoral/lei-do-minuto-seguinte-conheca-os-direitos-de-quem-sofre-violencia-sexual
 
-**Nota de atualização:** antes da publicação, conferir a vigência das páginas oficiais, completar referências bibliográficas específicas para cada afirmação clínica e submeter o texto a revisão técnica por profissional qualificado. Não registrar uma data de revisão clínica até que ela efetivamente ocorra.
+**Limites desta revisão:** a definição de trabalho da OMS não é norma jurídica; a estrutura de consentimento apresentada é educativa, não um teste legal; o módulo não pretende definir identidade, orientação, elegibilidade clínica ou ocorrência de crime. Antes da publicação, submeter o texto a revisão clínica e psicossocial independente, conferir novamente as páginas oficiais e revisar os encaminhamentos brasileiros. Não registrar uma data de revisão profissional até que ela efetivamente ocorra.
