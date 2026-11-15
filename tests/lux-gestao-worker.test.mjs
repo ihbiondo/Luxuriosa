@@ -8,22 +8,21 @@ test("canonicalizes /lux-gestao to /lux-gestao/", async () => {
   assert.equal(response.headers.get("location"), "https://luxuriosa.com.br/lux-gestao/");
 });
 
-test("serves the published Pages app under the private production route", async () => {
+test("legacy worker keeps compatibility while serving only the protected 442 redirect", async () => {
   const originalFetch = globalThis.fetch;
   let requestedUrl = "";
   globalThis.fetch = async (url) => {
     requestedUrl = String(url);
-    return new Response("<!doctype html><title>Lux-Gestão | Operação da loja</title>", {
+    return new Response('<meta http-equiv="refresh" content="0;url=https://442.luxuriosa.com.br/apps/gestao/">', {
       status: 200,
       headers: { "Content-Type": "text/html; charset=utf-8" }
     });
   };
-
   try {
     const response = await worker.fetch(new Request("https://luxuriosa.com.br/lux-gestao/"));
     assert.equal(new URL(requestedUrl).pathname, "/previa/lux-gestao/");
     assert.equal(response.status, 200);
-    assert.match(await response.text(), /Lux-Gestão \\| Operação da loja/);
+    assert.match(await response.text(), /https:\/\/442\.luxuriosa\.com\.br\/apps\/gestao\//);
     assert.match(response.headers.get("x-robots-tag"), /noindex/);
     assert.match(response.headers.get("cache-control"), /no-store/);
     assert.equal(response.headers.get("x-luxuriosa-worker-version"), "2026-11-11.1");

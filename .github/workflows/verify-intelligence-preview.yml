@@ -1,50 +1,25 @@
-name: Verify Luxuriosa Intelligence preview
-
+name: Verify legacy Intelligence redirect
 on:
   pull_request:
-    paths:
-      - "previa/lux-central/index.html"
-      - ".github/workflows/verify-intelligence-preview.yml"
+    paths: ["lux-central/index.html","previa/lux-central/index.html",".github/workflows/verify-intelligence-preview.yml"]
   push:
     branches: [main]
-    paths:
-      - "previa/lux-central/index.html"
-      - ".github/workflows/verify-intelligence-preview.yml"
-
+    paths: ["lux-central/index.html","previa/lux-central/index.html",".github/workflows/verify-intelligence-preview.yml"]
 permissions:
   contents: read
-
 jobs:
   verify:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v6
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 22
-      - name: Extract and syntax-check the module script
+      - uses: actions/checkout@v4
+      - name: Confirmar que URLs antigas apontam para o painel protegido
         run: |
-          node --input-type=module -e '
-            import { readFileSync, writeFileSync } from "node:fs";
-            const html = readFileSync("previa/lux-central/index.html", "utf8");
-            const startTag = "<script type=\"module\">";
-            const start = html.indexOf(startTag);
-            const end = html.indexOf("</script>", start);
-            if (start < 0 || end < 0) throw new Error("Módulo JavaScript principal não encontrado.");
-            const moduleSource = html.slice(start + startTag.length, end);
-            for (const id of ["customerRfvSearch", "customerRfvSegment", "customerRfvRows", "customerRfvNote"]) {
-              if (!html.includes("id=\"" + id + "\"")) throw new Error("Elemento RFV ausente: " + id);
-            }
-            if (!moduleSource.includes("action:\"customer-rfv\"")) throw new Error("Chamada customer-rfv ausente.");
-            for (const forbidden of ["sales-ledger", "salesLedgerRows", "salesLedgerMeta", "renderSalesLedger", "action:\"list\",limit:50", "sales.data?.sales"]) {
-              if (html.includes(forbidden) || moduleSource.includes(forbidden)) throw new Error("Livro de vendas duplicado na Inteligência: " + forbidden);
-            }
-            const legacySalesCall = "supabase.functions.invoke(\\\"management-sales\\\",{body:{action:\\\"list\\\"";
-            if (moduleSource.includes(legacySalesCall)) {
-              throw new Error("A Inteligência não deve consultar o livro oficial de vendas da Gestão.");
-            }
-            writeFileSync("/tmp/luxuriosa-intelligence-preview.mjs", moduleSource);
-          '
-          node --check /tmp/luxuriosa-intelligence-preview.mjs
+          node --input-type=module <<'NODE'
+          import fs from "node:fs";
+          for (const path of ["lux-central/index.html","previa/lux-central/index.html"]) {
+            const html = fs.readFileSync(path,"utf8");
+            if (!html.includes("https://442.luxuriosa.com.br/apps/inteligencia/")) throw new Error(path + ": redirecionamento ausente.");
+            if (html.includes("customer-rfv") || html.includes("management-sales") || html.includes("SUPABASE")) throw new Error(path + ": código administrativo ainda público.");
+          }
+          console.log("URLs antigas da Inteligência redirecionadas.");
+          NODE
