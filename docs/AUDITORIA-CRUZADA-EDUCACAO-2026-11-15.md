@@ -409,3 +409,17 @@ A Nota Técnica 222/2025 foi formulada com foco na rede de atenção a mulheres 
 - Artigo público corpo-humano-e-ciclo-menstrual.html ampliado com janela fértil, fecundação, fertilidade, sinais de alerta e fontes atualizadas.
 - Criado AUDITORIA-CICLO-MENSTRUAL-FERTILIDADE-2026-11-15.md.
 - Revisão documental; revisão clínica externa permanece pendente. Nenhuma publicação em produção.
+
+
+## 18. Revisão documental — anatomia, fisiologia e desenvolvimento corporal (15/11/2026)
+
+- Módulo 2 atualizado para v0.2: refinadas as distinções entre vulva, vestíbulo, uretra, vagina e colo; detalhadas estruturas internas do clitóris, corpos eréteis penianos, tubas uterinas, epidídimo e assoalho pélvico.
+- Reformulada a explicação do eixo hipotálamo–hipófise–gônadas para evitar atribuir hormônios exclusivamente a um sexo.
+- Acrescentadas faixas de referência da Sociedade Brasileira de Pediatria para início puberal, com ressalva de que não são cronograma individual nem diagnóstico automático.
+- Reforçada a distinção entre características sexuais, variações intersexo e identidade de gênero.
+- Corrigido o tratamento editorial do hímen: variação anatômica não comprova histórico sexual; testes de virgindade não têm validade científica.
+- Reforçados sinais de urgência: dor testicular súbita e intensa e parafimose; incluída orientação para não forçar a retração do prepúcio.
+- Artigo público `educacao/temas/corpo-humano-e-ciclo-menstrual.html` ampliado com anatomia, desenvolvimento, hímen e sinais de alerta, mantendo a URL.
+- Criado `docs/AUDITORIA-ANATOMIA-FISIOLOGIA-2026-11-15.md` com fontes, achados e limitações.
+- Fontes centrais: NCBI Bookshelf/StatPearls, MedlinePlus, Sociedade Brasileira de Pediatria, Ministério da Saúde/UFRGS, OMS, ACOG, NHS e Associação Europeia de Urologia.
+- Revisão documental; validação clínica externa, revisão especializada de linguagem sobre variações intersexo e decisão sobre diagramas acessíveis permanecem pendentes. Nenhuma alteração foi publicada em produção.
