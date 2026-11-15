@@ -248,8 +248,19 @@ jobs:
           done
           curl --fail --silent http://127.0.0.1:4173/login.html >/dev/null
 
+          mkdir -p "$GITHUB_WORKSPACE/e2e-screenshots"
           E2E_BASE_URL="http://127.0.0.1:4173" \
           E2E_SUPABASE_URL="$API_URL" \
           E2E_SERVICE_ROLE_KEY="$SERVICE_ROLE_KEY" \
+          E2E_SCREENSHOT_DIR="$GITHUB_WORKSPACE/e2e-screenshots" \
           node "$site/tests/e2e/minhas-conquistas.mjs"
+
+      - name: Publicar evidências visuais do E2E
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: minhas-conquistas-visual-${{ github.run_id }}
+          path: e2e-screenshots/
+          if-no-files-found: warn
+          retention-days: 7
 
