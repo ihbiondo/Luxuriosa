@@ -93,6 +93,12 @@ const SCREENSHOT_DIR = process.env.E2E_SCREENSHOT_DIR || "";
 async function captureScreenshot(page, filename) {
   if (!SCREENSHOT_DIR) return;
   await fs.mkdir(SCREENSHOT_DIR, { recursive: true });
+  await page.evaluate(() => {
+    const active = document.activeElement;
+    if (active && typeof active.blur === "function") active.blur();
+    window.scrollTo(0, 0);
+  });
+  await page.waitForTimeout(80);
   await page.screenshot({
     path: `${SCREENSHOT_DIR}/${filename}.png`,
     fullPage: true,
