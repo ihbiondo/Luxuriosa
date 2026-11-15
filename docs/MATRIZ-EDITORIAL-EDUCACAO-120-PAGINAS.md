@@ -22,16 +22,16 @@ Cada página deve identificar fontes, data real de revisão, escopo e limites. N
 |---|---|---|
 | 1. Fundamentos da saúde sexual | Rascunho interno v0.2 — revisão documental em 15/11/2026 | Revisão clínica, psicossocial e jurídica externa |
 | 2. Anatomia e fisiologia | Rascunho interno v0.2 — revisão documental em 15/11/2026 | Revisão clínica externa; leitura especializada sobre variações intersexo; decidir política para diagramas didáticos |
-| 3. Ciclo, fertilidade e reprodução | Rascunho interno v0.1 | Revisão clínica; validar sinais de alerta e limites de estimativas de fertilidade |
+| 3. Ciclo, fertilidade e reprodução | Rascunho interno v0.2 — revisão documental em 15/11/2026 | Revisão clínica; validar sinais de alerta e limites de estimativas de fertilidade |
 | 4. Contracepção | Rascunho interno v0.2 — revisão documental em 15/11/2026 | Revisão clínica externa; conferir bulas 2026 do implante e SIU-LNG, implementação no SUS e critérios de elegibilidade |
-| 5. IST, HIV e prevenção combinada | Rascunho interno v0.1 | Revisão clínica e checagem de protocolos |
-| 6. Consentimento, limites e segurança | Rascunho interno v0.1 | Revisão psicossocial e jurídica |
-| 7. Relações e intimidade | Rascunho interno v0.1 | Revisão psicossocial externa |
-| 8. Prazer e resposta sexual | Rascunho interno v0.1 | Revisão clínica externa; conferir critérios de avaliação e sinais de alerta |
-| 9. Saúde íntima e autocuidado | Rascunho interno v0.1 | Revisão clínica externa; validar recomendações de higiene e alertas |
+| 5. IST, HIV e prevenção combinada | Rascunho interno v0.2 — revisão documental em 15/11/2026 | Revisão clínica e checagem de protocolos |
+| 6. Consentimento, limites e segurança | Rascunho interno v0.2 — revisão documental em 15/11/2026 | Revisão psicossocial e jurídica |
+| 7. Relações e intimidade | Rascunho interno v0.2 — revisão documental em 15/11/2026 | Revisão psicossocial externa |
+| 8. Prazer e resposta sexual | Rascunho interno v0.2 — revisão documental em 15/11/2026 | Revisão clínica externa; conferir critérios de avaliação e sinais de alerta |
+| 9. Saúde íntima e autocuidado | Rascunho interno v0.2 — revisão documental em 15/11/2026 | Revisão clínica externa; validar recomendações de higiene e alertas |
 | 10. Acessórios e segurança | Rascunho interno v0.1 | Revisão clínica e técnica; validar materiais, compatibilidade, limpeza, dispositivos eletrônicos e alertas |
-| 11. Violência sexual, apoio e direitos | Rascunho interno v0.1 | Revisão jurídica, clínica e psicossocial; delimitar corretamente a Lei nº 15.516/2026 |
-| 12. Mitos e caminhos de atendimento | Rascunho interno v0.1 | Revisão clínica e checagem individual das afirmações |
+| 11. Violência sexual, apoio e direitos | Rascunho interno v0.2 — revisão documental em 15/11/2026 | Revisão jurídica, clínica e psicossocial; delimitar corretamente a Lei nº 15.516/2026 |
+| 12. Mitos e caminhos de atendimento | Rascunho interno v0.1 — sem revisão documental integral nesta rodada | Revisão clínica e checagem individual das afirmações |
 
 Os doze módulos possuem rascunhos internos em versões diferentes, ainda não publicados e sem revisão profissional externa. As versões v0.2 indicam revisão documental interna, não validação clínica, jurídica ou psicossocial. Nenhum conteúdo deve ser tratado como material profissionalmente validado.
 
@@ -75,7 +75,7 @@ A paginação é uma referência de profundidade editorial, não uma obrigação
 |---:|---|---:|---|
 | 1 | Fundamentos da sexualidade e saúde sexual | 10 p. | Conceitos, dimensões da saúde sexual, direitos, autonomia, diversidade, prazer, segurança e determinantes sociais. |
 | 2 | Anatomia, fisiologia e desenvolvimento corporal | 10 p. | Anatomia externa e interna, variações corporais, puberdade, resposta fisiológica e linguagem anatômica correta. |
-| 3 | Ciclo menstrual, fertilidade e reprodução | 10 p. | Fases do ciclo, variações por idade, ovulação e janela fértil, fecundação, gravidez, avaliação da fertilidade e sinais de alerta. | v0.2 documental; artigo público atualizado; revisão clínica externa pendente.
+| 3 | Ciclo menstrual, fertilidade e reprodução | 10 p. | Fases do ciclo, variações por idade, ovulação e janela fértil, fecundação, gravidez, avaliação da fertilidade e sinais de alerta. |
 | 4 | Contracepção e planejamento reprodutivo | 10 p. | Métodos, funcionamento, eficácia, uso, limitações, contracepção de emergência e decisão compartilhada. |
 | 5 | IST, HIV e prevenção combinada | 12 p. | Infecções prioritárias, transmissão, sintomas, testagem, janela diagnóstica, preservativos, vacinação, PrEP, PEP, tratamento e parcerias. |
 | 6 | Consentimento, limites e segurança | 10 p. | Consentimento contínuo, comunicação, coerção, vulnerabilidade, privacidade e segurança presencial/digital. |
