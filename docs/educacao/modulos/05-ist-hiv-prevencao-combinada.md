@@ -296,10 +296,10 @@ Não espere sintomas para buscar orientação. Não use um resultado isolado sem
 3. **Ministério da Saúde (Brasil).** *Prevenção — HIV/Aids.* Inclui orientações sobre PEP, PrEP e prevenção. https://www.gov.br/saude/pt-br/assuntos/saude-de-a-a-z/a/aids-hiv/prevencao
 4. **Ministério da Saúde (Brasil).** *Profilaxia Pós-Exposição de Risco (PEP) à Infecção pelo HIV, IST e Hepatites Virais — PCDT.* Anexo atualizado em 20 mar. 2025. https://www.gov.br/saude/pt-br/assuntos/pcdt/p/profilaxia-pos-exposicao-de-risco-pep-a-infeccao-pelo-hiv/view
 5. **Ministério da Saúde (Brasil).** *Nota Técnica nº 222/2025-CGHA/.DATHI/SVSA/MS — reforço de recomendações para PEP em pessoas sobreviventes de violência sexual.* Assinada em novembro de 2025 e publicada em 28 jan. 2026. https://azt.aids.gov.br/documentos/nota_tecnica/Nota%20Tecnica%20222.pdf
-5. **Ministério da Saúde (Brasil).** *Profilaxia Pré-Exposição (PrEP) Oral à Infecção pelo HIV — PCDT.* Anexo atualizado em 20 mar. 2025. https://www.gov.br/saude/pt-br/assuntos/pcdt/p/profilaxia-pre-exposicao-prep-oral-a-infeccao-pelo-hiv/view
-6. **Ministério da Saúde (Brasil).** *PCDTs — Protocolos Clínicos e Diretrizes Terapêuticas.* Página de referência para localizar versões vigentes. https://www.gov.br/aids/pt-br/central-de-conteudo/pcdts
-7. **World Health Organization.** *HIV and AIDS — Questions and answers.* Explica tratamento antirretroviral e ausência de transmissão sexual quando a carga viral é indetectável. https://www.who.int/news-room/questions-and-answers/item/HIV-AIDS
-8. **U.S. Department of Health and Human Services, NIH.** *Antiretroviral Therapy to Prevent Sexual Transmission of HIV.* Updated 25 Sep. 2025. https://clinicalinfo.hiv.gov/en/guidelines/hiv-clinical-guidelines-adult-and-adolescent-arv/arv-therapy-as-prevention
+6. **Ministério da Saúde (Brasil).** *Profilaxia Pré-Exposição (PrEP) Oral à Infecção pelo HIV — PCDT.* Anexo atualizado em 20 mar. 2025. https://www.gov.br/saude/pt-br/assuntos/pcdt/p/profilaxia-pre-exposicao-prep-oral-a-infeccao-pelo-hiv/view
+7. **Ministério da Saúde (Brasil).** *PCDTs — Protocolos Clínicos e Diretrizes Terapêuticas.* Página de referência para localizar versões vigentes. https://www.gov.br/aids/pt-br/central-de-conteudo/pcdts
+8. **World Health Organization.** *HIV and AIDS — Questions and answers.* Explica tratamento antirretroviral e ausência de transmissão sexual quando a carga viral é indetectável. https://www.who.int/news-room/questions-and-answers/item/HIV-AIDS
+9. **U.S. Department of Health and Human Services, NIH.** *Antiretroviral Therapy to Prevent Sexual Transmission of HIV.* Updated 25 Sep. 2025. https://clinicalinfo.hiv.gov/en/guidelines/hiv-clinical-guidelines-adult-and-adolescent-arv/arv-therapy-as-prevention
 
 **Controle editorial antes da publicação**
 - Confirmar a versão vigente dos PCDTs de IST, PEP e PrEP no dia da publicação.
