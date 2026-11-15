@@ -21,7 +21,7 @@ Cada página deve identificar fontes, data real de revisão, escopo e limites. N
 | Módulo | Situação | Próximo requisito |
 |---|---|---|
 | 1. Fundamentos da saúde sexual | Rascunho interno v0.1 | Revisão editorial e clínica |
-| 2. Anatomia e fisiologia | Rascunho interno v0.1 | Revisão clínica; decidir política para diagramas didáticos |
+| 2. Anatomia e fisiologia | Rascunho interno v0.2 — revisão documental em 15/11/2026 | Revisão clínica externa; leitura especializada sobre variações intersexo; decidir política para diagramas didáticos |
 | 3. Ciclo, fertilidade e reprodução | Rascunho interno v0.1 | Revisão clínica; validar sinais de alerta e limites de estimativas de fertilidade |
 | 4. Contracepção | Rascunho interno v0.2 — revisão documental em 15/11/2026 | Revisão clínica externa; conferir bulas 2026 do implante e SIU-LNG, implementação no SUS e critérios de elegibilidade |
 | 5. IST, HIV e prevenção combinada | Rascunho interno v0.1 | Revisão clínica e checagem de protocolos |
