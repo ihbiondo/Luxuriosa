@@ -169,7 +169,7 @@ O Ministério da Saúde disponibiliza o [PCDT de PrEP oral](https://www.gov.br/s
 
 PEP é uma medida de urgência para reduzir o risco de infecção pelo HIV após uma exposição potencialmente relevante. A avaliação também pode envolver hepatites virais, outras IST, vacinação e contracepção de emergência, conforme a situação.
 
-**Prazo essencial:** iniciar o mais rápido possível e no máximo em até 72 horas após a exposição. Quando indicada, a PEP é tomada por 28 dias, com acompanhamento da equipe de saúde.
+**Prazo essencial:** iniciar o mais rápido possível — preferencialmente nas primeiras duas horas, conforme orientação do Ministério da Saúde — e no máximo em até 72 horas após a exposição. Quando indicada, a PEP é tomada por 28 dias, com acompanhamento da equipe de saúde.
 
 Procure atendimento imediatamente se houve, por exemplo:
 - relação sexual sem preservativo ou com rompimento/escape, quando houver possível exposição;
