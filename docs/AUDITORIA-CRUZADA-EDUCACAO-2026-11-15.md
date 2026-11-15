@@ -321,3 +321,43 @@ Foram examinados os conceitos de prazer, desejo espontâneo e responsivo, excita
 - [Ministério da Saúde — Prevenção](https://www.gov.br/saude/pt-br/assuntos/saude-de-a-a-z/a/aids-hiv/prevencao): início preferencial nas primeiras duas horas e limite de 72 horas.
 
 A revisão é documental e de coerência editorial; não equivale a revisão jurídica, clínica ou psicossocial profissional. A página pública foi apenas conferida, sem alteração. O Módulo 6 continua interno e não está aprovado para publicação.
+
+
+## 15. Revisão de coerência — Módulo 5, Módulo 11 e prevenção pós-exposição (15/11/2026)
+
+**Arquivos examinados:**
+- `docs/educacao/modulos/05-ist-hiv-prevencao-combinada.md`;
+- `docs/educacao/modulos/06-consentimento-limites-seguranca.md`;
+- `docs/educacao/modulos/11-violencia-sexual-apoio-direitos.md`;
+- `educacao/temas/prevencao-combinada.html`;
+- `educacao/guias/violencia-sexual-onde-buscar-ajuda.html`.
+
+### Achado central
+
+O material diferenciava PrEP (antes da exposição) e PEP-HIV (após exposição recente), mas não explicitava com força suficiente que o cuidado pós-violência sexual não termina no limite de 72 horas da PEP-HIV. A Nota Técnica nº 222/2025 do Ministério da Saúde, publicada em janeiro de 2026, reforça avaliação integrada de HIV, hepatite B, sífilis e outras IST, vacinação, contracepção de emergência, testagem e seguimento.
+
+### Correções
+
+1. **Módulo 5 v0.2:** diferencia PEP-HIV do conjunto de intervenções pós-exposição; acrescenta seção específica para violência sexual, incluindo PEP-HIV até 72 horas, seguimento quando o prazo passou, episódios recorrentes, avaliação de PrEP para risco futuro, hepatite B, IST não virais, testagem CT/NG por local de exposição, hepatite C, HPV, contracepção de emergência e seguimento.
+2. **Módulo 11 v0.2:** atualiza a seção de atendimento imediato e remete ao Módulo 5 para detalhes clínicos. Reforça que o cuidado continua depois de 72 horas e que os critérios da Nota Técnica 222/2025 não devem ser generalizados sem considerar seu escopo (mulheres e meninas) e os protocolos específicos.
+3. **Página pública de prevenção combinada:** acrescenta resumo de que a prevenção pós-violência não se limita à PEP-HIV.
+4. **Guia público de violência sexual:** explicita que o prazo de 72 horas é específico da PEP-HIV e inclui as medidas adicionais descritas na Nota Técnica.
+5. **Módulo 6:** coerência mantida; autonomia, privacidade, consentimento e respeito aos limites durante acolhimento e procedimentos são compatíveis com a orientação de cuidado humanizado e não revitimizante.
+
+### Distinções importantes
+
+- PEP-HIV: urgência, iniciar o mais rápido possível e até 72 horas; quando indicada, 28 dias.
+- Hepatite B: avaliação vacinal/imunológica e eventual vacina/imunoglobulina; a Nota Técnica aponta janela preferencial de 24 horas e limite de 14 dias para imunoglobulina em exposição sexual, conforme indicação.
+- Sífilis e outras IST não virais: avaliação e prevenção/tratamento preemptivo conforme protocolo; não aplicar automaticamente o limite de 72 horas da PEP-HIV.
+- Hepatite C: não há profilaxia medicamentosa pós-exposição; avaliação e seguimento com testagem.
+- Contracepção de emergência: até 120 horas para opções citadas na Nota Técnica, quando indicadas.
+- PrEP: estratégia pré-exposição para risco futuro; não substitui PEP-HIV após evento recente.
+
+### Fontes e limites
+
+- [Nota Técnica nº 222/2025-CGHA/.DATHI/SVSA/MS](https://azt.aids.gov.br/documentos/nota_tecnica/Nota%20Tecnica%20222.pdf).
+- [Ministério da Saúde — PEP](https://www.gov.br/saude/pt-br/assuntos/saude-de-a-a-z/a/aids-hiv/pep).
+- [Ministério da Saúde — Prevenção HIV/Aids](https://www.gov.br/saude/pt-br/assuntos/saude-de-a-a-z/a/aids-hiv/prevencao).
+- [PCDT de IST](https://www.gov.br/saude/pt-br/assuntos/pcdt/a/atencao-integral-as-pessoas-com-infeccoes-sexualmente-transmissiveis/view).
+
+A Nota Técnica 222/2025 foi formulada com foco na rede de atenção a mulheres e meninas. Os critérios clínicos devem ser aplicados por profissionais conforme a situação individual e os protocolos vigentes. A revisão é documental; revisão clínica, pediátrica e jurídica externa permanece pendente. Nenhuma publicação em produção foi feita.
