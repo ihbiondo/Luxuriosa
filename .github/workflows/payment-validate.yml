@@ -124,3 +124,15 @@ jobs:
           parse_sql(migration)
           print("Sintaxe SQL da migração validada.")
           PY
+
+      - name: Setup Supabase CLI
+        uses: supabase/setup-cli@v1
+        with:
+          version: latest
+      - name: Testar migrations e RLS em Supabase local descartável
+        run: |
+          # CLI sem link/token: todas as operações são locais ao runner.
+          supabase start
+          supabase db reset
+          supabase test db
+
