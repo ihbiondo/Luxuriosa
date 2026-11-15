@@ -229,8 +229,9 @@ Use os módulos específicos quando precisar aprofundar um assunto:
 - **Módulo 9 — Saúde íntima, higiene e autocuidado:** cuidados cotidianos e sinais de atenção.
 - **Módulo 10 — Acessórios íntimos: materiais e segurança:** compatibilidade, limpeza e uso responsável.
 - **Módulo 11 — Violência sexual, apoio e direitos:** acolhimento, SUS e rede de proteção.
+- **Módulo 12 — Mitos, dúvidas frequentes e caminhos para atendimento:** consulta rápida, checagem de informações e encaminhamento aos capítulos de referência.
 
-Este mapa representa a arquitetura editorial planejada. Os módulos ainda em elaboração não devem ser tratados como páginas publicadas ou como material clinicamente revisado.
+Este mapa representa a arquitetura editorial planejada. Os doze módulos já possuem rascunhos internos v0.1, mas não são páginas públicas nem material clinicamente, psicossocialmente ou juridicamente revisado.
 
 ## 9. Síntese do capítulo
 
