@@ -26,14 +26,14 @@ Cada página deve identificar fontes, data real de revisão, escopo e limites. N
 | 4. Contracepção | Rascunho interno v0.1 | Revisão clínica e checagem de elegibilidade, protocolos e oferta atual do SUS |
 | 5. IST, HIV e prevenção combinada | Rascunho interno v0.1 | Revisão clínica e checagem de protocolos |
 | 6. Consentimento, limites e segurança | Rascunho interno v0.1 | Revisão psicossocial e jurídica |
-| 7. Relações e intimidade | Não produzido | Produzir com foco em comunicação e relações respeitosas |
-| 8. Prazer e resposta sexual | Não produzido | Produzir com revisão clínica e sem padrões universais |
-| 9. Saúde íntima e autocuidado | Não produzido | Produzir com revisão clínica |
+| 7. Relações e intimidade | Rascunho interno v0.1 | Revisão psicossocial externa |
+| 8. Prazer e resposta sexual | Rascunho interno v0.1 | Revisão clínica externa; conferir critérios de avaliação e sinais de alerta |
+| 9. Saúde íntima e autocuidado | Rascunho interno v0.1 | Revisão clínica externa; validar recomendações de higiene e alertas |
 | 10. Acessórios e segurança | Não produzido | Produzir com documentação técnica e critérios de materiais |
 | 11. Violência sexual, apoio e direitos | Rascunho interno v0.1 | Revisão jurídica, clínica e psicossocial; delimitar corretamente a Lei nº 15.516/2026 |
 | 12. Mitos e caminhos de atendimento | Rascunho interno v0.1 | Revisão clínica e checagem individual das afirmações |
 
-Os oito rascunhos (módulos 1 a 6, 11 e 12) são documentação interna, não páginas públicas nem conteúdo revisado externamente. Os módulos 7, 8, 9 e 10 ainda não existem como capítulos.
+Os onze rascunhos (módulos 1 a 9, 11 e 12) são documentação interna, não páginas públicas nem conteúdo revisado externamente. O Módulo 10 ainda não existe como capítulo.
 
 ## 2. Matriz dos 23 artigos existentes
 
@@ -138,7 +138,7 @@ Para cada afirmação clínica importante, registrar fonte específica, data da 
 
 **Fase 1 — Inventário e arquitetura (agora):** matriz dos 23 artigos, distinção entre verbete e guia, identificação de lacunas e política de preservação de URLs.
 
-**Fase 2 — Conteúdo prioritário:** os módulos 1 a 6, 11 e 12 já têm rascunhos internos. Produzir em seguida os módulos 7, 8 e 9; por último o 10. Antes de qualquer publicação, revisar os oito rascunhos e os novos capítulos com profissionais habilitados conforme o tema.
+**Fase 2 — Conteúdo prioritário:** os módulos 1 a 9, 11 e 12 têm rascunhos internos. Produzir em seguida o Módulo 10. Antes de qualquer publicação, revisar todos os rascunhos com profissionais habilitados conforme o tema.
 
 **Fase 3 — Produção e navegação:** criar páginas-pilar, sumários, links contextuais, glossário e trilhas de leitura. Cada página terá resumo visível no início e aprofundamento organizado em seções.
 
