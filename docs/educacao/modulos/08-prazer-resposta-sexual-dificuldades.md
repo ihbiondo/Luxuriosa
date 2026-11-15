@@ -1,6 +1,6 @@
 # Módulo 8 — Prazer, resposta sexual e dificuldades
 
-**Status:** rascunho editorial v0.1 — material interno para revisão; não publicado  
+**Status:** rascunho editorial v0.2 — material interno para revisão; não publicado  
 **Público:** pessoas adultas  
 **Extensão planejada:** cerca de 10 páginas equivalentes  
 **Revisão clínica externa:** não realizada
@@ -121,7 +121,46 @@ Dor pode ter causas musculares, dermatológicas, infecciosas, hormonais, anatôm
 
 Não force a continuidade. Interrompa a atividade que causa dor e procure avaliação se o sintoma for recorrente, intenso, novo ou acompanhado de sangramento, febre, corrimento, lesões ou sintomas urinários. Dor súbita intensa, dor pélvica importante, dor testicular aguda ou sangramento intenso exigem atendimento urgente.
 
-## 7. Cuidados práticos centrados na pessoa
+## 7. Avaliação e tratamento: caminhos possíveis, sem receita universal
+
+Uma dificuldade sexual não deve ser tratada apenas pelo nome do sintoma. A avaliação considera quando começou, se sempre ocorreu ou surgiu depois, em quais situações acontece, se causa sofrimento à própria pessoa, condições de saúde, medicamentos, uso de substâncias, dor, contexto emocional e relacional e objetivos de cuidado. Exames são escolhidos conforme a história e os achados; não existe um painel único obrigatório para todas as pessoas.
+
+O diagnóstico de uma disfunção não decorre automaticamente de uma preferência, de uma diferença em relação à parceria ou de um episódio isolado. Critérios variam conforme a condição e os sistemas de classificação. Em muitos quadros, duração, frequência, contexto e sofrimento clinicamente significativo fazem parte da avaliação. Não aplicar um prazo único — por exemplo, seis meses — a todas as dificuldades.
+
+O cuidado pode combinar uma ou mais abordagens:
+- **Revisão de fatores associados:** investigar doenças, dor, alterações hormonais quando indicadas, sono, saúde mental e efeitos adversos de medicamentos. Não interrompa nem altere remédios sem conversar com quem prescreveu.
+- **Acompanhamento psicosexual ou psicoterapia:** pode ajudar quando ansiedade, experiências difíceis, pressão de desempenho, sofrimento emocional ou questões relacionais participam do problema. Não significa que o sintoma seja “imaginário”.
+- **Fisioterapia do assoalho pélvico:** pode ser indicada em algumas condições de dor, tensão muscular ou dificuldade de penetração, após avaliação. Exercícios de contração, como Kegel, não são apropriados para todos os quadros e podem piorar sintomas quando há excesso de tensão.
+- **Cuidados locais e manejo da dor:** lubrificantes, hidratantes vaginais, tratamentos hormonais locais ou outras medidas podem ser considerados conforme a causa, fase da vida, contraindicações e avaliação profissional. Dor persistente não deve ser anestesiada ou mascarada para continuar a atividade.
+- **Tratamento médico específico:** medicamentos ou procedimentos podem ser úteis em algumas condições, mas dependem do diagnóstico, dos riscos, das interações, da disponibilidade e das preferências da pessoa. A resposta não é garantida e pode exigir acompanhamento.
+
+### 7.1 Disfunção erétil
+
+A avaliação pode incluir história clínica e sexual, exame físico e exames laboratoriais selecionados, por exemplo para investigar fatores metabólicos ou hormonais. A disfunção erétil recorrente pode ser um marcador de risco cardiovascular e merece avaliação da saúde geral, não apenas uma solução pontual para a ereção.
+
+Medicamentos inibidores da PDE5 são opções frequentemente utilizadas quando apropriadas, mas exigem avaliação de contraindicações e interações. **Não devem ser combinados com nitratos**; a associação pode causar queda perigosa da pressão arterial. Também há contraindicações e precauções com outros medicamentos e condições cardiovasculares. Não use comprimidos de outra pessoa nem produtos de procedência duvidosa.
+
+### 7.2 Desejo sexual e hormônios
+
+Não existe suplemento, alimento ou nível hormonal que funcione como medida universal de desejo. Testosterona não deve ser usada como “estimulante” geral, para corrigir qualquer cansaço ou por conta própria. A literatura especializada admite benefício moderado em situações clínicas selecionadas, especialmente em mulheres após a menopausa com transtorno do desejo sexual hipoativo diagnosticado após avaliação biopsicossocial; a indicação, o uso fora de bula em muitos locais, a formulação e o monitoramento exigem decisão médica compartilhada. Um resultado isolado de testosterona não diagnostica esse transtorno.
+
+### 7.3 Orgasmo e ejaculação
+
+A abordagem depende de fatores como medicamentos, condições neurológicas ou metabólicas, dor, contexto, estímulos, ansiedade e histórico individual. Em alguns casos, revisar um medicamento com o profissional prescritor, tratar uma condição associada ou receber acompanhamento psicosexual pode ajudar. Dificuldade de orgasmo, ejaculação precoce, tardia, ausente ou retrógrada não tem uma única causa nem um tratamento intercambiável. Não suspenda antidepressivos ou outros medicamentos por conta própria.
+
+### 7.4 Dor sexual e dificuldade de penetração
+
+O tratamento depende da causa identificada. Pode envolver cuidado de condições dermatológicas, infecciosas, hormonais ou ginecológicas/urológicas, fisioterapia pélvica, apoio psicosexual, dilatadores em situações selecionadas e outras medidas orientadas por profissional. Nenhuma pessoa deve ser pressionada a insistir na penetração ou suportar dor como parte do tratamento.
+
+### 7.5 Promessas comerciais não são evidência clínica
+
+Desconfie de produtos que prometem ereção imediata, aumento permanente do desejo, orgasmo garantido, aumento genital, “cura natural” ou resultados iguais para todas as pessoas. Depoimentos, avaliações, linguagem “natural” e antes/depois não demonstram eficácia nem segurança.
+
+Suplementos e produtos de “potência” podem ter composição incerta, interações ou ingredientes farmacológicos não declarados. A FDA publicou alertas sobre produtos de aprimoramento sexual com medicamentos ocultos, incluindo substâncias semelhantes às usadas em tratamentos para disfunção erétil. Esses alertas não permitem concluir que todo produto comercializado no Brasil esteja contaminado; demonstram, porém, que rótulo, propaganda e avaliações não substituem controle de qualidade nem avaliação profissional.
+
+Acessórios íntimos podem fazer parte de experiências consensuais e preferências pessoais, mas não são tratamento comprovado para disfunção sexual por si só. Não devem ser anunciados como cura, terapia hormonal, substituto de consulta ou garantia de desempenho. Separar claramente descrição comercial de informação clínica.
+
+## 8. Cuidados práticos centrados na pessoa
 
 - Converse sobre o que é confortável e o que não é.
 - Não transforme o orgasmo ou a ereção em meta obrigatória.
@@ -132,7 +171,7 @@ Não force a continuidade. Interrompa a atividade que causa dor e procure avalia
 - Procure avaliação quando uma mudança persistir ou causar sofrimento.
 - Evite produtos, hormônios e medicamentos sem orientação profissional.
 
-## 8. Quando procurar atendimento
+## 9. Quando procurar atendimento
 
 Procure UBS ou profissional de saúde quando houver:
 - dificuldade persistente de desejo, excitação, ereção, orgasmo ou ejaculação que cause sofrimento;
@@ -145,7 +184,7 @@ Procure UBS ou profissional de saúde quando houver:
 
 Procure atendimento urgente diante de dor testicular súbita e intensa, dor pélvica intensa, desmaio, febre alta com dor genital/pélvica, sangramento importante ou lesão aguda. A classificação de urgência depende do quadro e deve ser feita por serviço de saúde.
 
-## 9. Perguntas frequentes
+## 10. Perguntas frequentes
 
 ### É normal não sentir desejo espontaneamente?
 Pode acontecer. Algumas pessoas percebem desejo de forma responsiva, depois de contexto e estímulos agradáveis. Isso não significa que devam iniciar uma atividade sem vontade ou consentimento.
@@ -168,7 +207,7 @@ Dor recorrente não deve ser considerada inevitável. Interrompa o que dói e pr
 ### Medicamentos podem afetar o desejo ou o orgasmo?
 Sim, alguns medicamentos podem interferir na função sexual. Não os suspenda por conta própria; converse com quem prescreveu.
 
-## 10. Síntese do capítulo
+## 11. Síntese do capítulo
 
 Prazer e resposta sexual são individuais e contextuais. Desejo, excitação, respostas físicas, orgasmo e satisfação se relacionam, mas não são a mesma coisa. Não existe padrão universal de desempenho. Dificuldades persistentes, dolorosas ou angustiantes merecem acolhimento e avaliação, sem vergonha e sem automedicação.
 
@@ -177,6 +216,10 @@ Prazer e resposta sexual são individuais e contextuais. Desejo, excitação, re
 1. **Ministério da Saúde (Brasil).** *Saúde sexual e saúde reprodutiva.* Cadernos de Atenção Básica, nº 26. Apresenta modelos de resposta sexual e reconhece fatores biológicos, psicológicos e socioculturais. https://bvsms.saude.gov.br/bvs/publicacoes/saude_sexual_saude_reprodutiva.pdf
 2. **American College of Obstetricians and Gynecologists (ACOG).** *Your Sexual Health.* Informações sobre desejo, excitação, orgasmo, dor e quando conversar com profissional. https://www.acog.org/womens-health/faqs/your-sexual-health
 3. **ACOG.** *Female Sexual Dysfunction.* Practice Bulletin nº 213, julho de 2019; reafirmado em 2025. https://www.acog.org/clinical/clinical-guidance/practice-bulletin/articles/2019/07/female-sexual-dysfunction
+8. **European Association of Urology (EAU).** *Guidelines on Sexual and Reproductive Health — Management of Erectile Dysfunction.* Edição 2026. https://uroweb.org/guidelines/sexual-and-reproductive-health/chapter/management-of-erectile-dysfunction
+9. **International Society for the Study of Women’s Sexual Health (ISSWSH).** *Clinical Practice Guideline for the Use of Systemic Testosterone for Hypoactive Sexual Desire Disorder in Women.* 2021. https://pmc.ncbi.nlm.nih.gov/articles/PMC8064950/
+10. **Fifth International Consultation on Sexual Medicine (ICSM).** *Definitions, classification, and epidemiology of sexual dysfunction: a consensus statement.* 2026. https://academic.oup.com/smr/article/14/2/qeag028/8685686
+11. **U.S. Food and Drug Administration (FDA).** *Sexual Enhancement and Energy Product Notifications.* Consultar alertas atualizados; alertas de 2026 incluem produtos com ingredientes farmacológicos não declarados. https://www.fda.gov/drugs/medication-health-fraud-notifications/sexual-enhancement-and-energy-product-notifications
 4. **American Academy of Family Physicians (AAFP).** *Female Sexual Dysfunction: Common Questions and Answers.* American Family Physician, 2025;111(5):433–442. https://www.aafp.org/afp/2025/0500/female-sexual-dysfunction
 5. **NHS.** *Low sex drive (loss of libido).* Fatores associados e quando buscar avaliação. https://www.nhs.uk/symptoms/loss-of-libido/
 6. **NHS.** *Erectile dysfunction (impotence).* Causas possíveis e indicação de avaliação quando recorrente. https://www.nhs.uk/conditions/erection-problems-erectile-dysfunction/
@@ -184,6 +227,9 @@ Prazer e resposta sexual são individuais e contextuais. Desejo, excitação, re
 
 **Controle editorial antes da publicação**
 - Revisão por profissional habilitado em saúde sexual, ginecologia/urologia ou área pertinente.
+- Conferir a redação sobre critérios diagnósticos: não aplicar duração ou frequência universal a todas as disfunções.
+- Validar o resumo de tratamentos e contraindicações com fontes clínicas brasileiras atualizadas e profissionais habilitados.
+- Manter a distinção entre produtos comerciais, acessórios de uso pessoal e tratamentos clínicos; não atribuir eficácia terapêutica sem evidência específica.
 - Atualizar fontes clínicas e conferir recomendações brasileiras aplicáveis.
 - Evitar transformar modelos de resposta sexual em padrão obrigatório.
 - Revisar alertas de urgência e separar sinais gerais de situações emergenciais.
