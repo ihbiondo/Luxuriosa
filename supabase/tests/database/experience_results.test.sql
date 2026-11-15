@@ -231,8 +231,7 @@ select extensions.is(
   'conta A continua vendo somente seu próprio resultado'
 );
 select extensions.lives_ok(
-  $delete from public.experience_results
-    where user_id = '10000000-0000-4000-8000-000000000002'$,
+  'delete from public.experience_results where user_id = ''10000000-0000-4000-8000-000000000002''',
   'conta A não consegue excluir resultado de B'
 );
 
