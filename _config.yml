@@ -1,0 +1,5 @@
+# Configuração do GitHub Pages / Jekyll
+# A pasta docs/ contém rascunhos editoriais e auditorias internas.
+# Ela não deve ser copiada nem convertida para o site público.
+exclude:
+  - docs/
