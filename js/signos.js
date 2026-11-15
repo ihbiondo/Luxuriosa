@@ -257,6 +257,18 @@
       sign.profile.overview + (note ? " " + note : "");
     result.hidden = false;
 
+    // Guarda somente o resultado calculado; data, horário e fuso de nascimento não são incluídos.
+    window.dispatchEvent(new CustomEvent("lux:experience-finished", { detail: {
+      attempt_id: crypto.randomUUID(),
+      activity_id: "sign_profile",
+      result_title: "Seu signo solar: " + sign.name,
+      result_summary: (
+        "Seu signo solar é " + sign.name + ". Elemento: " + sign.element +
+        ". Modalidade: " + sign.modality + ". " + sign.profile.overview +
+        (note ? " " + note : "")
+      ).trim().slice(0, 800)
+    }}));
+
     const studio = document.getElementById("solarShareStudio");
     if (studio) studio.hidden = false;
     if (solarShare) solarShare.setSign(sign);
@@ -350,8 +362,16 @@
         return;
       }
       document.getElementById("compatibilityHeading").textContent = a.name + " + " + b.name;
-      document.getElementById("compatibilityText").textContent = describeCombination(a, b, data.classification);
+      const summary = describeCombination(a, b, data.classification);
+      document.getElementById("compatibilityText").textContent = summary;
       document.getElementById("compatibilityResult").hidden = false;
+
+      window.dispatchEvent(new CustomEvent("lux:experience-finished", { detail: {
+        attempt_id: crypto.randomUUID(),
+        activity_id: "sign_compatibility",
+        result_title: a.name + " + " + b.name,
+        result_summary: summary.slice(0, 800)
+      }}));
     });
   }
 
