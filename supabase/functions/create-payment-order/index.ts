@@ -95,7 +95,7 @@ async function calculateMotorcycleRoundTrip(originCep: string, destination: stri
     headers: {
       "content-type": "application/json",
       "X-Goog-Api-Key": GOOGLE_MAPS_API_KEY,
-      "X-Goog-FieldMask": "routes.distanceMeters,routes.legs.distanceMeters,routes.legs.travelAdvisory.tollInfo"
+      "X-Goog-FieldMask": "routes.distanceMeters,routes.legs.distanceMeters"
     },
     body: JSON.stringify({
       origin: { address: origin },
@@ -104,7 +104,6 @@ async function calculateMotorcycleRoundTrip(originCep: string, destination: stri
       travelMode: "TWO_WHEELER",
       regionCode: "BR",
       languageCode: "pt-BR",
-      extraComputations: ["TOLLS"],
       routeModifiers: { vehicleInfo: { emissionType: "GASOLINE" } }
     })
   });
@@ -121,31 +120,11 @@ async function calculateMotorcycleRoundTrip(originCep: string, destination: stri
   }
   const outboundMeters = Number(legs[0].distanceMeters);
   const distanceKm = outboundMeters / 1000;
-  const tollForLeg = (leg: any): { cents: number; unknown: boolean } => {
-    const tollInfo = leg?.travelAdvisory?.tollInfo;
-    if (!tollInfo) return { cents: 0, unknown: false };
-    const prices = Array.isArray(tollInfo.estimatedPrice) ? tollInfo.estimatedPrice : [];
-    if (!prices.length) return { cents: 0, unknown: true };
-    let total = 0;
-    for (const price of prices) {
-      if (price?.currencyCode !== "BRL") return { cents: 0, unknown: true };
-      const units = Number(price.units || 0);
-      const nanos = Number(price.nanos || 0);
-      if (!Number.isFinite(units) || !Number.isFinite(nanos)) return { cents: 0, unknown: true };
-      total += units * 100 + Math.round(nanos / 10000000);
-    }
-    return { cents: Math.round(total), unknown: false };
-  };
-  const outboundToll = tollForLeg(legs[0]);
-  const returnToll = tollForLeg(legs[1]);
-  if (outboundToll.unknown || returnToll.unknown) {
-    throw new Error("A rota pode ter pedágio, mas o valor não pôde ser confirmado. Fale com a Luxuriosa para validar o total.");
-  }
   return {
     distanceKm,
-    outboundTollCents: outboundToll.cents,
-    returnTollCents: returnToll.cents,
-    totalTollCents: outboundToll.cents + returnToll.cents
+    outboundTollCents: 0,
+    returnTollCents: 0,
+    totalTollCents: 0
   };
 }
 
@@ -495,7 +474,7 @@ Deno.serve(async (req: Request) => {
     } else if (planCode === "vip") {
       baseFeeCents = 0;
     }
-    const tollCents = route?.totalTollCents ?? 0;
+    const tollCents = 0;
     const shippingCents = baseFeeCents + tollCents;
     if (!Number.isSafeInteger(shippingCents) || shippingCents < 0 || shippingCents > 1000000) {
       return reply({ error: "O frete calculado ultrapassou o limite permitido. Fale com a Luxuriosa." }, 409, origin);
