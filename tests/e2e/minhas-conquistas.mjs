@@ -142,6 +142,14 @@ async function completeKnowledgeQuiz(page) {
   await page.locator("#quizResult").waitFor({ state: "visible", timeout: 15000 });
   assert.match(await page.locator("#quizResult").innerText(), /21 de 21 respostas corretas/i);
 
+  const nextStep = page.locator(".ed-next-step");
+  await nextStep.waitFor({ state: "visible", timeout: 10000 });
+  assert.equal(
+    await nextStep.locator('a[href="/experiencias/"]').count(),
+    1,
+    "Ao concluir o quiz, deve surgir uma recomendação para continuar nas Experiências."
+  );
+
   await page.locator("#experienceSavePanel").waitFor({ state: "visible", timeout: 15000 });
   await page.locator("#experienceSaveButton").click();
   await page.locator("#experienceSaveStatus").waitFor({ state: "visible", timeout: 15000 });
