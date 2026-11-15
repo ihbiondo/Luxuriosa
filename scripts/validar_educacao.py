@@ -146,8 +146,8 @@ def main() -> int:
             errors.append(f"{rel}: script modular compartilhado ausente")
         if 'localStorage.getItem("lux18")' not in page_text or "ed-age-pending" not in page_text:
             errors.append(f"{rel}: proteção visual antecipada da declaração 18+ ausente")
-        if '<summary>Explorar módulos ⌄</summary>' not in page_text:
-            errors.append(f"{rel}: menu de cinco módulos ausente")
+        if '<summary>Explorar a biblioteca ⌄</summary>' not in page_text:
+            errors.append(f"{rel}: menu de navegação da biblioteca ausente")
         if '<details class="ed-menu">' not in page_text:
             errors.append(f"{rel}: menu de navegação ausente")
         if not re.search(r'<a class="ed-brand" href="/educacao/"', page_text):
