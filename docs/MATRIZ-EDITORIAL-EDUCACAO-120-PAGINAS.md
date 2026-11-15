@@ -16,6 +16,25 @@ Cada tema terá três níveis de leitura:
 
 Cada página deve identificar fontes, data real de revisão, escopo e limites. Não atribuir autoria ou revisão clínica a profissionais que não tenham efetivamente participado.
 
+### Situação dos módulos em 15/11/2026
+
+| Módulo | Situação | Próximo requisito |
+|---|---|---|
+| 1. Fundamentos da saúde sexual | Rascunho interno v0.1 | Revisão editorial e clínica |
+| 2. Anatomia e fisiologia | Não produzido | Produzir com terminologia precisa e decidir política para diagramas didáticos |
+| 3. Ciclo, fertilidade e reprodução | Não produzido | Produzir com fontes clínicas e limites de métodos de percepção da fertilidade |
+| 4. Contracepção | Não produzido | Produzir comparação baseada em diretrizes atuais |
+| 5. IST, HIV e prevenção combinada | Rascunho interno v0.1 | Revisão clínica e checagem de protocolos |
+| 6. Consentimento, limites e segurança | Rascunho interno v0.1 | Revisão psicossocial e jurídica |
+| 7. Relações e intimidade | Não produzido | Produzir com foco em comunicação e relações respeitosas |
+| 8. Prazer e resposta sexual | Não produzido | Produzir com revisão clínica e sem padrões universais |
+| 9. Saúde íntima e autocuidado | Não produzido | Produzir com revisão clínica |
+| 10. Acessórios e segurança | Não produzido | Produzir com documentação técnica e critérios de materiais |
+| 11. Violência sexual, apoio e direitos | Rascunho interno v0.1 | Revisão jurídica, clínica e psicossocial; delimitar corretamente a Lei nº 15.516/2026 |
+| 12. Mitos e caminhos de atendimento | Rascunho interno v0.1 | Revisão clínica e checagem individual das afirmações |
+
+Os cinco rascunhos são documentação interna, não páginas públicas nem conteúdo revisado externamente. Os sete módulos restantes ainda não existem como capítulos.
+
 ## 2. Matriz dos 23 artigos existentes
 
 Legenda: **MANTER** = preservar URL e função; **REESCREVER** = aprofundar/atualizar; **UNIR PARCIALMENTE** = manter página com escopo próprio, eliminando trechos repetidos e criando links; **REPOSICIONAR** = ajustar a função dentro da biblioteca. Nenhuma página está indicada para exclusão nesta etapa.
@@ -119,7 +138,7 @@ Para cada afirmação clínica importante, registrar fonte específica, data da 
 
 **Fase 1 — Inventário e arquitetura (agora):** matriz dos 23 artigos, distinção entre verbete e guia, identificação de lacunas e política de preservação de URLs.
 
-**Fase 2 — Conteúdo prioritário:** começar por módulos 1, 5, 6 e 11, pois estabelecem os fundamentos, prevenção, consentimento e caminhos de apoio. Depois módulos 2, 3 e 4; em seguida 7, 8 e 9; por último 10 e 12.
+**Fase 2 — Conteúdo prioritário:** os módulos 1, 5, 6, 11 e 12 já têm rascunhos internos. Produzir agora módulos 2, 3 e 4; em seguida 7, 8 e 9; por último 10. Antes de qualquer publicação, revisar os cinco rascunhos existentes e os novos capítulos com profissionais habilitados conforme o tema.
 
 **Fase 3 — Produção e navegação:** criar páginas-pilar, sumários, links contextuais, glossário e trilhas de leitura. Cada página terá resumo visível no início e aprofundamento organizado em seções.
 
