@@ -150,7 +150,11 @@ Evite perguntas como “por que você foi?”, “por que não reagiu?” ou “
 
 ## 7. Atendimento e direitos no Brasil
 
-A violência sexual é uma questão de saúde pública e de direitos humanos. A Lei nº 12.845/2013 garante atendimento emergencial, integral e gratuito nos hospitais do SUS às pessoas em situação de violência sexual. O atendimento não pode ser condicionado à apresentação de boletim de ocorrência.
+A violência sexual é uma questão de saúde pública e de direitos humanos. A Lei nº 12.845/2013 garante atendimento emergencial, integral e gratuito nos hospitais do SUS às pessoas em situação de violência sexual. **A apresentação de boletim de ocorrência pela pessoa atendida não é requisito para receber os cuidados de saúde.**
+
+A legislação foi atualizada pela Lei nº 15.516/2026. Entre as alterações, passou a constar na Lei nº 12.845/2013 a comunicação obrigatória à autoridade policial, em até 24 horas, dos casos em que houver indícios ou confirmação de violência sexual, para as providências cabíveis e fins estatísticos.
+
+**Essa comunicação é uma obrigação institucional do serviço de saúde, não uma exigência de que a pessoa registre pessoalmente um BO para ser atendida.** A pessoa não deve deixar de procurar assistência por receio de não ter feito registro policial. O serviço deve explicar, de forma clara, os procedimentos e as comunicações legalmente aplicáveis, respeitando a privacidade e as normas vigentes.
 
 Conforme a necessidade, os cuidados podem incluir:
 - avaliação e tratamento de lesões;
@@ -160,12 +164,13 @@ Conforme a necessidade, os cuidados podem incluir:
 - exames e acompanhamento;
 - informação sobre direitos e serviços disponíveis.
 
-Algumas medidas são sensíveis ao tempo. A avaliação para PEP contra HIV deve ocorrer o mais rápido possível e em até 72 horas após possível exposição. A equipe também pode avaliar contracepção de emergência, outras profilaxias e seguimento. Mesmo se já passou esse prazo, procure atendimento: ainda pode haver cuidados importantes.
+Algumas medidas são sensíveis ao tempo. A avaliação para PEP contra HIV deve ocorrer o mais rápido possível, preferencialmente nas primeiras duas horas e no máximo em até 72 horas após possível exposição. A equipe também pode avaliar contracepção de emergência, outras profilaxias e seguimento. Mesmo se já passou esse prazo, procure atendimento: ainda pode haver cuidados importantes.
 
-O atendimento deve respeitar privacidade, autonomia e decisões da pessoa, com explicação clara dos procedimentos. A decisão de registrar ocorrência não deve impedir o acesso aos cuidados de saúde.
+O atendimento deve respeitar privacidade, autonomia e decisões da pessoa, com explicação clara dos procedimentos. Em situações concretas, peça ao serviço que explique quais informações serão registradas e quais comunicações são obrigatórias.
 
 Para informações de apoio e encaminhamento, consulte:
 - [Ministério da Saúde — Violência sexual](https://www.gov.br/saude/pt-br/assuntos/saude-de-a-a-z/s/saude-da-mulher/saude-sexual-e-reprodutiva/violencia-sexual/violencia-sexual)
+- [Lei nº 15.516/2026 — texto legal](https://normas.leg.br/?urn=urn%3Alex%3Abr%3Afederal%3Alei%3A2026-09-22%3B15516)
 - [Ministério das Mulheres — Lei do Minuto Seguinte](https://www.gov.br/mulheres/pt-br/central-de-conteudos/noticias/2026/agosto-defeso-eleitoral/lei-do-minuto-seguinte-conheca-os-direitos-de-quem-sofre-violencia-sexual)
 - [Guia prático de cuidado à mulher em situação de violência — Ministério da Saúde (2025)](https://www.gov.br/saude/pt-br/centrais-de-conteudo/publicacoes/guias-e-manuais/2025/guia-pratico-de-cuidado-a-mulher-em-situacao-de-violencia.pdf)
 
