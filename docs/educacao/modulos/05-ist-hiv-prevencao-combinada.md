@@ -115,7 +115,7 @@ A escolha de estratégias deve ser individualizada com profissionais e serviços
 
 ### 4.1 PrEP — profilaxia pré-exposição ao HIV
 
-PrEP é o uso de medicamentos antirretrovirais por pessoas HIV-negativas antes de possíveis exposições, com o objetivo de reduzir o risco de adquirir HIV. A modalidade, os exames necessários, o início, a adesão e o acompanhamento devem seguir o protocolo vigente e avaliação profissional.
+PrEP é o uso de medicamentos antirretrovirais por pessoas sem HIV antes de possíveis exposições, com o objetivo de reduzir o risco de adquirir o vírus. No SUS, o PCDT de 2025 descreve modalidades oral diária e sob demanda para perfis específicos. A modalidade sob demanda não é adequada a todas as pessoas ou práticas sexuais; a escolha depende de critérios clínicos e deve ser feita com profissional habilitado, nunca por adaptação autônoma de esquema. Antes de iniciar, é necessário confirmar a ausência de HIV e avaliar situações que possam exigir investigação adicional, como sinais recentes compatíveis com infecção aguda. O acompanhamento inclui testagem periódica para HIV e avaliação de outras IST e exames adicionais conforme o protocolo e as condições individuais.
 
 Pontos importantes:
 - PrEP é prevenção do HIV, não de todas as IST;
@@ -124,7 +124,7 @@ Pontos importantes:
 - a modalidade e o esquema dependem de avaliação clínica;
 - não se deve iniciar, interromper ou adaptar medicamentos por conta própria.
 
-O Ministério da Saúde disponibiliza o [PCDT de PrEP oral](https://www.gov.br/saude/pt-br/assuntos/pcdt/p/profilaxia-pre-exposicao-prep-oral-a-infeccao-pelo-hiv/view), com anexo atualizado em 20 de março de 2025. Protocolos podem mudar; a equipe deve consultar a versão vigente.
+O Ministério da Saúde disponibiliza o [PCDT de PrEP oral](https://www.gov.br/saude/pt-br/assuntos/pcdt/p/profilaxia-pre-exposicao-prep-oral-a-infeccao-pelo-hiv/view), com anexo atualizado em 20 de março de 2025, e uma [ferramenta oficial de apoio à decisão clínica](https://portal.aids.gov.br/prep). Essas ferramentas são destinadas a orientar a atuação dos serviços e não substituem avaliação individual. Protocolos podem mudar; a equipe deve consultar a versão vigente.
 
 ### 4.2 PEP — profilaxia pós-exposição ao HIV
 
@@ -145,7 +145,7 @@ Fontes oficiais: [Ministério da Saúde — PEP](https://www.gov.br/saude/pt-br/
 
 ### 4.3 Tratamento do HIV e prevenção
 
-O tratamento antirretroviral é cuidado de saúde essencial para pessoas vivendo com HIV. A adesão e o acompanhamento permitem controlar a infecção e preservar a saúde. Pessoas com HIV que mantêm carga viral indetectável de forma sustentada não transmitem o HIV por via sexual — conceito conhecido como I=I (indetectável = intransmissível). A avaliação de carga viral e o acompanhamento são realizados pelos serviços de saúde.
+O tratamento antirretroviral é cuidado de saúde essencial para pessoas vivendo com HIV. A adesão e o acompanhamento permitem controlar a infecção e preservar a saúde. Pessoas vivendo com HIV que realizam tratamento e mantêm carga viral indetectável de forma sustentada não transmitem o HIV por via sexual — conceito conhecido como I=I (indetectável = intransmissível). O Ministério da Saúde reconhece o risco zero de transmissão sexual nessa condição. A avaliação da carga viral e o acompanhamento são realizados pelos serviços de saúde; não se deve presumir indetectabilidade sem esses registros.
 
 I=I se refere à transmissão sexual do HIV e não significa proteção contra outras IST ou gravidez. Não deve ser generalizado para outras vias de transmissão sem orientação específica. A afirmação pressupõe tratamento eficaz e supressão viral sustentada, acompanhada por serviço de saúde.
 
@@ -189,6 +189,8 @@ Para PEP, não espere uma consulta agendada: procure imediatamente um serviço q
 - [Ministério da Saúde — Prevenção combinada](https://www.gov.br/aids/pt-br/assuntos/prevencao-combinada)
 - [Ministério da Saúde — PCDT de PEP](https://www.gov.br/saude/pt-br/assuntos/pcdt/p/profilaxia-pos-exposicao-de-risco-pep-a-infeccao-pelo-hiv/view)
 - [Ministério da Saúde — PCDT de PrEP](https://www.gov.br/saude/pt-br/assuntos/pcdt/p/profilaxia-pre-exposicao-prep-oral-a-infeccao-pelo-hiv/view)
+- [Ministério da Saúde — Ferramenta de apoio à decisão clínica para PrEP](https://portal.aids.gov.br/prep)
+- [Ministério da Saúde — Nota Técnica sobre I=I e risco zero de transmissão sexual](https://www.gov.br/aids/pt-br/central-de-conteudo/notas-tecnicas/2023/nota-tecnica-no-376-2023-cgahv-dathi-svsa-ms.pdf)
 - [Ministério da Saúde — PCDTs vigentes](https://www.gov.br/aids/pt-br/central-de-conteudo/pcdts)
 - [Ministério da Saúde — Calendário Nacional de Vacinação 2026](https://www.gov.br/saude/pt-br/vacinacao/publicacoes/instrucao-normativa-que-instrui-o-calendario-nacional-de-vacinacao-2026.pdf/view)
 
