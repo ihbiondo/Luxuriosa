@@ -57,6 +57,45 @@ Esta tabela é introdutória. Não substitui as páginas oficiais de diagnóstic
 
 **Atenção:** a tabela não é uma ferramenta de triagem. Sintomas, exames e tratamento variam por infecção, local do corpo, gestação, idade, histórico e diretrizes vigentes.
 
+## 2.1 Sífilis: diagnóstico, tratamento e acompanhamento
+
+A sífilis é uma infecção bacteriana curável, mas pode evoluir por fases e permanecer sem sintomas perceptíveis. O diagnóstico deve combinar história clínica, exame e testes apropriados. O teste rápido é treponêmico: identifica anticorpos contra *Treponema pallidum* e pode continuar reagente mesmo depois de tratamento adequado. Por isso, um resultado reagente isolado não permite concluir, por si só, se existe infecção ativa ou se houve tratamento anterior.
+
+O serviço pode solicitar teste não treponêmico quantitativo, como VDRL ou RPR, para compor a avaliação e estabelecer um valor de referência para acompanhar a resposta ao tratamento. A interpretação considera resultados anteriores, sintomas, possibilidade de nova exposição, gestação e estágio provável da infecção. Títulos baixos persistentes após tratamento podem representar cicatriz sorológica; somente a equipe pode diferenciar essa situação de falha terapêutica ou reinfecção.
+
+A penicilina benzatina é o tratamento de escolha na maioria das situações, mas o esquema depende do estágio e de condições individuais. Não tente escolher dose ou número de aplicações com base em tabelas da internet. Gestantes precisam de avaliação e tratamento oportunos para prevenir sífilis congênita. Parcerias sexuais devem ser comunicadas de forma segura e orientadas a realizar avaliação, testagem e tratamento quando indicado.
+
+## 2.2 Gonorreia e clamídia: considerar o local da exposição
+
+Gonorreia e clamídia podem não causar sintomas. Quando aparecem, manifestações como corrimento, ardor ao urinar, dor pélvica, dor testicular, sangramento ou desconforto retal não são exclusivas dessas infecções e não confirmam o diagnóstico.
+
+A avaliação pode incluir teste molecular para *Neisseria gonorrhoeae* e *Chlamydia trachomatis*. A amostra apropriada depende dos locais de exposição e da avaliação clínica: urina ou amostras genitais, retais ou da garganta podem ser consideradas. Um exame feito em apenas um local não necessariamente exclui infecção em outro. O Ministério da Saúde mantém uma rede de laboratórios de biologia molecular CT/NG no SUS; a oferta e o fluxo de acesso podem variar entre serviços e municípios.
+
+O tratamento deve seguir o protocolo vigente e considerar o agente identificado, o local da infecção, gestação, alergias, coinfecções e resistência antimicrobiana — especialmente relevante para gonorreia. Não use antibióticos restantes, não compartilhe medicamentos e não improvise esquemas. Parcerias podem precisar de avaliação, testagem ou tratamento, mesmo sem sintomas. O serviço deve orientar quando evitar relações, quando retomar atividades e se é necessário repetir exames, para reduzir transmissão e reinfecção.
+
+## 2.3 HPV: vacinação e rastreamento são medidas diferentes
+
+O HPV reúne muitos tipos virais. Alguns podem causar verrugas; outros estão associados a cânceres, inclusive do colo do útero, ânus, pênis, vulva, vagina e orofaringe. A infecção pode desaparecer espontaneamente, persistir ou produzir lesões; não é possível prever a evolução individual apenas pela presença ou ausência de sintomas.
+
+A vacinação é a principal medida de prevenção contra os tipos de HPV incluídos na vacina. No SUS, os públicos e esquemas dependem do Calendário Nacional de Vacinação e de critérios específicos para grupos especiais. A vacina não trata infecção já existente, não cobre todos os tipos virais e não elimina a necessidade de rastreamento recomendado para pessoas com colo do útero.
+
+Rastreamento do câncer do colo do útero não é o mesmo que investigar toda infecção por HPV. O teste molecular para DNA-HPV oncogênico está sendo implantado gradualmente no SUS; a disponibilidade local pode variar. O exame citopatológico (Papanicolau) avalia alterações celulares e não confirma, por si só, a presença do vírus. Siga a orientação do serviço de saúde e as diretrizes nacionais vigentes, sem substituir o rastreamento por vacinação ou por autotestes não indicados.
+
+Preservativos reduzem o risco, mas não eliminam a transmissão do HPV, pois pode haver contato com pele e mucosas não cobertas. Verrugas, lesões ou alterações em exames precisam de avaliação; não aplique produtos para verrugas comuns na região genital.
+
+## 2.4 Hepatites virais: distinguir as vias de transmissão
+
+As hepatites virais não têm todas a mesma forma de transmissão nem a mesma prevenção:
+
+- **Hepatite A:** transmissão principalmente fecal-oral, inclusive em práticas sexuais com contato oral-anal. Há vacina para grupos e situações definidos pelo PNI; higiene e barreiras podem reduzir riscos conforme a prática.
+- **Hepatite B:** pode ser transmitida por via sexual, sangue e transmissão vertical. A vacinação é a principal prevenção e está disponível no SUS para pessoas não vacinadas, conforme calendário. Testagem, avaliação de parcerias e cuidados após exposição dependem do histórico vacinal e da situação clínica.
+- **Hepatite C:** a transmissão ocorre principalmente pelo contato com sangue. A transmissão sexual é menos comum, mas pode ocorrer em contextos específicos, sobretudo quando há exposição a sangue ou lesões. Não existe vacina. O diagnóstico e o tratamento são oferecidos pelo SUS; os antivirais de ação direta curam a maioria das pessoas tratadas.
+
+Resultados reagentes em testes iniciais podem exigir exames complementares para esclarecer se há infecção ativa, contato anterior ou necessidade de acompanhamento. Para hepatite B, a equipe considera marcadores diferentes; para hepatite C, pode ser necessário confirmar a presença do vírus por exame molecular. Não interprete um único marcador isoladamente.
+
+A recomendação de testagem, o momento do exame e a necessidade de repetição variam conforme o vírus, o tipo de teste, vacinação, exposição e situação clínica. A vacinação contra hepatite B não protege contra hepatite C; não existe vacina contra hepatite C. Em possível exposição recente, procure atendimento para avaliação de medidas pós-exposição, sem esperar sintomas.
+
+
 ## 3. Como reduzir o risco
 
 ### 3.1 Preservativos e barreiras
