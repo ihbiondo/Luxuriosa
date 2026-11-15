@@ -9,7 +9,25 @@ on:
       - "login.html"
       - "pagamento-retorno.html"
       - "acompanhar-pedido/**"
+      - "portal/**"
+      - "experiencias/**"
+      - "educacao/interatividade/**"
       - "js/clientes.js"
+      - "js/portal.js"
+      - "js/conquistas*.js"
+      - "js/experiencias*.js"
+      - "js/signos.js"
+      - "js/educacao-interatividade.js"
+      - "css/conquistas.css"
+      - "css/experiencias.css"
+      - "css/portal.css"
+      - "css/educacao.css"
+      - "supabase/migrations/20261115140000_create_experience_results.sql"
+      - "supabase/tests/database/experience_results.test.sql"
+      - "tests/conquistas.test.js"
+      - "tests/e2e/**"
+      - "termos-experiencias.html"
+      - "privacidade.html"
       - "data/produtos.json"
       - ".github/workflows/payment-validate.yml"
   pull_request:
@@ -20,7 +38,25 @@ on:
       - "login.html"
       - "pagamento-retorno.html"
       - "acompanhar-pedido/**"
+      - "portal/**"
+      - "experiencias/**"
+      - "educacao/interatividade/**"
       - "js/clientes.js"
+      - "js/portal.js"
+      - "js/conquistas*.js"
+      - "js/experiencias*.js"
+      - "js/signos.js"
+      - "js/educacao-interatividade.js"
+      - "css/conquistas.css"
+      - "css/experiencias.css"
+      - "css/portal.css"
+      - "css/educacao.css"
+      - "supabase/migrations/20261115140000_create_experience_results.sql"
+      - "supabase/tests/database/experience_results.test.sql"
+      - "tests/conquistas.test.js"
+      - "tests/e2e/**"
+      - "termos-experiencias.html"
+      - "privacidade.html"
       - "data/produtos.json"
       - ".github/workflows/payment-validate.yml"
 
@@ -128,11 +164,92 @@ jobs:
       - name: Setup Supabase CLI
         uses: supabase/setup-cli@v1
         with:
-          version: latest
-      - name: Testar migrations e RLS em Supabase local descartável
+          version: 3.0.0
+      - name: Testar banco e jornada E2E em ambiente local descartável
+        env:
+          SUPABASE_TELEMETRY_DISABLED: "1"
         run: |
-          # CLI sem link/token: todas as operações são locais ao runner.
+          set -euo pipefail
+          test_root="$(mktemp -d)"
+          site_server_pid=""
+          cleanup() {
+            if [[ -n "$site_server_pid" ]]; then
+              kill "$site_server_pid" >/dev/null 2>&1 || true
+            fi
+            (cd "$test_root" && supabase stop) >/dev/null 2>&1 || true
+            rm -rf "$test_root"
+          }
+          trap cleanup EXIT
+
+          # Projeto scratch: somente fixtures de login + migration de conquistas.
+          # Não há token, project-ref, link ou credencial do Supabase hospedado.
+          mkdir -p "$test_root/supabase/migrations" "$test_root/supabase/tests/database"
+          cp "$GITHUB_WORKSPACE/supabase/config.toml" "$test_root/supabase/config.toml"
+          cp "$GITHUB_WORKSPACE/tests/e2e/login-fixtures.sql" "$test_root/supabase/migrations/20261115130000_e2e_login_fixtures.sql"
+          cp "$GITHUB_WORKSPACE/supabase/migrations/20261115140000_create_experience_results.sql" "$test_root/supabase/migrations/"
+          cp "$GITHUB_WORKSPACE/supabase/tests/database/experience_results.test.sql" "$test_root/supabase/tests/database/"
+
+          cd "$test_root"
           supabase start
           supabase db reset
           supabase test db
+
+          # Copia temporária do site. Somente a cópia recebe a URL/chave local.
+          site="$test_root/site"
+          mkdir -p "$site"
+          tar --exclude=.git --exclude=node_modules -cf - -C "$GITHUB_WORKSPACE" . | tar -xf - -C "$site"
+
+          supabase status --env --output-format text > "$test_root/supabase.env"
+          set -a
+          source "$test_root/supabase.env"
+          set +a
+          : "${API_URL:?API_URL ausente no Supabase local}"
+          : "${ANON_KEY:?ANON_KEY ausente no Supabase local}"
+          : "${SERVICE_ROLE_KEY:?SERVICE_ROLE_KEY ausente no Supabase local}"
+
+          python - "$site" "$API_URL" "$ANON_KEY" <<'PY'
+          import sys
+          from pathlib import Path
+
+          site = Path(sys.argv[1])
+          local_url, local_key = sys.argv[2], sys.argv[3]
+          hosted_url = "https://byiykxfugvxuowueuxca.supabase.co"
+          hosted_key = "sb_publishable_LaMbeWQ1PNANEQ85SD_35Q_wDzswy8y"
+          files = [
+              "login.html",
+              "js/portal.js",
+              "js/conquistas.js",
+              "js/experiencias-salvar.js",
+          ]
+          for relative in files:
+              path = site / relative
+              original = path.read_text(encoding="utf-8")
+              if hosted_url not in original or hosted_key not in original:
+                  raise SystemExit(f"Configuração Supabase esperada não encontrada em {relative}")
+              path.write_text(
+                  original.replace(hosted_url, local_url).replace(hosted_key, local_key),
+                  encoding="utf-8"
+              )
+          print("Cópia E2E do site configurada exclusivamente para o Supabase local.")
+          PY
+
+          cd "$site"
+          npm init -y >/dev/null
+          npm install --no-save playwright@1
+          npx playwright install --with-deps chromium
+
+          python3 -m http.server 4173 --bind 127.0.0.1 --directory "$site" > "$test_root/site-server.log" 2>&1 &
+          site_server_pid=$!
+          for attempt in $(seq 1 30); do
+            if curl --fail --silent http://127.0.0.1:4173/login.html >/dev/null; then
+              break
+            fi
+            sleep 1
+          done
+          curl --fail --silent http://127.0.0.1:4173/login.html >/dev/null
+
+          E2E_BASE_URL="http://127.0.0.1:4173" \
+          E2E_SUPABASE_URL="$API_URL" \
+          E2E_SERVICE_ROLE_KEY="$SERVICE_ROLE_KEY" \
+          node "$site/tests/e2e/minhas-conquistas.mjs"
 
