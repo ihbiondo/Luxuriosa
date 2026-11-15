@@ -22,7 +22,7 @@ on:
       - "css/experiencias.css"
       - "css/portal.css"
       - "css/educacao.css"
-      - "supabase/migrations/20261115140000_create_experience_results.sql"
+      - "supabase/migrations/20261115181510_create_experience_results.sql"
       - "supabase/tests/database/experience_results.test.sql"
       - "tests/conquistas.test.js"
       - "tests/e2e/**"
@@ -51,7 +51,7 @@ on:
       - "css/experiencias.css"
       - "css/portal.css"
       - "css/educacao.css"
-      - "supabase/migrations/20261115140000_create_experience_results.sql"
+      - "supabase/migrations/20261115181510_create_experience_results.sql"
       - "supabase/tests/database/experience_results.test.sql"
       - "tests/conquistas.test.js"
       - "tests/e2e/**"
@@ -113,7 +113,7 @@ jobs:
           python - <<'PY'
           from pathlib import Path
 
-          migration = Path("supabase/migrations/20261115140000_create_experience_results.sql").read_text()
+          migration = Path("supabase/migrations/20261115181510_create_experience_results.sql").read_text()
           terms = Path("termos-experiencias.html").read_text()
           dashboard = Path("portal/conquistas/index.html").read_text()
           portal = Path("portal/index.html").read_text()
@@ -186,7 +186,7 @@ jobs:
           mkdir -p "$test_root/supabase/migrations" "$test_root/supabase/tests/database"
           cp "$GITHUB_WORKSPACE/supabase/config.toml" "$test_root/supabase/config.toml"
           cp "$GITHUB_WORKSPACE/tests/e2e/login-fixtures.sql" "$test_root/supabase/migrations/20261115130000_e2e_login_fixtures.sql"
-          cp "$GITHUB_WORKSPACE/supabase/migrations/20261115140000_create_experience_results.sql" "$test_root/supabase/migrations/"
+          cp "$GITHUB_WORKSPACE/supabase/migrations/20261115181510_create_experience_results.sql" "$test_root/supabase/migrations/"
           cp "$GITHUB_WORKSPACE/supabase/tests/database/experience_results.test.sql" "$test_root/supabase/tests/database/"
 
           cd "$test_root"
