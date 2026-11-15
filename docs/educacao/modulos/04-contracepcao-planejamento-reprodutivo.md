@@ -185,7 +185,9 @@ Este capítulo não prescreve métodos, não substitui avaliação de elegibilid
 - Ministério da Saúde. **Nota Técnica Conjunta nº 198/2026** — gestão, monitoramento, registro, distribuição e acesso ao implante no SUS (24 ago. 2026). https://www.gov.br/saude/pt-br/centrais-de-conteudo/publicacoes/notas-tecnicas/2026/nota-tecnica-conjunta-no-198-2026-cgesmu-dgci-saps-ms.pdf/view
 - Ministério da Saúde. **Nota Técnica Conjunta nº 343/2026** — consolidação da quinta remessa de implantes (3 nov. 2026). https://www.gov.br/saude/pt-br/centrais-de-conteudo/publicacoes/notas-tecnicas/2026/nota-tecnica-conjunta-no-343-2026-cgesmu-dgci-saps-cgafb-daf-sctie-ms.pdf/view
 - Anvisa. **Anvisa aprova ampliação do uso do Implanon para cinco anos** (26 out. 2026). https://www.gov.br/anvisa/pt-br/assuntos/noticias-anvisa/2026/anvisa-aprova-ampliacao-do-uso-do-implanon-para-cinco-anos
-- Prefeitura de São Paulo, Secretaria Municipal da Saúde. **Nota Técnica nº 01/2026** — atualização do SIU de levonorgestrel 52 mg para até oito anos de uso contraceptivo (11 nov. 2026). https://prefeitura.sp.gov.br/documents/d/saude/atualizacao-mirena-para-8-anos-pdf
+- Prefeitura de São Paulo, Secretaria Municipal da Saúde. **Nota Técnica nº 02/2025** — atualização do SIU de levonorgestrel 52 mg (Mirena) para até oito anos de uso exclusivamente contraceptivo (30 jul. 2025). https://prefeitura.sp.gov.br/documents/d/saude/nota_tecnica_bula_mirena_25-pdf
+- Bayer. **Mirena® — bula do paciente e do profissional de saúde**, com aprovação Anvisa e indicação por finalidade de uso. https://www.bulario.bayer.com.br/medicamentos-de-prescricao/mirena
+- Anvisa. **Bulário Eletrônico** — conferir sempre a bula brasileira vigente de cada produto. https://consultas.anvisa.gov.br/#/bulario/
 - Anvisa. **Bulário Eletrônico** — consulta à bula brasileira vigente de cada produto. https://consultas.anvisa.gov.br/#/bulario/
 - Brasil. **Lei nº 14.443/2022** — planejamento familiar e esterilização voluntária. https://www.planalto.gov.br/ccivil_03/_ato2019-2022/2022/lei/l14443.htm
 
