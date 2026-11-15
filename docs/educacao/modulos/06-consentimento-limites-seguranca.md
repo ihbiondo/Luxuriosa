@@ -34,11 +34,11 @@ Uma pessoa pode concordar com um beijo e não desejar continuar. Pode aceitar de
 
 **Específico:** a concordância se refere à atividade combinada; não é autorização genérica.
 
-**Contínuo:** deve ser respeitado durante toda a experiência, com atenção à comunicação verbal e não verbal.
+**Contínuo:** deve ser respeitado durante toda a experiência. Isso não significa exigir uma confirmação verbal repetida a cada instante; significa manter atenção à comunicação, às mudanças de contexto e aos limites. Um sinal de desconforto, hesitação ou pedido de pausa exige interromper e esclarecer, sem insistência. Sinais não verbais nunca autorizam ignorar uma recusa verbal.
 
 **Revogável:** pode ser retirado a qualquer momento, sem necessidade de justificar a decisão.
 
-**Com capacidade para decidir:** a pessoa precisa estar em condições de compreender e escolher. Sono, inconsciência, incapacitação importante por álcool ou outras substâncias e determinadas situações de vulnerabilidade podem impedir uma decisão válida. Questões de capacidade e idade também dependem da legislação aplicável e exigem cuidado específico.
+**Com capacidade para decidir:** a pessoa precisa estar em condições de compreender e escolher. Sono, inconsciência ou alteração por álcool e outras substâncias que prejudique a compreensão, a decisão ou a comunicação podem impedir uma escolha livre. Se houver dúvida sobre a capacidade de decidir naquele momento, não avance. Capacidade, idade e validade jurídica dependem do contexto e da legislação aplicável; esta lista é educativa, não um teste jurídico.
 
 ### 1.2 O que não é consentimento
 
@@ -164,7 +164,7 @@ Conforme a necessidade, os cuidados podem incluir:
 - exames e acompanhamento;
 - informação sobre direitos e serviços disponíveis.
 
-Algumas medidas são sensíveis ao tempo. A avaliação para PEP contra HIV deve ocorrer o mais rápido possível, preferencialmente nas primeiras duas horas e no máximo em até 72 horas após possível exposição. A equipe também pode avaliar contracepção de emergência, outras profilaxias e seguimento. Mesmo se já passou esse prazo, procure atendimento: ainda pode haver cuidados importantes.
+Algumas medidas são sensíveis ao tempo. A avaliação para PEP contra HIV deve ocorrer o mais rápido possível e, no máximo, em até 72 horas após possível exposição. A indicação depende de avaliação do serviço de saúde; não espere sintomas nem tente decidir sozinho se a profilaxia é necessária. A equipe também pode avaliar contracepção de emergência, outras profilaxias e seguimento. Mesmo se já passou esse prazo, procure atendimento: ainda pode haver cuidados importantes.
 
 O atendimento deve respeitar privacidade, autonomia e decisões da pessoa, com explicação clara dos procedimentos. Em situações concretas, peça ao serviço que explique quais informações serão registradas e quais comunicações são obrigatórias.
 
@@ -206,7 +206,18 @@ Não. Enviar uma imagem a alguém não equivale a autorizar que ela seja divulga
 
 Não. O atendimento de saúde garantido pela Lei nº 12.845/2013 não depende de boletim de ocorrência. Procure atendimento o quanto antes.
 
-## 9. Síntese do capítulo
+## 9. Coerência com relacionamentos e resposta sexual
+
+Os princípios deste capítulo se conectam a dois temas próximos:
+
+- **Relacionamentos e comunicação (Módulo 7):** diálogo, acordos e negociação só são construtivos quando todas as pessoas podem participar livremente e discordar sem medo. Em situações de coerção, controle, ameaça ou violência, a prioridade é segurança e apoio independente — não uma conversa a dois, terapia de casal ou tentativa de convencer quem exerce violência.
+- **Prazer e resposta sexual (Módulo 8):** desejo, excitação subjetiva, ereção, lubrificação, orgasmo e outras respostas corporais não são equivalentes a consentimento. Desejo responsivo não cria obrigação de começar uma atividade; uma resposta física involuntária não prova vontade; dor, medo ou mudança de ideia são motivos suficientes para parar.
+
+Consentimento também não é moeda de troca por afeto, compromisso, presentes, dinheiro, exclusividade ou continuidade da relação. Acordos podem organizar expectativas, mas não retiram o direito de recusar uma atividade específica e atual.
+
+Esta é uma estrutura educativa de autonomia e segurança, não uma definição jurídica universal. Situações concretas envolvendo idade, capacidade, vulnerabilidade, violência ou responsabilidades legais exigem avaliação conforme a legislação brasileira vigente e, quando necessário, orientação especializada.
+
+## 10. Síntese do capítulo
 
 Consentimento é uma escolha livre, específica, contínua e revogável. Limites merecem respeito em qualquer tipo de relação e em ambientes presenciais ou digitais. Silêncio, pressão, histórico de relacionamento e respostas físicas não substituem uma decisão voluntária.
 
