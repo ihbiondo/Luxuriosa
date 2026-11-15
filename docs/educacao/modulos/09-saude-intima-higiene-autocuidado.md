@@ -1,6 +1,6 @@
 # Módulo 9 — Saúde íntima, higiene e autocuidado
 
-**Status:** rascunho editorial v0.1 — material interno para revisão; não publicado  
+**Status:** rascunho editorial v0.2 — revisão documental ampliada; material interno, não publicado  
 **Público:** pessoas adultas  
 **Extensão planejada:** cerca de 10 páginas equivalentes  
 **Revisão clínica externa:** não realizada
@@ -40,9 +40,9 @@ A anatomia varia. Pessoas intersexo, trans e com diferentes histórias de cirurg
 
 ## 2. Higiene vulvar e vaginal
 
-A vulva pode ser lavada externamente com água morna e, se tolerado, produto suave sem perfume. Enxágue bem e seque delicadamente, sem esfregar. Se houver irritação, pode ser útil suspender sabonetes e produtos não essenciais na região sensível e buscar orientação se o sintoma persistir.
+A higiene da vulva deve ser externa e delicada. Água limpa costuma ser suficiente; se a pessoa tolerar, pode usar pequena quantidade de sabonete suave e sem perfume na pele externa, enxaguando bem. Em caso de irritação, suspenda produtos não essenciais e prefira água até receber orientação. Após evacuar, a limpeza deve seguir da frente para trás, para reduzir o transporte de resíduos fecais em direção à vulva.
 
-A vagina não precisa de lavagem interna. Duchas, desodorantes, perfumes, sprays e produtos inseridos para “limpeza” podem irritar e alterar o equilíbrio local. Não introduza antissépticos, sabonetes ou receitas caseiras na vagina.
+A vagina não precisa de lavagem interna: ela possui mecanismos próprios de limpeza. Duchas, desodorantes, perfumes, sprays, antissépticos, sabonetes ou receitas caseiras introduzidos no canal vaginal podem irritar e alterar o equilíbrio local. Não é necessário eliminar completamente o odor corporal; uma secreção e um odor leves podem fazer parte da variação normal. Mudança marcante ou persistente, especialmente com outros sintomas, merece avaliação.
 
 ### 2.1 Corrimento vaginal: o que observar
 
@@ -52,13 +52,13 @@ Mudanças persistentes de cor, odor, quantidade ou consistência, especialmente 
 
 ### 2.2 Menstruação e produtos menstruais
 
-Absorventes externos, internos, coletores e roupas absorventes têm orientações próprias de uso e higiene. Siga o tempo de troca e limpeza indicado pelo fabricante e as orientações de saúde. Lave as mãos antes e depois de manipular produtos internos e higienize coletores conforme as instruções específicas.
+Os produtos menstruais não são intercambiáveis: siga as instruções específicas de uso, troca, limpeza e descarte. Como referência geral, o Ministério da Saúde orienta trocar absorventes externos em aproximadamente seis horas, ajustando antes conforme o fluxo e a umidade. Para absorventes internos, lave as mãos antes e depois, use a menor absorção adequada e respeite o rótulo; a FDA orienta troca entre quatro e oito horas e nunca ultrapassar oito horas de uso contínuo. Para coletores e roupas absorventes, siga o limite e o procedimento de higiene indicados pelo fabricante; não existe um tempo único que sirva para todas as marcas e modelos.
 
-Procure atendimento se houver dor intensa ou diferente do habitual, sangramento muito intenso, febre, desmaio, odor incomum persistente ou sintomas que causem preocupação. Febre, mal-estar importante, vômitos, tontura ou erupção cutânea durante o uso de absorvente interno ou coletor exigem avaliação urgente.
+Procure atendimento se houver dor intensa ou diferente do habitual, sangramento muito intenso, febre, desmaio, odor incomum persistente ou sintomas que causem preocupação. Durante o uso de absorvente interno, febre súbita, vômitos, diarreia, tontura, desmaio ou erupção cutânea exigem retirar o produto e procurar atendimento imediatamente: podem ser sinais de síndrome do choque tóxico, condição rara e grave. Não atribua esses sintomas automaticamente ao produto nem espere que desapareçam.
 
 ## 3. Higiene do pênis, escroto e região anal
 
-Lave a parte externa com água e produto suave, se tolerado, e enxágue bem. Se houver prepúcio retrátil, retraia suavemente apenas até onde for confortável, lave a glande, enxágue e recoloque o prepúcio em sua posição habitual. Nunca force a retração. Se o prepúcio ficar preso atrás da glande e não retornar, especialmente com dor ou inchaço, procure atendimento de urgência.
+A higiene do pênis deve ser regular, com água e sabonete neutro, seguida de enxágue e secagem cuidadosa. Quando o prepúcio puder ser retraído naturalmente, puxe-o suavemente apenas até onde for confortável, lave a glande, enxágue, seque e recoloque o prepúcio em sua posição habitual. Nunca force a retração. Se o prepúcio ficar preso atrás da glande e não retornar, especialmente com dor ou inchaço, procure atendimento de urgência. O Ministério da Saúde também orienta a higiene diária e após relações sexuais ou masturbação.
 
 Seque sem esfregar e evite perfumes, talcos e antissépticos na região genital. O excesso de limpeza pode irritar a pele. Troque roupas úmidas ou suadas quando possível e escolha peças confortáveis, sem presumir que um tecido específico seja obrigatório para todas as pessoas.
 
@@ -170,13 +170,17 @@ Autocuidado íntimo deve ser simples, respeitoso e adequado à anatomia. Mais pr
 
 ## Referências principais
 
-1. **American College of Obstetricians and Gynecologists (ACOG).** *Vulvovaginal Health.* Variações anatômicas, higiene vulvar, produtos irritantes e sinais que merecem avaliação. https://www.acog.org/womens-health/faqs/vulvovaginal-health
-2. **ACOG.** *Vaginitis.* Causas, diagnóstico, tratamento e prevenção de irritações/vaginites. https://www.acog.org/womens-health/faqs/vaginitis
-3. **ACOG.** *Disorders of the Vulva: Common Causes of Vulvar Pain, Burning, and Itching.* https://www.acog.org/womens-health/faqs/disorders-of-the-vulva-common-causes-of-vulvar-pain-burning-and-itching
-4. **Ministério da Saúde (Brasil).** *Características das IST.* Sinais e sintomas possíveis e necessidade de avaliação. https://www.gov.br/saude/pt-br/assuntos/saude-de-a-a-z/i/ist/caracteristicas-das-ist
-5. **Ministério da Saúde (Brasil).** *IST — Infecções Sexualmente Transmissíveis.* Testagem, manifestações e orientação de cuidado. https://www.gov.br/saude/pt-br/assuntos/saude-de-a-a-z/i/ist/ist
-6. **Ministério da Saúde (Brasil).** *Saúde sexual e saúde reprodutiva.* Cadernos de Atenção Básica, nº 26. https://bvsms.saude.gov.br/bvs/publicacoes/saude_sexual_saude_reprodutiva.pdf
-7. **NHS.** *Urinary tract infections (UTIs).* Sinais, sintomas e quando procurar atendimento. https://www.nhs.uk/conditions/urinary-tract-infections-utis/
+1. **Ministério da Saúde (Brasil).** *Programa Dignidade Menstrual — Um ciclo de respeito: Guia de implementação.* 2024. Orienta higiene externa com água limpa, possibilidade de sabonete neutro, troca aproximada de absorventes externos conforme fluxo e evitar sprays/perfumes íntimos. https://www.gov.br/saude/pt-br/composicao/sectics/publicacoes/cartilha-programa-dignidade-menstrual-um-ciclo-de-respeito
+2. **Ministério da Saúde (Brasil).** *Guia de Saúde do Homem para Agentes Comunitários de Saúde.* 2025. Orienta higiene peniana com água e sabão neutro, limpeza cuidadosa da glande quando o prepúcio é retrátil e secagem. https://bvsms.saude.gov.br/bvs/publicacoes/guia_saude_homem_acs_imp.pdf
+3. **American College of Obstetricians and Gynecologists (ACOG).** *Vulvovaginal Health.* Atualizado em janeiro de 2026. https://www.acog.org/womens-health/faqs/vulvovaginal-health
+4. **ACOG.** *Vaginitis.* https://www.acog.org/womens-health/faqs/vaginitis
+5. **ACOG.** *Disorders of the Vulva: Common Causes of Vulvar Pain, Burning, and Itching.* https://www.acog.org/womens-health/faqs/disorders-of-the-vulva-common-causes-of-vulvar-pain-burning-and-itching
+6. **Ministério da Saúde (Brasil).** *Características das IST.* https://www.gov.br/saude/pt-br/assuntos/saude-de-a-a-z/i/ist/caracteristicas-das-ist
+7. **Ministério da Saúde (Brasil).** *IST — Infecções Sexualmente Transmissíveis.* https://www.gov.br/saude/pt-br/assuntos/saude-de-a-a-z/i/ist/ist
+8. **Ministério da Saúde (Brasil).** *Saúde sexual e saúde reprodutiva.* Cadernos de Atenção Básica, nº 26. https://bvsms.saude.gov.br/bvs/publicacoes/saude_sexual_saude_reprodutiva.pdf
+9. **NHS.** *Urinary tract infections (UTIs).* https://www.nhs.uk/conditions/urinary-tract-infections-utis/
+10. **U.S. Food and Drug Administration (FDA).** *The Facts on Tampons and Tampon Safety.* Troca entre quatro e oito horas, limite máximo de oito horas e sinais de alerta da síndrome do choque tóxico. https://www.fda.gov/consumers/consumer-updates/facts-tampons-and-tampon-safety
+11. **Organização Mundial da Saúde (OMS).** *Bacterial vaginosis.* Atualizado em 21 nov. 2025. https://www.who.int/news-room/fact-sheets/detail/bacterial-vaginosis
 
 **Controle editorial antes da publicação**
 - Revisão por profissional habilitado em ginecologia, urologia, medicina de família ou enfermagem com experiência pertinente.
