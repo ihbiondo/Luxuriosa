@@ -466,3 +466,10 @@ Os Módulos 10 e 12 foram revisados documentalmente e atualizados para v0.2:
 Registro completo: `docs/AUDITORIA-COMPLEMENTAR-MODULOS-10-E-12-2026-11-15.md`.
 
 A revisão documental não substitui revisão clínica, técnica, psicossocial ou jurídica. A página pública de mitos permanece resumida e não deve ser confundida com a versão interna de 24 afirmações.
+
+
+## 20. Proteção dos documentos internos no GitHub Pages — 15/11/2026
+
+A inspeção do artefato do Pages anterior identificou arquivos de `docs/` no pacote gerado, incluindo HTML convertido de módulos internos. Foi adicionado `_config.yml` com exclusão explícita de `docs/`. A correção foi confirmada no deploy GitHub Pages #1104 (run 43725660339): o artefato novo não contém arquivos de `docs/`, e build e deploy concluíram com sucesso.
+
+Limite: o repositório GitHub continua público. A exclusão do site não torna os arquivos-fonte privados nem remove versões históricas do Git. Se confidencialidade real for necessária, os documentos devem ser movidos para repositório privado ou removidos do repositório público com tratamento do histórico, após decisão do proprietário.
