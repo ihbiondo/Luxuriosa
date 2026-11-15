@@ -23,6 +23,21 @@
 - Corrigida URL duplicada no caminho da referência de prevenção de IST e removida a repetição da mesma fonte na lista.
 - Conteúdo clínico visível não foi alterado nessa correção.
 
+## Revisão complementar — PrEP, I=I e testagem
+
+### P1 — PrEP: explicitar que as modalidades não são universais
+- **Arquivos:** `docs/educacao/modulos/05-ist-hiv-prevencao-combinada.md` e `educacao/temas/prevencao-combinada.html`.
+- O PCDT de PrEP 2025 descreve modalidade oral diária e modalidade sob demanda para perfis específicos, com critérios de elegibilidade, exames e seguimento. A ferramenta oficial do Ministério da Saúde detalha que a modalidade sob demanda não se aplica a todas as pessoas ou práticas.
+- **Correção:** os textos agora explicam a existência das modalidades sem publicar posologia nem sugerir autoseleção. Reforçam confirmação de ausência de HIV, testagem periódica e acompanhamento clínico.
+
+### P1 — I=I: acrescentar fonte normativa direta
+- **Arquivos:** Módulo 5 e guia público de prevenção combinada.
+- A Nota Técnica nº 376/2023 do Ministério da Saúde orienta a incorporação do conceito I=I e risco zero de transmissão sexual ao cuidado contínuo.
+- **Correção:** acrescentada referência direta à nota técnica e reforçado que a afirmação depende de tratamento e carga viral indetectável sustentada, não se estendendo a outras IST ou automaticamente a outras vias de transmissão.
+
+### P2 — Janelas diagnósticas
+- Os artigos mantêm a orientação de que não existe janela única para todas as IST e todos os testes. O Ministério da Saúde descreve janela diagnóstica também para os testes de HIV; a recomendação editorial permanece encaminhar o leitor ao serviço para definir exame e eventual repetição, em vez de publicar um prazo universal.
+
 ## Pontos conferidos sem alteração substantiva
 - A PEP para HIV tem limite de 72 horas e duração de 28 dias quando indicada.
 - Para hepatite B, a página oficial informa atendimento inicial preferencial em até 24 horas, podendo ocorrer até 14 dias; vacina e, em algumas situações, imunoglobulina dependem do histórico e da avaliação.
@@ -42,5 +57,5 @@
 ## Limitações e próximos passos
 - Não foi feita revisão linha a linha de todos os 23 artigos públicos.
 - A checagem documental não equivale à validação clínica por profissional habilitado.
-- Ainda falta rastrear cada afirmação clínica importante do Módulo 5 à fonte específica que a sustenta, incluindo janelas diagnósticas por agente e método, indicações de PrEP e critérios de vacinação.
+- Ainda falta rastrear cada afirmação clínica importante do Módulo 5 à fonte específica que a sustenta, incluindo janelas diagnósticas específicas por agente e método e validação profissional final dos critérios de PrEP e vacinação.
 - Antes de publicação, confirmar novamente versões vigentes dos protocolos e submeter o conteúdo à revisão profissional.
