@@ -1,0 +1,81 @@
+name: Auditoria de limpeza do histórico público
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/history-purge-audit.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    name: Simular remoção de painéis e backend do histórico
+    runs-on: ubuntu-latest
+    steps:
+      - name: Instalar git-filter-repo
+        run: |
+          python -m pip install --user git-filter-repo
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+
+      - name: Clonar todas as referências públicas
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          git clone --mirror "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY.git" /tmp/luxuriosa-public.git
+
+      - name: Simular a limpeza em todas as branches e tags
+        run: |
+          set -euo pipefail
+          cd /tmp/luxuriosa-public.git
+          {
+            echo "AUDITORIA DE HISTÓRICO — LUXURIOSA"
+            echo "Data UTC: $(date -u +%FT%TZ)"
+            echo "Branches antes: $(git for-each-ref refs/heads --format='%(refname)' | wc -l)"
+            echo "Tags antes: $(git for-each-ref refs/tags --format='%(refname)' | wc -l)"
+            echo "Commits alcançáveis antes: $(git rev-list --all --count)"
+          } | tee /tmp/history-audit.txt
+
+          git filter-repo --sensitive-data-removal --invert-paths --force \
+            --path supabase \
+            --path .github/scripts \
+            --path 442 \
+            --path gestao-privada-8f2c6d.html \
+            --path lux-central \
+            --path lux-gestao-pedidos \
+            --path previa/lux-central \
+            --path previa/lux-gestao-pedidos \
+            --path previa/lux-gestao \
+            2>&1 | tee /tmp/filter-repo-audit.log
+
+          {
+            echo
+            echo "RESULTADO APÓS FILTRO"
+            echo "Branches depois: $(git for-each-ref refs/heads --format='%(refname)' | wc -l)"
+            echo "Tags depois: $(git for-each-ref refs/tags --format='%(refname)' | wc -l)"
+            echo "Commits alcançáveis depois: $(git rev-list --all --count)"
+            echo "Refs alteradas:"
+            cat .git/filter-repo/changed-refs
+            echo
+            echo "PR refs alteradas:"
+            (grep -E '^refs/pull/[0-9]+/head$' .git/filter-repo/changed-refs || true)
+            echo
+            echo "Primeiros commits reescritos e LFS:"
+            (grep -E 'First Changed Commit|LFS Objects Orphaned|NOTE:' /tmp/filter-repo-audit.log || true)
+          } | tee -a /tmp/history-audit.txt
+
+          if git rev-list --objects --all | awk '{print $2}' | grep -E '^(supabase/|\.github/scripts/|442/|gestao-privada-8f2c6d\.html$|lux-central/|lux-gestao-pedidos/|previa/lux-central/|previa/lux-gestao-pedidos/|previa/lux-gestao/)'; then
+            echo "ERRO: ainda existem caminhos administrativos no histórico filtrado."
+            exit 1
+          fi
+
+          echo "Verificação: nenhum dos caminhos administrativos selecionados permanece alcançável." | tee -a /tmp/history-audit.txt
+
+      - name: Publicar relatório da simulação
+        uses: actions/upload-artifact@v4
+        with:
+          name: auditoria-historico-publico
+          path: /tmp/history-audit.txt
+          retention-days: 14
