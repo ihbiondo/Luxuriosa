@@ -102,7 +102,7 @@ Pontos que exigem continuidade:
 
 ## 7. Proteção dos documentos internos no site público
 
-A inspeção do artefato do GitHub Pages da implantação de 15/11/2026 identificou que a pasta `docs/` era incluída no pacote gerado, embora não estivesse na navegação nem no sitemap. Foi adicionado `_config.yml` com exclusão explícita de `docs/` na geração Jekyll. A correção depende da confirmação no próximo artefato de deploy. Como o repositório GitHub é público, a exclusão do Pages não oculta os arquivos-fonte do GitHub; armazenamento privado separado é necessário para confidencialidade real.
+A inspeção do artefato do GitHub Pages da implantação de 15/11/2026 identificou que a pasta `docs/` era incluída no pacote gerado, embora não estivesse na navegação nem no sitemap. Foi adicionado `_config.yml` com exclusão explícita de `docs/` na geração Jekyll. A correção foi confirmada no build/deploy GitHub Pages #1104 (run 43725660339): o artefato foi inspecionado e não contém arquivos da pasta `docs/`. Como o repositório GitHub é público, a exclusão do Pages não oculta os arquivos-fonte do GitHub; armazenamento privado separado ou remoção do repositório público, com tratamento do histórico, é necessário para confidencialidade real.
 
 ## 8. Pendências que impedem declarar a biblioteca integralmente pronta
 
