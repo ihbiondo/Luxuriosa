@@ -287,3 +287,36 @@ Foram examinados os conceitos de prazer, desejo espontâneo e responsivo, excita
 - Página pública `educacao/temas/consentimento-e-limites.html` foi conferida e não alterada; não foram encontrados conflitos que exigissem mudança pública nesta rodada.
 - Auditoria específica em `docs/AUDITORIA-PSICOSSOCIAL-RELACIONAMENTOS-2026-11-15.md`.
 - Revisão documental; avaliação profissional psicossocial e revisão especializada em violência permanecem pendentes. Nenhuma publicação em produção.
+
+
+## 14. Revisão de coerência — Módulo 6 e articulação com os Módulos 7 e 8 (15/11/2026)
+
+**Arquivos examinados:**
+- `docs/educacao/modulos/06-consentimento-limites-seguranca.md`;
+- `docs/educacao/modulos/07-relacionamentos-comunicacao-intimidade.md`;
+- `docs/educacao/modulos/08-prazer-resposta-sexual-dificuldades.md`;
+- `educacao/temas/consentimento-e-limites.html` (página pública).
+
+### Ajustes no Módulo 6
+
+1. **Consentimento contínuo sem formalismo mecânico:** esclarecido que não se exige uma confirmação verbal repetida a cada instante; exige-se atenção à comunicação e aos limites, interrupção diante de hesitação/desconforto e respeito absoluto à recusa verbal.
+2. **Capacidade para decidir:** substituída a formulação genérica sobre “incapacitação importante” por orientação funcional: se álcool ou outras substâncias prejudicarem compreensão, decisão ou comunicação, ou houver dúvida sobre a capacidade naquele momento, não avançar. Idade, capacidade e validade jurídica continuam sujeitas à legislação e ao contexto.
+3. **Alinhamento clínico da PEP:** removida a referência às “primeiras duas horas” como prazo preferencial neste módulo. Mantida a orientação de avaliação o mais rápido possível e no máximo em 72 horas, coerente com o padrão documental adotado no Módulo 5; não é orientação de autoseleção nem substitui avaliação.
+4. **Articulação explícita com os Módulos 7 e 8:** acrescentada seção que distingue negociação segura de coerção, esclarece que acordos não substituem consentimento atual e reforça que desejo responsivo e respostas fisiológicas não equivalem a consentimento.
+5. **Limite jurídico:** explicitado que a estrutura livre, informada, específica, contínua e revogável é educativa e não deve ser apresentada como transcrição de uma definição legal brasileira universal.
+
+### Resultado da leitura cruzada
+
+- **Módulo 6 → Módulo 7:** coerência confirmada. O Módulo 7 condiciona comunicação e resolução de conflitos à segurança, reconhece coerção e controle e afasta terapia de casal/mediação como recomendação automática em contextos de violência. O Módulo 6 agora remete expressamente a esse limite.
+- **Módulo 6 → Módulo 8:** coerência confirmada. O Módulo 8 já afirma que lubrificação, ereção e desejo responsivo não substituem consentimento e que ninguém deve insistir em atividade dolorosa. O Módulo 6 torna essa conexão explícita.
+- **Módulo 7 → Módulo 8:** sem contradição identificada. Diferença de desejo não é tratada como falta de amor/compromisso; ninguém deve sexo ou toque para evitar conflito; dificuldades sexuais são tratadas sem obrigação de desempenho.
+- **Página pública de consentimento:** a leitura não identificou conflito conceitual com os módulos. A página já explica liberdade, especificidade, continuidade, reversibilidade, efeitos de pressão, resposta corporal e o limite de que consentimento não substitui segurança. Não foi alterada nesta rodada para evitar duplicação; permanece uma página introdutória, menos abrangente que o módulo interno.
+
+### Fontes e limites
+
+- [OMS — Comprehensive sexuality education, 11/03/2026](https://www.who.int/news-room/fact-sheets/detail/comprehensive-sexuality-education): consentimento, privacidade, integridade corporal, relações, comunicação, decisão e busca de apoio.
+- [OMS — Violence against women, 18/06/2026](https://www.who.int/news-room/fact-sheets/detail/violence-against-women): violência por parceiro íntimo inclui coerção sexual, abuso psicológico e comportamentos controladores.
+- [UNESCO — International technical guidance on sexuality education, 2018](https://unesdoc.unesco.org/ark:/48223/pf0000260770): consentimento, privacidade, integridade corporal e fatores que afetam a capacidade de consentir, incluindo substâncias, violência, pobreza e relações de poder.
+- [Ministério da Saúde — PEP](https://www.gov.br/saude/pt-br/assuntos/saude-de-a-a-z/a/aids-hiv/pep): avaliação e início o mais rápido possível, até 72 horas.
+
+A revisão é documental e de coerência editorial; não equivale a revisão jurídica, clínica ou psicossocial profissional. A página pública foi apenas conferida, sem alteração. O Módulo 6 continua interno e não está aprovado para publicação.
