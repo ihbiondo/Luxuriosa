@@ -1098,6 +1098,7 @@ input:focus,select:focus{border-color:#ff70ba;box-shadow:0 0 0 3px rgba(240,79,1
         const requestedPage = new URLSearchParams(window.location.search).get("redirect");
         let resumeCheckout = false;
         let returnToClub = new URLSearchParams(window.location.search).get("next") === "clube.html";
+        const returnToConquistas = new URLSearchParams(window.location.search).get("next") === "portal/conquistas/";
         const returnToPortal = new URLSearchParams(window.location.search).get("next") === "portal/";
         try {
           resumeCheckout = localStorage.getItem("luxuriosa_checkout_after_login") === "1";
@@ -1111,6 +1112,10 @@ input:focus,select:focus{border-color:#ff70ba;box-shadow:0 0 0 3px rgba(240,79,1
         }
         if (returnToClub) {
           window.location.replace("/clube.html");
+          return;
+        }
+        if (returnToConquistas) {
+          window.location.replace("/portal/conquistas/");
           return;
         }
         if (returnToPortal) {
@@ -1337,6 +1342,7 @@ input:focus,select:focus{border-color:#ff70ba;box-shadow:0 0 0 3px rgba(240,79,1
           options: {
             emailRedirectTo: window.location.origin + window.location.pathname +
               (new URLSearchParams(window.location.search).get("next") === "clube.html" ? "?next=clube.html" :
+                new URLSearchParams(window.location.search).get("next") === "portal/conquistas/" ? "?next=portal%2Fconquistas%2F" :
                 new URLSearchParams(window.location.search).get("next") === "portal/" ? "?next=portal%2F" : ""),
             data: {
               username,
