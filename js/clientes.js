@@ -198,9 +198,9 @@
     if (cidadeNormalizada === "bauru" && estado === "SP") {
       var avisoFrete = "Entrega em Bauru-SP: tarifa conforme sua modalidade de participação no Clube.";
       var avisoPrazo = " Prazo operacional previsto: até 30 minutos após a confirmação do pagamento, contado dentro da janela de entrega. Pagamentos fora da janela entram na próxima abertura.";
-      var avisoMinimo = " O subtotal mínimo para pagamento automático é R$ 50,00.";
-      if (subtotal > 0 && subtotal < 50) {
-        avisoMinimo += " Faltam " + formatarPreco(50 - subtotal) + " em produtos para atingir o mínimo.";
+      var avisoMinimo = " O pedido deve ter mais de R$ 10,00 em produtos.";
+      if (subtotal > 0 && subtotal <= 10) {
+        avisoMinimo += " Faltam " + formatarPreco(10.01 - subtotal) + " para atingir o mínimo.";
       }
       aviso.textContent = avisoFrete + avisoPrazo + avisoMinimo;
       return;
@@ -208,7 +208,7 @@
 
     var cidadesCheckout = ["agudos", "pederneiras", "piratininga", "lencois paulista"];
     if (estado === "SP" && cidadesCheckout.indexOf(cidadeNormalizada) !== -1) {
-      aviso.textContent = "Entrega em " + cidade + "/SP: o frete e o pedido mínimo são calculados pela rota do endereço e aparecem antes do pagamento. Limite operacional: até 55 km pela rota. Pedágios, quando houver, são informados separadamente."
+      aviso.textContent = "Entrega em " + cidade + "/SP: o frete e o pedido mínimo são calculados pela rota do endereço e aparecem antes do pagamento. Pedido mínimo: mais de R$ 49,00 em produtos. Limite operacional: até 55 km pela rota."
       return;
     }
 
@@ -477,12 +477,14 @@
       var reviewState = String(dadosAtuais.address.state || "").trim().toUpperCase();
       if (reviewCity === "bauru" && reviewState === "SP") {
         paymentMinimumInfo.hidden = false;
-        paymentMinimumInfo.textContent = integridade.subtotal < 50
-          ? "Atenção: para pagar pelo site com Pix ou cartão em Bauru, o subtotal mínimo de produtos é R$ 50,00. Seu pedido está em " + formatarPreco(integridade.subtotal) + "; faltam " + formatarPreco(50 - integridade.subtotal) + ". O benefício de entrega do Clube não altera o mínimo do checkout. Você também pode encaminhar a solicitação pelo WhatsApp e consultar as condições."
-          : "Para pagamento automático pelo site com Pix ou cartão em Bauru, o subtotal mínimo de produtos é R$ 50,00. A condição de entrega do Clube não altera esse mínimo.";
+        paymentMinimumInfo.textContent = integridade.subtotal <= 10
+          ? "Atenção: o pedido em Bauru deve ter mais de R$ 10,00 em produtos. Seu pedido está em " + formatarPreco(integridade.subtotal) + "; acrescente pelo menos " + formatarPreco(10.01 - integridade.subtotal) + "."
+          : "Pedido mínimo em Bauru: mais de R$ 10,00 em produtos.";
       } else {
-        paymentMinimumInfo.hidden = true;
-        paymentMinimumInfo.textContent = "";
+        paymentMinimumInfo.hidden = false;
+        paymentMinimumInfo.textContent = integridade.subtotal <= 49
+          ? "Atenção: para entregas fora de Bauru, o pedido deve ter mais de R$ 49,00 em produtos. Seu pedido está em " + formatarPreco(integridade.subtotal) + "; acrescente pelo menos " + formatarPreco(49.01 - integridade.subtotal) + "."
+          : "Pedido mínimo fora de Bauru: mais de R$ 49,00 em produtos.";
       }
     }
 
@@ -575,8 +577,9 @@
     var cidadePagamento = String(dadosAtuais.address.city || "").normalize("NFD")
       .replace(/[\u0300-\u036f]/g, "").trim().toLowerCase();
     var estadoPagamento = String(dadosAtuais.address.state || "").trim().toUpperCase();
-    if (cidadePagamento === "bauru" && estadoPagamento === "SP" && integridade.subtotal < 50) {
-      avisar("Para pagamento automático com Pix ou cartão em Bauru, o subtotal mínimo de produtos é R$ 50,00. A condição de entrega do Clube não altera o mínimo. Abaixo desse valor, revise o carrinho ou encaminhe o pedido pelo WhatsApp para consultar as condições.", "error");
+    var minimoProdutos = cidadePagamento === "bauru" && estadoPagamento === "SP" ? 10 : 49;
+    if (integridade.subtotal <= minimoProdutos) {
+      avisar("O pedido deve ter mais de R$ " + minimoProdutos.toFixed(2).replace(".", ",") + " em produtos para entrega nesse destino. Abaixo desse valor, acrescente produtos ao carrinho.", "error");
       return;
     }
 
