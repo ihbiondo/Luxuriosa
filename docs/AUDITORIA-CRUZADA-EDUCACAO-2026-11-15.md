@@ -458,7 +458,7 @@ A leitura estrutural dos 23 artigos confirmou avisos informativos e referências
 ## 19. Revisão documental complementar dos Módulos 10 e 12 — 15/11/2026
 
 Os Módulos 10 e 12 foram revisados documentalmente e atualizados para v0.2:
-- Módulo 10: bibliografia ampliada com ACOG, Planned Parenthood e literatura de recomendações de uso seguro de vibradores; explicitados os limites de evidência para limpeza universal, materiais, anéis constritivos, bombas e práticas de contenção.
+- Módulo 10: bibliografia conferida e duplicações removidas, mantendo ACOG, Planned Parenthood e literatura de recomendações de uso seguro de vibradores; explicitados os limites de evidência para limpeza universal, materiais, anéis constritivos, bombas e práticas de contenção.
 - Módulo 12: incluídas as orientações do Ministério da Saúde sobre início preferencial da PEP-HIV nas primeiras duas horas (máximo 72h; 28 dias quando indicada), a orientação de contracepção de emergência em até 120 horas com delimitação do escopo da Nota Técnica nº 2/2025, e fontes específicas de I=I.
 - Corrigido o mapa interno do Módulo 12: os 12 módulos estão em v0.2 após a revisão documental, mas nenhum foi validado externamente por profissionais.
 - Matriz editorial atualizada.
