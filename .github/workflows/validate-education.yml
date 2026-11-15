@@ -14,6 +14,19 @@ on:
       - "scripts/validar_educacao.py"
       - "sitemap.xml"
       - ".github/workflows/validate-education.yml"
+  pull_request:
+    branches: [main]
+    paths:
+      - "educacao/**"
+      - "experiencias/**"
+      - "js/educacao.js"
+      - "js/educacao-interatividade.js"
+      - "js/experiencias.js"
+      - "js/signos.js"
+      - "js/signo-detalhe.js"
+      - "scripts/validar_educacao.py"
+      - "sitemap.xml"
+      - ".github/workflows/validate-education.yml"
   workflow_dispatch:
 
 permissions:
