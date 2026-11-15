@@ -246,6 +246,47 @@
     })[Math.floor(normalized / 30)] || null;
   }
 
+  function showSignJourney(kind) {
+    const panel = document.getElementById("signJourney");
+    const heading = document.getElementById("signJourneyTitle");
+    const description = document.getElementById("signJourneyDescription");
+    const firstLink = document.getElementById("signJourneyLinkOne");
+    const secondLink = document.getElementById("signJourneyLinkTwo");
+    if (!panel || !heading || !description || !firstLink || !secondLink) return;
+
+    const journeys = {
+      solar: {
+        title: "Agora que você descobriu seu signo, o que vem depois?",
+        description: "Compare combinações astrológicas por diversão ou explore os perfis simbólicos dos doze signos.",
+        links: [
+          { href: "#compatibilityForm", label: "Comparar combinações" },
+          { href: "#signGrid", label: "Explorar os 12 signos" }
+        ],
+        anchor: document.getElementById("solarShareStudio")
+      },
+      compatibility: {
+        title: "Uma leitura simbólica pode abrir espaço para uma boa conversa.",
+        description: "Astrologia é entretenimento. Para aprofundar o tema das relações, conheça conteúdos sobre diálogo, autonomia e limites.",
+        links: [
+          { href: "/educacao/temas/relacoes-saudaveis-e-comunicacao.html", label: "Ler sobre relações saudáveis" },
+          { href: "/experiencias/?tipo=couple", label: "Explorar Conexão a dois" }
+        ],
+        anchor: document.querySelector(".compatibility")
+      }
+    };
+
+    const journey = journeys[kind];
+    if (!journey) return;
+    heading.textContent = journey.title;
+    description.textContent = journey.description;
+    firstLink.href = journey.links[0].href;
+    firstLink.textContent = journey.links[0].label + " →";
+    secondLink.href = journey.links[1].href;
+    secondLink.textContent = journey.links[1].label + " →";
+    if (journey.anchor) journey.anchor.after(panel);
+    panel.hidden = false;
+  }
+
   function renderSign(sign, method, note) {
     document.getElementById("resultSymbol").textContent = sign.glyph;
     document.getElementById("resultName").textContent = sign.name;
@@ -272,6 +313,7 @@
     const studio = document.getElementById("solarShareStudio");
     if (studio) studio.hidden = false;
     if (solarShare) solarShare.setSign(sign);
+    showSignJourney("solar");
   }
 
   function showCalculationError(message) {
@@ -282,6 +324,8 @@
     result.hidden = true;
     const studio = document.getElementById("solarShareStudio");
     if (studio) studio.hidden = true;
+    const journey = document.getElementById("signJourney");
+    if (journey) journey.hidden = true;
   }
 
   function fillCatalog(signs, signsById) {
@@ -365,6 +409,7 @@
       const summary = describeCombination(a, b, data.classification);
       document.getElementById("compatibilityText").textContent = summary;
       document.getElementById("compatibilityResult").hidden = false;
+      showSignJourney("compatibility");
 
       window.dispatchEvent(new CustomEvent("lux:experience-finished", { detail: {
         attempt_id: crypto.randomUUID(),
