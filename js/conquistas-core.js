@@ -61,9 +61,12 @@ export function calculateAchievementStats(results) {
       .map(item => item && item.activity_id)
       .filter(id => Object.prototype.hasOwnProperty.call(ACTIVITY_NAMES, id))
   );
+  const recognisedRows = rows.filter(item =>
+    item && Object.prototype.hasOwnProperty.call(ACTIVITY_NAMES, item.activity_id)
+  );
   const distinctCategories = new Set(
-    rows
-      .map(item => item && item.category)
+    recognisedRows
+      .map(item => item.category)
       .filter(category => typeof category === "string" && category.length > 0)
   );
 
