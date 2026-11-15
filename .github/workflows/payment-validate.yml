@@ -199,7 +199,7 @@ jobs:
           mkdir -p "$site"
           tar --exclude=.git --exclude=node_modules -cf - -C "$GITHUB_WORKSPACE" . | tar -xf - -C "$site"
 
-          supabase status --env --output-format text > "$test_root/supabase.env"
+          supabase status --output env --output-format text > "$test_root/supabase.env"
           set -a
           source "$test_root/supabase.env"
           set +a
