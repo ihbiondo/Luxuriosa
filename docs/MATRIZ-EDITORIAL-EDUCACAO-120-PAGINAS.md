@@ -29,9 +29,9 @@ Cada página deve identificar fontes, data real de revisão, escopo e limites. N
 | 7. Relações e intimidade | Rascunho interno v0.2 — revisão documental em 15/11/2026 | Revisão psicossocial externa |
 | 8. Prazer e resposta sexual | Rascunho interno v0.2 — revisão documental em 15/11/2026 | Revisão clínica externa; conferir critérios de avaliação e sinais de alerta |
 | 9. Saúde íntima e autocuidado | Rascunho interno v0.2 — revisão documental em 15/11/2026 | Revisão clínica externa; validar recomendações de higiene e alertas |
-| 10. Acessórios e segurança | Rascunho interno v0.1 | Revisão clínica e técnica; validar materiais, compatibilidade, limpeza, dispositivos eletrônicos e alertas |
+| 10. Acessórios e segurança | Rascunho interno v0.2 — revisão documental em 15/11/2026 | Revisão clínica e técnica externa; validar materiais, compatibilidade, limpeza, dispositivos eletrônicos e alertas |
 | 11. Violência sexual, apoio e direitos | Rascunho interno v0.2 — revisão documental em 15/11/2026 | Revisão jurídica, clínica e psicossocial; delimitar corretamente a Lei nº 15.516/2026 |
-| 12. Mitos e caminhos de atendimento | Rascunho interno v0.1 — sem revisão documental integral nesta rodada | Revisão clínica e checagem individual das afirmações |
+| 12. Mitos e caminhos de atendimento | Rascunho interno v0.2 — revisão documental em 15/11/2026 | Revisão clínica e checagem individual das afirmações |
 
 Os doze módulos possuem rascunhos internos em versões diferentes, ainda não publicados e sem revisão profissional externa. As versões v0.2 indicam revisão documental interna, não validação clínica, jurídica ou psicossocial. Nenhum conteúdo deve ser tratado como material profissionalmente validado.
 
