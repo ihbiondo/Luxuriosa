@@ -179,6 +179,13 @@ async function completeSolarSign(page) {
   await page.locator("#experienceSaveButton").click();
   await page.locator("#experienceSaveStatus").waitFor({ state: "visible", timeout: 15000 });
   assert.match(await page.locator("#experienceSaveStatus").innerText(), /salvo no seu histórico privado/i);
+
+  await page.setViewportSize({ width: 390, height: 844 });
+  await assertNoHorizontalOverflow(page, "Leitura solar e próximo passo em 390 px");
+  await captureScreenshot(page, "signo-solar-proximo-passo-mobile-390");
+  await page.setViewportSize({ width: 1440, height: 1000 });
+  await assertNoHorizontalOverflow(page, "Leitura solar e próximo passo em 1440 px");
+  await captureScreenshot(page, "signo-solar-proximo-passo-desktop-1440");
 }
 
 async function completeSignCompatibility(page) {
@@ -201,6 +208,13 @@ async function completeSignCompatibility(page) {
   await page.locator("#experienceSaveButton").click();
   await page.locator("#experienceSaveStatus").waitFor({ state: "visible", timeout: 15000 });
   assert.match(await page.locator("#experienceSaveStatus").innerText(), /salvo no seu histórico privado/i);
+
+  await page.setViewportSize({ width: 390, height: 844 });
+  await assertNoHorizontalOverflow(page, "Compatibilidade e próximo passo em 390 px");
+  await captureScreenshot(page, "compatibilidade-proximo-passo-mobile-390");
+  await page.setViewportSize({ width: 1440, height: 1000 });
+  await assertNoHorizontalOverflow(page, "Compatibilidade e próximo passo em 1440 px");
+  await captureScreenshot(page, "compatibilidade-proximo-passo-desktop-1440");
 }
 
 async function readResultsForUser(userId) {
