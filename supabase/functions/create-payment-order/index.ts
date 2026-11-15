@@ -407,19 +407,29 @@ Deno.serve(async (req: Request) => {
     if (fulfillmentType === "scheduled" && rule.scheduled_delivery_enabled !== true) {
       return reply({ error: "A entrega agendada ainda não está disponível para esse destino. Escolha entrega imediata ou fale com a Luxuriosa." }, 409, origin);
     }
-    const routeDestination = [
-      deliveryAddress.street + ", " + deliveryAddress.number,
-      deliveryAddress.district,
-      deliveryAddress.city,
-      deliveryAddress.state,
-      deliveryAddress.zip,
-      "Brasil"
-    ].filter(Boolean).join(", ");
-    const route = await calculateMotorcycleRoundTrip(String(rule.freight_origin_cep || ""), routeDestination);
-    if (!Number.isFinite(route.distanceKm) || route.distanceKm <= 0 || route.distanceKm > 55) {
-      return reply({ error: "Esse endereço está fora da área de entrega (limite de 55 km pela rota de motocicleta)." }, 409, origin);
+    const isBauruDelivery = cityNormalized === "bauru" && deliveryAddress.state === "SP";
+    let route: RouteFreight | null = null;
+    let distanceKm = 0;
+    let tier: { minimum: number } | null = null;
+
+    if (isBauruDelivery) {
+      tier = { minimum: Number(rule.minimum_order_up_to_12km_cents) };
+    } else {
+      const routeDestination = [
+        deliveryAddress.street + ", " + deliveryAddress.number,
+        deliveryAddress.district,
+        deliveryAddress.city,
+        deliveryAddress.state,
+        deliveryAddress.zip,
+        "Brasil"
+      ].filter(Boolean).join(", ");
+      route = await calculateMotorcycleRoundTrip(String(rule.freight_origin_cep || ""), routeDestination);
+      distanceKm = route.distanceKm;
+      if (!Number.isFinite(distanceKm) || distanceKm <= 0 || distanceKm > 55) {
+        return reply({ error: "Esse endereço está fora da área de entrega (limite de 55 km pela rota de motocicleta)." }, 409, origin);
+      }
+      tier = freightTier(distanceKm, rule);
     }
-    const tier = freightTier(route.distanceKm, rule);
     if (!tier || !Number.isSafeInteger(tier.minimum) || tier.minimum < 0) {
       return reply({ error: "A faixa de distância ou o pedido mínimo desse destino ainda não está configurado." }, 409, origin);
     }
@@ -478,15 +488,14 @@ Deno.serve(async (req: Request) => {
     const planCode = deliveryPlan?.plan_code === "vip" ? "vip"
       : deliveryPlan?.plan_code === "supporter" ? "supporter" : null;
 
-    const distanceKm = route.distanceKm;
-    let baseFeeCents = distanceKm <= 30 ? 2000 : 7000;
-    if (isClubMember) baseFeeCents = distanceKm <= 30 ? 1000 : 5000;
+    let baseFeeCents = isBauruDelivery ? 2000 : (distanceKm <= 30 ? 4000 : 7000);
+    if (isClubMember) baseFeeCents = isBauruDelivery ? 1000 : (distanceKm <= 30 ? 3000 : 5000);
     if (planCode === "supporter") {
       baseFeeCents = distanceKm <= 30 ? 0 : (fulfillmentType === "scheduled" ? 1500 : 3000);
     } else if (planCode === "vip") {
       baseFeeCents = 0;
     }
-    const tollCents = route.totalTollCents;
+    const tollCents = route?.totalTollCents ?? 0;
     const shippingCents = baseFeeCents + tollCents;
     if (!Number.isSafeInteger(shippingCents) || shippingCents < 0 || shippingCents > 1000000) {
       return reply({ error: "O frete calculado ultrapassou o limite permitido. Fale com a Luxuriosa." }, 409, origin);
@@ -754,7 +763,7 @@ Deno.serve(async (req: Request) => {
       checkoutItems.push({
         quantity: 1,
         price: shippingCents,
-        description: "Entrega " + (fulfillmentType === "scheduled" ? "agendada" : "imediata") + " · " + route.distanceKm.toFixed(1) + " km" + (tollCents > 0 ? " · pedágio incluso" : "")
+        description: "Entrega " + (fulfillmentType === "scheduled" ? "agendada" : "imediata") + (route ? " · " + route.distanceKm.toFixed(1) + " km" : " · Bauru") + (tollCents > 0 ? " · pedágio incluso" : "")
       });
     }
 
