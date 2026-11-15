@@ -288,7 +288,9 @@ try {
   assert.ok(solarResult, "A leitura solar deve usar o identificador oficial sign_profile.");
   assert.equal(solarResult.category, "astrologia");
   assert.equal(solarResult.score, null);
-  assert.doesNotMatch(solarResult.result_summary, /1990-05-01|08:30|America\\/Sao_Paulo/i,
+  assert.ok(!solarResult.result_summary.includes("1990-05-01"));
+  assert.ok(!solarResult.result_summary.includes("08:30"));
+  assert.ok(!solarResult.result_summary.includes("America/Sao_Paulo"),
     "Data, horário e fuso de nascimento não podem entrar no histórico.");
 
   await completeSignCompatibility(pageA);
@@ -298,7 +300,7 @@ try {
   assert.ok(compatibilityResult, "A leitura de compatibilidade deve usar o identificador sign_compatibility.");
   assert.equal(compatibilityResult.category, "astrologia");
   assert.equal(compatibilityResult.score, null);
-  assert.match(compatibilityResult.result_title, /Áries \\+ Leão/);
+  assert.equal(compatibilityResult.result_title, "Áries + Leão");
 
   await pageA.goto(`${BASE_URL}/portal/conquistas/`, { waitUntil: "domcontentloaded" });
   await pageA.locator("#conquistasMain").waitFor({ state: "visible", timeout: 15000 });
