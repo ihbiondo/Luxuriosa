@@ -149,3 +149,24 @@
  .privacy-note,.zodiac-disclaimer{font-size:13px;line-height:1.75}
  .catalog-count{font-size:11px}
 }
+
+
+/* Próximos passos contextuais: continuidade sem chamada comercial invasiva. */
+.sign-journey{
+ display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:22px;
+ margin:18px 0;padding:21px 23px;border:1px solid #e2d5eb;border-radius:16px;
+ background:linear-gradient(110deg,#f8f2fa,#fff6fa);color:#493451;
+}
+.sign-journey-copy small{color:#896e97;font-size:10px;font-weight:700;letter-spacing:.14em}
+.sign-journey-copy h2{margin:7px 0 5px;color:#493451;font:500 22px/1.25 var(--serif)}
+.sign-journey-copy p{max-width:650px;margin:0;color:#6d6175;font-size:12px;line-height:1.7}
+.sign-journey-actions{display:flex;flex-direction:column;align-items:flex-start;gap:10px}
+.sign-journey-actions a{color:#a8327b;font-size:11px;font-weight:700;text-decoration:underline;text-underline-offset:3px}
+.sign-journey-actions a:focus-visible{outline:2px solid #c43c88;outline-offset:4px;border-radius:3px}
+@media(max-width:700px){
+ .sign-journey{grid-template-columns:1fr;gap:14px;margin:14px 0;padding:17px;border-radius:14px}
+ .sign-journey-copy h2{font-size:20px}
+ .sign-journey-copy p{font-size:13px}
+ .sign-journey-actions{gap:12px}
+ .sign-journey-actions a{font-size:12px}
+}
