@@ -5,6 +5,8 @@ on:
     branches: [main]
     paths:
       - "educacao/**"
+      - "docs/educacao/**"
+      - "docs/MATRIZ-EDITORIAL-EDUCACAO-120-PAGINAS.md"
       - "experiencias/**"
       - "js/educacao.js"
       - "js/educacao-interatividade.js"
