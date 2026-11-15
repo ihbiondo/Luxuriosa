@@ -231,3 +231,44 @@ Foram examinados o artigo público de contracepção, o artigo de ciclo menstrua
 Os 12 módulos formam uma arquitetura coerente para a biblioteca e têm separação temática razoável. As repetições identificadas são, em geral, úteis como alertas breves, desde que os aprofundamentos permaneçam nos capítulos de referência e os links internos sejam inseridos apenas quando as páginas estiverem efetivamente revisadas e publicadas.
 
 **A auditoria não considera os módulos prontos para publicação.** A PR #132 deve permanecer aberta e em rascunho. Nenhuma alteração desta etapa autoriza merge, deploy ou publicação em produção.
+
+
+## 12. Revisão clínica documental — Módulo 8: prazer, resposta sexual e dificuldades (15/11/2026)
+
+**Arquivo:** `docs/educacao/modulos/08-prazer-resposta-sexual-dificuldades.md`  
+**Versão:** rascunho interno v0.2.  
+**Estado:** revisão documental concluída nesta etapa; não publicado e sem revisão profissional externa.
+
+### Escopo da leitura
+
+Foram examinados os conceitos de prazer, desejo espontâneo e responsivo, excitação subjetiva e respostas genitais, orgasmo e ejaculação, modelos de resposta sexual, critérios gerais para reconhecer dificuldades, disfunção erétil, alterações do desejo, dificuldades orgásmicas/ejaculatórias, dor sexual, encaminhamento e alegações comerciais de “potência” ou “desempenho”.
+
+### Ajustes realizados
+
+1. **Critérios diagnósticos:** acrescentada ressalva explícita de que duração, frequência, contexto e sofrimento clinicamente significativo variam conforme a condição e o sistema de classificação. O prazo de seis meses não deve ser generalizado para todas as disfunções. Diferença de desejo entre parceiros, preferência pessoal ou episódio isolado não constitui, por si só, diagnóstico.
+2. **Tratamentos:** incluída seção de abordagem biopsicossocial e individualizada, cobrindo investigação de fatores associados, revisão de medicamentos pelo prescritor, acompanhamento psicosexual, fisioterapia do assoalho pélvico em situações selecionadas, cuidados locais e tratamentos médicos conforme diagnóstico. O texto não oferece posologia nem substitui avaliação.
+3. **Disfunção erétil:** acrescentada a importância de avaliar saúde cardiovascular/metabólica e de não reduzir o cuidado a uma solução pontual. A redação alerta para a contraindicação de inibidores da PDE5 com nitratos e riociguate, por risco de hipotensão grave; a decisão terapêutica depende de avaliação profissional.
+4. **Testosterona e desejo:** esclarecido que testosterona não é estimulante geral, não existe nível sérico isolado que diagnostique transtorno do desejo e o uso em mulheres é restrito a situações clínicas selecionadas, com benefício moderado, decisão compartilhada e monitoramento. Não apresentar hormônios como suplemento de desempenho.
+5. **Dor e assoalho pélvico:** esclarecido que exercícios de contração/Kegel não são universais e podem ser inadequados quando há tensão muscular excessiva. A fisioterapia pélvica, dilatadores e outros recursos dependem da avaliação e da causa.
+6. **Alegações comerciais:** criada seção que diferencia acessórios de tratamentos clínicos e rejeita promessas de cura, aumento permanente, orgasmo garantido ou efeito universal. Incluído alerta de que produtos de aprimoramento sexual podem conter fármacos não declarados; a referência à FDA é contextual e não permite inferir contaminação de todos os produtos vendidos no Brasil.
+7. **Referências:** adicionadas diretrizes EAU 2026 para disfunção erétil, orientação ISSWSH sobre testosterona, consenso ICSM 2026 sobre classificação e alertas da FDA sobre produtos de aprimoramento sexual. ACOG PB 213 permanece identificado como reafirmado em 2025.
+
+### Fontes consultadas
+
+- [ACOG — Your Sexual Health](https://www.acog.org/womens-health/faqs/your-sexual-health): domínios de desejo, excitação, orgasmo e dor; fatores biopsicossociais e opções gerais de cuidado.
+- [ACOG — Female Sexual Dysfunction, Practice Bulletin 213](https://www.acog.org/clinical/clinical-guidance/practice-bulletin/articles/2019/07/female-sexual-dysfunction): critérios e abordagem de disfunção sexual; reafirmado em 2025.
+- [ACOG — When Sex Is Painful](https://www.acog.org/womens-health/faqs/when-sex-is-painful): dor frequente ou intensa e necessidade de avaliação.
+- [EAU — Management of Erectile Dysfunction, Guidelines on Sexual and Reproductive Health 2026](https://uroweb.org/guidelines/sexual-and-reproductive-health/chapter/management-of-erectile-dysfunction): avaliação clínica, fatores cardiovasculares/metabólicos, opções terapêuticas e contraindicações.
+- [ISSWSH — Clinical Practice Guideline for Systemic Testosterone in Women with HSDD](https://pmc.ncbi.nlm.nih.gov/articles/PMC8064950/): indicação selecionada, avaliação biopsicossocial, monitoramento e limites de segurança.
+- [ICSM 2026 — Definitions, classification, and epidemiology of sexual dysfunction](https://academic.oup.com/smr/article/14/2/qeag028/8685686): critérios por condição e importância do sofrimento clínico, sem um prazo universal.
+- [FDA — Sexual Enhancement and Energy Product Notifications](https://www.fda.gov/drugs/medication-health-fraud-notifications/sexual-enhancement-and-energy-product-notifications): alertas de 2026 sobre ingredientes farmacológicos não declarados em produtos de aprimoramento sexual.
+- [NHS — Ejaculation problems](https://www.nhs.uk/conditions/Ejaculation-problems/): fatores físicos, psicológicos e medicamentosos em dificuldades ejaculatórias.
+
+### Limites e pendências
+
+- A revisão foi documental e não equivale a avaliação clínica, validação por especialista ou revisão sistemática.
+- O ACOG PB 213 é orientação profissional de 2019 reafirmada em 2025; as páginas de orientação ao público não substituem diretrizes brasileiras.
+- Diretrizes EAU e alertas FDA são referências internacionais; antes de publicação, confirmar registro, bula, contraindicações e disponibilidade de tratamentos no Brasil com fontes oficiais nacionais, inclusive Anvisa e protocolos pertinentes.
+- A evidência e as recomendações podem variar por anatomia, condição, idade, menopausa, comorbidades e medicamentos. O texto mantém linguagem geral e não inclui doses.
+- A página pública `educacao/temas/saude-sexual-e-bem-estar.html` já contém uma síntese introdutória de desejo, resposta corporal e dor; foi lida e não recebeu alteração nesta rodada para evitar duplicação. Não existe, entre os arquivos públicos revisados nesta PR, artigo específico sobre tratamento de disfunções sexuais.
+- O Módulo 8 permanece interno. Revisão profissional clínica e validação editorial final são obrigatórias antes de qualquer publicação.
