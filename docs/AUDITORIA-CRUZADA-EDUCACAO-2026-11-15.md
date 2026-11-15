@@ -397,3 +397,15 @@ A Nota Técnica 222/2025 foi formulada com foco na rede de atenção a mulheres 
 - Não foi feita avaliação individual de contraindicações, interações, elegibilidade, início/retomada após contracepção de emergência ou condutas pós-parto.
 - Revisão por ginecologista ou profissional habilitado em planejamento reprodutivo e revisão jurídica da seção de esterilização continuam pendentes.
 - Nenhuma alteração foi publicada em produção.
+
+
+## 17. Revisão clínica documental — ciclo menstrual, fertilidade e reprodução (15/11/2026)
+
+- Módulo 3 atualizado para v0.2: diferenciadas referências FIGO para adultos (24–38 dias, até 8 dias de sangramento e variação dependente da idade) de outras faixas clínicas e dos parâmetros da adolescência.
+- Corrigida a apresentação da ovulação: não ocorre necessariamente no 14º dia; incluída janela fértil biológica aproximada e limites de calendário, aplicativos, muco cervical e testes de LH.
+- Reforçada a orientação para contracepção de emergência sem esperar atraso menstrual, com remissão ao Módulo 4 e limite de até 120 horas conforme método/indicação.
+- Acrescentados critérios do método da amenorreia lactacional, retorno possível da ovulação antes da primeira menstruação pós-parto e mudanças de sangramento com métodos hormonais.
+- Fertilidade alinhada à OMS e à Sociedade Brasileira de Reprodução Humana: avaliação após 12 meses abaixo de 35 anos, após 6 meses a partir de 35 anos e antecipada quando há fatores conhecidos; acima de 40 anos pode ser mais imediata.
+- Artigo público corpo-humano-e-ciclo-menstrual.html ampliado com janela fértil, fecundação, fertilidade, sinais de alerta e fontes atualizadas.
+- Criado AUDITORIA-CICLO-MENSTRUAL-FERTILIDADE-2026-11-15.md.
+- Revisão documental; revisão clínica externa permanece pendente. Nenhuma publicação em produção.
