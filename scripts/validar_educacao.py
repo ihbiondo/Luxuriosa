@@ -174,24 +174,24 @@ def main() -> int:
                 errors.append(f"{rel}: quiz deve indicar fontes para conferir as respostas")
 
             question_blocks = re.findall(
-                r'<fieldset\\b(?=[^>]*class=["\\'][^"\\']*\\bed-question\\b[^"\\']*["\\'])[^>]*>[\\s\\S]*?</fieldset>',
+                r'<fieldset\b[^>]*class="[^"]*\bed-question\b[^"]*"[^>]*>(.*?)</fieldset>',
                 page_text,
-                flags=re.IGNORECASE,
+                flags=re.IGNORECASE | re.DOTALL,
             )
             if len(question_blocks) != 21:
                 errors.append(f"{rel}: esperado quiz com 21 questões; encontrado {len(question_blocks)}")
 
             seen_questions: set[str] = set()
             for index, block in enumerate(question_blocks, start=1):
-                legend = re.search(r'<legend[^>]*>([\\s\\S]*?)</legend>', block, re.IGNORECASE)
-                answer = re.search(r'\\bdata-answer=["\\']([^"\\']+)["\\']', block, re.IGNORECASE)
+                legend = re.search(r'<legend[^>]*>(.*?)</legend>', block, re.IGNORECASE | re.DOTALL)
+                answer = re.search(r'\bdata-answer="([^"]+)"', block, re.IGNORECASE)
                 options = re.findall(
-                    r'<input\\b[^>]*type=["\\']radio["\\'][^>]*value=["\\']([^"\\']+)["\\']',
+                    r'<input\b[^>]*type="radio"[^>]*value="([^"]+)"',
                     block,
                     re.IGNORECASE,
                 )
                 label = re.sub(r'<[^>]+>', ' ', legend.group(1)).strip() if legend else ""
-                normalized = re.sub(r'\\s+', ' ', label).casefold()
+                normalized = re.sub(r'\s+', ' ', label).casefold()
                 if not normalized:
                     errors.append(f"{rel}: questão {index} sem enunciado")
                 elif normalized in seen_questions:
@@ -201,7 +201,7 @@ def main() -> int:
                 if not answer or answer.group(1) not in options:
                     errors.append(f"{rel}: questão {index} sem alternativa correta válida")
                 if len(options) != 3:
-                    errors.append(f"{rel}: questão {index} deve apresentar três alternativas")
+                    errors.append(f"{rel}: questão {index} deve apresentar três alternativas")                    errors.append(f"{rel}: questão {index} deve apresentar três alternativas")
 
         canonical_url = f"{BASE_URL}/{rel.as_posix()}"
         if rel.name == "index.html":
