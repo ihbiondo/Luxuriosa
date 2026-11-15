@@ -174,7 +174,7 @@ def main() -> int:
                 errors.append(f"{rel}: quiz deve indicar fontes para conferir as respostas")
 
             question_blocks = re.findall(
-                r'<fieldset\b[^>]*class="[^"]*\bed-question\b[^"]*"[^>]*>(.*?)</fieldset>',
+                r'(<fieldset\b[^>]*class="[^"]*\bed-question\b[^"]*"[^>]*>.*?</fieldset>)',
                 page_text,
                 flags=re.IGNORECASE | re.DOTALL,
             )
