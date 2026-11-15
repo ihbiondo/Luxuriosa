@@ -49,7 +49,39 @@ O Módulo 11 diferencia a assistência em saúde da comunicação institucional 
 
 Fonte primária: [Lei nº 15.516/2026 — texto integral](https://normas.leg.br/?urn=urn%3Alex%3Abr%3Afederal%3Alei%3A2026-09-22%3B15516).
 
-## 3. Achados de consistência e arquitetura
+## 3. Auditoria estrutural dos 23 artigos públicos
+
+A leitura estrutural dos 23 artigos mapeados identificou dois problemas transversais de apresentação:
+
+### P2 — Navegação com nomenclatura antiga
+
+**Escopo:** os 23 artigos em temas, guias, enciclopédia e curiosidades.
+
+O menu apresentava o texto “Explorar módulos” e o rótulo acessível “Navegação dos cinco módulos”, apesar de a navegação reunir cinco seções da biblioteca (Temas, Enciclopédia, Curiosidades, Guias e Interatividade), não cinco módulos editoriais.
+
+**Correção realizada:** em todos os 23 artigos, o menu agora usa “Explorar a biblioteca” e o rótulo acessível “Navegação da biblioteca”. URLs, destinos, conteúdo educativo, canonical e metadados de indexação foram preservados.
+
+### P2 — Marcadores internos de auditoria no HTML
+
+**Escopo:** sete artigos: saúde sexual e bem-estar, consentimento e limites, prevenção de IST, contracepção, corpo humano e ciclo menstrual, prevenção combinada e segurança digital e privacidade.
+
+Havia parágrafos ocultos com a classe `ed-expansion-marker` e o texto “A auditoria editorial ampliada”. Embora estivessem marcados como ocultos, eram resíduos de processo editorial no HTML.
+
+**Correção realizada:** removidos os marcadores internos das sete páginas em que estavam presentes. O conteúdo educativo visível não foi alterado por essa remoção.
+
+### Limite desta revisão dos 23 artigos
+
+Foi feita uma leitura estrutural dos 23 arquivos (títulos, H1, headings, navegação, datas de atualização, estrutura de fontes, avisos e principais termos de risco), além da correção transversal descrita acima. Isso não equivale a uma revisão clínica ou jurídica linha a linha de todo o conteúdo. Permanecem obrigatórias as checagens individuais das afirmações clínicas e legais, dos links de referência e da acessibilidade.
+
+### Observações de consistência para a próxima rodada
+
+- Preservar a diferença entre páginas-pilar e guias práticos; não fundir páginas apenas por compartilharem palavras-chave.
+- Manter alertas de urgência curtos nos artigos que tratam de exposição ao HIV, violência sexual e possíveis lesões, com aprofundamento no guia ou módulo de referência.
+- Conferir os links oficiais individualmente, pois uma URL existente no HTML não prova que o destino continua válido ou que sustenta a afirmação associada.
+- Conferir se a data visível de atualização corresponde à alteração substantiva mais recente; não atualizar datas apenas por ajustes cosméticos.
+- Conferir autoria institucional e dados estruturados para que não sugiram revisão clínica ou autoria profissional inexistente.
+
+## 4. Achados de consistência e arquitetura
 
 ### P2 — Mapa do Módulo 12 estava incompleto
 
@@ -79,13 +111,13 @@ O Módulo 2 é textual e a regra atual do validador reprova elementos de mídia 
 
 A matriz mapeia 23 artigos e preserva suas URLs. Oito artigos foram revisados para reduzir repetição nesta PR. Ainda falta uma revisão individual dos 23 textos, incluindo atualização de fontes, afirmações clínicas, links, intenção de busca, acessibilidade e metadados. A matriz não substitui essa leitura.
 
-## 4. Verificação pontual de orientações de urgência
+## 5. Verificação pontual de orientações de urgência
 
 - **PEP para HIV:** o Ministério da Saúde informa início o mais rápido possível, preferencialmente nas primeiras duas horas e no máximo em 72 horas; quando indicada, a profilaxia dura 28 dias. Os módulos 5 e 11 devem manter o alerta para procurar atendimento imediatamente, sem transformar o texto em prescrição. Fonte: [Ministério da Saúde — Prevenção](https://www.gov.br/saude/pt-br/assuntos/saude-de-a-a-z/a/aids-hiv/prevencao).
 - **Contracepção de emergência:** a Nota Técnica nº 2/2025 do Ministério da Saúde orienta acesso em até 120 horas e indica levonorgestrel oral ou DIU de cobre como opções disponíveis no SUS. A adequação depende da avaliação e do método. Fonte: [Nota Técnica nº 2/2025 — Ministério da Saúde](https://www.gov.br/saude/pt-br/centrais-de-conteudo/publicacoes/notas-tecnicas/2025/nota-tecnica-no-2-2025-cosaj-cgcriaj-dgci-saps-ms/%40%40download/file).
 - **Lei nº 15.516/2026:** o texto legal prevê comunicação obrigatória à autoridade policial, em até 24 horas, dos casos com indícios ou confirmação de violência sexual, e contém regra específica sobre Conselho Tutelar no contexto descrito na própria lei. O texto do Módulo 11 foi delimitado nesse ponto; a revisão jurídica especializada continua pendente. Fonte: [Lei nº 15.516/2026](https://normas.leg.br/?urn=urn%3Alex%3Abr%3Afederal%3Alei%3A2026-09-22%3B15516).
 
-## 5. Separação editorial e publicidade
+## 6. Separação editorial e publicidade
 
 - Conteúdo educativo não deve inserir chamadas de compra no meio de recomendações clínicas.
 - Enciclopédia de acessórios deve ser informativa, sem transformar descrição comercial em recomendação médica.
@@ -93,13 +125,13 @@ A matriz mapeia 23 artigos e preserva suas URLs. Oito artigos foram revisados pa
 - Conteúdo sobre acessórios, lubrificantes e práticas íntimas pode sofrer restrições de publicidade. Não prometer aprovação ou monetização.
 - A revisão de elegibilidade para anúncios é separada da revisão de qualidade editorial, clínica e jurídica.
 
-## 6. Validação automatizada
+## 7. Validação automatizada
 
 A execução do workflow **Validate Education and Experiences**, run nº 18, associada ao commit `de0c6cc17bf19ee132109728f4125408fb5a6e1c`, terminou com conclusão `success`.
 
 Isso confirma somente que as verificações automatizadas configuradas passaram naquele commit. Não comprova precisão clínica, validade jurídica, revisão profissional, elegibilidade para anúncios ou aprovação para publicação. As alterações desta atualização ainda precisam gerar nova execução do workflow.
 
-## 7. Pendências obrigatórias antes de publicação
+## 8. Pendências obrigatórias antes de publicação
 
 1. Revisão clínica por profissionais habilitados dos módulos 1 a 5 e 8 a 10 e 12.
 2. Revisão psicossocial dos módulos 6, 7 e 11.
@@ -112,7 +144,7 @@ Isso confirma somente que as verificações automatizadas configuradas passaram 
 9. Revisão de acessibilidade, navegação, links, metadados, sitemap e políticas de publicidade por URL.
 10. Aprovação editorial expressa antes de qualquer merge ou publicação.
 
-## 8. Decisão
+## 9. Decisão
 
 Os 12 módulos formam uma arquitetura coerente para a biblioteca e têm separação temática razoável. As repetições identificadas são, em geral, úteis como alertas breves, desde que os aprofundamentos permaneçam nos capítulos de referência e os links internos sejam inseridos apenas quando as páginas estiverem efetivamente revisadas e publicadas.
 
