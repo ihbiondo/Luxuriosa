@@ -96,13 +96,27 @@ async function captureScreenshot(page, filename) {
   await page.evaluate(() => {
     const active = document.activeElement;
     if (active && typeof active.blur === "function") active.blur();
+    document.documentElement.style.setProperty("scroll-behavior", "auto", "important");
+    const header = document.querySelector(".header");
+    if (header) {
+      header.style.setProperty("position", "static", "important");
+      header.style.setProperty("top", "auto", "important");
+    }
     window.scrollTo(0, 0);
   });
-  await page.waitForTimeout(80);
+  await page.waitForTimeout(50);
   await page.screenshot({
     path: `${SCREENSHOT_DIR}/${filename}.png`,
     fullPage: true,
     animations: "disabled"
+  });
+  await page.evaluate(() => {
+    document.documentElement.style.removeProperty("scroll-behavior");
+    const header = document.querySelector(".header");
+    if (header) {
+      header.style.removeProperty("position");
+      header.style.removeProperty("top");
+    }
   });
 }
 
