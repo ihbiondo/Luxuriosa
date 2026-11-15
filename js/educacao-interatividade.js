@@ -1,5 +1,5 @@
 /* Educação Luxuriosa — ferramentas locais de aprendizagem.
- * Nenhuma resposta é enviada, armazenada ou associada a uma pessoa.
+ * Respostas individuais permanecem no navegador; apenas um resumo é salvo se o visitante optar por isso.
  */
 (function () {
   "use strict";
@@ -42,6 +42,14 @@
             ? "Ótimo trabalho."
             : "Revise as explicações para consolidar o conteúdo.");
         if (journey) journey.hidden = false;
+        window.dispatchEvent(new CustomEvent("lux:experience-finished", { detail: {
+          attempt_id: crypto.randomUUID(),
+          activity_id: "knowledge_quiz",
+          result_title: "Quiz de conhecimentos essenciais concluído",
+          result_summary: "Você acertou " + score + " de " + questions.length + " questões. As explicações foram exibidas para apoiar a revisão dos temas.",
+          score: score,
+          score_max: questions.length
+        }}));
       } else {
         result.textContent = "Você respondeu " + answered + " de " + questions.length +
           " questões. Complete as respostas para conferir sua pontuação.";
@@ -58,6 +66,10 @@
         feedback.textContent = "";
       });
       result.textContent = "";
+      const savePanel = document.getElementById("experienceSavePanel");
+      if (savePanel) savePanel.hidden = true;
+      const saveStatus = document.getElementById("experienceSaveStatus");
+      if (saveStatus) { saveStatus.hidden = true; saveStatus.textContent = ""; }
       const journey = document.querySelector(".ed-next-step");
       if (journey) journey.hidden = true;
     });
