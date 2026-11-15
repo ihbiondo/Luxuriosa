@@ -1,10 +1,10 @@
 # Módulo 12 — Mitos, dúvidas frequentes e caminhos para atendimento
 
-**Status:** rascunho editorial v0.1 — material interno para revisão; não publicado  
+**Status:** rascunho editorial v0.2 — revisão documental em 15/11/2026; material interno, não publicado  
 **Público:** pessoas adultas  
 **Função na biblioteca:** capítulo de consulta rápida, orientação inicial e encaminhamento para os módulos aprofundados  
 **Extensão planejada:** cerca de 10 páginas equivalentes  
-**Revisão clínica externa:** não realizada
+**Revisão clínica externa:** não realizada; esta revisão documental não equivale a validação profissional
 
 > **Aviso ao leitor:** este capítulo oferece informação geral e não substitui avaliação, diagnóstico ou tratamento individual. Em caso de dor intensa, sangramento importante, febre com piora do estado geral, reação alérgica grave, violência ou risco imediato, procure atendimento adequado sem esperar uma resposta pela internet.
 
@@ -92,7 +92,7 @@ Desconfie de páginas que:
 
 ### Mito 11 — Contracepção de emergência é abortiva
 
-**Fato:** os métodos orais de contracepção de emergência atuam principalmente atrasando ou impedindo a ovulação; não interrompem uma gravidez já estabelecida. A opção e o momento de uso devem ser discutidos com serviço de saúde ou farmacêutico habilitado, conforme disponibilidade e orientação vigente.
+**Fato:** os métodos orais de contracepção de emergência atuam principalmente atrasando ou impedindo a ovulação; não interrompem uma gravidez já estabelecida. A contracepção de emergência deve ser procurada o quanto antes; a orientação do Ministério da Saúde prevê acesso em até 120 horas (cinco dias), conforme o método disponível e a avaliação do serviço. Não espere a menstruação atrasar para buscar orientação.
 
 ### Mito 12 — Existe um método contraceptivo ideal para todas as pessoas
 
@@ -130,7 +130,7 @@ Desconfie de páginas que:
 
 ### Mito 20 — PEP pode ser iniciada a qualquer momento
 
-**Fato:** a PEP para HIV é uma medida de urgência e precisa ser avaliada e iniciada o mais rápido possível, no máximo em até 72 horas após a exposição, quando indicada. Não espere sintomas nem resultado de teste. Procure atendimento imediatamente.
+**Fato:** a PEP para HIV é uma medida de urgência e precisa ser avaliada e iniciada o mais rápido possível — preferencialmente nas primeiras duas horas, conforme orientação do Ministério da Saúde — e no máximo em até 72 horas após a exposição, quando indicada. Quando indicada, o tratamento dura 28 dias e exige acompanhamento. Não espere sintomas nem resultado de teste; procure atendimento imediatamente.
 
 ## 5. Mitos e fatos: higiene, acessórios e segurança
 
@@ -231,7 +231,7 @@ Use os módulos específicos quando precisar aprofundar um assunto:
 - **Módulo 11 — Violência sexual, apoio e direitos:** acolhimento, SUS e rede de proteção.
 - **Módulo 12 — Mitos, dúvidas frequentes e caminhos para atendimento:** consulta rápida, checagem de informações e encaminhamento aos capítulos de referência.
 
-Este mapa representa a arquitetura editorial planejada. Os doze módulos já possuem rascunhos internos v0.1, mas não são páginas públicas nem material clinicamente, psicossocialmente ou juridicamente revisado.
+Este mapa representa a arquitetura editorial planejada. Os módulos 1 a 9 e 11 possuem rascunhos internos v0.2; os módulos 10 e 12 permanecem em v0.2 após revisão documental desta rodada. Nenhum deles é página pública ou material clinicamente, psicossocialmente ou juridicamente validado. A revisão documental não equivale a revisão profissional externa.
 
 ## 9. Síntese do capítulo
 
@@ -248,6 +248,17 @@ Na dúvida, procure fontes institucionais, observe a data e a finalidade do cont
 5. **Ministério da Saúde (Brasil).** *Diagnóstico das IST.* https://www.gov.br/aids/pt-br/assuntos/ist/diagnostico
 6. **Ministério da Saúde (Brasil).** *Onde encontrar testes rápidos.* https://www.gov.br/aids/pt-br/assuntos/testes-rapidos-1/onde-encontrar
 7. **Organização Mundial da Saúde (OMS).** *Comprehensive sexuality education.* 11 mar. 2026. https://www.who.int/news-room/fact-sheets/detail/comprehensive-sexuality-education
+8. **Ministério da Saúde (Brasil).** *Prevenção — HIV/Aids.* Orientação atual sobre PEP, início preferencial nas primeiras duas horas, limite de 72 horas e duração de 28 dias. https://www.gov.br/saude/pt-br/assuntos/saude-de-a-a-z/a/aids-hiv/prevencao
+9. **Ministério da Saúde (Brasil).** *Nota Técnica nº 376/2023-CGAHV/.DATHI/SVSA/MS.* Incorporação do conceito I=I e risco zero de transmissão sexual com carga viral indetectável sustentada. https://www.gov.br/aids/pt-br/central-de-conteudo/notas-tecnicas/2023/nota-tecnica-no-376-2023-cgahv-dathi-svsa-ms.pdf
+10. **Ministério da Saúde (Brasil).** *Nota Técnica nº 2/2025-COSAJ/CGCRIAJ/DGCI/SAPS/MS.* Orientações de saúde sexual e reprodutiva para adolescentes, incluindo contracepção de emergência em até 120 horas; aplicar apenas dentro do escopo da nota e das orientações nacionais vigentes. https://www.gov.br/saude/pt-br/centrais-de-conteudo/publicacoes/notas-tecnicas/2025/nota-tecnica-no-2-2025-cosaj-cgcriaj-dgci-saps-ms/@@download/file
+11. **American College of Obstetricians and Gynecologists (ACOG).** *Female Sexual Dysfunction: Common Questions and Answers.* American Family Physician, 2025;111(5):433–442. https://www.aafp.org/afp/2025/0500/female-sexual-dysfunction
+
+**Limites desta revisão documental (15/11/2026)**
+- Os mitos foram conferidos por coerência com os módulos temáticos e fontes institucionais, mas não houve revisão clínica externa de cada resposta.
+- A janela diagnóstica varia conforme agente, teste e exposição; não usar este capítulo para definir datas individuais de testagem.
+- A orientação de contracepção de emergência em até 120 horas foi vinculada à Nota Técnica nº 2/2025, cujo escopo específico é saúde sexual e reprodutiva de adolescentes; não extrapolar automaticamente critérios de elegibilidade ou fluxos além desse escopo.
+- A PEP-HIV é distinta das medidas pós-exposição para hepatites e outras IST; a janela de 72 horas refere-se à PEP para HIV.
+- Canais e disponibilidade dos serviços devem ser reconfirmados na rede local antes de qualquer publicação ou atualização.
 
 **Controle editorial antes da publicação**
 - Fazer revisão clínica das afirmações sobre desejo, dor, resposta sexual, contracepção, IST, HIV, higiene e acessórios.
