@@ -483,3 +483,16 @@ body{background:radial-gradient(ellipse at 10% 5%,rgba(113,69,132,.38),transpare
  .ed-next-step-actions{display:grid}
  .ed-next-step-actions>a:first-child,.ed-next-step-portal{min-height:46px;justify-content:center;font-size:12px}
 }
+
+
+/* Salvamento opcional de resultados educativos no espaço pessoal */
+.ed-save-result{display:grid;gap:10px;margin:18px 0 8px;padding:17px;border:1px solid #ddcfe5;border-radius:13px;background:linear-gradient(120deg,#f5eff8,#fff5fa)}
+.ed-save-result>div{display:grid;gap:5px}
+.ed-save-result>div>small{color:#987342;font-size:8px;font-weight:700;letter-spacing:.15em}
+.ed-save-result>div>strong{color:#493451;font:500 20px/1.25 var(--ed-serif,var(--serif,Georgia,serif))}
+.ed-save-result>div>p{margin:0;color:#675b70;font-size:11px;line-height:1.65}
+.ed-save-result #experienceSaveButton{justify-self:start}
+.ed-save-result #experienceSaveStatus{margin:0;color:#675b70;font-size:10px;line-height:1.6}
+.ed-save-result #experienceSaveStatus[data-kind="success"]{color:#245c3c}
+.ed-save-result #experienceSaveStatus[data-kind="error"]{color:#8d3030}
+@media(max-width:560px){.ed-save-result{padding:15px}.ed-save-result #experienceSaveButton{width:100%;white-space:normal}}
