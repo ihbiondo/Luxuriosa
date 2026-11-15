@@ -138,7 +138,7 @@ O cuidado pode combinar uma ou mais abordagens:
 
 A avaliação pode incluir história clínica e sexual, exame físico e exames laboratoriais selecionados, por exemplo para investigar fatores metabólicos ou hormonais. A disfunção erétil recorrente pode ser um marcador de risco cardiovascular e merece avaliação da saúde geral, não apenas uma solução pontual para a ereção.
 
-Medicamentos inibidores da PDE5 são opções frequentemente utilizadas quando apropriadas, mas exigem avaliação de contraindicações e interações. **Não devem ser combinados com nitratos**; a associação pode causar queda perigosa da pressão arterial. Também há contraindicações e precauções com outros medicamentos e condições cardiovasculares. Não use comprimidos de outra pessoa nem produtos de procedência duvidosa.
+Medicamentos inibidores da PDE5 são opções frequentemente utilizadas quando apropriadas, mas exigem avaliação de contraindicações e interações. **Não devem ser combinados com nitratos ou riociguate**; essas associações podem causar queda perigosa da pressão arterial. Também há contraindicações e precauções com outros medicamentos e condições cardiovasculares. Não use comprimidos de outra pessoa nem produtos de procedência duvidosa.
 
 ### 7.2 Desejo sexual e hormônios
 
