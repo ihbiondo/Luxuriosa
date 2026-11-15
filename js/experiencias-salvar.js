@@ -65,25 +65,6 @@ async function checkAccess() {
   }
 }
 
-function buildResult(detail) {
-  if (!detail || !allowedActivities[detail.activity_id]) return null;
-  const definition = allowedActivities[detail.activity_id];
-  const resultTitle = String(detail.result_title || "").trim().slice(0, 120);
-  const resultSummary = String(detail.result_summary || "").trim().slice(0, 800);
-  if (resultTitle.length < 2 || resultSummary.length < 2) return null;
-
-  return {
-    attempt_id: String(detail.attempt_id || crypto.randomUUID()),
-    activity_id: detail.activity_id,
-    activity_title: definition.title,
-    category: definition.category,
-    result_title: resultTitle,
-    result_summary: resultSummary,
-    score: Number.isInteger(detail.score) ? detail.score : null,
-    score_max: Number.isInteger(detail.score_max) ? detail.score_max : null
-  };
-}
-
 async function insertResult(result, user) {
   const { error } = await supabase.from("experience_results").insert({
     user_id: user.id,
