@@ -126,6 +126,28 @@ async function acceptTerms(page) {
   await page.locator("#conquistasEmpty").waitFor({ state: "visible", timeout: 15000 });
 }
 
+async function completeKnowledgeQuiz(page) {
+  await page.goto(`${BASE_URL}/educacao/interatividade/`, { waitUntil: "domcontentloaded" });
+  const questions = page.locator("#knowledgeQuiz .ed-question");
+  const total = await questions.count();
+  assert.equal(total, 21, "O quiz deve apresentar as 21 questões previstas.");
+
+  for (let index = 0; index < total; index += 1) {
+    const question = questions.nth(index);
+    const answer = await question.getAttribute("data-answer");
+    await question.locator(`input[type="radio"][value="${answer}"]`).check();
+  }
+
+  await page.locator("#quizCheck").click();
+  await page.locator("#quizResult").waitFor({ state: "visible", timeout: 15000 });
+  assert.match(await page.locator("#quizResult").innerText(), /21 de 21 respostas corretas/i);
+
+  await page.locator("#experienceSavePanel").waitFor({ state: "visible", timeout: 15000 });
+  await page.locator("#experienceSaveButton").click();
+  await page.locator("#experienceSaveStatus").waitFor({ state: "visible", timeout: 15000 });
+  assert.match(await page.locator("#experienceSaveStatus").innerText(), /salvo no seu histórico privado/i);
+}
+
 async function readResultsForUser(userId) {
   const url = new URL(`${SUPABASE_URL}/rest/v1/experience_results`);
   url.searchParams.set("select", "*");
@@ -205,7 +227,23 @@ try {
   assert.equal(await pageA.locator("#conquistasActivities").innerText(), "1");
   assert.equal(await pageA.locator("#conquistasSaved").innerText(), "2");
 
-  // Capturas do histórico com resultados sintéticos em celular e desktop.
+  // 6. O quiz educativo integrado também pode salvar um resumo e sua pontuação.
+  await completeKnowledgeQuiz(pageA);
+  const savedAfterQuiz = await readResultsForUser(userA.id);
+  assert.equal(savedAfterQuiz.length, 3, "O quiz deve acrescentar um terceiro registro.");
+  const quizResult = savedAfterQuiz.find(row => row.activity_id === "knowledge_quiz");
+  assert.ok(quizResult, "O quiz deve usar o identificador oficial knowledge_quiz.");
+  assert.equal(quizResult.score, 21);
+  assert.equal(quizResult.score_max, 21);
+  assert.match(quizResult.result_summary, /21 de 21 questões/i);
+
+  await pageA.goto(`${BASE_URL}/portal/conquistas/`, { waitUntil: "domcontentloaded" });
+  await pageA.locator("#conquistasMain").waitFor({ state: "visible", timeout: 15000 });
+  assert.equal(await pageA.locator("#conquistasPoints").innerText(), "20");
+  assert.equal(await pageA.locator("#conquistasActivities").innerText(), "2");
+  assert.equal(await pageA.locator("#conquistasSaved").innerText(), "3");
+
+  // Capturas do histórico com resultados de teste em celular e desktop.
   await pageA.setViewportSize({ width: 390, height: 844 });
   await assertNoHorizontalOverflow(pageA, "Histórico mobile em 390 px");
   await captureScreenshot(pageA, "dashboard-historico-mobile-390");
