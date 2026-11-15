@@ -15,7 +15,7 @@ A estrutura é abrangente e evita algumas generalizações perigosas: não recom
 
 ### Ajustes realizados
 - Versão elevada de v0.1 para v0.2, com status explícito de revisão documental.
-- Bibliografia ampliada com ACOG, Planned Parenthood e recomendações clínicas sobre vibradores.
+- Bibliografia conferida; removidas referências duplicadas, mantendo ACOG, Planned Parenthood, literatura sobre vibradores e fontes de higiene já presentes.
 - Inserida seção de limites documentais, para não apresentar recomendações gerais como protocolo universal.
 - Clarificado que orientações sobre anéis constritivos, bombas e práticas BDSM são precauções gerais e precisam de revisão especializada.
 - Reforçado que fontes de 2018/2019 são referências úteis, mas não certificam produtos nem substituem avaliação técnica atual.
