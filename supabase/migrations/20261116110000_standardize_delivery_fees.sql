@@ -51,14 +51,17 @@ where not exists (
     and fulfillment_mode = 'delivery'
 );
 
+-- Também normaliza uma configuração preexistente (inclusive inativa), garantindo
+-- que Borebi fique disponível para consulta administrativa, mas nunca no checkout automático.
 update public.fulfillment_sla_rules
 set delivery_fee_cents = 5000,
     club_delivery_fee_cents = 4000,
     free_delivery_if_contains_kit = false,
+    automatic_payment_enabled = false,
+    active = true,
     updated_at = now()
 where city_normalized = 'borebi'
   and state = 'SP'
-  and fulfillment_mode = 'delivery'
-  and active = true;
+  and fulfillment_mode = 'delivery';
 
 commit;
