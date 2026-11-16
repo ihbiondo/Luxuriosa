@@ -16,6 +16,8 @@ on:
       - "js/carrinho.js"
       - "supabase/functions/create-payment-order/index.ts"
       - "supabase/migrations/20261116110000_standardize_delivery_fees.sql"
+      - "supabase/tests/database/freight_rules.test.sql"
+      - "tests/fixtures/freight_rules_fixture.sql"
       - "js/portal.js"
       - "js/conquistas*.js"
       - "js/experiencias*.js"
@@ -48,6 +50,8 @@ on:
       - "js/carrinho.js"
       - "supabase/functions/create-payment-order/index.ts"
       - "supabase/migrations/20261116110000_standardize_delivery_fees.sql"
+      - "supabase/tests/database/freight_rules.test.sql"
+      - "tests/fixtures/freight_rules_fixture.sql"
       - "js/portal.js"
       - "js/conquistas*.js"
       - "js/experiencias*.js"
@@ -200,6 +204,9 @@ jobs:
           cp "$GITHUB_WORKSPACE/tests/e2e/login-fixtures.sql" "$test_root/supabase/migrations/20261115130000_e2e_login_fixtures.sql"
           cp "$GITHUB_WORKSPACE/supabase/migrations/20261115181510_create_experience_results.sql" "$test_root/supabase/migrations/"
           cp "$GITHUB_WORKSPACE/supabase/tests/database/experience_results.test.sql" "$test_root/supabase/tests/database/"
+          cp "$GITHUB_WORKSPACE/tests/fixtures/freight_rules_fixture.sql" "$test_root/supabase/migrations/20261115120000_freight_rules_fixture.sql"
+          cp "$GITHUB_WORKSPACE/supabase/migrations/20261116110000_standardize_delivery_fees.sql" "$test_root/supabase/migrations/"
+          cp "$GITHUB_WORKSPACE/supabase/tests/database/freight_rules.test.sql" "$test_root/supabase/tests/database/"
 
           cd "$test_root"
           supabase start
