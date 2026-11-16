@@ -465,7 +465,6 @@ Deno.serve(async (req: Request) => {
           ". Seu subtotal atual é R$ " + (subtotalCents / 100).toFixed(2).replace(".", ",") + "."
       }, 409, origin);
     }
-    let baseFeeCents = 0;
     const configuredFee = configuredFreightFee(distanceKm, rule, fulfillmentType, isClubMember, isBauruDelivery);
     if (configuredFee === null) {
       return reply({ error: "A tarifa de entrega para sua modalidade ainda não está configurada. Fale com a Luxuriosa." }, 409, origin);
