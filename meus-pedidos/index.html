@@ -27,8 +27,8 @@
     .meta{display:flex;flex-wrap:wrap;gap:8px 22px;color:var(--muted);font-size:12px;margin:14px 0}
     .items{border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:12px 0;margin:12px 0;color:#e9dfe2}
     .items div{display:flex;justify-content:space-between;gap:12px;padding:5px 0}.total{display:flex;justify-content:space-between;font-weight:700;color:var(--gold)}
-    .steps{display:grid;grid-template-columns:repeat(6,1fr);gap:5px;margin:20px 0 8px}.step{height:5px;border-radius:9px;background:#44363b}.step.done{background:var(--gold)}.step.active{background:var(--wine);box-shadow:0 0 0 2px rgba(139,30,63,.18)}
-    .step-labels{display:grid;grid-template-columns:repeat(6,1fr);gap:5px}.step-labels span{font-size:9px;line-height:1.4;color:#857a7f;text-align:center}.step-labels span.done{color:var(--pink)}.step-labels span.active{color:var(--gold);font-weight:700}.step-labels small{display:block;font-size:8px;color:#8d8288;margin-top:4px;line-height:1.4}
+    .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin:20px 0 8px}.step{height:5px;border-radius:9px;background:#44363b}.step.done{background:var(--gold)}.step.active{background:var(--wine);box-shadow:0 0 0 2px rgba(139,30,63,.18)}
+    .step-labels{display:grid;grid-template-columns:repeat(4,1fr);gap:5px}.step-labels span{font-size:9px;line-height:1.4;color:#857a7f;text-align:center}.step-labels span.done{color:var(--pink)}.step-labels span.active{color:var(--gold);font-weight:700}.step-labels small{display:block;font-size:8px;color:#8d8288;margin-top:4px;line-height:1.4}
     .payment-note{font-size:11px;line-height:1.6;color:var(--muted);margin-top:12px}
     .empty{padding:28px;text-align:center}.empty strong{display:block;color:var(--pink);margin-bottom:8px}
     footer{border-top:1px solid var(--line);padding-top:18px;margin-top:34px;color:#8d8187;font-size:10px;text-align:center}
@@ -112,7 +112,7 @@
         const index=stageIndex(order), bars=el("div","steps"), labels=el("div","step-labels");
         stages.forEach((stage,i)=>{
           const done=i<index || (index===3 && i===3);
-          const active=i===index && index!==3;
+          const active=i===index && !(i===3 && order.status==="delivered");
           bars.append(el("span","step"+(done?" done":active?" active":"")));
           const label=el("span",done?"done":active?"active":"",stage.label);
           if(stage.dateKey&&order[stage.dateKey]&&(done||active))label.append(el("small","",new Date(order[stage.dateKey]).toLocaleString("pt-BR")));
