@@ -554,10 +554,9 @@
       "nome": "Algemas Reforçadas — Cromadas",
       "categoria": "Acessórios",
       "subcategoria": "Algemas",
-      "marca": "Vipmix",
       "preco": 34.9,
       "precoAntigo": null,
-      "descricao": "**Algema Ajustável Reforçada em Metal — Vipmix**\n\nA algema reforçada em metal tem acabamento cromado e ajuste regulável. Uma opção de acessório para brincadeiras consensuais, com atenção ao conforto e aos limites de cada pessoa.\n\nAntes do uso, confira o mecanismo de abertura e ajuste. Nunca utilize de forma que cause dor, perda de circulação ou desconforto.",
+      "descricao": "**Algemas Reguláveis Reforçadas — Cromadas**\n\nAlgemas metálicas com estrutura reforçada, acabamento cromado e regulagem ajustável para adaptar o encaixe aos pulsos. Um acessório para brincadeiras consensuais e experiências a dois.\n\nAjuste sem apertar excessivamente e mantenha a comunicação durante toda a brincadeira. Após o uso, higienize conforme as orientações do fabricante e guarde em local seco.",
       "imagem": "img/produtos/novas/algema-reforçada-1.jpg",
       "imagens": [
         "img/produtos/novas/algema-reforçada-1.jpg",
@@ -573,17 +572,18 @@
       "tamanhos": "U",
       "cor": "Cromada",
       "estoque": 5,
-      "exigirControleEstoque": true
+      "exigirControleEstoque": true,
+      "pagina": "produtos/30-algemas-reforcadas-cromadas.html",
+      "marca": "Vipmix"
     },
     {
       "id": 31,
       "nome": "Body Sensual Rendado — Frente Única",
       "categoria": "Lingerie",
       "subcategoria": "Body",
-      "marca": "Sensual Love",
       "preco": 79.9,
       "precoAntigo": null,
-      "descricao": "**Body Frente Única em Renda — Satine**\n\nUma peça de lingerie com modelagem frente única e acabamento em renda. A proposta combina um visual delicado com um recorte marcante para compor produções especiais.\n\nConsulte o atendimento para confirmar o caimento e a disponibilidade.",
+      "descricao": "**Body em Renda Frente Única — Sem Bojo**\n\nBody inteiramente rendado, com modelagem frente única e sem bojo, que valoriza a silhueta com delicadeza. A composição de poliamida e elastano oferece elasticidade e toque macio, enquanto o forro 100% algodão contribui para o conforto na região íntima.\n\nUma peça versátil, que pode ser usada como lingerie ou para compor produções especiais. Para preservar a renda, lave à mão com água fria e sabão neutro e seque à sombra.",
       "imagem": "img/produtos/novas/lingerie-body-satine-frente-tamanho-g-body-sensual-frente-unica-rendado-1.jpg",
       "imagens": [
         "img/produtos/novas/lingerie-body-satine-frente-tamanho-g-body-sensual-frente-unica-rendado-1.jpg",
@@ -599,17 +599,18 @@
       "tamanhos": "G",
       "cor": "Satine",
       "estoque": 1,
-      "exigirControleEstoque": true
+      "exigirControleEstoque": true,
+      "pagina": "produtos/31-body-sensual-rendado-frente-unica.html",
+      "marca": "Sensual Love"
     },
     {
       "id": 32,
       "nome": "Body Rendado com Persex — Pink",
       "categoria": "Lingerie",
       "subcategoria": "Body",
-      "marca": "Sensual Love",
       "preco": 79.9,
       "precoAntigo": null,
-      "descricao": "**Body Rendado com Persex — Sensual Love**\n\nBody em renda com persex, em tom pink. Uma peça de lingerie para quem procura um visual marcante em uma única composição.\n\nConsulte o atendimento para confirmar o caimento e a disponibilidade.",
+      "descricao": "**Body Rendado com Persex — Pink**\n\nBody fio dental confeccionado em renda, acompanhado de persex para completar a composição. O tecido combina poliamida e elastano, oferecendo elasticidade e toque macio. A peça conta ainda com forro 100% algodão na região íntima.\n\nUma combinação de delicadeza e sensualidade para momentos especiais. Lave à mão com água fria e sabão neutro e seque à sombra para preservar a renda e a cor.",
       "imagem": "img/produtos/novas/lingerie-body-rosa-frente-tamanho-gg-body-sensual-rendado-1.jpg",
       "imagens": [
         "img/produtos/novas/lingerie-body-rosa-frente-tamanho-gg-body-sensual-rendado-1.jpg",
@@ -625,17 +626,18 @@
       "tamanhos": "GG",
       "cor": "Pink",
       "estoque": 2,
-      "exigirControleEstoque": true
+      "exigirControleEstoque": true,
+      "pagina": "produtos/32-body-rendado-com-persex-pink.html",
+      "marca": "Sensual Love"
     },
     {
       "id": 33,
       "nome": "Body Rendado com Persex — Azul-marinho",
       "categoria": "Lingerie",
       "subcategoria": "Body",
-      "marca": "Sensual Love",
       "preco": 79.9,
       "precoAntigo": null,
-      "descricao": "**Body Rendado com Persex — Sensual Love**\n\nBody em renda com persex, em azul-marinho. Uma peça de lingerie para compor um visual sofisticado e marcante.\n\nConsulte o atendimento para confirmar o caimento e a disponibilidade.",
+      "descricao": "**Body Rendado com Persex — Azul-marinho**\n\nBody fio dental confeccionado em renda, acompanhado de persex para completar a composição. O tecido combina poliamida e elastano, oferecendo elasticidade e toque macio. A peça conta ainda com forro 100% algodão na região íntima.\n\nUma combinação de delicadeza e sensualidade para momentos especiais. Lave à mão com água fria e sabão neutro e seque à sombra para preservar a renda e a cor.",
       "imagem": "img/produtos/novas/lingerie-body-azul-marinho-frente-tamanho-gg-body-sensual-rendado-1.jpg",
       "imagens": [
         "img/produtos/novas/lingerie-body-azul-marinho-frente-tamanho-gg-body-sensual-rendado-1.jpg",
@@ -651,17 +653,18 @@
       "tamanhos": "GG",
       "cor": "Azul-marinho",
       "estoque": 1,
-      "exigirControleEstoque": true
+      "exigirControleEstoque": true,
+      "pagina": "produtos/33-body-rendado-com-persex-azul-marinho.html",
+      "marca": "Sensual Love"
     },
     {
       "id": 34,
       "nome": "Body Sensual Rendado — Vermelho",
       "categoria": "Lingerie",
       "subcategoria": "Body",
-      "marca": "Pimenta Sexy",
       "preco": 79.9,
       "precoAntigo": null,
-      "descricao": "**Body Sensual Rendado — Pimenta Sexy**\n\nBody rendado em vermelho, com modelagem cavada. Uma peça de lingerie de presença marcante.\n\nConsulte o atendimento para confirmar o caimento e a disponibilidade.",
+      "descricao": "**Body Sensual Rendado Veneno — Vermelho**\n\nBody inteiramente rendado, com recortes e aberturas estratégicas na região dos seios e da calcinha. A modelagem cria um visual marcante e valoriza as curvas, unindo renda delicada e uma proposta ousada.\n\nModelo em tamanho único. Para preservar o tecido, siga as orientações da etiqueta e evite alvejantes ou produtos agressivos.",
       "imagem": "img/produtos/novas/lingerie-body-vermelho-frente-tamanho-unico-body-cavado-sensual-rendado-1.jpg",
       "imagens": [
         "img/produtos/novas/lingerie-body-vermelho-frente-tamanho-unico-body-cavado-sensual-rendado-1.jpg",
@@ -676,17 +679,18 @@
       "tamanhos": "U",
       "cor": "Vermelho",
       "estoque": 1,
-      "exigirControleEstoque": true
+      "exigirControleEstoque": true,
+      "pagina": "produtos/34-body-sensual-rendado-vermelho.html",
+      "marca": "Pimenta Sexy"
     },
     {
       "id": 35,
       "nome": "Body Sensual Rendado — Branco",
       "categoria": "Lingerie",
       "subcategoria": "Body",
-      "marca": "Pimenta Sexy",
       "preco": 79.9,
       "precoAntigo": null,
-      "descricao": "**Body Sensual Rendado — Pimenta Sexy**\n\nBody rendado em branco, com modelagem cavada. Uma opção de lingerie para quem prefere uma composição clara e delicada.\n\nConsulte o atendimento para confirmar o caimento e a disponibilidade.",
+      "descricao": "**Body Sensual Rendado Veneno — Branco**\n\nBody inteiramente rendado, com recortes e aberturas estratégicas na região dos seios e da calcinha. A modelagem cria um visual marcante e valoriza as curvas, unindo renda delicada e uma proposta ousada.\n\nModelo em tamanho único. Para preservar o tecido, siga as orientações da etiqueta e evite alvejantes ou produtos agressivos.",
       "imagem": "img/produtos/novas/lingerie-body-branco-frente-tamanho-unico-body-cavado-sensual-rendado-1.jpg",
       "imagens": [
         "img/produtos/novas/lingerie-body-branco-frente-tamanho-unico-body-cavado-sensual-rendado-1.jpg",
@@ -701,17 +705,18 @@
       "tamanhos": "U",
       "cor": "Branco",
       "estoque": 1,
-      "exigirControleEstoque": true
+      "exigirControleEstoque": true,
+      "pagina": "produtos/35-body-sensual-rendado-branco.html",
+      "marca": "Pimenta Sexy"
     },
     {
       "id": 36,
       "nome": "Conjunto Cropped Rendado com Persex — Preto",
       "categoria": "Lingerie",
       "subcategoria": "Conjunto Cropped",
-      "marca": "Sensual Love",
       "preco": 89.9,
       "precoAntigo": null,
-      "descricao": "**Conjunto Cropped Rendado com Persex — Sensual Love**\n\nConjunto de lingerie com cropped rendado e persex, na cor preta. Uma composição para quem busca um visual coordenado e marcante.\n\nConsulte o atendimento para confirmar o caimento e a disponibilidade.",
+      "descricao": "**Conjunto Cropped Rendado com Persex — Preto**\n\nConjunto composto por top cropped rendado, calcinha fio dental e persex. A mistura de poliamida e elastano proporciona elasticidade e toque macio, enquanto a calcinha possui forro 100% algodão para maior conforto.\n\nUma composição que combina delicadeza e presença, ideal para ocasiões especiais. Lave à mão com água fria e sabão neutro e seque à sombra para preservar a renda e a elasticidade.",
       "imagem": "img/produtos/novas/lingerie-conjunto-preto-frente-tamanho-m-cropped-sensual-rendado-1.jpg",
       "imagens": [
         "img/produtos/novas/lingerie-conjunto-preto-frente-tamanho-m-cropped-sensual-rendado-1.jpg",
@@ -727,17 +732,18 @@
       "tamanhos": "M",
       "cor": "Preto",
       "estoque": 1,
-      "exigirControleEstoque": true
+      "exigirControleEstoque": true,
+      "pagina": "produtos/36-conjunto-cropped-rendado-com-persex-preto.html",
+      "marca": "Sensual Love"
     },
     {
       "id": 37,
       "nome": "Conjunto Sensual Rendado Encanto — Branco",
       "categoria": "Lingerie",
       "subcategoria": "Conjunto",
-      "marca": "Pimenta Sexy",
       "preco": 69.9,
       "precoAntigo": null,
-      "descricao": "**Conjunto Rendado Encanto com Laço — Pimenta Sexy**\n\nConjunto de lingerie rendado com detalhe de laço, na cor branca. Uma opção delicada para compor um visual especial.\n\nConsulte o atendimento para confirmar o caimento e a disponibilidade.",
+      "descricao": "**Conjunto Sensual Rendado Encanto — Branco**\n\nConjunto de lingerie em renda, com visual delicado e modelagem de tamanho único. A proposta combina feminilidade e conforto em uma composição pensada para valorizar a silhueta.\n\nPara preservar o tecido e a tonalidade, prefira a lavagem à mão ou em ciclo delicado, sem alvejantes. Seque naturalmente à sombra.",
       "imagem": "img/produtos/novas/lingerie-conjunto-branco-frente-tamanho-unico-sensual-rendado-com-fita-1.jpg",
       "imagens": [
         "img/produtos/novas/lingerie-conjunto-branco-frente-tamanho-unico-sensual-rendado-com-fita-1.jpg",
@@ -752,17 +758,18 @@
       "tamanhos": "U",
       "cor": "Branco",
       "estoque": 1,
-      "exigirControleEstoque": true
+      "exigirControleEstoque": true,
+      "pagina": "produtos/37-conjunto-sensual-rendado-encanto-branco.html",
+      "marca": "Pimenta Sexy"
     },
     {
       "id": 38,
       "nome": "Conjunto Sensual Rendado Laís — Branco",
       "categoria": "Lingerie",
       "subcategoria": "Conjunto",
-      "marca": "Pimenta Sexy",
       "preco": 69.9,
       "precoAntigo": null,
-      "descricao": "**Conjunto Rendado Laís — Pimenta Sexy**\n\nConjunto de lingerie rendado na cor branca. Uma composição clássica para quem procura uma peça coordenada.\n\nConsulte o atendimento para confirmar o caimento e a disponibilidade.",
+      "descricao": "**Conjunto Sensual Rendado Laís — Branco**\n\nConjunto de lingerie rendado com modelagem versátil e tamanho único. O desenho da peça valoriza a silhueta e combina delicadeza com um visual marcante, para ocasiões especiais ou para renovar a coleção de lingerie.\n\nPara conservar o tecido, lave à mão ou no ciclo delicado, evite alvejantes e secadoras e seque à sombra.",
       "imagem": "img/produtos/novas/lingerie-conjunto-branco-frente-tamanho-unico-body-sensual-rendado-1.jpg",
       "imagens": [
         "img/produtos/novas/lingerie-conjunto-branco-frente-tamanho-unico-body-sensual-rendado-1.jpg",
@@ -777,17 +784,18 @@
       "tamanhos": "U",
       "cor": "Branco",
       "estoque": 1,
-      "exigirControleEstoque": true
+      "exigirControleEstoque": true,
+      "pagina": "produtos/38-conjunto-sensual-rendado-lais-branco.html",
+      "marca": "Pimenta Sexy"
     },
     {
       "id": 39,
       "nome": "Conjunto Cropped Rendado com Persex — Vinho",
       "categoria": "Lingerie",
       "subcategoria": "Conjunto Cropped",
-      "marca": "Sensual Love",
       "preco": 89.9,
       "precoAntigo": null,
-      "descricao": "**Conjunto Top Rendado com Persex — Sensual Love**\n\nConjunto de lingerie com top rendado e persex, em tom vinho. Uma composição de visual intenso e sofisticado.\n\nConsulte o atendimento para confirmar o caimento e a disponibilidade.",
+      "descricao": "**Conjunto Cropped Rendado com Persex — Vinho**\n\nConjunto composto por top cropped rendado, calcinha fio dental e persex. A mistura de poliamida e elastano proporciona elasticidade e toque macio, enquanto a calcinha possui forro 100% algodão para maior conforto.\n\nUma composição que combina delicadeza e presença, ideal para ocasiões especiais. Lave à mão com água fria e sabão neutro e seque à sombra para preservar a renda e a elasticidade.",
       "imagem": "img/produtos/novas/lingerie-conjunto-vinho-frente-tamanho-gg-cropped-sensual-rendado-1.jpg",
       "imagens": [
         "img/produtos/novas/lingerie-conjunto-vinho-frente-tamanho-gg-cropped-sensual-rendado-1.jpg",
@@ -803,17 +811,18 @@
       "tamanhos": "GG",
       "cor": "Vinho",
       "estoque": 1,
-      "exigirControleEstoque": true
+      "exigirControleEstoque": true,
+      "pagina": "produtos/39-conjunto-cropped-rendado-com-persex-vinho.html",
+      "marca": "Sensual Love"
     },
     {
       "id": 40,
       "nome": "Conjunto Top Rendado com Persex — Vermelho",
       "categoria": "Lingerie",
       "subcategoria": "Conjunto",
-      "marca": "Sensual Love",
       "preco": 69.9,
       "precoAntigo": null,
-      "descricao": "**Conjunto Top Rendado com Persex — Sensual Love**\n\nConjunto de lingerie com top rendado e persex, na cor vermelha. Uma composição para quem prefere uma peça de destaque.\n\nConsulte o atendimento para confirmar o caimento e a disponibilidade.",
+      "descricao": "**Conjunto Top Rendado com Persex — Vermelho**\n\nConjunto composto por top rendado, calcinha fio dental e persex. A composição em poliamida e elastano oferece elasticidade e toque macio, e a calcinha possui forro 100% algodão para maior conforto na região íntima.\n\nUma combinação delicada e marcante para ocasiões especiais. Lave à mão com água fria e sabão neutro, não utilize alvejante e seque à sombra.",
       "imagem": "img/produtos/novas/lingerie-conjunto-vermelho-frente-tamanho-p-sensual-rendado-1.jpg",
       "imagens": [
         "img/produtos/novas/lingerie-conjunto-vermelho-frente-tamanho-p-sensual-rendado-1.jpg",
@@ -829,17 +838,18 @@
       "tamanhos": "P",
       "cor": "Vermelho",
       "estoque": 1,
-      "exigirControleEstoque": true
+      "exigirControleEstoque": true,
+      "pagina": "produtos/40-conjunto-top-rendado-com-persex-vermelho.html",
+      "marca": "Sensual Love"
     },
     {
       "id": 41,
       "nome": "Calcinha Fio Dental com Frase — Fode sua puta",
       "categoria": "Lingerie",
       "subcategoria": "Calcinha",
-      "marca": "Yaffa",
       "preco": 29.9,
       "precoAntigo": null,
-      "descricao": "**Calcinha Fio Dental com Frase — Yaffa**\n\nCalcinha fio dental vermelha com frase que brilha no escuro. Uma peça irreverente para quem gosta de lingerie com mensagem ousada.\n\nConsulte o atendimento para confirmar a frase e a disponibilidade.",
+      "descricao": "**Fio Dental Vermelho com Frase que Brilha no Escuro**\n\nCalcinha fio dental vermelha com frente em tule transparente e parte traseira em fio elástico. O destaque é a frase aplicada na parte posterior, com efeito fluorescente que brilha no escuro. Possui reguladores laterais para ajustar o caimento.\n\nPara realçar o efeito luminoso, deixe a peça exposta à luz por alguns minutos antes do uso. Lave à mão com sabão neutro, seque à sombra e não passe a ferro.",
       "imagem": "img/produtos/novas/lingerie-fio-vermelho-traseira-tamanho-unico-fode-sua-puta-1.jpg",
       "imagens": [
         "img/produtos/novas/lingerie-fio-vermelho-traseira-tamanho-unico-fode-sua-puta-1.jpg",
@@ -856,17 +866,18 @@
       "cor": "Vermelho",
       "opcao": "Fode sua puta",
       "estoque": 3,
-      "exigirControleEstoque": true
+      "exigirControleEstoque": true,
+      "pagina": "produtos/41-calcinha-fio-dental-com-frase-fode-sua-puta.html",
+      "marca": "Yaffa"
     },
     {
       "id": 42,
       "nome": "Calcinha Fio Dental com Frase — Safada",
       "categoria": "Lingerie",
       "subcategoria": "Calcinha",
-      "marca": "Yaffa",
       "preco": 29.9,
       "precoAntigo": null,
-      "descricao": "**Calcinha Fio Dental com Frase — Yaffa**\n\nCalcinha fio dental vermelha com frase que brilha no escuro. Uma peça irreverente para quem gosta de lingerie com mensagem ousada.\n\nConsulte o atendimento para confirmar a frase e a disponibilidade.",
+      "descricao": "**Fio Dental Vermelho com Frase que Brilha no Escuro**\n\nCalcinha fio dental vermelha com frente em tule transparente e parte traseira em fio elástico. O destaque é a frase aplicada na parte posterior, com efeito fluorescente que brilha no escuro. Possui reguladores laterais para ajustar o caimento.\n\nPara realçar o efeito luminoso, deixe a peça exposta à luz por alguns minutos antes do uso. Lave à mão com sabão neutro, seque à sombra e não passe a ferro.",
       "imagem": "img/produtos/novas/lingerie-fio-vermelho-traseira-tamanho-unico-safada-1.jpg",
       "imagens": [
         "img/produtos/novas/lingerie-fio-vermelho-traseira-tamanho-unico-safada-1.jpg",
@@ -883,17 +894,18 @@
       "cor": "Vermelho",
       "opcao": "Safada",
       "estoque": 2,
-      "exigirControleEstoque": true
+      "exigirControleEstoque": true,
+      "pagina": "produtos/42-calcinha-fio-dental-com-frase-safada.html",
+      "marca": "Yaffa"
     },
     {
       "id": 43,
       "nome": "Calcinha Fio Dental Plus Size com Strass — Amor",
       "categoria": "Lingerie",
       "subcategoria": "Calcinha",
-      "marca": "Tallyta",
       "preco": 39.9,
       "precoAntigo": null,
-      "descricao": "**Calcinha Fio Dental Plus Size com Strass — Tallyta**\n\nCalcinha fio dental vermelha plus size com aplicação de strass e a palavra “Amor”. Uma peça com detalhe brilhante e mensagem delicada.\n\nConsulte o atendimento para confirmar os detalhes e a disponibilidade.",
+      "descricao": "**Fio Dental Plus Size com Strass — Amor**\n\nCalcinha fio dental plus size em renda vermelha, com aplicação decorativa de palavra em metal e strass. O detalhe brilhante destaca a peça, enquanto a modelagem foi pensada para acompanhar as curvas com conforto.\n\nTamanho G1. Para conservar a renda e os detalhes, lave à mão com água fria e sabão neutro, evite alvejantes e não utilize ferro de passar.",
       "imagem": "img/produtos/novas/lingerie-fio-vermelho-traseira-tamanho-g1-amor-1.jpg",
       "imagens": [
         "img/produtos/novas/lingerie-fio-vermelho-traseira-tamanho-g1-amor-1.jpg",
@@ -910,17 +922,18 @@
       "cor": "Vermelho",
       "opcao": "Amor",
       "estoque": 1,
-      "exigirControleEstoque": true
+      "exigirControleEstoque": true,
+      "pagina": "produtos/43-calcinha-fio-dental-plus-size-com-strass-amor.html",
+      "marca": "Tallyta"
     },
     {
       "id": 44,
       "nome": "Calcinha Fio Dental Plus Size com Strass — Tesão",
       "categoria": "Lingerie",
       "subcategoria": "Calcinha",
-      "marca": "Tallyta",
       "preco": 39.9,
       "precoAntigo": null,
-      "descricao": "**Calcinha Fio Dental Plus Size com Strass — Tallyta**\n\nCalcinha fio dental vermelha plus size com aplicação de strass e a palavra “Tesão”. Uma peça com detalhe brilhante e mensagem ousada.\n\nConsulte o atendimento para confirmar os detalhes e a disponibilidade.",
+      "descricao": "**Fio Dental Plus Size com Strass — Tesão**\n\nCalcinha fio dental plus size em renda vermelha, com aplicação decorativa de palavra em metal e strass. O detalhe brilhante destaca a peça, enquanto a modelagem foi pensada para acompanhar as curvas com conforto.\n\nTamanho G1. Para conservar a renda e os detalhes, lave à mão com água fria e sabão neutro, evite alvejantes e não utilize ferro de passar.",
       "imagem": "img/produtos/novas/lingerie-fio-vermelho-traseira-tamanho-g1-tesão-1.jpg",
       "imagens": [
         "img/produtos/novas/lingerie-fio-vermelho-traseira-tamanho-g1-tesão-1.jpg",
@@ -937,17 +950,18 @@
       "cor": "Vermelho",
       "opcao": "Tesão",
       "estoque": 1,
-      "exigirControleEstoque": true
+      "exigirControleEstoque": true,
+      "pagina": "produtos/44-calcinha-fio-dental-plus-size-com-strass-tesao.html",
+      "marca": "Tallyta"
     },
     {
       "id": 45,
       "nome": "Máscara Sensual de Tecido — Preta",
       "categoria": "Acessórios",
       "subcategoria": "Máscaras",
-      "marca": "Vipmix",
       "preco": 29.9,
       "precoAntigo": null,
-      "descricao": "**Máscara de Tecido com Tiras para Amarrar — Vipmix**\n\nMáscara preta em tecido, com tiras para amarração. Um acessório para brincadeiras consensuais e experiências sensoriais.\n\nAjuste sem pressionar os olhos ou dificultar a respiração. Combine limites e mantenha a comunicação durante o uso.",
+      "descricao": "**Máscara Sensual de Tecido — Preta**\n\nMáscara preta confeccionada em tecido, com tiras para amarrar e ajustar. Um acessório para brincadeiras sensoriais e momentos a dois, permitindo explorar a privação visual de forma combinada.\n\nAjuste sem pressionar os olhos ou dificultar a respiração. Combine previamente os limites e mantenha a comunicação durante o uso.",
       "imagem": "img/produtos/novas/mascara-em-tecido-amarra-em-tiras-1.jpg",
       "imagens": [
         "img/produtos/novas/mascara-em-tecido-amarra-em-tiras-1.jpg",
@@ -962,17 +976,18 @@
       "tamanhos": "U",
       "cor": "Preto",
       "estoque": 5,
-      "exigirControleEstoque": true
+      "exigirControleEstoque": true,
+      "pagina": "produtos/45-mascara-sensual-de-tecido-preta.html",
+      "marca": "Vipmix"
     },
     {
       "id": 46,
-      "nome": "Óleo de Massagem — Kama Sutra 120 ml",
+      "nome": "Óleo de Massagem — 120 ml",
       "categoria": "Óleos para massagem",
       "subcategoria": "Óleos corporais para massagem",
-      "marca": "Sensual Love",
       "preco": 39.9,
       "precoAntigo": null,
-      "descricao": "**Óleo Corporal para Massagem — Kama Sutra**\n\nÓleo corporal da Sensual Love, indicado para momentos de massagem e cuidado corporal.\n\nAntes de utilizar, confira no rótulo a composição, as áreas indicadas e as advertências do fabricante. Consulte o atendimento para confirmar a apresentação e disponibilidade.",
+      "descricao": "**Óleo Corporal para Massagem — 120 ml**\n\nÓleo corporal aromático em frasco de 120 ml, com fragrância envolvente e toque suave. Pode ser utilizado em massagens e também para perfumar e deixar a pele macia.\n\nPara a massagem, coloque uma pequena quantidade nas mãos e espalhe sobre a pele com movimentos suaves. Produto de uso externo: não ingerir e evitar contato com os olhos e mucosas.",
       "imagem": "img/produtos/novas/oleo-de-massagem-kama-sutra-1.jpg",
       "imagens": [
         "img/produtos/novas/oleo-de-massagem-kama-sutra-1.jpg",
@@ -986,17 +1001,18 @@
       "sobConsulta": false,
       "tamanhos": "U",
       "estoque": 5,
-      "exigirControleEstoque": true
+      "exigirControleEstoque": true,
+      "pagina": "produtos/46-oleo-de-massagem-120-ml.html",
+      "marca": "Sensual Love"
     },
     {
       "id": 47,
       "nome": "Venda para Olhos Macia e Ajustável — Preta",
       "categoria": "Acessórios",
       "subcategoria": "Venda para olhos",
-      "marca": "Youvibe Vipmix",
       "preco": 9.9,
       "precoAntigo": null,
-      "descricao": "**Venda para Olhos Macia e Ajustável — Vipmix**\n\nVenda macia e ajustável para os olhos, na cor preta. Um acessório simples para experiências sensoriais e brincadeiras consensuais.\n\nAjuste com conforto, sem pressionar os olhos. Combine previamente os limites e mantenha a comunicação durante o uso.",
+      "descricao": "**Venda para Olhos Macia e Ajustável — Preta**\n\nVenda para os olhos em tecido macio, com tiras ajustáveis para adaptar a fixação. Seu formato ajuda a bloquear a luz e pode ser usado tanto em momentos de descanso quanto em experiências sensoriais.\n\nMedidas aproximadas de 7 × 20 cm e peso aproximado de 5 g. Lave manualmente com sabão neutro, seque à sombra e evite alvejantes ou produtos abrasivos.",
       "imagem": "img/produtos/novas/venda-olhos-macia-e-ajustavel-1.jpg",
       "imagens": [
         "img/produtos/novas/venda-olhos-macia-e-ajustavel-1.jpg",
@@ -1011,7 +1027,9 @@
       "tamanhos": "U",
       "cor": "Preto",
       "estoque": 10,
-      "exigirControleEstoque": true
+      "exigirControleEstoque": true,
+      "pagina": "produtos/47-venda-para-olhos-macia-e-ajustavel-preta.html",
+      "marca": "Youvibe Vipmix"
     }
   ]
 }
