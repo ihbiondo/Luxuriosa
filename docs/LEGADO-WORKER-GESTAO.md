@@ -1,7 +1,7 @@
-# Worker Lux-Gestão antigo — configuração desativada
+# Worker Lux-Gestão antigo — excluído da Cloudflare
 
 **Atualizado em:** 16/11/2026  
-**Estado:** configuração de implantação preservada para referência, sem URL `workers.dev` ou preview.
+**Estado:** Worker `lux-gestao` e suas quatro rotas foram excluídos da Cloudflare em 16/11/2026. Código e documentação históricos permanecem no GitHub.
 
 ## Arquivos
 
@@ -29,3 +29,17 @@ A alteração deste arquivo em 16/11/2026 foi apenas no GitHub. **Não foi execu
 Não executar `wrangler deploy` deste repositório. Não restaurar `workers_dev` ou `preview_urls` para `true`. O ambiente administrativo oficial é `https://442.luxuriosa.com.br`.
 
 O Worker e as rotas antigas só podem ser removidos depois de validar o redirecionamento no Cloudflare e confirmar que nenhuma rotina web depende deles. O backup/migração do SQLite Tauri é uma frente independente e não bloqueia a retirada das rotas web; o código e o banco local permanecem preservados.
+
+
+## Encerramento confirmado — 16/11/2026
+
+Após conferência direta no painel Cloudflare, o usuário removeu as quatro rotas vinculadas à zona `luxuriosa.com.br`:
+
+- `luxuriosa.com.br/lux-gestao`
+- `luxuriosa.com.br/lux-gestao/*`
+- `luxuriosa.com.br/lux-gestao-pedidos`
+- `luxuriosa.com.br/lux-gestao-pedidos/*`
+
+Em seguida, o usuário excluiu permanentemente o Worker `lux-gestao` pela zona de perigo do painel. A exclusão remove o Worker, suas implantações e configuração na Cloudflare. O repositório `ihbiondo/Luxuriosa-gestao` e o aplicativo desktop Tauri/SQLite permanecem preservados. Não houve alteração de DNS, do 442 ou do Supabase.
+
+A confirmação da exclusão é baseada no relato do usuário após a ação no painel; não foi realizada consulta independente à API da Cloudflare.
