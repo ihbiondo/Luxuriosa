@@ -1446,9 +1446,10 @@
       "_Condição do frete conforme o destino e os itens do pedido:_",
       "",
       "*CONDIÇÕES DE ENTREGA*",
-      "• Em Bauru, pedidos que incluam pelo menos um kit promocional têm frete grátis.",
-      "• Para os demais pedidos em Bauru, o frete padrão é R$ 15,00.",
-      "• Para outras cidades, disponibilidade e valor serão confirmados no atendimento.",
+      "• Sem adesão ao Clube: Bauru R$ 20,00; região até 30 km R$ 40,00; região até 55 km R$ 70,00.",
+      "• Com Clube Luxuriosa gratuito ativo na conta: Bauru R$ 10,00; região até 30 km R$ 25,00; região até 55 km R$ 50,00.",
+      "• Apoiadores recebem frete subsidiado pela Luxuriosa. No Privilegie, o frete de entrega é gratuito dentro da área atendida.",
+      "• A distância é calculada pela rota de motocicleta. Não atendemos acima de 55 km.",
       "*PRÓXIMO PASSO*",
       "Gostaria de confirmar a disponibilidade, os tamanhos e a entrega.",
       "_O envio desta mensagem não confirma o pedido nem processa pagamento._"
