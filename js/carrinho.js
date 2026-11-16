@@ -1446,9 +1446,9 @@
       "_Condição do frete conforme o destino e os itens do pedido:_",
       "",
       "*CONDIÇÕES DE ENTREGA*",
-      "• Em Bauru, pedidos que incluam pelo menos um kit promocional têm frete grátis.",
-      "• Para os demais pedidos em Bauru, o frete padrão é R$ 15,00.",
-      "• Para outras cidades, disponibilidade e valor serão confirmados no atendimento.",
+      "• Sem Clube: Bauru R$ 15,00; Tibiriçá R$ 20,00; Agudos, Piratininga e Pederneiras R$ 25,00; Lençóis Paulista e Borebi R$ 50,00.",
+      "• Clube gratuito: Bauru R$ 10,00; Tibiriçá R$ 15,00; Agudos, Piratininga e Pederneiras R$ 20,00; Lençóis Paulista e Borebi R$ 40,00.",
+      "• Lençóis Paulista e Borebi já incluem pedágio. Demais localidades: frete sob consulta pelo atendimento.",
       "*PRÓXIMO PASSO*",
       "Gostaria de confirmar a disponibilidade, os tamanhos e a entrega.",
       "_O envio desta mensagem não confirma o pedido nem processa pagamento._"

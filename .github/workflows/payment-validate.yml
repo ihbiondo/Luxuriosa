@@ -6,6 +6,11 @@ on:
     paths:
       - "index.html"
       - "loja.html"
+      - "atendimento.html"
+      - "faq.html"
+      - "entregas/**"
+      - "cidades/**"
+      - "previa/**"
       - "login.html"
       - "pagamento-retorno.html"
       - "acompanhar-pedido/**"
@@ -13,6 +18,11 @@ on:
       - "experiencias/**"
       - "educacao/interatividade/**"
       - "js/clientes.js"
+      - "js/carrinho.js"
+      - "supabase/functions/create-payment-order/index.ts"
+      - "supabase/migrations/20261116110000_standardize_delivery_fees.sql"
+      - "supabase/tests/database/freight_rules.test.sql"
+      - "tests/fixtures/freight_rules_fixture.sql"
       - "js/portal.js"
       - "js/conquistas*.js"
       - "js/experiencias*.js"
@@ -35,6 +45,11 @@ on:
     paths:
       - "index.html"
       - "loja.html"
+      - "atendimento.html"
+      - "faq.html"
+      - "entregas/**"
+      - "cidades/**"
+      - "previa/**"
       - "login.html"
       - "pagamento-retorno.html"
       - "acompanhar-pedido/**"
@@ -42,6 +57,11 @@ on:
       - "experiencias/**"
       - "educacao/interatividade/**"
       - "js/clientes.js"
+      - "js/carrinho.js"
+      - "supabase/functions/create-payment-order/index.ts"
+      - "supabase/migrations/20261116110000_standardize_delivery_fees.sql"
+      - "supabase/tests/database/freight_rules.test.sql"
+      - "tests/fixtures/freight_rules_fixture.sql"
       - "js/portal.js"
       - "js/conquistas*.js"
       - "js/experiencias*.js"
@@ -72,9 +92,12 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
+      # Inclui validação estática das regras de frete do checkout e do backend.
       - name: Validar JavaScript do checkout, login e acompanhamento
         run: |
           node --check js/clientes.js
+          node --check js/carrinho.js
+          npx --yes esbuild@0.25.0 supabase/functions/create-payment-order/index.ts --format=esm --platform=neutral --outfile=/tmp/create-payment-order.js
           node --input-type=module <<'NODE'
           import fs from "node:fs";
           import { execFileSync } from "node:child_process";
@@ -114,6 +137,10 @@ jobs:
           from pathlib import Path
 
           migration = Path("supabase/migrations/20261115181510_create_experience_results.sql").read_text()
+          freight_migration = Path("supabase/migrations/20261116110000_standardize_delivery_fees.sql").read_text()
+          freight_backend = Path("supabase/functions/create-payment-order/index.ts").read_text()
+          delivery_page = Path("entregas/index.html").read_text()
+          delivery_faq = Path("faq.html").read_text()
           terms = Path("termos-experiencias.html").read_text()
           dashboard = Path("portal/conquistas/index.html").read_text()
           portal = Path("portal/index.html").read_text()
@@ -159,6 +186,16 @@ jobs:
           from pglast import parse_sql
           parse_sql(migration)
           print("Sintaxe SQL da migração validada.")
+          parse_sql(freight_migration)
+          print("Sintaxe SQL da migração de frete validada.")
+          assert "club_delivery_fee_cents" in freight_migration
+          assert "tibirica" in freight_backend and "freight_quote_required" in freight_backend
+          assert "R$ 15,00" in delivery_page and "R$ 10,00" in delivery_page
+          assert "R$ 50,00" in delivery_page and "R$ 40,00" in delivery_page
+          assert "pedágio já incluído" in delivery_page
+          assert "cotado pelo atendimento" in delivery_faq
+          assert "55 km pela rota" not in delivery_page
+          print("Política oficial de frete e exceção de Tibiriçá verificadas.")
           PY
 
       - name: Setup Supabase CLI
@@ -181,13 +218,16 @@ jobs:
           }
           trap cleanup EXIT
 
-          # Projeto scratch: somente fixtures de login + migration de conquistas.
+          # Projeto scratch: fixtures isoladas de login, frete e migration de conquistas.
           # Não há token, project-ref, link ou credencial do Supabase hospedado.
           mkdir -p "$test_root/supabase/migrations" "$test_root/supabase/tests/database"
           cp "$GITHUB_WORKSPACE/supabase/config.toml" "$test_root/supabase/config.toml"
           cp "$GITHUB_WORKSPACE/tests/e2e/login-fixtures.sql" "$test_root/supabase/migrations/20261115130000_e2e_login_fixtures.sql"
           cp "$GITHUB_WORKSPACE/supabase/migrations/20261115181510_create_experience_results.sql" "$test_root/supabase/migrations/"
           cp "$GITHUB_WORKSPACE/supabase/tests/database/experience_results.test.sql" "$test_root/supabase/tests/database/"
+          cp "$GITHUB_WORKSPACE/tests/fixtures/freight_rules_fixture.sql" "$test_root/supabase/migrations/20261115120000_freight_rules_fixture.sql"
+          cp "$GITHUB_WORKSPACE/supabase/migrations/20261116110000_standardize_delivery_fees.sql" "$test_root/supabase/migrations/"
+          cp "$GITHUB_WORKSPACE/supabase/tests/database/freight_rules.test.sql" "$test_root/supabase/tests/database/"
 
           cd "$test_root"
           supabase start

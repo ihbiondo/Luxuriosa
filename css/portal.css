@@ -506,3 +506,41 @@ body{
 }
 .footer a:first-child{color:#5c4469}
 :focus-visible{outline:3px solid #d83c91;outline-offset:4px}
+
+/* Clube: opções de evolução exibidas somente no portal autenticado. */
+.club-upgrade{margin:34px 0 28px;padding:clamp(22px,4vw,34px);border:1px solid rgba(216,183,127,.28);border-radius:22px;background:linear-gradient(135deg,rgba(53,27,48,.96),rgba(29,17,34,.98));box-shadow:0 16px 42px rgba(0,0,0,.16)}
+.club-upgrade-heading{max-width:700px;margin:0 auto 22px;text-align:center}
+.club-upgrade-heading h2{margin:9px 0;color:#f2dfc6;font:500 clamp(27px,4vw,36px)/1.15 var(--serif)}
+.club-upgrade-heading p{margin:0;color:#cdbed5;font-size:13px;line-height:1.7}
+.club-upgrade-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.club-upgrade-card{display:flex;flex-direction:column;padding:22px;border:1px solid rgba(216,183,127,.25);border-radius:16px;background:rgba(13,8,16,.45)}
+.club-upgrade-card--support{border-color:rgba(237,118,169,.4)}
+.club-upgrade-kicker{color:#d8b77f;font-size:10px;font-weight:700;letter-spacing:.13em}
+.club-upgrade-card--support .club-upgrade-kicker{color:#f08bb4}
+.club-upgrade-card h3{margin:9px 0 3px;color:#f7e9d8;font:500 27px var(--serif)}
+.club-upgrade-price{margin:5px 0 12px;color:#e8c98f;font-size:22px;font-weight:700}
+.club-upgrade-price small{color:#cdbed5;font-size:11px;font-weight:400}
+.club-upgrade-card>p:not(.club-upgrade-price){margin:0 0 18px;color:#d0c2d6;font-size:12px;line-height:1.7}
+.club-upgrade-card>a{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:auto;padding:12px 14px;border:1px solid rgba(216,183,127,.55);border-radius:24px;color:#f0d4a2;text-decoration:none;font-size:11px;font-weight:700}
+.club-upgrade-card>a:hover{background:rgba(216,183,127,.1)}
+.club-upgrade-note{margin:14px 0 0;color:#a997b0;font-size:10px;line-height:1.6;text-align:center}
+@media(max-width:700px){.club-upgrade-grid{grid-template-columns:1fr}.club-upgrade-card{padding:19px}}
+
+/* Clube: opções de evolução exibidas somente no portal autenticado. */
+.club-upgrade{margin:34px 0 28px;padding:clamp(22px,4vw,34px);border:1px solid rgba(216,183,127,.28);border-radius:22px;background:linear-gradient(135deg,rgba(53,27,48,.96),rgba(29,17,34,.98));box-shadow:0 16px 42px rgba(0,0,0,.16)}
+.club-upgrade-heading{max-width:700px;margin:0 auto 22px;text-align:center}
+.club-upgrade-heading h2{margin:9px 0;color:#f2dfc6;font:500 clamp(27px,4vw,36px)/1.15 var(--serif)}
+.club-upgrade-heading p{margin:0;color:#cdbed5;font-size:13px;line-height:1.7}
+.club-upgrade-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.club-upgrade-card{display:flex;flex-direction:column;padding:22px;border:1px solid rgba(216,183,127,.25);border-radius:16px;background:rgba(13,8,16,.45)}
+.club-upgrade-card--support{border-color:rgba(237,118,169,.4)}
+.club-upgrade-kicker{color:#d8b77f;font-size:10px;font-weight:700;letter-spacing:.13em}
+.club-upgrade-card--support .club-upgrade-kicker{color:#f08bb4}
+.club-upgrade-card h3{margin:9px 0 3px;color:#f7e9d8;font:500 27px var(--serif)}
+.club-upgrade-price{margin:5px 0 12px;color:#e8c98f;font-size:22px;font-weight:700}
+.club-upgrade-price small{color:#cdbed5;font-size:11px;font-weight:400}
+.club-upgrade-card>p:not(.club-upgrade-price){margin:0 0 18px;color:#d0c2d6;font-size:12px;line-height:1.7}
+.club-upgrade-card>a{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:auto;padding:12px 14px;border:1px solid rgba(216,183,127,.55);border-radius:24px;color:#f0d4a2;text-decoration:none;font-size:11px;font-weight:700}
+.club-upgrade-card>a:hover{background:rgba(216,183,127,.1)}
+.club-upgrade-note{margin:14px 0 0;color:#a997b0;font-size:10px;line-height:1.6;text-align:center}
+@media(max-width:700px){.club-upgrade-grid{grid-template-columns:1fr}.club-upgrade-card{padding:19px}}
