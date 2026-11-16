@@ -19,9 +19,8 @@
     "Todos",
     "Lingerie",
     "Géis e estimulantes",
-    "Vibradores e acessórios",
-    "Acessórios",
-    "Jogos e masturbadores",
+    "Vibradores e masturbadores",
+    "Jogos e acessórios",
     "Perfumes e higiene",
     "Óleos para massagem",
     "Kits",
@@ -29,7 +28,6 @@
   ];
 
   var GRUPOS_CATEGORIAS = {
-    "Acessórios": ["Acessórios"],
     "Óleos para massagem": ["Óleos para massagem"],
     "Géis e estimulantes": [
       "Géis e estimulantes íntimos",
@@ -37,17 +35,16 @@
       "Estimulantes",
       "Géis e cremes íntimos"
     ],
-    "Vibradores e acessórios": [
+    "Vibradores e masturbadores": [
       "Vibradores",
       "Anéis penianos",
       "Plugs anais",
       "Próteses",
-      "Masturbadores",
-      "Acessórios"
-    ],
-    "Jogos e masturbadores": [
-      "Jogos eróticos",
       "Masturbadores"
+    ],
+    "Jogos e acessórios": [
+      "Jogos eróticos",
+      "Acessórios"
     ],
     "Perfumes e higiene": [
       "Perfumes sensuais",
