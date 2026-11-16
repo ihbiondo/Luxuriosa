@@ -76,14 +76,32 @@
   <section class="discover-section portal-more" aria-labelledby="discoverTitle">
     <div class="section-heading"><span class="eyebrow">OUTRAS ÁREAS</span><h2 id="discoverTitle">Explore o seu espaço</h2><p class="section-intro">A mesma navegação simples para tudo o que a Luxuriosa oferece.</p></div>
     <div class="portal-destinations">
-      <a class="priority-card portal-destination-card portal-destination-card--experience" href="/experiencias/">
-        <span class="priority-icon" aria-hidden="true">✦</span>
-        <span class="priority-copy"><span class="priority-kicker">INTERAÇÃO E DESCOBERTA</span><strong>Experiências</strong><span class="priority-description">Quizzes, desafios, descobertas e momentos a dois.</span><span class="priority-action">Explorar experiências <span aria-hidden="true">→</span></span></span>
-      </a>
-      <a class="priority-card portal-destination-card portal-destination-card--education" href="/educacao/">
-        <span class="priority-icon" aria-hidden="true">◇</span>
-        <span class="priority-copy"><span class="priority-kicker">CONHECIMENTO E BEM-ESTAR</span><strong>Educação</strong><span class="priority-description">Guias, temas e informação confiável para aprender no seu ritmo.</span><span class="priority-action">Acessar conteúdos <span aria-hidden="true">→</span></span></span>
-      </a>
+      <details class="portal-destination-disclosure portal-destination-card--experience">
+        <summary class="priority-card portal-destination-card">
+          <span class="priority-icon" aria-hidden="true">✦</span>
+          <span class="priority-copy"><span class="priority-kicker">INTERAÇÃO E DESCOBERTA</span><strong>Experiências</strong><span class="priority-description">Quizzes, desafios, descobertas e momentos a dois.</span><span class="priority-action">Escolher uma categoria <span aria-hidden="true">⌄</span></span></span>
+        </summary>
+        <div class="portal-submenu" aria-label="Categorias de experiências">
+          <a href="/experiencias/?tipo=quiz"><strong>Quizzes</strong><span>Autoconhecimento e curiosidades</span></a>
+          <a href="/experiencias/?tipo=couple"><strong>A dois</strong><span>Conversas e conexão</span></a>
+          <a href="/experiencias/?tipo=challenge"><strong>Desafios</strong><span>Pequenas descobertas</span></a>
+          <a href="/experiencias/?tipo=astrology"><strong>Astrologia</strong><span>Signos e compatibilidade</span></a>
+          <a href="/experiencias/"><strong>Todas as experiências</strong><span>Ver a coleção completa</span></a>
+        </div>
+      </details>
+      <details class="portal-destination-disclosure portal-destination-card--education">
+        <summary class="priority-card portal-destination-card">
+          <span class="priority-icon" aria-hidden="true">◇</span>
+          <span class="priority-copy"><span class="priority-kicker">CONHECIMENTO E BEM-ESTAR</span><strong>Educação</strong><span class="priority-description">Guias, temas e informação confiável para aprender no seu ritmo.</span><span class="priority-action">Escolher uma categoria <span aria-hidden="true">⌄</span></span></span>
+        </summary>
+        <div class="portal-submenu" aria-label="Categorias educativas">
+          <a href="/educacao/temas/"><strong>Temas educativos</strong><span>Saúde, prevenção, corpo e relações</span></a>
+          <a href="/educacao/enciclopedia/"><strong>Enciclopédia</strong><span>Referências, produtos e materiais</span></a>
+          <a href="/educacao/curiosidades/"><strong>Curiosidades</strong><span>Explicações rápidas e descobertas</span></a>
+          <a href="/educacao/guias/"><strong>Guias práticos</strong><span>Cuidados, escolha e conservação</span></a>
+          <a href="/educacao/"><strong>Biblioteca completa</strong><span>Ver todos os conteúdos educativos</span></a>
+        </div>
+      </details>
       <a class="priority-card portal-destination-card portal-destination-card--club" href="/clube.html">
         <span class="priority-icon" aria-hidden="true">♛</span>
         <span class="priority-copy"><span class="priority-kicker">BENEFÍCIOS</span><strong>Clube de Vantagens</strong><span class="priority-description">Consulte as vantagens e condições disponíveis para clientes.</span><span class="priority-action">Conhecer o clube <span aria-hidden="true">→</span></span></span>
