@@ -5,7 +5,6 @@ const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 const INFINITEPAY_API_KEY = Deno.env.get("INFINITEPAY_API_KEY") || "";
 const INFINITEPAY_HANDLE = Deno.env.get("INFINITEPAY_HANDLE") || "";
-const GOOGLE_MAPS_API_KEY = Deno.env.get("GOOGLE_MAPS_API_KEY") || "";
 const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY") || "";
 const EMAIL_FROM = Deno.env.get("EMAIL_FROM") || "";
 const admin = createClient(SUPABASE_URL, SERVICE_ROLE_KEY, {
