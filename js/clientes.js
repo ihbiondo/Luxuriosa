@@ -1,6 +1,6 @@
 /* =========================================================
-   LUXURIOSA — CADASTRO LOCAL E REVISÃO DO PEDIDO
-   Sem conta, servidor, API ou sincronização.
+   LUXURIOSA — DADOS DO CLIENTE E REVISÃO DO PEDIDO
+   Checkout autenticado, consulta de perfil e criação de pedido via Supabase.
    ========================================================= */
 (function () {
   "use strict";
