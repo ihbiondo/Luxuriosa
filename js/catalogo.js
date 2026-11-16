@@ -1712,7 +1712,12 @@
 
           /* Permite abrir a loja já com uma categoria ou busca selecionada. */
           var parametrosLoja = new URLSearchParams(window.location.search);
-          var categoriaSolicitada = parametrosLoja.get("categoria");
+          var caminhoLoja = window.location.pathname.replace(/\\/+$/, "") || "/";
+          var categoriasPorRota = {
+            "/loja/lingerie": "Lingerie"
+          };
+          var categoriaSolicitada = parametrosLoja.get("categoria") ||
+            categoriasPorRota[caminhoLoja];
           if (categoriaSolicitada && CATEGORIAS.indexOf(categoriaSolicitada) !== -1 &&
               categoriaTemProdutos(categoriaSolicitada)) {
             filtroAtual = categoriaSolicitada;
