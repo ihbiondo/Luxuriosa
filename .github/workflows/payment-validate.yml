@@ -78,6 +78,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
+      # Inclui validação estática das regras de frete do checkout e do backend.
       - name: Validar JavaScript do checkout, login e acompanhamento
         run: |
           node --check js/clientes.js
