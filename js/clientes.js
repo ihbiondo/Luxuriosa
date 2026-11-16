@@ -29,8 +29,8 @@
 
     return [
       "Destino: " + (cidade || "cidade não informada") + (estado ? "/" + estado : ""),
-      "Sem Clube: Bauru R$ 20, região até 30 km R$ 40 e região até 55 km R$ 70. Com Clube gratuito ativo: R$ 10, R$ 25 e R$ 50, respectivamente.",
-      "Apoiadores têm frete subsidiado pela Luxuriosa. No Privilegie, o frete é gratuito dentro da área atendida. Limite: 55 km pela rota de motocicleta."
+      "Sem Clube: Bauru R$ 20, até 30 km R$ 30 e até 55 km R$ 45. Clube gratuito: R$ 10, R$ 20 e R$ 30, respectivamente.",
+      "Apoiador: 50% do custo real da rota de ida e volta; rota programada pode ter entrega gratuita mediante confirmação. Privilégio: frete grátis. Limite: 55 km pela rota de motocicleta."
     ];
   }
 
@@ -196,7 +196,7 @@
       ? cidade.normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim().toLowerCase()
       : cidade.trim().toLowerCase();
     if (cidadeNormalizada === "bauru" && estado === "SP") {
-      var avisoFrete = "Entrega em Bauru-SP: tarifa conforme sua modalidade de participação no Clube.";
+      var avisoFrete = "Entrega em Bauru-SP: Sem Clube R$ 20; Clube gratuito R$ 10; Apoiador paga 50% do custo real da rota; Privilégio tem frete grátis.";
       var avisoPrazo = " Prazo operacional previsto: até 30 minutos após a confirmação do pagamento, contado dentro da janela de entrega. Pagamentos fora da janela entram na próxima abertura.";
       var avisoMinimo = " O pedido deve ter mínimo de R$ 20,00 em produtos.";
       if (subtotal > 0 && subtotal < 20) {
