@@ -38,7 +38,7 @@
       <div class="time"><span>Expedição prevista até</span><strong id="dispatch">—</strong></div>
       <div class="time"><span>Entrega prevista até</span><strong id="delivery">—</strong></div>
     </div>
-    <p id="note">A confirmação é consultada no servidor com a InfinitePay. O retorno do navegador, sozinho, nunca libera o pedido.</p>
+    <p id="note">O status do pedido é consultado no servidor. A equipe confirma o recebimento após conferir a transação na InfinitePay; o retorno do navegador, sozinho, nunca libera a expedição.</p>
     <div class="actions">
       <button type="button" id="check">CONSULTAR PAGAMENTO</button>
       <a class="primary" href="index.html">VOLTAR À LUXURIOSA</a>
@@ -51,10 +51,6 @@
   "use strict";
   var params=new URLSearchParams(location.search);
   var orderNsu=params.get("order")||params.get("order_nsu")||"";
-  var transactionNsu=params.get("transaction_nsu")||"";
-  var invoiceSlug=params.get("slug")||params.get("invoice_slug")||"";
-  var receiptUrl=params.get("receipt_url")||"";
-  var captureMethod=params.get("capture_method")||"";
   var api="https://byiykxfugvxuowueuxca.supabase.co/functions/v1/payment-status";
   var $=function(id){return document.getElementById(id)};
   function getAccessToken(){
