@@ -202,8 +202,10 @@
 
   function setBackgroundHidden(hidden) {
     document.querySelectorAll(".ed-header, .ed-adult, .ed-main, .ed-footer").forEach(element => {
-      if (hidden) element.setAttribute("aria-hidden", "true");
-      else element.removeAttribute("aria-hidden");
+      // Mantém o conteúdo no DOM e no fluxo de leitura dos rastreadores.
+      // O atributo inert impede foco e interação enquanto a declaração 18+ está aberta.
+      if (hidden) element.setAttribute("inert", "");
+      else element.removeAttribute("inert");
     });
   }
 
