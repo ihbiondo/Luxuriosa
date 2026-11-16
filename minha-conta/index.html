@@ -881,6 +881,7 @@ input:focus,select:focus{border-color:#d4af7c;box-shadow:0 0 0 3px rgba(212,175,
       const profileContent = document.createElement("div");
       profileContent.className = "account-section-content";
       profile.append(profileSummary, profileContent);
+      profile.open = true;
 
       const subsections = [
         ["account-email-section", "E-mail de acesso", $("emailChangeForm")],
