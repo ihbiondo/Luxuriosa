@@ -197,7 +197,7 @@ jobs:
           }
           trap cleanup EXIT
 
-          # Projeto scratch: somente fixtures de login + migration de conquistas.
+          # Projeto scratch: fixtures isoladas de login, frete e migration de conquistas.
           # Não há token, project-ref, link ou credencial do Supabase hospedado.
           mkdir -p "$test_root/supabase/migrations" "$test_root/supabase/tests/database"
           cp "$GITHUB_WORKSPACE/supabase/config.toml" "$test_root/supabase/config.toml"
