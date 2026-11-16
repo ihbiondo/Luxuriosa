@@ -481,7 +481,7 @@ Deno.serve(async (req: Request) => {
       baseFeeCents = 0;
     } else if (planCode === "supporter") {
       if (!route) {
-        return reply({ error: "Não foi possível calcular o custo real da rota para o benefício Apoiador. Fale com a Luxuriosa." }, 409, origin);
+        return reply({ error: "Não foi possível estimar o custo operacional da rota para o benefício Apoiador. Fale com a Luxuriosa." }, 409, origin);
       }
       if (Number(rule.motorcycle_km_per_liter) <= 0) {
         return reply({ error: "A configuração do custo de entrega Apoiador ainda não está disponível. Fale com a Luxuriosa." }, 409, origin);
@@ -489,11 +489,11 @@ Deno.serve(async (req: Request) => {
       const costPerKmCents =
         Number(rule.motorcycle_fuel_price_cents_per_liter) / Number(rule.motorcycle_km_per_liter) +
         Number(rule.motorcycle_operational_cost_cents_per_km);
-      const actualRoundTripCostCents = Math.max(
+      const estimatedRoundTripCostCents = Math.max(
         Number(rule.minimum_delivery_cost_cents),
         Math.ceil(route.distanceKm * 2 * costPerKmCents)
       );
-      baseFeeCents = Math.ceil(actualRoundTripCostCents * Number(rule.supporter_share_percent) / 100);
+      baseFeeCents = Math.ceil(estimatedRoundTripCostCents * Number(rule.supporter_share_percent) / 100);
     } else {
       const configuredFee = configuredFreightFee(distanceKm, rule, fulfillmentType, isClubMember, isBauruDelivery);
       if (configuredFee === null) {
