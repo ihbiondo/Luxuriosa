@@ -586,6 +586,146 @@ input:focus,select:focus{border-color:#d4af7c;box-shadow:0 0 0 3px rgba(212,175,
     #signedInArea .account-actions{margin-top:22px;padding-top:18px;border-top:1px solid #e7deeb}
     #signedInArea .account-signout .secondary{width:100%}
 
+
+    /* Cadastro reorganizado: três seções claras, com segurança dentro das configurações. */
+    #signedInArea>.eyebrow,
+    #signedInArea>#accountGreeting,
+    #signedInArea>.lead{display:none!important}
+    #signedInArea .account-box{
+      width:min(100%,980px);
+      max-width:980px;
+      margin:0 auto;
+      padding:clamp(18px,3vw,30px);
+      border-radius:18px;
+    }
+    #signedInArea .account-email{
+      margin:0 0 18px;
+      padding:0 0 14px;
+      border-bottom:1px solid rgba(212,175,124,.2);
+      font-size:13px;
+      line-height:1.7;
+      overflow-wrap:anywhere;
+    }
+    #signedInArea #account-profile-section{
+      margin:0;
+      padding:0;
+      border:0;
+      background:transparent;
+      overflow:visible;
+    }
+    #signedInArea #account-profile-section>summary{
+      min-height:64px;
+      padding:18px 20px;
+      border:1px solid rgba(212,175,124,.38);
+      border-radius:13px;
+      background:linear-gradient(110deg,rgba(139,30,63,.42),#241219);
+      color:#f7d7d9!important;
+      font-size:16px;
+      letter-spacing:.01em;
+    }
+    #signedInArea #account-profile-section>summary:after{content:"−";color:#e2bd82!important}
+    #signedInArea #account-profile-section:not([open])>summary:after{content:"＋"}
+    #signedInArea #account-profile-section>.account-section-content{
+      display:grid;
+      gap:12px;
+      padding:14px 0 0;
+    }
+    #signedInArea #account-profile-section .account-subsection{
+      margin:0;
+      border:1px solid rgba(212,175,124,.22);
+      border-radius:12px;
+      background:linear-gradient(145deg,#1c1014,#120c0e);
+      overflow:hidden;
+    }
+    #signedInArea #account-profile-section .account-subsection>summary{
+      min-height:62px;
+      padding:17px 19px;
+      color:#f7d7d9!important;
+      font-size:14px;
+      font-weight:600;
+    }
+    #signedInArea #account-profile-section .account-subsection>summary:after{
+      color:#d4af7c!important;
+      font-size:18px;
+    }
+    #signedInArea #account-profile-section .account-subsection>.account-section-content{
+      padding:0 18px 18px;
+      border-top:1px solid rgba(212,175,124,.15);
+    }
+    #signedInArea #account-data-section .account-form,
+    #signedInArea #account-consent-section .account-form,
+    #signedInArea #account-settings-section .account-form{
+      margin:0!important;
+      padding:16px 0 0!important;
+      border:0!important;
+    }
+    #signedInArea #account-data-section .section-label{
+      margin:8px 0 10px;
+      padding-top:12px;
+      font-size:10px;
+    }
+    #signedInArea #account-data-section .section-label:first-child{
+      margin-top:0;
+      padding-top:0;
+      border-top:0;
+    }
+    #signedInArea #account-data-section .grid,
+    #signedInArea #account-password-section .grid{gap:13px}
+    #signedInArea #account-settings-section>.account-section-content{
+      padding:0 14px 14px;
+    }
+    #signedInArea #account-settings-section .account-settings-item{
+      margin-top:10px;
+      border-color:rgba(212,175,124,.18);
+      background:#110b0d;
+    }
+    #signedInArea #account-settings-section .account-settings-item:first-child{margin-top:14px}
+    #signedInArea #account-settings-section .account-settings-item>summary{
+      min-height:54px;
+      padding:14px 16px;
+      font-size:13px;
+    }
+    #signedInArea #account-password-section .email-change-help{margin:8px 0 12px}
+    #signedInArea #account-delete-section .danger-help{
+      margin:16px 0;
+      color:#e0b6ba;
+      font-size:12px;
+      line-height:1.7;
+    }
+    #signedInArea .account-signout{
+      margin:18px 0 0;
+      padding-top:16px;
+      border-top:1px solid rgba(212,175,124,.2);
+    }
+    #signedInArea .account-signout .secondary{
+      width:100%;
+      min-height:48px;
+      border-radius:9px;
+    }
+    @media(max-width:820px){
+      #signedInArea .account-box{
+        width:100%;
+        padding:16px 14px;
+        border-radius:15px;
+      }
+      #signedInArea .account-email{margin-bottom:14px;font-size:12px}
+      #signedInArea #account-profile-section>summary{
+        min-height:58px;
+        padding:15px 16px;
+        font-size:15px;
+      }
+      #signedInArea #account-profile-section>.account-section-content{gap:10px;padding-top:11px}
+      #signedInArea #account-profile-section .account-subsection>summary{
+        min-height:56px;
+        padding:14px 15px;
+        font-size:13px;
+      }
+      #signedInArea #account-profile-section .account-subsection>.account-section-content{padding:0 14px 15px}
+      #signedInArea #account-data-section .grid{grid-template-columns:1fr}
+      #signedInArea #account-data-section .field.full{grid-column:1}
+      #signedInArea #account-settings-section>.account-section-content{padding:0 10px 10px}
+      #signedInArea #account-settings-section .account-settings-item>summary{padding:13px 14px}
+    }
   </style>
 </head>
 <body>
@@ -721,29 +861,9 @@ input:focus,select:focus{border-color:#d4af7c;box-shadow:0 0 0 3px rgba(212,175,
         </div>
 
         <div id="signedInArea" class="hidden">
-          <span class="eyebrow">Área da sua conta</span>
-          <h2 id="accountGreeting">Olá!</h2>
-          <p class="lead">Consulte e mantenha seus dados atualizados.</p>
           <div class="account-box">
             <p class="account-email">Conta vinculada a <strong id="accountEmail"></strong></p>
             <p><a id="adminDashboardLink" class="hidden" href="#" rel="nofollow">Acessar Gestão Luxuriosa →</a></p>
-            <div class="account-welcome">
-              <strong>Olá! O que você quer acessar?</strong>
-              <p>Seus atalhos principais estão aqui.</p>
-            </div>
-            <nav class="account-home" aria-label="Painel de atalhos da sua conta">
-              <a href="/minha-conta/"><span class="tile-icon" aria-hidden="true"><svg viewBox="0 0 48 48" focusable="false"><circle cx="24" cy="15" r="8"/><path d="M9 41c1-9 6-14 15-14s14 5 15 14Z"/></svg></span><strong>Meu cadastro</strong><span>Seus dados, endereço e preferências.</span></a>
-              <a href="/meus-pedidos/"><span class="tile-icon" aria-hidden="true"><svg viewBox="0 0 48 48" focusable="false"><path d="M12 16h24l2.5 25h-29L12 16Z"/><path d="M17 18v-5a7 7 0 0 1 14 0v5M18 26h12M18 32h8"/></svg></span><strong>Meus pedidos</strong><span>Acompanhe cada etapa das suas compras.</span></a>
-              <a href="/loja.html"><span class="tile-icon" aria-hidden="true"><svg viewBox="0 0 48 48" focusable="false"><path d="M7 20 11 9h26l4 11v3a6 6 0 0 1-11 3 6 6 0 0 1-12 0 6 6 0 0 1-11-3z"/><path d="M10 28v12h28V28M19 40V28h10v12"/></svg></span><strong>Explorar Loja</strong><span>Produtos, kits e novidades.</span></a>
-              <a href="/clube.html"><span class="tile-icon" aria-hidden="true"><svg viewBox="0 0 48 48" focusable="false"><path d="m8 15 9 8 7-14 7 14 9-8-4 24H12Z"/><path d="M13 33h22M8 42h32"/></svg></span><strong>Clube de Vantagens</strong><span>Benefícios e modalidades.</span></a>
-              <a class="account-tile-featured" href="/portal/"><span class="tile-icon" aria-hidden="true"><svg viewBox="0 0 48 48" focusable="false"><path d="M24 5 29 19 43 24 29 29 24 43 19 29 5 24 19 19Z"/></svg></span><strong>Abrir meu portal</strong><span>Seu espaço com conteúdos, ferramentas e experiências.</span></a>
-            </nav>
-            <section class="orders-panel" id="account-orders-panel" aria-labelledby="ordersHeading">
-              <div class="section-label" id="ordersHeading">Meus pedidos</div>
-              <p class="orders-intro">Acompanhe as solicitações feitas pelo site e o andamento de cada pedido. Solicitações encaminhadas ao WhatsApp ficam aguardando confirmação; a compra só é confirmada após o atendimento.</p>
-              <div id="accountOrders" class="orders-list" aria-live="polite"><p class="orders-empty">Carregando seu histórico...</p></div>
-              <p class="orders-intro"><a href="/acompanhar-pedido/">ABRIR ACOMPANHAMENTO COMPLETO DOS PEDIDOS →</a></p>
-            </section>
             <form id="emailChangeForm" class="account-form email-change-form">
               <div class="section-label">E-mail de acesso</div>
               <div class="grid">
@@ -753,7 +873,18 @@ input:focus,select:focus{border-color:#d4af7c;box-shadow:0 0 0 3px rgba(212,175,
               <p class="email-change-help">Por segurança, a alteração depende da confirmação por e-mail. O endereço atual continua válido até a conclusão do processo.</p>
               <div class="actions"><button class="secondary" id="requestEmailChangeButton" type="submit">SOLICITAR ALTERAÇÃO DE E-MAIL</button></div>
             </form>
-            <form id="accountDataConsentForm" class="account-form" style="margin:18px 0;padding:16px;border:1px solid var(--line);border-radius:10px">
+            <form id="accountPasswordForm" class="account-form">
+              <div class="section-label">Trocar senha</div>
+              <p class="email-change-help">Por segurança, confirme sua senha atual antes de cadastrar uma nova.</p>
+              <div class="grid">
+                <div class="field full"><label for="currentAccountPassword">Senha atual</label><input id="currentAccountPassword" type="password" autocomplete="current-password" required></div>
+                <div class="field"><label for="newAccountPassword">Nova senha</label><input id="newAccountPassword" type="password" autocomplete="new-password" minlength="8" pattern="(?=.*[A-Za-z])(?=.*[0-9]).{8,}" title="Use pelo menos 8 caracteres, incluindo letras e números." required></div>
+                <div class="field"><label for="confirmAccountPassword">Confirme a nova senha</label><input id="confirmAccountPassword" type="password" autocomplete="new-password" minlength="8" required></div>
+              </div>
+              <p class="email-change-help">Use pelo menos 8 caracteres, incluindo letras e números.</p>
+              <div class="actions"><button class="secondary" id="saveAccountPasswordButton" type="submit">ALTERAR SENHA</button></div>
+            </form>
+            <form id="accountDataConsentForm" class="account-form">
               <div class="section-label">Privacidade e uso de dados opcionais</div>
               <p class="email-change-help">Estas escolhas não afetam sua conta, seus pedidos ou o atendimento. Você pode alterá-las gratuitamente.</p>
               <div class="field full" style="margin:12px 0">
@@ -867,45 +998,54 @@ input:focus,select:focus{border-color:#d4af7c;box-shadow:0 0 0 3px rgba(212,175,
     });
 
     const $ = (id) => document.getElementById(id);
-    // Agrupa todas as configurações pessoais dentro de "Meu cadastro".
+    // Organiza o cadastro em três áreas principais e agrupa os controles sensíveis.
     function organizeAccountSections() {
       const box = document.querySelector("#signedInArea .account-box");
       if (!box || box.dataset.organized === "true") return;
-      const orders = $("ordersHeading")?.closest(".orders-panel");
-      if (orders) orders.id = "account-orders-panel";
 
       const profile = document.createElement("details");
-      profile.className = "account-section";
+      profile.className = "account-section account-profile";
       profile.id = "account-profile-section";
+      profile.open = true;
+
       const profileSummary = document.createElement("summary");
       profileSummary.textContent = "Meu cadastro";
       const profileContent = document.createElement("div");
-      profileContent.className = "account-section-content";
+      profileContent.className = "account-section-content account-profile-content";
       profile.append(profileSummary, profileContent);
-      profile.open = true;
 
-      const subsections = [
-        ["account-email-section", "E-mail de acesso", $("emailChangeForm")],
-        ["account-consent-section", "Privacidade e autorizações", $("accountDataConsentForm")],
-        ["account-data-section", "Meus dados e endereço", $("accountForm")],
-        ["account-delete-section", "Encerrar conta", $("deleteAccountForm")]
-      ];
-      subsections.forEach(([id, title, node]) => {
-        if (!node) return;
-        if (id === "account-delete-section") node.hidden = false;
+      function createDisclosure(id, title, node = null, extraClass = "") {
         const details = document.createElement("details");
-        details.className = "account-section account-subsection";
+        details.className = "account-section account-subsection " + extraClass;
         details.id = id;
         const summary = document.createElement("summary");
         summary.textContent = title;
         const content = document.createElement("div");
         content.className = "account-section-content";
         details.append(summary, content);
-        profileContent.append(details);
-        content.append(node);
+        if (node) content.append(node);
+        return { details, content };
+      }
+
+      const dataSection = createDisclosure("account-data-section", "Meus dados", $("accountForm"), "account-data-section");
+      const privacySection = createDisclosure("account-consent-section", "Privacidade e autorizações", $("accountDataConsentForm"), "account-privacy-section");
+      const settingsSection = createDisclosure("account-settings-section", "Configurações da conta", null, "account-settings-section");
+
+      const settingsItems = [
+        ["account-email-section", "E-mail de acesso", $("emailChangeForm")],
+        ["account-password-section", "Trocar senha", $("accountPasswordForm")],
+        ["account-delete-section", "Encerrar conta", $("deleteAccountForm")]
+      ];
+      settingsItems.forEach(([id, title, node]) => {
+        if (!node) return;
+        if (id === "account-delete-section") node.hidden = false;
+        const item = createDisclosure(id, title, node, "account-settings-item");
+        settingsSection.content.append(item.details);
       });
 
-      if (orders) orders.after(profile);
+      profileContent.append(dataSection.details, privacySection.details, settingsSection.details);
+      box.append(profile);
+
       const signOut = $("signOutButton")?.closest(".account-actions");
       if (signOut) {
         profile.after(signOut);
@@ -925,10 +1065,16 @@ input:focus,select:focus{border-color:#d4af7c;box-shadow:0 0 0 3px rgba(212,175,
           if (target) window.setTimeout(() => target.scrollIntoView({ behavior: "smooth", block: "start" }), 0);
         });
       });
+
       const requestedSectionId = window.location.hash.slice(1);
       const requestedSection = requestedSectionId ? document.getElementById(requestedSectionId) : null;
       if (requestedSection && requestedSection.matches("details.account-section")) {
         requestedSection.open = true;
+        let parent = requestedSection.parentElement?.closest("details.account-section");
+        while (parent) {
+          parent.open = true;
+          parent = parent.parentElement?.closest("details.account-section");
+        }
         window.setTimeout(() => requestedSection.scrollIntoView({ behavior: "smooth", block: "start" }), 100);
       }
     }
@@ -1262,7 +1408,6 @@ input:focus,select:focus{border-color:#d4af7c;box-shadow:0 0 0 3px rgba(212,175,
       try {
         await syncNewAccountData(user);
         await loadAccountData(user);
-        await loadAccountOrders(user);
         await loadAdminAccess(user);
         activeUserId = user.id;
         const requestedPage = new URLSearchParams(window.location.search).get("redirect");
@@ -1332,6 +1477,49 @@ input:focus,select:focus{border-color:#d4af7c;box-shadow:0 0 0 3px rgba(212,175,
       } finally {
         button.disabled = false;
         button.textContent = "SOLICITAR ALTERAÇÃO DE E-MAIL";
+      }
+    });
+
+    $("accountPasswordForm").addEventListener("submit", async (event) => {
+      event.preventDefault();
+      clearMessage();
+
+      const currentPassword = $("currentAccountPassword").value;
+      const newPassword = $("newAccountPassword").value;
+      const confirmation = $("confirmAccountPassword").value;
+
+      if (!/(?=.*[A-Za-z])(?=.*[0-9]).{8,}/.test(newPassword)) {
+        return message("Use uma nova senha com pelo menos 8 caracteres, incluindo letras e números.", true);
+      }
+      if (newPassword !== confirmation) {
+        return message("A confirmação da nova senha não coincide.", true);
+      }
+      if (currentPassword === newPassword) {
+        return message("A nova senha precisa ser diferente da senha atual.", true);
+      }
+
+      const button = $("saveAccountPasswordButton");
+      button.disabled = true;
+      button.textContent = "ALTERANDO SENHA...";
+      try {
+        const { data: current, error: currentError } = await supabase.auth.getUser();
+        if (currentError) throw currentError;
+        if (!current.user?.email) throw new Error("Sua sessão expirou. Entre novamente.");
+
+        const { error } = await supabase.auth.updateUser({
+          password: newPassword,
+          currentPassword
+        });
+        if (error) throw error;
+
+        $("accountPasswordForm").reset();
+        message("Sua senha foi alterada com sucesso.");
+      } catch (error) {
+        console.error("Falha ao alterar senha:", error);
+        message("Não foi possível alterar sua senha. " + friendlyError(error), true);
+      } finally {
+        button.disabled = false;
+        button.textContent = "ALTERAR SENHA";
       }
     });
 
