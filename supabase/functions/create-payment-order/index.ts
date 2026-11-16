@@ -317,8 +317,8 @@ Deno.serve(async (req: Request) => {
 
     const cityNormalized = normalizeCity(deliveryAddress.city);
     const districtNormalized = normalizeCity(deliveryAddress.district);
-    const isTibiriçaDelivery = (cityNormalized === "bauru" && districtNormalized === "tibiriça") ||
-      cityNormalized === "tibiriça";
+    const isTibiriçaDelivery = (cityNormalized === "bauru" && districtNormalized === "tibirica") ||
+      cityNormalized === "tibirica";
     const isBauruDelivery = cityNormalized === "bauru" || isTibiriçaDelivery;
     const officialDeliveryCities = new Set([
       "bauru", "agudos", "pederneiras", "piratininga", "lencois paulista", "borebi"
