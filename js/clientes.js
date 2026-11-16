@@ -29,8 +29,8 @@
 
     return [
       "Destino: " + (cidade || "cidade não informada") + (estado ? "/" + estado : ""),
-      "Condição: frete calculado conforme endereço, distância pela rota e modalidade de participação no Clube.",
-      "Limite operacional: até 55 km pela rota de motocicleta. Pedágio, quando houver, é informado separadamente."
+      "Sem Clube: Bauru R$ 20, região até 30 km R$ 40 e região até 55 km R$ 70. Com Clube gratuito ativo: R$ 10, R$ 25 e R$ 50, respectivamente.",
+      "Apoiadores têm frete subsidiado pela Luxuriosa. No Privilegie, o frete é gratuito dentro da área atendida. Limite: 55 km pela rota de motocicleta."
     ];
   }
 
