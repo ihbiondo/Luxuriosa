@@ -54,7 +54,7 @@
     return [
       "Destino: " + tarifa.nome + (estado ? "/" + estado : ""),
       "Sem Clube: " + formatarPreco(tarifa.comum) + " | Clube gratuito: " + formatarPreco(tarifa.clube),
-      tarifa.pedagio ? "Pedágio incluído no valor." : "Demais localidades: frete sob consulta pelo atendimento."
+      tarifa.pedagio ? "Pedágio incluído no valor." : "Valores fixos nas localidades listadas; demais regiões sob consulta pelo atendimento."
     ];
   }
 
@@ -390,7 +390,7 @@
 
     lines.push("", "*Subtotal: " + formatarPreco(subtotal) + "*");
 
-    lines.push("Frete: a calcular conforme endereço e modalidade do Clube");
+    lines.push("Frete: valor fixo conforme a localidade e a modalidade do Clube, de acordo com a tabela oficial");
     lines.push("*Total estimado dos produtos: " + formatarPreco(totalProdutos) + "*");
 
     lines.push("", "*ENTREGA*");
