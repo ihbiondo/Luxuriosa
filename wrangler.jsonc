@@ -3,6 +3,7 @@
   "name": "lux-gestao",
   "main": "./cloudflare/lux-gestao-worker.mjs",
   "compatibility_date": "2026-11-10",
-  "workers_dev": true,
+  "workers_dev": false,
+  "preview_urls": false,
   "keep_vars": true
 }
