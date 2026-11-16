@@ -985,3 +985,57 @@ body.customer-open { overflow: hidden; }
   }
 }
 
+
+
+/* =========================================================
+   CABEÇALHO DESKTOP — NAVEGAÇÃO MAIS LEVE
+   ========================================================= */
+@media (min-width: 1200px) {
+  header .nav {
+    min-height: 68px;
+    height: 68px;
+    gap: 12px;
+  }
+  header .logo {
+    flex: 0 0 auto;
+    font-size: 24px;
+    letter-spacing: .035em;
+  }
+  header .navlinks {
+    flex: 1 1 auto;
+    justify-content: center;
+    gap: clamp(10px, 1.05vw, 16px);
+    font-size: 10px;
+    letter-spacing: .075em;
+    white-space: nowrap;
+  }
+  header .nav-right {
+    flex: 0 0 auto;
+    gap: 7px;
+  }
+  /* O atalho flutuante de WhatsApp continua disponível na página. */
+  header .nav-right > .btn[data-wa] {
+    display: none;
+  }
+  header .cart-trigger,
+  header .account-trigger {
+    width: 38px;
+    min-width: 38px;
+    height: 38px;
+    min-height: 38px;
+    padding: 0;
+    justify-content: center;
+    border-radius: 50%;
+  }
+  header .cart-label,
+  header .account-trigger-label {
+    display: none;
+  }
+  header .cart-icon {
+    font-size: 18px;
+  }
+  header .account-trigger-icon {
+    font-size: 17px;
+  }
+}
+
