@@ -467,13 +467,14 @@ Deno.serve(async (req: Request) => {
     const planCode = deliveryPlan?.plan_code === "vip" ? "vip"
       : deliveryPlan?.plan_code === "supporter" ? "supporter" : null;
 
-    let baseFeeCents = isBauruDelivery ? 2000 : (distanceKm <= 30 ? 4000 : 7000);
-    if (isClubMember) baseFeeCents = isBauruDelivery ? 1000 : (distanceKm <= 30 ? 3000 : 5000);
-    if (planCode === "supporter") {
-      baseFeeCents = distanceKm <= 30 ? 0 : (fulfillmentType === "scheduled" ? 1500 : 3000);
-    } else if (planCode === "vip") {
-      baseFeeCents = 0;
-    }
+    // Tabela única de frete: cliente sem adesão ao Clube paga a tarifa padrão;
+    // membro do Clube gratuito ou Apoiador usa a tarifa de membro.
+    // O plano Privilégio mantém frete gratuito dentro da área atendida.
+    const hasClubFreight = isClubMember || planCode === "supporter" || planCode === "vip";
+    let baseFeeCents = hasClubFreight
+      ? (isBauruDelivery ? 1000 : (distanceKm <= 30 ? 2500 : 5000))
+      : (isBauruDelivery ? 2000 : (distanceKm <= 30 ? 4000 : 7000));
+    if (planCode === "vip") baseFeeCents = 0;
     const tollCents = 0;
     const shippingCents = baseFeeCents + tollCents;
     if (!Number.isSafeInteger(shippingCents) || shippingCents < 0 || shippingCents > 1000000) {
