@@ -27,7 +27,7 @@
   function obterTarifasOficiais(address) {
     var cidade = normalizarLocalidade(address && address.city);
     var distrito = normalizarLocalidade(address && address.district);
-    if (cidade === "bauru" && distrito === "tibiriça") {
+    if (cidade === "bauru" && distrito === "tibirica") {
       return { nome: "Tibiriçá", comum: 20, clube: 15, pedagio: false };
     }
     var tarifas = {
