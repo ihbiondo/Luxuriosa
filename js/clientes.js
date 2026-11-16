@@ -20,17 +20,41 @@
     return Number(value || 0).toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
   }
 
+  function normalizarLocalidade(value) {
+    return String(value || "").normalize("NFD").replace(/[\\u0300-\\u036f]/g, "").trim().toLowerCase();
+  }
+
+  function obterTarifasOficiais(address) {
+    var cidade = normalizarLocalidade(address && address.city);
+    var distrito = normalizarLocalidade(address && address.district);
+    if (cidade === "bauru" && distrito === "tibiriça") {
+      return { nome: "Tibiriçá", comum: 20, clube: 15, pedagio: false };
+    }
+    var tarifas = {
+      "bauru": { nome: "Bauru", comum: 15, clube: 10, pedagio: false },
+      "agudos": { nome: "Agudos", comum: 25, clube: 20, pedagio: false },
+      "piratininga": { nome: "Piratininga", comum: 25, clube: 20, pedagio: false },
+      "pederneiras": { nome: "Pederneiras", comum: 25, clube: 20, pedagio: false },
+      "lencois paulista": { nome: "Lençóis Paulista", comum: 50, clube: 40, pedagio: true },
+      "borebi": { nome: "Borebi", comum: 50, clube: 40, pedagio: true }
+    };
+    return tarifas[cidade] || null;
+  }
+
   function resumirCondicaoFrete(address, subtotal) {
     var cidade = String(address && address.city || "").trim();
     var estado = String(address && address.state || "").trim().toUpperCase();
-    var cidadeNormalizada = cidade.normalize
-      ? cidade.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase()
-      : cidade.toLowerCase();
-
+    var tarifa = obterTarifasOficiais(address);
+    if (!tarifa || estado !== "SP") {
+      return [
+        "Destino: " + (cidade || "cidade não informada") + (estado ? "/" + estado : ""),
+        "Frete sob consulta pelo atendimento."
+      ];
+    }
     return [
-      "Destino: " + (cidade || "cidade não informada") + (estado ? "/" + estado : ""),
-      "Sem Clube: Bauru R$ 20, até 30 km R$ 30 e até 55 km R$ 45. Clube gratuito: R$ 10, R$ 20 e R$ 30, respectivamente.",
-      "Limite de atendimento: 55 km pela rota de motocicleta."
+      "Destino: " + tarifa.nome + (estado ? "/" + estado : ""),
+      "Sem Clube: " + formatarPreco(tarifa.comum) + " | Clube gratuito: " + formatarPreco(tarifa.clube),
+      tarifa.pedagio ? "Pedágio incluído no valor." : "Demais localidades: frete sob consulta pelo atendimento."
     ];
   }
 
@@ -184,37 +208,31 @@
 
     var cidade = texto("customerCity");
     var estado = texto("customerState").toUpperCase();
+    var distrito = texto("customerDistrict");
     var api = window.LuxuriosaCarrinho;
     var subtotal = api && typeof api.obterTotal === "function" ? Number(api.obterTotal()) : 0;
 
     if (!cidade || !estado) {
-      aviso.textContent = "Informe a cidade e o estado. O site calcula o frete e o pedido mínimo pelo endereço antes de abrir a cobrança.";
+      aviso.textContent = "Informe a cidade e o estado para conferir o valor de entrega.";
       return;
     }
 
-    var cidadeNormalizada = cidade.normalize
-      ? cidade.normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim().toLowerCase()
-      : cidade.trim().toLowerCase();
-    if (cidadeNormalizada === "bauru" && estado === "SP") {
-      var avisoFrete = "Entrega em Bauru-SP: Sem Clube R$ 20; Clube gratuito R$ 10.";
-      var avisoPrazo = " Prazo operacional previsto: até 30 minutos após a confirmação do pagamento, contado dentro da janela de entrega. Pagamentos fora da janela entram na próxima abertura.";
-      var avisoMinimo = " O pedido deve ter mínimo de R$ 20,00 em produtos.";
-      if (subtotal > 0 && subtotal < 20) {
-        avisoMinimo += " Faltam " + formatarPreco(20 - subtotal) + " para atingir o mínimo.";
-      }
-      aviso.textContent = avisoFrete + avisoPrazo + avisoMinimo;
+    var tarifa = obterTarifasOficiais({ city: cidade, district: distrito });
+    if (!tarifa || estado !== "SP") {
+      aviso.textContent = "Entrega para " + cidade + "/" + estado + ": frete sob consulta pelo atendimento.";
       return;
     }
 
-    var cidadesCheckout = ["agudos", "pederneiras", "piratininga", "lencois paulista"];
-    if (estado === "SP" && cidadesCheckout.indexOf(cidadeNormalizada) !== -1) {
-      aviso.textContent = "Entrega em " + cidade + "/SP: o frete e o pedido mínimo são calculados pela rota do endereço e aparecem antes do pagamento. Pedido mínimo: mínimo de R$ 50,00 em produtos. Limite operacional: até 55 km pela rota."
-      return;
+    var textoFrete = "Frete fixo em " + tarifa.nome + ": Sem Clube " + formatarPreco(tarifa.comum) +
+      " | Clube gratuito " + formatarPreco(tarifa.clube) + ".";
+    if (tarifa.pedagio) textoFrete += " Pedágio já incluído.";
+    var pedidoMinimo = normalizarLocalidade(cidade) === "bauru" ? 20 : 50;
+    var textoMinimo = " Pedido mínimo: " + formatarPreco(pedidoMinimo) + " em produtos.";
+    if (subtotal > 0 && subtotal < pedidoMinimo) {
+      textoMinimo += " Faltam " + formatarPreco(pedidoMinimo - subtotal) + " para atingir o mínimo.";
     }
-
-    aviso.textContent = "Entrega para " + cidade + "/" + estado + ": consulte a disponibilidade e o frete pelo WhatsApp. O checkout automático está habilitado apenas para Bauru, Agudos, Pederneiras, Piratininga e Lençóis Paulista, dentro do limite de rota.";
+    aviso.textContent = textoFrete + textoMinimo;
   }
-
 
   function formatarTelefone(value) {
     var digits = String(value || "").replace(/\D/g, "");
