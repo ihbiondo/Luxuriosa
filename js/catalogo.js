@@ -1090,10 +1090,10 @@
     if (statusCatalogo) {
       statusCatalogo.textContent = lista.length
         ? lista.length + (lista.length === 1 ? " produto encontrado." : " produtos encontrados.") +
-          (termoPesquisa ? " Pesquisa: " + termoPesquisa + "." : " Categoria: " + filtroAtual + ".")
+          (termoPesquisa ? " Pesquisa: " + termoPesquisa + "." : "")
         : (termoPesquisa
           ? "Nenhum produto encontrado para \"" + termoPesquisa + "\"."
-          : "Nenhum produto encontrado na categoria " + filtroAtual + ".");
+          : "Nenhum produto encontrado.");
     }
     atualizarControlesPesquisa();
 
