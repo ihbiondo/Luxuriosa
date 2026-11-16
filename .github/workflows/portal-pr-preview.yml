@@ -1,0 +1,28 @@
+name: Build Portal PR Preview
+
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+
+jobs:
+  preview:
+    if: github.event.pull_request.number == 138
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout PR branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - name: Package static preview
+        run: |
+          git archive --format=zip --output=portal-luxuriosa-preview.zip HEAD
+      - name: Upload preview artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: portal-luxuriosa-pr-138
+          path: portal-luxuriosa-preview.zip
+          retention-days: 7
