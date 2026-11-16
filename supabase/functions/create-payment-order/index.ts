@@ -376,7 +376,7 @@ Deno.serve(async (req: Request) => {
 
     const cityNormalized = normalizeCity(deliveryAddress.city);
     const { data: rule, error: ruleError } = await admin.from("fulfillment_sla_rules")
-      .select("id, dispatch_minutes, delivery_minutes, delivery_fee_cents, free_delivery_if_contains_kit, automatic_payment_enabled, freight_origin_cep, express_fee_up_to_12km_cents, express_fee_up_to_35km_cents, express_fee_up_to_55km_cents, scheduled_fee_up_to_12km_cents, scheduled_fee_up_to_35km_cents, scheduled_fee_up_to_55km_cents, club_express_fee_up_to_12km_cents, club_express_fee_up_to_35km_cents, club_express_fee_up_to_55km_cents, club_scheduled_fee_up_to_12km_cents, club_scheduled_fee_up_to_35km_cents, club_scheduled_fee_up_to_55km_cents, motorcycle_fuel_price_cents_per_liter, motorcycle_km_per_liter, motorcycle_operational_cost_cents_per_km, minimum_delivery_cost_cents, supporter_share_percent, minimum_order_up_to_12km_cents, minimum_order_up_to_35km_cents, minimum_order_up_to_55km_cents, scheduled_delivery_enabled, scheduled_max_advance_hours")
+      .select("id, dispatch_minutes, delivery_minutes, delivery_fee_cents, free_delivery_if_contains_kit, automatic_payment_enabled, freight_origin_cep, express_fee_up_to_12km_cents, express_fee_up_to_35km_cents, express_fee_up_to_55km_cents, scheduled_fee_up_to_12km_cents, scheduled_fee_up_to_35km_cents, scheduled_fee_up_to_55km_cents, club_express_fee_up_to_12km_cents, club_express_fee_up_to_35km_cents, club_express_fee_up_to_55km_cents, club_scheduled_fee_up_to_12km_cents, club_scheduled_fee_up_to_35km_cents, club_scheduled_fee_up_to_55km_cents, minimum_order_up_to_12km_cents, minimum_order_up_to_35km_cents, minimum_order_up_to_55km_cents, scheduled_delivery_enabled, scheduled_max_advance_hours")
       .eq("city_normalized", cityNormalized)
       .eq("state", deliveryAddress.state)
       .eq("fulfillment_mode", "delivery")
@@ -430,23 +430,12 @@ Deno.serve(async (req: Request) => {
     if (clubMembershipError) throw clubMembershipError;
     const isClubMember = clubMembership?.active === true;
 
-    const { data: deliveryPlan, error: deliveryPlanError } = await admin.from("delivery_plan_memberships")
-      .select("plan_code")
-      .eq("user_id", customerId)
-      .eq("status", "active")
-      .lte("starts_at", nowIso)
-      .or("ends_at.is.null,ends_at.gt." + nowIso)
-      .maybeSingle();
-    if (deliveryPlanError) throw deliveryPlanError;
-    const planCode = deliveryPlan?.plan_code === "vip" ? "vip"
-      : deliveryPlan?.plan_code === "supporter" ? "supporter" : null;
-
     const isBauruDelivery = cityNormalized === "bauru" && deliveryAddress.state === "SP";
     let route: RouteFreight | null = null;
     let distanceKm = 0;
     let tier: { minimum: number } | null = null;
 
-    if (!isBauruDelivery || planCode === "supporter") {
+    if (!isBauruDelivery) {
       const routeDestination = [
         deliveryAddress.street + ", " + deliveryAddress.number,
         deliveryAddress.district,
@@ -477,30 +466,11 @@ Deno.serve(async (req: Request) => {
       }, 409, origin);
     }
     let baseFeeCents = 0;
-    if (planCode === "vip") {
-      baseFeeCents = 0;
-    } else if (planCode === "supporter") {
-      if (!route) {
-        return reply({ error: "Não foi possível estimar o custo operacional da rota para o benefício Apoiador. Fale com a Luxuriosa." }, 409, origin);
-      }
-      if (Number(rule.motorcycle_km_per_liter) <= 0) {
-        return reply({ error: "A configuração do custo de entrega Apoiador ainda não está disponível. Fale com a Luxuriosa." }, 409, origin);
-      }
-      const costPerKmCents =
-        Number(rule.motorcycle_fuel_price_cents_per_liter) / Number(rule.motorcycle_km_per_liter) +
-        Number(rule.motorcycle_operational_cost_cents_per_km);
-      const estimatedRoundTripCostCents = Math.max(
-        Number(rule.minimum_delivery_cost_cents),
-        Math.ceil(route.distanceKm * 2 * costPerKmCents)
-      );
-      baseFeeCents = Math.ceil(estimatedRoundTripCostCents * Number(rule.supporter_share_percent) / 100);
-    } else {
-      const configuredFee = configuredFreightFee(distanceKm, rule, fulfillmentType, isClubMember, isBauruDelivery);
-      if (configuredFee === null) {
-        return reply({ error: "A tarifa de entrega para sua modalidade ainda não está configurada. Fale com a Luxuriosa." }, 409, origin);
-      }
-      baseFeeCents = configuredFee;
+    const configuredFee = configuredFreightFee(distanceKm, rule, fulfillmentType, isClubMember, isBauruDelivery);
+    if (configuredFee === null) {
+      return reply({ error: "A tarifa de entrega para sua modalidade ainda não está configurada. Fale com a Luxuriosa." }, 409, origin);
     }
+    const baseFeeCents = configuredFee;
     const tollCents = 0;
     const shippingCents = baseFeeCents + tollCents;
     if (!Number.isSafeInteger(shippingCents) || shippingCents < 0 || shippingCents > 1000000) {
