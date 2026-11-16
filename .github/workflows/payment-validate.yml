@@ -82,7 +82,7 @@ jobs:
         run: |
           node --check js/clientes.js
           node --check js/carrinho.js
-          npx --yes esbuild@0.25.0 supabase/functions/create-payment-order/index.ts --format=esm --platform=neutral --external:https://* --outfile=/tmp/create-payment-order.js
+          npx --yes esbuild@0.25.0 supabase/functions/create-payment-order/index.ts --format=esm --platform=neutral --outfile=/tmp/create-payment-order.js
           node --input-type=module <<'NODE'
           import fs from "node:fs";
           import { execFileSync } from "node:child_process";
