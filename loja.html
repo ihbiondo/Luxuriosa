@@ -360,6 +360,21 @@
           <button type="button" id="clearCatalogSearch" class="catalog-search-clear" aria-label="Limpar pesquisa" hidden>Limpar</button>
         </form>
 
+        <div class="catalog-filter-toolbar">
+          <div class="catalog-filter-heading">
+            <span class="catalog-filter-label">Categorias</span>
+            <span class="catalog-filter-hint">Escolha uma seleção ou refine por preço</span>
+          </div>
+          <label class="catalog-sort-control" for="catalogSort">
+            <span>Ordenar por</span>
+            <select id="catalogSort" name="sort">
+              <option value="relevancia">Mais relevantes</option>
+              <option value="menor-preco">Menor preço</option>
+              <option value="maior-preco">Maior preço</option>
+            </select>
+          </label>
+        </div>
+
         <div
           class="chips"
           id="chips"
@@ -712,7 +727,7 @@
        JAVASCRIPT
   ========================================================== -->
 
-  <script src="js/catalogo.js?v=20261114-pre-venda-v1"></script>
+  <script src="js/catalogo.js?v=20261116-filtros-preco-v1"></script>
   <script src="js/inteligencia.js?v=20261113-dado-online"></script>
   <script src="js/carrinho.js?v=20261113-dado-online"></script>
   <script src="js/clientes.js?v=20261113-dado-online"></script>

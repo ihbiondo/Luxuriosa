@@ -577,3 +577,74 @@ body.customer-open { overflow: hidden; }
   .customer-account-assist { grid-template-columns: minmax(0, 1fr); gap: 9px; }
   .customer-account-assist .customer-account-load { width: 100%; min-height: 46px; white-space: normal; }
 }
+
+
+/* =========================================================
+   LOJA — CONTROLES DE CATEGORIA E ORDENAÇÃO
+   ========================================================= */
+.catalog-filter-toolbar {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 16px;
+  margin: 4px 0 14px;
+}
+.catalog-filter-heading {
+  display: grid;
+  gap: 4px;
+}
+.catalog-filter-label {
+  color: var(--text);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+.catalog-filter-hint {
+  color: var(--muted);
+  font-size: 11px;
+}
+.catalog-sort-control {
+  display: grid;
+  gap: 5px;
+  min-width: 190px;
+  color: var(--muted);
+  font-size: 10px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+.catalog-sort-control select {
+  width: 100%;
+  min-height: 42px;
+  padding: 9px 34px 9px 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+  font-size: 12px;
+  letter-spacing: normal;
+  text-transform: none;
+  cursor: pointer;
+}
+.catalog-sort-control select:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 3px;
+}
+@media (max-width: 600px) {
+  .catalog-filter-toolbar {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+  .catalog-sort-control {
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+  }
+  .catalog-sort-control select {
+    min-height: 44px;
+  }
+}
