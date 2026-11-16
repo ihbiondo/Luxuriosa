@@ -42,7 +42,8 @@
       "Anéis penianos",
       "Plugs anais",
       "Próteses",
-      "Masturbadores"
+      "Masturbadores",
+      "Acessórios"
     ],
     "Jogos e masturbadores": [
       "Jogos eróticos",
