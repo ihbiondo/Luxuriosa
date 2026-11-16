@@ -1,0 +1,51 @@
+/* Portal Luxuriosa — hierarquia de navegação consistente */
+.portal-featured{display:none!important}
+.portal-priority{margin-top:28px}
+.portal-more{margin-top:42px}
+.portal-more .section-heading{margin-bottom:18px}
+.portal-more .section-heading h2{margin:6px 0 4px}
+.portal-more .section-intro{color:#706579}
+.portal-destinations{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.portal-destination-card{min-height:148px;padding:22px;gap:18px}
+.portal-destination-card .priority-icon{width:64px;height:64px;flex-basis:64px;border-radius:18px;font:30px/1 Georgia,serif}
+.portal-destination-card .priority-copy strong{font-size:24px}
+.portal-destination-card .priority-description{font-size:12px}
+.portal-destination-card .priority-action{margin-top:10px}
+.portal-destination-card--experience .priority-icon{background:#fff0f7;color:#d83c91;border-color:#edc7dc}
+.portal-destination-card--education .priority-icon{background:#f0e9f5;color:#654b72;border-color:#ded1e8}
+.portal-destination-card--club .priority-icon{background:#faf5e9;color:#a17d42;border-color:#eadfc8}
+.portal-destination-card--achievement .priority-icon{background:#f0e9f5;color:#654b72}
+.portal-destination-card--account .priority-icon,.portal-destination-card--privacy .priority-icon{background:#f4eff7;color:#654b72;border-color:#ded1e8}
+.portal-destination-card--support .priority-icon{background:#fff0f7;color:#b83280;border-color:#edc7dc}
+@media(max-width:700px){
+ .portal-priority{margin-top:18px}
+ .portal-more{margin-top:30px}
+ .portal-destinations{grid-template-columns:1fr;gap:11px}
+ .portal-destination-card{min-height:132px;padding:18px;gap:16px}
+ .portal-destination-card .priority-icon{width:60px;height:60px;flex-basis:60px}
+ .portal-destination-card .priority-copy strong{font-size:22px}
+ .portal-destination-card .priority-description{font-size:13px}
+}
+@media(max-width:380px){
+ .portal-destination-card{padding:15px 13px;gap:13px}
+ .portal-destination-card .priority-icon{width:54px;height:54px;flex-basis:54px}
+ .portal-destination-card .priority-copy strong{font-size:20px}
+ .portal-destination-card .priority-description{font-size:12px}
+}
+
+
+/* Áreas com categorias expansíveis no hub do Portal */
+.portal-destination-disclosure{display:block;min-width:0}
+.portal-destination-disclosure>summary{list-style:none;cursor:pointer}
+.portal-destination-disclosure>summary::-webkit-details-marker{display:none}
+.portal-destination-disclosure>summary::marker{content:""}
+.portal-destination-disclosure>summary:focus-visible{outline:3px solid #8b1e3f;outline-offset:4px}
+.portal-destination-disclosure[open]>summary{border-radius:18px 18px 0 0}
+.portal-destination-disclosure[open] .priority-action span{display:inline-block;transform:rotate(180deg)}
+.portal-submenu{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;padding:12px;background:#fff;border:1px solid #eadfe9;border-top:0;border-radius:0 0 18px 18px}
+.portal-submenu a{display:flex;flex-direction:column;gap:4px;min-width:0;padding:13px 14px;border:1px solid #eee6ef;border-radius:12px;background:#fcfafc;color:#302536;text-decoration:none;transition:background .18s,border-color .18s}
+.portal-submenu a:hover{background:#f8f0f6;border-color:#d9c3d8}
+.portal-submenu a:focus-visible{outline:2px solid #8b1e3f;outline-offset:2px}
+.portal-submenu a strong{font-size:13px;font-weight:700}
+.portal-submenu a span{font-size:11px;line-height:1.45;color:#746a78}
+@media(max-width:700px){.portal-submenu{grid-template-columns:1fr;padding:10px}.portal-submenu a{padding:12px}}
