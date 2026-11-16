@@ -726,6 +726,81 @@ input:focus,select:focus{border-color:#d4af7c;box-shadow:0 0 0 3px rgba(212,175,
       #signedInArea #account-settings-section>.account-section-content{padding:0 10px 10px}
       #signedInArea #account-settings-section .account-settings-item>summary{padding:13px 14px}
     }
+
+    /* Redesign dedicado de Meu cadastro — mesma identidade da loja, com foco em leitura e uso mobile */
+    body:has(#signedInArea:not(.hidden)){background:
+      radial-gradient(ellipse at 8% 0%,rgba(139,30,63,.25),transparent 34%),
+      radial-gradient(ellipse at 92% 70%,rgba(139,30,63,.12),transparent 32%),#0b0b0b}
+    body:has(#signedInArea:not(.hidden)) .shell{width:min(100% - 40px,1040px)}
+    body:has(#signedInArea:not(.hidden)) main{display:block;min-height:0;padding:14px 0 54px}
+    body:has(#signedInArea:not(.hidden)) .intro{display:none}
+    body:has(#signedInArea:not(.hidden)) .panel{width:100%;max-width:none;padding:clamp(18px,3vw,34px);border:1px solid rgba(212,175,124,.2);border-radius:20px;background:linear-gradient(145deg,#1a1014 0%,#110c0e 68%,#0e0b0c 100%);box-shadow:0 26px 80px rgba(0,0,0,.38)}
+    #signedInArea .account-box{width:100%;max-width:820px;margin:0 auto;padding:0;border:0;background:transparent}
+    #signedInArea .account-email{display:flex;align-items:center;gap:6px;margin:0 0 22px;padding:12px 15px;border:1px solid rgba(212,175,124,.18);border-radius:11px;background:#120c0f;color:#c9b3b6;font-size:12px}
+    #signedInArea .account-email strong{color:#f7d7d9;font-weight:600;overflow-wrap:anywhere}
+    #signedInArea .account-box>p:has(#adminDashboardLink){margin:0 0 12px}
+    #signedInArea #account-profile-section{display:block;margin:0;border:0;background:transparent;overflow:visible}
+    #signedInArea #account-profile-section>summary{min-height:0;padding:0 0 17px;border:0;border-bottom:1px solid rgba(212,175,124,.18);border-radius:0;background:transparent;color:#f7d7d9!important;font:500 27px/1.25 var(--serif);letter-spacing:0}
+    #signedInArea #account-profile-section>summary:after{content:"";display:none}
+    #signedInArea #account-profile-section>.account-section-content{display:grid;gap:13px;padding:18px 0 0}
+    #signedInArea #account-profile-section .account-subsection{margin:0;border:1px solid rgba(212,175,124,.22);border-radius:14px;background:linear-gradient(145deg,#1c1014,#130d0f);overflow:hidden;box-shadow:0 8px 24px rgba(0,0,0,.12)}
+    #signedInArea #account-profile-section .account-subsection>summary{display:flex;align-items:center;justify-content:space-between;gap:14px;min-height:68px;padding:18px 20px;color:#f7d7d9!important;font-size:14px;font-weight:600;letter-spacing:.01em}
+    #signedInArea #account-profile-section .account-subsection>summary:after{content:"＋";display:grid;place-items:center;width:27px;height:27px;border:1px solid rgba(212,175,124,.28);border-radius:50%;color:#d4af7c!important;font-size:15px;flex:0 0 27px}
+    #signedInArea #account-profile-section .account-subsection[open]>summary:after{content:"−";background:rgba(139,30,63,.22)}
+    #signedInArea #account-profile-section .account-subsection>.account-section-content{padding:0 20px 22px;border-top:1px solid rgba(212,175,124,.13)}
+    #signedInArea #account-profile-section .account-subsection>.account-section-content>.account-form{margin:0!important;padding:18px 0 0!important;border:0!important}
+    #signedInArea #account-profile-section .section-label{margin:18px 0 10px;padding-top:14px;border-top:1px solid rgba(212,175,124,.15);color:#d4af7c;font-size:10px;letter-spacing:.14em}
+    #signedInArea #account-profile-section .section-label:first-child{margin-top:0;padding-top:0;border-top:0}
+    #signedInArea #account-profile-section .grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:15px}
+    #signedInArea #account-profile-section .field{min-width:0}
+    #signedInArea #account-profile-section label{color:#eadde0;font-size:11px}
+    #signedInArea #account-profile-section input:not([type=checkbox]),#signedInArea #account-profile-section select{min-height:49px;border:1px solid rgba(212,175,124,.24);border-radius:9px;background:#0d090b;color:#fff5f6;font-size:13px}
+    #signedInArea #account-profile-section input:focus,#signedInArea #account-profile-section select:focus{border-color:#d4af7c;box-shadow:0 0 0 3px rgba(212,175,124,.12)}
+    #signedInArea #account-profile-section .colors{gap:8px}
+    #signedInArea #account-profile-section .color-option{min-height:39px;padding:8px 11px;border:1px solid rgba(212,175,124,.2);border-radius:8px;background:#170e11;color:#e8d9dc;font-size:11px}
+    #signedInArea #account-profile-section .color-option input{width:15px;height:15px;accent-color:#8b1e3f}
+    #signedInArea #account-profile-section .email-change-help{color:#c9b3b6;font-size:11px;line-height:1.65}
+    #signedInArea #account-profile-section .account-settings-item{margin:10px 0 0;border:1px solid rgba(212,175,124,.16);border-radius:10px;background:#100b0d}
+    #signedInArea #account-profile-section .account-settings-item>summary{min-height:55px;padding:14px 16px;font-size:12px}
+    #signedInArea #account-profile-section .account-settings-item>.account-section-content{padding:0 16px 16px}
+    #signedInArea #account-profile-section .primary{min-height:49px;border-radius:9px;background:#8b1e3f;border-color:#8b1e3f;box-shadow:none;font-size:10px}
+    #signedInArea #account-profile-section .primary:hover{background:#a32950;border-color:#a32950}
+    #signedInArea #account-profile-section .secondary{min-height:46px;border-radius:9px;background:#1b1014;border-color:rgba(212,175,124,.32);color:#e2bd82;font-size:10px}
+    #signedInArea #account-profile-section .actions{margin-top:18px}
+    #signedInArea #account-profile-section .profile-progress{margin:16px 0 4px;padding:15px;border:1px solid rgba(212,175,124,.2);border-radius:11px;background:#100b0d}
+    #signedInArea #account-profile-section .profile-progress-head{color:#f7d7d9}
+    #signedInArea #account-profile-section .profile-progress small{color:#c9b3b6}
+    #signedInArea .account-signout{max-width:820px;margin:20px auto 0;padding:17px 0 0;border-top:1px solid rgba(212,175,124,.17)}
+    #signedInArea .account-signout .secondary{width:100%;min-height:48px;border:1px solid rgba(190,65,91,.38);border-radius:9px;background:rgba(139,30,63,.12);color:#e5a6b2;font-size:10px}
+    #signedInArea .account-signout .secondary:hover{background:rgba(139,30,63,.24)}
+    #signedInArea .danger-help{color:#e0b6ba;font-size:12px;line-height:1.7}
+    #notice{max-width:820px;margin:0 auto 16px}
+    @media(max-width:820px){
+      body:has(#signedInArea:not(.hidden)) .shell{width:min(100% - 26px,680px)}
+      body:has(#signedInArea:not(.hidden)) main{padding:8px 0 34px}
+      body:has(#signedInArea:not(.hidden)) .panel{padding:18px 15px;border-radius:16px}
+      #signedInArea .account-box{padding:0}
+      #signedInArea .account-email{align-items:flex-start;flex-direction:column;gap:2px;margin-bottom:17px;padding:11px 13px}
+      #signedInArea #account-profile-section>summary{font-size:24px;padding-bottom:14px}
+      #signedInArea #account-profile-section>.account-section-content{gap:10px;padding-top:13px}
+      #signedInArea #account-profile-section .account-subsection{border-radius:12px}
+      #signedInArea #account-profile-section .account-subsection>summary{min-height:62px;padding:15px 15px;font-size:13px}
+      #signedInArea #account-profile-section .account-subsection>.account-section-content{padding:0 14px 17px}
+      #signedInArea #account-profile-section .grid{grid-template-columns:1fr;gap:12px}
+      #signedInArea #account-profile-section .field.full{grid-column:1}
+      #signedInArea #account-profile-section .account-settings-item>summary{padding:13px 14px}
+      #signedInArea #account-profile-section .account-settings-item>.account-section-content{padding:0 13px 14px}
+      #signedInArea #account-profile-section .color-option{font-size:10px}
+      #signedInArea .account-signout{margin-top:16px;padding-top:14px}
+    }
+    @media(max-width:380px){
+      body:has(#signedInArea:not(.hidden)) .shell{width:calc(100% - 20px)}
+      body:has(#signedInArea:not(.hidden)) .panel{padding:15px 11px}
+      #signedInArea #account-profile-section .account-subsection>summary{padding:13px 12px}
+      #signedInArea #account-profile-section .account-subsection>.account-section-content{padding:0 11px 14px}
+    }
+    @media(prefers-reduced-motion:reduce){#signedInArea *{scroll-behavior:auto!important;transition:none!important}}
+
   </style>
 </head>
 <body>
