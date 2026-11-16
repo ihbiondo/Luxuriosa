@@ -376,7 +376,7 @@ Deno.serve(async (req: Request) => {
 
     const cityNormalized = normalizeCity(deliveryAddress.city);
     const { data: rule, error: ruleError } = await admin.from("fulfillment_sla_rules")
-      .select("id, dispatch_minutes, delivery_minutes, delivery_fee_cents, free_delivery_if_contains_kit, automatic_payment_enabled, freight_origin_cep, express_fee_up_to_12km_cents, express_fee_up_to_35km_cents, express_fee_up_to_55km_cents, scheduled_fee_up_to_12km_cents, scheduled_fee_up_to_35km_cents, scheduled_fee_up_to_55km_cents, club_express_fee_up_to_12km_cents, club_express_fee_up_to_35km_cents, club_express_fee_up_to_55km_cents, club_scheduled_fee_up_to_12km_cents, club_scheduled_fee_up_to_35km_cents, club_scheduled_fee_up_to_55km_cents, minimum_order_up_to_12km_cents, minimum_order_up_to_35km_cents, minimum_order_up_to_55km_cents, scheduled_delivery_enabled, scheduled_max_advance_hours")
+      .select("id, dispatch_minutes, delivery_minutes, delivery_fee_cents, free_delivery_if_contains_kit, automatic_payment_enabled, freight_origin_cep, express_fee_up_to_12km_cents, express_fee_up_to_35km_cents, express_fee_up_to_55km_cents, scheduled_fee_up_to_12km_cents, scheduled_fee_up_to_35km_cents, scheduled_fee_up_to_55km_cents, club_express_fee_up_to_12km_cents, club_express_fee_up_to_35km_cents, club_express_fee_up_to_55km_cents, club_scheduled_fee_up_to_12km_cents, club_scheduled_fee_up_to_35km_cents, club_scheduled_fee_up_to_55km_cents, motorcycle_fuel_price_cents_per_liter, motorcycle_km_per_liter, motorcycle_operational_cost_cents_per_km, minimum_delivery_cost_cents, supporter_share_percent, minimum_order_up_to_12km_cents, minimum_order_up_to_35km_cents, minimum_order_up_to_55km_cents, scheduled_delivery_enabled, scheduled_max_advance_hours")
       .eq("city_normalized", cityNormalized)
       .eq("state", deliveryAddress.state)
       .eq("fulfillment_mode", "delivery")
@@ -483,22 +483,17 @@ Deno.serve(async (req: Request) => {
       if (!route) {
         return reply({ error: "Não foi possível calcular o custo real da rota para o benefício Apoiador. Fale com a Luxuriosa." }, 409, origin);
       }
-      const { data: pricingSettings, error: pricingSettingsError } = await admin.from("delivery_pricing_settings")
-        .select("fuel_price_cents_per_liter, motorcycle_km_per_liter, operational_cost_cents_per_km, minimum_delivery_cost_cents, supporter_share_percent")
-        .eq("id", true)
-        .maybeSingle();
-      if (pricingSettingsError) throw pricingSettingsError;
-      if (!pricingSettings || Number(pricingSettings.motorcycle_km_per_liter) <= 0) {
+      if (Number(rule.motorcycle_km_per_liter) <= 0) {
         return reply({ error: "A configuração do custo de entrega Apoiador ainda não está disponível. Fale com a Luxuriosa." }, 409, origin);
       }
       const costPerKmCents =
-        Number(pricingSettings.fuel_price_cents_per_liter) / Number(pricingSettings.motorcycle_km_per_liter) +
-        Number(pricingSettings.operational_cost_cents_per_km);
+        Number(rule.motorcycle_fuel_price_cents_per_liter) / Number(rule.motorcycle_km_per_liter) +
+        Number(rule.motorcycle_operational_cost_cents_per_km);
       const actualRoundTripCostCents = Math.max(
-        Number(pricingSettings.minimum_delivery_cost_cents),
+        Number(rule.minimum_delivery_cost_cents),
         Math.ceil(route.distanceKm * 2 * costPerKmCents)
       );
-      baseFeeCents = Math.ceil(actualRoundTripCostCents * Number(pricingSettings.supporter_share_percent) / 100);
+      baseFeeCents = Math.ceil(actualRoundTripCostCents * Number(rule.supporter_share_percent) / 100);
     } else {
       const configuredFee = configuredFreightFee(distanceKm, rule, fulfillmentType, isClubMember, isBauruDelivery);
       if (configuredFee === null) {
