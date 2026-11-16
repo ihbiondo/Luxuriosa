@@ -20,6 +20,15 @@ Após conferência direta no painel Cloudflare, o usuário removeu as quatro rot
 
 Em seguida, excluiu permanentemente o Worker `lux-gestao` pela zona de perigo do painel. A exclusão removeu o Worker, suas implantações e configuração na Cloudflare.
 
+## URLs antigas após a retirada do Worker
+
+As páginas estáticas do site público redirecionam as rotas antigas para o portal administrativo protegido:
+
+- `/lux-gestao/` → `https://442.luxuriosa.com.br/apps/gestao/` (página criada em 16/11/2026).
+- `/lux-gestao-pedidos/` → `https://442.luxuriosa.com.br/apps/pedidos-site/`.
+
+Esses redirecionamentos pertencem ao site estático e não recriam nem dependem do Worker excluído.
+
 ## O que permanece preservado
 
 - O repositório privado `ihbiondo/Luxuriosa-gestao`, que também contém o aplicativo desktop Tauri.
