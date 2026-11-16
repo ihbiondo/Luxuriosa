@@ -639,6 +639,7 @@
 
             var opcoesFiltros = $("chips");
             var botaoFiltros = $("toggleCatalogFilters");
+            var recolheuFiltrosMobile = false;
             if (opcoesFiltros && botaoFiltros && window.matchMedia && window.matchMedia("(max-width: 600px)").matches) {
               opcoesFiltros.classList.remove("is-open");
               botaoFiltros.setAttribute("aria-expanded", "false");
@@ -646,11 +647,13 @@
               if (textoBotao) textoBotao.textContent = "Filtrar categorias";
               var marcaBotao = botaoFiltros.querySelector(".catalog-filter-toggle-mark");
               if (marcaBotao) marcaBotao.textContent = "+";
+              botaoFiltros.focus();
+              recolheuFiltrosMobile = true;
             }
 
             /* Recriar os filtros não deve perder o foco do teclado. */
             var filtrosAtualizados = $("chips");
-            if (filtrosAtualizados) {
+            if (!recolheuFiltrosMobile && filtrosAtualizados) {
               var botoes = filtrosAtualizados.querySelectorAll("button[data-categoria]");
               for (var i = 0; i < botoes.length; i++) {
                 if (botoes[i].getAttribute("data-categoria") === categoria) {
