@@ -13,6 +13,9 @@ on:
       - "experiencias/**"
       - "educacao/interatividade/**"
       - "js/clientes.js"
+      - "js/carrinho.js"
+      - "supabase/functions/create-payment-order/index.ts"
+      - "supabase/migrations/20261116110000_standardize_delivery_fees.sql"
       - "js/portal.js"
       - "js/conquistas*.js"
       - "js/experiencias*.js"
@@ -42,6 +45,9 @@ on:
       - "experiencias/**"
       - "educacao/interatividade/**"
       - "js/clientes.js"
+      - "js/carrinho.js"
+      - "supabase/functions/create-payment-order/index.ts"
+      - "supabase/migrations/20261116110000_standardize_delivery_fees.sql"
       - "js/portal.js"
       - "js/conquistas*.js"
       - "js/experiencias*.js"
@@ -75,6 +81,8 @@ jobs:
       - name: Validar JavaScript do checkout, login e acompanhamento
         run: |
           node --check js/clientes.js
+          node --check js/carrinho.js
+          npx --yes esbuild@0.25.0 supabase/functions/create-payment-order/index.ts --format=esm --platform=neutral --external:https://* --outfile=/tmp/create-payment-order.js
           node --input-type=module <<'NODE'
           import fs from "node:fs";
           import { execFileSync } from "node:child_process";
@@ -114,6 +122,7 @@ jobs:
           from pathlib import Path
 
           migration = Path("supabase/migrations/20261115181510_create_experience_results.sql").read_text()
+          freight_migration = Path("supabase/migrations/20261116110000_standardize_delivery_fees.sql").read_text()
           terms = Path("termos-experiencias.html").read_text()
           dashboard = Path("portal/conquistas/index.html").read_text()
           portal = Path("portal/index.html").read_text()
@@ -159,6 +168,8 @@ jobs:
           from pglast import parse_sql
           parse_sql(migration)
           print("Sintaxe SQL da migração validada.")
+          parse_sql(freight_migration)
+          print("Sintaxe SQL da migração de frete validada.")
           PY
 
       - name: Setup Supabase CLI
