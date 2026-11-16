@@ -14,7 +14,8 @@ alter table public.fulfillment_sla_rules
   add column if not exists supporter_share_percent smallint not null default 50 check (supporter_share_percent between 0 and 100);
 
 update public.fulfillment_sla_rules
-set express_fee_up_to_12km_cents = 2000,
+set delivery_fee_cents = case when city_normalized = 'bauru' then 2000 else 3000 end,
+    express_fee_up_to_12km_cents = 2000,
     express_fee_up_to_35km_cents = 3000,
     express_fee_up_to_55km_cents = 4500,
     scheduled_fee_up_to_12km_cents = 2000,
