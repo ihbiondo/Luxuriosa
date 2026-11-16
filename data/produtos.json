@@ -573,7 +573,8 @@
       "cor": "Cromada",
       "estoque": 5,
       "exigirControleEstoque": true,
-      "pagina": "produtos/30-algemas-reforcadas-cromadas.html"
+      "pagina": "produtos/30-algemas-reforcadas-cromadas.html",
+      "marca": "Vipmix"
     },
     {
       "id": 31,
@@ -599,7 +600,8 @@
       "cor": "Satine",
       "estoque": 1,
       "exigirControleEstoque": true,
-      "pagina": "produtos/31-body-sensual-rendado-frente-unica.html"
+      "pagina": "produtos/31-body-sensual-rendado-frente-unica.html",
+      "marca": "Sensual Love"
     },
     {
       "id": 32,
@@ -625,7 +627,8 @@
       "cor": "Pink",
       "estoque": 2,
       "exigirControleEstoque": true,
-      "pagina": "produtos/32-body-rendado-com-persex-pink.html"
+      "pagina": "produtos/32-body-rendado-com-persex-pink.html",
+      "marca": "Sensual Love"
     },
     {
       "id": 33,
@@ -651,7 +654,8 @@
       "cor": "Azul-marinho",
       "estoque": 1,
       "exigirControleEstoque": true,
-      "pagina": "produtos/33-body-rendado-com-persex-azul-marinho.html"
+      "pagina": "produtos/33-body-rendado-com-persex-azul-marinho.html",
+      "marca": "Sensual Love"
     },
     {
       "id": 34,
@@ -676,7 +680,8 @@
       "cor": "Vermelho",
       "estoque": 1,
       "exigirControleEstoque": true,
-      "pagina": "produtos/34-body-sensual-rendado-vermelho.html"
+      "pagina": "produtos/34-body-sensual-rendado-vermelho.html",
+      "marca": "Pimenta Sexy"
     },
     {
       "id": 35,
@@ -701,7 +706,8 @@
       "cor": "Branco",
       "estoque": 1,
       "exigirControleEstoque": true,
-      "pagina": "produtos/35-body-sensual-rendado-branco.html"
+      "pagina": "produtos/35-body-sensual-rendado-branco.html",
+      "marca": "Pimenta Sexy"
     },
     {
       "id": 36,
@@ -727,7 +733,8 @@
       "cor": "Preto",
       "estoque": 1,
       "exigirControleEstoque": true,
-      "pagina": "produtos/36-conjunto-cropped-rendado-com-persex-preto.html"
+      "pagina": "produtos/36-conjunto-cropped-rendado-com-persex-preto.html",
+      "marca": "Sensual Love"
     },
     {
       "id": 37,
@@ -752,7 +759,8 @@
       "cor": "Branco",
       "estoque": 1,
       "exigirControleEstoque": true,
-      "pagina": "produtos/37-conjunto-sensual-rendado-encanto-branco.html"
+      "pagina": "produtos/37-conjunto-sensual-rendado-encanto-branco.html",
+      "marca": "Pimenta Sexy"
     },
     {
       "id": 38,
@@ -777,7 +785,8 @@
       "cor": "Branco",
       "estoque": 1,
       "exigirControleEstoque": true,
-      "pagina": "produtos/38-conjunto-sensual-rendado-lais-branco.html"
+      "pagina": "produtos/38-conjunto-sensual-rendado-lais-branco.html",
+      "marca": "Pimenta Sexy"
     },
     {
       "id": 39,
@@ -803,7 +812,8 @@
       "cor": "Vinho",
       "estoque": 1,
       "exigirControleEstoque": true,
-      "pagina": "produtos/39-conjunto-cropped-rendado-com-persex-vinho.html"
+      "pagina": "produtos/39-conjunto-cropped-rendado-com-persex-vinho.html",
+      "marca": "Sensual Love"
     },
     {
       "id": 40,
@@ -829,7 +839,8 @@
       "cor": "Vermelho",
       "estoque": 1,
       "exigirControleEstoque": true,
-      "pagina": "produtos/40-conjunto-top-rendado-com-persex-vermelho.html"
+      "pagina": "produtos/40-conjunto-top-rendado-com-persex-vermelho.html",
+      "marca": "Sensual Love"
     },
     {
       "id": 41,
@@ -856,7 +867,8 @@
       "opcao": "Fode sua puta",
       "estoque": 3,
       "exigirControleEstoque": true,
-      "pagina": "produtos/41-calcinha-fio-dental-com-frase-fode-sua-puta.html"
+      "pagina": "produtos/41-calcinha-fio-dental-com-frase-fode-sua-puta.html",
+      "marca": "Yaffa"
     },
     {
       "id": 42,
@@ -883,7 +895,8 @@
       "opcao": "Safada",
       "estoque": 2,
       "exigirControleEstoque": true,
-      "pagina": "produtos/42-calcinha-fio-dental-com-frase-safada.html"
+      "pagina": "produtos/42-calcinha-fio-dental-com-frase-safada.html",
+      "marca": "Yaffa"
     },
     {
       "id": 43,
@@ -910,7 +923,8 @@
       "opcao": "Amor",
       "estoque": 1,
       "exigirControleEstoque": true,
-      "pagina": "produtos/43-calcinha-fio-dental-plus-size-com-strass-amor.html"
+      "pagina": "produtos/43-calcinha-fio-dental-plus-size-com-strass-amor.html",
+      "marca": "Tallyta"
     },
     {
       "id": 44,
@@ -937,7 +951,8 @@
       "opcao": "Tesão",
       "estoque": 1,
       "exigirControleEstoque": true,
-      "pagina": "produtos/44-calcinha-fio-dental-plus-size-com-strass-tesao.html"
+      "pagina": "produtos/44-calcinha-fio-dental-plus-size-com-strass-tesao.html",
+      "marca": "Tallyta"
     },
     {
       "id": 45,
@@ -962,7 +977,8 @@
       "cor": "Preto",
       "estoque": 5,
       "exigirControleEstoque": true,
-      "pagina": "produtos/45-mascara-sensual-de-tecido-preta.html"
+      "pagina": "produtos/45-mascara-sensual-de-tecido-preta.html",
+      "marca": "Vipmix"
     },
     {
       "id": 46,
@@ -986,7 +1002,8 @@
       "tamanhos": "U",
       "estoque": 5,
       "exigirControleEstoque": true,
-      "pagina": "produtos/46-oleo-de-massagem-120-ml.html"
+      "pagina": "produtos/46-oleo-de-massagem-120-ml.html",
+      "marca": "Sensual Love"
     },
     {
       "id": 47,
@@ -1011,7 +1028,8 @@
       "cor": "Preto",
       "estoque": 10,
       "exigirControleEstoque": true,
-      "pagina": "produtos/47-venda-para-olhos-macia-e-ajustavel-preta.html"
+      "pagina": "produtos/47-venda-para-olhos-macia-e-ajustavel-preta.html",
+      "marca": "Youvibe Vipmix"
     }
   ]
 }
