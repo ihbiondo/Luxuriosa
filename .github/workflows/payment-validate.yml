@@ -20,6 +20,7 @@ on:
       - "js/clientes.js"
       - "js/carrinho.js"
       - "supabase/functions/create-payment-order/index.ts"
+      - "supabase/config.toml"
       - "supabase/migrations/20261116181752_standardize_delivery_fees.sql"
       - "supabase/tests/database/freight_rules.test.sql"
       - "tests/fixtures/freight_rules_fixture.sql"
