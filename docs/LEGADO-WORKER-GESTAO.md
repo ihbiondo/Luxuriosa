@@ -28,4 +28,4 @@ A alteração deste arquivo em 16/11/2026 foi apenas no GitHub. **Não foi execu
 
 Não executar `wrangler deploy` deste repositório. Não restaurar `workers_dev` ou `preview_urls` para `true`. O ambiente administrativo oficial é `https://442.luxuriosa.com.br`.
 
-O Worker e as rotas antigas só podem ser removidos depois de validar o redirecionamento no Cloudflare e concluir o backup/reconciliação do SQLite antigo.
+O Worker e as rotas antigas só podem ser removidos depois de validar o redirecionamento no Cloudflare e confirmar que nenhuma rotina web depende deles. O backup/migração do SQLite Tauri é uma frente independente e não bloqueia a retirada das rotas web; o código e o banco local permanecem preservados.
