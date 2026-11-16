@@ -1,0 +1,34 @@
+/* Portal Luxuriosa — hierarquia de navegação consistente */
+.portal-featured{display:none!important}
+.portal-priority{margin-top:28px}
+.portal-more{margin-top:42px}
+.portal-more .section-heading{margin-bottom:18px}
+.portal-more .section-heading h2{margin:6px 0 4px}
+.portal-more .section-intro{color:#706579}
+.portal-destinations{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.portal-destination-card{min-height:148px;padding:22px;gap:18px}
+.portal-destination-card .priority-icon{width:64px;height:64px;flex-basis:64px;border-radius:18px;font:30px/1 Georgia,serif}
+.portal-destination-card .priority-copy strong{font-size:24px}
+.portal-destination-card .priority-description{font-size:12px}
+.portal-destination-card .priority-action{margin-top:10px}
+.portal-destination-card--experience .priority-icon{background:#fff0f7;color:#d83c91;border-color:#edc7dc}
+.portal-destination-card--education .priority-icon{background:#f0e9f5;color:#654b72;border-color:#ded1e8}
+.portal-destination-card--club .priority-icon{background:#faf5e9;color:#a17d42;border-color:#eadfc8}
+.portal-destination-card--achievement .priority-icon{background:#f0e9f5;color:#654b72}
+.portal-destination-card--account .priority-icon,.portal-destination-card--privacy .priority-icon{background:#f4eff7;color:#654b72;border-color:#ded1e8}
+.portal-destination-card--support .priority-icon{background:#fff0f7;color:#b83280;border-color:#edc7dc}
+@media(max-width:700px){
+ .portal-priority{margin-top:18px}
+ .portal-more{margin-top:30px}
+ .portal-destinations{grid-template-columns:1fr;gap:11px}
+ .portal-destination-card{min-height:132px;padding:18px;gap:16px}
+ .portal-destination-card .priority-icon{width:60px;height:60px;flex-basis:60px}
+ .portal-destination-card .priority-copy strong{font-size:22px}
+ .portal-destination-card .priority-description{font-size:13px}
+}
+@media(max-width:380px){
+ .portal-destination-card{padding:15px 13px;gap:13px}
+ .portal-destination-card .priority-icon{width:54px;height:54px;flex-basis:54px}
+ .portal-destination-card .priority-copy strong{font-size:20px}
+ .portal-destination-card .priority-description{font-size:12px}
+}
