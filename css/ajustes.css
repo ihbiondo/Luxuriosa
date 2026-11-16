@@ -648,3 +648,137 @@ body.customer-open { overflow: hidden; }
     min-height: 44px;
   }
 }
+
+
+/* =========================================================
+   LOJA — FILTROS ELEGANTES E DISCRETOS
+   ========================================================= */
+.catalog-filter-panel {
+  margin: 4px 0 22px;
+  padding: 16px 18px 13px;
+  border: 1px solid rgba(212, 175, 124, .2);
+  border-radius: 14px;
+  background: linear-gradient(112deg, rgba(139, 30, 63, .13), rgba(212, 175, 124, .035) 58%, rgba(255, 255, 255, .012));
+  box-shadow: 0 10px 28px rgba(0, 0, 0, .12);
+}
+.catalog-filter-panel-head {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+.catalog-filter-heading {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+  margin-right: auto;
+}
+.catalog-filter-eyebrow {
+  color: var(--gold);
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: .17em;
+}
+.catalog-filter-heading strong {
+  color: var(--text);
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 17px;
+  font-weight: 500;
+}
+.catalog-filter-toggle {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 42px;
+  padding: 9px 13px;
+  border: 1px solid rgba(212, 175, 124, .3);
+  border-radius: 9px;
+  color: var(--text);
+  background: rgba(139, 30, 63, .16);
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+}
+.catalog-filter-toggle > span:first-child,
+.catalog-filter-toggle-mark { color: var(--gold); font-size: 15px; }
+.catalog-sort-control {
+  display: grid;
+  gap: 5px;
+  min-width: 190px;
+  color: var(--muted);
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: .13em;
+  text-transform: uppercase;
+}
+.catalog-sort-control select {
+  width: 100%;
+  min-height: 40px;
+  padding: 8px 34px 8px 12px;
+  border: 1px solid rgba(212, 175, 124, .22);
+  border-radius: 8px;
+  color: var(--text);
+  background: rgba(8, 8, 8, .62);
+  font: inherit;
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: normal;
+  text-transform: none;
+  cursor: pointer;
+}
+.catalog-sort-control select:focus-visible,
+.catalog-filter-toggle:focus-visible,
+.catalog-filter-panel .chip:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 3px;
+}
+.catalog-filter-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin: 13px 0 0;
+  padding: 0;
+}
+.catalog-filter-options .chip {
+  min-height: 34px;
+  padding: 8px 13px;
+  border: 1px solid rgba(212, 175, 124, .19);
+  border-radius: 999px;
+  color: #d6c7ca;
+  background: rgba(255, 255, 255, .025);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: .035em;
+  text-transform: none;
+  transition: color .18s ease, border-color .18s ease, background .18s ease, transform .18s ease;
+}
+.catalog-filter-options .chip:hover {
+  border-color: rgba(212, 175, 124, .62);
+  color: #f1d8a8;
+  background: rgba(139, 30, 63, .2);
+}
+.catalog-filter-options .chip.active {
+  border-color: #c99b5b;
+  color: #1b0d12;
+  background: linear-gradient(120deg, #d9b779, #b98b4e);
+  box-shadow: 0 3px 12px rgba(185, 139, 78, .16);
+  font-weight: 700;
+}
+.shop-page #catalogo .catalogo-status { margin: 0 0 18px; }
+
+@media (max-width: 600px) {
+  .catalog-filter-panel { margin: 0 0 19px; padding: 12px; border-radius: 12px; }
+  .catalog-filter-panel-head { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 10px; }
+  .catalog-filter-heading { grid-column: 1 / -1; }
+  .catalog-filter-heading strong { font-size: 16px; }
+  .catalog-filter-toggle { display: inline-flex; justify-self: start; min-height: 40px; }
+  .catalog-sort-control { grid-column: 2; grid-row: 2; grid-template-columns: auto minmax(0, 1fr); align-items: center; gap: 8px; min-width: 0; font-size: 8px; letter-spacing: .08em; }
+  .catalog-sort-control select { min-height: 40px; min-width: 0; padding: 7px 24px 7px 9px; font-size: 11px; }
+  .catalog-filter-options { display: none; gap: 7px; margin-top: 12px; }
+  .catalog-filter-options.is-open { display: flex; }
+  .catalog-filter-options .chip { min-height: 36px; padding: 8px 11px; font-size: 10px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .catalog-filter-options .chip { transition: none; }
+}
