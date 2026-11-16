@@ -24,6 +24,7 @@ set delivery_fee_cents = case city_normalized
       when 'lencois paulista' then 4000
       else club_delivery_fee_cents
     end,
+    free_delivery_if_contains_kit = false,
     updated_at = now()
 where active = true
   and fulfillment_mode = 'delivery'
@@ -34,10 +35,14 @@ where active = true
 insert into public.fulfillment_sla_rules (
   city_normalized, state, fulfillment_mode, dispatch_minutes, delivery_minutes,
   automatic_payment_enabled, active, delivery_fee_cents, club_delivery_fee_cents,
-  freight_origin_cep, scheduled_delivery_enabled
+  freight_origin_cep, scheduled_delivery_enabled,
+  express_fee_up_to_12km_cents, express_fee_up_to_35km_cents, express_fee_up_to_55km_cents,
+  scheduled_fee_up_to_12km_cents, scheduled_fee_up_to_35km_cents, scheduled_fee_up_to_55km_cents,
+  free_delivery_if_contains_kit
 )
 select 'borebi', 'SP', 'delivery', 0, 0, false, true, 5000, 4000,
-       '17030290', false
+       '17030290', false,
+       0, 0, 0, 0, 0, 0, false
 where not exists (
   select 1
   from public.fulfillment_sla_rules
@@ -49,6 +54,7 @@ where not exists (
 update public.fulfillment_sla_rules
 set delivery_fee_cents = 5000,
     club_delivery_fee_cents = 4000,
+    free_delivery_if_contains_kit = false,
     updated_at = now()
 where city_normalized = 'borebi'
   and state = 'SP'
