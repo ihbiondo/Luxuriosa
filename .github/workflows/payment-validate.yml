@@ -6,6 +6,11 @@ on:
     paths:
       - "index.html"
       - "loja.html"
+      - "atendimento.html"
+      - "faq.html"
+      - "entregas/**"
+      - "cidades/**"
+      - "previa/**"
       - "login.html"
       - "pagamento-retorno.html"
       - "acompanhar-pedido/**"
@@ -40,6 +45,11 @@ on:
     paths:
       - "index.html"
       - "loja.html"
+      - "atendimento.html"
+      - "faq.html"
+      - "entregas/**"
+      - "cidades/**"
+      - "previa/**"
       - "login.html"
       - "pagamento-retorno.html"
       - "acompanhar-pedido/**"
@@ -128,6 +138,9 @@ jobs:
 
           migration = Path("supabase/migrations/20261115181510_create_experience_results.sql").read_text()
           freight_migration = Path("supabase/migrations/20261116110000_standardize_delivery_fees.sql").read_text()
+          freight_backend = Path("supabase/functions/create-payment-order/index.ts").read_text()
+          delivery_page = Path("entregas/index.html").read_text()
+          delivery_faq = Path("faq.html").read_text()
           terms = Path("termos-experiencias.html").read_text()
           dashboard = Path("portal/conquistas/index.html").read_text()
           portal = Path("portal/index.html").read_text()
@@ -175,6 +188,14 @@ jobs:
           print("Sintaxe SQL da migração validada.")
           parse_sql(freight_migration)
           print("Sintaxe SQL da migração de frete validada.")
+          assert "club_delivery_fee_cents" in freight_migration
+          assert "tibirica" in freight_backend and "freight_quote_required" in freight_backend
+          assert "R$ 15,00" in delivery_page and "R$ 10,00" in delivery_page
+          assert "R$ 50,00" in delivery_page and "R$ 40,00" in delivery_page
+          assert "pedágio já incluído" in delivery_page
+          assert "cotado pelo atendimento" in delivery_faq
+          assert "55 km pela rota" not in delivery_page
+          print("Política oficial de frete e exceção de Tibiriçá verificadas.")
           PY
 
       - name: Setup Supabase CLI
