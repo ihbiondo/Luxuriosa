@@ -29,7 +29,8 @@
 
     return [
       "Destino: " + (cidade || "cidade não informada") + (estado ? "/" + estado : ""),
-      "Condição: frete calculado conforme endereço, distância pela rota e modalidade de participação no Clube.",
+      "Frete sem Clube: Bauru R$ 20,00; até 30 km R$ 40,00; até 55 km R$ 70,00.",
+      "Frete com Clube gratuito ativo: Bauru R$ 10,00; até 30 km R$ 25,00; até 55 km R$ 50,00.",
       "Limite operacional: até 55 km pela rota de motocicleta. Pedágio, quando houver, é informado separadamente."
     ];
   }
