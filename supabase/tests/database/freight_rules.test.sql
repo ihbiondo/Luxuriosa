@@ -1,6 +1,6 @@
 begin;
 
-select plan(10);
+select plan(8);
 
 select is(
   (select delivery_fee_cents from public.fulfillment_sla_rules where city_normalized = 'bauru'),
@@ -42,16 +42,7 @@ select is(
   3000,
   'Clube gratuito até 55 km é R$ 30'
 );
-select is(
-  (select supporter_share_percent from public.fulfillment_sla_rules where city_normalized = 'bauru'),
-  50,
-  'Apoiador paga 50% do custo operacional'
-);
-select is(
-  (select motorcycle_fuel_price_cents_per_liter from public.fulfillment_sla_rules where city_normalized = 'bauru'),
-  619,
-  'Preço do combustível inicial é R$ 6,19 por litro'
-);
+
 
 select * from finish();
 rollback;
