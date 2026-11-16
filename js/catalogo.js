@@ -1712,7 +1712,7 @@
 
           /* Permite abrir a loja já com uma categoria ou busca selecionada. */
           var parametrosLoja = new URLSearchParams(window.location.search);
-          var caminhoLoja = window.location.pathname.replace(/\\/+$/, "") || "/";
+          var caminhoLoja = window.location.pathname.replace(/\/+$/, "") || "/";
           var categoriasPorRota = {
             "/loja/lingerie": "Lingerie"
           };
