@@ -1449,8 +1449,8 @@
       "• Sem Clube: Bauru R$ 20,00; até 30 km R$ 30,00; até 55 km R$ 45,00.",
       "• Clube gratuito ativo: Bauru R$ 10,00; até 30 km R$ 20,00; até 55 km R$ 30,00.",
       "• Apoiador: paga 50% do custo real da rota de ida e volta; em rota programada, a entrega pode ser gratuita mediante confirmação.",
-      "• Privilégio: frete grátis dentro da área atendida. Não atendemos acima de 55 km.",
-      "• A distância é calculada pela rota de motocicleta. Não atendemos acima de 55 km.",
+      "• Privilégio: frete grátis dentro da área atendida.",
+      "• A distância é calculada pela rota de motocicleta; não atendemos acima de 55 km.",
       "*PRÓXIMO PASSO*",
       "Gostaria de confirmar a disponibilidade, os tamanhos e a entrega.",
       "_O envio desta mensagem não confirma o pedido nem processa pagamento._"
