@@ -637,6 +637,17 @@
 
             renderizarProdutos();
 
+            var opcoesFiltros = $("chips");
+            var botaoFiltros = $("toggleCatalogFilters");
+            if (opcoesFiltros && botaoFiltros && window.matchMedia && window.matchMedia("(max-width: 600px)").matches) {
+              opcoesFiltros.classList.remove("is-open");
+              botaoFiltros.setAttribute("aria-expanded", "false");
+              var textoBotao = botaoFiltros.querySelector(".catalog-filter-toggle-text");
+              if (textoBotao) textoBotao.textContent = "Filtrar categorias";
+              var marcaBotao = botaoFiltros.querySelector(".catalog-filter-toggle-mark");
+              if (marcaBotao) marcaBotao.textContent = "+";
+            }
+
             /* Recriar os filtros não deve perder o foco do teclado. */
             var filtrosAtualizados = $("chips");
             if (filtrosAtualizados) {
@@ -1906,10 +1917,26 @@
     });
   }
 
+  function configurarToggleFiltros() {
+    var botao = $("toggleCatalogFilters");
+    var opcoes = $("chips");
+    if (!botao || !opcoes) return;
+
+    botao.addEventListener("click", function () {
+      var aberto = opcoes.classList.toggle("is-open");
+      botao.setAttribute("aria-expanded", aberto ? "true" : "false");
+      var texto = botao.querySelector(".catalog-filter-toggle-text");
+      var marca = botao.querySelector(".catalog-filter-toggle-mark");
+      if (texto) texto.textContent = aberto ? "Fechar categorias" : "Filtrar categorias";
+      if (marca) marca.textContent = aberto ? "−" : "+";
+    });
+  }
+
   function iniciar() {
 
     configurarPesquisaCatalogo();
     configurarOrdenacaoCatalogo();
+    configurarToggleFiltros();
     renderizarFiltros();
 
     configurarWhatsApp();
