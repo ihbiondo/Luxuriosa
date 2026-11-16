@@ -331,7 +331,7 @@ Deno.serve(async (req: Request) => {
 
     const ruleCityNormalized = isTibiriçaDelivery ? "bauru" : cityNormalized;
     const { data: rule, error: ruleError } = await admin.from("fulfillment_sla_rules")
-      .select("id, dispatch_minutes, delivery_minutes, delivery_fee_cents, club_delivery_fee_cents, automatic_payment_enabled, minimum_order_up_to_12km_cents, minimum_order_up_to_55km_cents, scheduled_delivery_enabled, scheduled_max_advance_hours")
+      .select("id, dispatch_minutes, delivery_minutes, delivery_fee_cents, club_delivery_fee_cents, automatic_payment_enabled, freight_origin_cep, minimum_order_up_to_12km_cents, minimum_order_up_to_55km_cents, scheduled_delivery_enabled, scheduled_max_advance_hours")
       .eq("city_normalized", ruleCityNormalized)
       .eq("state", deliveryAddress.state)
       .eq("fulfillment_mode", "delivery")
