@@ -355,7 +355,7 @@ Deno.serve(async (req: Request) => {
     // Pedidos do site devem pertencer a uma conta autenticada para permitir acompanhamento privado.
     // O gateway da Edge Function não exige JWT; por isso validamos a sessão manualmente.
     let customerId: string | null = null;
-    const token = (req.headers.get("authorization") || "").replace(/^Bearer\\s+/i, "");
+    const token = (req.headers.get("authorization") || "").replace(/^Bearer\s+/i, "");
     if (token) {
       const { data: userData, error: userAuthError } = await admin.auth.getUser(token);
       if (userAuthError || !userData.user) {
@@ -370,7 +370,7 @@ Deno.serve(async (req: Request) => {
         error: "Entre ou crie sua conta Luxuriosa antes de finalizar o pedido. Seus dados cadastrados serão aproveitados no checkout."
       }, 401, origin);
     }
-    if (customerEmail && !/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(customerEmail)) {
+    if (customerEmail && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(customerEmail)) {
       customerEmail = "";
     }
 
