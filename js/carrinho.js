@@ -1446,9 +1446,9 @@
       "_Condição do frete conforme o destino e os itens do pedido:_",
       "",
       "*CONDIÇÕES DE ENTREGA*",
-      "• Sem Clube: Bauru R$ 20,00; até 30 km R$ 30,00; até 55 km R$ 45,00.",
-      "• Clube gratuito ativo: Bauru R$ 10,00; até 30 km R$ 20,00; até 55 km R$ 30,00.",
-      "• A distância é calculada pela rota de motocicleta; não atendemos acima de 55 km.",
+      "• Sem Clube: Bauru R$ 15,00; Tibiriçá R$ 20,00; Agudos, Piratininga e Pederneiras R$ 25,00; Lençóis Paulista e Borebi R$ 50,00.",
+      "• Clube gratuito: Bauru R$ 10,00; Tibiriçá R$ 15,00; Agudos, Piratininga e Pederneiras R$ 20,00; Lençóis Paulista e Borebi R$ 40,00.",
+      "• Lençóis Paulista e Borebi já incluem pedágio. Demais localidades: frete sob consulta pelo atendimento.",
       "*PRÓXIMO PASSO*",
       "Gostaria de confirmar a disponibilidade, os tamanhos e a entrega.",
       "_O envio desta mensagem não confirma o pedido nem processa pagamento._"
