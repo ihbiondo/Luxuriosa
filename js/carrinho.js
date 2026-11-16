@@ -1446,9 +1446,10 @@
       "_Condição do frete conforme o destino e os itens do pedido:_",
       "",
       "*CONDIÇÕES DE ENTREGA*",
-      "• Em Bauru, pedidos que incluam pelo menos um kit promocional têm frete grátis.",
-      "• Para os demais pedidos em Bauru, o frete padrão é R$ 15,00.",
-      "• Para outras cidades, disponibilidade e valor serão confirmados no atendimento.",
+      "• Sem Clube: Bauru R$ 20,00; região até 30 km R$ 40,00; região até 55 km R$ 70,00.",
+      "• Com Clube gratuito ativo na conta: Bauru R$ 10,00; região até 30 km R$ 25,00; região até 55 km R$ 50,00.",
+      "• A distância regional é calculada pela rota de motocicleta. Acima de 55 km não realizamos entrega.",
+      "• A condição de membro é conferida na conta antes da cobrança.",
       "*PRÓXIMO PASSO*",
       "Gostaria de confirmar a disponibilidade, os tamanhos e a entrega.",
       "_O envio desta mensagem não confirma o pedido nem processa pagamento._"
