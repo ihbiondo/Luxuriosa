@@ -1113,3 +1113,28 @@
     padding: 7px 0;
   }
 }
+
+
+/* =========================================================
+   USABILIDADE MOBILE — ÁREAS DE TOQUE DO RODAPÉ
+   Mantém a composição atual e facilita a navegação por toque.
+========================================================= */
+@media (max-width: 600px) {
+  .footer-navigation {
+    gap: 4px;
+  }
+
+  .footer-navigation a,
+  .footer-navigation button,
+  .footer-social-links a,
+  .footer-bottom a,
+  .footer-bottom button {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+
+  .footer-social-links {
+    gap: 6px 14px;
+  }
+}
