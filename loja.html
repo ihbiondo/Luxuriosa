@@ -56,7 +56,7 @@
   <!-- CSS -->
   <link rel="stylesheet" href="css/style.css?v=20261114-pre-venda-v1">
   <link rel="stylesheet" href="css/responsive.css">
-  <link rel="stylesheet" href="css/ajustes.css">
+  <link rel="stylesheet" href="css/ajustes.css?v=20261116-filtro-elegante-v1">
   <style>
     .delivery-fee-note {
       margin: 0 0 28px;
@@ -359,6 +359,29 @@
           >
           <button type="button" id="clearCatalogSearch" class="catalog-search-clear" aria-label="Limpar pesquisa" hidden>Limpar</button>
         </form>
+
+        <div class="catalog-filter-panel" aria-label="Filtros do catálogo">
+          <div class="catalog-filter-panel-head">
+            <div class="catalog-filter-heading">
+              <span class="catalog-filter-eyebrow">SUA EXPERIÊNCIA, DO SEU JEITO</span>
+              <strong>Explore por categoria</strong>
+            </div>
+            <button class="catalog-filter-toggle" id="toggleCatalogFilters" type="button" aria-expanded="false" aria-controls="chips">
+              <span aria-hidden="true">☷</span>
+              <span class="catalog-filter-toggle-text">Filtrar categorias</span>
+              <span class="catalog-filter-toggle-mark" aria-hidden="true">+</span>
+            </button>
+            <label class="catalog-sort-control" for="catalogSort">
+              <span>Ordenar por</span>
+              <select id="catalogSort" name="sort">
+                <option value="relevancia">Mais relevantes</option>
+                <option value="menor-preco">Menor preço</option>
+                <option value="maior-preco">Maior preço</option>
+              </select>
+            </label>
+          </div>
+          <div class="chips catalog-filter-options" id="chips" aria-label="Categorias disponíveis"></div>
+        </div>
 
         <p class="catalogo-status" id="catalogoStatus" role="status" aria-live="polite" aria-atomic="true"></p>
 
@@ -705,7 +728,7 @@
        JAVASCRIPT
   ========================================================== -->
 
-  <script src="js/catalogo.js?v=20261116-sem-filtros-v1"></script>
+  <script src="js/catalogo.js?v=20261116-filtro-elegante-v1"></script>
   <script src="js/inteligencia.js?v=20261113-dado-online"></script>
   <script src="js/carrinho.js?v=20261113-dado-online"></script>
   <script src="js/clientes.js?v=20261113-dado-online"></script>
