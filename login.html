@@ -66,6 +66,13 @@
     .account-section .account-form{margin:0!important;padding:0!important;border:0!important}
     .account-section .account-form>.section-label:first-child{margin-top:0}
     .account-section .account-form .actions{margin-bottom:8px}
+    #signedInArea #account-profile-section{grid-column:1/-1;margin:12px 0}
+    .account-section.account-subsection{grid-column:1/-1;margin:9px 0;border-color:rgba(212,175,124,.16);border-radius:9px}
+    .account-subsection>summary{padding:12px 14px;font-size:11px}
+    .account-subsection>.account-section-content{padding:0 14px 14px}
+    .account-signout{margin:22px 0 4px;padding-top:16px;border-top:1px solid var(--line)}
+    .account-signout .secondary{width:100%;border-color:rgba(190,65,91,.35);color:#bd5570}
+    #account-orders-panel{scroll-margin-top:24px}
     .account-club{margin:18px 0;padding:18px;border:1px solid rgba(212,175,124,.3);border-radius:12px;background:linear-gradient(130deg,rgba(139,30,63,.2),rgba(0,0,0,.2))}
     .account-club strong{display:block;color:var(--gold);font:400 22px var(--serif)}
     .account-club p{margin:5px 0 12px;color:var(--muted);font-size:11px}
@@ -568,6 +575,10 @@ input:focus,select:focus{border-color:#d4af7c;box-shadow:0 0 0 3px rgba(212,175,
 #signedInArea .profile-progress-track{background:#33252a!important}
 #signedInArea .profile-progress-track span{background:linear-gradient(90deg,#8b1e3f,#d4af7c)!important}
 
+  
+    /* O painel inicial mantém apenas os atalhos; detalhes ficam nas páginas próprias. */
+    #signedInArea .orders-panel,#signedInArea .account-section{display:none!important}
+
   </style>
 </head>
 <body>
@@ -714,13 +725,13 @@ input:focus,select:focus{border-color:#d4af7c;box-shadow:0 0 0 3px rgba(212,175,
               <p>Seus atalhos principais estão aqui.</p>
             </div>
             <nav class="account-home" aria-label="Painel de atalhos da sua conta">
-              <a class="account-tile account-tile-featured" href="/portal/"><span class="tile-icon" aria-hidden="true"><svg viewBox="0 0 48 48" focusable="false"><path d="M24 5 29 19 43 24 29 29 24 43 19 29 5 24 19 19Z"/></svg></span><strong>Abrir meu Portal</strong><span>Seu espaço com conteúdos, ferramentas e experiências.</span></a>
-              <a href="/loja.html"><span class="tile-icon" aria-hidden="true"><svg viewBox="0 0 48 48" focusable="false"><path d="M7 20 11 9h26l4 11v3a6 6 0 0 1-11 3 6 6 0 0 1-12 0 6 6 0 0 1-11-3z"/><path d="M10 28v12h28V28M19 40V28h10v12"/></svg></span><strong>Explorar a loja</strong><span>Produtos, kits e novidades.</span></a>
-              <a href="#account-orders-section" data-open-account="account-orders-section"><span class="tile-icon" aria-hidden="true"><svg viewBox="0 0 48 48" focusable="false"><path d="M12 16h24l2.5 25h-29L12 16Z"/><path d="M17 18v-5a7 7 0 0 1 14 0v5M18 26h12M18 32h8"/></svg></span><strong>Meus pedidos</strong><span>Acompanhe suas compras.</span></a>
-              <a href="#account-profile-section" data-open-account="account-profile-section"><span class="tile-icon" aria-hidden="true"><svg viewBox="0 0 48 48" focusable="false"><circle cx="24" cy="15" r="8"/><path d="M9 41c1-9 6-14 15-14s14 5 15 14Z"/></svg></span><strong>Meu cadastro</strong><span>Dados pessoais e endereço.</span></a>
+              <a href="/minha-conta/"><span class="tile-icon" aria-hidden="true"><svg viewBox="0 0 48 48" focusable="false"><circle cx="24" cy="15" r="8"/><path d="M9 41c1-9 6-14 15-14s14 5 15 14Z"/></svg></span><strong>Meu cadastro</strong><span>Seus dados, endereço e preferências.</span></a>
+              <a href="/meus-pedidos/"><span class="tile-icon" aria-hidden="true"><svg viewBox="0 0 48 48" focusable="false"><path d="M12 16h24l2.5 25h-29L12 16Z"/><path d="M17 18v-5a7 7 0 0 1 14 0v5M18 26h12M18 32h8"/></svg></span><strong>Meus pedidos</strong><span>Acompanhe cada etapa das suas compras.</span></a>
+              <a href="/loja.html"><span class="tile-icon" aria-hidden="true"><svg viewBox="0 0 48 48" focusable="false"><path d="M7 20 11 9h26l4 11v3a6 6 0 0 1-11 3 6 6 0 0 1-12 0 6 6 0 0 1-11-3z"/><path d="M10 28v12h28V28M19 40V28h10v12"/></svg></span><strong>Explorar Loja</strong><span>Produtos, kits e novidades.</span></a>
               <a href="/clube.html"><span class="tile-icon" aria-hidden="true"><svg viewBox="0 0 48 48" focusable="false"><path d="m8 15 9 8 7-14 7 14 9-8-4 24H12Z"/><path d="M13 33h22M8 42h32"/></svg></span><strong>Clube de Vantagens</strong><span>Benefícios e modalidades.</span></a>
+              <a class="account-tile-featured" href="/portal/"><span class="tile-icon" aria-hidden="true"><svg viewBox="0 0 48 48" focusable="false"><path d="M24 5 29 19 43 24 29 29 24 43 19 29 5 24 19 19Z"/></svg></span><strong>Abrir meu portal</strong><span>Seu espaço com conteúdos, ferramentas e experiências.</span></a>
             </nav>
-            <section class="orders-panel" aria-labelledby="ordersHeading">
+            <section class="orders-panel" id="account-orders-panel" aria-labelledby="ordersHeading">
               <div class="section-label" id="ordersHeading">Meus pedidos</div>
               <p class="orders-intro">Acompanhe as solicitações feitas pelo site e o andamento de cada pedido. Solicitações encaminhadas ao WhatsApp ficam aguardando confirmação; a compra só é confirmada após o atendimento.</p>
               <div id="accountOrders" class="orders-list" aria-live="polite"><p class="orders-empty">Carregando seu histórico...</p></div>
@@ -849,35 +860,61 @@ input:focus,select:focus{border-color:#d4af7c;box-shadow:0 0 0 3px rgba(212,175,
     });
 
     const $ = (id) => document.getElementById(id);
-    // Agrupa configurações em seções recolhíveis para reduzir a sobrecarga visual.
+    // Agrupa todas as configurações pessoais dentro de "Meu cadastro".
     function organizeAccountSections() {
       const box = document.querySelector("#signedInArea .account-box");
       if (!box || box.dataset.organized === "true") return;
-      const sections = [
-        ["account-orders-section", "Meus pedidos", $("ordersHeading")?.closest(".orders-panel")],
+      const orders = $("ordersHeading")?.closest(".orders-panel");
+      if (orders) orders.id = "account-orders-panel";
+
+      const profile = document.createElement("details");
+      profile.className = "account-section";
+      profile.id = "account-profile-section";
+      const profileSummary = document.createElement("summary");
+      profileSummary.textContent = "Meu cadastro";
+      const profileContent = document.createElement("div");
+      profileContent.className = "account-section-content";
+      profile.append(profileSummary, profileContent);
+
+      const subsections = [
         ["account-email-section", "E-mail de acesso", $("emailChangeForm")],
         ["account-consent-section", "Privacidade e autorizações", $("accountDataConsentForm")],
-        ["account-profile-section", "Meus dados e endereço", $("accountForm")],
+        ["account-data-section", "Meus dados e endereço", $("accountForm")],
         ["account-delete-section", "Encerrar conta", $("deleteAccountForm")]
       ];
-      sections.forEach(([id, title, node]) => {
+      subsections.forEach(([id, title, node]) => {
         if (!node) return;
+        if (id === "account-delete-section") node.hidden = false;
         const details = document.createElement("details");
-        details.className = "account-section";
+        details.className = "account-section account-subsection";
         details.id = id;
         const summary = document.createElement("summary");
         summary.textContent = title;
         const content = document.createElement("div");
         content.className = "account-section-content";
         details.append(summary, content);
-        node.before(details);
+        profileContent.append(details);
         content.append(node);
       });
+
+      if (orders) orders.after(profile);
+      const signOut = $("signOutButton")?.closest(".account-actions");
+      if (signOut) {
+        profile.after(signOut);
+        signOut.classList.add("account-signout");
+      }
       box.dataset.organized = "true";
+
       document.querySelectorAll("[data-open-account]").forEach(link => {
         link.addEventListener("click", () => {
           const target = document.getElementById(link.dataset.openAccount);
           if (target) target.open = true;
+        });
+      });
+      document.querySelectorAll("[data-scroll-account]").forEach(link => {
+        link.addEventListener("click", () => {
+          const target = document.getElementById(link.dataset.scrollAccount);
+          if (target) window.setTimeout(() => target.scrollIntoView({ behavior: "smooth", block: "start" }), 0);
         });
       });
       const requestedSectionId = window.location.hash.slice(1);
@@ -1247,7 +1284,9 @@ input:focus,select:focus{border-color:#d4af7c;box-shadow:0 0 0 3px rgba(212,175,
           window.location.replace("/portal/");
           return;
         }
-        if (requestedPage === "acompanhar-pedido/") window.location.replace("/acompanhar-pedido/");
+        if (requestedPage === "acompanhar-pedido/") window.location.replace("/meus-pedidos/");
+        if (requestedPage === "minha-conta/") window.location.replace("/minha-conta/");
+        if (requestedPage === "meus-pedidos/") window.location.replace("/meus-pedidos/");
       } catch (error) {
         activeUserId = null;
         message("Não foi possível carregar todos os dados da sua conta. Atualize a página para tentar novamente.", true);
