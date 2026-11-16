@@ -78,68 +78,9 @@ function cents(value: unknown): number {
 }
 
 
-type RouteFreight = {
-  distanceKm: number;
-  outboundTollCents: number;
-  returnTollCents: number;
-  totalTollCents: number;
-};
-
-async function calculateMotorcycleRoundTrip(originCep: string, destination: string): Promise<RouteFreight> {
-  if (!GOOGLE_MAPS_API_KEY) {
-    throw new Error("O cálculo automático de rota ainda não está configurado. Fale com a Luxuriosa para confirmar o frete.");
-  }
-  const origin = originCep + ", Bauru, SP, Brasil";
-  const response = await fetch("https://routes.googleapis.com/directions/v2:computeRoutes", {
-    method: "POST",
-    headers: {
-      "content-type": "application/json",
-      "X-Goog-Api-Key": GOOGLE_MAPS_API_KEY,
-      "X-Goog-FieldMask": "routes.distanceMeters,routes.legs.distanceMeters"
-    },
-    body: JSON.stringify({
-      origin: { address: origin },
-      destination: { address: origin },
-      intermediates: [{ address: destination }],
-      travelMode: "TWO_WHEELER",
-      regionCode: "BR",
-      languageCode: "pt-BR",
-      routeModifiers: { vehicleInfo: { emissionType: "GASOLINE" } }
-    })
-  });
-  const payload = await response.json().catch(() => ({}));
-  if (!response.ok) {
-    console.error("Google Routes failed", response.status, payload?.error?.message || "No details");
-    throw new Error("Não foi possível calcular a rota de motocicleta. Confira o endereço ou fale com a Luxuriosa.");
-  }
-  const route = payload?.routes?.[0];
-  const legs = route?.legs;
-  if (!route || !Array.isArray(legs) || legs.length !== 2 ||
-      !Number.isFinite(Number(legs[0]?.distanceMeters))) {
-    throw new Error("Não conseguimos confirmar o trajeto completo de ida e volta. Fale com a Luxuriosa para calcular o frete.");
-  }
-  const outboundMeters = Number(legs[0].distanceMeters);
-  const distanceKm = outboundMeters / 1000;
-  return {
-    distanceKm,
-    outboundTollCents: 0,
-    returnTollCents: 0,
-    totalTollCents: 0
-  };
-}
-
-function freightTier(distanceKm: number, rule: any) {
-  if (distanceKm <= 30) return { minimum: Number(rule.minimum_order_up_to_35km_cents) };
-  if (distanceKm <= 55) return { minimum: Number(rule.minimum_order_up_to_55km_cents) };
-  return null;
-}
-
-function configuredFreightFee(distanceKm: number, rule: any, fulfillmentType: string, isClubMember: boolean, isBauruDelivery: boolean): number | null {
-  const band = isBauruDelivery ? "12" : distanceKm <= 30 ? "35" : distanceKm <= 55 ? "55" : "";
-  if (!band) return null;
-  const mode = fulfillmentType === "scheduled" ? "scheduled" : "express";
-  const prefix = isClubMember ? "club_" : "";
-  const value = Number(rule[prefix + mode + "_fee_up_to_" + band + "km_cents"]);
+function configuredFreightFee(rule: any, isClubMember: boolean, isTibiriçaDelivery: boolean): number | null {
+  if (isTibiriçaDelivery) return isClubMember ? 1500 : 2000;
+  const value = Number(isClubMember ? rule.club_delivery_fee_cents : rule.delivery_fee_cents);
   return Number.isSafeInteger(value) && value >= 0 ? value : null;
 }
 
@@ -375,9 +316,24 @@ Deno.serve(async (req: Request) => {
     }
 
     const cityNormalized = normalizeCity(deliveryAddress.city);
+    const districtNormalized = normalizeCity(deliveryAddress.district);
+    const isTibiriçaDelivery = (cityNormalized === "bauru" && districtNormalized === "tibiriça") ||
+      cityNormalized === "tibiriça";
+    const isBauruDelivery = cityNormalized === "bauru" || isTibiriçaDelivery;
+    const officialDeliveryCities = new Set([
+      "bauru", "agudos", "pederneiras", "piratininga", "lencois paulista", "borebi"
+    ]);
+    if (!officialDeliveryCities.has(cityNormalized) && !isTibiriçaDelivery) {
+      return reply({
+        code: "freight_quote_required",
+        error: "Para essa localidade, o frete é cotado pelo atendimento. Fale com a Luxuriosa para consultar a disponibilidade e o valor."
+      }, 409, origin);
+    }
+
+    const ruleCityNormalized = isTibiriçaDelivery ? "bauru" : cityNormalized;
     const { data: rule, error: ruleError } = await admin.from("fulfillment_sla_rules")
-      .select("id, dispatch_minutes, delivery_minutes, delivery_fee_cents, free_delivery_if_contains_kit, automatic_payment_enabled, freight_origin_cep, express_fee_up_to_12km_cents, express_fee_up_to_35km_cents, express_fee_up_to_55km_cents, scheduled_fee_up_to_12km_cents, scheduled_fee_up_to_35km_cents, scheduled_fee_up_to_55km_cents, club_express_fee_up_to_12km_cents, club_express_fee_up_to_35km_cents, club_express_fee_up_to_55km_cents, club_scheduled_fee_up_to_12km_cents, club_scheduled_fee_up_to_35km_cents, club_scheduled_fee_up_to_55km_cents, minimum_order_up_to_12km_cents, minimum_order_up_to_35km_cents, minimum_order_up_to_55km_cents, scheduled_delivery_enabled, scheduled_max_advance_hours")
-      .eq("city_normalized", cityNormalized)
+      .select("id, dispatch_minutes, delivery_minutes, delivery_fee_cents, club_delivery_fee_cents, free_delivery_if_contains_kit, automatic_payment_enabled, minimum_order_up_to_12km_cents, minimum_order_up_to_55km_cents, scheduled_delivery_enabled, scheduled_max_advance_hours")
+      .eq("city_normalized", ruleCityNormalized)
       .eq("state", deliveryAddress.state)
       .eq("fulfillment_mode", "delivery")
       .eq("active", true)
@@ -386,9 +342,10 @@ Deno.serve(async (req: Request) => {
     if (!rule || rule.automatic_payment_enabled !== true ||
         !Number.isInteger(rule.dispatch_minutes) || rule.dispatch_minutes < 1 ||
         !Number.isInteger(rule.delivery_minutes) || rule.delivery_minutes < 1) {
-      return reply({
-        error: "O pagamento automático ainda não está liberado para essa cidade. A equipe da Luxuriosa precisa configurar os prazos de expedição, entrega e frete."
-      }, 409, origin);
+      const message = cityNormalized === "borebi"
+        ? "O frete para Borebi tem valor fixo, mas o pagamento automático ainda não está habilitado para esse destino. Finalize pelo atendimento da Luxuriosa."
+        : "O pagamento automático ainda não está liberado para essa localidade. Fale com a equipe da Luxuriosa para concluir o pedido.";
+      return reply({ error: message }, 409, origin);
     }
 
     const fulfillmentType = body?.fulfillment_type === "scheduled" ? "scheduled" : "express";
@@ -398,7 +355,7 @@ Deno.serve(async (req: Request) => {
     // Pedidos do site devem pertencer a uma conta autenticada para permitir acompanhamento privado.
     // O gateway da Edge Function não exige JWT; por isso validamos a sessão manualmente.
     let customerId: string | null = null;
-    const token = (req.headers.get("authorization") || "").replace(/^Bearer\s+/i, "");
+    const token = (req.headers.get("authorization") || "").replace(/^Bearer\\s+/i, "");
     if (token) {
       const { data: userData, error: userAuthError } = await admin.auth.getUser(token);
       if (userAuthError || !userData.user) {
@@ -413,7 +370,7 @@ Deno.serve(async (req: Request) => {
         error: "Entre ou crie sua conta Luxuriosa antes de finalizar o pedido. Seus dados cadastrados serão aproveitados no checkout."
       }, 401, origin);
     }
-    if (customerEmail && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(customerEmail)) {
+    if (customerEmail && !/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(customerEmail)) {
       customerEmail = "";
     }
 
@@ -430,50 +387,28 @@ Deno.serve(async (req: Request) => {
     if (clubMembershipError) throw clubMembershipError;
     const isClubMember = clubMembership?.active === true;
 
-    const isBauruDelivery = cityNormalized === "bauru" && deliveryAddress.state === "SP";
-    let route: RouteFreight | null = null;
-    let distanceKm = 0;
-    let tier: { minimum: number } | null = null;
-
-    if (!isBauruDelivery) {
-      const routeDestination = [
-        deliveryAddress.street + ", " + deliveryAddress.number,
-        deliveryAddress.district,
-        deliveryAddress.city,
-        deliveryAddress.state,
-        deliveryAddress.zip,
-        "Brasil"
-      ].filter(Boolean).join(", ");
-      route = await calculateMotorcycleRoundTrip(String(rule.freight_origin_cep || ""), routeDestination);
-      distanceKm = route.distanceKm;
-      if (!Number.isFinite(distanceKm) || distanceKm <= 0 || distanceKm > 55) {
-        return reply({ error: "Esse endereço está fora da área de entrega (limite de 55 km pela rota de motocicleta)." }, 409, origin);
-      }
+    const minimum = Number(isBauruDelivery
+      ? rule.minimum_order_up_to_12km_cents
+      : rule.minimum_order_up_to_55km_cents);
+    if (!Number.isSafeInteger(minimum) || minimum < 0) {
+      return reply({ error: "O pedido mínimo para esse destino ainda não está configurado. Fale com a Luxuriosa." }, 409, origin);
     }
-    tier = isBauruDelivery
-      ? { minimum: Number(rule.minimum_order_up_to_12km_cents) }
-      : freightTier(distanceKm, rule);
-    if (!tier || !Number.isSafeInteger(tier.minimum) || tier.minimum < 0) {
-      return reply({ error: "A faixa de distância ou o pedido mínimo desse destino ainda não está configurado." }, 409, origin);
-    }
-    if (subtotalCents < tier.minimum) {
-      const distanceMessage = route
-        ? "Para entrega a aproximadamente " + route.distanceKm.toFixed(1).replace(".", ",") + " km, "
-        : "Para entrega em Bauru, ";
+    if (subtotalCents < minimum) {
       return reply({
-        error: distanceMessage + "o pedido mínimo é R$ " + (tier.minimum / 100).toFixed(2).replace(".", ",") +
+        error: "Para entrega em " + deliveryAddress.city + ", o pedido mínimo é R$ " + (minimum / 100).toFixed(2).replace(".", ",") +
           ". Seu subtotal atual é R$ " + (subtotalCents / 100).toFixed(2).replace(".", ",") + "."
       }, 409, origin);
     }
-    const configuredFee = configuredFreightFee(distanceKm, rule, fulfillmentType, isClubMember, isBauruDelivery);
+
+    const configuredFee = configuredFreightFee(rule, isClubMember, isTibiriçaDelivery);
     if (configuredFee === null) {
-      return reply({ error: "A tarifa de entrega para sua modalidade ainda não está configurada. Fale com a Luxuriosa." }, 409, origin);
+      return reply({ error: "A tarifa fixa de entrega para sua modalidade ainda não está configurada. Fale com a Luxuriosa." }, 409, origin);
     }
     const baseFeeCents = configuredFee;
     const tollCents = 0;
-    const shippingCents = baseFeeCents + tollCents;
+    const shippingCents = baseFeeCents;
     if (!Number.isSafeInteger(shippingCents) || shippingCents < 0 || shippingCents > 1000000) {
-      return reply({ error: "O frete calculado ultrapassou o limite permitido. Fale com a Luxuriosa." }, 409, origin);
+      return reply({ error: "O frete informado ultrapassou o limite permitido. Fale com a Luxuriosa." }, 409, origin);
     }
 
     const clubDiscountCents = isClubMember && subtotalCents > CLUB_DISCOUNT_THRESHOLD_CENTS
@@ -677,7 +612,7 @@ Deno.serve(async (req: Request) => {
       delivery_sla_minutes: rule.delivery_minutes,
       fulfillment_type: fulfillmentType,
       delivery_origin_cep: rule.freight_origin_cep,
-      delivery_distance_km: route ? Number(route.distanceKm.toFixed(2)) : null,
+      delivery_distance_km: null,
       delivery_base_fee_cents: baseFeeCents,
       delivery_toll_amount_cents: tollCents,
       scheduled_discount_amount: 0,
@@ -738,7 +673,9 @@ Deno.serve(async (req: Request) => {
       checkoutItems.push({
         quantity: 1,
         price: shippingCents,
-        description: "Entrega " + (fulfillmentType === "scheduled" ? "agendada" : "imediata") + (route ? " · " + route.distanceKm.toFixed(1) + " km" : " · Bauru") + (tollCents > 0 ? " · pedágio incluso" : "")
+        description: "Entrega " + (fulfillmentType === "scheduled" ? "agendada" : "imediata") + " · " +
+           (deliveryAddress.district ? deliveryAddress.district + ", " : "") + deliveryAddress.city +
+           (["lencois paulista", "borebi"].includes(cityNormalized) ? " · pedágio incluso" : "")
       });
     }
 
