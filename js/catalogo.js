@@ -23,10 +23,14 @@
     "Perfumes e higiene",
     "Kits",
     "Lingerie",
+    "Acessórios",
+    "Óleos para massagem",
     "Ofertas"
   ];
 
   var GRUPOS_CATEGORIAS = {
+    "Acessórios": ["Acessórios"],
+    "Óleos para massagem": ["Óleos para massagem"],
     "Géis e estimulantes": [
       "Géis e estimulantes íntimos",
       "Géis e lubrificantes íntimos",
@@ -38,7 +42,6 @@
       "Anéis penianos",
       "Plugs anais",
       "Próteses",
-      "Acessórios e fetiches"
     ],
     "Jogos e masturbadores": [
       "Jogos eróticos",
@@ -47,7 +50,6 @@
     "Perfumes e higiene": [
       "Perfumes sensuais",
       "Higiene íntima",
-      "Óleos de massagem"
     ]
   };
 
