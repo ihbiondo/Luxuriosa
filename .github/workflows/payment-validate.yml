@@ -102,7 +102,7 @@ jobs:
           node --input-type=module <<'NODE'
           import fs from "node:fs";
           import { execFileSync } from "node:child_process";
-          const pages = ["index.html","loja.html","login.html","pagamento-retorno.html","acompanhar-pedido/index.html"];
+          const pages = ["index.html","loja.html","login.html","minha-conta/index.html","meus-pedidos/index.html","pagamento-retorno.html","acompanhar-pedido/index.html"];
           for (const page of pages) {
             const html = fs.readFileSync(page, "utf8");
             const scripts = [...html.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/gi)];
@@ -223,6 +223,48 @@ jobs:
           # Não há token, project-ref, link ou credencial do Supabase hospedado.
           mkdir -p "$test_root/supabase/migrations" "$test_root/supabase/tests/database"
           cp "$GITHUB_WORKSPACE/supabase/config.toml" "$test_root/supabase/config.toml"
+          # O runner pode já ter processos usando as portas padrão do Supabase.
+          # Reserve portas livres para esta pilha descartável sem alterar a configuração versionada.
+          python3 - "$test_root/supabase/config.toml" <<'PY'
+          import socket
+          import sys
+          from pathlib import Path
+
+          config_path = Path(sys.argv[1])
+          reservations = []
+          for _ in range(4):
+              sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+              sock.bind(("0.0.0.0", 0))
+              reservations.append(sock)
+          ports = [sock.getsockname()[1] for sock in reservations]
+          for sock in reservations:
+              sock.close()
+
+          settings = {
+              "api": {"port": ports[0]},
+              "db": {"port": ports[1], "shadow_port": ports[2]},
+              "local_smtp": {"port": ports[3]},
+          }
+          lines = config_path.read_text(encoding="utf-8").splitlines()
+          section = None
+          for index, line in enumerate(lines):
+              stripped = line.strip()
+              if stripped.startswith("[") and stripped.endswith("]"):
+                  section = stripped[1:-1]
+                  continue
+              if section not in settings or "=" not in line:
+                  continue
+              key = line.split("=", 1)[0].strip()
+              if key in settings[section]:
+                  value = settings[section].pop(key)
+                  lines[index] = f"{key} = {value}"
+
+          missing = {name: values for name, values in settings.items() if values}
+          if missing:
+              raise SystemExit(f"Não foi possível configurar as portas locais: {missing}")
+          config_path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+          print(f"Portas locais isoladas: API={ports[0]}, DB={ports[1]}, shadow={ports[2]}, SMTP={ports[3]}")
+          PY
           cp "$GITHUB_WORKSPACE/tests/e2e/login-fixtures.sql" "$test_root/supabase/migrations/20261115130000_e2e_login_fixtures.sql"
           cp "$GITHUB_WORKSPACE/supabase/migrations/20261115181510_create_experience_results.sql" "$test_root/supabase/migrations/"
           cp "$GITHUB_WORKSPACE/supabase/tests/database/experience_results.test.sql" "$test_root/supabase/tests/database/"
