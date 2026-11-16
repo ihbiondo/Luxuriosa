@@ -573,7 +573,8 @@
       "tamanhos": "U",
       "cor": "Cromada",
       "estoque": 5,
-      "exigirControleEstoque": true
+      "exigirControleEstoque": true,
+      "pagina": "produtos/30-algemas-reforcadas-cromadas.html"
     },
     {
       "id": 31,
@@ -599,7 +600,8 @@
       "tamanhos": "G",
       "cor": "Satine",
       "estoque": 1,
-      "exigirControleEstoque": true
+      "exigirControleEstoque": true,
+      "pagina": "produtos/31-body-sensual-rendado-frente-unica.html"
     },
     {
       "id": 32,
@@ -625,7 +627,8 @@
       "tamanhos": "GG",
       "cor": "Pink",
       "estoque": 2,
-      "exigirControleEstoque": true
+      "exigirControleEstoque": true,
+      "pagina": "produtos/32-body-rendado-com-persex-pink.html"
     },
     {
       "id": 33,
@@ -651,7 +654,8 @@
       "tamanhos": "GG",
       "cor": "Azul-marinho",
       "estoque": 1,
-      "exigirControleEstoque": true
+      "exigirControleEstoque": true,
+      "pagina": "produtos/33-body-rendado-com-persex-azul-marinho.html"
     },
     {
       "id": 34,
@@ -676,7 +680,8 @@
       "tamanhos": "U",
       "cor": "Vermelho",
       "estoque": 1,
-      "exigirControleEstoque": true
+      "exigirControleEstoque": true,
+      "pagina": "produtos/34-body-sensual-rendado-vermelho.html"
     },
     {
       "id": 35,
@@ -701,7 +706,8 @@
       "tamanhos": "U",
       "cor": "Branco",
       "estoque": 1,
-      "exigirControleEstoque": true
+      "exigirControleEstoque": true,
+      "pagina": "produtos/35-body-sensual-rendado-branco.html"
     },
     {
       "id": 36,
@@ -727,7 +733,8 @@
       "tamanhos": "M",
       "cor": "Preto",
       "estoque": 1,
-      "exigirControleEstoque": true
+      "exigirControleEstoque": true,
+      "pagina": "produtos/36-conjunto-cropped-rendado-com-persex-preto.html"
     },
     {
       "id": 37,
@@ -752,7 +759,8 @@
       "tamanhos": "U",
       "cor": "Branco",
       "estoque": 1,
-      "exigirControleEstoque": true
+      "exigirControleEstoque": true,
+      "pagina": "produtos/37-conjunto-sensual-rendado-encanto-branco.html"
     },
     {
       "id": 38,
@@ -777,7 +785,8 @@
       "tamanhos": "U",
       "cor": "Branco",
       "estoque": 1,
-      "exigirControleEstoque": true
+      "exigirControleEstoque": true,
+      "pagina": "produtos/38-conjunto-sensual-rendado-lais-branco.html"
     },
     {
       "id": 39,
@@ -803,7 +812,8 @@
       "tamanhos": "GG",
       "cor": "Vinho",
       "estoque": 1,
-      "exigirControleEstoque": true
+      "exigirControleEstoque": true,
+      "pagina": "produtos/39-conjunto-cropped-rendado-com-persex-vinho.html"
     },
     {
       "id": 40,
@@ -829,7 +839,8 @@
       "tamanhos": "P",
       "cor": "Vermelho",
       "estoque": 1,
-      "exigirControleEstoque": true
+      "exigirControleEstoque": true,
+      "pagina": "produtos/40-conjunto-top-rendado-com-persex-vermelho.html"
     },
     {
       "id": 41,
@@ -856,7 +867,8 @@
       "cor": "Vermelho",
       "opcao": "Fode sua puta",
       "estoque": 3,
-      "exigirControleEstoque": true
+      "exigirControleEstoque": true,
+      "pagina": "produtos/41-calcinha-fio-dental-com-frase-fode-sua-puta.html"
     },
     {
       "id": 42,
@@ -883,7 +895,8 @@
       "cor": "Vermelho",
       "opcao": "Safada",
       "estoque": 2,
-      "exigirControleEstoque": true
+      "exigirControleEstoque": true,
+      "pagina": "produtos/42-calcinha-fio-dental-com-frase-safada.html"
     },
     {
       "id": 43,
@@ -910,7 +923,8 @@
       "cor": "Vermelho",
       "opcao": "Amor",
       "estoque": 1,
-      "exigirControleEstoque": true
+      "exigirControleEstoque": true,
+      "pagina": "produtos/43-calcinha-fio-dental-plus-size-com-strass-amor.html"
     },
     {
       "id": 44,
@@ -937,7 +951,8 @@
       "cor": "Vermelho",
       "opcao": "Tesão",
       "estoque": 1,
-      "exigirControleEstoque": true
+      "exigirControleEstoque": true,
+      "pagina": "produtos/44-calcinha-fio-dental-plus-size-com-strass-tesao.html"
     },
     {
       "id": 45,
@@ -962,7 +977,8 @@
       "tamanhos": "U",
       "cor": "Preto",
       "estoque": 5,
-      "exigirControleEstoque": true
+      "exigirControleEstoque": true,
+      "pagina": "produtos/45-mascara-sensual-de-tecido-preta.html"
     },
     {
       "id": 46,
@@ -986,7 +1002,8 @@
       "sobConsulta": false,
       "tamanhos": "U",
       "estoque": 5,
-      "exigirControleEstoque": true
+      "exigirControleEstoque": true,
+      "pagina": "produtos/46-oleo-de-massagem-kama-sutra-120-ml.html"
     },
     {
       "id": 47,
@@ -1011,7 +1028,8 @@
       "tamanhos": "U",
       "cor": "Preto",
       "estoque": 10,
-      "exigirControleEstoque": true
+      "exigirControleEstoque": true,
+      "pagina": "produtos/47-venda-para-olhos-macia-e-ajustavel-preta.html"
     }
   ]
 }
