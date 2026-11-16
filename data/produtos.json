@@ -982,10 +982,9 @@
     },
     {
       "id": 46,
-      "nome": "Óleo de Massagem — Kama Sutra 120 ml",
+      "nome": "Óleo de Massagem — 120 ml",
       "categoria": "Óleos para massagem",
       "subcategoria": "Óleos corporais para massagem",
-      "marca": "Sensual Love",
       "preco": 39.9,
       "precoAntigo": null,
       "descricao": "**Óleo Corporal para Massagem — 120 ml**\n\nÓleo corporal aromático em frasco de 120 ml, com fragrância envolvente e toque suave. Pode ser utilizado em massagens e também para perfumar e deixar a pele macia.\n\nPara a massagem, coloque uma pequena quantidade nas mãos e espalhe sobre a pele com movimentos suaves. Produto de uso externo: não ingerir e evitar contato com os olhos e mucosas.",
@@ -1003,14 +1002,13 @@
       "tamanhos": "U",
       "estoque": 5,
       "exigirControleEstoque": true,
-      "pagina": "produtos/46-oleo-de-massagem-kama-sutra-120-ml.html"
+      "pagina": "produtos/46-oleo-de-massagem-120-ml.html"
     },
     {
       "id": 47,
       "nome": "Venda para Olhos Macia e Ajustável — Preta",
       "categoria": "Acessórios",
       "subcategoria": "Venda para olhos",
-      "marca": "Youvibe Vipmix",
       "preco": 9.9,
       "precoAntigo": null,
       "descricao": "**Venda para Olhos Macia e Ajustável — Preta**\n\nVenda para os olhos em tecido macio, com tiras ajustáveis para adaptar a fixação. Seu formato ajuda a bloquear a luz e pode ser usado tanto em momentos de descanso quanto em experiências sensoriais.\n\nMedidas aproximadas de 7 × 20 cm e peso aproximado de 5 g. Lave manualmente com sabão neutro, seque à sombra e evite alvejantes ou produtos abrasivos.",
