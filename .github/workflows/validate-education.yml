@@ -26,6 +26,7 @@ on:
       - "js/signos.js"
       - "js/signo-detalhe.js"
       - "scripts/validar_educacao.py"
+      - "scripts/validar_experiencias.py"
       - "sitemap.xml"
       - ".github/workflows/validate-education.yml"
   pull_request:
@@ -54,6 +55,7 @@ on:
       - "js/signos.js"
       - "js/signo-detalhe.js"
       - "scripts/validar_educacao.py"
+      - "scripts/validar_experiencias.py"
       - "sitemap.xml"
       - ".github/workflows/validate-education.yml"
   workflow_dispatch:
@@ -77,6 +79,8 @@ jobs:
           node-version: "22"
       - name: Validate education pages and local links
         run: python scripts/validar_educacao.py
+      - name: Validate Experiences cards, quiz and sign profiles
+        run: python scripts/validar_experiencias.py
       - name: Check JavaScript syntax
         run: |
           for file in \
