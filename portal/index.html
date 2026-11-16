@@ -12,7 +12,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/css/portal.css">
-<link rel="stylesheet" href="/css/portal-experiencias.css">
+<link rel="stylesheet" href="/css/portal-hub.css">
 <script type="module" src="/js/portal.js"></script>
 </head>
 <body>
@@ -28,16 +28,16 @@
     <img src="/img/site/logo-usuario-luxuriosa.webp" alt="Luxuriosa">
   </a>
   <nav class="desktop-nav" aria-label="Navegação principal">
-    <a href="/loja.html"><span aria-hidden="true">▦</span> Explorar loja</a>
     <a href="/login.html#account-orders-section"><span aria-hidden="true">▱</span> Meus pedidos</a>
+    <a href="/loja.html"><span aria-hidden="true">▦</span> Explorar produtos</a>
     <a href="/experiencias/"><span aria-hidden="true">✦</span> Experiências</a>
     <a href="/educacao/"><span aria-hidden="true">◇</span> Educação</a>
   </nav>
   <details class="mobile-menu">
     <summary aria-label="Abrir menu de navegação"><span class="menu-lines" aria-hidden="true"></span><span>Menu</span></summary>
     <nav class="mobile-menu-panel" aria-label="Navegação do portal">
-      <a class="mobile-main-link mobile-main-link--featured" href="/loja.html">▦ Explorar loja</a>
-      <a href="/login.html#account-orders-section">▱ Meus pedidos</a>
+      <a class="mobile-main-link mobile-main-link--featured" href="/login.html#account-orders-section">▱ Meus pedidos</a>
+      <a href="/loja.html">▦ Explorar produtos</a>
       <a href="/experiencias/">✦ Experiências</a>
       <a href="/educacao/">◇ Educação</a>
       <a href="/clube.html">♛ Clube de Vantagens</a>
@@ -58,42 +58,55 @@
     <span class="welcome-mark" aria-hidden="true">✦</span>
   </section>
 
-  <section class="portal-featured" aria-label="Descubra a Luxuriosa">
-    <div class="portal-featured-copy"><span class="eyebrow">MAIS DO QUE UMA LOJA</span><h2>Um espaço para <em>descobrir, aprender e aproveitar.</em></h2><p>Explore experiências interativas, encontre informação confiável e acompanhe tudo o que faz parte da sua jornada.</p><div class="portal-featured-links"><a href="/experiencias/">Viver uma experiência <span aria-hidden="true">↗</span></a><a href="/educacao/">Explorar a biblioteca <span aria-hidden="true">↗</span></a></div></div>
-    <div class="portal-featured-stamp" aria-hidden="true"><span>L</span><small>SINTA-SE<br>AINDA MAIS VOCÊ</small></div>
-  </section>
-  <section class="priority-section" aria-label="Acessos principais">
-    <a class="priority-card priority-card--store" href="/loja.html">
-      <span class="priority-icon" aria-hidden="true">
-        <svg viewBox="0 0 48 48" focusable="false"><path d="M7 20.5 10.5 8h27L41 20.5v3a6 6 0 0 1-6 6 6 6 0 0 1-5-2.7 6 6 0 0 1-10 0 6 6 0 0 1-5 2.7 6 6 0 0 1-6-6v-3Z"/><path d="M10 29v11h28V29M19 40V28h10v12M8 20h32"/></svg>
-      </span>
-      <span class="priority-copy"><span class="priority-kicker">DESCUBRA A COLEÇÃO</span><strong>Explorar produtos</strong><span class="priority-description">Encontre novidades e escolhas especiais para você.</span><span class="priority-action">Conhecer a loja <span aria-hidden="true">→</span></span></span>
-    </a>
+  <section class="priority-section portal-priority" aria-label="Acessos prioritários">
     <a class="priority-card priority-card--orders" href="/login.html#account-orders-section">
       <span class="priority-icon" aria-hidden="true">
         <svg viewBox="0 0 48 48" focusable="false"><path d="M12 16h24l2.5 25h-29L12 16Z"/><path d="M17 18v-5a7 7 0 0 1 14 0v5M18 26h12M18 32h8"/></svg>
       </span>
-      <span class="priority-copy"><span class="priority-kicker">ACOMPANHE SUAS COMPRAS</span><strong>Meus pedidos</strong><span class="priority-description">Veja o andamento e os detalhes das suas compras.</span><span class="priority-action">Consultar pedidos <span aria-hidden="true">→</span></span></span>
+      <span class="priority-copy"><span class="priority-kicker">ACOMPANHE SUAS COMPRAS</span><strong>Meus pedidos</strong><span class="priority-description">Consulte seus pedidos, acompanhe o andamento e veja os detalhes das compras.</span><span class="priority-action">Consultar pedidos <span aria-hidden="true">→</span></span></span>
+    </a>
+    <a class="priority-card priority-card--store" href="/loja.html">
+      <span class="priority-icon" aria-hidden="true">
+        <svg viewBox="0 0 48 48" focusable="false"><path d="M7 20.5 10.5 8h27L41 20.5v3a6 6 0 0 1-6 6 6 6 0 0 1-5-2.7 6 6 0 0 1-10 0 6 6 0 0 1-5 2.7 6 6 0 0 1-6-6v-3Z"/><path d="M10 29v11h28V29M19 40V28h10v12M8 20h32"/></svg>
+      </span>
+      <span class="priority-copy"><span class="priority-kicker">DESCUBRA A COLEÇÃO</span><strong>Explorar produtos</strong><span class="priority-description">Encontre produtos, novidades e escolhas especiais para você.</span><span class="priority-action">Conhecer a loja <span aria-hidden="true">→</span></span></span>
     </a>
   </section>
 
-  <section class="discover-section" aria-labelledby="discoverTitle">
-    <div class="section-heading"><span class="eyebrow">SEU ESPAÇO, SUAS POSSIBILIDADES</span><h2 id="discoverTitle">Escolha por onde começar</h2><p class="section-intro">Acesse rapidamente as áreas que fazem parte da sua conta.</p></div>
-    <div class="secondary-grid">
-      <a class="secondary-card secondary-card--experience" href="/experiencias/">
-        <span class="secondary-icon" aria-hidden="true">✦</span><span class="secondary-copy"><strong>Experiências</strong><span>Quizzes, descobertas e momentos a dois.</span></span><span class="secondary-arrow" aria-hidden="true">→</span>
+  <section class="discover-section portal-more" aria-labelledby="discoverTitle">
+    <div class="section-heading"><span class="eyebrow">OUTRAS ÁREAS</span><h2 id="discoverTitle">Explore o seu espaço</h2><p class="section-intro">A mesma navegação simples para tudo o que a Luxuriosa oferece.</p></div>
+    <div class="portal-destinations">
+      <a class="priority-card portal-destination-card portal-destination-card--experience" href="/experiencias/">
+        <span class="priority-icon" aria-hidden="true">✦</span>
+        <span class="priority-copy"><span class="priority-kicker">INTERAÇÃO E DESCOBERTA</span><strong>Experiências</strong><span class="priority-description">Quizzes, desafios, descobertas e momentos a dois.</span><span class="priority-action">Explorar experiências <span aria-hidden="true">→</span></span></span>
       </a>
-      <a id="portalAchievementsCard" class="secondary-card secondary-card--achievement" href="/portal/conquistas/" hidden>
-        <span class="secondary-icon" aria-hidden="true">✧</span><span class="secondary-copy"><strong>Minhas conquistas</strong><span>Seus pontos, emblemas e resultados salvos.</span></span><span class="secondary-arrow" aria-hidden="true">→</span>
+      <a class="priority-card portal-destination-card portal-destination-card--education" href="/educacao/">
+        <span class="priority-icon" aria-hidden="true">◇</span>
+        <span class="priority-copy"><span class="priority-kicker">CONHECIMENTO E BEM-ESTAR</span><strong>Educação</strong><span class="priority-description">Guias, temas e informação confiável para aprender no seu ritmo.</span><span class="priority-action">Acessar conteúdos <span aria-hidden="true">→</span></span></span>
       </a>
-      <a id="portalAchievementsActivationCard" class="secondary-card secondary-card--achievement" href="/portal/conquistas/" hidden>
-        <span class="secondary-icon" aria-hidden="true">✧</span><span class="secondary-copy"><strong>Ativar Minhas conquistas</strong><span>Leia os termos e ative seu espaço pessoal, se desejar.</span></span><span class="secondary-arrow" aria-hidden="true">→</span>
+      <a class="priority-card portal-destination-card portal-destination-card--club" href="/clube.html">
+        <span class="priority-icon" aria-hidden="true">♛</span>
+        <span class="priority-copy"><span class="priority-kicker">BENEFÍCIOS</span><strong>Clube de Vantagens</strong><span class="priority-description">Consulte as vantagens e condições disponíveis para clientes.</span><span class="priority-action">Conhecer o clube <span aria-hidden="true">→</span></span></span>
       </a>
-      <a class="secondary-card secondary-card--education" href="/educacao/">
-        <span class="secondary-icon" aria-hidden="true">◇</span><span class="secondary-copy"><strong>Educação e bem-estar</strong><span>Conteúdos, guias e informação confiável.</span></span><span class="secondary-arrow" aria-hidden="true">→</span>
+      <a id="portalAchievementsCard" class="priority-card portal-destination-card portal-destination-card--achievement" href="/portal/conquistas/" hidden>
+        <span class="priority-icon" aria-hidden="true">✧</span>
+        <span class="priority-copy"><span class="priority-kicker">SEU PROGRESSO</span><strong>Minhas conquistas</strong><span class="priority-description">Seus pontos, emblemas e resultados salvos.</span><span class="priority-action">Ver conquistas <span aria-hidden="true">→</span></span></span>
       </a>
-      <a class="secondary-card secondary-card--club" href="/clube.html">
-        <span class="secondary-icon" aria-hidden="true">♛</span><span class="secondary-copy"><strong>Clube de Vantagens</strong><span>Conheça os benefícios disponíveis.</span></span><span class="secondary-arrow" aria-hidden="true">→</span>
+      <a id="portalAchievementsActivationCard" class="priority-card portal-destination-card portal-destination-card--achievement" href="/portal/conquistas/" hidden>
+        <span class="priority-icon" aria-hidden="true">✧</span>
+        <span class="priority-copy"><span class="priority-kicker">SEU PROGRESSO</span><strong>Ativar Minhas conquistas</strong><span class="priority-description">Leia os termos e ative seu espaço pessoal, se desejar.</span><span class="priority-action">Conhecer o recurso <span aria-hidden="true">→</span></span></span>
+      </a>
+      <a class="priority-card portal-destination-card portal-destination-card--account" href="/login.html#account-profile-section">
+        <span class="priority-icon" aria-hidden="true">◎</span>
+        <span class="priority-copy"><span class="priority-kicker">DADOS PESSOAIS</span><strong>Minha conta</strong><span class="priority-description">Revise seus dados e mantenha suas informações atualizadas.</span><span class="priority-action">Gerenciar conta <span aria-hidden="true">→</span></span></span>
+      </a>
+      <a class="priority-card portal-destination-card portal-destination-card--privacy" href="/login.html#account-consent-section">
+        <span class="priority-icon" aria-hidden="true">⌑</span>
+        <span class="priority-copy"><span class="priority-kicker">CONTROLE E PRIVACIDADE</span><strong>Privacidade</strong><span class="priority-description">Consulte suas autorizações e preferências de privacidade.</span><span class="priority-action">Revisar preferências <span aria-hidden="true">→</span></span></span>
+      </a>
+      <a class="priority-card portal-destination-card portal-destination-card--support" href="/atendimento.html">
+        <span class="priority-icon" aria-hidden="true">✉</span>
+        <span class="priority-copy"><span class="priority-kicker">PRECISA DE AJUDA?</span><strong>Atendimento</strong><span class="priority-description">Encontre os canais de contato e tire suas dúvidas.</span><span class="priority-action">Falar com a Luxuriosa <span aria-hidden="true">→</span></span></span>
       </a>
     </div>
   </section>
