@@ -25,6 +25,6 @@ enabled = false
 enabled = false
 
 # Evita colisão com serviços que já ocupem a porta padrão 54324 no runner.
-[inbucket]
+[local_smtp]
 enabled = true
 port = 54330
