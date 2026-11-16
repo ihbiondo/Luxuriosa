@@ -177,7 +177,7 @@ const experiences={
       {question:"A base de um acessório anal ajuda a impedir que ele entre completamente.",prompt:"Esta afirmação é verdadeira ou falsa?",answer:true,explanation:"Verdadeiro. A base larga ou um limitador externo é um recurso importante para reduzir o risco de retenção."},
       {question:"Todo acessório pode ser fervido para higienizar.",prompt:"Esta afirmação é verdadeira ou falsa?",answer:false,explanation:"Falso. A limpeza depende do material, desenho e componentes. Siga o fabricante e não improvise com calor, álcool ou produtos químicos."},
       {question:"Um ciclo menstrual precisa durar exatamente 28 dias para ser saudável.",prompt:"Esta afirmação é verdadeira ou falsa?",answer:false,explanation:"Falso. A duração varia entre pessoas e ao longo da vida; 28 dias não é regra universal."},
-      {question:"O consentimento pode ser retirado mesmo depois de a atividade começar.",prompt:"Esta afirmação é verdadeira ou falsa?",answer:true,explanation:"Verdadeiro. A pessoa pode mudar de ideia e pedir para parar a qualquer momento."},
+      {question:"Uma pessoa que está dormindo ou inconsciente pode consentir?",prompt:"Esta afirmação é verdadeira ou falsa?",answer:false,explanation:"Falso. Uma pessoa que está dormindo ou inconsciente não pode dar consentimento. Aguarde que esteja plenamente consciente e capaz de decidir livremente."},
     ],
     result:{title:"Informação também é cuidado.",description:"Você respondeu às quinze perguntas. Use as explicações como ponto de partida para conversar, aprender e respeitar a autonomia de cada pessoa.",advice:"O objetivo não é tirar nota: é reforçar que consentimento, comunicação e respeito caminham juntos."}
   },
