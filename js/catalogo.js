@@ -309,10 +309,13 @@
     imagemPrincipal.style.width = "100%";
     imagemPrincipal.style.maxWidth = "100%";
     imagemPrincipal.style.height = "100%";
+    var produtoEhLingerie = produto.categoria === "Lingerie" ||
+      produto.tipoProduto === "Lingerie";
+
     imagemPrincipal.style.objectFit = permitirGaleria
       ? "contain"
-      : (produto.imagemCardAjuste === "contain" ? "contain" : "cover");
-    imagemPrincipal.style.objectPosition = permitirGaleria
+      : (produtoEhLingerie || produto.imagemCardAjuste === "contain" ? "contain" : "cover");
+    imagemPrincipal.style.objectPosition = permitirGaleria || produtoEhLingerie
       ? "center center"
       : (produto.imagemCardPosicao || "50% 66%");
 
