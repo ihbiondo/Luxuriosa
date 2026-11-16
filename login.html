@@ -66,7 +66,8 @@
     .account-section .account-form{margin:0!important;padding:0!important;border:0!important}
     .account-section .account-form>.section-label:first-child{margin-top:0}
     .account-section .account-form .actions{margin-bottom:8px}
-    .account-section.account-subsection{margin:9px 0;border-color:rgba(212,175,124,.16);border-radius:9px}
+    #signedInArea #account-profile-section{grid-column:1/-1;margin:12px 0}
+    .account-section.account-subsection{grid-column:1/-1;margin:9px 0;border-color:rgba(212,175,124,.16);border-radius:9px}
     .account-subsection>summary{padding:12px 14px;font-size:11px}
     .account-subsection>.account-section-content{padding:0 14px 14px}
     .account-signout{margin:22px 0 4px;padding-top:16px;border-top:1px solid var(--line)}
@@ -879,6 +880,7 @@ input:focus,select:focus{border-color:#d4af7c;box-shadow:0 0 0 3px rgba(212,175,
       ];
       subsections.forEach(([id, title, node]) => {
         if (!node) return;
+        if (id === "account-delete-section") node.hidden = false;
         const details = document.createElement("details");
         details.className = "account-section account-subsection";
         details.id = id;
