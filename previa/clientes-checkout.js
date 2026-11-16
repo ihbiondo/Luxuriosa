@@ -21,25 +21,38 @@
     return Number(value || 0).toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
   }
 
+  function normalizarLocalidade(value) {
+    return String(value || "").normalize("NFD").replace(/[\\u0300-\\u036f]/g, "").trim().toLowerCase();
+  }
+
+  function obterTarifasOficiais(address) {
+    var cidade = normalizarLocalidade(address && address.city);
+    var distrito = normalizarLocalidade(address && address.district);
+    if (cidade === "bauru" && distrito === "tibirica") {
+      return { nome: "Tibiriçá", comum: 20, clube: 15, pedagio: false };
+    }
+    var tarifas = {
+      "bauru": { nome: "Bauru", comum: 15, clube: 10, pedagio: false },
+      "agudos": { nome: "Agudos", comum: 25, clube: 20, pedagio: false },
+      "piratininga": { nome: "Piratininga", comum: 25, clube: 20, pedagio: false },
+      "pederneiras": { nome: "Pederneiras", comum: 25, clube: 20, pedagio: false },
+      "lencois paulista": { nome: "Lençóis Paulista", comum: 50, clube: 40, pedagio: true },
+      "borebi": { nome: "Borebi", comum: 50, clube: 40, pedagio: true }
+    };
+    return tarifas[cidade] || null;
+  }
+
   function resumirCondicaoFrete(address, subtotal) {
     var cidade = String(address && address.city || "").trim();
     var estado = String(address && address.state || "").trim().toUpperCase();
-    var cidadeNormalizada = cidade.normalize
-      ? cidade.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase()
-      : cidade.toLowerCase();
-
-    if (cidadeNormalizada === "bauru" && estado === "SP") {
-      var condicoes = [
-        "Destino: " + cidade + "/" + estado,
-        "Frete padrão fixo: R$ 15,00."
-      ];
-      condicoes.push("Pedidos que incluam pelo menos um kit promocional têm frete grátis exclusivamente em Bauru.");
-      return condicoes;
+    var tarifa = obterTarifasOficiais(address);
+    if (!tarifa || estado !== "SP") {
+      return ["Destino: " + (cidade || "cidade não informada") + (estado ? "/" + estado : ""), "Frete sob consulta pelo atendimento."];
     }
-
     return [
-      "Destino: " + (cidade || "cidade não informada") + (estado ? "/" + estado : ""),
-      "Condição: disponibilidade e valor do frete serão confirmados no atendimento."
+      "Destino: " + tarifa.nome + "/" + estado,
+      "Sem Clube: " + formatarPreco(tarifa.comum) + " | Clube gratuito: " + formatarPreco(tarifa.clube),
+      tarifa.pedagio ? "Pedágio incluído no valor." : "Demais localidades: frete sob consulta pelo atendimento."
     ];
   }
 
@@ -190,26 +203,30 @@
 
     var cidade = texto("customerCity");
     var estado = texto("customerState").toUpperCase();
+    var distrito = texto("customerDistrict");
     var api = window.LuxuriosaCarrinho;
     var subtotal = api && typeof api.obterTotal === "function" ? Number(api.obterTotal()) : 0;
 
     if (!cidade || !estado) {
-      aviso.textContent = "Informe a cidade e o estado para consultar as condições de entrega. O frete será confirmado no atendimento.";
+      aviso.textContent = "Informe a cidade e o estado para conferir o valor de entrega.";
       return;
     }
 
-    var cidadeNormalizada = cidade.normalize ? cidade.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase() : cidade.toLowerCase();
-    if (cidadeNormalizada === "bauru" && estado === "SP") {
-      var api = window.LuxuriosaCarrinho;
-      var items = api && typeof api.obterItens === "function" ? api.obterItens() : [];
-      var temKit = pedidoContemKit(items);
-      aviso.textContent = temKit
-        ? "Entrega em Bauru-SP: seu pedido inclui um kit promocional e tem frete grátis. Os demais pedidos têm frete de R$ 15,00."
-        : "Entrega em Bauru-SP: frete fixo de R$ 15,00. Pedidos que incluam pelo menos um kit promocional têm frete grátis.";
+    var tarifa = obterTarifasOficiais({ city: cidade, district: distrito });
+    if (!tarifa || estado !== "SP") {
+      aviso.textContent = "Entrega para " + cidade + "/" + estado + ": frete sob consulta pelo atendimento.";
       return;
     }
 
-    aviso.textContent = "Entrega para " + cidade + "/" + estado + ": disponibilidade e valor do frete serão confirmados no atendimento.";
+    var textoFrete = "Frete fixo em " + tarifa.nome + ": Sem Clube " + formatarPreco(tarifa.comum) +
+      " | Clube gratuito " + formatarPreco(tarifa.clube) + ".";
+    if (tarifa.pedagio) textoFrete += " Pedágio já incluído.";
+    var pedidoMinimo = normalizarLocalidade(cidade) === "bauru" ? 20 : 50;
+    var textoMinimo = " Pedido mínimo: " + formatarPreco(pedidoMinimo) + " em produtos.";
+    if (subtotal > 0 && subtotal < pedidoMinimo) {
+      textoMinimo += " Faltam " + formatarPreco(pedidoMinimo - subtotal) + " para atingir o mínimo.";
+    }
+    aviso.textContent = textoFrete + textoMinimo;
   }
 
   var supabaseClientPromise = null;
@@ -435,17 +452,9 @@
     var subtotal = integridade.subtotal;
     if (!items.length) return "";
 
-    var temKit = pedidoContemKit(items);
     var totalProdutos = subtotal;
     var cidade = String(data.address.city || "").trim();
     var estado = String(data.address.state || "").trim().toUpperCase();
-    var cidadeNormalizada = cidade.normalize
-      ? cidade.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase()
-      : cidade.toLowerCase();
-    var emBauru = cidadeNormalizada === "bauru" && estado === "SP";
-    var freteGratis = emBauru && temKit;
-    var frete = emBauru && !freteGratis ? 15 : 0;
-    var totalEstimado = Math.round((totalProdutos + frete) * 100) / 100;
 
     var lines = [
       "Olá! Quero fazer um pedido na *Luxuriosa*. ❤️",
@@ -461,16 +470,8 @@
 
     lines.push("", "*Subtotal: " + formatarPreco(subtotal) + "*");
 
-    if (freteGratis) {
-      lines.push("Frete: grátis (benefício automático por incluir kit)");
-      lines.push("*Total estimado: " + formatarPreco(totalEstimado) + "*");
-    } else if (emBauru) {
-      lines.push("Frete: " + formatarPreco(frete));
-      lines.push("*Total estimado: " + formatarPreco(totalEstimado) + "*");
-    } else {
-      lines.push("Frete: a confirmar conforme o destino");
-      lines.push("*Total estimado dos produtos: " + formatarPreco(totalProdutos) + "*");
-    }
+    lines.push("Frete: conforme a tabela oficial da localidade; confirmar a modalidade do Clube.");
+    lines.push("*Total estimado dos produtos: " + formatarPreco(totalProdutos) + "*");
 
     lines.push("", "*ENTREGA*");
     lines.push("• " + data.name + " — " + data.phone);
