@@ -572,7 +572,8 @@
       "sobConsulta": false,
       "tamanhos": "U",
       "cor": "Cromada",
-      "estoque": 5
+      "estoque": 5,
+      "exigirControleEstoque": true
     },
     {
       "id": 31,
@@ -597,7 +598,8 @@
       "sobConsulta": false,
       "tamanhos": "G",
       "cor": "Satine",
-      "estoque": 1
+      "estoque": 1,
+      "exigirControleEstoque": true
     },
     {
       "id": 32,
@@ -622,7 +624,8 @@
       "sobConsulta": false,
       "tamanhos": "GG",
       "cor": "Pink",
-      "estoque": 2
+      "estoque": 2,
+      "exigirControleEstoque": true
     },
     {
       "id": 33,
@@ -647,7 +650,8 @@
       "sobConsulta": false,
       "tamanhos": "GG",
       "cor": "Azul-marinho",
-      "estoque": 1
+      "estoque": 1,
+      "exigirControleEstoque": true
     },
     {
       "id": 34,
@@ -671,7 +675,8 @@
       "sobConsulta": false,
       "tamanhos": "U",
       "cor": "Vermelho",
-      "estoque": 1
+      "estoque": 1,
+      "exigirControleEstoque": true
     },
     {
       "id": 35,
@@ -695,7 +700,8 @@
       "sobConsulta": false,
       "tamanhos": "U",
       "cor": "Branco",
-      "estoque": 1
+      "estoque": 1,
+      "exigirControleEstoque": true
     },
     {
       "id": 36,
@@ -720,7 +726,8 @@
       "sobConsulta": false,
       "tamanhos": "M",
       "cor": "Preto",
-      "estoque": 1
+      "estoque": 1,
+      "exigirControleEstoque": true
     },
     {
       "id": 37,
@@ -744,7 +751,8 @@
       "sobConsulta": false,
       "tamanhos": "U",
       "cor": "Branco",
-      "estoque": 1
+      "estoque": 1,
+      "exigirControleEstoque": true
     },
     {
       "id": 38,
@@ -768,7 +776,8 @@
       "sobConsulta": false,
       "tamanhos": "U",
       "cor": "Branco",
-      "estoque": 1
+      "estoque": 1,
+      "exigirControleEstoque": true
     },
     {
       "id": 39,
@@ -793,7 +802,8 @@
       "sobConsulta": false,
       "tamanhos": "GG",
       "cor": "Vinho",
-      "estoque": 1
+      "estoque": 1,
+      "exigirControleEstoque": true
     },
     {
       "id": 40,
@@ -818,7 +828,8 @@
       "sobConsulta": false,
       "tamanhos": "P",
       "cor": "Vermelho",
-      "estoque": 1
+      "estoque": 1,
+      "exigirControleEstoque": true
     },
     {
       "id": 41,
@@ -844,7 +855,8 @@
       "tamanhos": "U",
       "cor": "Vermelho",
       "opcao": "Fode sua puta",
-      "estoque": 3
+      "estoque": 3,
+      "exigirControleEstoque": true
     },
     {
       "id": 42,
@@ -870,7 +882,8 @@
       "tamanhos": "U",
       "cor": "Vermelho",
       "opcao": "Safada",
-      "estoque": 2
+      "estoque": 2,
+      "exigirControleEstoque": true
     },
     {
       "id": 43,
@@ -896,7 +909,8 @@
       "tamanhos": "G1",
       "cor": "Vermelho",
       "opcao": "Amor",
-      "estoque": 1
+      "estoque": 1,
+      "exigirControleEstoque": true
     },
     {
       "id": 44,
@@ -922,7 +936,8 @@
       "tamanhos": "G1",
       "cor": "Vermelho",
       "opcao": "Tesão",
-      "estoque": 1
+      "estoque": 1,
+      "exigirControleEstoque": true
     },
     {
       "id": 45,
@@ -946,7 +961,8 @@
       "sobConsulta": false,
       "tamanhos": "U",
       "cor": "Preto",
-      "estoque": 5
+      "estoque": 5,
+      "exigirControleEstoque": true
     },
     {
       "id": 46,
@@ -969,7 +985,8 @@
       "tipoProduto": "Óleos para massagem",
       "sobConsulta": false,
       "tamanhos": "U",
-      "estoque": 5
+      "estoque": 5,
+      "exigirControleEstoque": true
     },
     {
       "id": 47,
@@ -993,7 +1010,8 @@
       "sobConsulta": false,
       "tamanhos": "U",
       "cor": "Preto",
-      "estoque": 10
+      "estoque": 10,
+      "exigirControleEstoque": true
     }
   ]
 }
