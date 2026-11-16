@@ -17,14 +17,14 @@
 
   var CATEGORIAS = [
     "Todos",
+    "Lingerie",
     "Géis e estimulantes",
     "Vibradores e acessórios",
+    "Acessórios",
     "Jogos e masturbadores",
     "Perfumes e higiene",
-    "Kits",
-    "Lingerie",
-    "Acessórios",
     "Óleos para massagem",
+    "Kits",
     "Ofertas"
   ];
 
@@ -42,6 +42,7 @@
       "Anéis penianos",
       "Plugs anais",
       "Próteses",
+      "Masturbadores"
     ],
     "Jogos e masturbadores": [
       "Jogos eróticos",
@@ -76,6 +77,7 @@
 
   var filtroAtual = "Todos";
   var termoPesquisa = "";
+  var ordenarAtual = "relevancia";
   var elementoQueAbriuModal = null;
 
 
@@ -527,59 +529,37 @@
 
 
     /*
-     * Produtos em destaque
-     * aparecem primeiro.
-     *
-     * Mantemos a ordem original
-     * dos demais produtos.
+     * "Mais relevantes" preserva a curadoria atual:
+     * destaques primeiro e, depois, a ordem do catálogo.
+     * Os modos de preço mantêm a ordem original em caso de empate
+     * e deixam itens sem preço ao final.
      */
+    var itensOrdenados = lista.map(function (produto, indice) {
+      return { produto: produto, indice: indice };
+    });
 
-    return lista
+    itensOrdenados.sort(function (a, b) {
+      if (ordenarAtual === "menor-preco" || ordenarAtual === "maior-preco") {
+        var precoA = typeof a.produto.preco === "number" ? a.produto.preco : null;
+        var precoB = typeof b.produto.preco === "number" ? b.produto.preco : null;
 
-      .map(
-        function (
-          produto,
-          indice
-        ) {
-
-          return {
-            produto:
-              produto,
-
-            indice:
-              indice
-          };
+        if (precoA === null && precoB !== null) return 1;
+        if (precoB === null && precoA !== null) return -1;
+        if (precoA !== null && precoB !== null && precoA !== precoB) {
+          return ordenarAtual === "menor-preco" ? precoA - precoB : precoB - precoA;
         }
-      )
+      }
 
-      .sort(
-        function (a, b) {
+      var destaqueA = a.produto.destaque ? 1 : 0;
+      var destaqueB = b.produto.destaque ? 1 : 0;
+      return ordenarAtual === "relevancia"
+        ? (destaqueB - destaqueA || a.indice - b.indice)
+        : a.indice - b.indice;
+    });
 
-          var destaqueA =
-            a.produto.destaque
-              ? 1
-              : 0;
-
-          var destaqueB =
-            b.produto.destaque
-              ? 1
-              : 0;
-
-
-          return (
-            destaqueB -
-            destaqueA ||
-            a.indice -
-            b.indice
-          );
-        }
-      )
-
-      .map(
-        function (item) {
-          return item.produto;
-        }
-      );
+    return itensOrdenados.map(function (item) {
+      return item.produto;
+    });
   }
 
 
@@ -1910,9 +1890,21 @@
     }
   }
 
+  function configurarOrdenacaoCatalogo() {
+    var seletor = $("catalogSort");
+    if (!seletor) return;
+
+    seletor.value = ordenarAtual;
+    seletor.addEventListener("change", function () {
+      ordenarAtual = seletor.value;
+      renderizarProdutos();
+    });
+  }
+
   function iniciar() {
 
     configurarPesquisaCatalogo();
+    configurarOrdenacaoCatalogo();
     renderizarFiltros();
 
     configurarWhatsApp();
