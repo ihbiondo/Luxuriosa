@@ -30,7 +30,7 @@
     return [
       "Destino: " + (cidade || "cidade não informada") + (estado ? "/" + estado : ""),
       "Sem Clube: Bauru R$ 20, até 30 km R$ 30 e até 55 km R$ 45. Clube gratuito: R$ 10, R$ 20 e R$ 30, respectivamente.",
-      "Apoiador: 50% do custo operacional estimado pela rota de ida e volta (combustível e custo por km); pedágios, se houver, são confirmados à parte. Rota programada pode ter entrega gratuita mediante confirmação. Privilégio: frete grátis. Limite: 55 km pela rota de motocicleta."
+      "Limite de atendimento: 55 km pela rota de motocicleta."
     ];
   }
 
@@ -196,7 +196,7 @@
       ? cidade.normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim().toLowerCase()
       : cidade.trim().toLowerCase();
     if (cidadeNormalizada === "bauru" && estado === "SP") {
-      var avisoFrete = "Entrega em Bauru-SP: Sem Clube R$ 20; Clube gratuito R$ 10; Apoiador paga metade do custo operacional da rota; pedágios, se houver, são confirmados à parte; Privilégio tem frete grátis.";
+      var avisoFrete = "Entrega em Bauru-SP: Sem Clube R$ 20; Clube gratuito R$ 10.";
       var avisoPrazo = " Prazo operacional previsto: até 30 minutos após a confirmação do pagamento, contado dentro da janela de entrega. Pagamentos fora da janela entram na próxima abertura.";
       var avisoMinimo = " O pedido deve ter mínimo de R$ 20,00 em produtos.";
       if (subtotal > 0 && subtotal < 20) {
