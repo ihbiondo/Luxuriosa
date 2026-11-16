@@ -68,12 +68,36 @@
       .faq-answer { padding:0 14px 15px; }
       .faq-contact { margin-top:28px; padding:24px 20px; }
     }
-  </style>
+  
+    .faq-topics{display:flex;flex-wrap:wrap;gap:8px;margin-top:26px}
+    .faq-topics a{padding:9px 12px;border:1px solid rgba(212,175,124,.24);border-radius:999px;background:rgba(255,255,255,.035);color:var(--gold);font-size:10px;text-decoration:none;transition:background .2s ease,border-color .2s ease}
+    .faq-topics a:hover,.faq-topics a:focus-visible{border-color:rgba(212,175,124,.65);background:rgba(139,30,63,.24);color:var(--blush)}
+    .faq-group{margin-bottom:22px;padding:23px 25px}
+    .faq-group h2{display:flex;align-items:center;gap:12px}
+    .faq-group h2:after{content:"";height:1px;flex:1;background:linear-gradient(90deg,rgba(212,175,124,.25),transparent)}
+    .faq-item summary{padding-top:15px;padding-bottom:15px}
+    .faq-contact-actions{display:flex;flex-wrap:wrap;align-items:center;gap:16px;margin-top:16px}
+    .faq-contact .btn{margin-top:0}
+    .faq-social-link{color:var(--gold);font-size:11px;text-decoration:none;border-bottom:1px solid rgba(212,175,124,.32);padding:8px 0}
+    .faq-social-link:hover{color:var(--blush)}
+    .faq-footer{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;margin:42px auto 0;padding-top:18px;border-top:1px solid var(--line);color:var(--muted);font-size:10px}
+    .faq-footer a{color:var(--gold);text-decoration:none}
+    @media(max-width:700px){
+      .faq-topics{gap:7px;margin-top:20px}
+      .faq-topics a{font-size:9px;padding:8px 10px}
+      .faq-group{margin-bottom:16px;padding:19px 14px}
+      .faq-contact-actions{align-items:stretch;flex-direction:column;gap:10px}
+      .faq-contact .btn{justify-content:center}
+      .faq-social-link{align-self:flex-start}
+      .faq-footer{flex-direction:column;margin-top:30px}
+    }
+    @media(prefers-reduced-motion:reduce){.faq-topics a{transition:none}}
+</style>
 </head>
 <body>
   <a class="skip-link" href="#conteudo-principal">Pular para o conteúdo</a>
   <main class="faq-page" id="conteudo-principal" tabindex="-1">
-    <nav class="back page-nav" aria-label="Navegação principal"><a href="index.html">Início</a><a href="loja.html">Loja</a><a href="sobre.html">Sobre</a><a href="atendimento.html">Atendimento</a><a href="faq.html" aria-current="page">Dúvidas frequentes</a><a href="privacidade.html">Privacidade</a></nav>
+    <nav class="back page-nav" aria-label="Navegação principal"><a href="index.html">Início</a><a href="loja.html">Loja</a><a href="sobre.html">Sobre</a><a href="atendimento.html">Atendimento</a><a href="entregas/">Entregas</a><a href="faq.html" aria-current="page">Dúvidas frequentes</a><a href="clube.html">Clube</a><a href="privacidade.html">Privacidade</a></nav>
 
     <section class="faq-hero" aria-labelledby="faq-title">
     <div class="kicker">Estamos aqui para ajudar</div>
@@ -82,6 +106,13 @@
       Reunimos respostas para você comprar com mais tranquilidade, privacidade e clareza.
       Se sua dúvida não estiver aqui, nosso atendimento pode ajudar pelo WhatsApp.
     </p>
+    <nav class="faq-topics" aria-label="Atalhos das dúvidas">
+      <a href="#faq-pedidos">Pedidos e produtos</a>
+      <a href="#faq-entrega">Frete e entrega</a>
+      <a href="#faq-pagamento">Pagamento</a>
+      <a href="#faq-devolucoes">Trocas e devoluções</a>
+      <a href="#faq-privacidade">Privacidade</a>
+    </nav>
     </section>
 
     <section class="faq-group" aria-labelledby="faq-pedidos">
@@ -107,24 +138,16 @@
     <section class="faq-group" aria-labelledby="faq-entrega">
       <h2 id="faq-entrega">Frete e entrega</h2>
       <details class="faq-item">
-        <summary>Quanto custa a entrega em Bauru?</summary>
-        <div class="faq-answer"><p>Em Bauru, a entrega custa <strong>R$ 15,00</strong> sem Clube e <strong>R$ 10,00</strong> para membros do Clube gratuito. No distrito de Tibiriçá, os valores são <strong>R$ 20,00</strong> e <strong>R$ 15,00</strong>, respectivamente. Consulte a <a href="entregas/">tabela oficial de entregas</a>.</p></div>
+        <summary>Onde vejo os valores e as cidades atendidas?</summary>
+        <div class="faq-answer"><p>Consulte a <a href="entregas/">página de entregas</a> para comparar os valores por localidade e conferir as condições para membros do Clube. Para outros destinos, a disponibilidade e o valor são consultados pelo atendimento.</p></div>
       </details>
       <details class="faq-item">
-        <summary>Existe pedido mínimo para pagar pelo site em Bauru?</summary>
-        <div class="faq-answer"><p>Sim. Para pagamento automático com Pix ou cartão pelo site, o pedido deve ter no mínimo <strong>R$ 20,00 em Bauru</strong> e <strong>R$ 50,00 nas demais cidades atendidas</strong>. O mínimo é independente da tarifa de entrega e dos benefícios do Clube.</p></div>
-      </details>
-      <details class="faq-item">
-        <summary>Quanto custa a entrega para outras cidades?</summary>
-        <div class="faq-answer"><p>Agudos, Piratininga e Pederneiras custam <strong>R$ 25,00</strong> sem Clube e <strong>R$ 20,00</strong> com Clube. Lençóis Paulista e Borebi custam <strong>R$ 50,00</strong> sem Clube e <strong>R$ 40,00</strong> com Clube. Em Lençóis Paulista e Borebi, o pedágio já está incluído. Para outras localidades, o frete é cotado pelo atendimento.</p></div>
-      </details>
-      <details class="faq-item">
-        <summary>Quais cidades e distritos vocês atendem?</summary>
-        <div class="faq-answer"><p>As tarifas fixas são para Bauru, distrito de Tibiriçá, Agudos, Piratininga, Pederneiras, Lençóis Paulista e Borebi. Para todas as demais cidades e distritos, a disponibilidade e o valor do frete são consultados pelo atendimento. A distância geográfica, por si só, não garante atendimento.</p></div>
+        <summary>Existe pedido mínimo?</summary>
+        <div class="faq-answer"><p>Sim. O pedido mínimo é de <strong>R$ 20,00 em Bauru</strong> e <strong>R$ 50,00 nas demais cidades atendidas</strong>. Esse valor é independente da tarifa de entrega e dos benefícios do Clube.</p></div>
       </details>
       <details class="faq-item">
         <summary>A entrega é discreta?</summary>
-        <div class="faq-answer"><p>Sim. Você pode escolher entre uma apresentação neutra ou a embalagem personalizada Luxuriosa, feita em papel kraft marsala, fechada com adesivo da marca e com fragrância própria. Combinamos dia, período e local com você e avisamos pelo WhatsApp quando a entrega estiver a caminho.</p></div>
+        <div class="faq-answer"><p>Sim. Você pode escolher entre uma apresentação neutra ou a embalagem personalizada Luxuriosa. Combinamos dia, período e local com você. Saiba mais sobre o <a href="atendimento.html">atendimento e a apresentação dos pedidos</a>.</p></div>
       </details>
       <details class="faq-item">
         <summary>Qual é o prazo de entrega?</summary>
@@ -181,10 +204,18 @@
     </section>
 
     <div class="faq-contact">
-      <h2>Não encontrou sua resposta?</h2>
-      <p>Fale com a gente. Vamos ajudar com respeito, discrição e atenção às suas necessidades.</p>
-      <a class="btn primary" href="https://wa.me/5514996355924?text=Ol%C3%A1%21%20Tenho%20uma%20d%C3%BAvida%20sobre%20a%20Luxuriosa." target="_blank" rel="noopener noreferrer">Falar pelo WhatsApp</a>
+      <h2>Ficou com outra dúvida?</h2>
+      <p>Fale com a gente pelo canal que preferir. Vamos ajudar com respeito, discrição e atenção.</p>
+      <div class="faq-contact-actions">
+        <a class="btn primary" href="https://wa.me/5514996355924?text=Ol%C3%A1%21%20Tenho%20uma%20d%C3%BAvida%20sobre%20a%20Luxuriosa." target="_blank" rel="noopener noreferrer">Falar pelo WhatsApp</a>
+        <a class="faq-social-link" href="https://www.instagram.com/Luxuriosa014/" target="_blank" rel="noopener noreferrer">Instagram · @luxuriosa014 ↗</a>
+        <a class="faq-social-link" href="https://www.facebook.com/Luxuriosa014/" target="_blank" rel="noopener noreferrer">Facebook ↗</a>
+      </div>
     </div>
+    <footer class="faq-footer">
+      <span>© 2026 Luxuriosa · Bauru/SP · Exclusivo para maiores de 18 anos.</span>
+      <span><a href="index.html">Início</a> · <a href="atendimento.html">Atendimento</a> · <a href="entregas/">Entregas</a> · <a href="privacidade.html">Privacidade</a></span>
+    </footer>
   </main>
   <script src="js/inteligencia.js"></script>
 <script src="js/consentimento.js?v=20261114-clube-convite-v2"></script>
