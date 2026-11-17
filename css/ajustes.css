@@ -988,60 +988,6 @@ body.customer-open { overflow: hidden; }
 
 
 /* =========================================================
-   CABEÇALHO DESKTOP — NAVEGAÇÃO MAIS LEVE
-   ========================================================= */
-@media (min-width: 1200px) {
-  header .nav {
-    min-height: 68px;
-    height: 68px;
-    gap: 12px;
-  }
-  header .logo {
-    flex: 0 0 auto;
-    font-size: 24px;
-    letter-spacing: .035em;
-  }
-  header .navlinks {
-    flex: 1 1 auto;
-    justify-content: center;
-    gap: clamp(10px, 1.05vw, 16px);
-    font-size: 10px;
-    letter-spacing: .075em;
-    white-space: nowrap;
-  }
-  header .nav-right {
-    flex: 0 0 auto;
-    gap: 7px;
-  }
-  /* O atalho flutuante de WhatsApp continua disponível na página. */
-  header .nav-right > .btn[data-wa] {
-    display: none;
-  }
-  header .cart-trigger,
-  header .account-trigger {
-    width: 38px;
-    min-width: 38px;
-    height: 38px;
-    min-height: 38px;
-    padding: 0;
-    justify-content: center;
-    border-radius: 50%;
-  }
-  header .cart-label,
-  header .account-trigger-label {
-    display: none;
-  }
-  header .cart-icon {
-    font-size: 18px;
-  }
-  header .account-trigger-icon {
-    font-size: 17px;
-  }
-}
-
-
-
-/* =========================================================
    HOME — APROVEITAMENTO DE TELA EM DESKTOP
    Mantém as regras atuais de tablet e celular.
    ========================================================= */
@@ -1097,6 +1043,53 @@ body.customer-open { overflow: hidden; }
   .featured-section .products {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
+
+  /* Notebook e desktop compacto: mantém os links visíveis sem apertar o cabeçalho. */
+  header .nav {
+    height: 70px;
+    min-height: 70px;
+    gap: clamp(6px, 1vw, 12px);
+  }
+
+  header .logo {
+    flex: 0 0 auto;
+    font-size: clamp(19px, 2vw, 22px);
+    letter-spacing: .025em;
+  }
+
+  header .navlinks {
+    flex: 1 1 auto;
+    justify-content: center;
+    gap: clamp(7px, .8vw, 11px);
+    font-size: clamp(8px, .9vw, 9.5px);
+    letter-spacing: .025em;
+    white-space: nowrap;
+  }
+
+  header .nav-right {
+    flex: 0 0 auto;
+    gap: 5px;
+  }
+
+  header .nav-right > .btn[data-wa] {
+    display: none;
+  }
+
+  header .cart-trigger,
+  header .account-trigger {
+    width: 36px;
+    min-width: 36px;
+    height: 36px;
+    min-height: 36px;
+    padding: 0;
+    justify-content: center;
+    border-radius: 50%;
+  }
+
+  header .cart-label,
+  header .account-trigger-label {
+    display: none;
+  }
 }
 
 
@@ -1112,17 +1105,22 @@ body.customer-open { overflow: hidden; }
   }
 
   header .logo {
+    flex: 0 0 auto;
     font-size: 25px;
     letter-spacing: .035em;
   }
 
   header .navlinks {
+    flex: 1 1 auto;
+    justify-content: center;
     gap: clamp(8px, .82vw, 14px);
     font-size: 10px;
     letter-spacing: .045em;
+    white-space: nowrap;
   }
 
   header .nav-right {
+    flex: 0 0 auto;
     gap: 8px;
   }
 
@@ -1246,8 +1244,7 @@ body.customer-open { overflow: hidden; }
 }
 
 
-/* Links de contingência dos kits: substituídos pelos cards completos após
-   o carregamento do catálogo. Mantêm navegação e descoberta sem JavaScript. */
+/* Vitrine estática dos quatro kits: apresenta a oferta sem depender do catálogo dinâmico. */
 .home-kit-static-card {
   display: flex;
   min-width: 0;
