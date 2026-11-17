@@ -26,7 +26,7 @@
     menu.setAttribute("data-ed-module-menu", "");
     const summary = menu.querySelector("summary");
     if (summary) {
-      summary.textContent = "Menu";
+      summary.textContent = "Explorar a biblioteca ⌄";
       summary.setAttribute("aria-label", "Abrir menu principal");
     }
 
