@@ -24,10 +24,10 @@ let lastOpener=null;
     if (!nav) return;
 
     const items = [
-      { label: "Loja", href: "/", className: "global-nav-link global-nav-link--store" },
       { label: "Meu Portal", href: "/portal/", className: "global-nav-link global-nav-link--portal" },
       { label: "Experiências", href: "/experiencias/", className: "global-nav-link global-nav-link--experiences", current: "page" },
-      { label: "Educação", href: "/educacao/", className: "global-nav-link global-nav-link--education" }
+      { label: "Educação", href: "/educacao/", className: "global-nav-link global-nav-link--education" },
+      { label: "Voltar para Loja", href: "/", className: "global-nav-link global-nav-link--store" }
     ];
     const links = items.map(item => {
       const link = document.createElement("a");
