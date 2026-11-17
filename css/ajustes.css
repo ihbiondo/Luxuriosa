@@ -1530,3 +1530,184 @@ body.customer-open { overflow: hidden; }
     min-height: 44px;
   }
 }
+
+
+/* =========================================================
+   HOME — HERO, ATENDIMENTO E SOBRE (MOBILE-FIRST)
+   ========================================================= */
+
+/* A logo passa a ocupar um painel horizontal. A arte quadrada é recortada
+   com moderação para destacar a marca e a assinatura sem perder a coroa. */
+.hero-image-main {
+  width: min(100%, 540px);
+  aspect-ratio: 4 / 3;
+  border-radius: 18px;
+}
+
+.hero-image-main img {
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  object-fit: cover;
+  object-position: 50% 50%;
+  transform: scale(1.08);
+  transform-origin: center;
+}
+
+.hero-image-caption {
+  display: none;
+}
+
+/* Atendimento vira uma seção editorial única, sem o card solto ao lado/abaixo. */
+.service-preview-section {
+  padding: clamp(34px, 4.5vw, 58px) 0;
+  border-top: 1px solid rgba(212, 175, 124, .12);
+  border-bottom: 1px solid rgba(212, 175, 124, .12);
+  background:
+    radial-gradient(ellipse at 12% 50%, rgba(139, 30, 63, .14), transparent 62%),
+    linear-gradient(180deg, #10090c, #0b0b0b);
+}
+
+.service-preview {
+  display: block;
+  width: min(100%, 900px);
+  margin-inline: auto;
+}
+
+.service-preview-copy {
+  max-width: 820px;
+}
+
+.service-preview-copy p {
+  max-width: 760px;
+}
+
+.service-preview-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 20px;
+  margin-top: 20px;
+}
+
+.service-preview-actions .btn {
+  min-height: 46px;
+  margin: 0;
+}
+
+.service-preview-delivery {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 44px;
+  color: var(--gold);
+  font-size: 11px;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.service-preview-delivery span {
+  font-size: 14px;
+  text-decoration: none;
+}
+
+/* Remove a falsa marca em formato de quadrado: o próprio site já tem a logo real no hero. */
+.about-preview-section {
+  padding: clamp(36px, 5vw, 66px) 0;
+  background: linear-gradient(180deg, #0b0b0b, #10090c);
+}
+
+.about-preview {
+  display: block;
+  width: min(100%, 900px);
+  margin-inline: auto;
+}
+
+.about-preview-copy {
+  max-width: 790px;
+}
+
+@media (max-width: 900px) {
+  .hero-visual {
+    min-height: 0;
+    width: 100%;
+    max-width: 520px;
+    padding: 4px 0 26px;
+  }
+
+  .hero-image-main {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    border-radius: 16px;
+  }
+
+  .hero-image-main img {
+    transform: scale(1.08);
+  }
+
+  .service-preview-section,
+  .about-preview-section {
+    padding-block: 34px;
+  }
+
+  .service-preview {
+    width: 100%;
+  }
+
+  .service-preview-copy h2 {
+    font-size: clamp(30px, 7.5vw, 38px);
+    line-height: 1.08;
+  }
+
+  .service-preview-copy p {
+    font-size: 13px;
+    line-height: 1.7;
+  }
+
+  .service-preview-actions {
+    gap: 8px 16px;
+    margin-top: 16px;
+  }
+
+  .service-preview-actions .btn {
+    width: auto;
+  }
+
+  .about-preview {
+    width: 100%;
+  }
+
+  .about-preview-copy {
+    max-width: none;
+  }
+
+  .about-preview-copy h2 {
+    font-size: clamp(30px, 7.5vw, 38px);
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-image-main {
+    border-radius: 14px;
+  }
+
+  .service-preview-actions {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .service-preview-actions .btn {
+    width: 100%;
+  }
+
+  .service-preview-delivery {
+    min-height: 44px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-image-main img {
+    transform: none;
+  }
+}
