@@ -18,6 +18,33 @@
 
 
   /* =======================================================
+     CONTATO VIA WHATSAPP
+     ======================================================= */
+
+  function configurarWhatsApp() {
+    var numeroWhatsApp = "5514996355924";
+    var mensagemPadrao = "Olá! Conheci a Luxuriosa pelo site e gostaria de saber mais.";
+
+    document.querySelectorAll("[data-wa]").forEach(function (elemento) {
+      if (elemento.dataset.whatsappConfigured === "true") return;
+      elemento.dataset.whatsappConfigured = "true";
+
+      elemento.addEventListener("click", function () {
+        var mensagem = elemento.dataset.waMsg || mensagemPadrao;
+        var numero = String(numeroWhatsApp).replace(/\\D/g, "");
+        var url = "https://wa.me/" + numero + "?text=" + encodeURIComponent(mensagem);
+
+        if (window.LuxuriosaMedicao && typeof window.LuxuriosaMedicao.registrar === "function") {
+          window.LuxuriosaMedicao.registrar("whatsapp_contact", { method: "whatsapp" });
+        }
+
+        window.open(url, "_blank", "noopener,noreferrer");
+      });
+    });
+  }
+
+
+  /* =======================================================
      MENU MOBILE
      ======================================================= */
 
@@ -471,6 +498,7 @@
   function iniciar() {
 
     configurarAcessibilidade();
+    configurarWhatsApp();
 
     configurarMenu();
     configurarAno();
