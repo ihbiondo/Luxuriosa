@@ -112,6 +112,7 @@ def main() -> int:
         "/educacao/curiosidades/",
         "/educacao/guias/",
         "/educacao/interatividade/",
+        "/educacao/duvidas-frequentes/",
     }
     navigation_script = ROOT / "js" / "educacao.js"
     try:
@@ -151,6 +152,8 @@ def main() -> int:
                 errors.append(f"{rel}: cabeçalho global compartilhado ausente")
             if not re.search(r'<a class="brand" href="/" aria-label="Página inicial da Luxuriosa"', page_text):
                 errors.append(f"{rel}: marca não retorna à página inicial da Luxuriosa")
+            if page_text.count('class="ed-category-card"') != 6:
+                errors.append(f"{rel}: esperado seis cards de categoria na Educação")
             for href in ("/portal/", "/experiencias/", "/educacao/", "/"):
                 if f'href="{href}"' not in page_text:
                     errors.append(f"{rel}: link global ausente no cabeçalho: {href}")
@@ -165,6 +168,17 @@ def main() -> int:
             errors.append(f"{rel}: mídia visual não permitida: {', '.join(audit.forbidden_media)}")
 
         if page.name != "index.html":
+            if not audit.sources:
+                errors.append(f"{rel}: bloco de fontes ausente")
+            if not audit.related:
+                errors.append(f"{rel}: bloco de leituras relacionadas ausente")
+
+        if rel.as_posix() == "educacao/duvidas-frequentes/index.html":
+            faq_items = re.findall(r'<details\\b[^>]*class="[^"]*\\bed-faq-item\\b[^"]*"[^>]*>', page_text)
+            if len(faq_items) != 6:
+                errors.append(f"{rel}: esperado seis perguntas expansíveis; encontrado {len(faq_items)}")
+            if page_text.count('class="ed-faq-answer"') != 6:
+                errors.append(f"{rel}: cada pergunta deve ter uma resposta identificada")
             if not audit.sources:
                 errors.append(f"{rel}: bloco de fontes ausente")
             if not audit.related:
