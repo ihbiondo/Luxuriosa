@@ -23,20 +23,27 @@ let lastOpener=null;
     const nav = document.querySelector(".header nav");
     if (!nav) return;
 
-    const items = [{"label":"Meu Portal","href":"/portal/"},{"label":"Experiências","href":"/experiencias/","current":"page"},{"label":"Educação","href":"/educacao/"}];
+    const items = [
+      { label: "Loja", href: "/", className: "global-nav-link global-nav-link--store" },
+      { label: "Meu Portal", href: "/portal/", className: "global-nav-link global-nav-link--portal" },
+      { label: "Experiências", href: "/experiencias/", className: "global-nav-link global-nav-link--experiences", current: "page" },
+      { label: "Educação", href: "/educacao/", className: "global-nav-link global-nav-link--education" }
+    ];
     const links = items.map(item => {
       const link = document.createElement("a");
       link.href = item.href;
       link.textContent = item.label;
+      if (item.className) link.className = item.className;
       if (item.current) link.setAttribute("aria-current", item.current);
       return link;
     });
     nav.replaceChildren(...links);
-    nav.setAttribute("aria-label", "Navegação entre Portal, Experiências e Educação");
+    nav.setAttribute("aria-label", "Navegação principal da Luxuriosa");
 
     const footer = document.querySelector(".footer");
     if (footer) {
       [
+        { href: "/", label: "Loja" },
         { href: "/portal/", label: "Meu Portal" },
         { href: "/educacao/", label: "Educação" }
       ].forEach(item => {
