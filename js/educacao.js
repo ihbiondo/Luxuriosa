@@ -11,7 +11,8 @@
     { label: "Enciclopédia", href: "/educacao/enciclopedia/" },
     { label: "Curiosidades", href: "/educacao/curiosidades/" },
     { label: "Guias", href: "/educacao/guias/" },
-    { label: "Interatividade", href: "/educacao/interatividade/" }
+    { label: "Interatividade", href: "/educacao/interatividade/" },
+    { label: "Dúvidas frequentes", href: "/educacao/duvidas-frequentes/" }
   ];
   function normalizePath(path) {
     const clean = (path || "/").split("?")[0].split("#")[0];
