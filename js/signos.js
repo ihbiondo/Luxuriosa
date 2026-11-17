@@ -253,6 +253,22 @@
     })[Math.floor(normalized / 30)] || null;
   }
 
+  function revealResult(container, heading) {
+    if (heading && typeof heading.focus === "function") {
+      heading.focus({ preventScroll: true });
+    }
+    if (container && typeof container.scrollIntoView === "function") {
+      let reduceMotion = false;
+      try {
+        reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      } catch (_) {}
+      container.scrollIntoView({
+        behavior: reduceMotion ? "auto" : "smooth",
+        block: "nearest"
+      });
+    }
+  }
+
   function showSignJourney(kind) {
     const panel = document.getElementById("signJourney");
     const heading = document.getElementById("signJourneyTitle");
@@ -306,6 +322,7 @@
     document.getElementById("resultDescription").textContent =
       sign.profile.overview + (note ? " " + note : "");
     result.hidden = false;
+    revealResult(result, document.getElementById("resultName"));
 
     // Guarda somente o resultado calculado; data, horário e fuso de nascimento não são incluídos.
     window.dispatchEvent(new CustomEvent("lux:experience-finished", { detail: {
@@ -419,7 +436,10 @@
       document.getElementById("compatibilityHeading").textContent = a.name + " + " + b.name;
       const summary = describeCombination(a, b, data.classification);
       document.getElementById("compatibilityText").textContent = summary;
-      document.getElementById("compatibilityResult").hidden = false;
+      const compatibilityResult = document.getElementById("compatibilityResult");
+      const compatibilityHeading = document.getElementById("compatibilityHeading");
+      compatibilityResult.hidden = false;
+      revealResult(compatibilityResult, compatibilityHeading);
       showSignJourney("compatibility");
 
       window.dispatchEvent(new CustomEvent("lux:experience-finished", { detail: {
