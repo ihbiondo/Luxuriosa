@@ -179,7 +179,7 @@ def main() -> int:
                 errors.append(f"{rel}: esperado 20 perguntas expansíveis; encontrado {len(faq_items)}")
             if page_text.count('class="ed-faq-answer"') != 20:
                 errors.append(f"{rel}: cada pergunta deve ter uma resposta identificada")
-            faq_blocks = re.findall(r'<details\\b[^>]*class="[^"]*\\bed-faq-item\\b[^"]*"[^>]*>[\\s\\S]*?</details>', page_text)
+            faq_blocks = re.findall(r'<details\b[^>]*class="[^"]*\bed-faq-item\b[^"]*"[^>]*>[\s\S]*?</details>', page_text)
             related_blocks = [item for item in faq_blocks if 'class="ed-faq-related"' in item]
             if len(related_blocks) != 20:
                 errors.append(f"{rel}: esperado bloco de conteúdos relacionados em cada uma das 20 respostas; encontrado {len(related_blocks)}")
