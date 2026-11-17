@@ -27,7 +27,7 @@
       var keys = [];
       for (var i = 0; i < localStorage.length; i += 1) {
         var key = localStorage.key(i);
-        if (key && /^(_ga|_gid|_gat|_gac|_gcl)/i.test(key)) keys.push(key);
+        if (key && (/^(_ga|_gid|_gat|_gac|_gcl)/i.test(key) || key === "luxuriosa_traffic_context_v1")) keys.push(key);
       }
       keys.forEach(function (key) { localStorage.removeItem(key); });
     } catch (_) {}
@@ -207,13 +207,20 @@
       ad_user_data: "denied", ad_personalization: "denied"
     });
     window.gtag("js", new Date());
-    /* Evita enviar URLs, títulos e referências que possam revelar produtos íntimos. */
+    var safeReferrer = "";
+    try {
+      if (document.referrer) {
+        var referrerUrl = new URL(document.referrer);
+        if (referrerUrl.origin !== window.location.origin) safeReferrer = referrerUrl.origin + "/";
+      }
+    } catch (_) {}
+    /* URLs e títulos são genéricos; a referência externa é limitada ao domínio de origem. */
     window.gtag("config", GA_ID, {
       anonymize_ip: true,
       send_page_view: false,
       page_location: window.location.origin + "/navegacao",
       page_title: "Luxuriosa - Navegação",
-      page_referrer: ""
+      page_referrer: safeReferrer
     });
     /* Visualização genérica: não envia slug, título, query string ou nome de produto. */
     var path = window.location.pathname || "/";
@@ -223,7 +230,8 @@
     window.gtag("event", "page_view", {
       page_title: "Luxuriosa - " + pageType,
       page_location: window.location.origin + "/navegacao/" + pageType,
-      page_path: "/navegacao/" + pageType
+      page_path: "/navegacao/" + pageType,
+      page_referrer: safeReferrer
     });
     /* API interna para eventos comerciais sem parâmetros identificáveis. */
     window.LuxuriosaMedicao = window.LuxuriosaMedicao || {};
