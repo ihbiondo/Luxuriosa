@@ -9,6 +9,7 @@
   var CLUB_INVITE_KEY = "lux_clube_convite_v1";
   var clubInviteScheduled = false;
   var clubInvitePreviousFocus = null;
+  var dataInvitePreviousFocus = null;
 
   function clearOptionalAnalytics() {
     var names = document.cookie.split(";").map(function (part) {
@@ -55,6 +56,12 @@
     }
     document.body.classList.remove("lux-club-invite-open");
     try { localStorage.setItem(DATA_INVITE_KEY, String(Date.now())); } catch (e) {}
+
+    var previousFocus = dataInvitePreviousFocus;
+    dataInvitePreviousFocus = null;
+    if (previousFocus && previousFocus.isConnected && typeof previousFocus.focus === "function") {
+      window.requestAnimationFrame(function () { previousFocus.focus(); });
+    }
   }
 
   function openDataInvitation() {
@@ -69,13 +76,38 @@
     overlay.setAttribute("role", "dialog");
     overlay.setAttribute("aria-modal", "true");
     overlay.setAttribute("aria-labelledby", "luxDataInviteTitle");
+    overlay.setAttribute("aria-hidden", "false");
     overlay.innerHTML = '<section class="lux-data-invite-panel"><button type="button" class="lux-data-invite-close" aria-label="Fechar convite">×</button><span class="lux-club-kicker">SUA EXPERIÊNCIA, SUAS ESCOLHAS</span><h2 id="luxDataInviteTitle">Mais benefícios.<br><span>Mais cuidado.</span></h2><p>Você pode autorizar a personalização da sua experiência e o uso de estatísticas realmente anônimas para melhorar nossos serviços. Cada escolha é opcional. Seus dados pessoais identificáveis nunca serão compartilhados com parceiros.</p><a class="lux-club-invite-cta" href="/clube.html">CONFIGURAR AUTORIZAÇÕES</a><button type="button" class="lux-data-invite-later">Agora não</button><p class="lux-data-invite-privacy"><a href="/privacidade.html">Entenda como usamos seus dados</a></p></section>';
+    dataInvitePreviousFocus = document.activeElement;
     document.body.appendChild(overlay);
     overlay.querySelector(".lux-data-invite-close").addEventListener("click", closeDataInvitation);
     overlay.querySelector(".lux-data-invite-later").addEventListener("click", closeDataInvitation);
     overlay.querySelector(".lux-club-invite-cta").addEventListener("click", closeDataInvitation);
     overlay.addEventListener("keydown", function (event) {
-      if (event.key === "Escape") closeDataInvitation();
+      if (event.key === "Escape") {
+        event.preventDefault();
+        closeDataInvitation();
+        return;
+      }
+      if (event.key !== "Tab") return;
+
+      var focusable = Array.prototype.slice.call(
+        overlay.querySelectorAll('a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])')
+      ).filter(function (element) { return element.offsetParent !== null; });
+      if (!focusable.length) {
+        event.preventDefault();
+        return;
+      }
+
+      var first = focusable[0];
+      var last = focusable[focusable.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
     });
     document.body.classList.add("lux-club-invite-open");
     overlay.classList.add("open");
