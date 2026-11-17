@@ -75,8 +75,24 @@
     delete statusBox.dataset.kind;
   }
 
+  function modalidadeRetirada() { return texto("customerFulfillmentMode") === "pickup"; }
+
+  function atualizarModalidade() {
+    var pickup = modalidadeRetirada();
+    var addressFields = document.querySelector("#customerForm .customer-address-fields");
+    var pickupFields = $("customerPickupFields");
+    if (addressFields) addressFields.hidden = pickup;
+    if (pickupFields) pickupFields.hidden = !pickup;
+    atualizarAvisoFrete();
+  }
+
   function dadosDoFormulario() {
+    var pickup = modalidadeRetirada();
+    var date = texto("customerPickupDate");
+    var time = texto("customerPickupTime");
     return {
+      fulfillmentType: pickup ? "pickup" : "express",
+      pickupRequestedAt: pickup && date && time ? new Date(date + "T" + time + ":00-03:00").toISOString() : null,
       name: texto("customerName"),
       phone: texto("customerPhone"),
       email: texto("customerEmail").toLowerCase(),
@@ -205,6 +221,10 @@
   function atualizarAvisoFrete() {
     var aviso = $("customerFreightInfo");
     if (!aviso) return;
+    if (modalidadeRetirada()) {
+      aviso.textContent = "Retirada gratuita em Bauru. Sem cobrança de frete.";
+      return;
+    }
 
     var cidade = texto("customerCity");
     var estado = texto("customerState").toUpperCase();
@@ -252,7 +272,8 @@
   function validarDados({ exigirEndereco }) {
     var data = dadosDoFormulario();
     var primeiroErro = null;
-    var required = exigirEndereco
+    var exigirEnderecoEntrega = exigirEndereco && !modalidadeRetirada();
+    var required = exigirEnderecoEntrega
       ? ["customerName", "customerPhone", "customerEmail", "customerStreet", "customerNumber", "customerDistrict", "customerCity", "customerState"]
       : ["customerName", "customerPhone", "customerEmail"];
 
@@ -267,7 +288,7 @@
 
     var campoCep = $("customerCep");
     var cepDigits = texto("customerCep").replace(/\D/g, "");
-    if (cepDigits && cepDigits.length !== 8) {
+    if (!modalidadeRetirada() && cepDigits && cepDigits.length !== 8) {
       if (campoCep) {
         campoCep.setAttribute("aria-invalid", "true");
         primeiroErro = primeiroErro || campoCep;
@@ -279,7 +300,7 @@
 
     var campoEstado = $("customerState");
     var estado = texto("customerState");
-    if (exigirEndereco && estado && !/^[A-Za-z]{2}$/.test(estado)) {
+    if (exigirEnderecoEntrega && estado && !/^[A-Za-z]{2}$/.test(estado)) {
       if (campoEstado) {
         campoEstado.setAttribute("aria-invalid", "true");
         campoEstado.focus();
@@ -307,7 +328,7 @@
     }
     if (primeiroErro) {
       avisar(
-        exigirEndereco
+        exigirEnderecoEntrega
           ? "Preencha nome ou apelido, telefone/WhatsApp, rua, número, bairro, cidade e estado."
           : "Preencha nome, telefone/WhatsApp e e-mail.",
         "error"
@@ -393,20 +414,24 @@
     lines.push(data.fulfillmentType === "pickup" ? "Frete: gratuito · retirada agendada em Bauru" : "Frete: valor fixo conforme a localidade e a modalidade do Clube, de acordo com a tabela oficial");
     lines.push("*Total dos produtos: " + formatarPreco(totalProdutos) + "*");
 
-    lines.push("", "*ENTREGA*");
+    lines.push("", data.fulfillmentType === "pickup" ? "*RETIRADA AGENDADA*" : "*ENTREGA*");
     lines.push("• " + data.name + " — " + data.phone);
-
-    var endereco = data.address.street + ", " + data.address.number;
-    if (data.address.complement) endereco += " — " + data.address.complement;
-    lines.push("• " + endereco);
-    lines.push("• " + data.address.district + " — " + data.address.city + "/" + data.address.state);
-    if (data.address.zip) lines.push("• CEP: " + data.address.zip);
-    if (data.address.reference) lines.push("• Referência: " + data.address.reference);
-
-    lines.push(
-      "",
-      "Gostaria de confirmar a disponibilidade dos produtos e combinar a entrega.",
-      "_Pedido sujeito à confirmação de disponibilidade, condições comerciais e entrega._"
+    if (data.fulfillmentType === "pickup") {
+      lines.push("• Retirada gratuita · Rua Madre Clélia, nº 5-44, Jardim Cruzeiro do Sul, Bauru/SP · CEP 17030-290");
+      lines.push("• Preferência: " + texto("customerPickupDate") + " às " + texto("customerPickupTime"));
+      lines.push("• Aguardando confirmação da disponibilidade pela equipe.");
+    } else {
+      var endereco = data.address.street + ", " + data.address.number;
+      if (data.address.complement) endereco += " — " + data.address.complement;
+      lines.push("• " + endereco);
+      lines.push("• " + data.address.district + " — " + data.address.city + "/" + data.address.state);
+      if (data.address.zip) lines.push("• CEP: " + data.address.zip);
+      if (data.address.reference) lines.push("• Referência: " + data.address.reference);
+    }
+    lines.push("", data.fulfillmentType === "pickup"
+      ? "Gostaria de confirmar a disponibilidade para retirada no dia e horário indicados."
+      : "Gostaria de confirmar a disponibilidade dos produtos e combinar a entrega.",
+      "_Pedido sujeito à confirmação da disponibilidade e das condições da modalidade escolhida._"
     );
 
     return lines.join("\n");
@@ -461,7 +486,7 @@
     if (form) form.hidden = false;
     limparAviso();
     mostrarStatusCep("", "info");
-    atualizarAvisoFrete();
+    atualizarModalidade();
 
     if (focusBeforeOpen && typeof focusBeforeOpen.focus === "function") focusBeforeOpen.focus();
     focusBeforeOpen = null;
@@ -480,7 +505,13 @@
       return;
     }
     if (!validarDados({ exigirEndereco: true })) return;
-    dadosAtuais = dadosDoFormulario();
+    var formData = dadosDoFormulario();
+    if (modalidadeRetirada() && !formData.pickupRequestedAt) {
+      avisar("Informe a data e o horário pretendidos para a retirada.", "error");
+      $("customerPickupDate").focus();
+      return;
+    }
+    dadosAtuais = formData;
     mensagemAtual = preencherMensagem(dadosAtuais);
     if (!mensagemAtual) {
       avisar("Não foi possível montar o pedido. Confira se ainda há produtos no carrinho.", "error");
@@ -490,19 +521,21 @@
 
     var paymentMinimumInfo = $("customerPaymentMinimumInfo");
     if (paymentMinimumInfo) {
-      var reviewCity = String(dadosAtuais.address.city || "").normalize("NFD")
-        .replace(/[\u0300-\u036f]/g, "").trim().toLowerCase();
-      var reviewState = String(dadosAtuais.address.state || "").trim().toUpperCase();
-      if (reviewCity === "bauru" && reviewState === "SP") {
-        paymentMinimumInfo.hidden = false;
-        paymentMinimumInfo.textContent = integridade.subtotal < 20
-          ? "Atenção: o pedido em Bauru deve ter mínimo de R$ 20,00 em produtos. Seu pedido está em " + formatarPreco(integridade.subtotal) + "; acrescente pelo menos " + formatarPreco(20 - integridade.subtotal) + "."
-          : "Pedido mínimo em Bauru: mínimo de R$ 20,00 em produtos.";
+      paymentMinimumInfo.hidden = false;
+      if (dadosAtuais.fulfillmentType === "pickup") {
+        paymentMinimumInfo.textContent = "Retirada gratuita em Bauru. Não há frete nem pedido mínimo de entrega.";
       } else {
-        paymentMinimumInfo.hidden = false;
-        paymentMinimumInfo.textContent = integridade.subtotal < 50
-          ? "Atenção: para entregas fora de Bauru, o pedido deve ter mínimo de R$ 50,00 em produtos. Seu pedido está em " + formatarPreco(integridade.subtotal) + "; acrescente pelo menos " + formatarPreco(50 - integridade.subtotal) + "."
-          : "Pedido mínimo fora de Bauru: mínimo de R$ 50,00 em produtos.";
+        var reviewCity = String(dadosAtuais.address.city || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim().toLowerCase();
+        var reviewState = String(dadosAtuais.address.state || "").trim().toUpperCase();
+        if (reviewCity === "bauru" && reviewState === "SP") {
+          paymentMinimumInfo.textContent = integridade.subtotal < 20
+            ? "Atenção: o pedido em Bauru deve ter mínimo de R$ 20,00 em produtos. Seu pedido está em " + formatarPreco(integridade.subtotal) + "; acrescente pelo menos " + formatarPreco(20 - integridade.subtotal) + "."
+            : "Pedido mínimo em Bauru: mínimo de R$ 20,00 em produtos.";
+        } else {
+          paymentMinimumInfo.textContent = integridade.subtotal < 50
+            ? "Atenção: para entregas fora de Bauru, o pedido deve ter mínimo de R$ 50,00 em produtos. Seu pedido está em " + formatarPreco(integridade.subtotal) + "; acrescente pelo menos " + formatarPreco(50 - integridade.subtotal) + "."
+            : "Pedido mínimo fora de Bauru: mínimo de R$ 50,00 em produtos.";
+        }
       }
     }
 
@@ -591,12 +624,19 @@
       return;
     }
     if (!validarDados({ exigirEndereco: true })) return;
+    var formData = dadosDoFormulario();
+    if (modalidadeRetirada() && !formData.pickupRequestedAt) {
+      avisar("Informe a data e o horário pretendidos para a retirada.", "error");
+      $("customerPickupDate").focus();
+      return;
+    }
+    dadosAtuais = formData;
 
     var cidadePagamento = String(dadosAtuais.address.city || "").normalize("NFD")
       .replace(/[\u0300-\u036f]/g, "").trim().toLowerCase();
     var estadoPagamento = String(dadosAtuais.address.state || "").trim().toUpperCase();
     var minimoProdutos = cidadePagamento === "bauru" && estadoPagamento === "SP" ? 20 : 50;
-    if (integridade.subtotal < minimoProdutos) {
+    if (!modalidadeRetirada() && integridade.subtotal < minimoProdutos) {
       avisar("O pedido deve ter no mínimo R$ " + minimoProdutos.toFixed(2).replace(".", ",") + " em produtos para entrega nesse destino. Abaixo desse valor, acrescente produtos ao carrinho.", "error");
       return;
     }
@@ -633,7 +673,9 @@
         body: JSON.stringify({
           session_key: sessionKey,
           items: itensAtuais,
-          customer: dadosAtuais
+          customer: dadosAtuais,
+          fulfillment_type: dadosAtuais.fulfillmentType,
+          pickup_requested_at: dadosAtuais.pickupRequestedAt
         })
       });
       var result = await response.json().catch(function () { return {}; });
@@ -803,8 +845,9 @@
     statusBox = $("customerStatus");
     messagePreview = $("customerMessagePreview");
     if (!overlay || !dialog || !form || !review) return;
-    atualizarAvisoFrete();
-
+    atualizarModalidade();
+    var fulfillmentMode = $("customerFulfillmentMode");
+    if (fulfillmentMode) fulfillmentMode.addEventListener("change", atualizarModalidade);
     form.addEventListener("submit", revisarPedido);
     $("customerClose").addEventListener("click", fechar);
     var accountLoadButton = $("customerAccountLoad");
