@@ -83,51 +83,45 @@
   text-underline-offset: 4px;
 }
 
-/* Convite do Google: uma hierarquia clara, sem estrelas decorativas ou nota presumida. */
+/* Convite para avaliação — simples, direto e com uma única ação. */
 .home-page .google-reviews-section {
-  padding-block: clamp(32px, 5vw, 54px);
+  padding-block: clamp(30px, 4.5vw, 48px);
   background:
-    radial-gradient(ellipse at 80% 10%, rgba(139, 30, 63, .22), transparent 58%),
+    radial-gradient(ellipse at 80% 10%, rgba(139, 30, 63, .2), transparent 58%),
     linear-gradient(180deg, #10090c, #0b0b0b);
 }
 
 .home-page .google-review-card {
-  position: relative;
-  isolation: isolate;
   display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: 22px;
+  grid-template-columns: minmax(0, 1fr) minmax(220px, 290px);
+  align-items: center;
+  gap: clamp(20px, 4vw, 38px);
   width: min(100%, 780px);
   margin: 0 auto;
-  padding: clamp(22px, 4vw, 34px);
-  overflow: hidden;
+  padding: clamp(22px, 3.5vw, 32px);
   border: 1px solid rgba(212, 175, 124, .34);
-  border-radius: 20px;
+  border-radius: 18px;
   background:
-    radial-gradient(ellipse at 100% 0%, rgba(139, 30, 63, .26), transparent 52%),
+    radial-gradient(ellipse at 100% 0%, rgba(139, 30, 63, .22), transparent 55%),
     linear-gradient(145deg, #21101a, #100b0e 78%);
-  box-shadow: 0 18px 48px rgba(0, 0, 0, .22);
-}
-
-.home-page .google-review-card::before {
-  content: "";
-  position: absolute;
-  z-index: -1;
-  top: 0;
-  left: 0;
-  width: 4px;
-  height: 100%;
-  background: linear-gradient(180deg, #e4c18b, #9f315d);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, .2);
 }
 
 .home-page .google-review-copy {
-  max-width: 640px;
+  min-width: 0;
+  max-width: 580px;
+}
+
+.home-page .google-review-stars {
+  margin-bottom: 12px;
+  color: #f2c66d;
+  font-size: 23px;
+  line-height: 1.2;
+  letter-spacing: .06em;
 }
 
 .home-page .google-review-kicker {
-  display: inline-flex;
-  align-items: center;
-  min-height: 28px;
+  display: block;
   color: var(--gold);
   font-size: 10px;
   font-weight: 700;
@@ -136,66 +130,34 @@
 }
 
 .home-page .google-review-copy h2 {
-  max-width: 620px;
-  margin: 10px 0 13px;
+  margin: 9px 0 10px;
   color: var(--blush);
   font-family: var(--serif);
-  font-size: clamp(27px, 4vw, 36px);
+  font-size: clamp(27px, 3.6vw, 35px);
   font-weight: 400;
   line-height: 1.12;
   text-wrap: balance;
 }
 
 .home-page .google-review-copy p {
-  max-width: 590px;
+  max-width: 550px;
   margin: 0;
   color: var(--muted);
   font-size: 13px;
-  line-height: 1.72;
-}
-
-.home-page .google-review-source {
-  display: inline-flex;
-  align-items: center;
-  gap: 9px;
-  min-height: 36px;
-  margin-top: 18px;
-  padding: 6px 12px 6px 7px;
-  border: 1px solid rgba(212, 175, 124, .24);
-  border-radius: 999px;
-  color: #eadcc8;
-  font-size: 11px;
-  letter-spacing: .02em;
-  background: rgba(255, 255, 255, .025);
-}
-
-.home-page .google-review-source-mark {
-  display: grid;
-  width: 24px;
-  height: 24px;
-  place-items: center;
-  border-radius: 50%;
-  background: #fff;
-  color: #4285f4;
-  font-family: Arial, sans-serif;
-  font-size: 15px;
-  font-weight: 700;
+  line-height: 1.68;
 }
 
 .home-page .google-review-actions {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: 9px;
+  display: block;
   width: 100%;
-  max-width: 380px;
 }
 
 .home-page .google-review-primary {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
-  min-width: 0;
+  gap: 10px;
+  width: 100%;
   min-height: 52px;
   padding: 13px 17px;
   border: 1px solid #e6c18b;
@@ -204,28 +166,16 @@
   color: #21130d;
   font-size: 11px;
   font-weight: 700;
-  letter-spacing: .12em;
+  letter-spacing: .09em;
+  line-height: 1.35;
   text-decoration: none;
   text-transform: uppercase;
 }
 
 .home-page .google-review-primary span {
+  flex: 0 0 auto;
   font-size: 16px;
   line-height: 1;
-}
-
-.home-page .google-review-profile {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 46px;
-  padding: 10px 15px;
-  border: 1px solid rgba(212, 175, 124, .3);
-  border-radius: 999px;
-  color: var(--gold);
-  font-size: 11px;
-  text-decoration: none;
-  transition: border-color .2s ease, background .2s ease;
 }
 
 .home-page .google-review-primary:hover,
@@ -233,84 +183,33 @@
   filter: brightness(1.04);
 }
 
-.home-page .google-review-profile:hover,
-.home-page .google-review-profile:focus-visible {
-  border-color: var(--gold);
-  background: rgba(212, 175, 124, .08);
-}
-
-.home-page .google-review-primary:focus-visible,
-.home-page .google-review-profile:focus-visible {
+.home-page .google-review-primary:focus-visible {
   outline: 2px solid var(--gold);
   outline-offset: 3px;
 }
 
-@media (min-width: 761px) {
-  .home-page .google-review-card {
-    grid-template-columns: minmax(0, 1fr) minmax(230px, 300px);
-    align-items: center;
-    gap: 32px;
-  }
-
-  .home-page .google-review-actions {
-    justify-self: end;
-  }
-}
-
 @media (max-width: 760px) {
-  .home-page .localizacao-avaliacao-section .section-head {
-    display: block;
-  }
-
-  .home-page .localizacao-avaliacao-section .section-head h2 {
-    font-size: clamp(29px, 7.5vw, 36px);
-    line-height: 1.1;
-  }
-
-  .home-page .localizacao-avaliacao-section .section-head > p {
-    margin-top: 9px;
-    font-size: 12px;
-    line-height: 1.6;
-  }
-
-  .home-page .location-card-copy {
-    align-items: flex-start;
-    flex-direction: column;
-    gap: 5px;
-  }
-
-  .home-page .location-map-wrap iframe {
-    height: 215px;
-  }
-
   .home-page .google-review-card {
+    grid-template-columns: minmax(0, 1fr);
     gap: 18px;
-    padding: 20px 18px;
+    padding: 21px 18px;
     border-radius: 16px;
+  }
+
+  .home-page .google-review-stars {
+    margin-bottom: 10px;
+    font-size: 22px;
   }
 
   .home-page .google-review-copy h2 {
     font-size: clamp(27px, 7.1vw, 33px);
-    line-height: 1.12;
-  }
-
-  .home-page .google-review-copy p {
-    font-size: 13px;
-    line-height: 1.68;
   }
 
   .home-page .google-review-actions {
     max-width: none;
   }
 
-  .home-page .google-review-primary,
-  .home-page .google-review-profile {
-    width: 100%;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .home-page .google-review-profile {
-    transition: none;
+  .home-page .google-review-primary {
+    min-height: 52px;
   }
 }
