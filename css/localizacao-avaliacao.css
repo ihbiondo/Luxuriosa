@@ -83,7 +83,7 @@
   text-underline-offset: 4px;
 }
 
-/* Convite para avaliação — simples, direto e com uma única ação. */
+/* Card de avaliação — mesmo acabamento do card de região. */
 .home-page .google-reviews-section {
   padding-block: clamp(30px, 4.5vw, 48px);
   background:
@@ -92,32 +92,24 @@
 }
 
 .home-page .google-review-card {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(220px, 290px);
-  align-items: center;
-  gap: clamp(20px, 4vw, 38px);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 17px;
   width: min(100%, 780px);
   margin: 0 auto;
-  padding: clamp(22px, 3.5vw, 32px);
-  border: 1px solid rgba(212, 175, 124, .34);
+  padding: clamp(18px, 3vw, 28px);
+  border: 1px solid rgba(212, 175, 124, .28);
   border-radius: 18px;
   background:
-    radial-gradient(ellipse at 100% 0%, rgba(139, 30, 63, .22), transparent 55%),
-    linear-gradient(145deg, #21101a, #100b0e 78%);
-  box-shadow: 0 16px 40px rgba(0, 0, 0, .2);
+    radial-gradient(ellipse at 95% 0%, rgba(139, 30, 63, .18), transparent 50%),
+    linear-gradient(145deg, rgba(34, 15, 25, .96), rgba(14, 10, 12, .98));
+  box-shadow: none;
 }
 
 .home-page .google-review-copy {
   min-width: 0;
-  max-width: 580px;
-}
-
-.home-page .google-review-stars {
-  margin-bottom: 12px;
-  color: #f2c66d;
-  font-size: 23px;
-  line-height: 1.2;
-  letter-spacing: .06em;
+  max-width: 640px;
 }
 
 .home-page .google-review-kicker {
@@ -140,7 +132,7 @@
 }
 
 .home-page .google-review-copy p {
-  max-width: 550px;
+  max-width: 590px;
   margin: 0;
   color: var(--muted);
   font-size: 13px;
@@ -148,39 +140,31 @@
 }
 
 .home-page .google-review-actions {
-  display: block;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 9px;
   width: 100%;
+}
+
+.home-page .google-review-stars {
+  color: #f2c66d;
+  font-size: 22px;
+  line-height: 1.2;
+  letter-spacing: .06em;
 }
 
 .home-page .google-review-primary {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  width: 100%;
-  min-height: 52px;
-  padding: 13px 17px;
-  border: 1px solid #e6c18b;
+  justify-content: center;
+  width: min(100%, 260px);
+  min-height: 48px;
+  padding: 12px 24px;
   border-radius: 999px;
-  background: linear-gradient(110deg, #d7b47e, #f0d5a5);
-  color: #21130d;
   font-size: 11px;
-  font-weight: 700;
-  letter-spacing: .09em;
-  line-height: 1.35;
+  letter-spacing: .16em;
   text-decoration: none;
-  text-transform: uppercase;
-}
-
-.home-page .google-review-primary span {
-  flex: 0 0 auto;
-  font-size: 16px;
-  line-height: 1;
-}
-
-.home-page .google-review-primary:hover,
-.home-page .google-review-primary:focus-visible {
-  filter: brightness(1.04);
 }
 
 .home-page .google-review-primary:focus-visible {
@@ -190,15 +174,9 @@
 
 @media (max-width: 760px) {
   .home-page .google-review-card {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 18px;
-    padding: 21px 18px;
+    gap: 15px;
+    padding: 20px 18px;
     border-radius: 16px;
-  }
-
-  .home-page .google-review-stars {
-    margin-bottom: 10px;
-    font-size: 22px;
   }
 
   .home-page .google-review-copy h2 {
@@ -206,10 +184,11 @@
   }
 
   .home-page .google-review-actions {
-    max-width: none;
+    width: 100%;
   }
 
   .home-page .google-review-primary {
-    min-height: 52px;
+    width: 100%;
+    max-width: 260px;
   }
 }
