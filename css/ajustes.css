@@ -1039,3 +1039,62 @@ body.customer-open { overflow: hidden; }
   }
 }
 
+
+
+/* =========================================================
+   HOME — APROVEITAMENTO DE TELA EM DESKTOP
+   Mantém as regras atuais de tablet e celular.
+   ========================================================= */
+@media (min-width: 1200px) {
+  .container {
+    width: min(1440px, 92%);
+  }
+
+  .hero-grid {
+    grid-template-columns: minmax(0, 1.06fr) minmax(0, .94fr);
+    gap: clamp(54px, 6vw, 96px);
+  }
+
+  .hero-visual {
+    min-height: 500px;
+  }
+
+  .hero-image-main {
+    width: min(94%, 500px);
+  }
+
+  .categories-section {
+    padding-top: 76px;
+    padding-bottom: 82px;
+  }
+
+  .categories {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 18px;
+  }
+
+  .cat {
+    min-height: 190px;
+    padding: 22px;
+  }
+
+  .featured-section {
+    padding-top: 76px;
+    padding-bottom: 82px;
+  }
+
+  .featured-section .products {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 20px;
+  }
+}
+
+@media (min-width: 901px) and (max-width: 1199px) {
+  .container {
+    width: 92%;
+  }
+
+  .featured-section .products {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
