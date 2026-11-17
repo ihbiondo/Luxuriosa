@@ -760,3 +760,8 @@ body{background:radial-gradient(ellipse at 10% 5%,rgba(113,69,132,.38),transpare
   .ed-menu nav a.ed-global-link { min-height: 38px; font-size: 10px; }
 }
 @media (prefers-reduced-motion: reduce) { .ed-category-card { transition: none; } }
+
+/* Centraliza uma categoria isolada quando a quantidade é ímpar. */
+@media (min-width: 681px) {
+  .ed-category-card:last-child:nth-child(odd) { grid-column: 1 / -1; width: calc(50% - 7px); justify-self: center; }
+}
