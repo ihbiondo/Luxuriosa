@@ -174,11 +174,17 @@ def main() -> int:
                 errors.append(f"{rel}: bloco de leituras relacionadas ausente")
 
         if rel.as_posix() == "educacao/duvidas-frequentes/index.html":
-            faq_items = re.findall(r'<details\b[^>]*class="[^"]*\bed-faq-item\b[^"]*"[^>]*>', page_text)
-            if len(faq_items) != 6:
-                errors.append(f"{rel}: esperado seis perguntas expansíveis; encontrado {len(faq_items)}")
-            if page_text.count('class="ed-faq-answer"') != 6:
+            faq_items = re.findall(r'<details\\b[^>]*class="[^"]*\\bed-faq-item\\b[^"]*"[^>]*>', page_text)
+            if len(faq_items) != 14:
+                errors.append(f"{rel}: esperado 14 perguntas expansíveis; encontrado {len(faq_items)}")
+            if page_text.count('class="ed-faq-answer"') != 14:
                 errors.append(f"{rel}: cada pergunta deve ter uma resposta identificada")
+            for section_id in ("faq-escolha", "faq-uso", "faq-compra"):
+                if f'id="{section_id}"' not in page_text:
+                    errors.append(f"{rel}: seção temática ausente: {section_id}")
+            for href in ("/faq.html", "/atendimento.html", "/educacao/guias/escolher-lubrificante.html", "/educacao/guias/limpeza-e-conservacao.html"):
+                if f'href="{href}"' not in page_text:
+                    errors.append(f"{rel}: link essencial ausente: {href}")
             if not audit.sources:
                 errors.append(f"{rel}: bloco de fontes ausente")
             if not audit.related:
