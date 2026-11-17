@@ -1499,13 +1499,14 @@ body.customer-open { overflow: hidden; }
   padding: 0;
   object-fit: cover;
   object-position: 50% 66%;
-  transform: scale(1.06);
+  transform: scale(1.08);
+  transform-origin: 50% 62%;
   transition: transform .35s ease;
 }
 
 .home-kit-static-card:hover .home-kit-static-media img,
 .home-kit-static-card:focus-visible .home-kit-static-media img {
-  transform: scale(1.12);
+  transform: scale(1.13);
 }
 
 @media (prefers-reduced-motion: reduce) {
