@@ -935,3 +935,28 @@ body{background:radial-gradient(ellipse at 10% 5%,rgba(113,69,132,.38),transpare
 @media(prefers-reduced-motion:reduce) {
   .ed-faq-search-control { box-shadow:none; }
 }
+
+/* Conteúdos relacionados dentro de cada resposta da FAQ. */
+.ed-faq-related { margin:16px 0 2px; padding:13px; border:1px solid rgba(203,182,216,.2); border-radius:13px; background:linear-gradient(125deg,rgba(255,255,255,.035),rgba(255,138,199,.035)); }
+.ed-faq-related-heading { margin:0 0 9px; color:#d9c4e4; font-size:10px; font-weight:700; letter-spacing:.13em; text-transform:uppercase; }
+.ed-faq-related-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; }
+.ed-faq-related-link { min-width:0; min-height:68px; display:grid !important; grid-template-columns:minmax(0,1fr) 16px; grid-template-rows:auto 1fr; align-content:start; align-items:center; gap:3px 8px; margin:0 !important; padding:10px 11px; border:1px solid rgba(203,182,216,.22); border-radius:10px; background:#211729; color:#f8effa !important; text-decoration:none !important; transition:border-color .18s ease,background .18s ease,transform .18s ease; }
+.ed-faq-related-link:hover { border-color:#e3449d; background:#302039; color:#fff !important; transform:translateY(-1px); }
+.ed-faq-related-type { grid-column:1; color:#e4b8d4; font-size:9px; font-weight:700; letter-spacing:.1em; line-height:1.2; }
+.ed-faq-related-label { grid-column:1; color:#f8effa; font-size:12px; font-weight:600; line-height:1.4; }
+.ed-faq-related-arrow { grid-column:2; grid-row:1 / span 2; align-self:center; color:#ff8ac7; font-size:15px; }
+.ed-faq-related-link--catalog { border-color:rgba(212,175,124,.36); background:linear-gradient(135deg,#30243a,#211729); }
+.ed-faq-related-link--catalog .ed-faq-related-type { color:#e0bd8d; }
+.ed-faq-related-disclaimer { max-width:920px; margin:-6px auto 25px; color:#beafc7; font-size:11px; line-height:1.65; }
+.ed-faq-related-link:focus-visible { outline:3px solid #ff8ac7; outline-offset:2px; }
+@media(max-width:540px) {
+  .ed-faq-related { margin-top:13px; padding:10px; }
+  .ed-faq-related-grid { grid-template-columns:1fr; gap:7px; }
+  .ed-faq-related-link { min-height:60px; padding:9px 10px; }
+  .ed-faq-related-label { font-size:12px; }
+  .ed-faq-related-disclaimer { margin-top:-2px; font-size:10px; }
+}
+@media(prefers-reduced-motion:reduce) {
+  .ed-faq-related-link { transition:none; }
+  .ed-faq-related-link:hover { transform:none; }
+}
