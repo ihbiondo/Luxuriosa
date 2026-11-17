@@ -19,10 +19,33 @@
   }
 
   function setupNavigation() {
-    const nav = document.querySelector(".header nav");
-    if (!nav) return;
+    let header = document.querySelector(".header");
+    if (!header) {
+      const legacyHeader = document.querySelector(".ed-header");
+      if (legacyHeader) {
+        header = document.createElement("header");
+        header.className = "header";
+        legacyHeader.replaceWith(header);
 
-    const brand = document.querySelector(".header .brand");
+        const brand = document.createElement("a");
+        brand.className = "brand";
+        brand.href = "/portal/";
+        brand.setAttribute("aria-label", "Voltar ao Meu Portal");
+        const brandName = document.createElement("span");
+        brandName.textContent = "Luxuriosa";
+        const brandSection = document.createElement("small");
+        brandSection.textContent = "EDUCAÇÃO";
+        brand.append(brandName, brandSection);
+
+        const newNav = document.createElement("nav");
+        newNav.setAttribute("aria-label", "Navegação principal da Luxuriosa");
+        header.append(brand, newNav);
+      }
+    }
+    const nav = header && header.querySelector("nav");
+    if (!header || !nav) return;
+
+    const brand = header.querySelector(".brand");
     if (brand) {
       brand.href = "/portal/";
       brand.setAttribute("aria-label", "Voltar ao Meu Portal");
