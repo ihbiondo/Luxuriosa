@@ -254,3 +254,185 @@ body{background:radial-gradient(ellipse at 10% 5%,rgba(113,69,132,.4),transparen
     max-width: 100%;
   }
 }
+
+
+/* Experiência aberta: leitura confortável, etapas claras e ações fáceis de alcançar. */
+.experience-dialog {
+  width: min(calc(100vw - 32px), 620px);
+  max-width: 620px;
+  max-height: min(88vh, 780px);
+  padding: clamp(22px, 3.5vw, 32px);
+  border-radius: 21px;
+  overscroll-behavior: contain;
+  scroll-padding-block: 18px;
+}
+.experience-dialog .dialog-head {
+  gap: 16px;
+  margin-bottom: 16px;
+}
+.experience-dialog #experienceEyebrow {
+  font-size: 10px;
+  line-height: 1.5;
+}
+.experience-dialog #experienceCounter {
+  min-height: 18px;
+  font-size: 12px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+.experience-dialog .dialog-head > button {
+  flex: 0 0 44px;
+  width: 44px;
+  height: 44px;
+  font-size: 22px;
+}
+.experience-dialog .experience-progress {
+  height: 6px;
+  margin-bottom: 25px;
+}
+.experience-dialog #experienceTitle,
+.experience-dialog #experienceResultTitle {
+  max-width: 24ch;
+  margin: 9px 0 10px;
+  font-size: clamp(27px, 4vw, 36px);
+  line-height: 1.18;
+  text-wrap: balance;
+}
+.experience-dialog #experienceDescription {
+  max-width: 58ch;
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.75;
+}
+.experience-dialog .dialog-meta {
+  gap: 8px;
+  margin: 19px 0;
+}
+.experience-dialog .dialog-meta span {
+  min-height: 34px;
+  display: inline-flex;
+  align-items: center;
+  padding: 7px 11px;
+  font-size: 11px;
+  line-height: 1.45;
+}
+.experience-dialog #experienceStart,
+.experience-dialog #experienceNext {
+  min-height: 50px;
+  padding-inline: 20px;
+  font-size: 12px;
+}
+.experience-dialog .step-label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 10px;
+  line-height: 1.5;
+}
+.experience-dialog #experienceQuestion {
+  max-width: 31ch;
+  margin: 7px 0 9px;
+  font-size: clamp(25px, 3.5vw, 32px);
+  line-height: 1.22;
+  text-wrap: balance;
+}
+.experience-dialog .question-prompt {
+  margin: 0 0 17px;
+  font-size: 14px;
+  line-height: 1.7;
+}
+.experience-dialog .experience-options {
+  gap: 10px;
+  margin: 18px 0;
+}
+.experience-dialog .experience-options button {
+  min-height: 52px;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 13px 15px;
+  border-radius: 11px;
+  font-size: 14px;
+  line-height: 1.55;
+}
+.experience-dialog .experience-feedback {
+  margin: 15px 0;
+  padding: 14px 16px;
+  border-radius: 0 11px 11px 0;
+  font-size: 13px;
+  line-height: 1.75;
+}
+.experience-dialog #experienceResultDescription,
+.experience-dialog #experienceResultAdvice {
+  font-size: 14px;
+  line-height: 1.8;
+}
+.experience-dialog #experienceResultAdvice {
+  margin-top: 15px;
+  padding: 14px 16px;
+  border-radius: 0 11px 11px 0;
+}
+.experience-dialog .source-links {
+  gap: 5px;
+  padding: 15px;
+}
+.experience-dialog .source-links a {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  padding-block: 7px;
+  font-size: 12px;
+  line-height: 1.55;
+}
+.experience-dialog .result-actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 22px;
+}
+.experience-dialog .result-actions button {
+  min-height: 48px;
+  width: 100%;
+  font-size: 12px;
+}
+.experience-dialog :is(h2, h3)[tabindex="-1"]:focus {
+  outline: none;
+}
+.experience-dialog :is(h2, h3)[tabindex="-1"]:focus-visible {
+  outline: 2px solid #e3449d;
+  outline-offset: 5px;
+  border-radius: 3px;
+}
+@media (max-width: 680px) {
+  .experience-dialog {
+    width: calc(100vw - 20px);
+    max-width: 620px;
+    max-height: 92vh;
+    max-height: calc(100dvh - 20px);
+    padding: 22px 18px;
+    border-radius: 18px;
+  }
+  .experience-dialog .experience-progress { margin-bottom: 21px; }
+  .experience-dialog #experienceTitle,
+  .experience-dialog #experienceResultTitle { font-size: clamp(26px, 7vw, 32px); }
+  .experience-dialog #experienceQuestion { font-size: clamp(24px, 6.5vw, 29px); }
+  .experience-dialog .question-prompt,
+  .experience-dialog #experienceDescription,
+  .experience-dialog #experienceResultDescription,
+  .experience-dialog #experienceResultAdvice { font-size: 14px; }
+  .experience-dialog #experienceStart,
+  .experience-dialog #experienceNext { width: 100%; }
+  .experience-dialog .result-actions { grid-template-columns: 1fr; }
+  .experience-dialog .result-actions button { min-height: 50px; }
+  .experience-dialog .experience-options button { min-height: 54px; padding: 13px 14px; }
+}
+@media (max-width: 360px) {
+  .experience-dialog {
+    width: calc(100vw - 14px);
+    padding: 19px 15px;
+  }
+  .experience-dialog .dialog-head { margin-bottom: 13px; }
+  .experience-dialog #experienceEyebrow { font-size: 9px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .experience-dialog .experience-progress span { transition: none; }
+}
