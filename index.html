@@ -58,7 +58,7 @@
   <!-- CSS -->
   <link rel="stylesheet" href="css/style.css?v=20261114-pre-venda-v1">
   <link rel="stylesheet" href="css/responsive.css">
-  <link rel="stylesheet" href="css/ajustes.css?v=20261117-home-editorial-mobile-v1">
+  <link rel="stylesheet" href="css/ajustes.css?v=20261117-home-mobile-rework-v2">
   <link rel="stylesheet" href="css/conta.css">
   <link rel="stylesheet" href="css/localizacao-avaliacao.css">
   <style>
@@ -131,7 +131,7 @@
   </script>
 </head>
 
-<body>
+<body class="home-page">
 
   <a class="skip-link" href="#conteudo-principal">Pular para o conteúdo</a>
 
@@ -411,11 +411,6 @@
             <a class="btn primary" href="loja.html">Conhecer a loja</a>
             <a class="btn ghost" href="atendimento.html">Como funciona</a>
           </div>
-          <ul class="hero-benefits" aria-label="Benefícios da Luxuriosa">
-            <li><span aria-hidden="true">✓</span> Atendimento reservado</li>
-            <li><span aria-hidden="true">✓</span> Entrega agendada</li>
-            <li><span aria-hidden="true">✓</span> Embalagem discreta</li>
-          </ul>
         </div>
         <div class="hero-visual" aria-label="Logo da Luxuriosa em destaque">
           <div class="hero-image-main">
@@ -556,20 +551,6 @@
       </div>
     </section>
 
-    <section class="section service-preview-section" id="atendimento">
-      <div class="container service-preview">
-        <div class="service-preview-copy">
-          <div class="kicker">Atendimento &amp; experiência</div>
-          <h2>Discrição em cada detalhe.</h2>
-          <p>Atendimento reservado, entrega combinada e embalagem discreta, preparada com a identidade da Luxuriosa. Você escolhe como conversar e como receber — do primeiro contato à entrega.</p>
-          <div class="service-preview-actions">
-            <a class="btn ghost" href="atendimento.html">Conheça nosso atendimento</a>
-            <a class="service-preview-delivery" href="entregas/">Conheça nossas entregas <span aria-hidden="true">↗</span></a>
-          </div>
-        </div>
-      </div>
-    </section>
-
     <section class="section about-preview-section" id="sobre">
       <div class="container about-preview">
         <div class="about-preview-copy">
@@ -579,6 +560,53 @@
           <p>Nossa proposta é simples: reunir boas escolhas e oferecer uma experiência de compra próxima, cuidadosa e discreta.</p>
           <a class="btn ghost" href="sobre.html">Conheça nossa história</a>
         </div>
+      </div>
+    </section>
+
+    <section class="section localizacao-avaliacao-section" id="regiao" aria-labelledby="regiao-title">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <div class="kicker">Nossa região</div>
+            <h2 id="regiao-title">Bauru e região.</h2>
+          </div>
+          <p>Atendimento reservado em Bauru e região, com discrição, cuidado e entrega combinada.</p>
+        </div>
+        <div class="localizacao-avaliacao-grid">
+          <article class="location-card">
+            <div class="location-card-copy">
+              <div><div class="kicker">Estamos por perto</div><h3>Jardim Cruzeiro do Sul</h3></div>
+              <p>Bauru · São Paulo</p>
+            </div>
+            <div class="location-map-wrap">
+              <iframe
+                title="Mapa da região do Jardim Cruzeiro do Sul, Bauru - SP"
+                src="https://www.google.com/maps?q=Jardim%20Cruzeiro%20do%20Sul%2C%20Bauru%20-%20SP&amp;output=embed"
+                loading="lazy"
+                referrerpolicy="no-referrer-when-downgrade"
+                allowfullscreen
+              ></iframe>
+            </div>
+            <a class="location-map-link" href="https://www.google.com/maps/search/?api=1&amp;query=Jardim%20Cruzeiro%20do%20Sul%2C%20Bauru%20-%20SP" target="_blank" rel="noopener noreferrer">Ver região no Google Maps ↗</a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section google-reviews-section" id="avaliacoes" aria-labelledby="avaliacoes-title">
+      <div class="container">
+        <article class="google-review-card">
+          <div class="google-review-copy">
+            <span class="google-review-kicker">Sua experiência importa</span>
+            <h2 id="avaliacoes-title">Já comprou na Luxuriosa?</h2>
+            <p>Sua opinião sincera ajuda outras pessoas a conhecerem nossa loja e a experiência de comprar com discrição, cuidado e atendimento próximo.</p>
+            <span class="google-review-source">Avaliações públicas no Google</span>
+          </div>
+          <div class="google-review-actions">
+            <a class="btn primary" href="https://www.google.com/maps/search/?api=1&amp;query=Luxuriosa%20Bauru%20SP" target="_blank" rel="noopener noreferrer">Ver avaliações no Google</a>
+            <a class="google-review-write" href="https://g.page/r/CV7eIEEIsONsEBM/review" target="_blank" rel="noopener noreferrer">Deixar minha avaliação <span aria-hidden="true">↗</span></a>
+          </div>
+        </article>
       </div>
     </section>
 
@@ -824,66 +852,39 @@
   </div>
 
 
-    <!-- =======================================================
-         AVALIAÇÃO & LOCALIZAÇÃO
-    ======================================================== -->
-    <section class="section localizacao-avaliacao-section" id="avaliar-localizacao">
-      <div class="container">
-        <div class="section-head">
-          <div><div class="kicker">Estamos por perto</div><h2>Luxuriosa em Bauru</h2></div>
-          <p>Atendimento em Bauru e região, com discrição, cuidado e atenção em cada detalhe.</p>
-        </div>
-        <div class="localizacao-avaliacao-grid">
-          <article class="review-invite">
-            <span class="review-stars" aria-label="Convite para avaliar no Google">★★★★★</span>
-            <div class="kicker">Sua experiência importa</div>
-            <h3>Já comprou na Luxuriosa?</h3>
-            <p>Se você já conhece nossos produtos e atendimento, conte como foi sua experiência. Sua avaliação sincera no Google ajuda outras pessoas a conhecerem nossa loja.</p>
-            <a class="btn primary" href="https://g.page/r/CV7eIEEIsONsEBM/review" target="_blank" rel="noopener noreferrer">Avaliar a Luxuriosa no Google</a>
-            <small>Compartilhe sua opinião livremente. Toda experiência é bem-vinda.</small>
-          </article>
-          <article class="location-card">
-            <div class="location-card-copy">
-              <div><div class="kicker">Nossa região</div><h3>Jardim Cruzeiro do Sul</h3></div>
-              <p>Bauru · São Paulo</p>
-            </div>
-            <div class="location-map-wrap">
-              <iframe
-                title="Mapa da região do Jardim Cruzeiro do Sul, Bauru - SP"
-                src="https://www.google.com/maps?q=Jardim%20Cruzeiro%20do%20Sul%2C%20Bauru%20-%20SP&output=embed"
-                loading="lazy"
-                referrerpolicy="no-referrer-when-downgrade"
-                allowfullscreen
-              ></iframe>
-            </div>
-            <a class="location-map-link" href="https://www.google.com/maps/search/?api=1&query=Jardim%20Cruzeiro%20do%20Sul%2C%20Bauru%20-%20SP" target="_blank" rel="noopener noreferrer">Ver região no Google Maps ↗</a>
-          </article>
-        </div>
-      </div>
-    </section>
+
 
   <!-- =========================================================
        FOOTER
   ========================================================== -->
 
-  <footer>
+  <footer class="home-footer">
     <div class="container">
       <div class="footer-grid">
         <div class="footer-brand">
           <a class="footer-logo" href="#inicio">Luxuriosa</a>
           <p>Sexshop &amp; Lingerie · Bauru/SP</p>
-          <div class="footer-social-links"><strong>Siga a Luxuriosa</strong><a href="https://www.instagram.com/Luxuriosa014/" target="_blank" rel="noopener noreferrer">Instagram</a><a href="https://www.facebook.com/Luxuriosa014/" target="_blank" rel="noopener noreferrer">Facebook</a></div>
+          <div class="footer-social-links">
+            <strong>Conecte-se com a Luxuriosa</strong>
+            <a href="https://www.instagram.com/Luxuriosa014/" target="_blank" rel="noopener noreferrer">Instagram ↗</a>
+            <a href="https://www.facebook.com/Luxuriosa014/" target="_blank" rel="noopener noreferrer">Facebook ↗</a>
+          </div>
           <span>© <span id="anoAtual">2026</span> Luxuriosa. Todos os direitos reservados.</span>
         </div>
-        <div class="footer-navigation">
+        <nav class="footer-navigation footer-navigation--explore" aria-label="Explore">
           <strong>Explore</strong>
           <a href="#inicio">Início</a>
           <a href="loja.html">Produtos</a>
           <a href="sobre.html">Sobre a Luxuriosa</a>
           <a href="atendimento.html">Atendimento</a>
           <a href="entregas/">Entregas</a>
-        </div>
-        <div class="footer-navigation">
+          <a class="footer-portal-link" href="/portal/">
+            <span class="footer-portal-symbol" aria-hidden="true">✦</span>
+            <span class="footer-portal-copy"><strong>Meu Portal</strong><small>Experiências, educação e conquistas</small></span>
+            <span class="footer-portal-arrow" aria-hidden="true">↗</span>
+          </a>
+        </nav>
+        <nav class="footer-navigation footer-navigation--info" aria-label="Informações">
           <strong>Informações</strong>
           <a href="faq.html">Dúvidas frequentes</a>
           <a href="clube/">Clube de Vantagens</a>
@@ -891,7 +892,7 @@
           <a href="#" data-open-cookie-preferences>Preferências de cookies</a>
           <button type="button" data-wa>Fale com a gente</button>
           <a href="entregas/">Condições de entrega</a>
-        </div>
+        </nav>
       </div>
       <div class="footer-bottom">
         <span>luxuriosa.com.br</span>

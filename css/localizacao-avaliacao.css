@@ -1,40 +1,222 @@
 /* =========================================================
-   HOMEPAGE — AVALIAÇÃO E LOCALIZAÇÃO (REGIÃO, SEM ENDEREÇO EXATO)
-========================================================= */
-.localizacao-avaliacao-section {
+   HOMEPAGE — REGIÃO E AVALIAÇÕES NO GOOGLE
+   ========================================================= */
+
+.home-page .localizacao-avaliacao-section {
   background: linear-gradient(180deg, #0b0b0b, #10090c);
 }
-.localizacao-avaliacao-grid {
+
+.home-page .localizacao-avaliacao-section .section-head {
+  align-items: end;
+  gap: 14px 24px;
+  margin-bottom: 18px;
+}
+
+.home-page .localizacao-avaliacao-section .section-head h2 {
+  margin-top: 8px;
+}
+
+.home-page .localizacao-avaliacao-grid {
   display: grid;
-  grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr);
-  gap: 22px;
-  align-items: stretch;
+  grid-template-columns: minmax(0, 780px);
+  justify-content: center;
+  gap: 16px;
 }
-.review-invite,
-.location-card {
+
+.home-page .location-card {
   min-width: 0;
-  padding: clamp(22px, 3vw, 34px);
-  border: 1px solid rgba(212,175,124,.25);
+  padding: clamp(18px, 3vw, 28px);
+  border: 1px solid rgba(212, 175, 124, .28);
   border-radius: 18px;
-  background: linear-gradient(145deg, rgba(139,30,63,.17), rgba(20,12,15,.88));
+  background:
+    radial-gradient(ellipse at 95% 0%, rgba(139, 30, 63, .18), transparent 50%),
+    linear-gradient(145deg, rgba(34, 15, 25, .96), rgba(14, 10, 12, .98));
 }
-.review-stars { display: block; margin-bottom: 20px; color: var(--gold); font-size: 22px; letter-spacing: .18em; }
-.review-invite h3,
-.location-card h3 { margin: 10px 0 12px; color: var(--blush); font-family: var(--serif); font-size: clamp(25px, 3vw, 32px); font-weight: 400; line-height: 1.2; }
-.review-invite p,
-.location-card-copy p { color: var(--muted); font-size: 13px; line-height: 1.75; }
-.review-invite .btn { margin-top: 12px; }
-.review-invite small { display: block; margin-top: 15px; color: var(--muted); font-size: 10px; line-height: 1.6; }
-.location-card { padding-bottom: 20px; }
-.location-card-copy { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; margin-bottom: 18px; }
-.location-card-copy h3 { margin-bottom: 0; }
-.location-card-copy p { margin: 0 0 4px; white-space: nowrap; }
-.location-map-wrap { overflow: hidden; border: 1px solid rgba(212,175,124,.2); border-radius: 12px; background: #171114; }
-.location-map-wrap iframe { display: block; width: 100%; height: 270px; border: 0; filter: grayscale(.35) contrast(1.02); }
-.location-map-link { display: inline-block; margin-top: 15px; color: var(--gold); font-size: 11px; text-decoration: underline; text-underline-offset: 4px; }
+
+.home-page .location-card-copy {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 14px;
+  margin-bottom: 16px;
+}
+
+.home-page .location-card-copy h3 {
+  margin: 8px 0 0;
+  color: var(--blush);
+  font-family: var(--serif);
+  font-size: clamp(23px, 3vw, 30px);
+  font-weight: 400;
+  line-height: 1.18;
+}
+
+.home-page .location-card-copy p {
+  margin: 0 0 3px;
+  color: var(--muted);
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.home-page .location-map-wrap {
+  overflow: hidden;
+  border: 1px solid rgba(212, 175, 124, .22);
+  border-radius: 12px;
+  background: #171114;
+}
+
+.home-page .location-map-wrap iframe {
+  display: block;
+  width: 100%;
+  height: 250px;
+  border: 0;
+  filter: grayscale(.25) contrast(1.02);
+}
+
+.home-page .location-map-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  margin-top: 10px;
+  color: var(--gold);
+  font-size: 12px;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.home-page .google-reviews-section {
+  background:
+    radial-gradient(ellipse at 80% 20%, rgba(139, 30, 63, .17), transparent 55%),
+    linear-gradient(180deg, #10090c, #0b0b0b);
+}
+
+.home-page .google-review-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(250px, .8fr);
+  align-items: center;
+  gap: clamp(20px, 4vw, 46px);
+  width: min(100%, 900px);
+  margin: 0 auto;
+  padding: clamp(22px, 4vw, 36px);
+  border: 1px solid rgba(212, 175, 124, .34);
+  border-radius: 20px;
+  background:
+    radial-gradient(ellipse at 0% 0%, rgba(139, 30, 63, .26), transparent 58%),
+    linear-gradient(140deg, #21101a, #100b0e 78%);
+  box-shadow: 0 20px 54px rgba(0, 0, 0, .22);
+}
+
+.home-page .google-review-kicker {
+  color: var(--gold);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: .19em;
+  text-transform: uppercase;
+}
+
+.home-page .google-review-copy h2 {
+  margin: 11px 0 12px;
+  color: var(--blush);
+  font-family: var(--serif);
+  font-size: clamp(28px, 4vw, 38px);
+  font-weight: 400;
+  line-height: 1.12;
+}
+
+.home-page .google-review-copy p {
+  max-width: 580px;
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.75;
+}
+
+.home-page .google-review-source {
+  display: inline-flex;
+  align-items: center;
+  min-height: 34px;
+  margin-top: 18px;
+  padding: 7px 11px;
+  border: 1px solid rgba(212, 175, 124, .23);
+  border-radius: 999px;
+  color: var(--gold);
+  font-size: 11px;
+  letter-spacing: .025em;
+}
+
+.home-page .google-review-actions {
+  display: grid;
+  gap: 11px;
+  justify-items: stretch;
+}
+
+.home-page .google-review-actions .btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  padding: 12px 16px;
+  text-align: center;
+}
+
+.home-page .google-review-write {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  color: var(--gold);
+  font-size: 12px;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
+}
+
 @media (max-width: 760px) {
-  .localizacao-avaliacao-grid { grid-template-columns: 1fr; gap: 14px; }
-  .location-card-copy { align-items: flex-start; flex-direction: column; gap: 5px; }
-  .location-map-wrap iframe { height: 235px; }
-  .review-invite .btn { width: 100%; }
+  .home-page .localizacao-avaliacao-section .section-head {
+    display: block;
+  }
+
+  .home-page .localizacao-avaliacao-section .section-head h2 {
+    font-size: clamp(29px, 7.5vw, 36px);
+    line-height: 1.1;
+  }
+
+  .home-page .localizacao-avaliacao-section .section-head > p {
+    margin-top: 9px;
+    font-size: 12px;
+    line-height: 1.6;
+  }
+
+  .home-page .location-card-copy {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .home-page .location-map-wrap iframe {
+    height: 215px;
+  }
+
+  .home-page .google-review-card {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 20px;
+    padding: 21px;
+    border-radius: 16px;
+  }
+
+  .home-page .google-review-copy h2 {
+    font-size: clamp(28px, 7.5vw, 34px);
+  }
+
+  .home-page .google-review-copy p {
+    font-size: 13px;
+    line-height: 1.68;
+  }
+
+  .home-page .google-review-actions .btn {
+    width: 100%;
+  }
+
+  .home-page .google-review-write {
+    justify-content: flex-start;
+  }
 }
