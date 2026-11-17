@@ -6,6 +6,13 @@
   "use strict";
 
   const AGE_KEY = "lux18";
+  const EDUCATION_MODULE_LINKS = [
+    { label: "Temas educativos", href: "/educacao/temas/" },
+    { label: "Enciclopédia", href: "/educacao/enciclopedia/" },
+    { label: "Curiosidades", href: "/educacao/curiosidades/" },
+    { label: "Guias", href: "/educacao/guias/" },
+    { label: "Interatividade", href: "/educacao/interatividade/" }
+  ];
   function normalizePath(path) {
     const clean = (path || "/").split("?")[0].split("#")[0];
     return clean.endsWith("/index.html") ? clean.slice(0, -"index.html".length) : clean;
@@ -61,7 +68,8 @@
       const footerLinks = [
         { href: "/", label: "Loja" },
         { href: "/portal/", label: "Meu Portal" },
-        { href: "/experiencias/", label: "Experiências" }
+        { href: "/experiencias/", label: "Experiências" },
+        ...EDUCATION_MODULE_LINKS.map(item => ({ href: item.href, label: item.label }))
       ];
       footerLinks.forEach(item => {
         if (footerNav.querySelector('a[href="' + item.href + '"]')) return;
