@@ -174,7 +174,7 @@ def main() -> int:
                 errors.append(f"{rel}: bloco de leituras relacionadas ausente")
 
         if rel.as_posix() == "educacao/duvidas-frequentes/index.html":
-            faq_items = re.findall(r'<details\\b[^>]*class="[^"]*\\bed-faq-item\\b[^"]*"[^>]*>', page_text)
+            faq_items = re.findall(r'<details\b[^>]*class="[^"]*\bed-faq-item\b[^"]*"[^>]*>', page_text)
             if len(faq_items) != 6:
                 errors.append(f"{rel}: esperado seis perguntas expansíveis; encontrado {len(faq_items)}")
             if page_text.count('class="ed-faq-answer"') != 6:
