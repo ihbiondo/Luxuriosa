@@ -49,7 +49,11 @@
 
   function closeDataInvitation() {
     var overlay = document.getElementById("lux-data-invite");
-    if (overlay) overlay.classList.remove("open");
+    if (overlay) {
+      overlay.classList.remove("open");
+      overlay.setAttribute("aria-hidden", "true");
+    }
+    document.body.classList.remove("lux-club-invite-open");
     try { localStorage.setItem(DATA_INVITE_KEY, String(Date.now())); } catch (e) {}
   }
 
@@ -75,9 +79,6 @@
     });
     document.body.classList.add("lux-club-invite-open");
     overlay.classList.add("open");
-    overlay.addEventListener("keydown", function (event) {
-      if (event.key === "Escape") closeClubInvitation();
-    });
     overlay.querySelector(".lux-club-invite-cta").focus();
   }
 
