@@ -4,8 +4,8 @@
    horizontal e o botao WhatsApp ficava cortado.
    ========================================================= */
 
-/* 981px a 1199px: usa o menu hamburguer (mesmo visual do celular) */
-@media (min-width: 981px) and (max-width: 1199px) {
+/* 901px a 1199px: usa menu compacto recolhível para evitar aperto horizontal. */
+@media (min-width: 901px) and (max-width: 1199px) {
   .nav { position: relative; }
 
   .burger {
@@ -17,7 +17,7 @@
   .navlinks {
     display: none;
     position: absolute;
-    top: 76px;
+    top: 70px;
     left: 0;
     right: 0;
     flex-direction: column;
@@ -42,23 +42,6 @@
 }
 
 /* 1200px a 1360px: menu completo, so mais compacto */
-/* Em notebooks e monitores baixos, reduz a altura do hero para antecipar
-   a entrada da vitrine dos quatro kits sem alterar a composição mobile. */
-@media (min-width: 1200px) and (max-height: 820px) {
-  .hero {
-    padding: clamp(42px, 4.5vw, 60px) 0;
-  }
-
-  .hero-visual {
-    min-height: 440px;
-    padding: 8px 0 20px;
-  }
-
-  .hero-image-main {
-    width: min(92%, 460px);
-  }
-}
-
 @media (min-width: 1200px) and (max-width: 1360px) {
   .nav { gap: 14px; }
 
@@ -1058,7 +1041,7 @@ body.customer-open { overflow: hidden; }
   }
 
   .featured-section .products {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   /* Notebook e desktop compacto: mantém os links visíveis sem apertar o cabeçalho. */
@@ -1072,15 +1055,6 @@ body.customer-open { overflow: hidden; }
     flex: 0 0 auto;
     font-size: clamp(19px, 2vw, 22px);
     letter-spacing: .025em;
-  }
-
-  header .navlinks {
-    flex: 1 1 auto;
-    justify-content: center;
-    gap: clamp(7px, .8vw, 11px);
-    font-size: clamp(9px, .9vw, 10px);
-    letter-spacing: .025em;
-    white-space: nowrap;
   }
 
   header .nav-right {
@@ -1388,13 +1362,6 @@ body.customer-open { overflow: hidden; }
   }
 }
 
-@media (min-width: 901px) and (max-width: 1199px) {
-  .home-kit-static-card:nth-child(4) {
-    grid-column: 2;
-  }
-}
-
-
 /* Preserva os ícones originais em telas menores; o SVG refinado fica no desktop. */
 @media (max-width: 1199px) {
   header .cart-icon svg,
@@ -1408,5 +1375,23 @@ body.customer-open { overflow: hidden; }
 
   header .account-trigger-icon::before {
     content: "👤";
+  }
+}
+
+
+/* Em notebooks e monitores baixos, reduz a altura do hero para antecipar
+   a entrada da vitrine dos quatro kits sem alterar a composição mobile. */
+@media (min-width: 1200px) and (max-height: 820px) {
+  .hero {
+    padding: clamp(42px, 4.5vw, 60px) 0;
+  }
+
+  .hero-visual {
+    min-height: 440px;
+    padding: 8px 0 20px;
+  }
+
+  .hero-image-main {
+    width: min(92%, 460px);
   }
 }
