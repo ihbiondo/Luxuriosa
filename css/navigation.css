@@ -4,7 +4,10 @@
 
 /* No desktop, os grupos funcionam como uma sequência única de links. */
 .navlinks .nav-menu-group {
-  display: contents;
+  display: flex;
+  align-items: center;
+  gap: inherit;
+  min-width: 0;
 }
 
 .navlinks .nav-menu-group-title {
