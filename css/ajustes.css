@@ -1244,3 +1244,42 @@ body.customer-open { overflow: hidden; }
     padding-left: 10px;
   }
 }
+
+
+/* Links de contingência dos kits: substituídos pelos cards completos após
+   o carregamento do catálogo. Mantêm navegação e descoberta sem JavaScript. */
+.home-kit-static-card {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  background: var(--surface2);
+  color: var(--blush);
+  text-decoration: none;
+  transition: transform .25s ease, border-color .25s ease;
+}
+
+.home-kit-static-card:hover,
+.home-kit-static-card:focus-visible {
+  transform: translateY(-3px);
+  border-color: var(--gold);
+}
+
+.home-kit-static-card img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: contain;
+  padding: 12px;
+  background: var(--surface);
+}
+
+.home-kit-static-card span {
+  display: block;
+  padding: 15px 16px 17px;
+  font-family: var(--serif);
+  font-size: clamp(18px, 1.7vw, 22px);
+  line-height: 1.2;
+}
