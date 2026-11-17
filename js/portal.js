@@ -70,9 +70,17 @@ async function boot() {
     }
 
     const meta = user.user_metadata || {};
-    const name = String(meta.display_name || meta.full_name || "").trim().split(/\s+/)[0] || "por aqui";
-    document.getElementById("portalGreetingName").textContent = name;
-    document.getElementById("portalSidebarName").textContent = name;
+    const firstName = String(meta.display_name || meta.full_name || "").trim().split(/\s+/)[0];
+    const greeting = document.getElementById("welcomeTitle");
+    const greetingName = document.getElementById("portalGreetingName");
+    const sidebarName = document.getElementById("portalSidebarName");
+
+    if (firstName) {
+      greetingName.textContent = firstName;
+    } else {
+      greeting.textContent = "Que bom ter você aqui.";
+    }
+    sidebarName.textContent = firstName || "Seu espaço";
 
     try {
       await configureAchievements(user);
