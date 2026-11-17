@@ -1079,8 +1079,8 @@ footer {
   width: 58px;
   height: 58px;
   padding: 0;
-  background: linear-gradient(135deg, var(--gold), #B98F5C);
-  color: #2A0D17;
+  background: #25D366;
+  color: #FFFFFF;
   border: 0;
   border-radius: 50%;
   box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
@@ -1096,7 +1096,7 @@ footer {
 }
 
 .whatsapp:focus-visible {
-  outline: 2px solid var(--gold);
+  outline: 2px solid #25D366;
   outline-offset: 4px;
 }
 
