@@ -170,3 +170,177 @@
  .sign-journey-actions{gap:12px}
  .sign-journey-actions a{font-size:12px}
 }
+
+
+/* Calculadora e resultados: hierarquia mais clara e sem apertos em telas estreitas. */
+.zodiac-tool,
+.compatibility {
+  padding: clamp(20px, 3vw, 30px);
+  border-radius: 20px;
+}
+.tool-heading > div { min-width: 0; }
+.tool-heading h2,
+.compatibility .section-head h2,
+.sign-catalog .section-head h2 { text-wrap: balance; }
+.sign-form { display: grid; gap: 15px; }
+.solar-input-grid {
+  width: 100%;
+  max-width: 680px;
+  gap: 15px;
+}
+.solar-input-grid > div,
+.compatibility-form > div { min-width: 0; }
+.solar-input-grid input,
+.timezone-settings input,
+.compatibility-form select {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  border-radius: 10px;
+}
+.timezone-settings {
+  max-width: 680px;
+  padding: 9px 0;
+}
+.timezone-settings summary {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  font-size: 12px;
+}
+.timezone-settings p {
+  font-size: 12px;
+  line-height: 1.7;
+}
+.sign-submit {
+  width: fit-content;
+  min-width: 210px;
+  min-height: 50px;
+  border-radius: 9px;
+  font-size: 12px;
+}
+.sign-result {
+  align-items: flex-start;
+  gap: 20px;
+  padding: clamp(17px, 3vw, 25px);
+  border-radius: 17px;
+  scroll-margin-block: 100px 24px;
+}
+.result-copy {
+  flex: 1 1 240px;
+  min-width: 0;
+}
+.result-copy h3 {
+  text-wrap: balance;
+}
+.result-tags {
+  flex-wrap: wrap;
+  gap: 7px;
+}
+.result-tags span {
+  min-height: 32px;
+  display: inline-flex;
+  align-items: center;
+  line-height: 1.4;
+  font-size: 11px;
+}
+.result-copy .result-description {
+  max-width: 68ch;
+}
+.result-copy h3:focus-visible,
+.compatibility-result h3:focus-visible {
+  outline: 2px solid #e3449d;
+  outline-offset: 5px;
+  border-radius: 3px;
+}
+.compatibility {
+  scroll-margin-block: 100px 24px;
+}
+.compatibility-intro {
+  max-width: 66ch;
+  font-size: 13px;
+  line-height: 1.75;
+}
+.compatibility-form {
+  gap: 14px;
+}
+.compatibility-form select {
+  min-height: 50px;
+  padding-inline: 13px;
+}
+.compatibility-form .primary {
+  min-height: 50px;
+  padding-inline: 18px;
+  border-radius: 9px;
+  font-size: 12px;
+}
+.compatibility-result {
+  padding: 19px;
+  border-radius: 0 13px 13px 0;
+  scroll-margin-block: 100px 24px;
+}
+.compatibility-result h3 {
+  margin: 7px 0 6px;
+  font-size: clamp(22px, 3vw, 27px);
+  line-height: 1.25;
+}
+.compatibility-result p {
+  max-width: 70ch;
+  font-size: 14px;
+  line-height: 1.8;
+}
+.sign-card-details summary {
+  justify-content: space-between;
+  gap: 10px;
+}
+.sign-card-details summary::after {
+  flex: 0 0 auto;
+  margin-left: auto;
+  float: none;
+}
+.sign-card-details[open] {
+  padding: 0 10px 10px;
+  border-radius: 9px;
+  background: rgba(255,255,255,.55);
+}
+.sign-card-details p {
+  overflow-wrap: anywhere;
+}
+@media (max-width: 800px) {
+  .compatibility-form {
+    grid-template-columns: minmax(0, 1fr) 24px minmax(0, 1fr);
+    align-items: end;
+  }
+  .compatibility-form .primary { grid-column: 1 / -1; }
+}
+@media (max-width: 560px) {
+  .zodiac-tool,
+  .compatibility { padding: 19px 17px; border-radius: 16px; }
+  .tool-heading { align-items: flex-start; }
+  .tool-symbol { width: 46px; height: 46px; flex: 0 0 46px; font-size: 24px; }
+  .solar-input-grid { grid-template-columns: minmax(0, 1fr); gap: 13px; }
+  .sign-submit { width: 100%; min-width: 0; }
+  .sign-result { flex-wrap: nowrap; gap: 13px; padding: 16px; }
+  .result-symbol { width: 62px; height: 62px; flex: 0 0 62px; font-size: 37px; }
+  .result-copy { flex: 1 1 0; min-width: 0; }
+  .result-copy h3 { font-size: 28px; }
+  .result-tags { margin: 12px 0; }
+  .result-tags span { font-size: 11px; }
+  .compatibility-form {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
+  }
+  .compatibility-and { display: none; }
+  .compatibility-form .primary { grid-column: auto; width: 100%; }
+  .compatibility-result { padding: 16px; }
+  .compatibility-result p { font-size: 13px; }
+  .sign-card-details[open] { padding-inline: 8px; }
+}
+@media (max-width: 360px) {
+  .zodiac-tool,
+  .compatibility { padding: 16px 14px; }
+  .sign-result { padding: 14px; }
+  .result-symbol { width: 56px; height: 56px; flex-basis: 56px; font-size: 33px; }
+  .result-copy h3 { font-size: 25px; }
+  .result-tags span { padding-inline: 8px; font-size: 10px; }
+}
