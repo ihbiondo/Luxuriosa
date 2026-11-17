@@ -1485,3 +1485,31 @@ body.customer-open { overflow: hidden; }
   .home-kit-static-cta svg { transition: none; }
 }
 
+
+
+/* HOME — imagens dos kits preenchendo a área visual, no padrão das categorias.
+   Mobile-first: ocupa 100% da mídia, sem moldura interna, com zoom moderado. */
+.home-kit-static-media {
+  background: #140a10;
+}
+
+.home-kit-static-media img {
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  object-fit: cover;
+  object-position: 50% 66%;
+  transform: scale(1.06);
+  transition: transform .35s ease;
+}
+
+.home-kit-static-card:hover .home-kit-static-media img,
+.home-kit-static-card:focus-visible .home-kit-static-media img {
+  transform: scale(1.12);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-kit-static-media img {
+    transition: none;
+  }
+}
