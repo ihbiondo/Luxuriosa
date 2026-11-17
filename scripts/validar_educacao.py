@@ -182,6 +182,11 @@ def main() -> int:
             for section_id in ("faq-escolha", "faq-uso", "faq-compra"):
                 if f'id="{section_id}"' not in page_text:
                     errors.append(f"{rel}: seção temática ausente: {section_id}")
+            for control_id in ("faqSearch", "faqSearchHint", "faqSearchStatus", "faqQuestions"):
+                if f'id="{control_id}"' not in page_text:
+                    errors.append(f"{rel}: controle de busca acessível ausente: {control_id}")
+            if 'type="search"' not in page_text or 'role="status"' not in page_text:
+                errors.append(f"{rel}: busca precisa de campo search e região de status acessível")
             for href in ("/faq.html", "/atendimento.html", "/educacao/guias/escolher-lubrificante.html", "/educacao/guias/limpeza-e-conservacao.html"):
                 if f'href="{href}"' not in page_text:
                     errors.append(f"{rel}: link essencial ausente: {href}")

@@ -196,6 +196,73 @@
     }
   }
 
+  function normalizeFaqQuery(value) {
+    return (value || "")
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toLocaleLowerCase("pt-BR");
+  }
+
+  function setupFaqSearch() {
+    const input = document.querySelector("#faqSearch");
+    const container = document.querySelector("#faqQuestions");
+    const status = document.querySelector("#faqSearchStatus");
+    if (!input || !container || !status) return;
+
+    const groups = Array.from(container.querySelectorAll(".ed-faq-group"));
+    const entries = groups.flatMap(group =>
+      Array.from(group.querySelectorAll(".ed-faq-item")).map(item => ({
+        item,
+        group,
+        searchText: normalizeFaqQuery(item.textContent)
+      }))
+    );
+
+    function updateResults() {
+      const query = normalizeFaqQuery(input.value.trim());
+      let visibleCount = 0;
+      const groupCounts = new Map(groups.map(group => [group, 0]));
+
+      entries.forEach(entry => {
+        const matches = !query || entry.searchText.includes(query);
+        entry.item.hidden = !matches;
+        if (matches) {
+          visibleCount += 1;
+          groupCounts.set(entry.group, groupCounts.get(entry.group) + 1);
+        }
+      });
+
+      groups.forEach(group => {
+        group.hidden = groupCounts.get(group) === 0;
+      });
+
+      if (!query) {
+        status.hidden = true;
+        status.textContent = "";
+        return;
+      }
+
+      status.hidden = false;
+      status.textContent = visibleCount === 0
+        ? "Nenhuma pergunta encontrada. Tente outra palavra ou escolha um dos assuntos acima."
+        : visibleCount + (visibleCount === 1
+          ? " pergunta encontrada."
+          : " perguntas encontradas.");
+    }
+
+    input.addEventListener("input", updateResults);
+    input.addEventListener("search", updateResults);
+
+    // Ao escolher um atalho de assunto, restaura a lista completa para não ocultar a seção de destino.
+    document.querySelectorAll(".ed-faq-jump a[href^='#faq-']").forEach(link => {
+      link.addEventListener("click", () => {
+        if (!input.value) return;
+        input.value = "";
+        updateResults();
+      });
+    });
+  }
+
   function setupSkipLink() {
     const main = document.querySelector(".ed-main");
     if (!main) return;
@@ -315,6 +382,7 @@
 
   function initialize() {
     setupNavigation();
+    setupFaqSearch();
     setupReadingJourney();
     setupSkipLink();
     setupAgeDeclaration();

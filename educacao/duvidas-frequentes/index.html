@@ -53,7 +53,16 @@
 <a href="#faq-uso">Uso e cuidados</a>
 <a href="#faq-compra">Compra reservada</a>
 </nav>
-<section class="ed-faq-content" aria-label="Perguntas e respostas frequentes">
+<div class="ed-faq-search">
+<label for="faqSearch">Buscar uma dúvida</label>
+<div class="ed-faq-search-control">
+<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="10.8" cy="10.8" r="6.8"></circle><path d="m16 16 5 5"></path></svg>
+<input id="faqSearch" type="search" inputmode="search" autocomplete="off" spellcheck="false" placeholder="Ex.: lubrificante, limpeza, entrega..." aria-controls="faqQuestions" aria-describedby="faqSearchHint faqSearchStatus">
+</div>
+<p id="faqSearchHint" class="ed-faq-search-hint">A busca considera perguntas e respostas. O texto digitado é usado apenas nesta página e não é enviado ou armazenado.</p>
+<p id="faqSearchStatus" class="ed-faq-search-status" role="status" aria-live="polite" hidden></p>
+</div>
+<section class="ed-faq-content" id="faqQuestions" aria-label="Perguntas e respostas frequentes">
 <section class="ed-faq-group" id="faq-escolha" aria-labelledby="faq-escolha-title">
 <p class="ed-faq-kicker">01 · ESCOLHA CONSCIENTE</p>
 <h2 id="faq-escolha-title">Antes de escolher</h2>
