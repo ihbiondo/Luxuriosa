@@ -27,7 +27,7 @@
       var keys = [];
       for (var i = 0; i < localStorage.length; i += 1) {
         var key = localStorage.key(i);
-        if (key && /^(_ga|_gid|_gat|_gac|_gcl)/i.test(key)) keys.push(key);
+        if (key && (/^(_ga|_gid|_gat|_gac|_gcl)/i.test(key) || key === "luxuriosa_traffic_context_v1")) keys.push(key);
       }
       keys.forEach(function (key) { localStorage.removeItem(key); });
     } catch (_) {}
