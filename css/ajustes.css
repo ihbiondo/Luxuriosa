@@ -41,20 +41,6 @@
   .navlinks a:last-child { border-bottom: 0; }
 }
 
-/* 1200px a 1360px: menu completo, so mais compacto */
-@media (min-width: 1200px) and (max-width: 1360px) {
-  .nav { gap: 14px; }
-
-  .navlinks {
-    gap: 16px;
-    font-size: 11px;
-    letter-spacing: 0.1em;
-  }
-
-  .cart-label { display: none; }
-}
-
-
 /* =========================================================
    CADASTRO LOCAL E REVISÃO DO PEDIDO
    ========================================================= */
