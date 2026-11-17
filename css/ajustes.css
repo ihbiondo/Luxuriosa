@@ -1515,3 +1515,18 @@ body.customer-open { overflow: hidden; }
     transition: none;
   }
 }
+
+
+/* LOJA MOBILE — áreas de toque confortáveis sem alterar o desktop. */
+@media (max-width: 600px) {
+  .shop-page .product-detail-link {
+    min-height: 44px;
+    padding: 10px 14px;
+  }
+
+  .shop-page .catalog-filter-toggle,
+  .shop-page .catalog-sort-control select,
+  .shop-page .catalog-filter-options .chip {
+    min-height: 44px;
+  }
+}
