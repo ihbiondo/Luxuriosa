@@ -819,3 +819,25 @@ body{background:radial-gradient(ellipse at 10% 5%,rgba(113,69,132,.38),transpare
   .ed-menu[open] nav { width: 100%; justify-content: flex-start; }
   .ed-menu nav a.ed-global-link { min-height: 36px; font-size: 9px; }
 }
+
+
+/* Navegação global da Educação: elemento nav direto, sempre visível como em Experiências. */
+.ed-nav { display: flex; align-items: center; justify-content: space-between; }
+.ed-menu { display: flex !important; flex: 0 1 auto; align-items: center; justify-content: flex-end; flex-wrap: wrap; gap: 4px 7px; min-width: 0; }
+.ed-menu a.ed-global-link { min-height: 40px; display: inline-flex; align-items: center; justify-content: center; padding: 6px 9px; border-radius: 8px; color: #eee5f4; font-size: 10px; font-weight: 600; letter-spacing: 0; white-space: nowrap; }
+.ed-menu a.ed-global-link--portal { color: #e3d5eb; }
+.ed-menu a.ed-global-link--experiences { color: #ff8ac7; }
+.ed-menu a.ed-global-link--education { color: #eee5f4; }
+.ed-menu a.ed-global-link--store { color: #e5c68d; }
+.ed-menu a.ed-global-link:hover { background: rgba(240,79,168,.12); color: #ff8ac7; }
+.ed-menu a.ed-global-link[aria-current="page"],
+.ed-menu a.ed-global-link[aria-current="location"] { background: rgba(240,79,168,.13); box-shadow: inset 0 0 0 1px rgba(240,79,168,.2); color: #ff8ac7; }
+@media (max-width: 820px) {
+  .ed-nav { align-items: flex-start; flex-wrap: wrap; gap: 8px; padding: 12px 0; }
+  .ed-menu { flex: 1 0 100%; width: 100%; justify-content: flex-start; gap: 3px 5px; }
+  .ed-menu a.ed-global-link { min-height: 38px; padding: 5px 8px; font-size: 10px; }
+}
+@media (max-width: 390px) {
+  .ed-menu { display: grid !important; grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .ed-menu a.ed-global-link { justify-content: center; }
+}
