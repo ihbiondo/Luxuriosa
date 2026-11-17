@@ -179,6 +179,14 @@ def main() -> int:
                 errors.append(f"{rel}: esperado 20 perguntas expansíveis; encontrado {len(faq_items)}")
             if page_text.count('class="ed-faq-answer"') != 20:
                 errors.append(f"{rel}: cada pergunta deve ter uma resposta identificada")
+            faq_blocks = re.findall(r'<details\\b[^>]*class="[^"]*\\bed-faq-item\\b[^"]*"[^>]*>[\\s\\S]*?</details>', page_text)
+            related_blocks = [item for item in faq_blocks if 'class="ed-faq-related"' in item]
+            if len(related_blocks) != 20:
+                errors.append(f"{rel}: esperado bloco de conteúdos relacionados em cada uma das 20 respostas; encontrado {len(related_blocks)}")
+            if page_text.count('class="ed-faq-related-link"') + page_text.count('class="ed-faq-related-link ed-faq-related-link--catalog"') < 35:
+                errors.append(f"{rel}: quantidade de links relacionados insuficiente")
+            if 'class="ed-faq-related-disclaimer"' not in page_text:
+                errors.append(f"{rel}: nota explicativa dos links de catálogo ausente")
             for section_id in ("faq-escolha", "faq-uso", "faq-compra"):
                 if f'id="{section_id}"' not in page_text:
                     errors.append(f"{rel}: seção temática ausente: {section_id}")
