@@ -1947,6 +1947,8 @@ body.customer-open { overflow: hidden; }
   }
 
   .home-page .footer-navigation > .footer-portal-link {
+    display: grid;
+    grid-template-columns: 30px minmax(0, 1fr) auto;
     grid-column: 1 / -1;
     min-height: 72px;
     padding: 12px 14px;
