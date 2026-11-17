@@ -19,6 +19,7 @@
   <link rel="stylesheet" href="../css/style.css">
   <link rel="stylesheet" href="../css/responsive.css">
   <link rel="stylesheet" href="../css/ajustes.css">
+<link rel="stylesheet" href="../css/navigation.css?v=20261117-menu-principal-v1">
   <style>
     .delivery-page{background:#0b0b0b;color:#f7f0e8}
     .delivery-hero{padding:34px 0 46px;background:radial-gradient(ellipse at 50% 0%,rgba(170,24,75,.28),transparent 62%),linear-gradient(145deg,#16090f,#0b0b0b 75%)}
@@ -124,8 +125,19 @@
   <header><div class="container nav">
     <a class="logo" href="../index.html" aria-label="Luxuriosa — início">LUXURIOSA</a>
     <nav class="navlinks" id="navlinks" aria-label="Principal">
-      <a href="../index.html">Início</a><a href="../loja.html">Loja</a><a href="../atendimento.html">Atendimento</a><a href="./" aria-current="page">Entregas</a><a href="../clube.html">Clube Luxuriosa</a>
-    </nav>
+        <a class="nav-link-shop" href="/loja.html">Loja</a>
+        <div class="nav-menu-group nav-menu-group--discover" role="group" aria-label="Conhecer">
+          <span class="nav-menu-group-title">Conhecer</span>
+          <a href="/educacao/">Educação</a>
+          <a href="/experiencias/">Experiências</a>
+          <a href="/clube/">Clube de Vantagens</a>
+        </div>
+        <div class="nav-menu-group nav-menu-group--help" role="group" aria-label="Ajuda e atendimento">
+          <span class="nav-menu-group-title">Ajuda e atendimento</span>
+          <a href="/atendimento.html">Atendimento</a>
+          <a href="/entregas/" aria-current="page">Entregas</a>
+        </div>
+      </nav>
     <div class="nav-right"><a class="btn ghost small" href="https://wa.me/5514996355924?text=Ol%C3%A1!%20Gostaria%20de%20tirar%20uma%20d%C3%BAvida%20sobre%20entregas." target="_blank" rel="noopener">WhatsApp</a><button class="burger" id="burger" type="button" aria-label="Abrir menu" aria-expanded="false" aria-controls="navlinks">☰</button></div>
   </div></header>
   <main class="delivery-page">
@@ -145,7 +157,7 @@
             <h2>Compare as opções de entrega.</h2>
             <p>O cadastro no Clube de Vantagens é gratuito e garante tarifas reduzidas.</p>
           </div>
-          <a class="delivery-club-shortcut" href="../clube.html">Conhecer o Clube <span aria-hidden="true">↗</span></a>
+          <a class="delivery-club-shortcut" href="/clube/">Conhecer o Clube <span aria-hidden="true">↗</span></a>
         </div>
 
         <div class="delivery-table-wrap">
