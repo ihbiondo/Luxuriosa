@@ -19,16 +19,13 @@
   }
 
   function setupNavigation() {
-    const menu = document.querySelector(".ed-menu");
-    const nav = menu && (menu.matches("nav") ? menu : menu.querySelector("nav"));
-    if (!menu || !nav) return;
+    const nav = document.querySelector(".header nav");
+    if (!nav) return;
 
-    menu.setAttribute("data-ed-module-menu", "");
-
-    const brand = document.querySelector(".ed-brand");
+    const brand = document.querySelector(".header .brand");
     if (brand) {
-      brand.href = "/educacao/";
-      brand.setAttribute("aria-label", "Educação Luxuriosa — início");
+      brand.href = "/portal/";
+      brand.setAttribute("aria-label", "Voltar ao Meu Portal");
       const subtitle = brand.querySelector("small");
       if (subtitle) subtitle.textContent = "EDUCAÇÃO";
     }
