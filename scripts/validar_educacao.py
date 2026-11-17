@@ -175,9 +175,9 @@ def main() -> int:
 
         if rel.as_posix() == "educacao/duvidas-frequentes/index.html":
             faq_items = re.findall(r'<details\b[^>]*class="[^"]*\bed-faq-item\b[^"]*"[^>]*>', page_text)
-            if len(faq_items) != 14:
-                errors.append(f"{rel}: esperado 14 perguntas expansíveis; encontrado {len(faq_items)}")
-            if page_text.count('class="ed-faq-answer"') != 14:
+            if len(faq_items) != 20:
+                errors.append(f"{rel}: esperado 20 perguntas expansíveis; encontrado {len(faq_items)}")
+            if page_text.count('class="ed-faq-answer"') != 20:
                 errors.append(f"{rel}: cada pergunta deve ter uma resposta identificada")
             for section_id in ("faq-escolha", "faq-uso", "faq-compra"):
                 if f'id="{section_id}"' not in page_text:
