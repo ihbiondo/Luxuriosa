@@ -57,6 +57,7 @@
   <link rel="stylesheet" href="css/style.css?v=20261114-pre-venda-v1">
   <link rel="stylesheet" href="css/responsive.css">
   <link rel="stylesheet" href="css/ajustes.css?v=20261117-catalogo-touch-targets-v1">
+<link rel="stylesheet" href="css/navigation.css?v=20261117-menu-principal-v1">
   <style>
     .delivery-fee-note {
       margin: 0 0 28px;
@@ -230,16 +231,19 @@
       </a>
 
 
-      <nav
-        class="navlinks"
-        id="navlinks"
-        aria-label="Principal"
-      >
-        <a href="index.html#categorias">Categorias</a>
-        <a href="#catalogo" aria-current="page">Loja</a>
-        <a href="atendimento.html">Atendimento</a>
-          <a href="clube.html">Clube de Vantagens</a>
-        <a href="sobre.html">Sobre</a>
+      <nav class="navlinks" id="navlinks" aria-label="Principal">
+        <a class="nav-link-shop" href="/loja.html#catalogo" aria-current="page">Loja</a>
+        <div class="nav-menu-group nav-menu-group--discover" role="group" aria-label="Conhecer">
+          <span class="nav-menu-group-title">Conhecer</span>
+          <a href="/educacao/">Educação</a>
+          <a href="/experiencias/">Experiências</a>
+          <a href="/clube/">Clube de Vantagens</a>
+        </div>
+        <div class="nav-menu-group nav-menu-group--help" role="group" aria-label="Ajuda e atendimento">
+          <span class="nav-menu-group-title">Ajuda e atendimento</span>
+          <a href="/atendimento.html">Atendimento</a>
+          <a href="/entregas/">Entregas</a>
+        </div>
       </nav>
 
 

@@ -28,6 +28,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600&family=Playfair+Display:wght@400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/responsive.css">
+  <link rel="stylesheet" href="css/navigation.css?v=20261117-menu-principal-v1">
   <style>
     .skip-link { position:fixed; top:12px; left:12px; z-index:10000; padding:12px 16px; transform:translateY(calc(-100% - 24px)); border:2px solid var(--gold); border-radius:8px; background:#0B0B0B; color:#fff; font-weight:700; text-decoration:none; box-shadow:0 4px 18px rgba(0,0,0,.35); }
     .skip-link:focus,.skip-link:focus-visible { transform:translateY(0); outline:3px solid #fff; outline-offset:3px; }
@@ -116,13 +117,18 @@
         LUXURIOSA
       </a>
       <nav class="navlinks" id="navlinks" aria-label="Principal">
-        <a href="index.html">Início</a>
-        <a href="loja.html">Loja</a>
-        <a href="sobre.html">Sobre</a>
-        <a href="#atendimento" aria-current="page">Atendimento</a>
-        <a href="entregas/">Entregas</a>
-        <a href="faq.html">Dúvidas frequentes</a>
-        <a href="privacidade.html">Privacidade</a>
+        <a class="nav-link-shop" href="/loja.html">Loja</a>
+        <div class="nav-menu-group nav-menu-group--discover" role="group" aria-label="Conhecer">
+          <span class="nav-menu-group-title">Conhecer</span>
+          <a href="/educacao/">Educação</a>
+          <a href="/experiencias/">Experiências</a>
+          <a href="/clube/">Clube de Vantagens</a>
+        </div>
+        <div class="nav-menu-group nav-menu-group--help" role="group" aria-label="Ajuda e atendimento">
+          <span class="nav-menu-group-title">Ajuda e atendimento</span>
+          <a href="/atendimento.html#atendimento" aria-current="page">Atendimento</a>
+          <a href="/entregas/">Entregas</a>
+        </div>
       </nav>
       <div class="nav-right">
         <a class="btn ghost small" href="https://wa.me/5514996355924?text=Ol%C3%A1!%20Gostaria%20de%20falar%20com%20a%20Luxuriosa." target="_blank" rel="noopener">WhatsApp</a>
