@@ -120,11 +120,11 @@
       (/Android/i.test(ua) && !/Mobile/i.test(ua)) ? "tablet"
       : /Mobile|Android|iPhone|iPod/i.test(ua) ? "mobile" : "desktop";
     var browser = /SamsungBrowser/i.test(ua) ? "samsung_internet"
-      : /Edg\//i.test(ua) ? "edge"
+      : /Edg\//i.test(ua) || /EdgiOS/i.test(ua) ? "edge"
       : /OPR\//i.test(ua) ? "opera"
-      : /Firefox\//i.test(ua) ? "firefox"
-      : /Chrome\//i.test(ua) && !/Edg\//i.test(ua) ? "chrome"
-      : /Safari\//i.test(ua) && !/Chrome\//i.test(ua) ? "safari" : "other";
+      : /Firefox\//i.test(ua) || /FxiOS/i.test(ua) ? "firefox"
+      : /Chrome\//i.test(ua) || /CriOS/i.test(ua) ? "chrome"
+      : /Safari\//i.test(ua) ? "safari" : "other";
     return {
       traffic_source: attribution.traffic_source || "unknown",
       traffic_source_detail: attribution.traffic_source_detail || null,
