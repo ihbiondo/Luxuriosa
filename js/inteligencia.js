@@ -115,7 +115,8 @@
       : /Mac OS X|Macintosh/i.test(ua) ? "macos"
       : /CrOS/i.test(ua) ? "chromeos"
       : /Linux/i.test(ua) ? "linux" : "unknown";
-    var device = /iPad|Tablet/i.test(ua) || (os === "ios" && /MacIntel/.test(platform)) ? "tablet"
+    var device = /iPad|Tablet/i.test(ua) || (os === "ios" && /MacIntel/.test(platform)) ||
+      (/Android/i.test(ua) && !/Mobile/i.test(ua)) ? "tablet"
       : /Mobile|Android|iPhone|iPod/i.test(ua) ? "mobile" : "desktop";
     var browser = /SamsungBrowser/i.test(ua) ? "samsung_internet"
       : /Edg\//i.test(ua) ? "edge"
