@@ -29,8 +29,8 @@
 
         const brand = document.createElement("a");
         brand.className = "brand";
-        brand.href = "/portal/";
-        brand.setAttribute("aria-label", "Voltar ao Meu Portal");
+        brand.href = "/";
+        brand.setAttribute("aria-label", "Página inicial da Luxuriosa");
         const brandName = document.createElement("span");
         brandName.textContent = "Luxuriosa";
         const brandSection = document.createElement("small");
@@ -47,8 +47,8 @@
 
     const brand = header.querySelector(".brand");
     if (brand) {
-      brand.href = "/portal/";
-      brand.setAttribute("aria-label", "Voltar ao Meu Portal");
+      brand.href = "/";
+      brand.setAttribute("aria-label", "Página inicial da Luxuriosa");
       const subtitle = brand.querySelector("small");
       if (subtitle) subtitle.textContent = "EDUCAÇÃO";
     }
@@ -57,23 +57,23 @@
     const portalLink = document.createElement("a");
     portalLink.href = "/portal/";
     portalLink.textContent = "Meu Portal";
-    portalLink.className = "ed-global-link ed-global-link--portal";
+    portalLink.className = "global-nav-link global-nav-link--portal";
 
     const experiencesLink = document.createElement("a");
     experiencesLink.href = "/experiencias/";
     experiencesLink.textContent = "Experiências";
-    experiencesLink.className = "ed-global-link ed-global-link--experiences";
+    experiencesLink.className = "global-nav-link global-nav-link--experiences";
 
     const educationLink = document.createElement("a");
     educationLink.href = "/educacao/";
     educationLink.textContent = "Educação";
-    educationLink.className = "ed-global-link ed-global-link--education";
+    educationLink.className = "global-nav-link global-nav-link--education";
     educationLink.setAttribute("aria-current", currentPath === "/educacao/" ? "page" : "location");
 
     const storeLink = document.createElement("a");
     storeLink.href = "/";
     storeLink.textContent = "Voltar para Loja";
-    storeLink.className = "ed-global-link ed-global-link--store";
+    storeLink.className = "global-nav-link global-nav-link--store";
 
     nav.replaceChildren(portalLink, experiencesLink, educationLink, storeLink);
     nav.setAttribute("aria-label", "Navegação principal da Luxuriosa");
