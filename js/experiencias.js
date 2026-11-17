@@ -232,7 +232,7 @@ function openExperience(id,opener){
   byId("experienceDuration").textContent=experience.duration;
   clearDialogState();
   dialog.showModal();
-  byId("experienceClose").focus();
+  byId("experienceTitle").focus({ preventScroll: true });
 }
 document.querySelectorAll("[data-experience]").forEach(button=>button.addEventListener("click",()=>openExperience(button.dataset.experience,button)));
 function startExperience(){
@@ -251,6 +251,7 @@ function renderQuestion(){
   byId("experienceQuestion").textContent=item.question;
   byId("experiencePrompt").textContent=item.prompt;
   byId("experienceProgressBar").style.width=((questionIndex+1)/total*100)+"%";
+  byId("experienceQuestion").focus({ preventScroll: false });
   byId("experienceFeedback").hidden=true;
   byId("experienceFeedback").textContent="";
   const options=byId("experienceOptions");
@@ -426,7 +427,7 @@ function finishExperience(){
     score_max:scoreMax
   }}));
 
-  byId("experienceRestart").focus();
+  byId("experienceResultTitle").focus({ preventScroll: false });
 }
 function restartExperience(){
   byId("experienceSavePanel").hidden=true;
