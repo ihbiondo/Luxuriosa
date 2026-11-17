@@ -2048,3 +2048,176 @@ body.customer-open { overflow: hidden; }
     width: calc(100% - 32px);
   }
 }
+
+
+/* =========================================================
+   HOME — CENTRALIZAÇÃO DOS TÍTULOS E CHAMADAS DE SEÇÃO
+   ========================================================= */
+
+/* Linha de contexto sob a marca, sem centralizar o título principal do hero. */
+.home-page .hero-copy > .kicker {
+  width: 100%;
+  text-align: center;
+}
+
+/* Vitrines: kicker, título e texto de apoio formam um único cabeçalho central. */
+.home-page .featured-section .section-head,
+.home-page .categories-section .section-head {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  text-align: center;
+}
+
+.home-page .featured-section .section-head > div,
+.home-page .categories-section .section-head > div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.home-page .featured-section .section-head .kicker,
+.home-page .categories-section .section-head .kicker {
+  text-align: center;
+}
+
+.home-page .featured-section .section-head h2,
+.home-page .categories-section .section-head h2 {
+  margin-inline: auto;
+  text-align: center;
+}
+
+.home-page .featured-section .section-head > p,
+.home-page .categories-section .section-head > p {
+  max-width: 560px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+/* Sobre: o conteúdo institucional passa a ter uma composição centralizada. */
+.home-page .about-preview-copy {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 790px;
+  margin-inline: auto;
+  text-align: center;
+}
+
+.home-page .about-preview-copy > .kicker {
+  text-align: center;
+}
+
+.home-page .about-preview-copy h2,
+.home-page .about-preview-copy p {
+  width: 100%;
+  max-width: 720px;
+  text-align: center;
+}
+
+.home-page .about-preview-copy .btn {
+  align-self: center;
+}
+
+/* Nossa localização: título e explicação alinhados ao centro. */
+.home-page .localizacao-avaliacao-section .section-head {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  text-align: center;
+}
+
+.home-page .localizacao-avaliacao-section .section-head > div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.home-page .localizacao-avaliacao-section .section-head .kicker,
+.home-page .localizacao-avaliacao-section .section-head h2 {
+  text-align: center;
+}
+
+.home-page .localizacao-avaliacao-section .section-head > p {
+  max-width: 560px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+/* Avaliações: estrelas e botão centralizados no próprio card. */
+.home-page .google-review-card {
+  align-items: center;
+}
+
+.home-page .google-review-copy {
+  width: 100%;
+  margin-inline: auto;
+  text-align: center;
+}
+
+.home-page .google-review-copy > .google-review-kicker,
+.home-page .google-review-copy h2,
+.home-page .google-review-copy p {
+  text-align: center;
+  margin-inline: auto;
+}
+
+.home-page .google-review-actions {
+  align-items: center;
+  justify-content: center;
+}
+
+.home-page .google-review-stars {
+  width: 100%;
+  text-align: center;
+}
+
+.home-page .google-review-primary {
+  align-self: center;
+  text-align: center;
+}
+
+@media (max-width: 900px) {
+  .home-page .hero-copy > .kicker {
+    margin-bottom: 12px;
+    text-align: center;
+  }
+
+  .home-page .featured-section .section-head,
+  .home-page .categories-section .section-head,
+  .home-page .localizacao-avaliacao-section .section-head {
+    align-items: center;
+    margin-bottom: 18px;
+  }
+
+  .home-page .about-preview-copy {
+    align-items: center;
+    text-align: center;
+  }
+
+  .home-page .about-preview-copy h2 {
+    text-align: center;
+  }
+
+  .home-page .about-preview-copy p {
+    text-align: center;
+  }
+
+  .home-page .google-review-card {
+    align-items: center;
+  }
+
+  .home-page .google-review-actions {
+    align-items: center;
+  }
+
+  .home-page .google-review-primary {
+    width: min(100%, 260px);
+  }
+}
