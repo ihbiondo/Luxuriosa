@@ -497,3 +497,33 @@ body{background:radial-gradient(ellipse at 10% 5%,rgba(113,69,132,.38),transpare
 .ed-save-result #experienceSaveStatus[data-kind="success"]{color:#245c3c}
 .ed-save-result #experienceSaveStatus[data-kind="error"]{color:#8d3030}
 @media(max-width:560px){.ed-save-result{padding:15px}.ed-save-result #experienceSaveButton{width:100%;white-space:normal}}
+
+
+/* Refinamento da página inicial da Educação: hierarquia clara e cards consistentes. */
+.ed-hero-inner{max-width:850px}
+.ed-hero h1{max-width:820px;text-wrap:balance}
+.ed-lead{max-width:690px}
+.ed-section-head{margin-bottom:27px}
+.ed-section-head h2{text-wrap:balance}
+.ed-section-head p{line-height:1.75}
+.ed-section .ed-grid:not(.ed-grid--two){align-items:stretch;gap:16px}
+.ed-section .ed-grid:not(.ed-grid--two) .ed-card{min-height:205px;padding:23px;box-shadow:0 12px 30px rgba(0,0,0,.18)}
+.ed-section .ed-grid:not(.ed-grid--two) .ed-card-index{margin-bottom:20px}
+.ed-section .ed-grid:not(.ed-grid--two) .ed-card p{line-height:1.7}
+.ed-section .ed-grid:not(.ed-grid--two) .ed-card:focus-visible{outline-offset:5px}
+@media(max-width:820px){
+ .ed-section .ed-grid:not(.ed-grid--two){gap:13px}
+ .ed-section .ed-grid:not(.ed-grid--two) .ed-card{min-height:190px;padding:20px}
+}
+@media(max-width:540px){
+ .ed-hero h1{font-size:clamp(33px,9vw,43px);line-height:1.12}
+ .ed-hero .ed-lead{font-size:15px;line-height:1.75}
+ .ed-actions{display:grid;grid-template-columns:1fr}
+ .ed-actions .ed-button{width:100%;min-height:50px}
+ .ed-section{padding-block:38px}
+ .ed-section-head{gap:9px;margin-bottom:19px}
+ .ed-section .ed-grid:not(.ed-grid--two){gap:11px}
+ .ed-section .ed-grid:not(.ed-grid--two) .ed-card{min-height:0;padding:19px}
+ .ed-section .ed-grid:not(.ed-grid--two) .ed-card-index{margin-bottom:13px}
+ .ed-section .ed-grid:not(.ed-grid--two) .ed-card p{font-size:14px}
+}
