@@ -320,9 +320,9 @@
   .tool-symbol { width: 46px; height: 46px; flex: 0 0 46px; font-size: 24px; }
   .solar-input-grid { grid-template-columns: minmax(0, 1fr); gap: 13px; }
   .sign-submit { width: 100%; min-width: 0; }
-  .sign-result { gap: 13px; padding: 16px; }
-  .result-symbol { width: 62px; height: 62px; flex-basis: 62px; font-size: 37px; }
-  .result-copy { flex-basis: 100%; }
+  .sign-result { flex-wrap: nowrap; gap: 13px; padding: 16px; }
+  .result-symbol { width: 62px; height: 62px; flex: 0 0 62px; font-size: 37px; }
+  .result-copy { flex: 1 1 0; min-width: 0; }
   .result-copy h3 { font-size: 28px; }
   .result-tags { margin: 12px 0; }
   .result-tags span { font-size: 11px; }
@@ -343,8 +343,4 @@
   .result-symbol { width: 56px; height: 56px; flex-basis: 56px; font-size: 33px; }
   .result-copy h3 { font-size: 25px; }
   .result-tags span { padding-inline: 8px; font-size: 10px; }
-}
-@media (prefers-reduced-motion: reduce) {
-  .sign-card,
-  .sign-card-details { scroll-behavior: auto; }
 }
