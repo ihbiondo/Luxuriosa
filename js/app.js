@@ -31,7 +31,7 @@
 
       elemento.addEventListener("click", function () {
         var mensagem = elemento.dataset.waMsg || mensagemPadrao;
-        var numero = String(numeroWhatsApp).replace(/\\D/g, "");
+        var numero = String(numeroWhatsApp).replace(/[^0-9]/g, "");
         var url = "https://wa.me/" + numero + "?text=" + encodeURIComponent(mensagem);
 
         if (window.LuxuriosaMedicao && typeof window.LuxuriosaMedicao.registrar === "function") {
