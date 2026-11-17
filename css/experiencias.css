@@ -449,3 +449,30 @@ body{background:radial-gradient(ellipse at 10% 5%,rgba(113,69,132,.4),transparen
   background: rgba(240,79,168,.13);
   font-weight: 700;
 }
+
+
+/* Vitrine de categorias das Experiências — cards compactos com ícone e resumo. */
+.experience-categories { margin: 4px 0 18px; padding: 9px 0 34px; }
+.experience-category-heading { margin-bottom: 17px; }
+.experience-category-heading > small { color: #dfc48e; font-size: 10px; font-weight: 700; letter-spacing: .16em; }
+.experience-category-heading h2 { margin: 5px 0 4px; color: #faf4fc; font: 400 clamp(26px,3.6vw,37px)/1.2 var(--serif); }
+.experience-category-heading p { margin: 0; color: #d5c8dc; font-size: 13px; line-height: 1.7; }
+.experience-category-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 13px; }
+.experience-category-card { min-width: 0; min-height: 112px; display: grid; grid-template-columns: 48px minmax(0,1fr) 18px; align-items: center; gap: 15px; padding: 17px 19px; border: 1px solid #e0d4e8; border-radius: 15px; background: linear-gradient(120deg,#fbf8fd,#eee5f4); color: #493451; box-shadow: 0 8px 22px rgba(0,0,0,.15); transition: transform .18s ease,border-color .18s ease,box-shadow .18s ease; }
+.experience-category-card:hover { transform: translateY(-2px); border-color: #e3449d; color: #493451; box-shadow: 0 12px 25px rgba(0,0,0,.2); }
+.experience-category-icon { width: 48px; height: 48px; display: grid; place-items: center; border: 1px solid #e4d4ec; border-radius: 13px; background: #fff; color: #a8327b; }
+.experience-category-icon svg { width: 25px; height: 25px; fill: none; stroke: currentColor; stroke-width: 1.55; stroke-linecap: round; stroke-linejoin: round; }
+.experience-category-copy { min-width: 0; display: grid; gap: 3px; }
+.experience-category-index { color: #9a713b; font-size: 9px; font-weight: 700; letter-spacing: .14em; }
+.experience-category-copy strong { color: #493451; font: 500 19px/1.2 var(--serif); }
+.experience-category-copy small { color: #6c6175; font-size: 12px; line-height: 1.5; }
+.experience-category-arrow { color: #b52e78; font-size: 18px; }
+.experience-category-card:focus-visible { outline: 3px solid #e3449d; outline-offset: 3px; }
+.discovery { padding-top: 30px; }
+@media(max-width:680px) {
+  .experience-categories { padding-bottom: 22px; }
+  .experience-category-grid { grid-template-columns: minmax(0,1fr); gap: 10px; }
+  .experience-category-card { min-height: 100px; grid-template-columns: 46px minmax(0,1fr) 18px; padding: 15px; gap: 12px; }
+  .experience-category-copy strong { font-size: 18px; }
+}
+@media(prefers-reduced-motion:reduce) { .experience-category-card { transition: none; } }
