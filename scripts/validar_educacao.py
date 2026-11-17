@@ -146,12 +146,21 @@ def main() -> int:
             errors.append(f"{rel}: script modular compartilhado ausente")
         if 'localStorage.getItem("lux18")' not in page_text or "ed-age-pending" not in page_text:
             errors.append(f"{rel}: proteção visual antecipada da declaração 18+ ausente")
-        if '<summary>Explorar a biblioteca ⌄</summary>' not in page_text:
-            errors.append(f"{rel}: menu de navegação da biblioteca ausente")
-        if '<details class="ed-menu">' not in page_text:
-            errors.append(f"{rel}: menu de navegação ausente")
-        if not re.search(r'<a class="ed-brand" href="/educacao/"', page_text):
-            errors.append(f"{rel}: link da marca não retorna à Educação")
+        if rel.as_posix() == "educacao/index.html":
+            if '<header class="header">' not in page_text or '<nav aria-label="Navegação principal da Luxuriosa">' not in page_text:
+                errors.append(f"{rel}: cabeçalho global compartilhado ausente")
+            if not re.search(r'<a class="brand" href="/portal/"', page_text):
+                errors.append(f"{rel}: marca não retorna ao Meu Portal")
+            for href in ("/portal/", "/experiencias/", "/educacao/", "/"):
+                if f'href="{href}"' not in page_text:
+                    errors.append(f"{rel}: link global ausente no cabeçalho: {href}")
+        else:
+            if '<summary>Explorar a biblioteca ⌄</summary>' not in page_text:
+                errors.append(f"{rel}: menu de navegação da biblioteca ausente")
+            if '<details class="ed-menu">' not in page_text:
+                errors.append(f"{rel}: menu de navegação ausente")
+            if not re.search(r'<a class="ed-brand" href="/educacao/"', page_text):
+                errors.append(f"{rel}: link da marca não retorna à Educação")
         if audit.forbidden_media:
             errors.append(f"{rel}: mídia visual não permitida: {', '.join(audit.forbidden_media)}")
 

@@ -19,16 +19,36 @@
   }
 
   function setupNavigation() {
-    const menu = document.querySelector(".ed-menu");
-    const nav = menu && (menu.matches("nav") ? menu : menu.querySelector("nav"));
-    if (!menu || !nav) return;
+    let header = document.querySelector(".header");
+    if (!header) {
+      const legacyHeader = document.querySelector(".ed-header");
+      if (legacyHeader) {
+        header = document.createElement("header");
+        header.className = "header";
+        legacyHeader.replaceWith(header);
 
-    menu.setAttribute("data-ed-module-menu", "");
+        const brand = document.createElement("a");
+        brand.className = "brand";
+        brand.href = "/portal/";
+        brand.setAttribute("aria-label", "Voltar ao Meu Portal");
+        const brandName = document.createElement("span");
+        brandName.textContent = "Luxuriosa";
+        const brandSection = document.createElement("small");
+        brandSection.textContent = "EDUCAÇÃO";
+        brand.append(brandName, brandSection);
 
-    const brand = document.querySelector(".ed-brand");
+        const newNav = document.createElement("nav");
+        newNav.setAttribute("aria-label", "Navegação principal da Luxuriosa");
+        header.append(brand, newNav);
+      }
+    }
+    const nav = header && header.querySelector("nav");
+    if (!header || !nav) return;
+
+    const brand = header.querySelector(".brand");
     if (brand) {
-      brand.href = "/educacao/";
-      brand.setAttribute("aria-label", "Educação Luxuriosa — início");
+      brand.href = "/portal/";
+      brand.setAttribute("aria-label", "Voltar ao Meu Portal");
       const subtitle = brand.querySelector("small");
       if (subtitle) subtitle.textContent = "EDUCAÇÃO";
     }

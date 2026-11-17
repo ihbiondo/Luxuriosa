@@ -841,3 +841,81 @@ body{background:radial-gradient(ellipse at 10% 5%,rgba(113,69,132,.38),transpare
   .ed-menu { display: grid !important; grid-template-columns: repeat(2,minmax(0,1fr)); }
   .ed-menu a.ed-global-link { justify-content: center; }
 }
+
+
+/* Cabeçalho da Educação — mesma estrutura e breakpoints de Experiências. */
+.header {
+  min-height: 73px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 12px max(20px, calc((100vw - 1120px) / 2));
+  border-bottom: 1px solid var(--line);
+  background: rgba(27,15,33,.96);
+}
+.header .brand {
+  display: flex;
+  flex: 0 0 auto;
+  flex-direction: column;
+  color: #f8effa;
+  font: 500 25px/1.05 var(--serif);
+  text-decoration: none;
+}
+.header .brand small {
+  margin-top: 5px;
+  color: #d9bd8c;
+  font: 600 8px var(--sans);
+  letter-spacing: .2em;
+}
+.header nav {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+  min-width: 0;
+}
+.header nav a {
+  min-height: 42px;
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 7px;
+  border-radius: 8px;
+  color: #e3d5eb;
+  font-size: 10px;
+  line-height: 1.25;
+  white-space: nowrap;
+  text-decoration: none;
+}
+.header nav a.global-nav-link--portal { color: #e3d5eb; }
+.header nav a.global-nav-link--experiences { color: #ff8ac7; }
+.header nav a.global-nav-link--education { color: #eee5f4; }
+.header nav a.global-nav-link--store { color: #e5c68d; }
+.header nav a:hover { background: rgba(240,79,168,.12); color: #ff8ac7; }
+.header nav a[aria-current="page"],
+.header nav a[aria-current="location"] {
+  background: rgba(240,79,168,.13);
+  box-shadow: inset 0 0 0 1px rgba(240,79,168,.2);
+  color: #ff8ac7;
+  font-weight: 700;
+}
+@media (max-width: 680px) {
+  .header { min-height: 66px; padding: 10px 14px; gap: 8px; }
+  .header .brand { font-size: 22px; }
+  .header nav { flex: 1 1 auto; gap: 3px 6px; }
+  .header nav a { min-height: 38px; padding: 4px 6px; font-size: 9px; }
+}
+@media (max-width: 480px) {
+  .header { align-items: flex-start; flex-wrap: wrap; padding: 12px 15px 9px; }
+  .header .brand { flex: 0 0 100%; }
+  .header nav {
+    flex: 0 0 100%;
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    justify-content: stretch;
+    gap: 4px 8px;
+  }
+  .header nav a { justify-content: center; font-size: 10px; }
+}
