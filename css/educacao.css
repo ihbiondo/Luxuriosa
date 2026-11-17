@@ -708,3 +708,60 @@ body{background:radial-gradient(ellipse at 10% 5%,rgba(113,69,132,.38),transpare
     justify-content: flex-start;
   }
 }
+
+
+/* Cabeçalho compartilhado e vitrine de categorias — Educação. */
+.ed-header { position: sticky; top: 0; z-index: 50; background: rgba(27,15,33,.96); border-bottom-color: rgba(224,205,235,.23); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); }
+.ed-nav { min-height: 73px; width: min(1100px, calc(100% - 40px)); gap: 18px; }
+.ed-brand { color: #f8effa; font: 500 25px/1.05 Georgia, "Times New Roman", serif; letter-spacing: 0; }
+.ed-brand-title { display: block; }
+.ed-brand small { margin-top: 5px; color: #d9bd8c; font: 600 8px/1.4 Arial, Helvetica, sans-serif; letter-spacing: .2em; }
+.ed-menu { margin: 0; }
+.ed-menu summary { display: none !important; }
+.ed-menu nav { display: flex !important; align-items: center; justify-content: flex-end; flex-wrap: wrap; gap: 6px 10px; }
+.ed-menu nav a.ed-global-link { min-height: 44px; display: inline-flex; align-items: center; justify-content: center; padding: 7px 9px; border-radius: 8px; font-size: 11px; font-weight: 600; letter-spacing: 0; white-space: nowrap; }
+.ed-global-link--portal { color: #e3d5eb !important; }
+.ed-global-link--experiences { color: #ff8ac7 !important; }
+.ed-global-link--education { color: #eee5f4 !important; }
+.ed-global-link--store { color: #e5c68d !important; }
+.ed-menu nav a.ed-global-link:hover { background: rgba(240,79,168,.12); color: #ff8ac7 !important; }
+.ed-menu nav a.ed-global-link[aria-current="page"],
+.ed-menu nav a.ed-global-link[aria-current="location"] { background: rgba(240,79,168,.13); box-shadow: inset 0 0 0 1px rgba(240,79,168,.2); color: #ff8ac7 !important; }
+.ed-category-section { padding-top: clamp(30px,5vw,54px); }
+.ed-category-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 13px; }
+.ed-category-card { min-width: 0; min-height: 112px; display: grid; grid-template-columns: 48px minmax(0,1fr) 18px; align-items: center; gap: 15px; padding: 17px 19px; border: 1px solid #dfd2e9; border-radius: 15px; background: linear-gradient(120deg,#fbf8fd,#f0e8f5); color: #493451; box-shadow: 0 8px 22px rgba(0,0,0,.13); transition: transform .18s ease,border-color .18s ease,box-shadow .18s ease; }
+.ed-category-card:hover { transform: translateY(-2px); border-color: #e3449d; box-shadow: 0 12px 25px rgba(0,0,0,.17); color: #493451; }
+.ed-category-icon { width: 48px; height: 48px; display: grid; place-items: center; border: 1px solid #e4d4ec; border-radius: 13px; background: #fff; color: #a8327b; }
+.ed-category-icon svg { width: 25px; height: 25px; fill: none; stroke: currentColor; stroke-width: 1.55; stroke-linecap: round; stroke-linejoin: round; }
+.ed-category-copy { min-width: 0; display: grid; gap: 3px; }
+.ed-category-index { color: #9a713b; font-size: 9px; font-weight: 700; letter-spacing: .14em; }
+.ed-category-copy strong { color: #493451; font: 500 19px/1.2 Georgia, "Times New Roman", serif; }
+.ed-category-copy small { color: #6c6175; font-size: 12px; line-height: 1.5; }
+.ed-category-arrow { color: #b52e78; font-size: 18px; }
+.ed-category-card:focus-visible { outline: 3px solid #e3449d; outline-offset: 3px; }
+.ed-section--disclaimer { padding-top: 0; }
+.ed-section--disclaimer .ed-small { color: #b8a9c1; font-size: 12px; line-height: 1.7; }
+@media (max-width: 820px) {
+  .ed-nav { align-items: center; padding: 10px 0; gap: 8px; }
+  .ed-menu { max-width: 70%; }
+  .ed-menu nav { gap: 4px; }
+  .ed-menu nav a.ed-global-link { min-height: 40px; padding: 5px 7px; font-size: 10px; }
+  .ed-category-card { padding: 15px; gap: 12px; }
+  .ed-category-copy strong { font-size: 18px; }
+}
+@media (max-width: 680px) {
+  .ed-category-grid { grid-template-columns: minmax(0,1fr); gap: 10px; }
+  .ed-category-card { min-height: 100px; grid-template-columns: 46px minmax(0,1fr) 18px; }
+}
+@media (max-width: 390px) {
+  .ed-nav { align-items: flex-start; flex-wrap: wrap; }
+  .ed-menu { width: 100%; max-width: 100%; }
+  .ed-menu nav { width: 100%; justify-content: flex-start; }
+  .ed-menu nav a.ed-global-link { min-height: 38px; font-size: 10px; }
+}
+@media (prefers-reduced-motion: reduce) { .ed-category-card { transition: none; } }
+
+/* Centraliza uma categoria isolada quando a quantidade é ímpar. */
+@media (min-width: 681px) {
+  .ed-category-card:last-child:nth-child(odd) { grid-column: 1 / -1; width: calc(50% - 7px); justify-self: center; }
+}

@@ -26,7 +26,7 @@
     menu.setAttribute("data-ed-module-menu", "");
     const summary = menu.querySelector("summary");
     if (summary) {
-      summary.textContent = "Menu";
+      summary.textContent = "Explorar a biblioteca ⌄";
       summary.setAttribute("aria-label", "Abrir menu principal");
     }
 
@@ -35,15 +35,10 @@
       brand.href = "/educacao/";
       brand.setAttribute("aria-label", "Educação Luxuriosa — início");
       const subtitle = brand.querySelector("small");
-      if (subtitle) subtitle.textContent = "EDUCAÇÃO · CONHECIMENTO";
+      if (subtitle) subtitle.textContent = "EDUCAÇÃO";
     }
 
     const currentPath = normalizePath(window.location.pathname);
-    const storeLink = document.createElement("a");
-    storeLink.href = "/";
-    storeLink.textContent = "Loja";
-    storeLink.className = "ed-global-link ed-global-link--store";
-
     const portalLink = document.createElement("a");
     portalLink.href = "/portal/";
     portalLink.textContent = "Meu Portal";
@@ -60,7 +55,12 @@
     educationLink.className = "ed-global-link ed-global-link--education";
     educationLink.setAttribute("aria-current", currentPath === "/educacao/" ? "page" : "location");
 
-    nav.replaceChildren(storeLink, portalLink, experiencesLink, educationLink);
+    const storeLink = document.createElement("a");
+    storeLink.href = "/";
+    storeLink.textContent = "Voltar para Loja";
+    storeLink.className = "ed-global-link ed-global-link--store";
+
+    nav.replaceChildren(portalLink, experiencesLink, educationLink, storeLink);
     nav.setAttribute("aria-label", "Navegação principal da Luxuriosa");
 
     const footerNav = document.querySelector(".ed-footer-links");
