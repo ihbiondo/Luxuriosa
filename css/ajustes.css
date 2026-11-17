@@ -1098,3 +1098,149 @@ body.customer-open { overflow: hidden; }
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
+
+
+/* =========================================================
+   HOME — CABEÇALHO E HERO EM DESKTOP
+   Mantém os estilos existentes para tablet e celular.
+   ========================================================= */
+@media (min-width: 1200px) {
+  header .nav {
+    height: 76px;
+    min-height: 76px;
+    gap: clamp(14px, 1.35vw, 22px);
+  }
+
+  header .logo {
+    font-size: 25px;
+    letter-spacing: .035em;
+  }
+
+  header .navlinks {
+    gap: clamp(8px, .82vw, 14px);
+    font-size: 10px;
+    letter-spacing: .045em;
+  }
+
+  header .nav-right {
+    gap: 8px;
+  }
+
+  header .nav-right > .btn[data-wa] {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 40px;
+    padding: 9px 13px;
+    border-radius: 999px;
+    font-size: 10px;
+    letter-spacing: .08em;
+    white-space: nowrap;
+  }
+
+  header .cart-trigger,
+  header .account-trigger {
+    width: auto;
+    min-width: 0;
+    height: auto;
+    min-height: 40px;
+    padding: 8px 12px;
+    justify-content: center;
+    gap: 8px;
+    border-radius: 999px;
+  }
+
+  header .cart-label,
+  header .account-trigger-label {
+    display: inline;
+    font-size: 10px;
+    letter-spacing: .055em;
+  }
+
+  header .cart-icon,
+  header .account-trigger-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    line-height: 1;
+  }
+
+  header .cart-icon svg,
+  header .account-trigger-icon svg {
+    display: block;
+    width: 17px;
+    height: 17px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.65;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .hero {
+    padding: clamp(70px, 6vw, 104px) 0;
+  }
+
+  .hero-grid {
+    grid-template-columns: minmax(0, 1.04fr) minmax(0, .96fr);
+    gap: clamp(54px, 5.5vw, 88px);
+  }
+
+  .hero-copy {
+    max-width: 650px;
+  }
+
+  .hero h1 {
+    max-width: 680px;
+    font-size: clamp(58px, 5.2vw, 82px);
+    line-height: 1;
+  }
+
+  .hero-copy > p {
+    max-width: 520px;
+    font-size: 17px;
+    line-height: 1.8;
+  }
+
+  .hero-visual {
+    min-height: 550px;
+    padding: 14px 0 30px;
+  }
+
+  .hero-image-main {
+    width: min(96%, 540px);
+    border-radius: 26px;
+  }
+
+  .hero-image-main img {
+    padding: 20px;
+  }
+}
+
+@media (min-width: 1200px) and (max-width: 1360px) {
+  header .navlinks {
+    gap: 8px;
+    font-size: 9px;
+    letter-spacing: .025em;
+  }
+
+  header .logo {
+    font-size: 23px;
+  }
+
+  header .nav-right {
+    gap: 6px;
+  }
+
+  header .cart-trigger,
+  header .account-trigger {
+    padding-right: 9px;
+    padding-left: 9px;
+  }
+
+  header .nav-right > .btn[data-wa] {
+    padding-right: 10px;
+    padding-left: 10px;
+  }
+}
