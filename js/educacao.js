@@ -20,15 +20,10 @@
 
   function setupNavigation() {
     const menu = document.querySelector(".ed-menu");
-    const nav = menu && menu.querySelector("nav");
+    const nav = menu && (menu.matches("nav") ? menu : menu.querySelector("nav"));
     if (!menu || !nav) return;
 
     menu.setAttribute("data-ed-module-menu", "");
-    const summary = menu.querySelector("summary");
-    if (summary) {
-      summary.textContent = "Explorar a biblioteca ⌄";
-      summary.setAttribute("aria-label", "Abrir menu principal");
-    }
 
     const brand = document.querySelector(".ed-brand");
     if (brand) {
@@ -80,9 +75,7 @@
       });
     }
 
-    menu.addEventListener("click", event => {
-      if (event.target.closest("a")) menu.open = false;
-    });
+
   }
 
 
