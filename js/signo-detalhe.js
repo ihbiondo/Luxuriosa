@@ -10,11 +10,17 @@
     const nav = document.querySelector(".header nav");
     if (!nav) return;
 
-    const items = [{"label":"Meu Portal","href":"/portal/"},{"label":"Experiências","href":"/experiencias/"},{"label":"Astrologia & Signos","href":"/experiencias/signos.html","current":"location"},{"label":"Educação","href":"/educacao/"}];
+    const items = [
+      { label: "Meu Portal", href: "/portal/", className: "global-nav-link global-nav-link--portal" },
+      { label: "Experiências", href: "/experiencias/", className: "global-nav-link global-nav-link--experiences" },
+      { label: "Educação", href: "/educacao/", className: "global-nav-link global-nav-link--education" },
+      { label: "Voltar para Loja", href: "/", className: "global-nav-link global-nav-link--store" }
+    ];
     const links = items.map(item => {
       const link = document.createElement("a");
       link.href = item.href;
       link.textContent = item.label;
+      if (item.className) link.className = item.className;
       if (item.current) link.setAttribute("aria-current", item.current);
       return link;
     });
