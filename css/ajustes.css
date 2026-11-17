@@ -2000,3 +2000,51 @@ body.customer-open { overflow: hidden; }
     font-size: 11px;
   }
 }
+
+
+/* HOME — margens de leitura e respiro das seções inferiores no mobile. */
+@media (max-width: 900px) {
+  .home-page .about-preview-section > .container,
+  .home-page .localizacao-avaliacao-section > .container,
+  .home-page .google-reviews-section > .container,
+  .home-page.home-footer > .container {
+    width: calc(100% - 36px);
+    max-width: 760px;
+    margin-inline: auto;
+    padding-inline: 0;
+    box-sizing: border-box;
+  }
+
+  .home-page .about-preview-copy h2 {
+    max-width: 100%;
+    font-size: clamp(29px, 7.4vw, 36px);
+    line-height: 1.12;
+    text-wrap: balance;
+    overflow-wrap: break-word;
+  }
+
+  .home-page .about-preview-copy p {
+    max-width: 100%;
+    overflow-wrap: break-word;
+  }
+
+  .home-page .about-preview-copy .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: min(100%, 320px);
+    min-height: 48px;
+    padding: 12px 18px;
+    white-space: normal;
+    text-align: center;
+  }
+}
+
+@media (max-width: 380px) {
+  .home-page .about-preview-section > .container,
+  .home-page .localizacao-avaliacao-section > .container,
+  .home-page .google-reviews-section > .container,
+  .home-page.home-footer > .container {
+    width: calc(100% - 32px);
+  }
+}
