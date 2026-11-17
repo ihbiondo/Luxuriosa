@@ -1362,8 +1362,8 @@ body.customer-open { overflow: hidden; }
   }
 }
 
-/* Preserva os ícones originais em telas menores; o SVG refinado fica no desktop. */
-@media (max-width: 1199px) {
+/* Mantém os ícones SVG refinados no desktop e os ícones compactos no mobile. */
+@media (max-width: 900px) {
   header .cart-icon svg,
   header .account-trigger-icon svg {
     display: none;
