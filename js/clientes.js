@@ -390,8 +390,8 @@
 
     lines.push("", "*Subtotal: " + formatarPreco(subtotal) + "*");
 
-    lines.push("Frete: valor fixo conforme a localidade e a modalidade do Clube, de acordo com a tabela oficial");
-    lines.push("*Total estimado dos produtos: " + formatarPreco(totalProdutos) + "*");
+    lines.push(data.fulfillmentType === "pickup" ? "Frete: gratuito · retirada agendada em Bauru" : "Frete: valor fixo conforme a localidade e a modalidade do Clube, de acordo com a tabela oficial");
+    lines.push("*Total dos produtos: " + formatarPreco(totalProdutos) + "*");
 
     lines.push("", "*ENTREGA*");
     lines.push("• " + data.name + " — " + data.phone);
