@@ -1080,6 +1080,31 @@
     });
   }
 
+  function renderizarColecaoPorIds(idGrid, ids) {
+    var grid = $(idGrid);
+
+    if (!grid) {
+      return;
+    }
+
+    grid.textContent = "";
+
+    var lista = (Array.isArray(ids) ? ids : []).map(function (id) {
+      return produtos.find(function (produto) {
+        return String(produto.id) === String(id);
+      });
+    }).filter(Boolean);
+
+    if (!lista.length) {
+      grid.appendChild(criarElemento("div", "empty", "Estamos preparando nossa seleção de kits especiais."));
+      return;
+    }
+
+    lista.forEach(function (produto) {
+      grid.appendChild(criarCardProduto(produto));
+    });
+  }
+
   function renderizarProdutos() {
 
     var grid =
@@ -1749,7 +1774,7 @@
           atualizarCategoriasVisiveis();
           renderizarFiltros();
           renderizarProdutos();
-          renderizarColecao("destaques-grid", "destaque");
+          renderizarColecaoPorIds("destaques-grid", [25, 26, 24, 27]);
           renderizarColecao("mais-vendidos-grid", "maisVendido");
           var secaoPreVenda = $("pre-venda");
           if (config.preVendaVisivel === true) {
@@ -1946,7 +1971,14 @@
 
     configurarModal();
 
-    carregarCatalogo();
+    /*
+     * A página inicial e as páginas institucionais não possuem a grade
+     * dinâmica do catálogo. Nelas, baixar todos os produtos é desnecessário.
+     * A loja mantém o carregamento normal porque possui o elemento #grid.
+     */
+    if ($("grid")) {
+      carregarCatalogo();
+    }
   }
 
 

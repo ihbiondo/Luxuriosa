@@ -9,7 +9,7 @@
 
   <meta
     name="description"
-    content="Sex shop em Bauru e região com produtos para intimidade, lingerie e acessórios. Atendimento reservado e entrega discreta para sua privacidade."
+    content="Sex shop em Bauru e região com kits especiais e produtos para intimidade. Atendimento reservado, entrega discreta e lingerie selecionada."
   >
 
   <meta name="robots" content="index,follow">
@@ -24,7 +24,7 @@
   <meta property="og:title" content="Luxuriosa | Sexshop em Bauru e Região — Entrega Discreta">
   <meta
     property="og:description"
-    content="Sexshop em Bauru e região, com produtos para intimidade, atendimento reservado e entrega discreta. Lingerie e acessórios selecionados."
+    content="Conheça os kits especiais da Luxuriosa, sexshop em Bauru e região. Produtos para intimidade, atendimento reservado e entrega discreta."
   >
   <meta property="og:url" content="https://luxuriosa.com.br/">
   <meta property="og:site_name" content="Luxuriosa">
@@ -35,7 +35,7 @@
   <meta property="og:image:alt" content="Logo da marca Luxuriosa">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Luxuriosa | Sexshop em Bauru e Região — Entrega Discreta">
-  <meta name="twitter:description" content="Sexshop em Bauru e região, com produtos para intimidade, atendimento reservado e entrega discreta. Lingerie e acessórios selecionados.">
+  <meta name="twitter:description" content="Conheça os kits especiais da Luxuriosa, sexshop em Bauru e região. Produtos para intimidade, atendimento reservado e entrega discreta.">
   <meta name="twitter:image" content="https://luxuriosa.com.br/img/site/og-luxuriosa.jpg">
   <meta name="twitter:image:alt" content="Logo da marca Luxuriosa">
 
@@ -48,16 +48,17 @@
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preload" as="image" href="img/site/logo-hero.webp" fetchpriority="high">
 
   <link
-    href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600&family=Playfair+Display:wght@400;500&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600&amp;family=Playfair+Display:wght@400;500&amp;display=swap"
     rel="stylesheet"
   >
 
   <!-- CSS -->
   <link rel="stylesheet" href="css/style.css?v=20261114-pre-venda-v1">
   <link rel="stylesheet" href="css/responsive.css">
-  <link rel="stylesheet" href="css/ajustes.css">
+  <link rel="stylesheet" href="css/ajustes.css?v=20261117-home-desktop-v6">
   <link rel="stylesheet" href="css/conta.css">
   <link rel="stylesheet" href="css/localizacao-avaliacao.css">
   <style>
@@ -77,7 +78,7 @@
     "@context": "https://schema.org",
     "@type": "OnlineStore",
     "name": "Luxuriosa",
-    "description": "Sexshop online em Bauru e região, com produtos para intimidade e prazer, entrega discreta e opção de retirada presencial em Bauru mediante combinação prévia. Também oferece lingerie selecionada.",
+    "description": "Sexshop online em Bauru e região com kits especiais, produtos para intimidade e prazer, atendimento reservado, entrega discreta e lingerie selecionada.",
     "url": "https://luxuriosa.com.br/",
     "image": "https://luxuriosa.com.br/img/site/og-luxuriosa.jpg",
     "logo": "https://luxuriosa.com.br/img/site/logo-hero.webp",
@@ -318,11 +319,12 @@
           aria-label="Abrir carrinho"
         >
 
-          <span
-            class="cart-icon"
-            aria-hidden="true"
-          >
-            🛒
+          <span class="cart-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" focusable="false">
+              <path d="M3 4h2l2.1 10.1a2 2 0 0 0 2 1.6h8.8a2 2 0 0 0 2-1.6L21 8H6"></path>
+              <circle cx="9.5" cy="19.2" r="1.2"></circle>
+              <circle cx="17.5" cy="19.2" r="1.2"></circle>
+            </svg>
           </span>
 
           <span class="cart-label">
@@ -346,7 +348,12 @@
           aria-label="Acessar minha conta"
           title="Minha conta"
         >
-          <span class="account-trigger-icon" aria-hidden="true">👤</span>
+          <span class="account-trigger-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" focusable="false">
+              <circle cx="12" cy="8" r="3.2"></circle>
+              <path d="M5.5 20a6.5 6.5 0 0 1 13 0"></path>
+            </svg>
+          </span>
           <span class="account-trigger-label">Minha conta</span>
         </a>
 
@@ -357,6 +364,7 @@
           class="btn ghost small"
           type="button"
           data-wa
+          aria-label="Falar com a Luxuriosa pelo WhatsApp"
         >
           WhatsApp
         </button>
@@ -419,7 +427,80 @@
       </div>
     </section>
 
-        <section class="section categories-section" id="categorias">
+            <section class="section featured-section" id="destaques" aria-labelledby="kits-home-title">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <div class="kicker">Combinações selecionadas</div>
+            <h2 id="kits-home-title">Kits especiais Luxuriosa</h2>
+          </div>
+          <p>Quatro combinações criadas para diferentes experiências, com a curadoria e o cuidado da Luxuriosa.</p>
+        </div>
+        <div class="products home-kit-static-grid" id="destaques-grid" aria-label="Kits selecionados Luxuriosa">
+          <a class="home-kit-static-card" href="produtos/25-kit-ela.html" aria-label="Conhecer Kit Ela por R$ 119,90">
+            <img src="img/produtos/kits/kit-ela.jpg" alt="Composição do Kit Ela" width="700" height="700" loading="lazy" decoding="async">
+            <span class="home-kit-static-name">Kit Ela</span>
+            <span class="home-kit-static-pricing" aria-label="Preço promocional: R$ 119,90; preço anterior: R$ 144,60">
+              <span class="home-kit-static-old">De R$ 144,60</span>
+              <span class="home-kit-static-current">R$ 119,90</span>
+            </span>
+            <span class="home-kit-static-cta" aria-hidden="true">
+              Conhecer kit
+              <svg viewBox="0 0 24 24" focusable="false">
+                <path d="M4 12h15M13 5l7 7-7 7"></path>
+              </svg>
+            </span>
+          </a>
+          <a class="home-kit-static-card" href="produtos/26-kit-ele.html" aria-label="Conhecer Kit Ele por R$ 119,90">
+            <img src="img/produtos/kits/kit-ele.jpg" alt="Composição do Kit Ele" width="700" height="700" loading="lazy" decoding="async">
+            <span class="home-kit-static-name">Kit Ele</span>
+            <span class="home-kit-static-pricing" aria-label="Preço promocional: R$ 119,90; preço anterior: R$ 134,60">
+              <span class="home-kit-static-old">De R$ 134,60</span>
+              <span class="home-kit-static-current">R$ 119,90</span>
+            </span>
+            <span class="home-kit-static-cta" aria-hidden="true">
+              Conhecer kit
+              <svg viewBox="0 0 24 24" focusable="false">
+                <path d="M4 12h15M13 5l7 7-7 7"></path>
+              </svg>
+            </span>
+          </a>
+          <a class="home-kit-static-card" href="produtos/24-kit-premium.html" aria-label="Conhecer Kit Intensidade por R$ 199,90">
+            <img src="img/produtos/kits/kit-intensidade.jpg" alt="Composição do Kit Intensidade" width="700" height="700" loading="lazy" decoding="async">
+            <span class="home-kit-static-name">Kit Intensidade</span>
+            <span class="home-kit-static-pricing" aria-label="Preço promocional: R$ 199,90; preço anterior: R$ 221,20">
+              <span class="home-kit-static-old">De R$ 221,20</span>
+              <span class="home-kit-static-current">R$ 199,90</span>
+            </span>
+            <span class="home-kit-static-cta" aria-hidden="true">
+              Conhecer kit
+              <svg viewBox="0 0 24 24" focusable="false">
+                <path d="M4 12h15M13 5l7 7-7 7"></path>
+              </svg>
+            </span>
+          </a>
+          <a class="home-kit-static-card" href="produtos/27-kit-extase.html" aria-label="Conhecer Kit Êxtase por R$ 249,90">
+            <img src="img/produtos/kits/kit-extase.jpg" alt="Composição do Kit Êxtase" width="700" height="700" loading="lazy" decoding="async">
+            <span class="home-kit-static-name">Kit Êxtase</span>
+            <span class="home-kit-static-pricing" aria-label="Preço promocional: R$ 249,90; preço anterior: R$ 296,00">
+              <span class="home-kit-static-old">De R$ 296,00</span>
+              <span class="home-kit-static-current">R$ 249,90</span>
+            </span>
+            <span class="home-kit-static-cta" aria-hidden="true">
+              Conhecer kit
+              <svg viewBox="0 0 24 24" focusable="false">
+                <path d="M4 12h15M13 5l7 7-7 7"></path>
+              </svg>
+            </span>
+          </a>
+        </div>
+        <div class="featured-footer">
+          <a class="btn ghost" href="loja.html?categoria=Kits">Explorar todos os kits</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section categories-section" id="categorias">
       <div class="container">
         <div class="section-head">
           <div><div class="kicker">Encontre o que procura</div><h2>Explore por categoria</h2></div>
@@ -427,34 +508,34 @@
         </div>
         <div class="categories" aria-label="Explore por categoria">
           <a class="cat cat--image" href="loja.html?categoria=G%C3%A9is%20e%20estimulantes">
-            <img class="cat-media" src="img/produtos/novas/luxuriosa-xana-loka-gel.jpg" alt="" aria-hidden="true" loading="lazy">
+            <img class="cat-media" src="img/produtos/novas/luxuriosa-xana-loka-gel.jpg" alt="" aria-hidden="true" loading="lazy" decoding="async">
             <span class="cat-index" aria-hidden="true">01</span><b>Géis e estimulantes</b><span class="cat-note">Sensações e descobertas</span>
           </a>
           <a class="cat cat--image" href="loja.html?categoria=Vibradores%20e%20masturbadores">
-            <img class="cat-media" src="img/produtos/novas/luxuriosa-vibrador-golfinho-rosa.jpg" alt="" aria-hidden="true" loading="lazy">
+            <img class="cat-media" src="img/produtos/novas/luxuriosa-vibrador-golfinho-rosa.jpg" alt="" aria-hidden="true" loading="lazy" decoding="async">
             <span class="cat-index" aria-hidden="true">02</span><b>Vibradores e masturbadores</b><span class="cat-note">Explore novas possibilidades</span>
           </a>
           <a class="cat cat--image" href="loja.html?categoria=Jogos%20e%20acess%C3%B3rios">
-            <img class="cat-media" src="img/produtos/novas/luxuriosa-dado-jogo-do-prazer-homem-x-mulher.jpg" alt="" aria-hidden="true" loading="lazy">
+            <img class="cat-media" src="img/produtos/novas/luxuriosa-dado-jogo-do-prazer-homem-x-mulher.jpg" alt="" aria-hidden="true" loading="lazy" decoding="async">
             <span class="cat-index" aria-hidden="true">03</span><b>Jogos e acessórios</b><span class="cat-note">Diversão sem roteiro</span>
           </a>
           <a class="cat cat--image" href="loja.html?categoria=Perfumes%20e%20higiene">
-            <img class="cat-media" src="img/produtos/novas/luxuriosa-perfume-sensual-melancia-apinil.jpg" alt="" aria-hidden="true" loading="lazy">
+            <img class="cat-media" src="img/produtos/novas/luxuriosa-perfume-sensual-melancia-apinil.jpg" alt="" aria-hidden="true" loading="lazy" decoding="async">
             <span class="cat-index" aria-hidden="true">04</span><b>Perfumes e higiene</b><span class="cat-note">Cuidado e atmosfera</span>
           </a>
 
           <a class="cat cat--image" href="/loja/lingerie/">
-            <img class="cat-media" src="img/produtos/novas/lingerie-conjunto-vinho-frente-tamanho-gg-cropped-sensual-rendado-1.jpg" alt="" aria-hidden="true" loading="lazy">
+            <img class="cat-media" src="img/produtos/novas/lingerie-conjunto-vinho-frente-tamanho-gg-cropped-sensual-rendado-1.jpg" alt="" aria-hidden="true" loading="lazy" decoding="async">
             <span class="cat-index" aria-hidden="true">05</span><b>Lingerie</b><span class="cat-note">Peças para cada estilo</span>
           </a>
 
           <a class="cat cat--image" href="loja.html?categoria=%C3%93leos%20para%20massagem">
-            <img class="cat-media" src="img/produtos/novas/oleo-de-massagem-kama-sutra-1.jpg" alt="" aria-hidden="true" loading="lazy">
+            <img class="cat-media" src="img/produtos/novas/oleo-de-massagem-kama-sutra-1.jpg" alt="" aria-hidden="true" loading="lazy" decoding="async">
             <span class="cat-index" aria-hidden="true">06</span><b>Óleos para massagem</b><span class="cat-note">Toque, cuidado e relaxamento</span>
           </a>
 
           <a class="cat cat--featured cat--editorial" href="loja.html?categoria=Kits">
-            <img class="cat-media" src="img/produtos/kits/kit-extase.jpg" alt="" aria-hidden="true" loading="lazy">
+            <img class="cat-media" src="img/produtos/kits/kit-extase.jpg" alt="" aria-hidden="true" loading="lazy" decoding="async">
             <span class="cat-index" aria-hidden="true">07</span><b>Kits especiais</b><span class="cat-note">Combinações selecionadas</span>
           </a>
           <a class="cat cat--editorial" href="loja.html">
@@ -476,34 +557,7 @@
       </div>
     </section>
 
-
-
-    <section class="section featured-section" id="destaques">
-      <div class="container">
-        <div class="section-head">
-          <div><div class="kicker">Escolhas da casa</div><h2>Uma seleção para começar</h2></div>
-          <p>Produtos individuais e kits para você encontrar o que combina com seu momento.</p>
-        </div>
-        <div class="products" id="destaques-grid"><div class="empty">Carregando produtos…</div></div>
-        <div class="featured-footer"><a class="btn ghost" href="loja.html">Ver todos os produtos</a></div>
-      </div>
-    </section>
-
-    
-
-
-<!-- =======================================================
-         EXPERIÊNCIA
-    ======================================================== -->
-
-    
-
-
-    <!-- =======================================================
-         ATENDIMENTO PERSONALIZADO
-    ======================================================== -->
-
-        <section class="section service-preview-section" id="atendimento">
+    <section class="section service-preview-section" id="atendimento">
       <div class="container service-preview">
         <div class="service-preview-copy">
           <div class="kicker">Atendimento &amp; experiência</div>
@@ -553,13 +607,12 @@
   ></div>
 
 
-  <aside
+  <div
     class="cart"
     id="cart"
     role="dialog"
     aria-modal="true"
     aria-labelledby="cartTitle"
-    aria-label="Carrinho de compras"
     aria-hidden="true"
   >
 
@@ -664,7 +717,7 @@
 
     </div>
 
-  </aside>
+  </div>
 
 
   <!-- =========================================================
@@ -879,12 +932,11 @@
        JAVASCRIPT
   ========================================================== -->
 
-  <script src="js/catalogo.js?v=20261114-pre-venda-v1"></script>
-  <script src="js/inteligencia.js"></script>
-  <script src="js/carrinho.js"></script>
-  <script src="js/clientes.js"></script>
-  <script src="js/app.js?v=20261112-1900"></script>
+  <script defer src="js/inteligencia.js"></script>
+  <script defer src="js/carrinho.js"></script>
+  <script defer src="js/clientes.js"></script>
+  <script defer src="js/app.js?v=20261117-whatsapp-home-v1"></script>
 
-  <script src="js/consentimento.js?v=20261114-clube-convite-v2"></script>
+  <script defer src="js/consentimento.js?v=20261117-data-invite-keyboard-v1"></script>
 </body>
 </html>
