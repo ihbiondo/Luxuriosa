@@ -49,3 +49,19 @@
 .portal-submenu a strong{font-size:13px;font-weight:700}
 .portal-submenu a span{font-size:11px;line-height:1.45;color:#746a78}
 @media(max-width:700px){.portal-submenu{grid-template-columns:1fr;padding:10px}.portal-submenu a{padding:12px}}
+
+
+/* O card condicional de conquistas ocupa a última linha sem desequilibrar o hub. */
+@media (min-width: 701px) {
+  .portal-destination-card--achievement {
+    grid-column: 1 / -1;
+    width: calc(50% - 8px);
+    justify-self: center;
+  }
+}
+@media (max-width: 700px) {
+  .portal-destination-card--achievement {
+    grid-column: auto;
+    width: auto;
+  }
+}
