@@ -103,7 +103,8 @@
         detail = candidate.replace(/[^a-z0-9.-]/g, "").slice(0, 120) || "referral";
         medium = utmMedium === "email" ? "email" : "referral";
       }
-      if (utmMedium === "email") medium = "email";
+      if (/cpc|ppc|paid|ads/.test(utmMedium) || params.has("gclid") || params.has("gbraid") || params.has("wbraid")) medium = "paid";
+      else if (utmMedium === "email") medium = "email";
       attribution = { traffic_source: source, traffic_source_detail: detail, traffic_medium: medium, created_at: Date.now() };
       try { localStorage.setItem(storedKey, JSON.stringify(attribution)); } catch (_) {}
     }
