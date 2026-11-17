@@ -1971,7 +1971,14 @@
 
     configurarModal();
 
-    carregarCatalogo();
+    /*
+     * A página inicial e as páginas institucionais não possuem a grade
+     * dinâmica do catálogo. Nelas, baixar todos os produtos é desnecessário.
+     * A loja mantém o carregamento normal porque possui o elemento #grid.
+     */
+    if ($("grid")) {
+      carregarCatalogo();
+    }
   }
 
 
