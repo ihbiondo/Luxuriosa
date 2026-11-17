@@ -1078,7 +1078,7 @@ body.customer-open { overflow: hidden; }
     flex: 1 1 auto;
     justify-content: center;
     gap: clamp(7px, .8vw, 11px);
-    font-size: clamp(8px, .9vw, 9.5px);
+    font-size: clamp(9px, .9vw, 10px);
     letter-spacing: .025em;
     white-space: nowrap;
   }
