@@ -1,0 +1,129 @@
+/* =========================================================
+   NAVEGAÇÃO PRINCIPAL — DESKTOP E MOBILE
+   ========================================================= */
+
+/* No desktop, os grupos funcionam como uma sequência única de links. */
+.navlinks .nav-menu-group {
+  display: contents;
+}
+
+.navlinks .nav-menu-group-title {
+  display: none;
+}
+
+.navlinks > .nav-link-shop {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 38px;
+  padding: 8px 14px;
+  border: 1px solid rgba(212, 175, 124, .42);
+  border-radius: 999px;
+  background: rgba(212, 175, 124, .075);
+  color: var(--gold);
+  font-weight: 600;
+  letter-spacing: .075em;
+  transition: background .2s ease, border-color .2s ease, color .2s ease;
+}
+
+.navlinks > .nav-link-shop:hover,
+.navlinks > .nav-link-shop:focus-visible {
+  border-color: var(--gold);
+  background: rgba(212, 175, 124, .14);
+  color: var(--blush);
+}
+
+.navlinks a[aria-current="page"]:not(.nav-link-shop) {
+  color: var(--gold);
+}
+
+@media (min-width: 1200px) {
+  header .navlinks {
+    align-items: center;
+    gap: clamp(8px, .78vw, 14px);
+    font-size: clamp(9px, .72vw, 11px);
+    letter-spacing: .04em;
+    white-space: nowrap;
+  }
+
+  .navlinks > .nav-link-shop {
+    min-height: 36px;
+    padding: 8px 13px;
+  }
+}
+
+/* Em tablets e celulares, o menu aberto revela grupos com rótulos claros. */
+@media (max-width: 1199px) {
+  .navlinks {
+    max-height: calc(100vh - 88px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+
+  .navlinks .nav-menu-group {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    gap: 0;
+    padding: 8px 0 5px;
+    border-top: 1px solid rgba(212, 175, 124, .15);
+  }
+
+  .navlinks .nav-menu-group-title {
+    display: block;
+    padding: 9px 5px 4px;
+    color: var(--gold);
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: .2em;
+    line-height: 1.4;
+    text-transform: uppercase;
+  }
+
+  .navlinks > a,
+  .navlinks .nav-menu-group > a {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    width: 100%;
+    min-height: 46px;
+    padding: 12px 5px;
+    border-bottom: 1px solid rgba(212, 175, 124, .08);
+    color: var(--muted);
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: .025em;
+    line-height: 1.35;
+    text-align: left;
+    text-transform: none;
+  }
+
+  .navlinks > .nav-link-shop {
+    justify-content: center;
+    min-height: 48px;
+    margin: 5px 0 10px;
+    padding: 12px 16px;
+    border: 1px solid rgba(212, 175, 124, .5);
+    border-radius: 12px;
+    background: linear-gradient(110deg, rgba(139, 30, 63, .28), rgba(212, 175, 124, .07));
+    color: var(--gold);
+    font-size: 12px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+  }
+
+  .navlinks .nav-menu-group > a:last-child {
+    border-bottom: 0;
+  }
+
+  .navlinks > a[aria-current="page"],
+  .navlinks .nav-menu-group > a[aria-current="page"] {
+    color: var(--gold);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .navlinks > .nav-link-shop {
+    transition: none;
+  }
+}
