@@ -1276,12 +1276,108 @@ body.customer-open { overflow: hidden; }
   background: var(--surface);
 }
 
-.home-kit-static-card span {
+.home-kit-static-card > .home-kit-static-name {
   display: block;
   padding: 15px 16px 17px;
   font-family: var(--serif);
   font-size: clamp(18px, 1.7vw, 22px);
   line-height: 1.2;
+}
+
+/* Informações comerciais extras ficam restritas à composição desktop. */
+.home-kit-static-pricing,
+.home-kit-static-cta {
+  display: none;
+}
+
+@media (min-width: 901px) {
+  .home-kit-static-grid {
+    align-items: stretch;
+  }
+
+  .home-kit-static-card {
+    min-height: 100%;
+  }
+
+  .home-kit-static-card > img {
+    padding: clamp(12px, 1.35vw, 20px);
+    background:
+      radial-gradient(ellipse at 50% 38%, rgba(139, 30, 63, .12), transparent 66%),
+      var(--surface);
+  }
+
+  .home-kit-static-card > .home-kit-static-name {
+    padding: 16px 18px 5px;
+    font-size: clamp(18px, 1.55vw, 23px);
+  }
+
+  .home-kit-static-pricing {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 3px;
+    padding: 0 18px 15px;
+  }
+
+  .home-kit-static-old {
+    padding: 0;
+    color: var(--muted);
+    font-family: var(--sans);
+    font-size: 11px;
+    line-height: 1.3;
+    text-decoration: line-through;
+  }
+
+  .home-kit-static-current {
+    padding: 0;
+    color: var(--gold);
+    font-family: var(--sans);
+    font-size: clamp(23px, 2vw, 29px);
+    font-weight: 600;
+    line-height: 1.15;
+    letter-spacing: -.025em;
+  }
+
+  .home-kit-static-cta {
+    display: flex;
+    min-height: 48px;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: auto;
+    padding: 13px 18px 15px;
+    border-top: 1px solid var(--line);
+    color: var(--blush);
+    font-family: var(--sans);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+  }
+
+  .home-kit-static-cta svg {
+    display: block;
+    width: 19px;
+    height: 19px;
+    flex: 0 0 auto;
+    fill: none;
+    stroke: var(--gold);
+    stroke-width: 1.6;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    transition: transform .2s ease;
+  }
+
+  .home-kit-static-card:hover .home-kit-static-cta svg,
+  .home-kit-static-card:focus-visible .home-kit-static-cta svg {
+    transform: translateX(4px);
+  }
+}
+
+@media (min-width: 901px) and (max-width: 1199px) {
+  .home-kit-static-card:nth-child(4) {
+    grid-column: 2;
+  }
 }
 
 
