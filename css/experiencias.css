@@ -436,3 +436,16 @@ body{background:radial-gradient(ellipse at 10% 5%,rgba(113,69,132,.4),transparen
 @media (prefers-reduced-motion: reduce) {
   .experience-dialog .experience-progress span { transition: none; }
 }
+
+
+/* Links globais seguem a mesma ordem e hierarquia da navegação da Educação. */
+.header nav a.global-nav-link--store { color: #e5c68d; }
+.header nav a.global-nav-link--portal { color: #e3d5eb; }
+.header nav a.global-nav-link--experiences { color: #ff8ac7; }
+.header nav a.global-nav-link--education { color: #eee5f4; }
+.header nav a.global-nav-link[aria-current="page"],
+.header nav a.global-nav-link[aria-current="location"] {
+  color: #ff8ac7;
+  background: rgba(240,79,168,.13);
+  font-weight: 700;
+}
