@@ -35,7 +35,7 @@
       brand.href = "/educacao/";
       brand.setAttribute("aria-label", "Educação Luxuriosa — início");
       const subtitle = brand.querySelector("small");
-      if (subtitle) subtitle.textContent = "EDUCAÇÃO · CONHECIMENTO";
+      if (subtitle) subtitle.textContent = "EDUCAÇÃO";
     }
 
     const currentPath = normalizePath(window.location.pathname);
