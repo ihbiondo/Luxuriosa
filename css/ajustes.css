@@ -2007,7 +2007,7 @@ body.customer-open { overflow: hidden; }
   .home-page .about-preview-section > .container,
   .home-page .localizacao-avaliacao-section > .container,
   .home-page .google-reviews-section > .container,
-  .home-page.home-footer > .container {
+  .home-page .home-footer > .container {
     width: calc(100% - 36px);
     max-width: 760px;
     margin-inline: auto;
