@@ -149,8 +149,8 @@ def main() -> int:
         if rel.as_posix() == "educacao/index.html":
             if '<header class="header">' not in page_text or '<nav aria-label="Navegação principal da Luxuriosa">' not in page_text:
                 errors.append(f"{rel}: cabeçalho global compartilhado ausente")
-            if not re.search(r'<a class="brand" href="/portal/"', page_text):
-                errors.append(f"{rel}: marca não retorna ao Meu Portal")
+            if not re.search(r'<a class="brand" href="/" aria-label="Página inicial da Luxuriosa"', page_text):
+                errors.append(f"{rel}: marca não retorna à página inicial da Luxuriosa")
             for href in ("/portal/", "/experiencias/", "/educacao/", "/"):
                 if f'href="{href}"' not in page_text:
                     errors.append(f"{rel}: link global ausente no cabeçalho: {href}")
