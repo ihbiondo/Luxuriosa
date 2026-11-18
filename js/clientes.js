@@ -286,8 +286,9 @@
   }
 
   function validarTelefone(value) {
-    var digits = value.replace(/\D/g, "");
-    return digits.length >= 10 && digits.length <= 13;
+    var digits = String(value || "").replace(/\D/g, "");
+    if (digits.length === 10 || digits.length === 11) return true;
+    return (digits.length === 12 || digits.length === 13) && digits.slice(0, 2) === "55";
   }
 
   function validarDados({ exigirEndereco }) {
