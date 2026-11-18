@@ -2,7 +2,7 @@ name: Validacao do site e checkout publico
 
 on:
   push:
-    branches: [main]
+    branches: [main, "audit/**"]
     paths:
       - "index.html"
       - "loja.html"
