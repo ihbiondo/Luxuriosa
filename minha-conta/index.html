@@ -1093,6 +1093,7 @@ input:focus,select:focus{border-color:#d4af7c;box-shadow:0 0 0 3px rgba(212,175,
     function attachCepLookup({ inputId, statusId, streetId, neighborhoodId, cityId, stateId, complementId }) {
       const input = $(inputId);
       const status = $(statusId);
+      if (!input || !status) return;
       let controller = null;
       let lastRequestedCep = "";
 
