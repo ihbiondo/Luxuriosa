@@ -34,7 +34,8 @@ export function montarResumoPedidoWhatsApp(order, items, includeProducts = false
     lines.push("", "Produtos:");
     rows.forEach(item => {
       const quantity = Math.max(0, Number(item.quantity) || 0);
-      const lineTotal = Number.isFinite(Number(item.line_total))
+      const lineTotal = item.line_total !== null && item.line_total !== undefined && item.line_total !== "" &&
+        Number.isFinite(Number(item.line_total))
         ? Number(item.line_total)
         : (Number(item.unit_price) || 0) * quantity;
       lines.push("• " + quantity + "× " + String(item.product_name || "Produto") + " — " + brl.format(lineTotal));
