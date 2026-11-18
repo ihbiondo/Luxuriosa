@@ -2,7 +2,7 @@ name: Validacao do site e checkout publico
 
 on:
   push:
-    branches: [main]
+    branches: [main, "audit/**"]
     paths:
       - "index.html"
       - "loja.html"
@@ -46,6 +46,11 @@ on:
       - "termos-experiencias.html"
       - "privacidade.html"
       - "data/produtos.json"
+      - "css/**"
+      - "js/catalogo.js"
+      - "produtos/**"
+      - "**/*.html"
+      - "sitemap.xml"
       - ".github/workflows/payment-validate.yml"
   pull_request:
     branches: [main]
@@ -90,12 +95,57 @@ on:
       - "termos-experiencias.html"
       - "privacidade.html"
       - "data/produtos.json"
+      - "css/**"
+      - "js/catalogo.js"
+      - "produtos/**"
+      - "**/*.html"
+      - "sitemap.xml"
       - ".github/workflows/payment-validate.yml"
 
 permissions:
   contents: read
 
 jobs:
+  responsividade:
+    name: Auditar responsividade mobile-first
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Instalar Playwright e Chromium
+        run: |
+          npm init -y >/dev/null
+          npm install --no-save playwright@1
+          npx playwright install --with-deps chromium
+      - name: Servir o site e executar auditoria responsiva
+        run: |
+          set -euo pipefail
+          python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/luxuriosa-site-server.log 2>&1 &
+          site_server_pid=$!
+          trap 'kill "$site_server_pid" >/dev/null 2>&1 || true' EXIT
+          for attempt in $(seq 1 30); do
+            if curl --fail --silent http://127.0.0.1:4173/login.html >/dev/null; then
+              break
+            fi
+            sleep 1
+          done
+          curl --fail --silent http://127.0.0.1:4173/login.html >/dev/null
+
+          RESPONSIVE_SCREENSHOT_DIR="$GITHUB_WORKSPACE/e2e-screenshots/responsividade" \
+          RESPONSIVE_REPORT_PATH="$GITHUB_WORKSPACE/e2e-screenshots/responsividade/report.json" \
+          E2E_BASE_URL="http://127.0.0.1:4173" \
+          node tests/e2e/responsividade.mjs
+      - name: Publicar relatório e capturas responsivas
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: responsividade-mobile-${{ github.run_id }}
+          path: e2e-screenshots/responsividade/
+          if-no-files-found: warn
+          retention-days: 7
+
   validate:
     name: Validar experiência pública
     runs-on: ubuntu-latest

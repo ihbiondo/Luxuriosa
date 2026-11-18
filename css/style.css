@@ -38,6 +38,12 @@
 html {
   scroll-behavior: smooth;
   scroll-padding-top: 84px;
+  /*
+   * A gaveta do carrinho fica deslocada para fora da tela quando fechada.
+   * Recorta somente o excesso horizontal sem criar uma nova área de rolagem
+   * vertical ou prejudicar elementos position: sticky.
+   */
+  overflow-x: clip;
 }
 
 body {
@@ -52,6 +58,9 @@ body {
   font-weight: 300;
 
   line-height: 1.6;
+
+  /* Evita que a gaveta fixa fechada amplie a largura do documento. */
+  overflow-x: clip;
 }
 
 body.modal-open,

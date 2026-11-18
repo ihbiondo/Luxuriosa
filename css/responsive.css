@@ -1298,3 +1298,14 @@
     min-height: 46px;
   }
 }
+
+
+/* =========================================================
+   VITRINE DE LINGERIE — ENQUADRAMENTO VERTICAL
+   Fotos originais em formato retrato: reduz o corte no card
+   sem deixar áreas vazias na imagem.
+========================================================= */
+.product-img.product-img--portrait {
+  aspect-ratio: 2 / 3;
+  overflow: hidden;
+}

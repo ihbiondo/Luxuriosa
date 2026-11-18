@@ -746,10 +746,14 @@
        IMAGEM
        ===================================================== */
 
+    var produtoEhLingerie =
+      produto.categoria === "Lingerie" ||
+      produto.tipoProduto === "Lingerie";
+
     var imagem =
       criarElemento(
         "div",
-        "product-img"
+        "product-img" + (produtoEhLingerie ? " product-img--portrait" : "")
       );
 
 
