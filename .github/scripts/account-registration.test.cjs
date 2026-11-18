@@ -23,8 +23,8 @@ for (const page of pages) {
       "confirmPassword"
     ]);
     assert.doesNotMatch(form, /postalCode|addressNumber|addressStreet|addressNeighborhood|favoriteColor|favoriteCategory|PreferredPrice|PreferredOffer|Consent/);
-    assert.match(form, /name="username"|id="username"/);
-    assert.match(form, /requestUsernameIdentity\("availability"/);
+    assert.match(form, /id="username"/);
+    assert.match(html, /requestUsernameIdentity\("availability", username\)/);
   });
 
   test(page + ": endereço permanece opcional dentro do perfil da conta", () => {
