@@ -243,61 +243,29 @@
     produto,
     permitirGaleria
   ) {
-
-    if (!container) {
-      return;
-    }
-
+    if (!container) return;
     container.textContent = "";
 
-    /*
-     * Compatibilidade:
-     * - produto.imagem continua sendo a imagem principal.
-     * - produto.imagens pode conter uma galeria.
-     * A galeria só aparece no modal, para manter os cards limpos.
-     */
-
     var imagens = [];
-
     if (Array.isArray(produto.imagens)) {
       imagens = produto.imagens.filter(function (caminho) {
         return typeof caminho === "string" && caminho.trim();
       });
     }
-
     if (produto.imagem && imagens.indexOf(produto.imagem) === -1) {
       imagens.unshift(produto.imagem);
     }
-
-    if (!imagens.length && produto.imagem) {
-      imagens = [produto.imagem];
-    }
+    if (!imagens.length && produto.imagem) imagens = [produto.imagem];
 
     if (!imagens.length) {
-      container.appendChild(
-        criarElemento(
-          "span",
-          "image-fallback",
-          obterSimboloProduto(produto)
-        )
-      );
+      container.appendChild(criarElemento("span", "image-fallback", obterSimboloProduto(produto)));
       return;
     }
 
-    /*
-     * Cards usam enquadramento quadrado para dar protagonismo ao produto.
-     * As artes originais da Luxuriosa são verticais (9:16); em cards 1:1,
-     * "contain" reduzia demais o produto. "cover" amplia o conteúdo sem
-     * alterar o arquivo original. A página/modal mantém a imagem integral.
-     *
-     * Se um produto ganhar uma miniatura própria, informe imagemCard no JSON.
-     * Ajustes opcionais por produto: imagemCardAjuste e imagemCardPosicao.
-     */
     var imagemCard = !permitirGaleria &&
       typeof produto.imagemCard === "string" &&
       produto.imagemCard.trim();
     var caminhoPrincipal = imagemCard ? produto.imagemCard : imagens[0];
-
     var imagemPrincipal = criarElemento("img");
     imagemPrincipal.className = permitirGaleria
       ? "product-detail-main-image"
@@ -306,47 +274,46 @@
     imagemPrincipal.alt = produto.nome || "Produto Luxuriosa";
     imagemPrincipal.loading = "lazy";
     imagemPrincipal.decoding = "async";
-    imagemPrincipal.style.width = "100%";
-    imagemPrincipal.style.maxWidth = "100%";
-    imagemPrincipal.style.height = "100%";
-    var produtoEhLingerie = produto.categoria === "Lingerie" ||
-      produto.tipoProduto === "Lingerie";
 
-    imagemPrincipal.style.objectFit = permitirGaleria
-      ? "contain"
-      : (produtoEhLingerie || produto.imagemCardAjuste === "contain" ? "contain" : "cover");
-    imagemPrincipal.style.objectPosition = permitirGaleria || produtoEhLingerie
-      ? "center center"
-      : (produto.imagemCardPosicao || "50% 66%");
-
-    imagemPrincipal.onerror = function () {
-      this.style.display = "none";
-
-      if (!container.querySelector(".image-fallback")) {
-        container.appendChild(
-          criarElemento(
-            "span",
-            "image-fallback",
-            obterSimboloProduto(produto)
-          )
-        );
-      }
-    };
-
-    container.appendChild(imagemPrincipal);
-
-    if (!permitirGaleria || imagens.length < 2) {
+    if (!permitirGaleria) {
+      imagemPrincipal.style.width = "100%";
+      imagemPrincipal.style.maxWidth = "100%";
+      imagemPrincipal.style.height = "100%";
+      var produtoEhLingerie = produto.categoria === "Lingerie" ||
+        produto.tipoProduto === "Lingerie";
+      imagemPrincipal.style.objectFit =
+        produtoEhLingerie || produto.imagemCardAjuste === "contain" ? "contain" : "cover";
+      imagemPrincipal.style.objectPosition = produtoEhLingerie
+        ? "center center"
+        : (produto.imagemCardPosicao || "50% 66%");
+      container.appendChild(imagemPrincipal);
+      imagemPrincipal.onerror = function () {
+        this.style.display = "none";
+        if (!container.querySelector(".image-fallback")) {
+          container.appendChild(criarElemento("span", "image-fallback", obterSimboloProduto(produto)));
+        }
+      };
       return;
     }
 
-    var miniaturas = criarElemento("div", "product-gallery-thumbnails");
-    miniaturas.style.display = "flex";
-    miniaturas.style.flexWrap = "wrap";
-    miniaturas.style.justifyContent = "center";
-    miniaturas.style.alignItems = "center";
-    miniaturas.style.gap = "8px";
-    miniaturas.style.marginTop = "12px";
+    /*
+     * No modal, a imagem principal tem seu próprio quadro.
+     * A galeria fica fora dele para não disputar altura com fotos verticais.
+     */
+    var quadroImagem = criarElemento("div", "product-detail-image-frame");
+    quadroImagem.appendChild(imagemPrincipal);
+    container.appendChild(quadroImagem);
 
+    imagemPrincipal.onerror = function () {
+      this.style.display = "none";
+      if (!quadroImagem.querySelector(".image-fallback")) {
+        quadroImagem.appendChild(criarElemento("span", "image-fallback", obterSimboloProduto(produto)));
+      }
+    };
+
+    if (imagens.length < 2) return;
+
+    var miniaturas = criarElemento("div", "product-gallery-thumbnails");
     imagens.forEach(function (caminho, indice) {
       var botaoMiniatura = criarElemento("button", "product-gallery-thumb");
       botaoMiniatura.type = "button";
@@ -355,28 +322,17 @@
         "Ver imagem " + (indice + 1) + " de " + (produto.nome || "produto")
       );
       botaoMiniatura.setAttribute("aria-pressed", indice === 0 ? "true" : "false");
-      botaoMiniatura.style.width = "64px";
-      botaoMiniatura.style.height = "64px";
-      botaoMiniatura.style.padding = "4px";
-      botaoMiniatura.style.border = indice === 0 ? "2px solid #b58a45" : "1px solid #d8d0c5";
-      botaoMiniatura.style.borderRadius = "8px";
-      botaoMiniatura.style.background = "#fff";
-      botaoMiniatura.style.cursor = "pointer";
-      botaoMiniatura.style.overflow = "hidden";
 
       var miniatura = criarElemento("img");
       miniatura.src = caminho;
       miniatura.alt = "";
       miniatura.loading = "lazy";
-      miniatura.style.width = "100%";
-      miniatura.style.height = "100%";
-      miniatura.style.objectFit = "contain";
+      miniatura.decoding = "async";
+      botaoMiniatura.appendChild(miniatura);
 
       miniatura.onerror = function () {
-        botaoMiniatura.style.display = "none";
+        botaoMiniatura.remove();
       };
-
-      botaoMiniatura.appendChild(miniatura);
 
       botaoMiniatura.addEventListener("click", function (evento) {
         evento.stopPropagation();
@@ -387,18 +343,14 @@
         Array.prototype.forEach.call(
           miniaturas.querySelectorAll("button"),
           function (outroBotao) {
-            outroBotao.style.border = "1px solid #d8d0c5";
             outroBotao.setAttribute("aria-pressed", "false");
           }
         );
-
-        botaoMiniatura.style.border = "2px solid #b58a45";
         botaoMiniatura.setAttribute("aria-pressed", "true");
       });
 
       miniaturas.appendChild(botaoMiniatura);
     });
-
     container.appendChild(miniaturas);
   }
 
