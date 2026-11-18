@@ -96,8 +96,9 @@ async function inspectLayout(page, route, viewport) {
       clientWidth: doc.clientWidth,
       documentWidth: doc.scrollWidth,
       bodyWidth: body ? body.scrollWidth : 0,
-      horizontalOverflow: doc.scrollWidth > doc.clientWidth + 1 ||
-        (body && body.scrollWidth > doc.clientWidth + 1),
+      // O body pode ter scrollWidth maior por causa da gaveta fixa fechada.
+      // O que determina rolagem horizontal real da página é o scrollWidth do documento.
+      horizontalOverflow: doc.scrollWidth > doc.clientWidth + 1,
       hasViewportMeta: Boolean(document.querySelector('meta[name="viewport"]')),
       offenders
     };
