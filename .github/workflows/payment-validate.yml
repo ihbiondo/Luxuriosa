@@ -12,6 +12,8 @@ on:
       - "cidades/**"
       - "previa/**"
       - "login.html"
+      - "minha-conta/**"
+      - ".github/scripts/**"
       - "pagamento-retorno.html"
       - "acompanhar-pedido/**"
       - "portal/**"
@@ -52,6 +54,8 @@ on:
       - "cidades/**"
       - "previa/**"
       - "login.html"
+      - "minha-conta/**"
+      - ".github/scripts/**"
       - "pagamento-retorno.html"
       - "acompanhar-pedido/**"
       - "portal/**"
@@ -98,6 +102,7 @@ jobs:
         run: |
           node --check js/clientes.js
           node --check js/carrinho.js
+          node --test .github/scripts/account-registration.test.cjs
           npx --yes esbuild@0.25.0 supabase/functions/create-payment-order/index.ts --format=esm --platform=neutral --outfile=/tmp/create-payment-order.js
           node --input-type=module <<'NODE'
           import fs from "node:fs";
