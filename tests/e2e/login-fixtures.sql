@@ -6,6 +6,7 @@
 
 create table public.profiles (
   id uuid primary key references auth.users(id) on delete cascade,
+  username text unique,
   full_name text,
   display_name text,
   phone text,
