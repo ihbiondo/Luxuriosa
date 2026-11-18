@@ -14,7 +14,7 @@ const admin = createClient(SUPABASE_URL, SERVICE_ROLE_KEY, {
 const ALLOWED_ORIGINS = new Set(["https://luxuriosa.com.br", "https://www.luxuriosa.com.br"]);
 const CATALOG_URL = "https://luxuriosa.com.br/data/produtos.json";
 const CHECKOUT_URL = "https://api.checkout.infinitepay.io/links";
-const PAYMENT_CHECKOUT_PAYLOAD_VERSION = 7;
+const PAYMENT_CHECKOUT_PAYLOAD_VERSION = 8;
 const VARIABLE_DICE_KIT_IDS = new Set(["22", "23", "24", "27", "28", "29"]);
 const ALLOWED_DICE_VARIANT_IDS = new Set(["1", "2", "3"]);
 const CLUB_DISCOUNT_THRESHOLD_CENTS = 10000;
@@ -136,6 +136,11 @@ Deno.serve(async (req: Request) => {
     const phone = textValue(customer.phone, 30);
     const phoneE164 = brazilPhone(phone);
     let customerEmail = textValue(customer.email, 254);
+    const paymentPayerType = customer.paymentPayerType === "third_party" ? "third_party" : "account_holder";
+    const paymentPayerName = paymentPayerType === "third_party" ? textValue(customer.paymentPayerName, 160) : null;
+    const paymentPayerPhone = paymentPayerType === "third_party"
+      ? brazilPhone(textValue(customer.paymentPayerPhone, 30))
+      : null;
     const address = customer.address && typeof customer.address === "object" ? customer.address : {};
     const deliveryAddress = {
       zip: digits(textValue(address.zip, 12)),
@@ -147,6 +152,14 @@ Deno.serve(async (req: Request) => {
       state: textValue(address.state, 2).toUpperCase(),
       reference: textValue(address.reference, 180)
     };
+
+    if (paymentPayerType === "third_party" &&
+        (!paymentPayerName || !paymentPayerPhone || !/^\+55[1-9]\d{9,10}$/.test(paymentPayerPhone))) {
+      return reply({
+        code: "invalid_payer_data",
+        error: "Informe o nome e um telefone brasileiro com DDD de quem fará o pagamento."
+      }, 400, origin);
+    }
 
     if (!name || !phoneE164 || !/^\+55[1-9]\d{9,10}$/.test(phoneE164) ||
         !deliveryAddress.street || !deliveryAddress.number || !deliveryAddress.district ||
@@ -461,7 +474,7 @@ Deno.serve(async (req: Request) => {
     if (cartError) throw cartError;
 
     const { data: pendingOrder, error: pendingOrderError } = await admin.from("orders")
-      .select("id, order_number, customer_name, subtotal, shipping_amount, club_discount_amount_cents, club_discount_percent, payment_checkout_payload_version, payment_customer_phone_hash, payment_customer_email_hash, payment_amount_cents, payment_checkout_url, payment_expires_at, delivery_address, fulfillment_type")
+      .select("id, order_number, customer_name, subtotal, shipping_amount, club_discount_amount_cents, club_discount_percent, payment_checkout_payload_version, payment_customer_phone_hash, payment_customer_email_hash, payment_amount_cents, payment_checkout_url, payment_expires_at, delivery_address, fulfillment_type, payment_payer_type, payment_payer_name, payment_payer_phone")
       .eq("cart_session_id", cart.id)
       .eq("payment_provider", "infinitepay")
       .eq("payment_status", "pending")
@@ -515,6 +528,10 @@ Deno.serve(async (req: Request) => {
           pendingOrder.customer_name === name &&
           pendingOrder.payment_customer_phone_hash === customerPhoneHash &&
           pendingOrder.payment_customer_email_hash === customerEmailHash;
+        const sameCheckoutPayer =
+          pendingOrder.payment_payer_type === paymentPayerType &&
+          (pendingOrder.payment_payer_name || null) === paymentPayerName &&
+          (pendingOrder.payment_payer_phone || null) === paymentPayerPhone;
 
         const pendingSubtotalCents = Math.round(Number(pendingOrder.subtotal || 0) * 100);
         const pendingShippingCents = Math.round(Number(pendingOrder.shipping_amount || 0) * 100);
@@ -529,7 +546,7 @@ Deno.serve(async (req: Request) => {
 
         if (Number(pendingOrder.payment_amount_cents) === totalCents && samePaymentBreakdown &&
             sameItems && sameAddress && pendingOrder.fulfillment_type === fulfillmentType &&
-            sameCheckoutContact && pendingOrder.payment_checkout_url) {
+            sameCheckoutContact && sameCheckoutPayer && pendingOrder.payment_checkout_url) {
           return reply({
             ok: true,
             order_number: pendingOrder.order_number,
@@ -543,7 +560,7 @@ Deno.serve(async (req: Request) => {
           }, 200, origin);
         }
 
-        if (pendingOrder.payment_checkout_url && !sameCheckoutContact) {
+        if (pendingOrder.payment_checkout_url && (!sameCheckoutContact || !sameCheckoutPayer)) {
           const expiryLabel = pendingOrder.payment_expires_at
             ? new Date(pendingOrder.payment_expires_at).toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo" })
             : "";
@@ -554,7 +571,7 @@ Deno.serve(async (req: Request) => {
             code: "active_checkout_contact_mismatch",
             order_number: pendingOrder.order_number,
             expires_at: pendingOrder.payment_expires_at || null,
-            error: "Já existe um link de pagamento ativo para este carrinho, criado com dados de contato ou configuração anteriores. Não use o link anterior se o telefone ou e-mail estiver incorreto. Por segurança, não vamos gerar uma segunda cobrança enquanto ele estiver válido. " + expiryAdvice
+            error: "Já existe um link de pagamento ativo para este carrinho, criado com dados de contato, pagador ou configuração anteriores. Não use o link anterior se os dados de quem receberá ou pagará estiverem incorretos. Por segurança, não vamos gerar uma segunda cobrança enquanto ele estiver válido. " + expiryAdvice
           }, 409, origin);
         }
 
@@ -593,6 +610,11 @@ Deno.serve(async (req: Request) => {
       source: "website",
       customer_name: name,
       customer_phone: phone,
+      payment_payer_type: paymentPayerType,
+      payment_payer_name: paymentPayerName,
+      payment_payer_phone: paymentPayerPhone,
+      payment_payer_source: "website_checkout",
+      payment_payer_declared_at: now.toISOString(),
       delivery_address: deliveryAddress,
       subtotal: subtotalCents / 100,
       shipping_amount: shippingCents / 100,
