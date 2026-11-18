@@ -40,6 +40,11 @@ for (const page of pages) {
   });
 }
 
+test("fixture E2E do Supabase inclui username no perfil", () => {
+  const fixture = read("tests/e2e/login-fixtures.sql");
+  assert.match(fixture, /username text unique/);
+});
+
 test("login aceita usuário ou e-mail e preserva login por e-mail", () => {
   const html = read("login.html");
   assert.match(html, /E-mail ou usuário/);
