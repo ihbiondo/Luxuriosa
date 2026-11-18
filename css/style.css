@@ -58,6 +58,9 @@ body {
   font-weight: 300;
 
   line-height: 1.6;
+
+  /* Evita que a gaveta fixa fechada amplie a largura do documento. */
+  overflow-x: clip;
 }
 
 body.modal-open,
