@@ -2,7 +2,7 @@ begin;
 
 create extension if not exists pgtap with schema extensions;
 
-select extensions.plan(19);
+select extensions.plan(18);
 
 select extensions.ok(
   (select relrowsecurity from pg_class where oid='public.contact_consents'::regclass),
