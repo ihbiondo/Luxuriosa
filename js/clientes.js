@@ -77,6 +77,20 @@
 
   function modalidadeRetirada() { return texto("customerFulfillmentMode") === "pickup"; }
 
+  function atualizarCamposPagador() {
+    var terceiro = texto("customerPayerType") === "third_party";
+    var fields = $("customerThirdPartyPayerFields");
+    var name = $("customerPayerName");
+    var phone = $("customerPayerPhone");
+    if (fields) fields.hidden = !terceiro;
+    if (name) name.required = terceiro;
+    if (phone) phone.required = terceiro;
+    if (!terceiro) {
+      if (name) { name.value = ""; name.removeAttribute("aria-invalid"); }
+      if (phone) { phone.value = ""; phone.removeAttribute("aria-invalid"); }
+    }
+  }
+
   function atualizarModalidade() {
     var pickup = modalidadeRetirada();
     var addressFields = document.querySelector("#customerForm .customer-address-fields");
@@ -96,6 +110,9 @@
       name: texto("customerName"),
       phone: texto("customerPhone"),
       email: texto("customerEmail").toLowerCase(),
+      paymentPayerType: texto("customerPayerType") === "third_party" ? "third_party" : "account_holder",
+      paymentPayerName: texto("customerPayerName"),
+      paymentPayerPhone: texto("customerPayerPhone"),
       address: {
         zip: texto("customerCep"),
         street: texto("customerStreet"),
@@ -120,6 +137,10 @@
     definirValor("customerName", data.name);
     definirValor("customerPhone", formatarTelefone(data.phone));
     definirValor("customerEmail", data.email || "");
+    definirValor("customerPayerType", data.paymentPayerType === "third_party" ? "third_party" : "account_holder");
+    definirValor("customerPayerName", data.paymentPayerName || "");
+    definirValor("customerPayerPhone", data.paymentPayerPhone || "");
+    atualizarCamposPagador();
     definirValor("customerCep", address.zip || "");
     definirValor("customerStreet", address.street || "");
     definirValor("customerNumber", address.number || "");
@@ -276,6 +297,9 @@
     var required = exigirEnderecoEntrega
       ? ["customerName", "customerPhone", "customerEmail", "customerCep", "customerStreet", "customerNumber", "customerDistrict", "customerCity", "customerState"]
       : ["customerName", "customerPhone", "customerEmail"];
+    if (data.paymentPayerType === "third_party") {
+      required.push("customerPayerName", "customerPayerPhone");
+    }
 
     document.querySelectorAll("#customerForm [aria-invalid='true']").forEach(function (field) { field.removeAttribute("aria-invalid"); });
     required.forEach(function (id) {
@@ -324,6 +348,15 @@
       if (!primeiroErro) primeiroErro = phone;
       avisar("Confira o telefone/WhatsApp. Informe DDD e número.", "error");
       phone.focus();
+      return false;
+    }
+    if (data.paymentPayerType === "third_party" && data.paymentPayerPhone && !validarTelefone(data.paymentPayerPhone)) {
+      var payerPhone = $("customerPayerPhone");
+      if (payerPhone) {
+        payerPhone.setAttribute("aria-invalid", "true");
+        payerPhone.focus();
+      }
+      avisar("Confira o telefone/WhatsApp de quem fará o pagamento. Informe DDD e número.", "error");
       return false;
     }
     if (primeiroErro) {
@@ -413,6 +446,14 @@
 
     lines.push(data.fulfillmentType === "pickup" ? "Frete: gratuito · retirada agendada em Bauru" : "Frete: valor fixo conforme a localidade e a modalidade do Clube, de acordo com a tabela oficial");
     lines.push("*Total dos produtos: " + formatarPreco(totalProdutos) + "*");
+
+    lines.push("", "*PAGAMENTO*");
+    if (data.paymentPayerType === "third_party") {
+      lines.push("• Pagador indicado: " + data.paymentPayerName + " — " + data.paymentPayerPhone);
+      lines.push("• Informação declarada no pedido; a confirmação do pagamento será feita separadamente.");
+    } else {
+      lines.push("• Pagamento informado como feito por você, responsável pela compra.");
+    }
 
     lines.push("", data.fulfillmentType === "pickup" ? "*RETIRADA AGENDADA*" : "*ENTREGA*");
     lines.push("• " + data.name + " — " + data.phone);
@@ -846,6 +887,9 @@
     messagePreview = $("customerMessagePreview");
     if (!overlay || !dialog || !form || !review) return;
     atualizarModalidade();
+    atualizarCamposPagador();
+    var payerType = $("customerPayerType");
+    if (payerType) payerType.addEventListener("change", atualizarCamposPagador);
     var fulfillmentMode = $("customerFulfillmentMode");
     if (fulfillmentMode) fulfillmentMode.addEventListener("change", atualizarModalidade);
     form.addEventListener("submit", revisarPedido);
@@ -871,13 +915,19 @@
         else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
       }
     });
+    var campoTelefonePagador = $("customerPayerPhone");
+    if (campoTelefonePagador) campoTelefonePagador.addEventListener("input", function () {
+      var digits = this.value.replace(/\D/g, "").slice(0, 13);
+      if (digits.length >= 10) this.value = formatarTelefone(digits);
+      this.removeAttribute("aria-invalid");
+    });
     var campoTelefone = $("customerPhone");
     if (campoTelefone) campoTelefone.addEventListener("input", function () {
       var digits = this.value.replace(/\D/g, "").slice(0, 13);
       if (digits.length >= 10) this.value = formatarTelefone(digits);
       this.removeAttribute("aria-invalid");
     });
-    ["customerName", "customerPhone", "customerStreet", "customerNumber", "customerDistrict", "customerCity", "customerState"].forEach(function (id) {
+    ["customerName", "customerPhone", "customerPayerName", "customerPayerPhone", "customerStreet", "customerNumber", "customerDistrict", "customerCity", "customerState"].forEach(function (id) {
       var campo = $(id);
       if (!campo) return;
       campo.addEventListener("input", function () {
