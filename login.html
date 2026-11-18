@@ -663,7 +663,7 @@ input:focus,select:focus{border-color:#d4af7c;box-shadow:0 0 0 3px rgba(212,175,
             <h2>Bem-vindo de volta.</h2>
             <p class="lead">Acesse sua conta com seu e-mail e senha.</p>
             <div class="grid">
-              <div class="field full"><label for="loginEmail">E-mail</label><input id="loginEmail" type="email" autocomplete="email" placeholder="voce@exemplo.com.br" required></div>
+              <div class="field full"><label for="loginEmail">E-mail ou usuário</label><input id="loginEmail" type="text" autocomplete="username" autocapitalize="none" spellcheck="false" placeholder="Seu e-mail ou usuário" required></div>
               <div class="field full"><label for="loginPassword">Senha</label><input id="loginPassword" type="password" autocomplete="current-password" placeholder="Sua senha" required></div>
             </div>
             <div class="actions"><button class="primary" type="submit">ENTRAR NA MINHA CONTA</button><button class="text-action" id="forgotButton" type="button">Esqueci minha senha</button></div>
@@ -671,8 +671,9 @@ input:focus,select:focus{border-color:#d4af7c;box-shadow:0 0 0 3px rgba(212,175,
 
           <form id="signupForm" class="hidden">
             <h2>Crie sua conta.</h2>
-            <p class="lead">É gratuito. Preencha apenas os dados essenciais para começar. Preferências podem ficar para depois.</p>
+            <p class="lead">É gratuito. Escolha seu usuário e preencha apenas os dados essenciais.</p>
             <div class="grid">
+              <div class="field full"><label for="username">Usuário</label><input id="username" type="text" autocomplete="username" autocapitalize="none" spellcheck="false" minlength="3" maxlength="24" pattern="[a-z0-9][a-z0-9._]{2,23}" placeholder="seu.usuario" aria-describedby="usernameStatus" required><small id="usernameStatus" aria-live="polite">De 3 a 24 caracteres: letras minúsculas, números, ponto ou sublinhado.</small></div>
               <div class="field full"><label for="fullName">Nome completo</label><input id="fullName" autocomplete="name" maxlength="160" required></div>
               <div class="field"><label for="birthDate">Data de nascimento</label><input id="birthDate" type="date" autocomplete="bday" required></div>
               <div class="field"><label for="phone">WhatsApp</label><input id="phone" type="tel" autocomplete="tel" placeholder="(14) 99999-9999" maxlength="30" required></div>
@@ -680,14 +681,6 @@ input:focus,select:focus{border-color:#d4af7c;box-shadow:0 0 0 3px rgba(212,175,
               <div class="field"><label for="signupPassword">Senha (mínimo 8 caracteres)</label><input id="signupPassword" type="password" autocomplete="new-password" minlength="8" pattern="(?=.*[A-Za-z])(?=.*[0-9]).{8,}" title="Use pelo menos 8 caracteres, incluindo letras e números." required></div>
               <div class="field"><label for="confirmPassword">Confirme a senha</label><input id="confirmPassword" type="password" autocomplete="new-password" minlength="8" required></div>
 
-              <div class="section-label">Endereço principal</div>
-              <div class="field"><label for="postalCode">CEP</label><input id="postalCode" inputmode="numeric" autocomplete="postal-code" maxlength="9" placeholder="00000-000" required><small class="cep-status" id="postalCodeStatus" aria-live="polite"></small></div>
-              <div class="field"><label for="addressNumber">Número</label><input id="addressNumber" autocomplete="address-line2" maxlength="20" required></div>
-              <div class="field full"><label for="street">Rua / Avenida</label><input id="street" autocomplete="address-line1" maxlength="160" required></div>
-              <div class="field"><label for="neighborhood">Bairro</label><input id="neighborhood" autocomplete="address-level3" maxlength="100" required></div>
-              <div class="field"><label for="complement">Complemento (opcional)</label><input id="complement" maxlength="100"></div>
-              <div class="field"><label for="city">Cidade</label><input id="city" autocomplete="address-level2" value="Bauru" maxlength="100" required></div>
-              <div class="field"><label for="state">UF</label><input id="state" autocomplete="address-level1" value="SP" maxlength="2" pattern="[A-Za-z]{2}" required></div>
 
             </div>
             <div class="actions"><button class="primary" type="submit">CRIAR MINHA CONTA</button></div>
@@ -761,6 +754,7 @@ input:focus,select:focus{border-color:#d4af7c;box-shadow:0 0 0 3px rgba(212,175,
             <form id="accountForm" class="account-form">
               <div class="section-label">Dados pessoais</div>
               <div class="grid">
+                <div class="field"><label for="accountUsername">Usuário</label><input id="accountUsername" type="text" readonly aria-readonly="true"><small>Use este usuário ou seu e-mail para entrar.</small></div>
                 <div class="field full"><label for="accountFullName">Nome completo</label><input id="accountFullName" autocomplete="name" maxlength="160" required></div>
                 <div class="field"><label for="accountBirthDate">Data de nascimento</label><input id="accountBirthDate" type="date" autocomplete="bday" required></div>
                 <div class="field"><label for="accountPhone">WhatsApp</label><input id="accountPhone" type="tel" autocomplete="tel" maxlength="30" required></div>
@@ -1036,9 +1030,49 @@ input:focus,select:focus{border-color:#d4af7c;box-shadow:0 0 0 3px rgba(212,175,
       if (/email not confirmed/i.test(text)) return "Confirme seu e-mail antes de entrar. Verifique sua caixa de entrada.";
       if (/user already registered/i.test(text)) return "Este e-mail já possui cadastro. Tente entrar ou recuperar sua senha.";
       if (/password should be at least/i.test(text)) return "A senha precisa ter pelo menos 8 caracteres.";
+      if (/profiles_username_key|duplicate key|username.*(unique|duplicate)/i.test(text)) return "Este usuário já está em uso. Escolha outro.";
       if (/username/i.test(text)) return "Não foi possível concluir o cadastro com os dados informados. Tente novamente.";
       return text;
     }
+
+    async function requestUsernameIdentity(mode, username, password) {
+      const response = await fetch(SUPABASE_URL + "/functions/v1/username-login", {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+          "apikey": SUPABASE_PUBLISHABLE_KEY
+        },
+        body: JSON.stringify({ mode, username, ...(password ? { password } : {}) })
+      });
+      const result = await response.json().catch(() => ({}));
+      if (!response.ok || !result.ok) {
+        throw new Error(result.error || "Não foi possível validar o usuário agora.");
+      }
+      return result;
+    }
+
+    $("username").addEventListener("input", () => {
+      $("username").value = $("username").value.toLowerCase().replace(/[^a-z0-9._]/g, "").slice(0, 24);
+      $("usernameStatus").textContent = "Verificaremos a disponibilidade ao criar sua conta.";
+      $("usernameStatus").dataset.kind = "";
+    });
+    $("username").addEventListener("blur", async () => {
+      const username = $("username").value.trim().toLowerCase();
+      if (!/^[a-z0-9][a-z0-9._]{2,23}$/.test(username)) {
+        $("usernameStatus").textContent = "Use de 3 a 24 caracteres: letras minúsculas, números, ponto ou sublinhado.";
+        $("usernameStatus").dataset.kind = "error";
+        return;
+      }
+      $("usernameStatus").textContent = "Verificando disponibilidade…";
+      try {
+        const result = await requestUsernameIdentity("availability", username);
+        $("usernameStatus").textContent = result.available ? "Usuário disponível." : "Este usuário já está em uso.";
+        $("usernameStatus").dataset.kind = result.available ? "success" : "error";
+      } catch (error) {
+        $("usernameStatus").textContent = "Não foi possível verificar agora. Tentaremos novamente ao criar a conta.";
+        $("usernameStatus").dataset.kind = "error";
+      }
+    });
 
     const ACCOUNT_CONSENT_VERSION = "luxuriosa-account-data-v2-2026-11";
 
@@ -1090,51 +1124,75 @@ input:focus,select:focus{border-color:#d4af7c;box-shadow:0 0 0 3px rgba(212,175,
     async function syncNewAccountData(user) {
       const meta = user?.user_metadata || {};
       await syncSignupConsents(user);
-      if (meta.account_setup_completed || !meta.address_postal_code) return;
-      const profile = {
-        full_name: meta.full_name || null,
-        phone: meta.phone || null,
-        birth_date: meta.birth_date || null
-      };
-      const profileResult = await supabase.from("profiles").update(profile).eq("id", user.id);
-      if (profileResult.error) throw profileResult.error;
+      if (meta.account_setup_completed) return;
 
-      const colors = Array.isArray(meta.favorite_colors) ? meta.favorite_colors.slice(0, 3) : [];
-      const categories = Array.isArray(meta.favorite_categories) ? meta.favorite_categories.slice(0, 3) : [];
-      const preferencesResult = await supabase.from("preferences").update({
-        favorite_colors: colors,
-        favorite_categories: categories,
-        preferred_price_range: meta.preferred_price_range || null,
-        preferred_offer_type: meta.preferred_offer_type || null
-      }).eq("user_id", user.id);
-      if (preferencesResult.error) throw preferencesResult.error;
+      const hasProfileData = Boolean(meta.full_name || meta.phone || meta.birth_date);
+      const hasPreferenceData = Array.isArray(meta.favorite_colors) ||
+        Array.isArray(meta.favorite_categories) ||
+        Object.prototype.hasOwnProperty.call(meta, "preferred_price_range") ||
+        Object.prototype.hasOwnProperty.call(meta, "preferred_offer_type");
+      const hasAddressData = Boolean(meta.address_postal_code || meta.address_street ||
+        meta.address_number || meta.address_neighborhood || meta.address_city);
 
-      const existing = await supabase.from("addresses").select("id").eq("user_id", user.id).limit(1);
-      if (existing.error) throw existing.error;
-      if (!existing.data.length) {
-        const addressResult = await supabase.from("addresses").insert({
-          user_id: user.id,
-          label: "Principal",
-          recipient_name: meta.full_name || meta.display_name,
-          postal_code: meta.address_postal_code,
-          street: meta.address_street,
-          number: meta.address_number,
-          complement: meta.address_complement || null,
-          neighborhood: meta.address_neighborhood || null,
-          city: meta.address_city,
-          state: String(meta.address_state || "").toUpperCase(),
-          country: "Brasil",
-          is_default: true
-        });
-        if (addressResult.error) throw addressResult.error;
+      if (!hasProfileData && !hasPreferenceData && !hasAddressData) return;
+
+      if (hasProfileData) {
+        const profileResult = await supabase.from("profiles").update({
+          full_name: meta.full_name || null,
+          phone: meta.phone || null,
+          birth_date: meta.birth_date || null
+        }).eq("id", user.id);
+        if (profileResult.error) throw profileResult.error;
       }
-      const metadataResult = await supabase.auth.updateUser({ data: { account_setup_completed: true, full_name: null, phone: null, birth_date: null, favorite_colors: null, favorite_categories: null, preferred_price_range: null, preferred_offer_type: null, address_postal_code: null, address_street: null, address_number: null, address_complement: null, address_neighborhood: null, address_city: null, address_state: null } });
+
+      if (hasPreferenceData) {
+        const preferencesResult = await supabase.from("preferences").update({
+          favorite_colors: Array.isArray(meta.favorite_colors) ? meta.favorite_colors.slice(0, 3) : [],
+          favorite_categories: Array.isArray(meta.favorite_categories) ? meta.favorite_categories.slice(0, 3) : [],
+          preferred_price_range: meta.preferred_price_range || null,
+          preferred_offer_type: meta.preferred_offer_type || null
+        }).eq("user_id", user.id);
+        if (preferencesResult.error) throw preferencesResult.error;
+      }
+
+      // Preserve address metadata from older registrations and migrate it only when supplied.
+      if (hasAddressData) {
+        const existing = await supabase.from("addresses").select("id").eq("user_id", user.id).limit(1);
+        if (existing.error) throw existing.error;
+        if (!existing.data.length) {
+          const addressResult = await supabase.from("addresses").insert({
+            user_id: user.id,
+            label: "Principal",
+            recipient_name: meta.full_name || meta.display_name,
+            postal_code: meta.address_postal_code || null,
+            street: meta.address_street || null,
+            number: meta.address_number || null,
+            complement: meta.address_complement || null,
+            neighborhood: meta.address_neighborhood || null,
+            city: meta.address_city || null,
+            state: String(meta.address_state || "").toUpperCase() || null,
+            country: "Brasil",
+            is_default: true
+          });
+          if (addressResult.error) throw addressResult.error;
+        }
+      }
+
+      const metadataResult = await supabase.auth.updateUser({ data: {
+        account_setup_completed: true,
+        full_name: null, phone: null, birth_date: null,
+        favorite_colors: null, favorite_categories: null,
+        preferred_price_range: null, preferred_offer_type: null,
+        address_postal_code: null, address_street: null, address_number: null,
+        address_complement: null, address_neighborhood: null,
+        address_city: null, address_state: null
+      } });
       if (metadataResult.error) throw metadataResult.error;
     }
 
     async function loadAccountData(user) {
       const [profileResult, addressResult, preferencesResult, consentResult] = await Promise.all([
-        supabase.from("profiles").select("full_name, display_name, phone, birth_date").eq("id", user.id).maybeSingle(),
+        supabase.from("profiles").select("username, full_name, display_name, phone, birth_date").eq("id", user.id).maybeSingle(),
         supabase.from("addresses").select("id, postal_code, street, number, complement, neighborhood, city, state").eq("user_id", user.id).eq("is_default", true).maybeSingle(),
         supabase.from("preferences").select("favorite_colors, favorite_categories, preferred_price_range, preferred_offer_type").eq("user_id", user.id).maybeSingle(),
         supabase.from("account_data_consents").select("purpose, granted, consent_text_version, created_at").eq("user_id", user.id).order("created_at", { ascending: false }).limit(20)
@@ -1157,6 +1215,7 @@ input:focus,select:focus{border-color:#d4af7c;box-shadow:0 0 0 3px rgba(212,175,
       const colors = preferencesResult.data?.favorite_colors || [];
       const categories = preferencesResult.data?.favorite_categories || [];
       $("accountEmail").textContent = user.email || "";
+      $("accountUsername").value = profile.username || user.user_metadata?.username || "";
       $("accountFullName").value = profile.full_name || user.user_metadata?.full_name || "";
       $("accountBirthDate").value = profile.birth_date || user.user_metadata?.birth_date || "";
       $("accountPhone").value = profile.phone || user.user_metadata?.phone || "";
@@ -1439,8 +1498,10 @@ input:focus,select:focus{border-color:#d4af7c;box-shadow:0 0 0 3px rgba(212,175,
     $("loginTab").addEventListener("click", () => showForm("login"));
     $("signupTab").addEventListener("click", () => showForm("signup"));
     $("forgotButton").addEventListener("click", () => {
-      $("resetEmail").value = $("loginEmail").value;
+      const identifier = $("loginEmail").value.trim();
+      $("resetEmail").value = identifier.includes("@") ? identifier : "";
       showForm("reset");
+      if (identifier && !identifier.includes("@")) message("Informe seu e-mail cadastrado para recuperar a senha.");
     });
     $("backToLogin").addEventListener("click", () => showForm("login"));
 
@@ -1449,12 +1510,25 @@ input:focus,select:focus{border-color:#d4af7c;box-shadow:0 0 0 3px rgba(212,175,
       clearMessage();
       setBusy(loginForm, true);
       try {
-        const { data, error } = await supabase.auth.signInWithPassword({
-          email: $("loginEmail").value.trim(),
-          password: $("loginPassword").value
-        });
-        if (error) throw error;
-        await showSignedIn(data.user);
+        const identifier = $("loginEmail").value.trim();
+        let user = null;
+        if (identifier.includes("@")) {
+          const { data, error } = await supabase.auth.signInWithPassword({
+            email: identifier.toLowerCase(),
+            password: $("loginPassword").value
+          });
+          if (error) throw error;
+          user = data.user;
+        } else {
+          const result = await requestUsernameIdentity("login", identifier, $("loginPassword").value);
+          const { data, error } = await supabase.auth.setSession({
+            access_token: result.session.access_token,
+            refresh_token: result.session.refresh_token
+          });
+          if (error) throw error;
+          user = data.user;
+        }
+        await showSignedIn(user);
       } catch (error) {
         console.error("Falha ao entrar:", error);
         message(friendlyError(error), true);
@@ -1465,6 +1539,11 @@ input:focus,select:focus{border-color:#d4af7c;box-shadow:0 0 0 3px rgba(212,175,
 
     signupForm.addEventListener("submit", async (event) => {
       event.preventDefault(); clearMessage();
+      const username = $("username").value.trim().toLowerCase();
+      if (!/^[a-z0-9][a-z0-9._]{2,23}$/.test(username)) {
+        $("username").focus();
+        return message("Escolha um usuário com 3 a 24 caracteres: letras minúsculas, números, ponto ou sublinhado.", true);
+      }
       if (!/(?=.*[A-Za-z])(?=.*[0-9]).{8,}/.test($("signupPassword").value)) return message("Use uma senha com pelo menos 8 caracteres, incluindo letras e números.", true);
       if ($("signupPassword").value !== $("confirmPassword").value) return message("As senhas não coincidem.", true);
       const birth = $("birthDate").value;
@@ -1475,13 +1554,26 @@ input:focus,select:focus{border-color:#d4af7c;box-shadow:0 0 0 3px rgba(212,175,
       const birthdayPending = today.getMonth() < birthDate.getMonth() || (today.getMonth() === birthDate.getMonth() && today.getDate() < birthDate.getDate());
       if (birthdayPending) age--;
       if (age < 18) return message("O cadastro na Luxuriosa é permitido somente para maiores de 18 anos.", true);
+
       const fullName = $("fullName").value.trim();
       const firstName = fullName.split(/\s+/)[0];
-      const usernameBase = fullName.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, "_").replace(/^_|_$/g, "").slice(0, 20) || "cliente";
-      const username = usernameBase + "_" + crypto.randomUUID().replace(/-/g, "").slice(0, 8);
       const phone = $("phone").value.trim();
-      const postalCode = $("postalCode").value.replace(/\D/g, "");
-      if (postalCode.length !== 8) return message("Informe um CEP válido com oito dígitos.", true);
+      try {
+        $("usernameStatus").textContent = "Verificando disponibilidade…";
+        const availability = await requestUsernameIdentity("availability", username);
+        if (!availability.available) {
+          $("usernameStatus").textContent = "Este usuário já está em uso.";
+          $("usernameStatus").dataset.kind = "error";
+          $("username").focus();
+          return message("Este usuário já está em uso. Escolha outro.", true);
+        }
+        $("usernameStatus").textContent = "Usuário disponível.";
+        $("usernameStatus").dataset.kind = "success";
+      } catch (error) {
+        console.error("Falha ao verificar usuário:", error);
+        return message(error.message || "Não foi possível verificar o usuário. Tente novamente.", true);
+      }
+
       if (new URLSearchParams(window.location.search).get("next") === "clube.html") {
         try { localStorage.setItem("luxuriosa_after_auth", "clube.html"); } catch (_) {}
       }
@@ -1489,7 +1581,7 @@ input:focus,select:focus{border-color:#d4af7c;box-shadow:0 0 0 3px rgba(212,175,
       let signupResult;
       try {
         signupResult = await supabase.auth.signUp({
-          email: $("signupEmail").value.trim(),
+          email: $("signupEmail").value.trim().toLowerCase(),
           password: $("signupPassword").value,
           options: {
             emailRedirectTo: window.location.origin + window.location.pathname +
@@ -1501,14 +1593,7 @@ input:focus,select:focus{border-color:#d4af7c;box-shadow:0 0 0 3px rgba(212,175,
               display_name: firstName,
               full_name: fullName,
               phone,
-              birth_date: birth,
-              address_postal_code: postalCode,
-              address_street: $("street").value.trim(),
-              address_number: $("addressNumber").value.trim(),
-              address_complement: $("complement").value.trim(),
-              address_neighborhood: $("neighborhood").value.trim(),
-              address_city: $("city").value.trim(),
-              address_state: $("state").value.trim().toUpperCase()
+              birth_date: birth
             }
           }
         });
@@ -1525,8 +1610,7 @@ input:focus,select:focus{border-color:#d4af7c;box-shadow:0 0 0 3px rgba(212,175,
         await showSignedIn(data.user);
       } else {
         signupForm.reset();
-        $("city").value = "Bauru";
-        $("state").value = "SP";
+        $("usernameStatus").textContent = "De 3 a 24 caracteres: letras minúsculas, números, ponto ou sublinhado.";
         showForm("login");
         message("Cadastro recebido! Enviamos um link de confirmação para seu e-mail. Abra a mensagem para ativar sua conta e concluir o acesso.");
       }
