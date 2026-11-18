@@ -314,6 +314,15 @@ async function auditCartAndCheckout(page) {
     return checkout && !checkout.disabled;
   }, null, { timeout: 20000 });
 
+  // Espera a animação de abertura terminar antes de medir as bordas do drawer.
+  await page.waitForFunction(() => {
+    const drawer = document.querySelector("#cart.open");
+    if (!drawer) return false;
+    const rect = drawer.getBoundingClientRect();
+    const width = document.documentElement.clientWidth;
+    return Math.abs(rect.left) <= 1 && Math.abs(rect.right - width) <= 1;
+  }, null, { timeout: 8000 });
+
   assert.equal(await page.locator("#cartCount").innerText(), "1",
     "O carrinho deve mostrar uma unidade do produto de teste.");
   assert.equal(await page.locator("#cartItems .cart-item").count(), 1,
