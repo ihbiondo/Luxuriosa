@@ -45,6 +45,59 @@
 
 
   /* =======================================================
+     NAVEGAÇÃO DA CONTA — SESSÃO AUTENTICADA
+     ======================================================= */
+
+  function configurarNavegacaoDaConta() {
+    var accountLink = document.querySelector("[data-nav-account]");
+    var accountHint = document.querySelector("[data-nav-account-hint]");
+    var ordersLink = document.querySelector("[data-nav-orders]");
+    if (!accountLink || !ordersLink) return;
+
+    function atualizarNavegacao(session) {
+      var authenticated = !!(session && session.user && session.user.id);
+      accountLink.href = authenticated ? "/minha-conta/" : "/login.html";
+      accountLink.setAttribute(
+        "aria-label",
+        authenticated ? "Minha conta — acessar meu perfil" : "Minha conta — entrar ou criar conta"
+      );
+      if (accountHint) {
+        accountHint.textContent = authenticated
+          ? "Acesse seus dados e preferências"
+          : "Entre ou crie sua conta";
+      }
+      ordersLink.hidden = !authenticated;
+      ordersLink.setAttribute("aria-hidden", authenticated ? "false" : "true");
+    }
+
+    /* O estado inicial é fechado por segurança até o Supabase confirmar a sessão. */
+    atualizarNavegacao(null);
+
+    import("https://esm.sh/@supabase/supabase-js@2")
+      .then(function (mod) {
+        var supabase = mod.createClient(
+          "https://byiykxfugvxuowueuxca.supabase.co",
+          "sb_publishable_LaMBeWQ1PNANEQ85SD_35Q_wDzswy8y",
+          { auth: { autoRefreshToken: true, persistSession: true, detectSessionInUrl: true } }
+        );
+
+        supabase.auth.onAuthStateChange(function (_event, session) {
+          atualizarNavegacao(session);
+        });
+
+        return supabase.auth.getSession();
+      })
+      .then(function (result) {
+        if (result && result.data) atualizarNavegacao(result.data.session);
+      })
+      .catch(function () {
+        /* Sem confirmação da sessão, mantém Meus pedidos oculto e a conta direcionada ao login. */
+        atualizarNavegacao(null);
+      });
+  }
+
+
+  /* =======================================================
      MENU MOBILE
      ======================================================= */
 
@@ -525,6 +578,7 @@
     configurarWhatsApp();
 
     configurarMenu();
+    configurarNavegacaoDaConta();
     configurarAno();
     configurarScroll();
 }
