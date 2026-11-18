@@ -823,6 +823,13 @@ input:focus,select:focus{border-color:#d4af7c;box-shadow:0 0 0 3px rgba(212,175,
                   <span>Permitir uso de indicadores limitados para estatísticas agregadas e anonimizadas, que podem ser compartilhadas com parceiros sem identificação individual. Não inclui nome, contato, endereço ou histórico individual de compras.</span>
                 </label>
               </div>
+              <div class="field full" style="margin:12px 0">
+                <label style="display:flex;gap:10px;align-items:flex-start;letter-spacing:0;line-height:1.6">
+                  <input id="accountWhatsappMarketingConsent" type="checkbox" style="width:16px;height:16px;flex:0 0 16px;margin:2px 0 0;accent-color:var(--wine)">
+                  <span>Quero receber novidades e ofertas da Luxuriosa pelo WhatsApp. Posso cancelar quando quiser. Esta autorização é opcional e não interfere nos pedidos ou no atendimento.</span>
+                </label>
+                <small id="accountContactConsentStatus" class="email-change-help" aria-live="polite"></small>
+              </div>
               <p id="accountConsentStatus" class="email-change-help" aria-live="polite"></p>
               <div class="actions"><button class="secondary" id="saveAccountDataConsentButton" type="submit">SALVAR AUTORIZAÇÕES</button></div>
             </form>
@@ -1180,6 +1187,7 @@ input:focus,select:focus{border-color:#d4af7c;box-shadow:0 0 0 3px rgba(212,175,
     });
 
     const ACCOUNT_CONSENT_VERSION = "luxuriosa-account-data-v2-2026-11";
+    const CONTACT_MARKETING_CONSENT_VERSION = "luxuriosa-contact-marketing-v1-2026-11";
 
     function updatePreferenceProgress(categories, priceRange, offerType) {
       const selectedCategories = Array.isArray(categories) ? categories : [];
@@ -1296,22 +1304,35 @@ input:focus,select:focus{border-color:#d4af7c;box-shadow:0 0 0 3px rgba(212,175,
     }
 
     async function loadAccountData(user) {
-      const [profileResult, addressResult, preferencesResult, consentResult] = await Promise.all([
+      const [profileResult, addressResult, preferencesResult, consentResult, contactConsentResult] = await Promise.all([
         supabase.from("profiles").select("username, full_name, display_name, phone, birth_date").eq("id", user.id).maybeSingle(),
         supabase.from("addresses").select("id, postal_code, street, number, complement, neighborhood, city, state").eq("user_id", user.id).eq("is_default", true).maybeSingle(),
         supabase.from("preferences").select("favorite_colors, favorite_categories, preferred_price_range, preferred_offer_type").eq("user_id", user.id).maybeSingle(),
-        supabase.from("account_data_consents").select("purpose, granted, consent_text_version, created_at").eq("user_id", user.id).order("created_at", { ascending: false }).limit(20)
+        supabase.from("account_data_consents").select("purpose, granted, consent_text_version, created_at").eq("user_id", user.id).order("created_at", { ascending: false }).limit(20),
+        supabase.from("contact_consents").select("granted, consent_text_version, created_at").eq("user_id", user.id).eq("channel", "whatsapp").eq("purpose", "marketing").order("created_at", { ascending: false }).limit(1).maybeSingle()
       ]);
       if (profileResult.error) throw profileResult.error;
       if (addressResult.error) throw addressResult.error;
       if (preferencesResult.error) throw preferencesResult.error;
       if (consentResult.error) throw consentResult.error;
+      if (contactConsentResult.error) throw contactConsentResult.error;
       const latestConsent = new Map();
       (consentResult.data || []).forEach(row => {
         if (!latestConsent.has(row.purpose)) latestConsent.set(row.purpose, row);
       });
       $("accountExperienceConsent").checked = latestConsent.get("experience_personalization")?.granted === true && latestConsent.get("experience_personalization")?.consent_text_version === ACCOUNT_CONSENT_VERSION;
       $("accountAggregatedConsent").checked = latestConsent.get("aggregated_insights_sharing")?.granted === true && latestConsent.get("aggregated_insights_sharing")?.consent_text_version === ACCOUNT_CONSENT_VERSION;
+      const contactConsent = contactConsentResult.data;
+      const whatsappMarketingActive = contactConsent?.granted === true &&
+        contactConsent?.consent_text_version === CONTACT_MARKETING_CONSENT_VERSION;
+      $("accountWhatsappMarketingConsent").checked = whatsappMarketingActive;
+      $("accountContactConsentStatus").textContent = !contactConsent
+        ? "Nenhuma autorização de ofertas por WhatsApp registrada."
+        : whatsappMarketingActive
+          ? "Autorização ativa desde " + new Date(contactConsent.created_at).toLocaleString("pt-BR") + ". Você pode desmarcar e salvar para revogar."
+          : contactConsent.granted
+            ? "Existe um registro anterior de autorização. Revise e salve sua escolha para atualizar a preferência."
+            : "Sem autorização ativa para ofertas por WhatsApp.";
       $("accountConsentStatus").textContent = consentResult.data?.length
         ? "Preferências registradas. Última atualização: " + new Date(consentResult.data[0].created_at).toLocaleString("pt-BR") + "."
         : "Nenhuma autorização opcional ativa. Os recursos essenciais da conta continuam funcionando.";
@@ -1536,11 +1557,16 @@ input:focus,select:focus{border-color:#d4af7c;box-shadow:0 0 0 3px rgba(212,175,
             p_source: "account_settings",
             p_event_key: crypto.randomUUID(),
             p_text_version: ACCOUNT_CONSENT_VERSION
+          }),
+          supabase.rpc("record_contact_consent", {
+            p_granted: $("accountWhatsappMarketingConsent").checked,
+            p_event_key: crypto.randomUUID(),
+            p_text_version: CONTACT_MARKETING_CONSENT_VERSION
           })
         ]);
         const failure = results.find(result => result.error);
         if (failure) throw failure.error;
-        message("Suas autorizações opcionais foram atualizadas. A revogação vale para usos futuros baseados nessas autorizações.");
+        message("Suas autorizações e a preferência de ofertas por WhatsApp foram atualizadas. Você pode alterar essas escolhas a qualquer momento.");
         const { data } = await supabase.auth.getUser();
         if (data.user) await loadAccountData(data.user);
       } catch (error) {
