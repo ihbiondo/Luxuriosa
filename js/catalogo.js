@@ -281,11 +281,14 @@
       imagemPrincipal.style.height = "100%";
       var produtoEhLingerie = produto.categoria === "Lingerie" ||
         produto.tipoProduto === "Lingerie";
-      imagemPrincipal.style.objectFit =
-        produtoEhLingerie || produto.imagemCardAjuste === "contain" ? "contain" : "cover";
-      imagemPrincipal.style.objectPosition = produtoEhLingerie
-        ? "center center"
-        : (produto.imagemCardPosicao || "50% 66%");
+      /*
+       * Na vitrine, a imagem deve ocupar todo o quadro do card.
+       * O object-fit: cover elimina as faixas vazias; a foto original
+       * permanece intacta e pode receber foco personalizado pelo JSON.
+       */
+      imagemPrincipal.style.objectFit = "cover";
+      imagemPrincipal.style.objectPosition =
+        produto.imagemCardPosicao || (produtoEhLingerie ? "center center" : "50% 66%");
       container.appendChild(imagemPrincipal);
       imagemPrincipal.onerror = function () {
         this.style.display = "none";
