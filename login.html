@@ -1421,6 +1421,15 @@ input:focus,select:focus{border-color:#d4af7c;box-shadow:0 0 0 3px rgba(212,175,
         const needsGoogleSetup = hasGoogleIdentity && !setupProfile?.oauth_setup_completed_at &&
           (!setupProfile?.username || setupProfile.username.startsWith("cliente_") ||
            !setupProfile.full_name || !setupProfile.birth_date || !setupProfile.phone);
+        if (hasGoogleIdentity && !needsGoogleSetup && user.user_metadata?.account_setup_completed !== true) {
+          // Conta existente com cadastro completo: não migra metadados do Google
+          // por cima de dados já informados no perfil.
+          const { data: metadataUpdate, error: metadataError } = await supabase.auth.updateUser({
+            data: { account_setup_completed: true }
+          });
+          if (metadataError) throw metadataError;
+          user = metadataUpdate.user || user;
+        }
         if (needsGoogleSetup) {
           signedInArea.classList.add("hidden");
           googleSetupArea.classList.remove("hidden");
