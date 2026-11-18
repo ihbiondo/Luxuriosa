@@ -84,7 +84,8 @@
   }
 
   .navlinks > a,
-  .navlinks .nav-menu-group > a {
+  .navlinks .nav-menu-group > a,
+  .navlinks .nav-drawer-account-area > a {
     display: flex;
     align-items: center;
     justify-content: flex-start;
@@ -120,7 +121,8 @@
   }
 
   .navlinks > a[aria-current="page"],
-  .navlinks .nav-menu-group > a[aria-current="page"] {
+  .navlinks .nav-menu-group > a[aria-current="page"],
+  .navlinks .nav-drawer-account-area > a[aria-current="page"] {
     color: var(--gold);
   }
 }
@@ -171,7 +173,7 @@
    ========================================================= */
 .nav-drawer-top,
 .nav-drawer-footer,
-.nav-account-link {
+.nav-drawer-account-area {
   display: none;
 }
 
@@ -381,52 +383,6 @@
     border-top: 1px solid rgba(212, 175, 124, .2);
   }
 
-  .nav-account-link {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    min-height: 55px;
-    padding: 12px 15px;
-    border: 1px solid rgba(212, 175, 124, .38);
-    border-radius: 13px;
-    background: linear-gradient(110deg, rgba(139, 30, 63, .27), rgba(212, 175, 124, .055));
-    color: #f4e8e9;
-    font-size: 13px;
-    font-weight: 600;
-    letter-spacing: .025em;
-  }
-
-  .nav-account-link:hover,
-  .nav-account-link:focus-visible {
-    border-color: var(--gold);
-    color: var(--gold);
-  }
-
-  .nav-account-icon {
-    display: inline-grid;
-    width: 28px;
-    height: 28px;
-    flex: 0 0 auto;
-    place-items: center;
-    color: var(--gold);
-  }
-
-  .nav-account-icon svg {
-    width: 22px;
-    height: 22px;
-    fill: none;
-    stroke: currentColor;
-    stroke-width: 1.55;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-  }
-
-  .nav-account-arrow {
-    margin-left: auto;
-    color: var(--gold);
-    font-size: 16px;
-  }
-
   .nav-drawer-footer > p {
     margin: 15px 0 0;
     color: #9d878f;
@@ -456,94 +412,42 @@
 }
 
 
-/* Menu lateral: atalho de conta, pedidos e ícones de navegação. */
-.nav-drawer-account-area {
-  display: none;
-}
-
-.nav-link-shop .nav-account-arrow {
-  display: none;
-}
-
+/* Ícones e atalhos da navegação mobile. */
 .nav-link-icon {
   display: none;
 }
 
 @media (max-width: 1199px) {
   .nav-drawer-account-area {
-    display: grid;
-    gap: 5px;
-    margin: 8px 0 5px;
+    display: contents;
   }
 
-  .nav-account-link {
+  .navlinks > a,
+  .navlinks .nav-menu-group > a,
+  .navlinks .nav-drawer-account-area > a {
     display: flex;
     align-items: center;
-    gap: 12px;
-    min-height: 52px;
-    padding: 10px 11px;
-    border: 1px solid rgba(212, 175, 124, .2);
-    border-radius: 10px;
-    background: rgba(212, 175, 124, .045);
-  }
-
-  .nav-account-copy {
-    display: flex;
-    min-width: 0;
-    flex: 1 1 auto;
-    flex-direction: row;
-    align-items: baseline;
-    flex-wrap: wrap;
-    gap: 3px 8px;
-    white-space: nowrap;
-  }
-
-  .nav-account-copy strong {
-    color: inherit;
+    justify-content: flex-start;
+    width: 100%;
+    min-height: 46px;
+    padding: 12px 5px;
+    border-bottom: 1px solid rgba(212, 175, 124, .08);
+    color: var(--muted);
     font-size: 13px;
-    font-weight: 600;
-    line-height: 1.3;
-  }
-
-  .nav-account-copy small {
-    color: #bfaeb4;
-    font-size: 10px;
-    font-weight: 400;
-    line-height: 1.3;
-    letter-spacing: .01em;
-  }
-
-  .nav-account-arrow {
-    margin-left: auto;
-    color: rgba(212, 175, 124, .72);
-    font-size: 18px;
-    line-height: 1;
-  }
-
-  .nav-orders-link {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    min-height: 47px;
-    padding: 10px 15px;
-    border: 1px solid rgba(212, 175, 124, .2);
-    border-radius: 11px;
-    background: rgba(212, 175, 124, .045);
-    color: #dfd0d4;
-    font-size: 12px;
-    font-weight: 600;
-    letter-spacing: .02em;
+    font-weight: 500;
+    letter-spacing: .025em;
+    line-height: 1.35;
+    text-align: left;
+    text-transform: none;
     text-decoration: none;
   }
 
-  .nav-orders-link[hidden] {
+  .navlinks .nav-drawer-account-area > a[hidden] {
     display: none !important;
   }
 
-  .nav-orders-link:hover,
-  .nav-orders-link:focus-visible {
-    border-color: rgba(212, 175, 124, .55);
-    background: rgba(212, 175, 124, .09);
+  .navlinks .nav-drawer-account-area > a:hover,
+  .navlinks .nav-drawer-account-area > a:focus-visible {
     color: var(--gold);
   }
 
@@ -565,43 +469,6 @@
     stroke-width: 1.55;
     stroke-linecap: round;
     stroke-linejoin: round;
-  }
-
-  .navlinks > .nav-link-shop {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    min-height: 52px;
-    margin: 4px 0 10px;
-    padding: 12px 15px;
-    letter-spacing: .12em;
-  }
-
-  .navlinks > .nav-link-shop .nav-link-icon {
-    color: var(--gold);
-  }
-
-  .navlinks .nav-menu-group > a {
-    justify-content: flex-start;
-    gap: 12px;
-    min-height: 49px;
-    padding-right: 11px;
-  }
-
-  .navlinks .nav-menu-group > a .nav-link-icon {
-    color: #d4af7c;
-  }
-
-  .navlinks .nav-menu-group > a > span:nth-child(2) {
-    flex: 1 1 auto;
-  }
-
-  .navlinks .nav-menu-group > a::after {
-    margin-left: auto;
-  }
-
-  .nav-drawer-footer {
-    padding-top: 17px;
   }
 }
 
