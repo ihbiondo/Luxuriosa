@@ -47,11 +47,6 @@ on:
       - "produtos/**"
       - "**/*.html"
       - "sitemap.xml"
-      - "css/**"
-      - "js/catalogo.js"
-      - "produtos/**"
-      - "**/*.html"
-      - "sitemap.xml"
       - ".github/workflows/payment-validate.yml"
   pull_request:
     branches: [main]
