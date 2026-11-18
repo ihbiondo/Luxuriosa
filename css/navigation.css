@@ -472,52 +472,72 @@
 @media (max-width: 1199px) {
   .nav-drawer-account-area {
     display: grid;
-    gap: 5px;
-    margin: 8px 0 5px;
+    gap: 0;
+    margin: 0;
   }
 
+  /* Minha conta usa exatamente a linguagem visual dos links comuns do menu. */
   .nav-account-link {
     display: flex;
     align-items: center;
     gap: 12px;
-    min-height: 52px;
-    padding: 10px 11px;
-    border: 1px solid rgba(212, 175, 124, .2);
-    border-radius: 10px;
-    background: rgba(212, 175, 124, .045);
+    width: 100%;
+    min-height: 49px;
+    padding: 12px 5px;
+    border: 0;
+    border-bottom: 1px solid rgba(212, 175, 124, .08);
+    border-radius: 0;
+    background: transparent;
+    color: var(--muted);
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: .025em;
+    line-height: 1.35;
+    text-align: left;
+    text-decoration: none;
+  }
+
+  .nav-account-link:hover,
+  .nav-account-link:focus-visible {
+    color: var(--gold);
+  }
+
+  .nav-account-icon {
+    display: inline-grid;
+    width: 25px;
+    height: 25px;
+    flex: 0 0 25px;
+    place-items: center;
+    color: #d4af7c;
+  }
+
+  .nav-account-icon svg {
+    display: block;
+    width: 21px;
+    height: 21px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.55;
+    stroke-linecap: round;
+    stroke-linejoin: round;
   }
 
   .nav-account-copy {
-    display: flex;
+    display: block;
     min-width: 0;
     flex: 1 1 auto;
-    flex-direction: row;
-    align-items: baseline;
-    flex-wrap: wrap;
-    gap: 3px 8px;
-    white-space: nowrap;
   }
 
   .nav-account-copy strong {
     color: inherit;
-    font-size: 13px;
-    font-weight: 600;
-    line-height: 1.3;
+    font-size: inherit;
+    font-weight: inherit;
+    line-height: inherit;
   }
 
-  .nav-account-copy small {
-    color: #bfaeb4;
-    font-size: 10px;
-    font-weight: 400;
-    line-height: 1.3;
-    letter-spacing: .01em;
-  }
-
+  .nav-account-copy small,
   .nav-account-arrow {
-    margin-left: auto;
-    color: rgba(212, 175, 124, .72);
-    font-size: 18px;
-    line-height: 1;
+    display: none;
   }
 
   .nav-orders-link {
