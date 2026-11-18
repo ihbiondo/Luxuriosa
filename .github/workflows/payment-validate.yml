@@ -103,6 +103,7 @@ jobs:
           node --check js/clientes.js
           node --check js/carrinho.js
           node --test .github/scripts/account-registration.test.cjs
+          node --test .github/scripts/google-oauth.test.cjs
           npx --yes esbuild@0.25.0 supabase/functions/create-payment-order/index.ts --format=esm --platform=neutral --outfile=/tmp/create-payment-order.js
           node --input-type=module <<'NODE'
           import fs from "node:fs";
