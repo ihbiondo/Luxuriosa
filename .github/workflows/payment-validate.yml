@@ -365,6 +365,8 @@ jobs:
           hosted_key = "sb_publishable_LaMbeWQ1PNANEQ85SD_35Q_wDzswy8y"
           files = [
               "login.html",
+              "js/app.js",
+              "js/clientes.js",
               "js/portal.js",
               "js/conquistas.js",
               "js/experiencias-salvar.js",
