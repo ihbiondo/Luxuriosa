@@ -240,6 +240,186 @@ async function completeSignCompatibility(page) {
   await captureScreenshot(page, "compatibilidade-proximo-passo-desktop-1440");
 }
 
+
+async function auditCartAndCheckout(page) {
+  // Usa somente um produto real do catálogo local; não cria pedido nem inicia pagamento.
+  await page.setViewportSize({ width: 320, height: 740 });
+  await page.goto(`${BASE_URL}/loja.html`, { waitUntil: "domcontentloaded" });
+
+  const product = await page.evaluate(async () => {
+    const response = await fetch("/data/produtos.json", { cache: "no-cache" });
+    if (!response.ok) throw new Error("Não foi possível carregar o catálogo local.");
+    const catalog = await response.json();
+    const item = catalog.produtos.find(product => String(product.id) === "31");
+    if (!item) throw new Error("O produto de referência 31 não está no catálogo.");
+    return {
+      id: String(item.id),
+      nome: item.nome,
+      preco: item.preco,
+      imagem: item.imagem || "",
+      categoria: item.categoria || "",
+      tamanhos: item.tamanhos || "",
+      quantidade: 1
+    };
+  });
+
+  assert.ok(Number.isFinite(product.preco) && product.preco > 0,
+    "O produto usado no teste deve ter preço válido.");
+  await page.evaluate(item => {
+    localStorage.removeItem("luxuriosa_carrinho");
+    localStorage.setItem("luxuriosa_carrinho", JSON.stringify([item]));
+  }, product);
+
+  await page.goto(`${BASE_URL}/loja.html?abrirCarrinho=1#catalogo`, {
+    waitUntil: "domcontentloaded"
+  });
+
+  // Aceita o aviso etário somente no navegador descartável do teste.
+  const ageButtons = ["#gateYes", "#ageConfirm"];
+  for (const selector of ageButtons) {
+    const button = page.locator(selector);
+    if (await button.isVisible().catch(() => false)) {
+      await button.click();
+      break;
+    }
+  }
+
+  await page.locator("#cart.open").waitFor({ state: "visible", timeout: 15000 });
+  await page.waitForFunction(() => {
+    const checkout = document.querySelector("#cartCheckout");
+    return checkout && !checkout.disabled;
+  }, null, { timeout: 20000 });
+
+  assert.equal(await page.locator("#cartCount").innerText(), "1",
+    "O carrinho deve mostrar uma unidade do produto de teste.");
+  assert.equal(await page.locator("#cartItems .cart-item").count(), 1,
+    "O carrinho deve renderizar exatamente o produto selecionado.");
+
+  async function inspectCart(label) {
+    const metrics = await page.evaluate(() => {
+      const drawer = document.querySelector("#cart");
+      const items = document.querySelector("#cartItems");
+      const close = document.querySelector("#cartClose");
+      const checkout = document.querySelector("#cartCheckout");
+      const box = element => {
+        if (!element) return null;
+        const rect = element.getBoundingClientRect();
+        return {
+          left: Math.round(rect.left),
+          right: Math.round(rect.right),
+          width: Math.round(rect.width),
+          height: Math.round(rect.height)
+        };
+      };
+      return {
+        viewport: document.documentElement.clientWidth,
+        document: document.documentElement.scrollWidth,
+        drawer: box(drawer),
+        drawerClientWidth: drawer?.clientWidth || 0,
+        drawerScrollWidth: drawer?.scrollWidth || 0,
+        items: box(items),
+        close: box(close),
+        checkout: box(checkout)
+      };
+    });
+    assert.ok(metrics.document <= metrics.viewport + 1,
+      label + ": documento excedeu a largura do celular: " + JSON.stringify(metrics));
+    assert.ok(metrics.drawer && metrics.drawer.left >= -1 &&
+      metrics.drawer.right <= metrics.viewport + 1,
+      label + ": gaveta do carrinho saiu da tela: " + JSON.stringify(metrics));
+    assert.ok(metrics.drawerScrollWidth <= metrics.drawerClientWidth + 1,
+      label + ": conteúdo interno da gaveta criou rolagem horizontal: " + JSON.stringify(metrics));
+    assert.ok(metrics.checkout && metrics.checkout.left >= -1 &&
+      metrics.checkout.right <= metrics.viewport + 1,
+      label + ": botão de checkout saiu da tela: " + JSON.stringify(metrics));
+    return metrics;
+  }
+
+  await inspectCart("Carrinho em 320 px");
+  await captureScreenshot(page, "carrinho-gaveta-mobile-320");
+
+  await page.setViewportSize({ width: 390, height: 844 });
+  await inspectCart("Carrinho em 390 px");
+  await captureScreenshot(page, "carrinho-gaveta-mobile-390");
+
+  // Verifica a atualização da quantidade e do subtotal sem enviar nenhum pedido.
+  await page.locator('#cartItems .cart-qty-btn[aria-label^="Aumentar quantidade"]').click();
+  await page.waitForFunction(() => document.querySelector("#cartCount")?.textContent === "2");
+  assert.equal(await page.locator("#cartItems .cart-qty").innerText(), "2",
+    "O controle de quantidade deve atualizar o item na gaveta.");
+
+  // A conta A já está autenticada no Supabase descartável deste E2E.
+  // A etapa registra apenas a abertura do checkout; nenhum dado é enviado.
+  await page.evaluate(() => {
+    if (window.LuxuriosaInteligencia &&
+        typeof window.LuxuriosaInteligencia.registrarEtapa === "function") {
+      window.LuxuriosaInteligencia.registrarEtapa = () => Promise.resolve();
+    }
+  });
+  await page.locator("#cartCheckout").click();
+  await page.locator("#customerOverlay:not([hidden])").waitFor({
+    state: "visible",
+    timeout: 20000
+  });
+
+  async function inspectCheckout(label) {
+    const metrics = await page.evaluate(() => {
+      const overlay = document.querySelector("#customerOverlay");
+      const dialog = overlay?.querySelector(".customer-dialog");
+      const rect = dialog?.getBoundingClientRect();
+      const fields = [...(dialog?.querySelectorAll("input, select, textarea, button") || [])]
+        .filter(element => !element.hidden && element.getClientRects().length)
+        .map(element => {
+          const box = element.getBoundingClientRect();
+          return {
+            tag: element.tagName.toLowerCase(),
+            id: element.id,
+            left: Math.round(box.left),
+            right: Math.round(box.right),
+            width: Math.round(box.width)
+          };
+        });
+      return {
+        viewport: document.documentElement.clientWidth,
+        document: document.documentElement.scrollWidth,
+        overlayVisible: Boolean(overlay && !overlay.hidden),
+        dialog: rect ? {
+          left: Math.round(rect.left),
+          right: Math.round(rect.right),
+          width: Math.round(rect.width),
+          height: Math.round(rect.height)
+        } : null,
+        fields
+      };
+    });
+    assert.ok(metrics.overlayVisible, label + ": etapa de dados não abriu.");
+    assert.ok(metrics.document <= metrics.viewport + 1,
+      label + ": página excedeu a largura da tela: " + JSON.stringify(metrics));
+    assert.ok(metrics.dialog && metrics.dialog.left >= -1 &&
+      metrics.dialog.right <= metrics.viewport + 1,
+      label + ": formulário saiu da largura da tela: " + JSON.stringify(metrics));
+    const overflowingFields = metrics.fields.filter(field =>
+      field.left < metrics.dialog.left - 1 || field.right > metrics.dialog.right + 1
+    );
+    assert.equal(overflowingFields.length, 0,
+      label + ": campos ultrapassaram o formulário: " + JSON.stringify(overflowingFields));
+    return metrics;
+  }
+
+  await page.setViewportSize({ width: 320, height: 740 });
+  await inspectCheckout("Checkout em 320 px");
+  await captureScreenshot(page, "checkout-dados-mobile-320");
+
+  await page.setViewportSize({ width: 390, height: 844 });
+  await inspectCheckout("Checkout em 390 px");
+  await captureScreenshot(page, "checkout-dados-mobile-390");
+
+  // Fecha sem revisar, cadastrar endereço, gerar cobrança ou iniciar pagamento.
+  await page.locator("#customerClose").click();
+  await page.locator("#customerOverlay[hidden]").waitFor({ state: "attached" });
+  await page.evaluate(() => localStorage.removeItem("luxuriosa_carrinho"));
+}
+
 async function readResultsForUser(userId) {
   const url = new URL(`${SUPABASE_URL}/rest/v1/experience_results`);
   url.searchParams.set("select", "*");
@@ -376,6 +556,9 @@ try {
   await pageA.setViewportSize({ width: 1440, height: 1000 });
   await assertNoHorizontalOverflow(pageA, "Histórico desktop em 1440 px");
   await captureScreenshot(pageA, "dashboard-historico-desktop-1440");
+
+  // 7. Carrinho e formulário de dados responsivos, sem efetuar compra.
+  await auditCartAndCheckout(pageA);
 
   // 6. Conta B recebe seu próprio painel vazio, sem enxergar os resultados de A.
   const userB = await createTestUser("B");
