@@ -44,6 +44,16 @@ create table public.account_data_consents (
   created_at timestamptz not null default now()
 );
 
+create table public.contact_consents (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null references auth.users(id) on delete cascade,
+  channel text not null,
+  purpose text not null,
+  granted boolean not null,
+  consent_text_version text not null,
+  created_at timestamptz not null default now()
+);
+
 create table public.orders (
   id uuid primary key default gen_random_uuid(),
   customer_id uuid not null references auth.users(id) on delete cascade,
@@ -71,13 +81,14 @@ alter table public.profiles enable row level security;
 alter table public.preferences enable row level security;
 alter table public.addresses enable row level security;
 alter table public.account_data_consents enable row level security;
+alter table public.contact_consents enable row level security;
 alter table public.orders enable row level security;
 alter table public.order_items enable row level security;
 alter table public.user_permissions enable row level security;
 
 grant select on public.profiles, public.preferences, public.addresses,
-  public.account_data_consents, public.orders, public.order_items,
-  public.user_permissions to authenticated;
+  public.account_data_consents, public.contact_consents, public.orders,
+  public.order_items, public.user_permissions to authenticated;
 
 create policy e2e_profiles_select_own on public.profiles
   for select to authenticated using ((select auth.uid()) = id);
@@ -89,6 +100,9 @@ create policy e2e_addresses_select_own on public.addresses
   for select to authenticated using ((select auth.uid()) = user_id);
 
 create policy e2e_consents_select_own on public.account_data_consents
+  for select to authenticated using ((select auth.uid()) = user_id);
+
+create policy e2e_contact_consents_select_own on public.contact_consents
   for select to authenticated using ((select auth.uid()) = user_id);
 
 create policy e2e_orders_select_own on public.orders
