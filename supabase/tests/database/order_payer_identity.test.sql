@@ -1,0 +1,13 @@
+begin;
+create extension if not exists pgtap with schema extensions;
+select extensions.plan(8);
+select extensions.ok(exists(select 1 from information_schema.columns where table_schema='public' and table_name='orders' and column_name='payment_payer_type'),'orders possui campo separado para o tipo de pagador');
+select extensions.ok(exists(select 1 from information_schema.columns where table_schema='public' and table_name='orders' and column_name='payment_payer_name'),'orders possui campo separado para o nome do pagador');
+select extensions.ok(exists(select 1 from information_schema.columns where table_schema='public' and table_name='orders' and column_name='payment_payer_phone'),'orders possui campo separado para o telefone do pagador');
+select extensions.ok(exists(select 1 from information_schema.columns where table_schema='public' and table_name='orders' and column_name='payment_payer_source'),'orders registra a origem da declaração');
+select extensions.ok(exists(select 1 from information_schema.columns where table_schema='public' and table_name='orders' and column_name='payment_payer_declared_at'),'orders registra quando a declaração foi feita');
+select extensions.ok(exists(select 1 from pg_constraint where conrelid='public.orders'::regclass and conname='orders_payment_payer_type_check'),'tipo de pagador possui valores restritos');
+select extensions.ok(exists(select 1 from pg_constraint where conrelid='public.orders'::regclass and conname='orders_payment_payer_source_check'),'origem da declaração possui valores restritos');
+select extensions.ok(exists(select 1 from pg_constraint where conrelid='public.orders'::regclass and conname='orders_third_party_payer_data_check'),'pagador terceiro exige nome e telefone E.164 válidos');
+select * from extensions.finish();
+rollback;
