@@ -457,6 +457,14 @@
 
 
 /* Menu lateral: atalho de conta, pedidos e ícones de navegação. */
+.nav-drawer-account-area {
+  display: none;
+}
+
+.nav-link-shop .nav-account-arrow {
+  display: none;
+}
+
 .nav-link-icon {
   display: none;
 }
