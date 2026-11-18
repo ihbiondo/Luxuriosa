@@ -635,7 +635,28 @@ input:focus,select:focus{border-color:#d4af7c;box-shadow:0 0 0 3px rgba(212,175,
       .account-home a{min-height:84px}
       .account-section>summary{min-height:48px}
     }
-  </style>
+  
+    .social-auth{margin:18px 0 24px}
+    .social-auth-divider{display:flex;align-items:center;gap:12px;margin:0 0 15px;color:#918696;font-size:9px;font-weight:600;letter-spacing:.14em}
+    .social-auth-divider:before,.social-auth-divider:after{content:"";height:1px;flex:1;background:#e9e3ec}
+    .google-auth-button{display:flex;align-items:center;justify-content:center;gap:12px;width:100%;min-height:50px;padding:0 16px;border:1px solid #ded8e3;border-radius:9px;background:#fff;color:#39333e;font:600 10px var(--sans);letter-spacing:.06em;cursor:pointer;transition:border-color .2s,box-shadow .2s}
+    .google-auth-button:hover{border-color:#c9b9d2;box-shadow:0 5px 16px rgba(74,53,83,.09)}
+    .google-auth-button:disabled{opacity:.55;cursor:wait}
+    .google-auth-mark{display:grid;place-items:center;width:22px;height:22px;border:1px solid #e7e2e9;border-radius:50%;color:#4285f4;font:700 15px Arial,sans-serif}
+    .social-auth>p{margin:8px 0 0;color:#8b818f;font-size:9px;text-align:center}
+    .google-setup{width:100%}
+    .google-setup-email{margin:0 0 18px;color:#766e7c;font-size:11px;overflow-wrap:anywhere}
+    .google-setup-email strong{color:#493c50;font-weight:600}
+    .google-privacy-consents{display:grid;gap:13px;margin-top:20px;padding:16px;border:1px solid #e9e3ec;border-radius:10px;background:#fbf9fc}
+    .google-privacy-consents label{display:flex;align-items:flex-start;gap:10px;margin:0;color:#514657;font-size:10px;font-weight:400;letter-spacing:0;line-height:1.65}
+    .google-privacy-consents input{width:16px;min-width:16px;height:16px;min-height:16px;margin:2px 0 0;accent-color:#d83c91}
+    .google-privacy-consents a{color:#b52e78;text-decoration:underline}
+    .google-consent-required{padding-bottom:12px;border-bottom:1px solid #e9e3ec}
+    .google-consent-caption{margin:0;color:#827887;font-size:9px;line-height:1.6}
+    .google-consent-option{margin-top:1px!important}
+    #googleSetupCancel{margin-top:10px}
+    @media(max-width:480px){.google-privacy-consents{padding:13px}.social-auth{margin:15px 0 20px}}
+</style>
 </head>
 <body>
   <div class="shell">
@@ -657,6 +678,14 @@ input:focus,select:focus{border-color:#d4af7c;box-shadow:0 0 0 3px rgba(212,175,
           <div class="tabs" role="tablist" aria-label="Acesso">
             <button class="tab" id="loginTab" type="button" role="tab" aria-selected="true">ENTRAR</button>
             <button class="tab" id="signupTab" type="button" role="tab" aria-selected="false">CRIAR CONTA</button>
+          </div>
+          <div id="socialAuthOptions" class="social-auth">
+            <div class="social-auth-divider"><span>OU</span></div>
+            <button id="googleAuthButton" class="google-auth-button" type="button">
+              <span class="google-auth-mark" aria-hidden="true">G</span>
+              <span>CONTINUAR COM GOOGLE</span>
+            </button>
+            <p>Entre ou crie sua conta sem precisar de uma nova senha.</p>
           </div>
 
           <form id="loginForm">
@@ -700,6 +729,52 @@ input:focus,select:focus{border-color:#d4af7c;box-shadow:0 0 0 3px rgba(212,175,
             <div class="field"><label for="newPassword">Nova senha (mínimo 8 caracteres)</label><input id="newPassword" type="password" autocomplete="new-password" minlength="8" pattern="(?=.*[A-Za-z])(?=.*[0-9]).{8,}" title="Use pelo menos 8 caracteres, incluindo letras e números." required></div>
             <div class="field" style="margin-top:13px"><label for="newPasswordConfirm">Confirme a nova senha</label><input id="newPasswordConfirm" type="password" autocomplete="new-password" minlength="8" required></div>
             <div class="actions"><button class="primary" type="submit">SALVAR NOVA SENHA</button></div>
+          </form>
+        </div>
+
+        <div id="googleSetupArea" class="google-setup hidden" aria-labelledby="googleSetupTitle">
+          <span class="eyebrow">Só mais um passo</span>
+          <h2 id="googleSetupTitle">Complete seu cadastro.</h2>
+          <p class="lead">Seu Google confirmou seu e-mail. Precisamos de alguns dados para preparar sua conta Luxuriosa.</p>
+          <p class="google-setup-email">E-mail Google: <strong id="googleSetupEmail"></strong></p>
+          <form id="googleSetupForm">
+            <div class="grid">
+              <div class="field full">
+                <label for="googleUsername">Usuário Luxuriosa</label>
+                <input id="googleUsername" type="text" autocomplete="username" autocapitalize="none" spellcheck="false" minlength="3" maxlength="24" pattern="[a-z0-9][a-z0-9._]{2,23}" placeholder="seu.usuario" required>
+                <small id="googleUsernameStatus" aria-live="polite">De 3 a 24 caracteres: letras minúsculas, números, ponto ou sublinhado.</small>
+              </div>
+              <div class="field full"><label for="googleFullName">Nome completo</label><input id="googleFullName" autocomplete="name" maxlength="160" required></div>
+              <div class="field"><label for="googleBirthDate">Data de nascimento</label><input id="googleBirthDate" type="date" autocomplete="bday" required></div>
+              <div class="field"><label for="googlePhone">WhatsApp com DDD</label><input id="googlePhone" type="tel" autocomplete="tel" placeholder="(14) 99999-9999" maxlength="30" required></div>
+            </div>
+
+            <div class="google-privacy-consents">
+              <div class="google-consent-required">
+                <label>
+                  <input id="googlePrivacyNoticeAccepted" type="checkbox" required>
+                  <span>Li e estou ciente da <a href="/privacidade.html" target="_blank" rel="noopener">Política de Privacidade</a>, que explica como os dados da minha conta são utilizados para acesso, segurança, atendimento e pedidos.</span>
+                </label>
+              </div>
+              <p class="google-consent-caption">As opções abaixo são voluntárias. Não são necessárias para criar a conta e podem ser alteradas depois.</p>
+              <label class="google-consent-option">
+                <input id="googleExperienceConsent" type="checkbox">
+                <span>Autorizo o uso das minhas preferências para recomendações, vantagens e seleção de produtos mais relevantes.</span>
+              </label>
+              <label class="google-consent-option">
+                <input id="googleAggregatedConsent" type="checkbox">
+                <span>Autorizo o uso de indicadores limitados em estatísticas agregadas e anonimizadas, sem identificação individual.</span>
+              </label>
+              <label class="google-consent-option">
+                <input id="googleWhatsappMarketingConsent" type="checkbox">
+                <span>Quero receber novidades e ofertas da Luxuriosa pelo WhatsApp. Posso cancelar quando quiser.</span>
+              </label>
+            </div>
+            <div class="actions">
+              <button class="primary" type="submit">CONCLUIR MEU CADASTRO</button>
+              <button class="text-action" id="googleSetupCancel" type="button">Sair da conta Google</button>
+            </div>
+            <p class="legal">O endereço não é solicitado agora. Ele só será necessário se você escolher entrega; a retirada agendada não exige endereço.</p>
           </form>
         </div>
 
@@ -993,6 +1068,9 @@ input:focus,select:focus{border-color:#d4af7c;box-shadow:0 0 0 3px rgba(212,175,
     const newPasswordForm = $("newPasswordForm");
     const authArea = $("authArea");
     const signedInArea = $("signedInArea");
+    const googleSetupArea = $("googleSetupArea");
+    const googleSetupForm = $("googleSetupForm");
+    const socialAuthOptions = $("socialAuthOptions");
     let activeUserId = null;
 
     function message(text, error = false) {
@@ -1012,6 +1090,7 @@ input:focus,select:focus{border-color:#d4af7c;box-shadow:0 0 0 3px rgba(212,175,
       $("loginTab").setAttribute("aria-selected", String(name === "login"));
       $("signupTab").setAttribute("aria-selected", String(name === "signup"));
       $("loginTab").closest(".tabs").classList.toggle("hidden", name === "reset" || name === "newPassword");
+      socialAuthOptions.classList.toggle("hidden", name === "reset" || name === "newPassword");
       clearMessage();
     }
     function setBusy(form, busy, label) {
@@ -1028,6 +1107,7 @@ input:focus,select:focus{border-color:#d4af7c;box-shadow:0 0 0 3px rgba(212,175,
     }
     function friendlyError(error) {
       const text = String(error?.message || "Não foi possível concluir a operação.");
+      if (/provider.*not enabled|unsupported provider/i.test(text)) return "O acesso com Google ainda não foi ativado. Use e-mail e senha enquanto finalizamos a configuração.";
       if (/invalid login credentials/i.test(text)) return "E-mail ou senha incorretos.";
       if (/email not confirmed/i.test(text)) return "Confirme seu e-mail antes de entrar. Verifique sua caixa de entrada.";
       if (/user already registered/i.test(text)) return "Este e-mail já possui cadastro. Tente entrar ou recuperar sua senha.";
@@ -1052,6 +1132,29 @@ input:focus,select:focus{border-color:#d4af7c;box-shadow:0 0 0 3px rgba(212,175,
       }
       return result;
     }
+
+    $("googleUsername").addEventListener("input", () => {
+      $("googleUsername").value = $("googleUsername").value.toLowerCase().replace(/[^a-z0-9._]/g, "").slice(0, 24);
+      $("googleUsernameStatus").textContent = "Verificaremos a disponibilidade ao concluir o cadastro.";
+      $("googleUsernameStatus").dataset.kind = "";
+    });
+    $("googleUsername").addEventListener("blur", async () => {
+      const username = $("googleUsername").value.trim().toLowerCase();
+      if (!/^[a-z0-9][a-z0-9._]{2,23}$/.test(username)) {
+        $("googleUsernameStatus").textContent = "Use de 3 a 24 caracteres: letras minúsculas, números, ponto ou sublinhado.";
+        $("googleUsernameStatus").dataset.kind = "error";
+        return;
+      }
+      $("googleUsernameStatus").textContent = "Verificando disponibilidade…";
+      try {
+        const result = await requestUsernameIdentity("availability", username);
+        $("googleUsernameStatus").textContent = result.available ? "Usuário disponível." : "Este usuário já está em uso.";
+        $("googleUsernameStatus").dataset.kind = result.available ? "success" : "error";
+      } catch (_) {
+        $("googleUsernameStatus").textContent = "Não foi possível verificar agora. Tentaremos ao concluir.";
+        $("googleUsernameStatus").dataset.kind = "error";
+      }
+    });
 
     $("username").addEventListener("input", () => {
       $("username").value = $("username").value.toLowerCase().replace(/[^a-z0-9._]/g, "").slice(0, 24);
@@ -1307,6 +1410,28 @@ input:focus,select:focus{border-color:#d4af7c;box-shadow:0 0 0 3px rgba(212,175,
       authArea.classList.add("hidden");
       signedInArea.classList.remove("hidden");
       try {
+        const { data: setupProfile, error: setupProfileError } = await supabase
+          .from("profiles")
+          .select("username, full_name, phone, birth_date, oauth_setup_completed_at")
+          .eq("id", user.id)
+          .maybeSingle();
+        if (setupProfileError) throw setupProfileError;
+        const hasGoogleIdentity = user.app_metadata?.provider === "google" ||
+          (Array.isArray(user.identities) && user.identities.some(identity => identity.provider === "google"));
+        const needsGoogleSetup = hasGoogleIdentity && !setupProfile?.oauth_setup_completed_at &&
+          (!setupProfile?.username || setupProfile.username.startsWith("cliente_") ||
+           !setupProfile.full_name || !setupProfile.birth_date || !setupProfile.phone);
+        if (needsGoogleSetup) {
+          signedInArea.classList.add("hidden");
+          googleSetupArea.classList.remove("hidden");
+          $("googleSetupEmail").textContent = user.email || "E-mail confirmado pelo Google";
+          $("googleUsername").value = setupProfile?.username?.startsWith("cliente_") ? "" : (setupProfile?.username || "");
+          $("googleFullName").value = setupProfile?.full_name || user.user_metadata?.full_name || user.user_metadata?.name || "";
+          $("googleBirthDate").value = setupProfile?.birth_date || "";
+          $("googlePhone").value = setupProfile?.phone || "";
+          return;
+        }
+        googleSetupArea.classList.add("hidden");
         await syncNewAccountData(user);
         await loadAccountData(user);
         await loadAccountOrders(user);
@@ -1527,6 +1652,45 @@ input:focus,select:focus{border-color:#d4af7c;box-shadow:0 0 0 3px rgba(212,175,
       });
     });
 
+    $("googleAuthButton").addEventListener("click", async () => {
+      const button = $("googleAuthButton");
+      button.disabled = true;
+      try {
+        const callback = new URL(window.location.href);
+        callback.hash = "";
+        const { error } = await supabase.auth.signInWithOAuth({
+          provider: "google",
+          options: {
+            redirectTo: callback.toString(),
+            queryParams: { prompt: "select_account" }
+          }
+        });
+        if (error) throw error;
+      } catch (error) {
+        console.error("Falha no acesso Google:", error);
+        message(friendlyError(error), true);
+        button.disabled = false;
+      }
+    });
+
+    $("googleSetupCancel").addEventListener("click", async () => {
+      const button = $("googleSetupCancel");
+      button.disabled = true;
+      try {
+        const { error } = await supabase.auth.signOut();
+        if (error) throw error;
+        activeUserId = null;
+        googleSetupArea.classList.add("hidden");
+        authArea.classList.remove("hidden");
+        showForm("login");
+        message("Você saiu da conta Google.");
+      } catch (error) {
+        message(friendlyError(error), true);
+      } finally {
+        button.disabled = false;
+      }
+    });
+
     $("loginTab").addEventListener("click", () => showForm("login"));
     $("signupTab").addEventListener("click", () => showForm("signup"));
     $("forgotButton").addEventListener("click", () => {
@@ -1648,6 +1812,78 @@ input:focus,select:focus{border-color:#d4af7c;box-shadow:0 0 0 3px rgba(212,175,
       }
     });
 
+    googleSetupForm.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      clearMessage();
+      const username = $("googleUsername").value.trim().toLowerCase();
+      const fullName = $("googleFullName").value.trim();
+      const birth = $("googleBirthDate").value;
+      const phone = $("googlePhone").value.trim();
+      if (!/^[a-z0-9][a-z0-9._]{2,23}$/.test(username)) {
+        $("googleUsername").focus();
+        return message("Escolha um usuário com 3 a 24 caracteres: letras minúsculas, números, ponto ou sublinhado.", true);
+      }
+      if (!fullName || fullName.length > 160) return message("Informe seu nome completo.", true);
+      const birthDate = birth ? new Date(birth + "T00:00:00") : null;
+      if (!birthDate || Number.isNaN(birthDate.getTime()) || birthDate >= new Date()) {
+        $("googleBirthDate").focus();
+        return message("Informe uma data de nascimento válida.", true);
+      }
+      const today = new Date();
+      let age = today.getFullYear() - birthDate.getFullYear();
+      if (today.getMonth() < birthDate.getMonth() ||
+          (today.getMonth() === birthDate.getMonth() && today.getDate() < birthDate.getDate())) age--;
+      if (age < 18) return message("O cadastro na Luxuriosa é permitido somente para maiores de 18 anos.", true);
+      if (phone.replace(/\D/g, "").length < 10 || phone.replace(/\D/g, "").length > 15) {
+        $("googlePhone").focus();
+        return message("Informe um WhatsApp válido com DDD.", true);
+      }
+      if (!$("googlePrivacyNoticeAccepted").checked) {
+        $("googlePrivacyNoticeAccepted").focus();
+        return message("Confirme a leitura da Política de Privacidade para concluir o cadastro.", true);
+      }
+
+      setBusy(googleSetupForm, true, "SALVANDO CADASTRO...");
+      try {
+        $("googleUsernameStatus").textContent = "Verificando disponibilidade…";
+        const availability = await requestUsernameIdentity("availability", username);
+        if (!availability.available) {
+          $("googleUsernameStatus").textContent = "Este usuário já está em uso.";
+          $("googleUsernameStatus").dataset.kind = "error";
+          $("googleUsername").focus();
+          throw new Error("Este usuário já está em uso. Escolha outro.");
+        }
+        $("googleUsernameStatus").textContent = "Usuário disponível.";
+        $("googleUsernameStatus").dataset.kind = "success";
+
+        const { error } = await supabase.rpc("complete_google_account_setup", {
+          p_username: username,
+          p_full_name: fullName,
+          p_birth_date: birth,
+          p_phone: phone,
+          p_experience_personalization: $("googleExperienceConsent").checked,
+          p_aggregated_statistics: $("googleAggregatedConsent").checked,
+          p_whatsapp_marketing: $("googleWhatsappMarketingConsent").checked,
+          p_privacy_notice_accepted: $("googlePrivacyNoticeAccepted").checked,
+          p_event_key: crypto.randomUUID()
+        });
+        if (error) throw error;
+
+        const { data: currentUser, error: currentUserError } = await supabase.auth.getUser();
+        if (currentUserError) throw currentUserError;
+        if (!currentUser.user) throw new Error("Sua sessão expirou. Entre novamente.");
+        googleSetupArea.classList.add("hidden");
+        activeUserId = null;
+        await showSignedIn(currentUser.user);
+        message("Cadastro concluído. Sua conta Luxuriosa está pronta.");
+      } catch (error) {
+        console.error("Falha ao concluir cadastro Google:", error);
+        message(friendlyError(error), true);
+      } finally {
+        setBusy(googleSetupForm, false);
+      }
+    });
+
     resetForm.addEventListener("submit", async (event) => {
       event.preventDefault();
       clearMessage();
@@ -1756,6 +1992,7 @@ input:focus,select:focus{border-color:#d4af7c;box-shadow:0 0 0 3px rgba(212,175,
         Promise.resolve().then(() => showSignedIn(session.user));
       } else if (event === "SIGNED_OUT") {
         activeUserId = null;
+        googleSetupArea.classList.add("hidden");
         signedInArea.classList.add("hidden");
         authArea.classList.remove("hidden");
       }
