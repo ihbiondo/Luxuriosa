@@ -22,6 +22,7 @@ test("novo usuário Google completa os mesmos dados essenciais depois da autenti
   }
   assert.match(script, /complete_google_account_setup/);
   assert.match(script, /account_setup_completed: true/);
+  assert.match(script, /Conta existente com cadastro completo/);
   assert.match(script, /oauth_setup_completed_at/);
   assert.match(script, /provider === "google"/);
   assert.match(script, /requestUsernameIdentity\("availability", username\)/);
