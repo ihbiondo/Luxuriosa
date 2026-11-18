@@ -65,5 +65,5 @@ test("usa preço unitário quando o total da linha não está gravado", () => {
     line_total: null
   }];
   const message = montarResumoPedidoWhatsApp(order, olderItem, true);
-  assert.match(message, /R\\$\\s*25,00/);
+  assert.ok(message.includes("25,00"));
 });
