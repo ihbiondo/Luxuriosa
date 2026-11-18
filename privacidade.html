@@ -121,6 +121,12 @@
         <td>Durante o atendimento e, se houver compra, pelo prazo necessário ao cumprimento de obrigações legais e defesa de direitos.</td>
       </tr>
       <tr>
+        <td>Nome e telefone da pessoa indicada como pagadora, quando diferente de quem realiza a compra</td>
+        <td>Identificar a pessoa indicada no pedido e apoiar a conferência e conciliação do pagamento. A indicação é declarada por quem faz o pedido e não comprova a identidade de quem efetivamente pagou.</td>
+        <td>Procedimentos relacionados à execução do pedido e às demais hipóteses legais aplicáveis ao tratamento (art. 7º da LGPD).</td>
+        <td>Pelo prazo necessário à identificação, conciliação, atendimento e cumprimento de obrigações legais aplicáveis ao pedido.</td>
+      </tr>
+      <tr>
         <td>CEP, endereço, complemento e ponto de referência</td>
         <td>Consultar a localidade, verificar a disponibilidade, calcular o frete e realizar a entrega.</td>
         <td>Procedimentos preliminares e execução de contrato (art. 7º, V).</td>
@@ -254,7 +260,15 @@
     Ao preencher o formulário, você informa nome ou apelido, telefone/WhatsApp e endereço
     de entrega (CEP, rua, número, complemento, bairro, cidade, estado e ponto de referência,
     quando aplicável). Antes de pagar, o site permite revisar os itens do carrinho, quantidades,
-    endereço e condições de entrega.
+    endereço e condições de entrega. A conta autenticada identifica quem é o titular do histórico;
+    o nome e telefone do formulário identificam quem receberá o pedido.
+  </p>
+  <p>
+    Quando outra pessoa for pagar, você pode indicar o nome e o telefone dela. Esses dados são
+    registrados em campos próprios do pedido, separados do titular da conta e da pessoa que
+    receberá a compra. A indicação é uma informação declarada por quem faz o pedido; ela não
+    confirma a identidade de quem efetivamente pagou e não substitui a verificação do meio de
+    pagamento. A Luxuriosa não recebe dados de cartão ou credenciais bancárias dessa pessoa.
   </p>
   <p>
     Ao clicar em pagar, os dados necessários à criação do pedido (nome ou apelido, telefone,
@@ -301,7 +315,7 @@
     <li><strong>Supabase:</strong> fornece autenticação e banco de dados para a área da conta, adesão ao Clube, registros de consentimento e operação da loja. Processa dados de perfil e autenticação, preferências, adesões, registros do aceite dos termos e resumos de resultados de experiências que titulares autenticados escolhem salvar, solicitações de pedido, itens, quantidades, valores e dados de entrega. Quando você autoriza estatísticas, também pode processar eventos pseudonimizados de navegação. Esses eventos podem incluir identificador interno do produto, tipo de página, tipo de ação, quantidade e data/hora; não incluem nome, telefone, endereço ou texto de conversas. Os eventos analíticos são retidos por até 180 dias e ficam acessíveis somente à administração autorizada. O serviço também pode processar dados técnicos, registros de segurança e cópias de segurança conforme seus prazos próprios. Consulte a <a href="https://supabase.com/privacy" target="_blank" rel="noopener noreferrer">Política de Privacidade do Supabase</a>.</li>
     <li><strong>GitHub Pages (GitHub):</strong> hospeda e entrega os arquivos estáticos do site. Como outros serviços de hospedagem, pode processar dados técnicos de conexão e acesso, como endereço IP, página solicitada e informações do navegador, necessários à disponibilização, segurança e funcionamento das páginas.</li>
     <li><strong>Google Fonts (Google):</strong> algumas páginas carregam fontes tipográficas hospedadas pelo Google. Ao acessar essas páginas, o navegador solicita os arquivos de fonte aos servidores do Google, que podem receber dados técnicos da conexão, como o endereço IP. Consulte a <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">Política de Privacidade do Google</a>.</li>
-    <li><strong>InfinitePay:</strong> processa o checkout e o pagamento. Recebe os itens, quantidades, valores, dados de contato e endereço de entrega necessários à cobrança e identificação da compra. Os dados do cartão são fornecidos diretamente à InfinitePay e não ficam disponíveis à Luxuriosa.</li>
+    <li><strong>InfinitePay:</strong> processa o checkout e o pagamento. Recebe os itens, quantidades, valores, dados de contato e endereço de entrega necessários à cobrança e identificação da compra. A indicação de um terceiro como pagador fica registrada internamente pela Luxuriosa e não é apresentada como identidade verificada pelo provedor. Os dados do cartão são fornecidos diretamente à InfinitePay e não ficam disponíveis à Luxuriosa.</li>
     <li><strong>Entregadores e autoridades:</strong> recebem somente os dados necessários à realização da entrega ou ao cumprimento de obrigação legal ou ordem válida.</li>
   </ul>
   <p>
