@@ -145,6 +145,12 @@
         <td>Enquanto a conta estiver ativa e pelo período necessário após seu encerramento para cumprir obrigações legais, resolver disputas e proteger direitos. A senha é processada pelo serviço de autenticação e não fica disponível em texto aberto para a Luxuriosa.</td>
       </tr>
       <tr>
+        <td>Dados básicos da Conta Google, quando você escolhe entrar com Google</td>
+        <td>Autenticar o acesso e facilitar o início do cadastro. O Google pode fornecer identificador da conta, endereço de e-mail e, quando disponíveis e autorizados, nome e foto do perfil. O e-mail identifica a conta e o nome pode ser sugerido no formulário; os demais dados obrigatórios são solicitados diretamente pela Luxuriosa.</td>
+        <td>Procedimentos preliminares e execução de contrato (art. 7º, V), para criação e acesso à conta. A autorização é concedida na própria tela do Google.</td>
+        <td>Os dados necessários à conta permanecem enquanto ela estiver ativa e pelo período necessário após seu encerramento para cumprir obrigações legais, resolver disputas e proteger direitos. A autenticação é processada pelo Google e pelo Supabase.</td>
+      </tr>
+      <tr>
         <td>Data de nascimento, nome completo, telefone/WhatsApp, endereço e cores favoritas associados à conta</td>
         <td>Manter o perfil, confirmar o requisito de maioridade, facilitar o atendimento e a entrega e lembrar preferências informadas pelo próprio titular.</td>
         <td>Execução de contrato e procedimentos preliminares (art. 7º, V); cumprimento de obrigação legal, quando aplicável. As cores favoritas são opcionais e usadas como preferência de produto.</td>
@@ -195,8 +201,15 @@
   </p>
   <p>
     Na área da conta, a Luxuriosa utiliza o Supabase para autenticação e armazenamento dos dados
-    de perfil, preferências e endereço principal. Isso inclui nome completo, data de nascimento,
-    telefone/WhatsApp, endereço, e-mail da conta e até três cores favoritas escolhidas pelo titular.
+    de perfil, preferências, registros de consentimento e endereço principal. Você pode entrar
+    com e-mail e senha ou escolher a autenticação com Google. Nesse último caso, o Google fornece
+    os dados básicos autorizados na tela de acesso, como identificador da conta e e-mail e,
+    quando disponíveis, nome e foto do perfil. A Luxuriosa não solicita acesso ao Gmail, Drive,
+    contatos, agenda ou outros conteúdos da Conta Google. O e-mail é usado para identificar a
+    conta e o nome pode ser sugerido no formulário de cadastro. A conclusão do cadastro exige
+    que você informe diretamente os demais dados solicitados pela Luxuriosa.
+    Isso inclui nome completo, data de nascimento, telefone/WhatsApp, endereço quando necessário,
+    e preferências informadas pelo próprio titular.
     O e-mail é usado para identificação e comunicações de autenticação. A senha é validada e
     protegida pelo serviço de autenticação; a Luxuriosa não consulta nem exibe a senha em texto
     aberto. A alteração de e-mail depende das confirmações enviadas pelo serviço.
@@ -284,6 +297,7 @@
     <li><strong>ViaCEP:</strong> se você consultar o CEP no formulário, o número informado é enviado ao serviço ViaCEP para buscar dados públicos de endereço. Nome, telefone, produtos e demais campos do pedido não são enviados nessa consulta. Consulte a <a href="https://viacep.com.br/" target="_blank" rel="noopener noreferrer">página do ViaCEP</a>.</li>
     <li><strong>Google Analytics 4 (Google):</strong> é carregado somente se você autorizar estatísticas no aviso de cookies. Nesse caso, recebe informações técnicas e eventos genéricos de navegação. A configuração procura não transmitir nomes ou identificadores de produtos, conteúdo do carrinho, dados do formulário, URLs específicas ou termos digitados; os eventos comerciais usam apenas parâmetros limitados, como etapa, método e quantidade. O IP é configurado com anonimização. Saiba mais na <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">Política de Privacidade do Google</a>.</li>
     <li><strong>Google AdSense (quando ativado):</strong> poderá exibir anúncios somente em páginas públicas de conteúdo selecionadas. Ao carregar um anúncio, o navegador poderá enviar ao Google informações técnicas de conexão e dispositivo, o endereço da página e identificadores ou cookies utilizados para exibição, controle de frequência, medição e prevenção de fraude. Conforme as configurações disponíveis e as regras aplicáveis, o Google e parceiros de publicidade poderão usar essas tecnologias para anúncios contextuais ou personalizados. A Luxuriosa não envia ao AdSense dados de cadastro, pedidos, endereço de entrega, pagamento, conteúdo do carrinho, conversas de atendimento ou respostas individuais de quizzes. Consulte a <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">Política de Privacidade do Google</a> e as <a href="https://support.google.com/adsense/answer/10502938?hl=pt-BR" target="_blank" rel="noopener noreferrer">políticas para editores</a>.</li>
+    <li><strong>Google — autenticação:</strong> quando você escolhe “Continuar com Google”, o Google autentica sua identidade e compartilha com o fluxo de acesso os dados básicos autorizados, como identificador da conta e e-mail e, quando disponíveis, nome e foto do perfil. A Luxuriosa não solicita acesso ao Gmail, Drive, contatos, agenda ou outros conteúdos da Conta Google. O Google processa a autenticação conforme sua própria política de privacidade. Consulte a <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">Política de Privacidade do Google</a>.</li>
     <li><strong>Supabase:</strong> fornece autenticação e banco de dados para a área da conta, adesão ao Clube, registros de consentimento e operação da loja. Processa dados de perfil e autenticação, preferências, adesões, registros do aceite dos termos e resumos de resultados de experiências que titulares autenticados escolhem salvar, solicitações de pedido, itens, quantidades, valores e dados de entrega. Quando você autoriza estatísticas, também pode processar eventos pseudonimizados de navegação. Esses eventos podem incluir identificador interno do produto, tipo de página, tipo de ação, quantidade e data/hora; não incluem nome, telefone, endereço ou texto de conversas. Os eventos analíticos são retidos por até 180 dias e ficam acessíveis somente à administração autorizada. O serviço também pode processar dados técnicos, registros de segurança e cópias de segurança conforme seus prazos próprios. Consulte a <a href="https://supabase.com/privacy" target="_blank" rel="noopener noreferrer">Política de Privacidade do Supabase</a>.</li>
     <li><strong>GitHub Pages (GitHub):</strong> hospeda e entrega os arquivos estáticos do site. Como outros serviços de hospedagem, pode processar dados técnicos de conexão e acesso, como endereço IP, página solicitada e informações do navegador, necessários à disponibilização, segurança e funcionamento das páginas.</li>
     <li><strong>Google Fonts (Google):</strong> algumas páginas carregam fontes tipográficas hospedadas pelo Google. Ao acessar essas páginas, o navegador solicita os arquivos de fonte aos servidores do Google, que podem receber dados técnicos da conexão, como o endereço IP. Consulte a <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">Política de Privacidade do Google</a>.</li>
