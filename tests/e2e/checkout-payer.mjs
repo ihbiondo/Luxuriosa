@@ -83,6 +83,16 @@ try {
   // e responde localmente com erro controlado antes de qualquer gravação/cobrança.
   await page.route("**/functions/v1/create-payment-order", async route => {
     const request = route.request();
+    const corsHeaders = {
+      "access-control-allow-origin": new URL(BASE_URL).origin,
+      "access-control-allow-methods": "POST, OPTIONS",
+      "access-control-allow-headers": "authorization, apikey, content-type",
+      "access-control-max-age": "600"
+    };
+    if (request.method() === "OPTIONS") {
+      await route.fulfill({ status: 204, headers: corsHeaders, body: "" });
+      return;
+    }
     if (request.method() !== "POST") {
       await route.continue();
       return;
@@ -98,6 +108,7 @@ try {
     await route.fulfill({
       status: 409,
       contentType: "application/json",
+      headers: corsHeaders,
       body: JSON.stringify({
         error: "Bloqueado pelo teste E2E. Nenhum pedido ou pagamento foi criado."
       })
