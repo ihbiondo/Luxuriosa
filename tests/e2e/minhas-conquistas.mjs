@@ -242,6 +242,15 @@ async function completeSignCompatibility(page) {
 
 
 async function auditCartAndCheckout(page) {
+  // Bloqueia a integração analítica hospedada; o teste não deve gravar eventos reais.
+  await page.route("https://byiykxfugvxuowueuxca.supabase.co/functions/v1/cart-orders", route =>
+    route.fulfill({
+      status: 200,
+      contentType: "application/json",
+      body: JSON.stringify({ ok: true, test: true })
+    })
+  );
+
   // Usa somente um produto real do catálogo local; não cria pedido nem inicia pagamento.
   await page.setViewportSize({ width: 320, height: 740 });
   await page.goto(`${BASE_URL}/loja.html`, { waitUntil: "domcontentloaded" });
@@ -273,6 +282,21 @@ async function auditCartAndCheckout(page) {
   await page.goto(`${BASE_URL}/loja.html?abrirCarrinho=1#catalogo`, {
     waitUntil: "domcontentloaded"
   });
+
+  const localAuthSession = await page.evaluate(() => {
+    return Object.keys(localStorage)
+      .filter(key => /^sb-.*-auth-token$/.test(key))
+      .some(key => {
+        try {
+          const value = JSON.parse(localStorage.getItem(key) || "null");
+          return Boolean(value && value.access_token);
+        } catch (_) {
+          return false;
+        }
+      });
+  });
+  assert.ok(localAuthSession,
+    "A sessão autenticada da conta E2E deve permanecer disponível no checkout.");
 
   // Aceita o aviso etário somente no navegador descartável do teste.
   const ageButtons = ["#gateYes", "#ageConfirm"];
