@@ -57,7 +57,7 @@
   <link rel="stylesheet" href="css/style.css?v=20261114-pre-venda-v1">
   <link rel="stylesheet" href="css/responsive.css">
   <link rel="stylesheet" href="css/ajustes.css?v=20261117-catalogo-touch-targets-v1">
-<link rel="stylesheet" href="css/navigation.css?v=20261118-account-nav-row-v2">
+<link rel="stylesheet" href="css/navigation.css?v=20261118-menu-hierarquico-v1">
   <style>
     .delivery-fee-note {
       margin: 0 0 28px;
@@ -233,115 +233,60 @@
 
       <nav class="navlinks" id="navlinks" aria-label="Menu principal">
         <div class="nav-drawer-top">
-          <span class="nav-drawer-title">NAVEGUE PELA LUXURIOSA</span>
-          <button class="nav-drawer-close" type="button" aria-label="Fechar menu">×</button>
-        </div>
-
-        <div class="nav-drawer-account-area">
-          <a class="nav-account-link" data-nav-account href="/login.html">
-            <span class="nav-account-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" focusable="false">
-                <circle cx="12" cy="8" r="3.2"></circle>
-                <path d="M5.5 20a6.5 6.5 0 0 1 13 0"></path>
-              </svg>
-            </span>
-            <span class="nav-account-copy">
-              <strong>Minha conta</strong>
-              <small data-nav-account-hint>Entre ou crie sua conta</small>
-            </span>
-            <span class="nav-account-arrow" aria-hidden="true">›</span>
-          </a>
-          <a class="nav-orders-link" data-nav-orders href="/meus-pedidos/" hidden aria-hidden="true">
-            <span class="nav-link-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" focusable="false">
-                <path d="M6 3h12l2 3v15H4V6l2-3Z"></path>
-                <path d="M8 9h8M8 13h8M8 17h5"></path>
-              </svg>
-            </span>
-            <span>Meus pedidos</span>
-            <span class="nav-account-arrow" aria-hidden="true">↗</span>
-          </a>
-        </div>
-
-        <a class="nav-link-shop" href="/loja.html" aria-label="Loja" aria-current="page">
-          <span class="nav-link-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24" focusable="false">
-              <path d="M5 8h14l1 13H4L5 8Z"></path>
-              <path d="M9 9V6a3 3 0 0 1 6 0v3"></path>
-            </svg>
-          </span>
-          <span>Loja</span>
-          <span class="nav-account-arrow" aria-hidden="true">↗</span>
-        </a>
-
-        <div class="nav-menu-group nav-menu-group--help" role="group" aria-label="Ajuda e atendimento">
-          <span class="nav-menu-group-title">Ajuda e atendimento</span>
-          <a href="/atendimento.html">
-            <span class="nav-link-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" focusable="false">
-                <path d="M4 13v-2a8 8 0 0 1 16 0v2"></path>
-                <rect x="3" y="12" width="4" height="7" rx="2"></rect>
-                <rect x="17" y="12" width="4" height="7" rx="2"></rect>
-                <path d="M19 19a3 3 0 0 1-3 3h-2"></path>
-              </svg>
-            </span>
-            <span>Atendimento</span>
-          </a>
-          <a href="/entregas/">
-            <span class="nav-link-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" focusable="false">
-                <circle cx="6" cy="17" r="2.5"></circle>
-                <circle cx="18" cy="17" r="2.5"></circle>
-                <path d="M8.5 17h4l2-6h3l2 6M12.5 17l-3-7H6M14.5 11H11"></path>
-                <path d="M13 7h3"></path>
-              </svg>
-            </span>
-            <span>Entregas</span>
-          </a>
-          <a href="/faq.html">
-            <span class="nav-link-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" focusable="false">
-                <circle cx="12" cy="12" r="9"></circle>
-                <path d="M9.6 9a2.5 2.5 0 1 1 4.2 1.8c-1.1 1-1.8 1.3-1.8 2.7M12 17.2v.1"></path>
-              </svg>
-            </span>
-            <span>Dúvidas frequentes</span>
-          </a>
-        </div>
-
-        <div class="nav-menu-group nav-menu-group--discover" role="group" aria-label="Conhecer">
-          <span class="nav-menu-group-title">Conhecer</span>
-          <a href="/educacao/">
-            <span class="nav-link-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" focusable="false">
-                <path d="M3 5.5A2.5 2.5 0 0 1 5.5 3H21v17H5.5A2.5 2.5 0 0 0 3 22V5.5Z"></path>
-                <path d="M3 6h14M8 7v10"></path>
-              </svg>
-            </span>
-            <span>Educação</span>
-          </a>
-          <a href="/experiencias/">
-            <span class="nav-link-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" focusable="false">
-                <path d="m12 3 2.7 5.5 6.1.9-4.4 4.3 1 6.1-5.4-2.9-5.4 2.9 1-6.1-4.4-4.3 6.1-.9L12 3Z"></path>
-              </svg>
-            </span>
-            <span>Experiências</span>
-          </a>
-          <a href="/clube/">
-            <span class="nav-link-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" focusable="false">
-                <path d="M5 4 9 7l3-4 3 4 4-3-1 9H6L5 4Z"></path>
-                <path d="M6 16h12M7 20h10"></path>
-              </svg>
-            </span>
-            <span>Clube de Vantagens</span>
-          </a>
-        </div>
-
-        <div class="nav-drawer-footer">
-          <p>ATENDIMENTO DISCRETO <span aria-hidden="true">·</span> BAURU E REGIÃO</p>
-        </div>
+            <span class="nav-drawer-title">NAVEGUE PELA LUXURIOSA</span>
+            <button class="nav-drawer-close" type="button" aria-label="Fechar menu">×</button>
+          </div>
+          <div class="nav-drawer-account-area"><a class="nav-primary-link nav-account-primary" data-nav-account href="/login.html"><span class="nav-link-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><circle cx="12" cy="8" r="3.2"></circle><path d="M5.5 20a6.5 6.5 0 0 1 13 0"></path></svg></span><span>Minha conta</span></a>
+          <div class="nav-submenu nav-account-submenu" data-nav-auth-only-group hidden>
+            <a data-nav-auth-only href="/minha-conta/">Meu cadastro</a>
+            <a data-nav-auth-only href="/meus-pedidos/">Minhas compras</a>
+          </div></div>
+          <a class="nav-primary-link nav-link-shop" href="/loja.html"><span class="nav-link-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M5 8h14l1 13H4L5 8Z"></path><path d="M9 9V6a3 3 0 0 1 6 0v3"></path></svg></span><span>Loja</span></a>
+          <details class="nav-submenu nav-store-submenu">
+            <summary>Explorar categorias</summary>
+            <a href="/loja.html?categoria=Lingerie">Lingerie</a>
+            <a href="/loja.html?categoria=G%C3%A9is%20e%20estimulantes">Géis e estimulantes</a>
+            <a href="/loja.html?categoria=Vibradores%20e%20masturbadores">Vibradores e masturbadores</a>
+            <a href="/loja.html?categoria=Jogos%20e%20acess%C3%B3rios">Jogos e acessórios</a>
+            <a href="/loja.html?categoria=Perfumes%20e%20higiene">Perfumes e higiene</a>
+            <a href="/loja.html?categoria=%C3%93leos%20para%20massagem">Óleos para massagem</a>
+            <a href="/loja.html?categoria=Kits">Kits</a>
+            <a class="nav-submenu-all" href="/loja.html">Ver todo catálogo</a>
+          </details>
+          <div class="nav-menu-group nav-menu-group--help" role="group" aria-label="Atendimento e Ajuda">
+            <span class="nav-menu-group-title">Atendimento e Ajuda</span>
+            <a href="/atendimento.html"><span class="nav-link-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M4 13v-2a8 8 0 0 1 16 0v2"></path><rect x="3" y="12" width="4" height="7" rx="2"></rect><rect x="17" y="12" width="4" height="7" rx="2"></rect><path d="M19 19a3 3 0 0 1-3 3h-2"></path></svg></span><span>Atendimento</span></a>
+            <a href="/entregas/"><span class="nav-link-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><circle cx="6" cy="17" r="2.5"></circle><circle cx="18" cy="17" r="2.5"></circle><path d="M8.5 17h4l2-6h3l2 6M12.5 17l-3-7H6M14.5 11H11"></path></svg></span><span>Entregas</span></a>
+            <a href="/faq.html"><span class="nav-link-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><circle cx="12" cy="12" r="9"></circle><path d="M9.6 9a2.5 2.5 0 1 1 4.2 1.8c-1.1 1-1.8 1.3-1.8 2.7M12 17.2v.1"></path></svg></span><span>Dúvidas frequentes</span></a>
+            <div class="nav-submenu nav-help-submenu">
+              <a href="/faq.html#faq-pedidos">Pedidos e produtos</a>
+              <a href="/faq.html#faq-entrega">Frete e entrega</a>
+              <a href="/faq.html#faq-pagamento">Pagamento</a>
+              <a href="/faq.html#faq-devolucoes">Trocas e devoluções</a>
+              <a href="/privacidade.html">Privacidade</a>
+            </div>
+          </div>
+          <div class="nav-menu-group nav-menu-group--discover" role="group" aria-label="Conhecer">
+            <span class="nav-menu-group-title">Conhecer</span>
+            <a href="/clube/"><span class="nav-link-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M5 4 9 7l3-4 3 4 4-3-1 9H6L5 4Z"></path><path d="M6 16h12M7 20h10"></path></svg></span><span>Clube de vantagens</span></a>
+            <a href="/educacao/"><span class="nav-link-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M3 5.5A2.5 2.5 0 0 1 5.5 3H21v17H5.5A2.5 2.5 0 0 0 3 22V5.5Z"></path><path d="M3 6h14M8 7v10"></path></svg></span><span>Educação</span></a>
+            <div class="nav-submenu">
+              <a href="/educacao/temas/">Temas educativos</a>
+              <a href="/educacao/enciclopedia/">Enciclopédia</a>
+              <a href="/educacao/curiosidades/">Curiosidades</a>
+              <a href="/educacao/guias/">Guias</a>
+              <a href="/educacao/interatividade/">Interatividade</a>
+              <a href="/educacao/duvidas-frequentes/">Dúvidas frequentes</a>
+            </div>
+            <a href="/experiencias/"><span class="nav-link-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="m12 3 2.7 5.5 6.1.9-4.4 4.3 1 6.1-5.4-2.9-5.4 2.9 1-6.1-4.4-4.3 6.1-.9L12 3Z"></path></svg></span><span>Experiências</span></a>
+            <div class="nav-submenu">
+              <a href="/experiencias/?tipo=quiz#experienceGrid">Quizzes</a>
+              <a href="/experiencias/?tipo=couple#experienceGrid">Conexão a dois</a>
+              <a href="/experiencias/?tipo=challenge#experienceGrid">Desafios</a>
+              <a href="/experiencias/?tipo=astrology#experienceGrid">Astrologia</a>
+            </div>
+          </div>
+          <div class="nav-drawer-footer"><p>ATENDIMENTO DISCRETO <span aria-hidden="true">·</span> BAURU E REGIÃO</p></div>
       </nav>
 
 
@@ -843,7 +788,7 @@
   <script src="js/inteligencia.js?v=20261113-dado-online"></script>
   <script src="js/carrinho.js?v=20261113-dado-online"></script>
   <script src="js/clientes.js?v=20261118-cadastro-usuario-endereco-condicional"></script>
-  <script src="js/app.js?v=20261118-menu-icons-auth-v1"></script>
+  <script src="js/app.js?v=20261118-menu-hierarquico-v1"></script>
 
   <script src="js/consentimento.js?v=20261118-clube-convite-120s-v1"></script>
 </body>
