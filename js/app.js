@@ -49,117 +49,141 @@
      ======================================================= */
 
   function configurarMenu() {
-
     var botao = $("burger");
     var menu = $("navlinks");
+    if (!botao || !menu) return;
 
-    if (!botao || !menu) {
-      return;
+    var header = botao.closest("header");
+    var closeButton = menu.querySelector(".nav-drawer-close");
+    if (!header) return;
+
+    var backdrop = document.createElement("button");
+    backdrop.type = "button";
+    backdrop.className = "nav-drawer-backdrop";
+    backdrop.setAttribute("aria-label", "Fechar menu");
+    backdrop.tabIndex = -1;
+    header.appendChild(backdrop);
+
+    var mobileQuery = window.matchMedia("(max-width: 1199px)");
+
+    function estaAberto() {
+      return menu.classList.contains("open");
     }
 
-
-    function fecharMenu() {
-
-      menu.classList.remove("open");
-
-      botao.classList.remove("open");
-
-      botao.setAttribute(
-        "aria-expanded",
-        "false"
-      );
-
-      botao.setAttribute("aria-label", "Abrir menu");
-
-    }
-
-
-    function abrirOuFecharMenu() {
-
-      var aberto =
-        menu.classList.toggle("open");
-
-      botao.classList.toggle(
-        "open",
-        aberto
-      );
-
-      botao.setAttribute(
-        "aria-expanded",
-        aberto ? "true" : "false"
-      );
-
-      botao.setAttribute("aria-label", aberto ? "Fechar menu" : "Abrir menu");
-
-    }
-
-
-    /* Clique no botão */
-
-    botao.addEventListener(
-      "click",
-      function (evento) {
-
-        evento.stopPropagation();
-
-        abrirOuFecharMenu();
-
+    function sincronizarViewport() {
+      if (mobileQuery.matches) {
+        if (!estaAberto()) {
+          menu.setAttribute("aria-hidden", "true");
+          menu.setAttribute("inert", "");
+        }
+      } else {
+        menu.classList.remove("open");
+        menu.removeAttribute("aria-hidden");
+        menu.removeAttribute("inert");
+        backdrop.classList.remove("open");
+        header.classList.remove("mobile-menu-active");
+        document.body.classList.remove("mobile-menu-open");
+        botao.classList.remove("open");
+        botao.setAttribute("aria-expanded", "false");
+        botao.setAttribute("aria-label", "Abrir menu");
       }
-    );
+    }
 
+    function fecharMenu(devolverFoco) {
+      var estavaAberto = estaAberto();
+      menu.classList.remove("open");
+      backdrop.classList.remove("open");
+      header.classList.remove("mobile-menu-active");
+      document.body.classList.remove("mobile-menu-open");
+      botao.classList.remove("open");
+      botao.setAttribute("aria-expanded", "false");
+      botao.setAttribute("aria-label", "Abrir menu");
+      menu.setAttribute("aria-hidden", "true");
+      menu.setAttribute("inert", "");
 
-    /* Clique nos links */
+      if (devolverFoco !== false && estavaAberto) botao.focus();
+    }
 
-    menu
-      .querySelectorAll("a")
-      .forEach(function (link) {
+    function abrirMenu() {
+      if (!mobileQuery.matches) return;
+      menu.removeAttribute("inert");
+      menu.setAttribute("aria-hidden", "false");
+      menu.classList.add("open");
+      backdrop.classList.add("open");
+      header.classList.add("mobile-menu-active");
+      document.body.classList.add("mobile-menu-open");
+      botao.classList.add("open");
+      botao.setAttribute("aria-expanded", "true");
+      botao.setAttribute("aria-label", "Menu aberto");
 
-        link.addEventListener(
-          "click",
-          fecharMenu
-        );
+      window.requestAnimationFrame(function () {
+        if (closeButton) closeButton.focus();
+        else {
+          var first = menu.querySelector("a[href], button:not([disabled])");
+          if (first) first.focus();
+        }
+      });
+    }
 
+    botao.addEventListener("click", function (evento) {
+      evento.stopPropagation();
+      if (estaAberto()) fecharMenu(false);
+      else abrirMenu();
+    });
+
+    if (closeButton) closeButton.addEventListener("click", function () {
+      fecharMenu(true);
+    });
+
+    backdrop.addEventListener("click", function () {
+      fecharMenu(true);
+    });
+
+    menu.querySelectorAll("a").forEach(function (link) {
+      link.addEventListener("click", function () {
+        fecharMenu(false);
+      });
+    });
+
+    menu.addEventListener("keydown", function (evento) {
+      if (!estaAberto()) return;
+      if (evento.key === "Escape") {
+        evento.preventDefault();
+        fecharMenu(true);
+        return;
+      }
+      if (evento.key !== "Tab") return;
+
+      var focaveis = Array.prototype.slice.call(
+        menu.querySelectorAll('a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])')
+      ).filter(function (elemento) {
+        return elemento.offsetParent !== null;
       });
 
-
-    /* Clique fora */
-
-    document.addEventListener(
-      "click",
-      function (evento) {
-
-        if (!menu.classList.contains("open")) {
-          return;
-        }
-
-        if (
-          !menu.contains(evento.target) &&
-          !botao.contains(evento.target)
-        ) {
-
-          fecharMenu();
-
-        }
-
+      if (!focaveis.length) {
+        evento.preventDefault();
+        if (closeButton) closeButton.focus();
+        return;
       }
-    );
 
-
-    /* Tecla Escape */
-
-    document.addEventListener(
-      "keydown",
-      function (evento) {
-
-        if (evento.key === "Escape") {
-          fecharMenu();
-        }
-
+      var primeiro = focaveis[0];
+      var ultimo = focaveis[focaveis.length - 1];
+      if (evento.shiftKey && document.activeElement === primeiro) {
+        evento.preventDefault();
+        ultimo.focus();
+      } else if (!evento.shiftKey && document.activeElement === ultimo) {
+        evento.preventDefault();
+        primeiro.focus();
       }
-    );
+    });
 
+    if (typeof mobileQuery.addEventListener === "function") {
+      mobileQuery.addEventListener("change", sincronizarViewport);
+    } else if (typeof mobileQuery.addListener === "function") {
+      mobileQuery.addListener(sincronizarViewport);
+    }
+    sincronizarViewport();
   }
-
 
   /* =======================================================
      CONTROLE DE IDADE +18
