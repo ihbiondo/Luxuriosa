@@ -117,7 +117,20 @@
       .delivery-club-panel .btn{width:100%;justify-content:center}
       .delivery-contact{align-items:flex-start;flex-direction:column}
     }
-    @media(max-width:360px){.delivery-comparison tr{padding:12px}.delivery-comparison tbody td{font-size:11px}.delivery-contact a{font-size:10px}}
+    @media(max-width:360px){
+      .delivery-table-wrap,.delivery-comparison,.delivery-comparison tbody,.delivery-comparison tr{
+        width:100%;min-width:0;max-width:100%;
+      }
+      .delivery-comparison tr{
+        grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+        padding:12px;
+      }
+      .delivery-comparison tbody th,.delivery-comparison tbody td{
+        min-width:0;max-width:100%;overflow-wrap:anywhere;
+      }
+      .delivery-comparison tbody td{font-size:11px}
+      .delivery-contact a{font-size:10px}
+    }
     @media(prefers-reduced-motion:reduce){.delivery-comparison tbody tr{transition:none}}
 </style>
 </head>
