@@ -19,6 +19,7 @@ on:
       - "meus-pedidos/**"
       - "js/pedido-whatsapp.js"
       - "tests/pedido-whatsapp.test.mjs"
+      - "tests/checkout-payer.test.mjs"
       - "portal/**"
       - "experiencias/**"
       - "educacao/interatividade/**"
