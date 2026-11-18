@@ -1171,7 +1171,7 @@
   overflow: hidden;
   flex: 0 1 auto;
 }
-.product-detail-main-image {
+.modal .m-img .product-detail-main-image {
   display: block;
   width: 100%;
   height: 100%;
@@ -1210,7 +1210,7 @@
 .product-gallery-thumb[aria-pressed="true"] {
   border: 2px solid #d4af7c;
 }
-.product-gallery-thumb img {
+.modal .m-img .product-gallery-thumb img {
   display: block;
   width: 100%;
   height: 100%;
