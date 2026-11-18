@@ -1258,17 +1258,16 @@
     padding: 10px 10px 4px;
     gap: 8px;
   }
-  .product-detail-image-frame {
+  .modal .m-img .product-detail-image-frame {
     /*
-     * A altura define o tamanho no celular; a largura acompanha a
-     * proporção retrato. Isso impede que o limite de altura transforme
-     * o quadro 4:5 em um bloco quase quadrado.
+     * Largura determinada pelo viewport; altura calculada pela proporção.
+     * O terceiro limite evita ultrapassar a altura em celulares baixos.
      */
-    width: auto;
-    height: min(38dvh, 290px);
-    max-width: min(78vw, 230px);
+    width: min(68vw, 204px, 27dvh);
+    height: auto;
     aspect-ratio: 3 / 4;
-    max-height: 38dvh;
+    max-width: none;
+    max-height: none;
     min-height: 0;
     flex: 0 0 auto;
     align-self: center;
