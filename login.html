@@ -1869,6 +1869,13 @@ input:focus,select:focus{border-color:#d4af7c;box-shadow:0 0 0 3px rgba(212,175,
         });
         if (error) throw error;
 
+        // Marca a migração dos metadados de onboarding como concluída para que
+        // o fluxo legado não sobrescreva nascimento e telefone coletados aqui.
+        const { error: metadataError } = await supabase.auth.updateUser({
+          data: { account_setup_completed: true }
+        });
+        if (metadataError) throw metadataError;
+
         const { data: currentUser, error: currentUserError } = await supabase.auth.getUser();
         if (currentUserError) throw currentUserError;
         if (!currentUser.user) throw new Error("Sua sessão expirou. Entre novamente.");
