@@ -274,7 +274,7 @@
     var primeiroErro = null;
     var exigirEnderecoEntrega = exigirEndereco && !modalidadeRetirada();
     var required = exigirEnderecoEntrega
-      ? ["customerName", "customerPhone", "customerEmail", "customerStreet", "customerNumber", "customerDistrict", "customerCity", "customerState"]
+      ? ["customerName", "customerPhone", "customerEmail", "customerCep", "customerStreet", "customerNumber", "customerDistrict", "customerCity", "customerState"]
       : ["customerName", "customerPhone", "customerEmail"];
 
     document.querySelectorAll("#customerForm [aria-invalid='true']").forEach(function (field) { field.removeAttribute("aria-invalid"); });
@@ -329,7 +329,7 @@
     if (primeiroErro) {
       avisar(
         exigirEnderecoEntrega
-          ? "Preencha nome ou apelido, telefone/WhatsApp, rua, número, bairro, cidade e estado."
+          ? "Preencha nome, telefone/WhatsApp, CEP, rua, número, bairro, cidade e estado para entrega."
           : "Preencha nome, telefone/WhatsApp e e-mail.",
         "error"
       );
@@ -775,7 +775,7 @@
       var profile = results[0].data || {};
       var address = results[1].data || {};
       if (!profile.full_name && !profile.phone && !address.street) {
-        avisar("Ainda não encontramos dados cadastrados na sua conta. Você pode preencher este pedido manualmente.", "info");
+        avisar("Ainda não encontramos dados pessoais ou endereço na sua conta. Preencha nome, WhatsApp e e-mail; o endereço só é necessário para entrega.", "info");
         return;
       }
 
@@ -804,7 +804,7 @@
         }
       });
       atualizarAvisoFrete();
-      avisar("Dados carregados. Confira e complete o endereço; você pode editar qualquer campo antes de revisar o pedido.", "success");
+      avisar("Dados carregados. Para entrega, complete o endereço; para retirada agendada, escolha a modalidade sem preencher endereço.", "success");
       $("customerName").focus();
     } catch (error) {
       if (requestId !== accountLoadId) return;
