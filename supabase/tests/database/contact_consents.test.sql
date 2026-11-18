@@ -44,7 +44,7 @@ select extensions.ok(
 insert into auth.users (id,email)
 values
   ('30000000-0000-4000-8000-000000000001','consent-a@test.invalid'),
-  ('30000000-0000-4000-8000-000000000002','consent-b@test.invalid');
+  ('31000000-0000-4000-8000-000000000002','consent-b@test.invalid');
 
 set local role authenticated;
 set local request.jwt.claim.sub='30000000-0000-4000-8000-000000000001';
@@ -85,7 +85,7 @@ select extensions.throws_ok(
   'a função rejeita versão de texto não aprovada'
 );
 
-set local request.jwt.claim.sub='30000000-0000-4000-8000-000000000002';
+set local request.jwt.claim.sub='31000000-0000-4000-8000-000000000002';
 
 select extensions.is(
   (select count(*)::integer from public.contact_consents),
