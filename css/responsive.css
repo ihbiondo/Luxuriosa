@@ -1255,13 +1255,23 @@
     border-radius: 16px;
   }
   .modal .m-img {
-    padding: 12px 12px 6px;
+    padding: 10px 10px 4px;
     gap: 8px;
   }
   .product-detail-image-frame {
-    width: min(100%, 340px);
-    aspect-ratio: 4 / 5;
-    max-height: 42dvh;
+    /*
+     * A altura define o tamanho no celular; a largura acompanha a
+     * proporção retrato. Isso impede que o limite de altura transforme
+     * o quadro 4:5 em um bloco quase quadrado.
+     */
+    width: auto;
+    height: min(38dvh, 290px);
+    max-width: min(78vw, 230px);
+    aspect-ratio: 3 / 4;
+    max-height: 38dvh;
+    min-height: 0;
+    flex: 0 0 auto;
+    align-self: center;
   }
   .product-gallery-thumbnails {
     gap: 8px;
