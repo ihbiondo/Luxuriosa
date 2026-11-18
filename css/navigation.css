@@ -476,16 +476,21 @@
     margin: 0;
   }
 
-  /* Minha conta usa exatamente a linguagem visual dos links comuns do menu. */
-  .nav-account-link {
+  /*
+   * O seletor precisa ser mais específico que ".navlinks a" em responsive.css.
+   * Sem isso, o display:block global empilha o ícone e o texto verticalmente.
+   */
+  .navlinks .nav-drawer-account-area > .nav-account-link {
     display: flex;
+    flex-direction: row;
     align-items: center;
+    justify-content: flex-start;
     gap: 12px;
     width: 100%;
     min-height: 49px;
-    padding: 12px 5px;
+    margin: 0;
+    padding: 12px 11px;
     border: 0;
-    border-bottom: 1px solid rgba(212, 175, 124, .08);
     border-radius: 0;
     background: transparent;
     color: var(--muted);
@@ -495,10 +500,13 @@
     line-height: 1.35;
     text-align: left;
     text-decoration: none;
+    text-transform: none;
   }
 
-  .nav-account-link:hover,
-  .nav-account-link:focus-visible {
+  .navlinks .nav-drawer-account-area > .nav-account-link:hover,
+  .navlinks .nav-drawer-account-area > .nav-account-link:focus-visible {
+    padding-left: 15px;
+    background: rgba(212, 175, 124, .075);
     color: var(--gold);
   }
 
