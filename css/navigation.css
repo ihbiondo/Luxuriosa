@@ -454,3 +454,135 @@
     transform: none;
   }
 }
+
+
+/* Menu lateral: atalho de conta, pedidos e ícones de navegação. */
+.nav-link-icon {
+  display: none;
+}
+
+@media (max-width: 1199px) {
+  .nav-drawer-account-area {
+    display: grid;
+    gap: 8px;
+    margin: 17px 0 11px;
+  }
+
+  .nav-account-link {
+    min-height: 61px;
+    padding: 12px 14px;
+  }
+
+  .nav-account-copy {
+    display: flex;
+    min-width: 0;
+    flex: 1 1 auto;
+    flex-direction: column;
+    gap: 3px;
+  }
+
+  .nav-account-copy strong {
+    color: inherit;
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1.3;
+  }
+
+  .nav-account-copy small {
+    color: #bfaeb4;
+    font-size: 9px;
+    font-weight: 400;
+    line-height: 1.4;
+    letter-spacing: .015em;
+  }
+
+  .nav-orders-link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-height: 47px;
+    padding: 10px 15px;
+    border: 1px solid rgba(212, 175, 124, .2);
+    border-radius: 11px;
+    background: rgba(212, 175, 124, .045);
+    color: #dfd0d4;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: .02em;
+    text-decoration: none;
+  }
+
+  .nav-orders-link[hidden] {
+    display: none !important;
+  }
+
+  .nav-orders-link:hover,
+  .nav-orders-link:focus-visible {
+    border-color: rgba(212, 175, 124, .55);
+    background: rgba(212, 175, 124, .09);
+    color: var(--gold);
+  }
+
+  .nav-link-icon {
+    display: inline-grid;
+    width: 25px;
+    height: 25px;
+    flex: 0 0 25px;
+    place-items: center;
+    color: var(--gold);
+  }
+
+  .nav-link-icon svg {
+    display: block;
+    width: 21px;
+    height: 21px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.55;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .navlinks > .nav-link-shop {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-height: 52px;
+    margin: 4px 0 10px;
+    padding: 12px 15px;
+    letter-spacing: .12em;
+  }
+
+  .navlinks > .nav-link-shop .nav-link-icon {
+    color: var(--gold);
+  }
+
+  .navlinks .nav-menu-group > a {
+    justify-content: flex-start;
+    gap: 12px;
+    min-height: 49px;
+    padding-right: 11px;
+  }
+
+  .navlinks .nav-menu-group > a .nav-link-icon {
+    color: #d4af7c;
+  }
+
+  .navlinks .nav-menu-group > a > span:nth-child(2) {
+    flex: 1 1 auto;
+  }
+
+  .navlinks .nav-menu-group > a::after {
+    margin-left: auto;
+  }
+
+  .nav-drawer-footer {
+    padding-top: 17px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav-orders-link {
+    transition: none !important;
+  }
+}
