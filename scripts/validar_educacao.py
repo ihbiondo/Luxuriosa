@@ -167,7 +167,7 @@ def main() -> int:
                 errors.append(f"{rel}: marca não retorna à página inicial da Luxuriosa")
             if page_text.count('class="ed-category-card"') != 6:
                 errors.append(f"{rel}: esperado seis cards de categoria na Educação")
-            discovery_options = re.findall(r'<button\\b[^>]*data-discovery="([^"]+)"[^>]*>', page_text)
+            discovery_options = re.findall(r'<button\b[^>]*data-discovery="([^"]+)"[^>]*>', page_text)
             expected_discovery_options = {"types", "materials", "lubricants", "care", "questions", "explore"}
             if len(discovery_options) != 6 or set(discovery_options) != expected_discovery_options:
                 errors.append(f"{rel}: assistente de descoberta deve apresentar as seis opções previstas")
