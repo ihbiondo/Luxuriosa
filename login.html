@@ -760,14 +760,15 @@ input:focus,select:focus{border-color:#d4af7c;box-shadow:0 0 0 3px rgba(212,175,
                 <div class="field"><label for="accountPhone">WhatsApp</label><input id="accountPhone" type="tel" autocomplete="tel" maxlength="30" required></div>
               </div>
               <div class="section-label">Endereço principal</div>
+              <small class="email-change-help">Opcional no cadastro. O endereço será necessário quando você escolher entrega no checkout; para retirada agendada, não precisa preencher.</small>
               <div class="grid">
-                <div class="field"><label for="accountPostalCode">CEP</label><input id="accountPostalCode" inputmode="numeric" autocomplete="postal-code" maxlength="9" required><small class="cep-status" id="accountPostalCodeStatus" aria-live="polite"></small></div>
-                <div class="field"><label for="accountAddressNumber">Número</label><input id="accountAddressNumber" autocomplete="address-line2" maxlength="20" required></div>
-                <div class="field full"><label for="accountStreet">Rua / Avenida</label><input id="accountStreet" autocomplete="address-line1" maxlength="160" required></div>
-                <div class="field"><label for="accountNeighborhood">Bairro</label><input id="accountNeighborhood" autocomplete="address-level3" maxlength="100" required></div>
+                <div class="field"><label for="accountPostalCode">CEP</label><input id="accountPostalCode" inputmode="numeric" autocomplete="postal-code" maxlength="9"><small class="cep-status" id="accountPostalCodeStatus" aria-live="polite"></small></div>
+                <div class="field"><label for="accountAddressNumber">Número</label><input id="accountAddressNumber" autocomplete="address-line2" maxlength="20"></div>
+                <div class="field full"><label for="accountStreet">Rua / Avenida</label><input id="accountStreet" autocomplete="address-line1" maxlength="160"></div>
+                <div class="field"><label for="accountNeighborhood">Bairro</label><input id="accountNeighborhood" autocomplete="address-level3" maxlength="100"></div>
                 <div class="field"><label for="accountComplement">Complemento (opcional)</label><input id="accountComplement" maxlength="100"></div>
-                <div class="field"><label for="accountCity">Cidade</label><input id="accountCity" autocomplete="address-level2" maxlength="100" required></div>
-                <div class="field"><label for="accountState">UF</label><input id="accountState" autocomplete="address-level1" maxlength="2" pattern="[A-Za-z]{2}" required></div>
+                <div class="field"><label for="accountCity">Cidade</label><input id="accountCity" autocomplete="address-level2" maxlength="100"></div>
+                <div class="field"><label for="accountState">UF</label><input id="accountState" autocomplete="address-level1" maxlength="2" pattern="[A-Za-z]{2}"></div>
               </div>
               <div class="section-label">Preferências</div>
               <div class="field">
@@ -1428,10 +1429,23 @@ input:focus,select:focus{border-color:#d4af7c;box-shadow:0 0 0 3px rgba(212,175,
       let age = today.getFullYear() - birthDate.getFullYear();
       if (today.getMonth() < birthDate.getMonth() || (today.getMonth() === birthDate.getMonth() && today.getDate() < birthDate.getDate())) age--;
       if (age < 18) return message("A conta Luxuriosa é permitida somente para maiores de 18 anos.", true);
-      const postalCode = $("accountPostalCode").value.replace(/\D/g, "");
-      if (postalCode.length !== 8) return message("Informe um CEP válido com oito dígitos.", true);
-      const state = $("accountState").value.trim().toUpperCase();
-      if (!/^[A-Z]{2}$/.test(state)) return message("Informe uma UF válida com duas letras.", true);
+
+      const address = {
+        postalCode: $("accountPostalCode").value.replace(/\D/g, ""),
+        street: $("accountStreet").value.trim(),
+        number: $("accountAddressNumber").value.trim(),
+        neighborhood: $("accountNeighborhood").value.trim(),
+        city: $("accountCity").value.trim(),
+        state: $("accountState").value.trim().toUpperCase()
+      };
+      const hasAnyAddress = Object.values(address).some(Boolean);
+      const hasCompleteAddress = address.postalCode.length === 8 &&
+        address.street && address.number && address.neighborhood &&
+        address.city && /^[A-Z]{2}$/.test(address.state);
+      if (hasAnyAddress && !hasCompleteAddress) {
+        return message("Para salvar o endereço, preencha CEP, rua, número, bairro, cidade e UF. Caso não vá usar entrega agora, deixe os campos em branco.", true);
+      }
+
       const colors = Array.from(document.querySelectorAll('input[name="accountFavoriteColor"]:checked')).map((input) => input.value);
       if (colors.length > 3) return message("Escolha no máximo três cores favoritas.", true);
       const categories = Array.from(document.querySelectorAll('input[name="accountFavoriteCategory"]:checked')).map((input) => input.value);
@@ -1442,31 +1456,46 @@ input:focus,select:focus{border-color:#d4af7c;box-shadow:0 0 0 3px rgba(212,175,
       button.disabled = true;
       button.textContent = "SALVANDO...";
       try {
-        const { error } = await supabase.rpc("update_account_data", {
-          p_full_name: fullName,
-          p_birth_date: birth,
-          p_phone: $("accountPhone").value.trim(),
-          p_favorite_colors: colors,
-          p_postal_code: postalCode,
-          p_street: $("accountStreet").value.trim(),
-          p_number: $("accountAddressNumber").value.trim(),
-          p_complement: $("accountComplement").value.trim(),
-          p_neighborhood: $("accountNeighborhood").value.trim(),
-          p_city: $("accountCity").value.trim(),
-          p_state: state
-        });
-        if (error) throw error;
         const { data: userData, error: userError } = await supabase.auth.getUser();
         if (userError) throw userError;
         if (!userData.user) throw new Error("Sua sessão expirou. Entre novamente.");
+
+        if (hasCompleteAddress) {
+          const { error } = await supabase.rpc("update_account_data", {
+            p_full_name: fullName,
+            p_birth_date: birth,
+            p_phone: $("accountPhone").value.trim(),
+            p_favorite_colors: colors,
+            p_postal_code: address.postalCode,
+            p_street: address.street,
+            p_number: address.number,
+            p_complement: $("accountComplement").value.trim(),
+            p_neighborhood: address.neighborhood,
+            p_city: address.city,
+            p_state: address.state
+          });
+          if (error) throw error;
+        } else {
+          const profileResult = await supabase.from("profiles").update({
+            full_name: fullName,
+            display_name: fullName.split(/\s+/)[0],
+            birth_date: birth,
+            phone: $("accountPhone").value.trim()
+          }).eq("id", userData.user.id);
+          if (profileResult.error) throw profileResult.error;
+        }
+
         const preferencesResult = await supabase.from("preferences").update({
+          favorite_colors: colors,
           favorite_categories: categories,
           preferred_price_range: preferredPriceRange || null,
           preferred_offer_type: preferredOfferType || null
         }).eq("user_id", userData.user.id);
         if (preferencesResult.error) throw preferencesResult.error;
         await loadAccountData(userData.user);
-        message("Seus dados e preferências foram atualizados com sucesso.");
+        message(hasCompleteAddress
+          ? "Seus dados, endereço e preferências foram atualizados."
+          : "Seus dados pessoais e preferências foram atualizados. O endereço continua opcional até você escolher entrega.");
       } catch (error) {
         console.error("Falha ao atualizar conta:", error);
         message("Não foi possível salvar todas as alterações. " + friendlyError(error), true);
@@ -1475,6 +1504,8 @@ input:focus,select:focus{border-color:#d4af7c;box-shadow:0 0 0 3px rgba(212,175,
         button.textContent = "SALVAR ALTERAÇÕES";
       }
     });
+
+
 
     ["favoriteCategory", "accountFavoriteCategory"].forEach((name) => {
       document.querySelectorAll('input[name="' + name + '"]').forEach((input) => {
