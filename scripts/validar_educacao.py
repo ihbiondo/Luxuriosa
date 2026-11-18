@@ -18,6 +18,20 @@ ROOT = Path(__file__).resolve().parents[1]
 EDU = ROOT / "educacao"
 BASE_URL = "https://luxuriosa.com.br"
 
+AGE_REQUIRED_PAGES = {
+    "educacao/curiosidades/a-prova-dagua.html",
+    "educacao/curiosidades/materiais-dos-acessorios.html",
+    "educacao/duvidas-frequentes/index.html",
+    "educacao/enciclopedia/index.html",
+    "educacao/enciclopedia/aneis-penianos.html",
+    "educacao/enciclopedia/jogos-de-casal.html",
+    "educacao/enciclopedia/masturbadores.html",
+    "educacao/enciclopedia/plugs-anais.html",
+    "educacao/enciclopedia/vibradores.html",
+    "educacao/guias/limpeza-e-conservacao.html",
+    "educacao/guias/primeiro-acessorio.html",
+}
+
 
 class PageAudit(HTMLParser):
     def __init__(self) -> None:
@@ -158,8 +172,19 @@ def main() -> int:
             errors.append(f"{rel}: canonical ausente")
         if "/js/educacao.js" not in audit.scripts:
             errors.append(f"{rel}: script modular compartilhado ausente")
-        if 'localStorage.getItem("lux18")' not in page_text or "ed-age-pending" not in page_text:
-            errors.append(f"{rel}: proteção visual antecipada da declaração 18+ ausente")
+        age_required = rel.as_posix() in AGE_REQUIRED_PAGES
+        has_age_marker = 'data-ed-age-required="true"' in page_text
+        if has_age_marker != age_required:
+            errors.append(f"{rel}: marcação de público adulto incompatível com a política de acesso")
+        if (
+            'document.documentElement.getAttribute("data-ed-age-required")' not in page_text
+            or 'localStorage.getItem("lux18")' not in page_text
+            or "ed-age-pending" not in page_text
+        ):
+            errors.append(f"{rel}: inicialização condicional da declaração 18+ ausente")
+        has_adult_banner = 'class="ed-adult"' in page_text
+        if has_adult_banner != age_required:
+            errors.append(f"{rel}: faixa de público adulto deve existir apenas nas páginas destinadas ao público adulto")
         if rel.as_posix() == "educacao/index.html":
             if '<header class="header">' not in page_text or '<nav aria-label="Navegação principal da Luxuriosa">' not in page_text:
                 errors.append(f"{rel}: cabeçalho global compartilhado ausente")
