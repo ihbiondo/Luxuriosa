@@ -147,6 +147,13 @@
         window.location.pathname.toLowerCase().endsWith("/clube.html") ||
         document.getElementById("lux-club-invite")) return;
 
+    /* Não empilha o convite do Clube sobre o convite separado de privacidade. */
+    var dataOverlay = document.getElementById("lux-data-invite");
+    if (dataOverlay && dataOverlay.classList.contains("open")) {
+      window.setTimeout(openClubInvitation, 5000);
+      return;
+    }
+
     clubInvitePreviousFocus = document.activeElement;
 
     var overlay = document.createElement("div");
@@ -202,7 +209,7 @@
     if (window.location.pathname.toLowerCase().endsWith("/clube.html")) return;
     if (clubInviteScheduled || clubInviteAlreadySeen()) return;
     clubInviteScheduled = true;
-    window.setTimeout(openClubInvitation, 15000);
+    window.setTimeout(openClubInvitation, 120000);
   }
 
   function readConsent() {
