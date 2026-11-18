@@ -252,6 +252,8 @@ try {
     })
   );
 
+  await capture(page, "lingerie-cards-mobile-390");
+
   const missingLingerieImages = result.lingerieCards.filter(item => !item.loaded);
   const wrongFit = result.lingerieCards.filter(item => item.objectFit !== "cover");
   const missingPortraitClass = result.lingerieCards.filter(item => !item.portraitCard);
@@ -291,6 +293,14 @@ try {
   });
   await capture(page, "entregas-mobile-320");
 
+  // Volta à vitrine antes de abrir o modal; a página de entregas não possui cards.
+  await openPage(page, "/loja/lingerie/", { name: "mobile-390", width: 390, height: 844 });
+  await page.waitForFunction(
+    () => document.querySelectorAll("#grid .product").length > 0,
+    null,
+    { timeout: 15000 }
+  );
+
   // Abre um card para validar o modal vertical em telas estreitas.
   await page.evaluate(() => {
     document.querySelectorAll("#gate, #ageGate, .age-gate").forEach(element => {
@@ -326,6 +336,11 @@ try {
   await capture(page, "modal-lingerie-mobile-390");
 
   await openPage(page, "/loja/lingerie/", { name: "mobile-320", width: 320, height: 740 });
+  await page.waitForFunction(
+    () => document.querySelectorAll("#grid .product").length > 0,
+    null,
+    { timeout: 15000 }
+  );
   await page.evaluate(() => {
     document.querySelectorAll("#gate, #ageGate, .age-gate").forEach(element => {
       element.style.setProperty("display", "none", "important");
@@ -347,7 +362,8 @@ try {
 const failed = result.routeFailures.length > 0 ||
   result.overflowFailures.length > 0 ||
   (result.imageFailures || []).length > 0 ||
-  (result.imageFitFailures || []).length > 0;
+  (result.imageFitFailures || []).length > 0 ||
+  (result.portraitCardFailures || []).length > 0;
 
 console.log(JSON.stringify({
   summary: {
