@@ -196,6 +196,79 @@
     }
   }
 
+  function setupDiscoveryAssistant() {
+    const assistant = document.querySelector("#edDiscoveryAssistant");
+    const result = document.querySelector("#edDiscoveryResult");
+    if (!assistant || !result) return;
+
+    const destinations = {
+      types: {
+        title: "Comece pela Enciclopédia",
+        description: "Conheça os principais tipos de acessórios, suas funções e as características que vale observar antes de comparar opções.",
+        href: "/educacao/enciclopedia/",
+        label: "Explorar a Enciclopédia"
+      },
+      materials: {
+        title: "Entenda os materiais",
+        description: "Veja a diferença entre materiais porosos e não porosos e por que composição, higiene e conservação importam.",
+        href: "/educacao/curiosidades/materiais-dos-acessorios.html",
+        label: "Ler sobre materiais"
+      },
+      lubricants: {
+        title: "Compare géis e lubrificantes",
+        description: "Conheça as bases aquosa, silicone e óleo e confira pontos importantes de compatibilidade com acessórios e preservativos.",
+        href: "/educacao/guias/escolher-lubrificante.html",
+        label: "Consultar o guia de lubrificantes"
+      },
+      care: {
+        title: "Aprenda sobre limpeza e conservação",
+        description: "Veja orientações gerais de limpeza, secagem e armazenamento, sempre respeitando as instruções do fabricante.",
+        href: "/educacao/guias/limpeza-e-conservacao.html",
+        label: "Abrir o guia de cuidados"
+      },
+      questions: {
+        title: "Tire dúvidas antes de escolher",
+        description: "Consulte respostas práticas sobre tamanhos, uso, compatibilidade, higiene e compra reservada.",
+        href: "/educacao/duvidas-frequentes/",
+        label: "Consultar dúvidas frequentes"
+      },
+      explore: {
+        title: "Explore no seu próprio ritmo",
+        description: "Leia explicações curtas, descubra novos assuntos e continue navegando pela biblioteca sem precisar decidir agora.",
+        href: "/educacao/curiosidades/",
+        label: "Ver curiosidades"
+      }
+    };
+
+    const buttons = Array.from(assistant.querySelectorAll("[data-discovery]"));
+    buttons.forEach(button => {
+      button.addEventListener("click", () => {
+        const destination = destinations[button.dataset.discovery];
+        if (!destination) return;
+
+        buttons.forEach(option => {
+          const selected = option === button;
+          option.setAttribute("aria-pressed", String(selected));
+          option.classList.toggle("is-selected", selected);
+        });
+
+        const eyebrow = document.createElement("p");
+        eyebrow.className = "ed-discovery-eyebrow";
+        eyebrow.textContent = "SUA TRILHA DE LEITURA";
+        const heading = document.createElement("h3");
+        heading.textContent = destination.title;
+        const description = document.createElement("p");
+        description.className = "ed-discovery-description";
+        description.textContent = destination.description;
+        const link = document.createElement("a");
+        link.className = "ed-discovery-link";
+        link.href = destination.href;
+        link.textContent = destination.label;
+        result.replaceChildren(eyebrow, heading, description, link);
+      });
+    });
+  }
+
   function normalizeFaqQuery(value) {
     return (value || "")
       .normalize("NFD")
@@ -383,6 +456,7 @@
   function initialize() {
     setupNavigation();
     setupFaqSearch();
+    setupDiscoveryAssistant();
     setupReadingJourney();
     setupSkipLink();
     setupAgeDeclaration();

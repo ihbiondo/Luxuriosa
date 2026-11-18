@@ -120,6 +120,19 @@ def main() -> int:
         for href in required_modules:
             if f'href: "{href}"' not in navigation_text:
                 errors.append(f"js/educacao.js: módulo ausente na navegação global: {href}")
+        required_discovery_destinations = {
+            "/educacao/enciclopedia/",
+            "/educacao/curiosidades/materiais-dos-acessorios.html",
+            "/educacao/guias/escolher-lubrificante.html",
+            "/educacao/guias/limpeza-e-conservacao.html",
+            "/educacao/duvidas-frequentes/",
+            "/educacao/curiosidades/",
+        }
+        for href in required_discovery_destinations:
+            if f'href: "{href}"' not in navigation_text:
+                errors.append(f"js/educacao.js: destino do assistente de descoberta ausente: {href}")
+        if "setupDiscoveryAssistant();" not in navigation_text:
+            errors.append("js/educacao.js: inicialização do assistente de descoberta ausente")
     except OSError as error:
         errors.append(f"js/educacao.js: não foi possível validar a navegação: {error}")
 
@@ -154,6 +167,19 @@ def main() -> int:
                 errors.append(f"{rel}: marca não retorna à página inicial da Luxuriosa")
             if page_text.count('class="ed-category-card"') != 6:
                 errors.append(f"{rel}: esperado seis cards de categoria na Educação")
+            discovery_options = re.findall(r'<button\b[^>]*data-discovery="([^"]+)"[^>]*>', page_text)
+            expected_discovery_options = {"types", "materials", "lubricants", "care", "questions", "explore"}
+            if len(discovery_options) != 6 or set(discovery_options) != expected_discovery_options:
+                errors.append(f"{rel}: assistente de descoberta deve apresentar as seis opções previstas")
+            for marker in (
+                'id="edDiscoveryAssistant"',
+                'id="edDiscoveryOptions"',
+                'id="edDiscoveryResult"',
+                'role="group" aria-label="Escolha um assunto para explorar"',
+                'role="status" aria-live="polite"',
+            ):
+                if marker not in page_text:
+                    errors.append(f"{rel}: componente de descoberta sem estrutura acessível: {marker}")
             for href in ("/portal/", "/experiencias/", "/educacao/", "/"):
                 if f'href="{href}"' not in page_text:
                     errors.append(f"{rel}: link global ausente no cabeçalho: {href}")
