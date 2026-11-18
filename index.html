@@ -59,7 +59,7 @@
   <link rel="stylesheet" href="css/style.css?v=20261114-pre-venda-v1">
   <link rel="stylesheet" href="css/responsive.css">
   <link rel="stylesheet" href="css/ajustes.css?v=20261117-footer-social-icons-v1">
-  <link rel="stylesheet" href="css/navigation.css?v=20261117-menu-principal-v1">
+  <link rel="stylesheet" href="css/navigation.css?v=20261118-mobile-drawer-v1">
   <link rel="stylesheet" href="css/conta.css">
   <link rel="stylesheet" href="css/localizacao-avaliacao.css">
   <style>
@@ -294,7 +294,11 @@
       </a>
 
 
-      <nav class="navlinks" id="navlinks" aria-label="Principal">
+      <nav class="navlinks" id="navlinks" aria-label="Menu principal">
+        <div class="nav-drawer-top">
+          <span class="nav-drawer-title">NAVEGUE PELA LUXURIOSA</span>
+          <button class="nav-drawer-close" type="button" aria-label="Fechar menu">×</button>
+        </div>
         <a class="nav-link-shop" href="/loja.html">Loja</a>
         <div class="nav-menu-group nav-menu-group--discover" role="group" aria-label="Conhecer">
           <span class="nav-menu-group-title">Conhecer</span>
@@ -306,6 +310,19 @@
           <span class="nav-menu-group-title">Ajuda e atendimento</span>
           <a href="/atendimento.html">Atendimento</a>
           <a href="/entregas/">Entregas</a>
+        </div>
+        <div class="nav-drawer-footer">
+          <a class="nav-account-link" href="/login.html">
+            <span class="nav-account-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" focusable="false">
+                <circle cx="12" cy="8" r="3.2"></circle>
+                <path d="M5.5 20a6.5 6.5 0 0 1 13 0"></path>
+              </svg>
+            </span>
+            <span>Minha conta</span>
+            <span class="nav-account-arrow" aria-hidden="true">↗</span>
+          </a>
+          <p>ATENDIMENTO DISCRETO <span aria-hidden="true">·</span> BAURU E REGIÃO</p>
         </div>
       </nav>
 
@@ -343,21 +360,8 @@
 
         </button>
 
-        <!-- MINHA CONTA -->
-        <a
-          class="account-trigger"
-          href="login.html"
-          aria-label="Acessar minha conta"
-          title="Minha conta"
-        >
-          <span class="account-trigger-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24" focusable="false">
-              <circle cx="12" cy="8" r="3.2"></circle>
-              <path d="M5.5 20a6.5 6.5 0 0 1 13 0"></path>
-            </svg>
-          </span>
-          <span class="account-trigger-label">Minha conta</span>
-        </a>
+        <!-- Minha conta permanece no desktop; no mobile fica no menu lateral -->
+
 
 
         <!-- WHATSAPP -->
@@ -954,7 +958,7 @@
   <script defer src="js/inteligencia.js"></script>
   <script defer src="js/carrinho.js"></script>
   <script defer src="js/clientes.js?v=20261118-cadastro-usuario-endereco-condicional"></script>
-  <script defer src="js/app.js?v=20261117-whatsapp-home-v1"></script>
+  <script defer src="js/app.js?v=20261118-mobile-drawer-v1"></script>
 
   <script defer src="js/consentimento.js?v=20261118-clube-convite-120s-v1"></script>
 </body>
