@@ -717,3 +717,60 @@
   .navlinks > .nav-link-shop,
   .navlinks > .nav-link-shop:hover { border: 0; border-radius: 0; background: transparent; color: inherit; }
 }
+
+
+/* Minha conta: mesma linha de navegação dos demais itens do drawer mobile. */
+@media (max-width: 1199px) {
+  .navlinks .nav-drawer-account-area > .nav-account-primary {
+    display: flex !important;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 12px;
+    width: 100%;
+    min-height: 49px;
+    margin: 0;
+    padding: 12px 11px;
+    border: 0;
+    border-bottom: 1px solid rgba(212, 175, 124, .08);
+    border-radius: 0;
+    background: transparent;
+    color: #e2d2d6;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: .015em;
+    line-height: 1.35;
+    text-align: left;
+    text-decoration: none;
+    text-transform: none;
+  }
+
+  .navlinks .nav-drawer-account-area > .nav-account-primary:hover,
+  .navlinks .nav-drawer-account-area > .nav-account-primary:focus-visible {
+    padding-left: 15px;
+    border: 0;
+    border-radius: 0;
+    background: rgba(212, 175, 124, .075);
+    color: var(--gold);
+  }
+
+  .navlinks .nav-drawer-account-area > .nav-account-primary .nav-link-icon {
+    display: inline-grid;
+    width: 25px;
+    height: 25px;
+    flex: 0 0 25px;
+    place-items: center;
+    color: #d4af7c;
+  }
+
+  .navlinks .nav-drawer-account-area > .nav-account-primary .nav-link-icon svg {
+    display: block;
+    width: 21px;
+    height: 21px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.55;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+}
