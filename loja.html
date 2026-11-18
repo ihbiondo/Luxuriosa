@@ -596,6 +596,30 @@
           <small style="display:block;margin:7px 0 0 26px;color:#b9a9ae;font-size:10px">Esta autorização não é necessária para fazer o pedido e pode ser revogada a qualquer momento.</small>
         </div>
 
+        <fieldset class="customer-fieldset customer-essential-fields">
+          <legend>Como deseja receber?</legend>
+          <div class="customer-grid">
+            <div class="customer-field customer-span-2">
+              <label for="customerFulfillmentMode">Modalidade</label>
+              <select id="customerFulfillmentMode" name="fulfillmentMode">
+                <option value="delivery">Entrega no endereço</option>
+                <option value="pickup">Retirada agendada gratuita em Bauru</option>
+              </select>
+            </div>
+          </div>
+          <div id="customerPickupFields" class="customer-grid" hidden>
+            <div class="customer-field">
+              <label for="customerPickupDate">Data pretendida</label>
+              <input id="customerPickupDate" type="date" autocomplete="off">
+            </div>
+            <div class="customer-field">
+              <label for="customerPickupTime">Horário pretendido</label>
+              <input id="customerPickupTime" type="time" autocomplete="off">
+            </div>
+            <p class="customer-freight-info customer-span-2">Retirada gratuita na Rua Madre Clélia, nº 5-44, Jardim Cruzeiro do Sul, Bauru/SP, CEP 17030-290. Informe sua preferência; a equipe confirmará a disponibilidade pelo WhatsApp. Após a confirmação do pagamento, o pedido será separado em até 30 minutos.</p>
+          </div>
+        </fieldset>
+
         <fieldset class="customer-fieldset customer-address-fields">
           <legend>Endereço de entrega</legend>
           <div class="customer-grid">
@@ -720,7 +744,7 @@
   <script src="js/catalogo.js?v=20261116-filtro-elegante-v1"></script>
   <script src="js/inteligencia.js?v=20261113-dado-online"></script>
   <script src="js/carrinho.js?v=20261113-dado-online"></script>
-  <script src="js/clientes.js?v=20261113-dado-online"></script>
+  <script src="js/clientes.js?v=20261118-cadastro-usuario-endereco-condicional"></script>
   <script src="js/app.js"></script>
 
   <script src="js/consentimento.js?v=20261114-clube-convite-v2"></script>
