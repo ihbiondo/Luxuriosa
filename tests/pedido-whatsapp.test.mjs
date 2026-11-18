@@ -55,3 +55,15 @@ test("gera link wa.me com mensagem codificada", () => {
 test("não gera link para telefone inválido", () => {
   assert.throws(() => criarLinkWhatsApp("111", "Resumo"), /número de WhatsApp brasileiro válido/);
 });
+
+test("usa preço unitário quando o total da linha não está gravado", () => {
+  const olderItem = [{
+    order_id: "order-1",
+    product_name: "Produto",
+    quantity: 2,
+    unit_price: 12.5,
+    line_total: null
+  }];
+  const message = montarResumoPedidoWhatsApp(order, olderItem, true);
+  assert.match(message, /R\\$\\s*25,00/);
+});
