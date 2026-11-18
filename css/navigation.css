@@ -638,3 +638,82 @@
     transition: none !important;
   }
 }
+
+
+/* Navegação hierárquica unificada: nenhum item principal recebe destaque isolado. */
+@media (max-width: 1199px) {
+  .navlinks > .nav-primary-link,
+  .navlinks > .nav-link-shop {
+    display: flex !important;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 12px;
+    width: 100%;
+    min-height: 49px;
+    margin: 0;
+    padding: 12px 11px;
+    border: 0;
+    border-radius: 0;
+    border-bottom: 1px solid rgba(212,175,124,.08);
+    background: transparent;
+    color: #e2d2d6;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: .015em;
+    text-align: left;
+    text-transform: none;
+  }
+  .navlinks > .nav-link-shop:hover,
+  .navlinks > .nav-link-shop:focus-visible,
+  .navlinks > .nav-primary-link:hover,
+  .navlinks > .nav-primary-link:focus-visible {
+    padding-left: 15px;
+    border: 0;
+    border-radius: 0;
+    background: rgba(212,175,124,.075);
+    color: var(--gold);
+  }
+  .navlinks > .nav-primary-link .nav-link-icon,
+  .navlinks > .nav-link-shop .nav-link-icon { color: #d4af7c; }
+  .nav-submenu {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    margin: 0 0 5px 37px;
+    padding: 0 0 3px 12px;
+    border-left: 1px solid rgba(212,175,124,.22);
+  }
+  .nav-submenu summary {
+    padding: 8px 5px;
+    color: #bdaab0;
+    font-size: 11px;
+    cursor: pointer;
+    list-style: none;
+  }
+  .nav-submenu summary::-webkit-details-marker { display: none; }
+  .nav-submenu summary::after { content: "+"; float: right; color: var(--gold); }
+  .nav-submenu[open] summary::after { content: "−"; }
+  .nav-submenu > a {
+    display: block;
+    min-height: 34px;
+    padding: 8px 5px;
+    color: #cbbbc0;
+    font-size: 11px;
+    line-height: 1.35;
+    text-decoration: none;
+  }
+  .nav-submenu > a:hover,
+  .nav-submenu > a:focus-visible { color: var(--gold); }
+  .nav-submenu .nav-submenu-all { color: var(--gold); font-weight: 700; }
+  .nav-account-submenu[hidden],
+  [data-nav-auth-only][hidden] { display: none !important; }
+  .nav-account-submenu { margin-bottom: 6px; }
+  .nav-help-submenu { margin-left: 37px; }
+  .navlinks .nav-menu-group > a { justify-content: flex-start; }
+  .navlinks .nav-menu-group > a::after { display: none; }
+}
+@media (min-width: 1200px) {
+  .nav-submenu { display: none; }
+  .navlinks > .nav-link-shop,
+  .navlinks > .nav-link-shop:hover { border: 0; border-radius: 0; background: transparent; color: inherit; }
+}
