@@ -701,13 +701,16 @@
         "content-type": "application/json",
         "apikey": "sb_publishable_LaMbeWQ1PNANEQ85SD_35Q_wDzswy8y"
       };
-      try {
-        var rawSession = localStorage.getItem("sb-byiykxfugvxuowueuxca-auth-token");
-        var parsedSession = rawSession ? JSON.parse(rawSession) : null;
-        if (parsedSession && parsedSession.access_token) {
-          headers.authorization = "Bearer " + parsedSession.access_token;
-        }
-      } catch (_) {}
+      var supabase = await obterClienteSupabase();
+      var sessionResult = await supabase.auth.getSession();
+      var accessToken = sessionResult && sessionResult.data && sessionResult.data.session
+        ? sessionResult.data.session.access_token
+        : "";
+      if (sessionResult && sessionResult.error) throw sessionResult.error;
+      if (!accessToken) {
+        throw new Error("Sua sessão expirou. Entre novamente na sua conta antes de continuar.");
+      }
+      headers.authorization = "Bearer " + accessToken;
 
       var response = await fetch("https://byiykxfugvxuowueuxca.supabase.co/functions/v1/create-payment-order", {
         method: "POST",
