@@ -10,7 +10,8 @@ create table public.profiles (
   full_name text,
   display_name text,
   phone text,
-  birth_date date
+  birth_date date,
+  oauth_setup_completed_at timestamptz
 );
 
 create table public.preferences (
