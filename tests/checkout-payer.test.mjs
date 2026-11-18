@@ -18,6 +18,9 @@ test("frontend valida, preserva e envia os dados do pagador dentro de customer",
   assert.match(client, /paymentPayerName:\s*texto\("customerPayerName"\)/);
   assert.match(client, /paymentPayerPhone:\s*texto\("customerPayerPhone"\)/);
   assert.match(client, /customer:\s*dadosAtuais/);
+  assert.match(client, /supabase\.auth\.getSession\(\)/);
+  assert.match(client, /headers\.authorization = "Bearer " \+ accessToken/);
+  assert.doesNotMatch(client, /sb-byiykxfugvxuowueuxca-auth-token/);
   assert.match(client, /data\.paymentPayerType === "third_party"/);
   assert.match(client, /validarTelefone\(data\.paymentPayerPhone\)/);
 });
