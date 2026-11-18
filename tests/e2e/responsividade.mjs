@@ -209,6 +209,7 @@ try {
   });
   await page.waitForFunction(
     () => document.querySelectorAll("#grid .product-card-main-image").length > 0,
+    null,
     { timeout: 15000 }
   );
   await page.waitForTimeout(900);
@@ -259,7 +260,7 @@ try {
     const modal = document.querySelector("#modal");
     return modal && getComputedStyle(modal).display !== "none" &&
       getComputedStyle(modal).visibility !== "hidden";
-  }, { timeout: 8000 }).catch(() => {});
+  }, null, { timeout: 8000 }).catch(() => {});
   const modalState = await page.evaluate(() => {
     const modal = document.querySelector("#modal");
     const content = modal?.querySelector(".modal");
