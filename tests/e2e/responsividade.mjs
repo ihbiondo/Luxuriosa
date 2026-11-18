@@ -223,7 +223,26 @@ try {
     null,
     { timeout: 15000 }
   );
-  await page.waitForTimeout(900);
+  await page.waitForFunction(
+    () => [...document.querySelectorAll("#grid .product-card-main-image")].length === 14,
+    null,
+    { timeout: 15000 }
+  );
+  await page.evaluate(async () => {
+    const images = [...document.querySelectorAll("#grid .product-card-main-image")];
+    await Promise.all(images.map(async image => {
+      image.loading = "eager";
+      if (!image.complete || image.naturalWidth === 0) {
+        await new Promise(resolve => {
+          image.addEventListener("load", resolve, { once: true });
+          image.addEventListener("error", resolve, { once: true });
+        });
+      }
+      if (image.complete && image.naturalWidth > 0 && image.decode) {
+        await image.decode().catch(() => {});
+      }
+    }));
+  });
   result.lingerieCards = await page.locator("#grid .product-card-main-image").evaluateAll(images =>
     images.map(image => {
       const frame = image.closest(".product-img") || image.parentElement;
