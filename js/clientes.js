@@ -452,7 +452,7 @@
       lines.push("• Pagador indicado: " + data.paymentPayerName + " — " + data.paymentPayerPhone);
       lines.push("• Informação declarada no pedido; a confirmação do pagamento será feita separadamente.");
     } else {
-      lines.push("• Pagamento informado como feito por você, responsável pela compra.");
+      lines.push("• Pagador indicado: você (pessoa responsável pelo pedido).");
     }
 
     lines.push("", data.fulfillmentType === "pickup" ? "*RETIRADA AGENDADA*" : "*ENTREGA*");
