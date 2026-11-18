@@ -115,12 +115,23 @@ async function capture(page, name) {
   });
 }
 
+async function dismissAgeGate(page) {
+  await page.evaluate(() => {
+    ["#gate", "#ageGate", "#ageGateOverlay"].forEach(selector => {
+      document.querySelectorAll(selector).forEach(element => {
+        element.style.setProperty("display", "none", "important");
+      });
+    });
+  });
+}
+
 async function openPage(page, route, viewport) {
   await page.setViewportSize({ width: viewport.width, height: viewport.height });
   const response = await page.goto(new URL(route, BASE_URL).href, {
     waitUntil: "domcontentloaded",
     timeout: 20000
   });
+  await dismissAgeGate(page);
   await page.waitForTimeout(90);
   return response;
 }
@@ -233,6 +244,7 @@ try {
         naturalHeight: image.naturalHeight,
         frameWidth,
         frameHeight,
+        portraitCard: frame?.classList.contains("product-img--portrait") ?? false,
         objectFit: getComputedStyle(image).objectFit,
         objectPosition: getComputedStyle(image).objectPosition,
         estimatedCropPercent: visibleRatio ? Math.round((1 - visibleRatio) * 100) : null
@@ -242,12 +254,42 @@ try {
 
   const missingLingerieImages = result.lingerieCards.filter(item => !item.loaded);
   const wrongFit = result.lingerieCards.filter(item => item.objectFit !== "cover");
+  const missingPortraitClass = result.lingerieCards.filter(item => !item.portraitCard);
+  result.lingerieCropWarnings = result.lingerieCards.filter(item =>
+    item.estimatedCropPercent !== null && item.estimatedCropPercent > 20
+  );
   if (missingLingerieImages.length) {
     result.imageFailures = missingLingerieImages;
   }
   if (wrongFit.length) {
     result.imageFitFailures = wrongFit;
   }
+  if (missingPortraitClass.length) {
+    result.portraitCardFailures = missingPortraitClass;
+  }
+
+  // Registra a geometria da tabela de entregas na menor largura testada.
+  await openPage(page, "/entregas/", { name: "mobile-320", width: 320, height: 740 });
+  result.deliveryTable320 = await page.evaluate(() => {
+    const table = document.querySelector(".delivery-comparison");
+    const wrapper = document.querySelector(".delivery-table-wrap");
+    const rect = element => {
+      if (!element) return null;
+      const box = element.getBoundingClientRect();
+      return { left: Math.round(box.left), right: Math.round(box.right), width: Math.round(box.width) };
+    };
+    return {
+      viewport: document.documentElement.clientWidth,
+      document: document.documentElement.scrollWidth,
+      wrapper: rect(wrapper),
+      table: rect(table),
+      rows: [...(table?.querySelectorAll("tbody tr") || [])].map(row => ({
+        row: rect(row),
+        heading: rect(row.querySelector("th"))
+      }))
+    };
+  });
+  await capture(page, "entregas-mobile-320");
 
   // Abre um card para validar o modal vertical em telas estreitas.
   await page.evaluate(() => {
@@ -317,11 +359,15 @@ console.log(JSON.stringify({
     lingerieCards: result.lingerieCards.length,
     missingLingerieImages: (result.imageFailures || []).length,
     wrongImageFit: (result.imageFitFailures || []).length,
+    portraitCardFailures: (result.portraitCardFailures || []).length,
+    lingerieCropWarnings: (result.lingerieCropWarnings || []).length,
     modalVisible: result.modal?.visible ?? false,
     modalHeight: result.modal?.height ?? null,
     failed
   },
   lingerieCards: result.lingerieCards,
+  lingerieCropWarnings: result.lingerieCropWarnings,
+  deliveryTable320: result.deliveryTable320,
   routeFailures: result.routeFailures,
   overflowFailures: result.overflowFailures,
   missingViewportMeta: result.missingViewportMeta,
@@ -338,6 +384,8 @@ assert.equal(result.routeFailures.length, 0, "Uma ou mais rotas públicas falhar
 assert.equal(result.overflowFailures.length, 0, "Foram encontrados casos de rolagem horizontal.");
 assert.equal((result.imageFailures || []).length, 0, "Uma ou mais imagens de lingerie não carregaram.");
 assert.equal((result.imageFitFailures || []).length, 0, "Há imagens de cards que não usam object-fit: cover.");
+assert.equal((result.portraitCardFailures || []).length, 0, "Cards de lingerie não receberam o formato vertical.");
+assert.equal(result.lingerieCards.length, 14, "A auditoria deve conferir as 14 lingeries do catálogo.");
 assert.ok(result.modal?.visible, "O modal de produto não abriu durante a auditoria.");
 assert.ok(
   result.modal.height <= result.modal.viewportHeight + 2,
