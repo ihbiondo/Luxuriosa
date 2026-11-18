@@ -374,12 +374,13 @@ jobs:
           for relative in files:
               path = site / relative
               original = path.read_text(encoding="utf-8")
-              if hosted_url not in original or hosted_key not in original:
-                  raise SystemExit(f"Configuração Supabase esperada não encontrada em {relative}")
-              path.write_text(
-                  original.replace(hosted_url, local_url).replace(hosted_key, local_key),
-                  encoding="utf-8"
-              )
+              if hosted_url not in original:
+                  raise SystemExit(f"URL Supabase esperada não encontrada em {relative}")
+              # Alguns módulos usam apenas o endpoint; outros também declaram a chave pública.
+              updated = original.replace(hosted_url, local_url)
+              if hosted_key in updated:
+                  updated = updated.replace(hosted_key, local_key)
+              path.write_text(updated, encoding="utf-8")
           print("Cópia E2E do site configurada exclusivamente para o Supabase local.")
           PY
 
