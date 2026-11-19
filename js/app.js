@@ -98,6 +98,67 @@
     var closeButton = menu.querySelector(".nav-drawer-close");
     if (!header) return;
 
+    /*
+     * O drawer mobile inicia com a Loja expandida e os demais grupos recolhidos.
+     * Os botões são criados no JS para manter a navegação desktop sem alteração.
+     */
+    function configurarGruposRecolhiveis() {
+      menu.querySelectorAll(".nav-menu-group").forEach(function (group) {
+        var title = group.querySelector(":scope > .nav-menu-group-title");
+        if (!title || group.querySelector(":scope > .nav-menu-group-toggle")) return;
+
+        var toggle = document.createElement("button");
+        toggle.type = "button";
+        toggle.className = "nav-menu-group-toggle";
+        toggle.textContent = title.textContent.trim();
+        toggle.setAttribute("aria-expanded", "false");
+
+        title.replaceWith(toggle);
+        toggle.addEventListener("click", function () {
+          var abrir = !group.classList.contains("is-open");
+          group.classList.toggle("is-open", abrir);
+          toggle.setAttribute("aria-expanded", String(abrir));
+        });
+      });
+
+      var loja = menu.querySelector(".nav-store-submenu");
+      if (loja) loja.open = true;
+
+      var grupoConhecer = menu.querySelector(".nav-menu-group--discover");
+      if (!grupoConhecer) return;
+      var linkExperiencias = Array.prototype.slice.call(
+        grupoConhecer.querySelectorAll(":scope > a")
+      ).find(function (link) {
+        return link.getAttribute("href") === "/experiencias/";
+      });
+      var submenuExperiencias = linkExperiencias && linkExperiencias.nextElementSibling;
+      if (!submenuExperiencias || !submenuExperiencias.classList.contains("nav-submenu")) return;
+
+      var prioridade = function (link) {
+        var href = link.getAttribute("href") || "";
+        if (href.indexOf("tipo=couple") !== -1) return 0;
+        if (href.indexOf("tipo=astrology") !== -1) return 1;
+        if (href.indexOf("tipo=quiz") !== -1) return 2;
+        if (href.indexOf("tipo=challenge") !== -1) return 3;
+        return 4;
+      };
+      Array.prototype.slice.call(submenuExperiencias.querySelectorAll(":scope > a"))
+        .sort(function (a, b) { return prioridade(a) - prioridade(b); })
+        .forEach(function (link) { submenuExperiencias.appendChild(link); });
+    }
+
+    function redefinirGruposDoMenu() {
+      menu.querySelectorAll(".nav-menu-group.is-open").forEach(function (group) {
+        group.classList.remove("is-open");
+        var toggle = group.querySelector(":scope > .nav-menu-group-toggle");
+        if (toggle) toggle.setAttribute("aria-expanded", "false");
+      });
+      var loja = menu.querySelector(".nav-store-submenu");
+      if (loja) loja.open = true;
+    }
+
+    configurarGruposRecolhiveis();
+
     var backdrop = document.createElement("button");
     backdrop.type = "button";
     backdrop.className = "nav-drawer-backdrop";
@@ -139,6 +200,7 @@
       botao.classList.remove("open");
       botao.setAttribute("aria-expanded", "false");
       botao.setAttribute("aria-label", "Abrir menu");
+      redefinirGruposDoMenu();
       menu.setAttribute("aria-hidden", "true");
       menu.setAttribute("inert", "");
 

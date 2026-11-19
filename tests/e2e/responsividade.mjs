@@ -155,6 +155,7 @@ const result = {
   publicMobileViewportFailures: [],
   homeFeaturedImages: [],
   homeFeaturedImageFailures: [],
+  experiencesPresentationOrder: null,
   missingViewportMeta: [],
   coreViewportResults: [],
   catalogCards: [],
@@ -462,7 +463,24 @@ try {
       accountBorderRadius: accountStyle?.borderRadius || null,
       iconDisplay: iconStyle?.display || null,
       iconWidth: icon ? Math.round(icon.getBoundingClientRect().width) : 0,
-      iconHeight: icon ? Math.round(icon.getBoundingClientRect().height) : 0
+      iconHeight: icon ? Math.round(icon.getBoundingClientRect().height) : 0,
+      storeCategoriesOpen: document.querySelector("#navlinks .nav-store-submenu")?.open ?? false,
+      accordionGroups: [...document.querySelectorAll("#navlinks .nav-menu-group")].map(group => {
+        const toggle = group.querySelector(":scope > .nav-menu-group-toggle");
+        const childLinks = [...group.querySelectorAll(":scope > a, :scope > .nav-submenu")];
+        return {
+          name: toggle?.textContent.trim() || "",
+          expanded: toggle?.getAttribute("aria-expanded") === "true",
+          hiddenByDefault: childLinks.every(item => getComputedStyle(item).display === "none")
+        };
+      }),
+      experienceMenuOrder: (() => {
+        const group = document.querySelector("#navlinks .nav-menu-group--discover");
+        const link = [...(group?.querySelectorAll(":scope > a") || [])]
+          .find(item => item.getAttribute("href") === "/experiencias/");
+        const submenu = link?.nextElementSibling;
+        return [...(submenu?.querySelectorAll(":scope > a") || [])].map(item => item.textContent.trim());
+      })()
     };
   });
   result.mobileMenu.accountRowAligned = Boolean(
@@ -479,6 +497,37 @@ try {
     result.mobileMenu.document <= result.mobileMenu.viewport + 1
   );
   await capture(page, "menu-mobile-aberto-390");
+
+  result.mobileMenu.accordionsCorrect = Boolean(
+    result.mobileMenu.storeCategoriesOpen &&
+    result.mobileMenu.accordionGroups.length === 2 &&
+    result.mobileMenu.accordionGroups.every(group => !group.expanded && group.hiddenByDefault) &&
+    result.mobileMenu.experienceMenuOrder.join("|") ===
+      "Conexão a dois|Astrologia|Quizzes|Desafios"
+  );
+
+  const conhecerToggle = page.locator("#navlinks .nav-menu-group--discover > .nav-menu-group-toggle");
+  await conhecerToggle.click();
+  await page.waitForFunction(() =>
+    document.querySelector("#navlinks .nav-menu-group--discover")?.classList.contains("is-open") &&
+    document.querySelector("#navlinks .nav-menu-group--discover > .nav-menu-group-toggle")?.getAttribute("aria-expanded") === "true"
+  );
+  result.mobileMenu.accordionInteractionWorks = await page.locator(
+    "#navlinks .nav-menu-group--discover.is-open > .nav-menu-group-toggle"
+  ).getAttribute("aria-expanded") === "true";
+  await conhecerToggle.click();
+
+  // A página Experiências deve destacar Conexão a dois e Astrologia antes das demais opções.
+  await openPage(page, "/experiencias/", { name: "mobile-390", width: 390, height: 844 });
+  result.experiencesPresentationOrder = await page.evaluate(() => ({
+    categories: [...document.querySelectorAll("#experienceCategories .experience-category-card strong")]
+      .map(item => item.textContent.trim()),
+    featured: [...document.querySelectorAll("#experienceGrid > .card")]
+      .map(item => item.querySelector("h3")?.textContent.trim() || ""),
+    filters: [...document.querySelectorAll(".filters button[data-filter]")]
+      .map(item => item.getAttribute("data-filter"))
+  }));
+  await capture(page, "experiencias-ordem-mobile-390");
 
   // Inspeção específica dos cards: preenchimento, carregamento e percentual estimado de corte.
   await openPage(page, "/loja/lingerie/", { name: "mobile-390", width: 390, height: 844 });
@@ -742,6 +791,12 @@ const failed = result.routeFailures.length > 0 ||
   result.catalogImageFitFailures.length > 0 ||
   result.catalogCardFrameFailures.length > 0 ||
   result.productGalleryFailures.length > 0 ||
+  !result.mobileMenu?.accordionsCorrect ||
+  !result.mobileMenu?.accordionInteractionWorks ||
+  result.experiencesPresentationOrder?.categories.join("|") !== "Conexão a dois|Astrologia|Quizzes|Desafios" ||
+  result.experiencesPresentationOrder?.featured.join("|") !==
+    "Conexão a dois.|Seu signo, suas descobertas.|Descubra seu estilo.|Mitos ou verdades?|Pequenas descobertas." ||
+  result.experiencesPresentationOrder?.filters.join("|") !== "all|couple|astrology|quiz|challenge|favorites" ||
   result.catalogGridNavigation?.failures.length > 0 ||
   result.catalogGridNavigation?.rendered !== expectedCatalogCards ||
   !result.catalogImageNavigation?.destinationMatched ||
@@ -778,6 +833,9 @@ console.log(JSON.stringify({
     portraitCardFailures: (result.portraitCardFailures || []).length,
     lingerieCropWarnings: (result.lingerieCropWarnings || []).length,
     mobileMenuAccountAligned: result.mobileMenu?.accountRowAligned ?? false,
+    mobileMenuAccordionsCorrect: result.mobileMenu?.accordionsCorrect ?? false,
+    mobileMenuAccordionInteractionWorks: result.mobileMenu?.accordionInteractionWorks ?? false,
+    experiencesPresentationOrder: result.experiencesPresentationOrder,
     productPagesChecked: result.productGalleries.length,
     productGalleryFailures: result.productGalleryFailures.length,
     catalogGridNavigation: result.catalogGridNavigation,
@@ -802,6 +860,7 @@ console.log(JSON.stringify({
   publicMobileViewportFailures: result.publicMobileViewportFailures,
   homeFeaturedImages: result.homeFeaturedImages,
   homeFeaturedImageFailures: result.homeFeaturedImageFailures,
+  experiencesPresentationOrder: result.experiencesPresentationOrder,
   missingViewportMeta: result.missingViewportMeta,
   pageErrors: result.pageErrors.slice(0, 30)
 }, null, 2));
@@ -829,6 +888,18 @@ assert.equal((result.portraitCardFailures || []).length, 0, "Cards de lingerie n
 assert.equal(result.lingerieCards.length, 14, "A auditoria deve conferir as 14 lingeries do catálogo.");
 assert.ok(result.mobileMenu?.accountRowAligned,
   "Minha conta deve alinhar-se como item comum do menu mobile: " + JSON.stringify(result.mobileMenu));
+assert.ok(result.mobileMenu?.accordionsCorrect && result.mobileMenu?.accordionInteractionWorks,
+  "O menu mobile deve iniciar com somente a Loja expandida, recolher os demais grupos e permitir expandi-los: " +
+  JSON.stringify(result.mobileMenu));
+assert.deepEqual(result.experiencesPresentationOrder?.categories,
+  ["Conexão a dois", "Astrologia", "Quizzes", "Desafios"],
+  "As categorias da página Experiências devem priorizar Conexão a dois e Astrologia.");
+assert.deepEqual(result.experiencesPresentationOrder?.featured,
+  ["Conexão a dois.", "Seu signo, suas descobertas.", "Descubra seu estilo.", "Mitos ou verdades?", "Pequenas descobertas."],
+  "Os cards em destaque da página Experiências devem seguir a nova prioridade.");
+assert.deepEqual(result.experiencesPresentationOrder?.filters,
+  ["all", "couple", "astrology", "quiz", "challenge", "favorites"],
+  "Os filtros devem seguir a nova prioridade de categorias.");
 assert.equal(result.productGalleryFailures.length, 0, "Uma ou mais páginas individuais apresentam foto principal pequena/descentralizada ou galeria incompleta: " + JSON.stringify(result.productGalleryFailures));
 assert.equal(result.catalogGridNavigation?.rendered, expectedCatalogCards,
   "A auditoria deve validar a navegação de todos os cards.");
