@@ -950,9 +950,26 @@
        MONTA CARD
        ===================================================== */
 
-    card.appendChild(
-      imagem
-    );
+    /*
+     * A foto e o botão "Mais detalhes" levam à mesma página individual.
+     * O restante do card continua abrindo o modal, e os controles de compra
+     * mantêm seus próprios eventos.
+     */
+    if (produto.pagina) {
+      var linkImagem = criarElemento("a", "product-image-link");
+      linkImagem.href = produto.pagina;
+      linkImagem.setAttribute(
+        "aria-label",
+        "Ver detalhes de " + (produto.nome || "produto Luxuriosa")
+      );
+      linkImagem.addEventListener("click", function (evento) {
+        evento.stopPropagation();
+      });
+      linkImagem.appendChild(imagem);
+      card.appendChild(linkImagem);
+    } else {
+      card.appendChild(imagem);
+    }
 
     card.appendChild(
       corpo
