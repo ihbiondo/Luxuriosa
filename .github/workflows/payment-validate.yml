@@ -19,6 +19,7 @@ on:
       - "meus-pedidos/**"
       - "js/pedido-whatsapp.js"
       - "tests/pedido-whatsapp.test.mjs"
+      - "tests/consent-ui.test.mjs"
       - "tests/checkout-payer.test.mjs"
       - "portal/**"
       - "experiencias/**"
@@ -76,6 +77,7 @@ on:
       - "meus-pedidos/**"
       - "js/pedido-whatsapp.js"
       - "tests/pedido-whatsapp.test.mjs"
+      - "tests/consent-ui.test.mjs"
       - "portal/**"
       - "experiencias/**"
       - "educacao/interatividade/**"
@@ -173,6 +175,7 @@ jobs:
           node --check js/carrinho.js
           node --test tests/pedido-whatsapp.test.mjs
           node --test tests/checkout-payer.test.mjs
+          node --test tests/consent-ui.test.mjs
           node --test .github/scripts/account-registration.test.cjs
           node --test .github/scripts/google-oauth.test.cjs
           npx --yes esbuild@0.25.0 supabase/functions/create-payment-order/index.ts --format=esm --platform=neutral --outfile=/tmp/create-payment-order.js
