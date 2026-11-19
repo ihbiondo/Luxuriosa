@@ -208,7 +208,7 @@ async function inspect(page, route, viewport) {
       ? [...nav.querySelectorAll("a[href]")].filter(visible).map(element => {
           const box = element.getBoundingClientRect();
           return {
-            label: (element.innerText || "").trim().replace(/\\s+/g, " "),
+            label: (element.innerText || "").trim().replace(/\s+/g, " "),
             href: element.getAttribute("href"),
             left: Math.round(box.left),
             right: Math.round(box.right),
