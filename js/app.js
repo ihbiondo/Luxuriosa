@@ -94,7 +94,7 @@
     var menu = header && header.querySelector(".navlinks");
     if (!header || !menu) return Promise.resolve();
 
-    var cssHref = "/css/navigation.css?v=20261119-menu-mobile-v4";
+    var cssHref = "/css/navigation.css?v=20261119-menu-mobile-v5";
     var cssLink = document.querySelector('link[rel="stylesheet"][href*="navigation.css"]');
     var cssTarget = new URL(cssHref, window.location.href).href;
     var cssReady = new Promise(function (resolve, reject) {
@@ -152,6 +152,7 @@
       '</a>',
       '<details class="nav-submenu nav-store-submenu" open>',
         '<summary>Categorias da loja</summary>',
+        '<div class="nav-store-grid">',
         '<a href="/loja/lingerie/"' + (lingerie ? ' aria-current="page"' : '') + '>Lingerie</a>',
         '<a href="/loja.html?categoria=G%C3%A9is%20e%20estimulantes">Géis e estimulantes</a>',
         '<a href="/loja.html?categoria=Vibradores%20e%20masturbadores">Vibradores e masturbadores</a>',
@@ -160,6 +161,7 @@
         '<a href="/loja.html?categoria=%C3%93leos%20para%20massagem">Óleos para massagem</a>',
         '<a href="/loja.html?categoria=Kits">Kits</a>',
         '<a class="nav-submenu-all" href="/loja.html">Ver todo catálogo</a>',
+        '</div>',
       '</details>',
       '<div class="nav-menu-group nav-menu-group--help" role="group" aria-label="Atendimento e Ajuda">',
         '<span class="nav-menu-group-title">Atendimento e Ajuda</span>',
