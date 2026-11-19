@@ -468,6 +468,9 @@ try {
       viewportHeight: innerHeight,
       imageFrameWidth: imageFrame ? Math.round(imageFrame.getBoundingClientRect().width) : 0,
       imageFrameHeight: imageFrame ? Math.round(imageFrame.getBoundingClientRect().height) : 0,
+      imageFrameRatio: imageFrame && imageFrame.getBoundingClientRect().height
+        ? Number((imageFrame.getBoundingClientRect().width / imageFrame.getBoundingClientRect().height).toFixed(3))
+        : 0,
       imageObjectFit: image ? getComputedStyle(image).objectFit : null,
       documentWidth: document.documentElement.scrollWidth,
       viewportWidth: document.documentElement.clientWidth
@@ -603,6 +606,10 @@ assert.ok(
   result.modal.height <= result.modal.viewportHeight * 0.88 + 2,
   "O modal excede 88% da altura do viewport mobile."
 );
+assert.ok(result.modal.imageFrameWidth <= result.modal.viewportWidth * 0.58 + 2,
+  "A imagem principal do modal ultrapassa 58% da largura do celular.");
+assert.ok(result.modal.imageFrameRatio >= 0.70 && result.modal.imageFrameRatio <= 0.80,
+  "A imagem principal do modal não manteve o enquadramento vertical 3:4.");
 assert.equal(result.productGalleryFailures.length, 0, "Uma ou mais páginas individuais não exibem/trocam todas as fotos cadastradas.");
 
 console.log("Auditoria responsiva Playwright: PASS.");
