@@ -18,10 +18,18 @@ assert.ok(
   ["127.0.0.1", "localhost"].includes(localHost),
   "O teste de persistência só pode apontar para o Supabase local."
 );
+assert.ok(
+  ["127.0.0.1", "localhost"].includes(new URL(FUNCTION_URL).hostname),
+  "A Edge Function de teste só pode ser chamada em loopback local."
+);
 assert.equal(
-  new URL(FUNCTION_URL).origin,
-  new URL(SUPABASE_URL).origin,
-  "A Edge Function deve estar no mesmo Supabase local."
+  new URL(FUNCTION_URL).pathname,
+  "/functions/v1/create-payment-order",
+  "O teste deve chamar somente create-payment-order."
+);
+assert.ok(
+  !FUNCTION_URL.includes("byiykxfugvxuowueuxca.supabase.co"),
+  "A Edge Function não pode apontar para o projeto hospedado."
 );
 
 async function createTestUser() {
