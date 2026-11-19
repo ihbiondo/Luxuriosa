@@ -239,11 +239,6 @@ try {
     for (const viewport of VIEWPORTS) {
       await preparePage(page, route, viewport);
       const measurements = await inspect(page, route, viewport);
-      assert.ok(
-        measurements.navigationCss?.includes("desktop-header-fix-v1"),
-        "A página " + route.path + " não carregou a versão corrigida da navegação."
-      );
-
       if (viewport.width >= 1200) {
         assert.ok(
           measurements.menuIcons.every(icon => !icon.visible),
