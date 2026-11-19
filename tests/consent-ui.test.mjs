@@ -47,10 +47,10 @@ test("todas as páginas públicas usam a versão atual do script de privacidade"
   const staleReferences = [];
   for (const path of htmlFiles) {
     const html = readFileSync(path, "utf8");
-    const scripts = [...html.matchAll(/<script\\b[^>]+src=["']([^"']*consentimento\\.js[^"']*)["']/gi)];
+    const scripts = [...html.matchAll(/<script\b[^>]+src=["']([^"']*consentimento\.js[^"']*)["']/gi)];
     for (const [, source] of scripts) {
       if (!source.includes("v=20261119-sem-convites-automaticos-v1")) {
-        staleReferences.push(path + " → " + source);
+        staleReferences.push(path + " -> " + source);
       }
     }
   }
