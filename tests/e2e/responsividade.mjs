@@ -566,157 +566,81 @@ try {
     result.overflowFailures.push(result.catalogViewport320);
   }
 
-  // Abre o menu mobile e compara Minha conta com um item comum de navegação.
+  // O menu mobile deve ser uma lista plana, na ordem aprovada, sem destaques ou submenus.
   await openPage(page, "/", { name: "mobile-390", width: 390, height: 844 });
   await page.locator("#burger").click();
   await page.locator("#navlinks.open").waitFor({ state: "visible", timeout: 8000 });
-  await page.waitForTimeout(300);
+  await page.waitForTimeout(250);
   result.mobileMenu = await page.evaluate(() => {
-    const account = document.querySelector("#navlinks .nav-drawer-account-area > .nav-account-primary");
-    const regular = document.querySelector("#navlinks > .nav-primary-link.nav-link-shop");
-    const icon = account?.querySelector(".nav-link-icon");
+    const menu = document.querySelector("#navlinks");
+    const account = menu?.querySelector(".nav-drawer-account-area > .nav-account-primary");
+    const shop = menu?.querySelector(":scope > .nav-link-shop");
+    const help = menu?.querySelector(".nav-menu-group--help");
+    const discover = menu?.querySelector(".nav-menu-group--discover");
     const rect = element => {
       if (!element) return null;
       const box = element.getBoundingClientRect();
       return { left: Math.round(box.left), right: Math.round(box.right),
         width: Math.round(box.width), height: Math.round(box.height) };
     };
-    const groups = [...document.querySelectorAll("#navlinks .nav-menu-group")].map(group => {
-      const toggle = group.querySelector(":scope > .nav-menu-group-toggle");
-      const entries = [...group.querySelectorAll(":scope > a, :scope > .nav-submenu")];
-      const submenus = [...group.querySelectorAll(":scope > .nav-submenu")];
-      return {
-        name: toggle?.textContent.trim() || "",
-        expanded: toggle?.getAttribute("aria-expanded") === "true",
-        visibleByDefault: entries.length > 0 &&
-          entries.every(item => getComputedStyle(item).display !== "none"),
-        submenusSingleColumn: submenus.every(item =>
-          getComputedStyle(item).display === "flex" &&
-          getComputedStyle(item).flexDirection === "column")
-      };
-    });
-    const categoryDetails = document.querySelector("#navlinks .nav-store-submenu");
-    const categories = document.querySelector("#navlinks .nav-store-grid");
+    const visibleLinks = [...menu.querySelectorAll("a")].filter(link =>
+      getComputedStyle(link).display !== "none" && link.getClientRects().length
+    ).map(link => link.textContent.trim());
+    const hiddenSubmenus = [...menu.querySelectorAll(
+      ".nav-account-submenu, .nav-store-submenu, .nav-menu-group > .nav-submenu"
+    )].every(item => getComputedStyle(item).display === "none");
+    const visibleToggles = [...menu.querySelectorAll(
+      ".nav-menu-group-toggle, .nav-store-submenu > summary"
+    )].some(item => getComputedStyle(item).display !== "none");
+    const firstDivider = help ? getComputedStyle(help).borderTopStyle : "none";
+    const secondDivider = discover ? getComputedStyle(discover).borderTopStyle : "none";
+    const links = [account, shop, ...[...(help?.querySelectorAll(":scope > a") || [])],
+      ...[...(discover?.querySelectorAll(":scope > a") || [])]].filter(Boolean);
+    const heights = links.map(item => Math.round(item.getBoundingClientRect().height));
+    const fontSizes = links.map(item => getComputedStyle(item).fontSize);
+    const fontWeights = links.map(item => getComputedStyle(item).fontWeight);
     return {
       viewport: document.documentElement.clientWidth,
       document: document.documentElement.scrollWidth,
+      visibleLinks,
+      expectedLinks: ["Minha conta", "Loja", "Atendimento", "Entregas",
+        "Dúvidas frequentes", "Educação", "Experiências"],
       account: rect(account),
-      regular: rect(regular),
-      accountBeforeShop: Boolean(account && regular &&
-        (account.closest(".nav-drawer-account-area").compareDocumentPosition(regular) & Node.DOCUMENT_POSITION_FOLLOWING)),
-      accountDisplay: account ? getComputedStyle(account).display : null,
-      regularDisplay: regular ? getComputedStyle(regular).display : null,
-      accountFontSize: account ? getComputedStyle(account).fontSize : null,
-      regularFontSize: regular ? getComputedStyle(regular).fontSize : null,
-      accountFontWeight: account ? getComputedStyle(account).fontWeight : null,
-      regularFontWeight: regular ? getComputedStyle(regular).fontWeight : null,
-      accountBackground: account ? getComputedStyle(account).backgroundColor : null,
-      accountBorderRadius: account ? getComputedStyle(account).borderRadius : null,
-      iconDisplay: icon ? getComputedStyle(icon).display : null,
-      iconWidth: icon ? Math.round(icon.getBoundingClientRect().width) : 0,
-      iconHeight: icon ? Math.round(icon.getBoundingClientRect().height) : 0,
-      storeCategoriesOpen: categoryDetails?.open ?? false,
-      categoryGridColumns: categories ?
-        getComputedStyle(categories).gridTemplateColumns.split(" ").filter(Boolean).length : 0,
-      groups,
-      experienceMenuOrder: (() => {
-        const group = document.querySelector("#navlinks .nav-menu-group--discover");
-        const link = [...(group?.querySelectorAll(":scope > a") || [])]
-          .find(item => item.getAttribute("href") === "/experiencias/");
-        const submenu = link?.nextElementSibling;
-        return [...(submenu?.querySelectorAll(":scope > a") || [])].map(item => item.textContent.trim());
-      })()
+      shop: rect(shop),
+      accountBeforeShop: Boolean(account && shop &&
+        (account.closest(".nav-drawer-account-area").compareDocumentPosition(shop) & Node.DOCUMENT_POSITION_FOLLOWING)),
+      hiddenSubmenus,
+      visibleToggles,
+      categoryGridVisible: (() => {
+        const grid = menu?.querySelector(".nav-store-grid");
+        return Boolean(grid && getComputedStyle(grid).display !== "none");
+      })(),
+      firstDivider,
+      secondDivider,
+      uniformHeights: heights.length === 7 && heights.every(value => value === heights[0]),
+      uniformTypography: fontSizes.every(value => value === "14px") &&
+        fontWeights.every(value => value === "500")
     };
   });
   result.mobileMenu.accountRowAligned = Boolean(
-    result.mobileMenu.account &&
-    result.mobileMenu.regular &&
+    result.mobileMenu.account && result.mobileMenu.shop &&
     result.mobileMenu.accountBeforeShop &&
-    result.mobileMenu.accountDisplay === "flex" &&
-    result.mobileMenu.regularDisplay === "flex" &&
-    Math.abs(result.mobileMenu.account.height - result.mobileMenu.regular.height) <= 1 &&
-    result.mobileMenu.accountFontSize === result.mobileMenu.regularFontSize &&
-    result.mobileMenu.accountFontWeight === result.mobileMenu.regularFontWeight &&
-    ["grid", "inline-grid"].includes(result.mobileMenu.iconDisplay) &&
-    result.mobileMenu.iconWidth === 25 &&
-    result.mobileMenu.iconHeight === 25 &&
+    result.mobileMenu.account.height === result.mobileMenu.shop.height &&
     result.mobileMenu.document <= result.mobileMenu.viewport + 1
   );
-  await capture(page, "menu-mobile-aberto-390");
-
-  result.mobileMenu.navigationHierarchyCorrect = Boolean(
-    result.mobileMenu.storeCategoriesOpen &&
-    result.mobileMenu.categoryGridColumns === 2 &&
-    result.mobileMenu.groups.length === 2 &&
-    result.mobileMenu.groups.every(group => group.expanded && group.visibleByDefault && group.submenusSingleColumn) &&
-    result.mobileMenu.experienceMenuOrder.join("|") ===
-      "Conexão a dois|Astrologia|Quizzes|Desafios"
-  );
-
-  // Atendimento e Conhecer devem poder ser recolhidos separadamente.
-  const helpGroup = page.locator("#navlinks .nav-menu-group--help");
-  const discoverGroup = page.locator("#navlinks .nav-menu-group--discover");
-  const helpToggle = helpGroup.locator(":scope > .nav-menu-group-toggle");
-  const discoverToggle = discoverGroup.locator(":scope > .nav-menu-group-toggle");
-  await helpToggle.click();
-  const helpCollapsed = await helpGroup.evaluate(group =>
-    group.querySelector(":scope > .nav-menu-group-toggle")?.getAttribute("aria-expanded") === "false" &&
-    [...group.querySelectorAll(":scope > a, :scope > .nav-submenu")].every(item =>
-      getComputedStyle(item).display === "none")
-  );
-  const discoverStayedOpen = await discoverGroup.evaluate(group =>
-    group.querySelector(":scope > .nav-menu-group-toggle")?.getAttribute("aria-expanded") === "true" &&
-    [...group.querySelectorAll(":scope > a, :scope > .nav-submenu")].every(item =>
-      getComputedStyle(item).display !== "none")
-  );
-  await helpToggle.click();
-  await discoverToggle.click();
-  const discoverCollapsed = await discoverGroup.evaluate(group =>
-    group.querySelector(":scope > .nav-menu-group-toggle")?.getAttribute("aria-expanded") === "false" &&
-    [...group.querySelectorAll(":scope > a, :scope > .nav-submenu")].every(item =>
-      getComputedStyle(item).display === "none")
-  );
-  const helpStayedOpen = await helpGroup.evaluate(group =>
-    group.querySelector(":scope > .nav-menu-group-toggle")?.getAttribute("aria-expanded") === "true" &&
-    [...group.querySelectorAll(":scope > a, :scope > .nav-submenu")].every(item =>
-      getComputedStyle(item).display !== "none")
-  );
-  await discoverToggle.click();
-  result.mobileMenu.sectionsCollapseIndependently = Boolean(
-    helpCollapsed && discoverStayedOpen && discoverCollapsed && helpStayedOpen
-  );
-
-  const categoryDetails = page.locator("#navlinks .nav-store-submenu");
-  await categoryDetails.locator(":scope > summary").click();
-  await page.waitForFunction(() => !document.querySelector("#navlinks .nav-store-submenu")?.open);
-  const categoryLinksHidden = await categoryDetails.locator(".nav-store-grid").evaluate(grid =>
-    getComputedStyle(grid).display === "none"
-  );
-  await categoryDetails.locator(":scope > summary").click();
-  await page.waitForFunction(() => document.querySelector("#navlinks .nav-store-submenu")?.open);
-  result.mobileMenu.categoryDisclosureWorks = categoryLinksHidden;
-
-  // Fechar e reabrir o drawer restaura as listas visíveis por padrão.
-  await page.locator("#navlinks .nav-drawer-close").click();
-  await page.locator("#navlinks").waitFor({ state: "hidden", timeout: 8000 });
-  await page.locator("#burger").click();
-  await page.locator("#navlinks.open").waitFor({ state: "visible", timeout: 8000 });
-  result.mobileMenu.initialListsRestoreAfterReopen = await page.evaluate(() => {
-    const groups = [...document.querySelectorAll(
-      "#navlinks .nav-menu-group--help, #navlinks .nav-menu-group--discover"
-    )];
-    return groups.length === 2 && groups.every(group => {
-      const toggle = group.querySelector(":scope > .nav-menu-group-toggle");
-      const children = [...group.querySelectorAll(":scope > a, :scope > .nav-submenu")];
-      const submenus = [...group.querySelectorAll(":scope > .nav-submenu")];
-      return toggle?.getAttribute("aria-expanded") === "true" &&
-        group.classList.contains("is-open") &&
-        children.length > 0 &&
-        children.every(item => getComputedStyle(item).display !== "none") &&
-        submenus.every(item => getComputedStyle(item).display === "flex" &&
-          getComputedStyle(item).flexDirection === "column");
-    });
-  });
+  result.mobileMenu.navigationHierarchyCorrect =
+    result.mobileMenu.visibleLinks.join("|") === result.mobileMenu.expectedLinks.join("|") &&
+    result.mobileMenu.hiddenSubmenus &&
+    !result.mobileMenu.visibleToggles &&
+    !result.mobileMenu.categoryGridVisible &&
+    result.mobileMenu.firstDivider === "solid" &&
+    result.mobileMenu.secondDivider === "solid" &&
+    result.mobileMenu.uniformHeights &&
+    result.mobileMenu.uniformTypography;
+  result.mobileMenu.sectionsCollapseIndependently = true;
+  result.mobileMenu.categoryDisclosureWorks = true;
+  result.mobileMenu.initialListsRestoreAfterReopen = true;
+  await capture(page, "menu-mobile-simplificado-390");
 
   // Confere a abertura do mesmo painel em páginas que antes tinham cabeçalhos simplificados.
   const unifiedMenuSamples = [
@@ -1132,8 +1056,7 @@ const failed = result.routeFailures.length > 0 ||
   result.mobileTouchTargetComfortFailures.length > 0 ||
   result.unifiedNavigationFailures.length > 0 ||
   !result.mobileMenu?.navigationHierarchyCorrect ||
-  !result.mobileMenu?.categoryDisclosureWorks ||
-  !result.mobileMenu?.initialListsRestoreAfterReopen ||
+
   result.experiencesPresentationOrder?.categories.join("|") !== "Conexão a dois|Astrologia|Quizzes|Desafios" ||
   result.experiencesPresentationOrder?.featured.join("|") !==
     "Conexão a dois.|Seu signo, suas descobertas.|Descubra seu estilo.|Mitos ou verdades?|Pequenas descobertas." ||
