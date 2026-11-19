@@ -94,7 +94,7 @@
     var menu = header && header.querySelector(".navlinks");
     if (!header || !menu) return Promise.resolve();
 
-    var cssHref = "/css/navigation.css?v=20261119-menu-mobile-v6";
+    var cssHref = "/css/navigation.css?v=20261119-menu-mobile-v7";
     var cssLink = document.querySelector('link[rel="stylesheet"][href*="navigation.css"]');
     var cssTarget = new URL(cssHref, window.location.href).href;
     var cssReady = new Promise(function (resolve, reject) {
@@ -134,6 +134,24 @@
         '</div>',
         '<button class="nav-drawer-close" type="button" aria-label="Fechar menu">×</button>',
       '</div>',
+      '<a class="nav-primary-link nav-link-shop" href="/loja.html"' + (loja ? ' aria-current="page"' : '') + '>',
+        '<span class="nav-link-icon" aria-hidden="true">',
+          '<svg viewBox="0 0 24 24" focusable="false"><path d="M5 8h14l1 13H4L5 8Z"></path><path d="M9 9V6a3 3 0 0 1 6 0v3"></path></svg>',
+        '</span><span>Loja</span>',
+      '</a>',
+      '<details class="nav-submenu nav-store-submenu" open>',
+        '<summary>Categorias da loja</summary>',
+        '<div class="nav-store-grid">',
+        '<a href="/loja.html?categoria=G%C3%A9is%20e%20estimulantes">Géis e estimulantes</a>',
+        '<a href="/loja.html?categoria=Vibradores%20e%20masturbadores">Vibradores e masturbadores</a>',
+        '<a href="/loja.html?categoria=Jogos%20e%20acess%C3%B3rios">Jogos e acessórios</a>',
+        '<a href="/loja.html?categoria=Perfumes%20e%20higiene">Perfumes e higiene</a>',
+        '<a href="/loja.html?categoria=%C3%93leos%20para%20massagem">Óleos para massagem</a>',
+        '<a href="/loja.html?categoria=Kits">Kits</a>',
+        '<a href="/loja/lingerie/"' + (lingerie ? ' aria-current="page"' : '') + '>Lingerie</a>',
+        '<a class="nav-submenu-all" href="/loja.html">Ver todo catálogo</a>',
+        '</div>',
+      '</details>',
       '<div class="nav-drawer-account-area">',
         '<a class="nav-primary-link nav-account-primary" data-nav-account href="/login.html">',
           '<span class="nav-link-icon" aria-hidden="true">',
@@ -145,24 +163,6 @@
           '<a data-nav-auth-only href="/meus-pedidos/">Minhas compras</a>',
         '</div>',
       '</div>',
-      '<a class="nav-primary-link nav-link-shop" href="/loja.html"' + (loja ? ' aria-current="page"' : '') + '>',
-        '<span class="nav-link-icon" aria-hidden="true">',
-          '<svg viewBox="0 0 24 24" focusable="false"><path d="M5 8h14l1 13H4L5 8Z"></path><path d="M9 9V6a3 3 0 0 1 6 0v3"></path></svg>',
-        '</span><span>Loja</span>',
-      '</a>',
-      '<details class="nav-submenu nav-store-submenu" open>',
-        '<summary>Categorias da loja</summary>',
-        '<div class="nav-store-grid">',
-        '<a href="/loja/lingerie/"' + (lingerie ? ' aria-current="page"' : '') + '>Lingerie</a>',
-        '<a href="/loja.html?categoria=G%C3%A9is%20e%20estimulantes">Géis e estimulantes</a>',
-        '<a href="/loja.html?categoria=Vibradores%20e%20masturbadores">Vibradores e masturbadores</a>',
-        '<a href="/loja.html?categoria=Jogos%20e%20acess%C3%B3rios">Jogos e acessórios</a>',
-        '<a href="/loja.html?categoria=Perfumes%20e%20higiene">Perfumes e higiene</a>',
-        '<a href="/loja.html?categoria=%C3%93leos%20para%20massagem">Óleos para massagem</a>',
-        '<a href="/loja.html?categoria=Kits">Kits</a>',
-        '<a class="nav-submenu-all" href="/loja.html">Ver todo catálogo</a>',
-        '</div>',
-      '</details>',
       '<div class="nav-menu-group nav-menu-group--help" role="group" aria-label="Atendimento e Ajuda">',
         '<span class="nav-menu-group-title">Atendimento e Ajuda</span>',
         '<a href="/atendimento.html"' + (atendimento ? ' aria-current="page"' : '') + '>',
