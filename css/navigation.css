@@ -335,6 +335,10 @@
     font: 500 14px/1.4 var(--sans); letter-spacing: .005em;
     text-align: left; text-decoration: none; text-transform: none;
   }
+  .navlinks a[aria-current="page"] {
+    background: transparent !important;
+    color: #e8dce0 !important;
+  }
   .navlinks .nav-menu-group > a:hover,
   .navlinks .nav-menu-group > a:focus-visible,
   .navlinks .nav-menu-group > .nav-submenu > a:hover,
@@ -401,6 +405,7 @@
     margin: 0;
     border: 0;
   }
+  .navlinks .nav-drawer-footer,
   .navlinks .nav-account-submenu,
   .navlinks .nav-store-submenu,
   .navlinks .nav-menu-group > .nav-submenu,
