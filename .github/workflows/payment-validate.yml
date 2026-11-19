@@ -437,15 +437,20 @@ jobs:
           (cd "$test_root" && supabase functions serve create-payment-order --no-verify-jwt --env-file "$test_root/function.env") > "$test_root/function-server.log" 2>&1 &
           function_server_pid=$!
           function_ready=false
+          function_url=""
           for attempt in $(seq 1 60); do
-            status_code="$(curl --silent --output /dev/null --write-out '%{http_code}' \
-              --request OPTIONS "$API_URL/functions/v1/create-payment-order" \
-              --header 'Origin: http://127.0.0.1:4173' \
-              --header 'Access-Control-Request-Method: POST' \
-              --header 'Access-Control-Request-Headers: authorization, apikey, content-type' || true)"
-            if [[ "$status_code" == "204" ]]; then
-              function_ready=true
-              break
+            # O runtime de Functions usa uma porta própria, diferente da API REST.
+            function_url="$(grep -Eo 'http://127\.0\.0\.1:[0-9]+/functions/v1/create-payment-order' "$test_root/function-server.log" | tail -n 1 || true)"
+            if [[ -n "$function_url" ]]; then
+              status_code="$(curl --silent --output /dev/null --write-out '%{http_code}' \
+                --request OPTIONS "$function_url" \
+                --header 'Origin: http://127.0.0.1:4173' \
+                --header 'Access-Control-Request-Method: POST' \
+                --header 'Access-Control-Request-Headers: authorization, apikey, content-type' || true)"
+              if [[ "$status_code" == "204" ]]; then
+                function_ready=true
+                break
+              fi
             fi
             sleep 1
           done
@@ -458,7 +463,7 @@ jobs:
           E2E_SUPABASE_URL="$API_URL" \
           E2E_SERVICE_ROLE_KEY="$SERVICE_ROLE_KEY" \
           E2E_ANON_KEY="$ANON_KEY" \
-          E2E_PAYMENT_FUNCTION_URL="$API_URL/functions/v1/create-payment-order" \
+          E2E_PAYMENT_FUNCTION_URL="$function_url" \
           node "$site/tests/e2e/checkout-payer-persistence.mjs"
 
       - name: Publicar evidências visuais do E2E
