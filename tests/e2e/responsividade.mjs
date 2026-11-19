@@ -501,7 +501,7 @@ try {
     Array.isArray(product.imagens) && product.imagens.length > 1 && product.pagina
   );
   for (const product of productsWithGallery) {
-    const route = "/" + product.pagina.replace(/^\\//, "");
+    const route = product.pagina.charAt(0) === "/" ? product.pagina : "/" + product.pagina;
     try {
       await openPage(page, route, { name: "mobile-390", width: 390, height: 844 });
       const gallery = page.locator(".product-detail-gallery");
@@ -539,7 +539,8 @@ const failed = result.routeFailures.length > 0 ||
   (result.portraitCardFailures || []).length > 0 ||
   result.catalogImageFailures.length > 0 ||
   result.catalogImageFitFailures.length > 0 ||
-  result.catalogCardFrameFailures.length > 0;
+  result.catalogCardFrameFailures.length > 0 ||
+  result.productGalleryFailures.length > 0;
 
 console.log(JSON.stringify({
   summary: {
