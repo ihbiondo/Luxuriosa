@@ -489,3 +489,140 @@
     color: var(--gold);
   }
 }
+
+
+/* =========================================================
+   NAVEGAÇÃO DESKTOP — LISTA ÚNICA, NA HORIZONTAL
+   Reaproveita os mesmos sete destinos do menu mobile.
+   ========================================================= */
+@media (min-width: 1200px) {
+  header .nav {
+    flex-wrap: nowrap;
+    gap: clamp(14px, 1.4vw, 22px);
+  }
+
+  header .nav > .logo {
+    flex: 0 0 auto;
+  }
+
+  header .nav > .navlinks {
+    display: flex !important;
+    position: static;
+    flex: 1 1 auto;
+    min-width: 0;
+    width: auto;
+    max-width: none;
+    max-height: none;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(8px, .75vw, 12px);
+    margin: 0;
+    padding: 0;
+    overflow: visible;
+    border: 0;
+    background: transparent;
+    box-shadow: none;
+    color: var(--muted);
+    font-family: var(--sans);
+    font-size: clamp(10.5px, .83vw, 12px);
+    font-weight: 500;
+    letter-spacing: 0;
+    line-height: 1.25;
+    text-transform: none;
+    white-space: nowrap;
+  }
+
+  header .navlinks .nav-drawer-top,
+  header .navlinks .nav-drawer-footer,
+  header .navlinks .nav-store-submenu,
+  header .navlinks .nav-menu-group-title,
+  header .navlinks .nav-menu-group > .nav-submenu {
+    display: none !important;
+  }
+
+  header .navlinks .nav-drawer-account-area,
+  header .navlinks .nav-menu-group {
+    display: flex !important;
+    flex: 0 0 auto;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: inherit;
+    width: auto;
+    min-width: 0;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+  }
+
+  /* Divisórias discretas preservam a hierarquia do menu mobile. */
+  header .navlinks .nav-menu-group--help,
+  header .navlinks .nav-menu-group--discover {
+    margin-left: 2px;
+    padding-left: clamp(8px, .75vw, 12px);
+    border-left: 1px solid rgba(212, 175, 124, .18);
+  }
+
+  header .navlinks .nav-account-primary,
+  header .navlinks > .nav-link-shop,
+  header .navlinks .nav-menu-group > a {
+    display: inline-flex !important;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+    width: auto;
+    min-width: 0;
+    min-height: 38px;
+    margin: 0;
+    padding: 8px 1px;
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    color: var(--muted);
+    font-family: var(--sans);
+    font-size: inherit;
+    font-weight: 600;
+    letter-spacing: 0;
+    line-height: 1.25;
+    text-align: center;
+    text-decoration: none;
+    text-transform: none;
+    white-space: nowrap;
+  }
+
+  header .navlinks .nav-link-icon {
+    display: none !important;
+  }
+
+  header .navlinks .nav-account-primary:hover,
+  header .navlinks .nav-account-primary:focus-visible,
+  header .navlinks > .nav-link-shop:hover,
+  header .navlinks > .nav-link-shop:focus-visible,
+  header .navlinks .nav-menu-group > a:hover,
+  header .navlinks .nav-menu-group > a:focus-visible,
+  header .navlinks a[aria-current="page"] {
+    color: var(--gold) !important;
+    background: transparent !important;
+  }
+
+  header .nav-right {
+    display: flex;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+    white-space: nowrap;
+  }
+
+  /* Minha conta já é o primeiro link da navegação principal. */
+  header .nav-right > .account-trigger {
+    display: none !important;
+  }
+
+  header .nav-right > .burger {
+    display: none !important;
+  }
+}
