@@ -94,7 +94,7 @@
     var menu = header && header.querySelector(".navlinks");
     if (!header || !menu) return Promise.resolve();
 
-    var cssHref = "/css/navigation.css?v=20261119-menu-mobile-v3";
+    var cssHref = "/css/navigation.css?v=20261119-menu-mobile-v4";
     var cssLink = document.querySelector('link[rel="stylesheet"][href*="navigation.css"]');
     var cssTarget = new URL(cssHref, window.location.href).href;
     var cssReady = new Promise(function (resolve, reject) {
@@ -270,62 +270,16 @@
      * O usuário pode recolher/reabrir Atendimento e Conhecer pelos botões.
      * Os botões são criados no JS para manter a navegação desktop sem alteração.
      */
+    /*
+     * O menu mobile usa uma lista contínua. Apenas as categorias da loja
+     * permanecem em duas colunas; os demais links são exibidos em sequência.
+     */
     function configurarGruposRecolhiveis() {
-      menu.querySelectorAll(".nav-menu-group").forEach(function (group) {
-        var title = group.querySelector(":scope > .nav-menu-group-title");
-        if (!title || group.querySelector(":scope > .nav-menu-group-toggle")) return;
-
-        var toggle = document.createElement("button");
-        toggle.type = "button";
-        toggle.className = "nav-menu-group-toggle";
-        toggle.textContent = title.textContent.trim();
-        var abrirInicialmente = group.classList.contains("nav-menu-group--help") ||
-          group.classList.contains("nav-menu-group--discover");
-        group.classList.toggle("is-open", abrirInicialmente);
-        toggle.setAttribute("aria-expanded", String(abrirInicialmente));
-
-        title.replaceWith(toggle);
-        toggle.addEventListener("click", function () {
-          var abrir = !group.classList.contains("is-open");
-          group.classList.toggle("is-open", abrir);
-          toggle.setAttribute("aria-expanded", String(abrir));
-        });
-      });
-
       var loja = menu.querySelector(".nav-store-submenu");
       if (loja) loja.open = true;
-
-      var grupoConhecer = menu.querySelector(".nav-menu-group--discover");
-      if (!grupoConhecer) return;
-      var linkExperiencias = Array.prototype.slice.call(
-        grupoConhecer.querySelectorAll(":scope > a")
-      ).find(function (link) {
-        return link.getAttribute("href") === "/experiencias/";
-      });
-      var submenuExperiencias = linkExperiencias && linkExperiencias.nextElementSibling;
-      if (!submenuExperiencias || !submenuExperiencias.classList.contains("nav-submenu")) return;
-
-      var prioridade = function (link) {
-        var href = link.getAttribute("href") || "";
-        if (href.indexOf("tipo=couple") !== -1) return 0;
-        if (href.indexOf("tipo=astrology") !== -1) return 1;
-        if (href.indexOf("tipo=quiz") !== -1) return 2;
-        if (href.indexOf("tipo=challenge") !== -1) return 3;
-        return 4;
-      };
-      Array.prototype.slice.call(submenuExperiencias.querySelectorAll(":scope > a"))
-        .sort(function (a, b) { return prioridade(a) - prioridade(b); })
-        .forEach(function (link) { submenuExperiencias.appendChild(link); });
     }
 
     function redefinirGruposDoMenu() {
-      menu.querySelectorAll(".nav-menu-group").forEach(function (group) {
-        var abrirInicialmente = group.classList.contains("nav-menu-group--help") ||
-          group.classList.contains("nav-menu-group--discover");
-        group.classList.toggle("is-open", abrirInicialmente);
-        var toggle = group.querySelector(":scope > .nav-menu-group-toggle");
-        if (toggle) toggle.setAttribute("aria-expanded", String(abrirInicialmente));
-      });
       var loja = menu.querySelector(".nav-store-submenu");
       if (loja) loja.open = true;
     }
