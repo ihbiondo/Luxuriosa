@@ -565,3 +565,14 @@
     max-height: none;
   }
 }
+
+
+/* Breadcrumbs com área confortável para toque nas páginas individuais. */
+@media (max-width: 760px) {
+  .product-detail-page .product-breadcrumb a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 40px;
+    padding: 4px 0;
+  }
+}
