@@ -6,6 +6,8 @@ import { chromium } from "playwright";
 const BASE_URL = process.env.E2E_BASE_URL || "http://127.0.0.1:4173";
 const ROOT = process.cwd();
 const SCREENSHOT_DIR = process.env.RESPONSIVE_SCREENSHOT_DIR || "";
+const catalogData = JSON.parse(fs.readFileSync(path.join(ROOT, "data/produtos.json"), "utf8"));
+const expectedCatalogCards = Array.isArray(catalogData.produtos) ? catalogData.produtos.length : 0;
 const REPORT_PATH = process.env.RESPONSIVE_REPORT_PATH || "";
 const VIEWPORTS = [
   { name: "mobile-320", width: 320, height: 740 },
@@ -151,7 +153,12 @@ const result = {
   overflowFailures: [],
   missingViewportMeta: [],
   coreViewportResults: [],
+  catalogCards: [],
+  catalogImageFailures: [],
+  catalogImageFitFailures: [],
+  catalogCardFrameFailures: [],
   lingerieCards: [],
+  catalogViewport320: null,
   modal: null,
   pageErrors: []
 };
@@ -212,6 +219,62 @@ try {
         });
       }
     }
+  }
+
+  // Percorre a vitrine geral para acionar o carregamento lazy de todas as imagens.
+  // A captura fullPage, sozinha, não rola a página e pode deixar cards abaixo da dobra em placeholder.
+  await openPage(page, "/loja.html", { name: "mobile-390", width: 390, height: 844 });
+  await page.waitForFunction(
+    expected => document.querySelectorAll("#grid .product").length === expected &&
+      document.querySelectorAll("#grid .product-card-main-image").length === expected,
+    expectedCatalogCards,
+    { timeout: 15000 }
+  );
+  const catalogImages = page.locator("#grid .product-card-main-image");
+  for (let index = 0; index < expectedCatalogCards; index++) {
+    const image = catalogImages.nth(index);
+    await image.scrollIntoViewIfNeeded();
+    await page.waitForFunction(
+      indexAtual => {
+        const current = document.querySelectorAll("#grid .product-card-main-image")[indexAtual];
+        return Boolean(current && current.complete);
+      },
+      index,
+      { timeout: 10000 }
+    );
+    await image.evaluate(async current => {
+      if (current.complete && current.naturalWidth > 0 && current.decode) {
+        await current.decode().catch(() => {});
+      }
+    });
+  }
+  result.catalogCards = await catalogImages.evaluateAll(images =>
+    images.map(image => {
+      const frame = image.closest(".product-img") || image.parentElement;
+      return {
+        product: image.alt,
+        src: image.getAttribute("src"),
+        loaded: image.complete && image.naturalWidth > 0,
+        naturalWidth: image.naturalWidth,
+        naturalHeight: image.naturalHeight,
+        frameWidth: frame?.clientWidth || 0,
+        frameHeight: frame?.clientHeight || 0,
+        objectFit: getComputedStyle(image).objectFit
+      };
+    })
+  );
+  result.catalogImageFailures = result.catalogCards.filter(item => !item.loaded);
+  result.catalogImageFitFailures = result.catalogCards.filter(item => item.objectFit !== "cover");
+  result.catalogCardFrameFailures = result.catalogCards.filter(item => item.frameWidth <= 0 || item.frameHeight <= 0);
+  await capture(page, "catalogo-completo-mobile-390");
+
+  // Confere também se os quadros dos cards continuam utilizáveis na menor largura.
+  await page.setViewportSize({ width: 320, height: 740 });
+  result.catalogViewport320 = await inspectLayout(page, "/loja.html (cards 320 px)", {
+    name: "mobile-320", width: 320, height: 740
+  });
+  if (result.catalogViewport320.horizontalOverflow) {
+    result.overflowFailures.push(result.catalogViewport320);
   }
 
   // Abre o menu mobile e compara Minha conta com um item comum de navegação.
@@ -439,7 +502,10 @@ const failed = result.routeFailures.length > 0 ||
   result.overflowFailures.length > 0 ||
   (result.imageFailures || []).length > 0 ||
   (result.imageFitFailures || []).length > 0 ||
-  (result.portraitCardFailures || []).length > 0;
+  (result.portraitCardFailures || []).length > 0 ||
+  result.catalogImageFailures.length > 0 ||
+  result.catalogImageFitFailures.length > 0 ||
+  result.catalogCardFrameFailures.length > 0;
 
 console.log(JSON.stringify({
   summary: {
@@ -448,6 +514,10 @@ console.log(JSON.stringify({
     routeFailures: result.routeFailures.length,
     horizontalOverflowFailures: result.overflowFailures.length,
     missingViewportMeta: result.missingViewportMeta.length,
+    catalogCards: result.catalogCards.length,
+    missingCatalogImages: result.catalogImageFailures.length,
+    catalogImageFitFailures: result.catalogImageFitFailures.length,
+    catalogCardFrameFailures: result.catalogCardFrameFailures.length,
     lingerieCards: result.lingerieCards.length,
     missingLingerieImages: (result.imageFailures || []).length,
     wrongImageFit: (result.imageFitFailures || []).length,
@@ -458,6 +528,11 @@ console.log(JSON.stringify({
     modalHeight: result.modal?.height ?? null,
     failed
   },
+  catalogCards: result.catalogCards,
+  catalogImageFailures: result.catalogImageFailures,
+  catalogImageFitFailures: result.catalogImageFitFailures,
+  catalogCardFrameFailures: result.catalogCardFrameFailures,
+  catalogViewport320: result.catalogViewport320,
   lingerieCards: result.lingerieCards,
   lingerieCropWarnings: result.lingerieCropWarnings,
   deliveryTable320: result.deliveryTable320,
@@ -475,6 +550,10 @@ if (REPORT_PATH) {
 
 assert.equal(result.routeFailures.length, 0, "Uma ou mais rotas públicas falharam.");
 assert.equal(result.overflowFailures.length, 0, "Foram encontrados casos de rolagem horizontal.");
+assert.equal(result.catalogCards.length, expectedCatalogCards, "A auditoria deve conferir todos os cards do catálogo.");
+assert.equal(result.catalogImageFailures.length, 0, "Uma ou mais imagens do catálogo geral não carregaram.");
+assert.equal(result.catalogImageFitFailures.length, 0, "Há imagens do catálogo geral sem object-fit: cover.");
+assert.equal(result.catalogCardFrameFailures.length, 0, "Há cards sem quadro de imagem com dimensões válidas.");
 assert.equal((result.imageFailures || []).length, 0, "Uma ou mais imagens de lingerie não carregaram.");
 assert.equal((result.imageFitFailures || []).length, 0, "Há imagens de cards que não usam object-fit: cover.");
 assert.equal((result.portraitCardFailures || []).length, 0, "Cards de lingerie não receberam o formato vertical.");
