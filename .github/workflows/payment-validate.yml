@@ -26,6 +26,9 @@ on:
       - "js/clientes.js"
       - "js/carrinho.js"
       - "supabase/functions/create-payment-order/index.ts"
+      - "supabase/migrations/20261118162000_add_order_payer_identity.sql"
+      - "tests/fixtures/checkout-payer-fixtures.sql"
+      - "tests/e2e/checkout-payer-persistence.mjs"
       - "supabase/config.toml"
       - "supabase/migrations/20261116181752_standardize_delivery_fees.sql"
       - "supabase/tests/database/freight_rules.test.sql"
@@ -76,6 +79,9 @@ on:
       - "js/clientes.js"
       - "js/carrinho.js"
       - "supabase/functions/create-payment-order/index.ts"
+      - "supabase/migrations/20261118162000_add_order_payer_identity.sql"
+      - "tests/fixtures/checkout-payer-fixtures.sql"
+      - "tests/e2e/checkout-payer-persistence.mjs"
       - "supabase/migrations/20261116181752_standardize_delivery_fees.sql"
       - "supabase/tests/database/freight_rules.test.sql"
       - "tests/fixtures/freight_rules_fixture.sql"
@@ -275,7 +281,11 @@ jobs:
           set -euo pipefail
           test_root="$(mktemp -d)"
           site_server_pid=""
+          function_server_pid=""
           cleanup() {
+            if [[ -n "$function_server_pid" ]]; then
+              kill "$function_server_pid" >/dev/null 2>&1 || true
+            fi
             if [[ -n "$site_server_pid" ]]; then
               kill "$site_server_pid" >/dev/null 2>&1 || true
             fi
@@ -331,6 +341,10 @@ jobs:
           print(f"Portas locais isoladas: API={ports[0]}, DB={ports[1]}, shadow={ports[2]}, SMTP={ports[3]}")
           PY
           cp "$GITHUB_WORKSPACE/tests/e2e/login-fixtures.sql" "$test_root/supabase/migrations/20261115130000_e2e_login_fixtures.sql"
+          cp "$GITHUB_WORKSPACE/tests/fixtures/checkout-payer-fixtures.sql" "$test_root/supabase/migrations/20261115150000_checkout_payer_fixtures.sql"
+          cp "$GITHUB_WORKSPACE/supabase/migrations/20261118162000_add_order_payer_identity.sql" "$test_root/supabase/migrations/"
+          mkdir -p "$test_root/supabase/functions/create-payment-order"
+          cp "$GITHUB_WORKSPACE/supabase/functions/create-payment-order/index.ts" "$test_root/supabase/functions/create-payment-order/index.ts"
           cp "$GITHUB_WORKSPACE/supabase/migrations/20261115181510_create_experience_results.sql" "$test_root/supabase/migrations/"
           cp "$GITHUB_WORKSPACE/supabase/tests/database/experience_results.test.sql" "$test_root/supabase/tests/database/"
           cp "$GITHUB_WORKSPACE/tests/fixtures/freight_rules_fixture.sql" "$test_root/supabase/migrations/20261115120000_freight_rules_fixture.sql"
@@ -416,6 +430,36 @@ jobs:
           E2E_SERVICE_ROLE_KEY="$SERVICE_ROLE_KEY" \
           E2E_SCREENSHOT_DIR="$GITHUB_WORKSPACE/e2e-screenshots" \
           node "$site/tests/e2e/checkout-payer.mjs"
+
+          # Executa a Edge Function real sobre o banco local. O modo de pagamento
+          # sintético só é ativado quando SUPABASE_URL aponta para o container local.
+          printf 'LUX_E2E_LOCAL_MODE=true\n' > "$test_root/function.env"
+          (cd "$test_root" && supabase functions serve create-payment-order --no-verify-jwt --env-file "$test_root/function.env") > "$test_root/function-server.log" 2>&1 &
+          function_server_pid=$!
+          function_ready=false
+          for attempt in $(seq 1 60); do
+            status_code="$(curl --silent --output /dev/null --write-out '%{http_code}' \
+              --request OPTIONS "$API_URL/functions/v1/create-payment-order" \
+              --header 'Origin: http://127.0.0.1:4173' \
+              --header 'Access-Control-Request-Method: POST' \
+              --header 'Access-Control-Request-Headers: authorization, apikey, content-type' || true)"
+            if [[ "$status_code" == "204" ]]; then
+              function_ready=true
+              break
+            fi
+            sleep 1
+          done
+          if [[ "$function_ready" != "true" ]]; then
+            cat "$test_root/function-server.log"
+            echo "A Edge Function local não iniciou com o preflight CORS esperado."
+            exit 1
+          fi
+
+          E2E_SUPABASE_URL="$API_URL" \
+          E2E_SERVICE_ROLE_KEY="$SERVICE_ROLE_KEY" \
+          E2E_ANON_KEY="$ANON_KEY" \
+          E2E_PAYMENT_FUNCTION_URL="$API_URL/functions/v1/create-payment-order" \
+          node "$site/tests/e2e/checkout-payer-persistence.mjs"
 
       - name: Publicar evidências visuais do E2E
         if: always()
