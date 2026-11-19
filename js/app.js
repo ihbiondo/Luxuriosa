@@ -267,47 +267,7 @@
     var closeButton = menu.querySelector(".nav-drawer-close");
     if (!header) return;
 
-    /*
-     * Atendimento e Conhecer começam abertos, como solicitado.
-     * Cada seção pode ser recolhida separadamente; ao reabrir o drawer,
-     * as duas listas retornam abertas para manter os destinos visíveis.
-     */
-    function configurarGruposRecolhiveis() {
-      menu.querySelectorAll(".nav-menu-group").forEach(function (group) {
-        var title = group.querySelector(":scope > .nav-menu-group-title");
-        if (!title || group.querySelector(":scope > .nav-menu-group-toggle")) return;
-
-        var toggle = document.createElement("button");
-        toggle.type = "button";
-        toggle.className = "nav-menu-group-toggle";
-        toggle.textContent = title.textContent.trim();
-        toggle.setAttribute("aria-expanded", "true");
-        group.classList.add("is-open");
-        title.replaceWith(toggle);
-
-        toggle.addEventListener("click", function () {
-          var abrir = !group.classList.contains("is-open");
-          group.classList.toggle("is-open", abrir);
-          toggle.setAttribute("aria-expanded", String(abrir));
-        });
-      });
-
-      var loja = menu.querySelector(".nav-store-submenu");
-      if (loja) loja.open = true;
-    }
-
-    function redefinirGruposDoMenu() {
-      menu.querySelectorAll(".nav-menu-group").forEach(function (group) {
-        group.classList.add("is-open");
-        var toggle = group.querySelector(":scope > .nav-menu-group-toggle");
-        if (toggle) toggle.setAttribute("aria-expanded", "true");
-      });
-
-      var loja = menu.querySelector(".nav-store-submenu");
-      if (loja) loja.open = true;
-    }
-
-    configurarGruposRecolhiveis();
+    /* O menu mobile é uma lista plana: sem acordeões ou submenus. */
 
     var backdrop = document.createElement("button");
     backdrop.type = "button";
@@ -351,7 +311,6 @@
       botao.classList.remove("open");
       botao.setAttribute("aria-expanded", "false");
       botao.setAttribute("aria-label", "Abrir menu");
-      redefinirGruposDoMenu();
       menu.setAttribute("aria-hidden", "true");
       menu.setAttribute("inert", "");
 
@@ -360,7 +319,6 @@
 
     function abrirMenu() {
       if (!mobileQuery.matches) return;
-      redefinirGruposDoMenu();
       menu.removeAttribute("inert");
       menu.setAttribute("aria-hidden", "false");
       menu.classList.add("open");
