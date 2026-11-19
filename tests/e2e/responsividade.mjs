@@ -234,9 +234,12 @@ try {
         if (viewport.width === 390 && usesSharedNavigation) {
           await page.waitForFunction(() => {
             const nav = document.querySelector("#navlinks");
+            const styleLink = [...document.querySelectorAll('link[rel="stylesheet"]')]
+              .find(link => (link.href || "").includes("navigation.css") &&
+                (link.href || "").includes("menu-mobile-v3"));
             return Boolean(nav && nav.querySelector(".nav-drawer-close") &&
-              nav.querySelector(".nav-menu-group-toggle"));
-          }, null, { timeout: 8000 });
+              nav.querySelector(".nav-menu-group-toggle") && styleLink && styleLink.sheet);
+          }, null, { timeout: 10000 });
           const audit = await page.evaluate(() => {
             const nav = document.querySelector("#navlinks");
             const toggles = [...(nav?.querySelectorAll(".nav-menu-group-toggle") || [])];
@@ -675,6 +678,12 @@ try {
   ];
   for (const sample of unifiedMenuSamples) {
     await openPage(page, sample.route, { name: "mobile-390", width: 390, height: 844 });
+    await page.waitForFunction(() => {
+      const styleLink = [...document.querySelectorAll('link[rel="stylesheet"]')]
+        .find(link => (link.href || "").includes("navigation.css") &&
+          (link.href || "").includes("menu-mobile-v3"));
+      return Boolean(styleLink && styleLink.sheet && document.querySelector("#burger"));
+    }, null, { timeout: 10000 });
     await page.locator("#burger").click();
     await page.locator("#navlinks.open").waitFor({ state: "visible", timeout: 8000 });
     const interaction = await page.evaluate(() => {
