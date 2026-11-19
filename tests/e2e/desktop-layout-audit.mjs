@@ -252,7 +252,8 @@ try {
         );
       }
 
-      if (viewport.width >= 901 && viewport.width <= 1199) {
+      if (viewport.width >= 901 && viewport.width <= 1199 &&
+          ["/", "/loja.html"].includes(route.path)) {
         for (const [name, icon] of Object.entries({
           cart: measurements.utilityIcons.cart,
           account: measurements.utilityIcons.account
