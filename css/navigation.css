@@ -408,6 +408,8 @@
   .navlinks .nav-drawer-footer,
   .navlinks .nav-account-submenu,
   .navlinks .nav-store-submenu,
+  .navlinks .nav-store-submenu > summary,
+  .navlinks .nav-store-grid,
   .navlinks .nav-menu-group > .nav-submenu,
   .navlinks .nav-menu-group > .nav-menu-group-toggle,
   .navlinks .nav-menu-group > .nav-menu-group-title {
