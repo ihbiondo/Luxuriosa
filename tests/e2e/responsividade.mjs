@@ -718,19 +718,80 @@ try {
         !interaction.groupsOpen || !interaction.categoryTargetMinHeight) {
       result.unifiedNavigationFailures.push({ route: sample.route, ...interaction });
     }
-    const closeReceivesPointer = await page.evaluate(() => {
+    await page.waitForFunction(() => {
+      const nav = document.querySelector("#navlinks");
+      if (!nav) return false;
+      const rect = nav.getBoundingClientRect();
+      return rect.left >= -1 && Math.abs(rect.right - innerWidth) <= 1;
+    }, null, { timeout: 5000 });
+
+    const closeHitTest = await page.evaluate(() => {
       const close = document.querySelector("#navlinks .nav-drawer-close");
-      if (!close) return false;
+      const nav = document.querySelector("#navlinks");
+      const backdrop = document.querySelector(".nav-drawer-backdrop");
+      if (!close || !nav || !backdrop) return { reachable: false, reason: "elemento ausente" };
+
       const rect = close.getBoundingClientRect();
-      const target = document.elementFromPoint(
-        rect.left + rect.width / 2,
-        rect.top + rect.height / 2
-      );
-      return Boolean(target && (target === close || close.contains(target)));
+      const point = {
+        x: rect.left + rect.width / 2,
+        y: rect.top + rect.height / 2
+      };
+      const target = document.elementFromPoint(point.x, point.y);
+      const describe = function (element) {
+        if (!element) return null;
+        const style = getComputedStyle(element);
+        const box = element.getBoundingClientRect();
+        return {
+          tag: element.tagName,
+          id: element.id,
+          className: typeof element.className === "string" ? element.className : "",
+          ariaLabel: element.getAttribute("aria-label"),
+          text: (element.textContent || "").trim().slice(0, 60),
+          position: style.position,
+          zIndex: style.zIndex,
+          pointerEvents: style.pointerEvents,
+          transform: style.transform,
+          rect: { left: box.left, top: box.top, right: box.right, bottom: box.bottom, width: box.width, height: box.height }
+        };
+      };
+      const chain = function (element) {
+        const result = [];
+        for (let node = element; node && node !== document.documentElement; node = node.parentElement) {
+          const style = getComputedStyle(node);
+          const box = node.getBoundingClientRect();
+          result.push({
+            tag: node.tagName,
+            className: typeof node.className === "string" ? node.className : "",
+            position: style.position,
+            zIndex: style.zIndex,
+            transform: style.transform,
+            filter: style.filter,
+            backdropFilter: style.backdropFilter,
+            opacity: style.opacity,
+            isolation: style.isolation,
+            rect: { left: box.left, top: box.top, right: box.right, bottom: box.bottom }
+          });
+        }
+        return result;
+      };
+
+      return {
+        reachable: Boolean(target && (target === close || close.contains(target))),
+        viewport: { width: innerWidth, height: innerHeight },
+        point,
+        close: describe(close),
+        nav: describe(nav),
+        backdrop: describe(backdrop),
+        hit: describe(target),
+        navAncestors: chain(nav),
+        backdropAncestors: chain(backdrop)
+      };
     });
+    console.log("[mobile-menu-hit-test] " + sample.route + " " + JSON.stringify(closeHitTest));
     assert.ok(
-      closeReceivesPointer,
-      "O botão de fechar do menu está encoberto por outro elemento em " + sample.route
+      closeHitTest.reachable,
+      "O botão de fechar do menu está encoberto por outro elemento em " +
+        sample.route + ": " + JSON.stringify(closeHitTest)
     );
 
     await capture(page, "menu-unificado-" + sample.name + "-390");
