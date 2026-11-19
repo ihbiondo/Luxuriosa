@@ -801,9 +801,8 @@
   }
 
   .burger {
-    width: 38px;
-
-    height: 38px;
+    width: 44px;
+    height: 44px;
   }
 
 
@@ -1371,5 +1370,16 @@
   }
   #modal #mBtn {
     min-height: 46px;
+  }
+}
+
+
+/* Alvos de toque confortáveis nas páginas individuais de produto. */
+@media (max-width: 760px) {
+  .product-detail-page .product-breadcrumb a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 40px;
+    padding: 4px 0;
   }
 }
