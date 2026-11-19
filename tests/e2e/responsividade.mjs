@@ -226,6 +226,12 @@ try {
 
         // Registra alvos de toque reais no celular estreito, sem tratar links inline de texto como botões.
         if (viewport.width === 320) {
+          // Aguarda todas as folhas de estilo (inclusive CSS específico de produto) antes de medir.
+          await page.waitForFunction(() =>
+            [...document.querySelectorAll('link[rel~="stylesheet"]')].every(link => Boolean(link.sheet)),
+            null,
+            { timeout: 10000 }
+          );
           const targets = await page.evaluate(() => {
             const selectors = [
               "button",
@@ -274,6 +280,9 @@ try {
                 controlWidth: Number(controlRect.width.toFixed(1)),
                 controlHeight: Number(controlRect.height.toFixed(1)),
                 measuredViaLabel: Boolean(wrappingLabel),
+                computedDisplay: style.display,
+                computedHeight: style.height,
+                computedMinHeight: style.minHeight,
                 below24: targetRect.width < 24 || targetRect.height < 24,
                 belowComfort40: targetRect.height < 40 || (iconOnly && targetRect.width < 40),
                 iconOnly
