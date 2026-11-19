@@ -134,7 +134,8 @@ try {
       Authorization: `Bearer ${accessToken}`,
       Origin: ORIGIN
     },
-    body: JSON.stringify(body)
+    body: JSON.stringify(body),
+    signal: AbortSignal.timeout(60000)
   });
   const result = await response.json();
   assert.equal(
