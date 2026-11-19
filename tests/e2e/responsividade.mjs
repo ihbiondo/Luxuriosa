@@ -160,6 +160,7 @@ const result = {
   lingerieCards: [],
   catalogViewport320: null,
   modal: null,
+  modalGallery: null,
   pageErrors: [],
   productGalleries: [],
   productGalleryFailures: []
@@ -477,6 +478,32 @@ try {
     };
   });
   result.modal = modalState;
+
+  // As miniaturas do modal estão na tela: exige que todas terminem de carregar antes da captura.
+  await page.waitForFunction(() => {
+    const imagens = [...document.querySelectorAll("#modal .product-gallery-thumb img")];
+    return imagens.length > 1 && imagens.every(img => img.complete && img.naturalWidth > 0);
+  }, null, { timeout: 12000 });
+  const modalThumbs = page.locator("#modal .product-gallery-thumb");
+  const modalThumbCount = await modalThumbs.count();
+  const modalMainImage = page.locator("#modal .product-detail-main-image");
+  const modalSecondThumbSrc = await modalThumbs.nth(1).locator("img").getAttribute("src");
+  await modalThumbs.nth(1).click();
+  result.modalGallery = await page.evaluate(() => {
+    const thumbs = [...document.querySelectorAll("#modal .product-gallery-thumb img")];
+    const selected = document.querySelector("#modal .product-gallery-thumb[aria-pressed='true']");
+    const main = document.querySelector("#modal .product-detail-main-image");
+    return {
+      count: thumbs.length,
+      loaded: thumbs.filter(img => img.complete && img.naturalWidth > 0).length,
+      selectedCount: document.querySelectorAll("#modal .product-gallery-thumb[aria-pressed='true']").length,
+      mainSrc: main?.getAttribute("src") || null,
+      selectedSrc: selected?.querySelector("img")?.getAttribute("src") || null
+    };
+  });
+  result.modalGallery.countMatchesExpected = modalThumbCount === result.modalGallery.count;
+  result.modalGallery.changesMainImage = result.modalGallery.mainSrc === modalSecondThumbSrc &&
+    result.modalGallery.selectedSrc === modalSecondThumbSrc;
   await capture(page, "modal-lingerie-mobile-390");
 
   await openPage(page, "/loja/lingerie/", { name: "mobile-320", width: 320, height: 740 });
@@ -544,7 +571,10 @@ const failed = result.routeFailures.length > 0 ||
   result.catalogImageFailures.length > 0 ||
   result.catalogImageFitFailures.length > 0 ||
   result.catalogCardFrameFailures.length > 0 ||
-  result.productGalleryFailures.length > 0;
+  result.productGalleryFailures.length > 0 ||
+  !result.modalGallery?.countMatchesExpected ||
+  result.modalGallery?.loaded !== result.modalGallery?.count ||
+  !result.modalGallery?.changesMainImage;
 
 console.log(JSON.stringify({
   summary: {
@@ -567,6 +597,9 @@ console.log(JSON.stringify({
     modalHeight: result.modal?.height ?? null,
     productGalleriesChecked: result.productGalleries.length,
     productGalleryFailures: result.productGalleryFailures.length,
+    modalThumbnails: result.modalGallery?.count ?? 0,
+    modalThumbnailsLoaded: result.modalGallery?.loaded ?? 0,
+    modalThumbnailSwitchWorks: result.modalGallery?.changesMainImage ?? false,
     failed
   },
   catalogCards: result.catalogCards,
@@ -581,6 +614,7 @@ console.log(JSON.stringify({
   overflowFailures: result.overflowFailures,
   missingViewportMeta: result.missingViewportMeta,
   modal: result.modal,
+  modalGallery: result.modalGallery,
   pageErrors: result.pageErrors.slice(0, 30)
 }, null, 2));
 
@@ -611,5 +645,8 @@ assert.ok(result.modal.imageFrameWidth <= result.modal.viewportWidth * 0.58 + 2,
 assert.ok(result.modal.imageFrameRatio >= 0.70 && result.modal.imageFrameRatio <= 0.80,
   "A imagem principal do modal não manteve o enquadramento vertical 3:4.");
 assert.equal(result.productGalleryFailures.length, 0, "Uma ou mais páginas individuais não exibem/trocam todas as fotos cadastradas.");
+assert.ok(result.modalGallery && result.modalGallery.count > 1, "O modal não exibiu uma galeria de miniaturas.");
+assert.equal(result.modalGallery.loaded, result.modalGallery.count, "Há miniaturas do modal que não carregaram.");
+assert.ok(result.modalGallery.changesMainImage, "Clicar em uma miniatura do modal não trocou a foto principal.");
 
 console.log("Auditoria responsiva Playwright: PASS.");
