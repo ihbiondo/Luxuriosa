@@ -390,3 +390,73 @@
   }
   .navlinks .nav-menu-group-toggle { display: none !important; }
 }
+
+
+/* =========================================================
+   MENU MOBILE SIMPLIFICADO — LISTA ÚNICA, SEM SUBMENUS
+   ========================================================= */
+@media (max-width: 1199px) {
+  /* No painel mobile, a navegação é uma lista plana. */
+  .navlinks .nav-drawer-account-area {
+    margin: 0;
+    border: 0;
+  }
+  .navlinks .nav-account-submenu,
+  .navlinks .nav-store-submenu,
+  .navlinks .nav-menu-group > .nav-submenu,
+  .navlinks .nav-menu-group > .nav-menu-group-toggle,
+  .navlinks .nav-menu-group > .nav-menu-group-title {
+    display: none !important;
+  }
+  .navlinks .nav-menu-group {
+    display: flex !important;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    gap: 0;
+  }
+  .navlinks .nav-menu-group--help {
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px solid rgba(212, 175, 124, .22);
+  }
+  .navlinks .nav-menu-group--discover {
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px solid rgba(212, 175, 124, .22);
+  }
+  .navlinks .nav-drawer-account-area > .nav-account-primary,
+  .navlinks > .nav-link-shop,
+  .navlinks .nav-menu-group > a {
+    display: flex !important;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 13px;
+    width: 100%;
+    min-height: 50px;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 11px 8px;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    color: #e8dce0;
+    font: 500 14px/1.4 var(--sans);
+    letter-spacing: .01em;
+    text-align: left;
+    text-decoration: none;
+    text-transform: none;
+  }
+  .navlinks .nav-menu-group > a {
+    border-bottom: 0;
+  }
+  .navlinks .nav-drawer-account-area > .nav-account-primary:hover,
+  .navlinks .nav-drawer-account-area > .nav-account-primary:focus-visible,
+  .navlinks > .nav-link-shop:hover,
+  .navlinks > .nav-link-shop:focus-visible,
+  .navlinks .nav-menu-group > a:hover,
+  .navlinks .nav-menu-group > a:focus-visible {
+    background: rgba(212, 175, 124, .045);
+    color: var(--gold);
+  }
+}
