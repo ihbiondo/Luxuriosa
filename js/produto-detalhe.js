@@ -65,8 +65,8 @@
         }
 
         function caminhoFotoProduto(caminho) {
-          if (/^(https?:)?\\//i.test(caminho) || caminho.indexOf("../") === 0) return caminho;
-          return "../" + caminho.replace(/^\\.\\//, "");
+          if (caminho.indexOf("http://") === 0 || caminho.indexOf("https://") === 0 || caminho.charAt(0) === "/" || caminho.indexOf("../") === 0) return caminho;
+          return "../" + (caminho.indexOf("./") === 0 ? caminho.slice(2) : caminho);
         }
 
         if (fotosProduto.length) {
