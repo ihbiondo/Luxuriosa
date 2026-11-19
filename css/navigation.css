@@ -320,16 +320,17 @@
   .navlinks .nav-menu-group-toggle { display: none !important; }
   .navlinks .nav-menu-group > .nav-submenu {
     display: flex !important; flex-direction: column; gap: 0;
-    margin: 0 0 7px 20px; padding: 0 0 0 12px;
-    border: 0; border-left: 1px solid rgba(212, 175, 124, .18); background: transparent;
+    margin: 0 0 7px 37px; padding: 0;
+    border: 0; background: transparent;
   }
   .navlinks .nav-menu-group > .nav-submenu > a {
-    display: flex; align-items: center; min-height: 39px;
-    box-sizing: border-box; margin: 0; padding: 7px 8px;
-    border: 0; border-bottom: 1px solid rgba(212, 175, 124, .055);
-    border-radius: 0; background: transparent; color: #bfaeb4;
-    font: 400 12px/1.35 var(--sans); letter-spacing: .005em;
+    display: flex; align-items: center; min-height: 48px;
+    box-sizing: border-box; margin: 0; padding: 10px 8px;
+    border: 0; border-bottom: 1px solid rgba(212, 175, 124, .09);
+    border-radius: 0; background: transparent; color: #e5d8dc;
+    font: 500 13px/1.4 var(--sans); letter-spacing: .01em;
     text-decoration: none; text-transform: none;
+    transition: color .16s ease, background .16s ease;
   }
   .navlinks .nav-menu-group > .nav-submenu > a:hover,
   .navlinks .nav-menu-group > .nav-submenu > a:focus-visible {
