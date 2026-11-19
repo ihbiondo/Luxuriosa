@@ -579,3 +579,19 @@
     vertical-align: middle;
   }
 }
+
+
+/* Regras de texto e estado antes repetidas nos HTMLs antigos de produto. */
+.product-detail-page .product-detail-description p {
+  margin: 0 0 16px;
+}
+
+.product-detail-page .product-detail-description ul {
+  margin: 0 0 16px;
+  padding-left: 22px;
+}
+
+.product-detail-page .product-status {
+  margin: 12px 0;
+  color: var(--blush);
+}
