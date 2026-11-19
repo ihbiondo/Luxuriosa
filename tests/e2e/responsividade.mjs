@@ -682,7 +682,16 @@ try {
       const styleLink = [...document.querySelectorAll('link[rel="stylesheet"]')]
         .find(link => (link.href || "").includes("navigation.css") &&
           (link.href || "").includes("menu-mobile-v3"));
-      return Boolean(styleLink && styleLink.sheet && document.querySelector("#burger"));
+      const nav = document.querySelector("#navlinks");
+      const backdrop = document.querySelector(".nav-drawer-backdrop");
+      return Boolean(
+        styleLink && styleLink.sheet &&
+        document.querySelector("#burger") &&
+        backdrop &&
+        getComputedStyle(nav).position === "fixed" &&
+        getComputedStyle(backdrop).position === "fixed" &&
+        Number(getComputedStyle(nav).zIndex) > Number(getComputedStyle(backdrop).zIndex)
+      );
     }, null, { timeout: 10000 });
     await page.locator("#burger").click();
     await page.locator("#navlinks.open").waitFor({ state: "visible", timeout: 8000 });
@@ -709,8 +718,24 @@ try {
         !interaction.groupsOpen || !interaction.categoryTargetMinHeight) {
       result.unifiedNavigationFailures.push({ route: sample.route, ...interaction });
     }
+    const closeReceivesPointer = await page.evaluate(() => {
+      const close = document.querySelector("#navlinks .nav-drawer-close");
+      if (!close) return false;
+      const rect = close.getBoundingClientRect();
+      const target = document.elementFromPoint(
+        rect.left + rect.width / 2,
+        rect.top + rect.height / 2
+      );
+      return Boolean(target && (target === close || close.contains(target)));
+    });
+    assert.ok(
+      closeReceivesPointer,
+      "O botão de fechar do menu está encoberto por outro elemento em " + sample.route
+    );
+
     await capture(page, "menu-unificado-" + sample.name + "-390");
     await page.locator("#navlinks .nav-drawer-close").click();
+    await page.locator("#navlinks.open").waitFor({ state: "hidden", timeout: 8000 });
   }
 
   // A página Experiências deve destacar Conexão a dois e Astrologia antes das demais opções.
