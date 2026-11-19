@@ -250,6 +250,8 @@ try {
               burger: Boolean(document.querySelector("#burger")),
               drawer: Boolean(nav && nav.querySelector(".nav-drawer-top")),
               brand: nav?.querySelector(".nav-drawer-title")?.textContent.trim() || "",
+              appScriptVersion: [...document.scripts].find(script =>
+                (script.src || "").includes("/js/app.js"))?.src || "",
               account: Boolean(nav?.querySelector("[data-nav-account]")),
               accountBeforeShop: Boolean(accountArea && shopLink &&
                 (accountArea.compareDocumentPosition(shopLink) & Node.DOCUMENT_POSITION_FOLLOWING)),
@@ -277,6 +279,7 @@ try {
           if (!audit.burger || !audit.drawer || audit.brand !== "LUXURIOSA" ||
               !audit.account || !audit.accountBeforeShop || !audit.store || audit.categoryLinks < 8 ||
               !audit.help || !audit.discover || !audit.groupsVisibleInOneColumn ||
+              !audit.appScriptVersion.includes("menu-mobile-v8") ||
               audit.categoryColumns !== 2) {
             result.unifiedNavigationFailures.push({ route: normalizedRoute, ...audit });
           }
