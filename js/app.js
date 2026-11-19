@@ -92,18 +92,32 @@
   function aplicarMenuUnificado() {
     var header = document.querySelector("header");
     var menu = header && header.querySelector(".navlinks");
-    if (!header || !menu) return;
+    if (!header || !menu) return Promise.resolve();
 
     var cssHref = "/css/navigation.css?v=20261119-menu-mobile-v3";
     var cssLink = document.querySelector('link[rel="stylesheet"][href*="navigation.css"]');
-    if (cssLink) {
-      cssLink.href = cssHref;
-    } else {
-      cssLink = document.createElement("link");
-      cssLink.rel = "stylesheet";
-      cssLink.href = cssHref;
-      document.head.appendChild(cssLink);
-    }
+    var cssTarget = new URL(cssHref, window.location.href).href;
+    var cssReady = new Promise(function (resolve, reject) {
+      if (cssLink && cssLink.href === cssTarget && cssLink.sheet) {
+        resolve();
+        return;
+      }
+
+      if (!cssLink) {
+        cssLink = document.createElement("link");
+        cssLink.rel = "stylesheet";
+      }
+
+      cssLink.addEventListener("load", resolve, { once: true });
+      cssLink.addEventListener("error", function () {
+        reject(new Error("Falha ao carregar css/navigation.css."));
+      }, { once: true });
+
+      if (cssLink.href !== cssTarget || !cssLink.sheet) {
+        cssLink.href = cssHref;
+      }
+      if (!cssLink.isConnected) document.head.appendChild(cssLink);
+    });
 
     var caminho = window.location.pathname || "/";
     var produto = caminho.indexOf("/produtos/") === 0;
@@ -232,6 +246,9 @@
     burger.setAttribute("aria-label", "Abrir menu");
     burger.setAttribute("aria-expanded", "false");
     burger.setAttribute("aria-controls", "navlinks");
+    burger.disabled = true;
+
+    return cssReady;
   }
 
   /* =======================================================
@@ -242,6 +259,7 @@
     var botao = $("burger");
     var menu = $("navlinks");
     if (!botao || !menu) return;
+    botao.disabled = false;
 
     var header = botao.closest("header");
     var closeButton = menu.querySelector(".nav-drawer-close");
@@ -319,7 +337,8 @@
     backdrop.className = "nav-drawer-backdrop";
     backdrop.setAttribute("aria-label", "Fechar menu");
     backdrop.tabIndex = -1;
-    header.appendChild(backdrop);
+    /* O fundo e o painel precisam compartilhar o mesmo contexto de empilhamento. */
+    (menu.parentElement || header).appendChild(backdrop);
 
     var mobileQuery = window.matchMedia("(max-width: 1199px)");
 
@@ -779,14 +798,19 @@
 
   function iniciar() {
 
-    aplicarMenuUnificado();
+    var menuStyleReady = aplicarMenuUnificado();
     configurarAcessibilidade();
     configurarWhatsApp();
-
-    configurarMenu();
     configurarNavegacaoDaConta();
     configurarAno();
     configurarScroll();
+
+    Promise.resolve(menuStyleReady).then(function () {
+      configurarMenu();
+    }).catch(function (erro) {
+      console.error("Luxuriosa: não foi possível carregar o CSS da navegação.", erro);
+      configurarMenu();
+    });
 }
 
 
