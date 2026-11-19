@@ -94,7 +94,7 @@
     var menu = header && header.querySelector(".navlinks");
     if (!header || !menu) return Promise.resolve();
 
-    var cssHref = "/css/navigation.css?v=20261119-menu-mobile-v5";
+    var cssHref = "/css/navigation.css?v=20261119-menu-mobile-v6";
     var cssLink = document.querySelector('link[rel="stylesheet"][href*="navigation.css"]');
     var cssTarget = new URL(cssHref, window.location.href).href;
     var cssReady = new Promise(function (resolve, reject) {
