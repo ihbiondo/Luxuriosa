@@ -695,6 +695,12 @@ try {
     }, null, { timeout: 10000 });
     await page.locator("#burger").click();
     await page.locator("#navlinks.open").waitFor({ state: "visible", timeout: 8000 });
+    await page.waitForFunction(() => {
+      const nav = document.querySelector("#navlinks");
+      if (!nav) return false;
+      const rect = nav.getBoundingClientRect();
+      return rect.left >= -1 && Math.abs(rect.right - innerWidth) <= 1;
+    }, null, { timeout: 5000 });
     const interaction = await page.evaluate(() => {
       const nav = document.querySelector("#navlinks");
       const rect = nav?.getBoundingClientRect();
@@ -718,13 +724,6 @@ try {
         !interaction.groupsOpen || !interaction.categoryTargetMinHeight) {
       result.unifiedNavigationFailures.push({ route: sample.route, ...interaction });
     }
-    await page.waitForFunction(() => {
-      const nav = document.querySelector("#navlinks");
-      if (!nav) return false;
-      const rect = nav.getBoundingClientRect();
-      return rect.left >= -1 && Math.abs(rect.right - innerWidth) <= 1;
-    }, null, { timeout: 5000 });
-
     const closeHitTest = await page.evaluate(() => {
       const close = document.querySelector("#navlinks .nav-drawer-close");
       const nav = document.querySelector("#navlinks");
@@ -787,7 +786,6 @@ try {
         backdropAncestors: chain(backdrop)
       };
     });
-    console.log("[mobile-menu-hit-test] " + sample.route + " " + JSON.stringify(closeHitTest));
     assert.ok(
       closeHitTest.reachable,
       "O botão de fechar do menu está encoberto por outro elemento em " +
