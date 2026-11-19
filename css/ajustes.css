@@ -846,6 +846,7 @@ body.customer-open { overflow: hidden; }
 .shop-page #catalogo .section-head > div {
   min-width: 0;
 }
+.shop-page #catalogo .section-head h1,
 .shop-page #catalogo .section-head h2 {
   margin-top: 8px;
 }
@@ -882,7 +883,8 @@ body.customer-open { overflow: hidden; }
     display: block;
     margin-bottom: 16px;
   }
-  .shop-page #catalogo .section-head h2 {
+  .shop-page #catalogo .section-head h1,
+.shop-page #catalogo .section-head h2 {
     margin: 7px 0 8px;
     font-size: clamp(27px, 7.5vw, 32px);
     line-height: 1.15;
