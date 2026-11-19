@@ -127,6 +127,27 @@
 
 /* Notebooks e tablets: mesmo menu recolhido por botão burger. */
 @media (min-width: 901px) and (max-width: 1199px) {
+  header .cart-icon,
+  header .account-trigger-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    line-height: 1;
+  }
+
+  header .cart-icon svg,
+  header .account-trigger-icon svg {
+    display: block;
+    width: 17px;
+    height: 17px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.65;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
   header .nav {
     position: relative;
   }
@@ -384,6 +405,10 @@
 
 /* A navegação desktop preserva o visual horizontal original. */
 @media (min-width: 1200px) {
+  /* Os ícones de apoio pertencem apenas à navegação recolhida; no desktop
+     preservamos a barra horizontal original com links somente em texto. */
+  .navlinks .nav-link-icon { display: none !important; }
+
   .nav-submenu { display: none; }
   .navlinks > .nav-link-shop,
   .navlinks > .nav-link-shop:hover {
