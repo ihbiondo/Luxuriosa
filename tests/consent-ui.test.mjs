@@ -12,6 +12,8 @@ test("mantém confirmação 18+ e preferências de cookies", () => {
   assert.match(consent, /function createConsentPanel/);
   assert.match(consent, /function addPreferencesLink/);
   assert.match(consent, /function saveConsent/);
+  assert.match(consent, /function clearOptionalAnalytics/);
+  assert.match(consent, /if \(!consent\.analytics\) clearOptionalAnalytics\(\)/);
 });
 
 test("não agenda convites em tela cheia para Clube ou autorizações", () => {
