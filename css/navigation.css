@@ -357,9 +357,6 @@
     background: transparent; color: #cbbbc1;
     font: 400 13.5px/1.4 var(--sans); text-decoration: none; text-transform: none;
   }
-  .navlinks .nav-menu-group:not(.is-open) > a,
-  .navlinks .nav-menu-group:not(.is-open) > .nav-submenu { display: none !important; }
-
   .nav-drawer-footer {
     display: block; margin-top: 17px; padding: 14px 0 2px;
     border-top: 1px solid rgba(212, 175, 124, .18);

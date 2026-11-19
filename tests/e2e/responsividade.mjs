@@ -272,7 +272,7 @@ try {
                 (script.src || "").includes("/js/app.js"))?.src || "",
               navigationCssVersion: [...document.querySelectorAll('link[rel="stylesheet"]')]
                 .find(link => (link.href || "").includes("navigation.css"))?.href || "",
-              visibleLinks: links.map(link => link.textContent.replace(/\\s+/g, " ").trim()),
+              visibleLinks: links.map(link => link.textContent.trim()),
               expectedLinks: ["Minha conta", "Loja", "Atendimento", "Entregas",
                 "Dúvidas frequentes", "Educação", "Experiências"],
               accountBeforeShop: Boolean(account && shop &&
@@ -698,7 +698,7 @@ try {
       const links = [...(nav?.querySelectorAll("a") || [])].filter(link =>
         getComputedStyle(link).display !== "none" && link.getClientRects().length
       );
-      const visibleLinks = links.map(link => link.textContent.replace(/\\s+/g, " ").trim());
+      const visibleLinks = links.map(link => link.textContent.trim());
       const hiddenSubmenus = [...(nav?.querySelectorAll(
         ".nav-account-submenu, .nav-store-submenu, .nav-menu-group > .nav-submenu"
       ) || [])].every(item => getComputedStyle(item).display === "none");
