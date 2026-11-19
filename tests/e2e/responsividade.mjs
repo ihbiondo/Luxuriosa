@@ -528,7 +528,7 @@ try {
 
   // Fechar e reabrir o drawer restaura as listas visíveis por padrão.
   await page.locator("#navlinks .nav-drawer-close").click();
-  await page.locator("#navlinks.open").waitFor({ state: "detached", timeout: 1000 }).catch(() => {});
+  await page.locator("#navlinks").waitFor({ state: "hidden", timeout: 8000 });
   await page.locator("#burger").click();
   await page.locator("#navlinks.open").waitFor({ state: "visible", timeout: 8000 });
   result.mobileMenu.initialListsRestoreAfterReopen = await page.evaluate(() => {
