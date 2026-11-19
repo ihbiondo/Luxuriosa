@@ -151,6 +151,10 @@ const result = {
   viewportNames: VIEWPORTS.map(item => item.name),
   routeFailures: [],
   overflowFailures: [],
+  publicMobileViewportResults: [],
+  publicMobileViewportFailures: [],
+  homeFeaturedImages: [],
+  homeFeaturedImageFailures: [],
   missingViewportMeta: [],
   coreViewportResults: [],
   catalogCards: [],
@@ -197,6 +201,77 @@ try {
       result.routeFailures.push({ route, error: error.message.slice(0, 260) });
     }
   }
+
+  // Expande a cobertura mobile para TODAS as rotas públicas em 320 px e 390 px.
+  // Isso encontra quebras em páginas editoriais, cidades, educação e conteúdo que não está no grupo central.
+  const allPublicMobileViewports = [
+    { name: "mobile-320", width: 320, height: 740 },
+    { name: "mobile-390", width: 390, height: 844 }
+  ];
+  for (const route of routes) {
+    for (const viewport of allPublicMobileViewports) {
+      try {
+        const response = await openPage(page, route, viewport);
+        const item = {
+          route,
+          viewport: viewport.name,
+          status: response?.status() ?? null,
+          ...(await inspectLayout(page, route, viewport))
+        };
+        result.publicMobileViewportResults.push(item);
+        if ((item.status !== null && item.status >= 400) ||
+            item.horizontalOverflow || !item.hasViewportMeta) {
+          result.publicMobileViewportFailures.push(item);
+        }
+      } catch (error) {
+        const item = { route, viewport: viewport.name, error: error.message.slice(0, 240) };
+        result.publicMobileViewportResults.push(item);
+        result.publicMobileViewportFailures.push(item);
+      }
+    }
+  }
+
+  // Verifica os quatro kits em destaque da home após forçar o carregamento lazy real.
+  await openPage(page, "/", { name: "mobile-390", width: 390, height: 844 });
+  const homeKitImages = page.locator("#destaques-grid .home-kit-static-media img");
+  const homeKitCount = await homeKitImages.count();
+  if (homeKitCount !== 4) {
+    result.homeFeaturedImageFailures.push({
+      expected: 4,
+      actual: homeKitCount,
+      reason: "Quantidade inesperada de imagens nos kits em destaque."
+    });
+  }
+  for (let index = 0; index < homeKitCount; index++) {
+    const image = homeKitImages.nth(index);
+    await image.scrollIntoViewIfNeeded();
+    await page.waitForFunction(
+      currentIndex => {
+        const current = document.querySelectorAll("#destaques-grid .home-kit-static-media img")[currentIndex];
+        return Boolean(current && current.complete);
+      },
+      index,
+      { timeout: 10000 }
+    );
+    await image.evaluate(async current => {
+      if (current.complete && current.naturalWidth > 0 && current.decode) {
+        await current.decode().catch(() => {});
+      }
+    });
+  }
+  result.homeFeaturedImages = await homeKitImages.evaluateAll(images =>
+    images.map(image => ({
+      alt: image.alt,
+      src: image.getAttribute("src"),
+      loaded: image.complete && image.naturalWidth > 0,
+      naturalWidth: image.naturalWidth,
+      naturalHeight: image.naturalHeight
+    }))
+  );
+  result.homeFeaturedImageFailures.push(
+    ...result.homeFeaturedImages.filter(image => !image.loaded)
+  );
+  await capture(page, "home-kits-mobile-390");
 
   // Cobertura detalhada nas páginas e jornadas centrais, do celular ao desktop.
   const coreRoutes = [...new Set(CORE_ROUTES)];
@@ -688,6 +763,10 @@ console.log(JSON.stringify({
     coreViewportChecks: result.coreViewportResults.length,
     routeFailures: result.routeFailures.length,
     horizontalOverflowFailures: result.overflowFailures.length,
+    publicMobileViewportChecks: result.publicMobileViewportResults.length,
+    publicMobileViewportFailures: result.publicMobileViewportFailures.length,
+    homeFeaturedImages: result.homeFeaturedImages.length,
+    homeFeaturedImageFailures: result.homeFeaturedImageFailures.length,
     missingViewportMeta: result.missingViewportMeta.length,
     catalogCards: result.catalogCards.length,
     missingCatalogImages: result.catalogImageFailures.length,
@@ -719,6 +798,10 @@ console.log(JSON.stringify({
   deliveryTable320: result.deliveryTable320,
   routeFailures: result.routeFailures,
   overflowFailures: result.overflowFailures,
+  publicMobileViewportResults: result.publicMobileViewportResults,
+  publicMobileViewportFailures: result.publicMobileViewportFailures,
+  homeFeaturedImages: result.homeFeaturedImages,
+  homeFeaturedImageFailures: result.homeFeaturedImageFailures,
   missingViewportMeta: result.missingViewportMeta,
   pageErrors: result.pageErrors.slice(0, 30)
 }, null, 2));
@@ -730,6 +813,12 @@ if (REPORT_PATH) {
 
 assert.equal(result.routeFailures.length, 0, "Uma ou mais rotas públicas falharam.");
 assert.equal(result.overflowFailures.length, 0, "Foram encontrados casos de rolagem horizontal.");
+assert.equal(result.publicMobileViewportFailures.length, 0,
+  "Foram encontradas falhas nas rotas públicas em 320/390 px: " +
+  JSON.stringify(result.publicMobileViewportFailures.slice(0, 20)));
+assert.equal(result.homeFeaturedImageFailures.length, 0,
+  "Uma ou mais imagens dos kits em destaque da home não carregaram: " +
+  JSON.stringify(result.homeFeaturedImageFailures));
 assert.equal(result.catalogCards.length, expectedCatalogCards, "A auditoria deve conferir todos os cards do catálogo.");
 assert.equal(result.catalogImageFailures.length, 0, "Uma ou mais imagens do catálogo geral não carregaram.");
 assert.equal(result.catalogImageFitFailures.length, 0, "Há imagens do catálogo geral sem object-fit: cover.");

@@ -133,3 +133,36 @@
 .sign-journey-actions a:hover{border-color:#e3449d;background:#fff0f7}
 .sign-journey-portal{min-height:40px;display:inline-flex;align-items:center;margin-top:7px;color:#756a7d;font-size:10px;text-decoration:underline;text-underline-offset:3px}
 @media(max-width:700px){.sign-journey{padding:17px}.sign-journey>p{font-size:14px}.sign-journey-actions{display:grid}.sign-journey-actions a{min-height:46px;font-size:12px}}
+
+/* Evita que nomes longos dos signos expandam a grade em celulares estreitos. */
+@media (max-width: 360px) {
+  .sign-detail-hero {
+    grid-template-columns: minmax(0, 86px) minmax(0, 1fr);
+    gap: 12px;
+  }
+
+  .sign-detail-hero > div:not(.sign-detail-symbol) {
+    min-width: 0;
+  }
+
+  .sign-detail-hero h1 {
+    max-width: 100%;
+    font-size: clamp(29px, 9vw, 34px);
+    line-height: 1.08;
+  }
+
+  .sign-detail-intro {
+    min-width: 0;
+    width: 100%;
+  }
+
+  .sign-detail-meta {
+    min-width: 0;
+  }
+
+  .sign-detail-meta span {
+    min-width: 0;
+    max-width: 100%;
+    white-space: normal;
+  }
+}
