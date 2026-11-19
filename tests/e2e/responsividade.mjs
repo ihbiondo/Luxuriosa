@@ -227,7 +227,7 @@ try {
         };
         result.publicMobileViewportResults.push(item);
 
-        // Confirma que as 47 páginas individuais e as vitrines/serviços usam o menu público único.
+        // Confirma que todas as páginas representativas usam o menu mobile simplificado.
         const normalizedRoute = route.startsWith("/") ? route : "/" + route;
         const usesSharedNavigation = normalizedRoute.startsWith("/produtos/") ||
           ["/loja/lingerie/", "/loja/lingerie/index.html", "/atendimento.html", "/entregas/"].includes(normalizedRoute);
@@ -236,51 +236,69 @@ try {
             const nav = document.querySelector("#navlinks");
             const styleLink = [...document.querySelectorAll('link[rel="stylesheet"]')]
               .find(link => (link.href || "").includes("navigation.css") &&
-                (link.href || "").includes("menu-mobile-v8"));
+                (link.href || "").includes("menu-mobile-v9"));
+            const appScript = [...document.scripts].find(script =>
+              (script.src || "").includes("/js/app.js") &&
+              (script.src || "").includes("menu-mobile-v9"));
             return Boolean(nav && nav.querySelector(".nav-drawer-close") &&
-              nav.querySelector(".nav-menu-group-toggle") && styleLink && styleLink.sheet);
+              styleLink && styleLink.sheet && appScript);
           }, null, { timeout: 10000 });
+
           const audit = await page.evaluate(() => {
             const nav = document.querySelector("#navlinks");
-            const groups = [...(nav?.querySelectorAll(".nav-menu-group") || [])];
-            const categories = nav?.querySelector(".nav-store-grid");
-            const accountArea = nav?.querySelector(".nav-drawer-account-area");
-            const shopLink = nav?.querySelector(".nav-link-shop");
+            const account = nav?.querySelector(".nav-drawer-account-area > .nav-account-primary");
+            const shop = nav?.querySelector(":scope > .nav-link-shop");
+            const help = nav?.querySelector(".nav-menu-group--help");
+            const discover = nav?.querySelector(".nav-menu-group--discover");
+            const links = [...(nav?.querySelectorAll("a") || [])].filter(link =>
+              getComputedStyle(link).display !== "none" && link.getClientRects().length
+            );
+            const heights = links.map(link => Math.round(link.getBoundingClientRect().height));
+            const fontSizes = links.map(link => getComputedStyle(link).fontSize);
+            const fontWeights = links.map(link => getComputedStyle(link).fontWeight);
+            const hiddenSubmenus = [...(nav?.querySelectorAll(
+              ".nav-account-submenu, .nav-store-submenu, .nav-menu-group > .nav-submenu"
+            ) || [])].every(item => getComputedStyle(item).display === "none");
+            const visibleToggles = [...(nav?.querySelectorAll(
+              ".nav-menu-group-toggle, .nav-store-submenu > summary"
+            ) || [])].some(item => getComputedStyle(item).display !== "none");
+            const categoryGrid = nav?.querySelector(".nav-store-grid");
             return {
               burger: Boolean(document.querySelector("#burger")),
-              drawer: Boolean(nav && nav.querySelector(".nav-drawer-top")),
+              drawer: Boolean(nav && nav.querySelector(".nav-drawer-top") &&
+                nav.querySelector(".nav-drawer-close")),
               brand: nav?.querySelector(".nav-drawer-title")?.textContent.trim() || "",
               appScriptVersion: [...document.scripts].find(script =>
                 (script.src || "").includes("/js/app.js"))?.src || "",
-              account: Boolean(nav?.querySelector("[data-nav-account]")),
-              accountBeforeShop: Boolean(accountArea && shopLink &&
-                (accountArea.compareDocumentPosition(shopLink) & Node.DOCUMENT_POSITION_FOLLOWING)),
-              store: Boolean(categories),
-              categoryLinks: nav?.querySelectorAll(".nav-store-grid > a").length || 0,
-              categoryColumns: categories ?
-                getComputedStyle(categories).gridTemplateColumns.split(" ").filter(Boolean).length : 0,
-              help: Boolean(nav?.querySelector(".nav-menu-group--help")),
-              discover: Boolean(nav?.querySelector(".nav-menu-group--discover")),
-              groupsVisibleInOneColumn: groups.length === 2 && groups.every(group => {
-                const toggle = group.querySelector(":scope > .nav-menu-group-toggle");
-                const entries = [...group.querySelectorAll(":scope > a, :scope > .nav-submenu")];
-                const submenus = [...group.querySelectorAll(":scope > .nav-submenu")];
-                return Boolean(toggle && toggle.getAttribute("aria-expanded") === "true" &&
-                  group.classList.contains("is-open")) &&
-                  entries.length > 0 &&
-                  entries.every(item => getComputedStyle(item).display !== "none") &&
-                  submenus.every(item => getComputedStyle(item).display === "flex" &&
-                    getComputedStyle(item).flexDirection === "column");
-              })
+              navigationCssVersion: [...document.querySelectorAll('link[rel="stylesheet"]')]
+                .find(link => (link.href || "").includes("navigation.css"))?.href || "",
+              visibleLinks: links.map(link => link.textContent.replace(/\\s+/g, " ").trim()),
+              expectedLinks: ["Minha conta", "Loja", "Atendimento", "Entregas",
+                "Dúvidas frequentes", "Educação", "Experiências"],
+              accountBeforeShop: Boolean(account && shop &&
+                (account.closest(".nav-drawer-account-area").compareDocumentPosition(shop) &
+                  Node.DOCUMENT_POSITION_FOLLOWING)),
+              hiddenSubmenus,
+              visibleToggles,
+              categoryGridVisible: Boolean(categoryGrid && getComputedStyle(categoryGrid).display !== "none"),
+              firstDivider: help ? getComputedStyle(help).borderTopStyle : "none",
+              secondDivider: discover ? getComputedStyle(discover).borderTopStyle : "none",
+              uniformHeights: heights.length === 7 && heights.every(value => value === heights[0]),
+              uniformTypography: fontSizes.length === 7 &&
+                fontSizes.every(value => value === "14px") &&
+                fontWeights.every(value => value === "500")
             };
           });
           item.unifiedNavigation = audit;
           result.unifiedNavigationChecks.push({ route: normalizedRoute, ...audit });
-          if (!audit.burger || !audit.drawer || audit.brand !== "LUXURIOSA" ||
-              !audit.account || !audit.accountBeforeShop || !audit.store || audit.categoryLinks < 8 ||
-              !audit.help || !audit.discover || !audit.groupsVisibleInOneColumn ||
-              !audit.appScriptVersion.includes("menu-mobile-v8") ||
-              audit.categoryColumns !== 2) {
+          if (!audit.burger || !audit.drawer || !audit.brand ||
+              !audit.appScriptVersion.includes("menu-mobile-v9") ||
+              !audit.navigationCssVersion.includes("menu-mobile-v9") ||
+              audit.visibleLinks.join("|") !== audit.expectedLinks.join("|") ||
+              !audit.accountBeforeShop || !audit.hiddenSubmenus || audit.visibleToggles ||
+              audit.categoryGridVisible || audit.firstDivider !== "solid" ||
+              audit.secondDivider !== "solid" || !audit.uniformHeights ||
+              !audit.uniformTypography) {
             result.unifiedNavigationFailures.push({ route: normalizedRoute, ...audit });
           }
         }
@@ -639,7 +657,7 @@ try {
     result.mobileMenu.uniformTypography;
   await capture(page, "menu-mobile-simplificado-390");
 
-  // Confere a abertura do mesmo painel em páginas que antes tinham cabeçalhos simplificados.
+  // Confere abertura, dimensões, rolagem, conteúdo e fechamento do menu em páginas representativas.
   const unifiedMenuSamples = [
     { route: "/produtos/1-dado-do-prazer-gay.html", name: "produto-detalhe" },
     { route: "/produtos/31-body-sensual-rendado-frente-unica.html", name: "produto-lingerie" },
@@ -652,18 +670,19 @@ try {
     await page.waitForFunction(() => {
       const styleLink = [...document.querySelectorAll('link[rel="stylesheet"]')]
         .find(link => (link.href || "").includes("navigation.css") &&
-          (link.href || "").includes("menu-mobile-v8"));
+          (link.href || "").includes("menu-mobile-v9"));
       const nav = document.querySelector("#navlinks");
       const backdrop = document.querySelector(".nav-drawer-backdrop");
       return Boolean(
         styleLink && styleLink.sheet &&
         document.querySelector("#burger") &&
-        backdrop &&
+        nav && backdrop &&
         getComputedStyle(nav).position === "fixed" &&
         getComputedStyle(backdrop).position === "fixed" &&
         Number(getComputedStyle(nav).zIndex) > Number(getComputedStyle(backdrop).zIndex)
       );
     }, null, { timeout: 10000 });
+
     await page.locator("#burger").click();
     await page.locator("#navlinks.open").waitFor({ state: "visible", timeout: 8000 });
     await page.waitForFunction(() => {
@@ -672,105 +691,57 @@ try {
       const rect = nav.getBoundingClientRect();
       return rect.left >= -1 && Math.abs(rect.right - innerWidth) <= 1;
     }, null, { timeout: 5000 });
+
     const interaction = await page.evaluate(() => {
       const nav = document.querySelector("#navlinks");
       const rect = nav?.getBoundingClientRect();
-      const categoryDetails = nav?.querySelector(".nav-store-submenu");
-      const categories = nav?.querySelector(".nav-store-grid");
-      const submenus = [...(nav?.querySelectorAll(".nav-menu-group > .nav-submenu") || [])];
+      const links = [...(nav?.querySelectorAll("a") || [])].filter(link =>
+        getComputedStyle(link).display !== "none" && link.getClientRects().length
+      );
+      const visibleLinks = links.map(link => link.textContent.replace(/\\s+/g, " ").trim());
+      const hiddenSubmenus = [...(nav?.querySelectorAll(
+        ".nav-account-submenu, .nav-store-submenu, .nav-menu-group > .nav-submenu"
+      ) || [])].every(item => getComputedStyle(item).display === "none");
+      const visibleToggles = [...(nav?.querySelectorAll(
+        ".nav-menu-group-toggle, .nav-store-submenu > summary"
+      ) || [])].some(item => getComputedStyle(item).display !== "none");
+      const categoryGrid = nav?.querySelector(".nav-store-grid");
       return {
         open: nav?.classList.contains("open") || false,
         widthWithinViewport: Boolean(rect && rect.left >= -1 && rect.right <= innerWidth + 1),
         heightWithinViewport: Boolean(rect && rect.height <= innerHeight + 1),
         internalScroll: Boolean(nav && ["auto", "scroll"].includes(getComputedStyle(nav).overflowY)),
         backgroundLocked: document.body.classList.contains("mobile-menu-open"),
-        categoriesOpen: categoryDetails?.open || false,
-        categoryColumns: categories ?
-          getComputedStyle(categories).gridTemplateColumns.split(" ").filter(Boolean).length : 0,
-        sectionsSingleColumn: submenus.length > 0 && submenus.every(item =>
-          getComputedStyle(item).display === "flex" &&
-          getComputedStyle(item).flexDirection === "column" &&
-          [...item.querySelectorAll(":scope > a")].every(link => getComputedStyle(link).display !== "none")),
-        categoryTargetMinHeight: [...(nav?.querySelectorAll(".nav-store-grid > a") || [])]
-          .every(link => link.getBoundingClientRect().height >= 40)
+        visibleLinks,
+        approvedLinksOnly: visibleLinks.join("|") === [
+          "Minha conta", "Loja", "Atendimento", "Entregas",
+          "Dúvidas frequentes", "Educação", "Experiências"
+        ].join("|"),
+        hiddenSubmenus,
+        visibleToggles,
+        categoryGridHidden: !categoryGrid || getComputedStyle(categoryGrid).display === "none",
+        closeButtonPresent: Boolean(nav?.querySelector(".nav-drawer-close"))
       };
     });
     result.unifiedNavigationInteractions.push({ route: sample.route, ...interaction });
     if (!interaction.open || !interaction.widthWithinViewport || !interaction.heightWithinViewport ||
-        !interaction.internalScroll || !interaction.backgroundLocked || !interaction.categoriesOpen ||
-        interaction.categoryColumns !== 2 || !interaction.sectionsSingleColumn ||
-        !interaction.categoryTargetMinHeight) {
+        !interaction.internalScroll || !interaction.backgroundLocked || !interaction.approvedLinksOnly ||
+        !interaction.hiddenSubmenus || interaction.visibleToggles ||
+        !interaction.categoryGridHidden || !interaction.closeButtonPresent) {
       result.unifiedNavigationFailures.push({ route: sample.route, ...interaction });
     }
+
     const closeHitTest = await page.evaluate(() => {
       const close = document.querySelector("#navlinks .nav-drawer-close");
-      const nav = document.querySelector("#navlinks");
-      const backdrop = document.querySelector(".nav-drawer-backdrop");
-      if (!close || !nav || !backdrop) return { reachable: false, reason: "elemento ausente" };
-
+      if (!close) return { reachable: false, reason: "botão de fechar ausente" };
       const rect = close.getBoundingClientRect();
-      const point = {
-        x: rect.left + rect.width / 2,
-        y: rect.top + rect.height / 2
-      };
-      const target = document.elementFromPoint(point.x, point.y);
-      const describe = function (element) {
-        if (!element) return null;
-        const style = getComputedStyle(element);
-        const box = element.getBoundingClientRect();
-        return {
-          tag: element.tagName,
-          id: element.id,
-          className: typeof element.className === "string" ? element.className : "",
-          ariaLabel: element.getAttribute("aria-label"),
-          text: (element.textContent || "").trim().slice(0, 60),
-          position: style.position,
-          zIndex: style.zIndex,
-          pointerEvents: style.pointerEvents,
-          transform: style.transform,
-          rect: { left: box.left, top: box.top, right: box.right, bottom: box.bottom, width: box.width, height: box.height }
-        };
-      };
-      const chain = function (element) {
-        const result = [];
-        for (let node = element; node && node !== document.documentElement; node = node.parentElement) {
-          const style = getComputedStyle(node);
-          const box = node.getBoundingClientRect();
-          result.push({
-            tag: node.tagName,
-            className: typeof node.className === "string" ? node.className : "",
-            position: style.position,
-            zIndex: style.zIndex,
-            transform: style.transform,
-            filter: style.filter,
-            backdropFilter: style.backdropFilter,
-            opacity: style.opacity,
-            isolation: style.isolation,
-            rect: { left: box.left, top: box.top, right: box.right, bottom: box.bottom }
-          });
-        }
-        return result;
-      };
-
-      return {
-        reachable: Boolean(target && (target === close || close.contains(target))),
-        viewport: { width: innerWidth, height: innerHeight },
-        point,
-        close: describe(close),
-        nav: describe(nav),
-        backdrop: describe(backdrop),
-        hit: describe(target),
-        navAncestors: chain(nav),
-        backdropAncestors: chain(backdrop)
-      };
+      const target = document.elementFromPoint(rect.left + rect.width / 2, rect.top + rect.height / 2);
+      return { reachable: Boolean(target && (target === close || close.contains(target))) };
     });
-    assert.ok(
-      closeHitTest.reachable,
-      "O botão de fechar do menu está encoberto por outro elemento em " +
-        sample.route + ": " + JSON.stringify(closeHitTest)
-    );
+    assert.ok(closeHitTest.reachable,
+      "O botão de fechar do menu está encoberto em " + sample.route + ": " + JSON.stringify(closeHitTest));
 
-    await capture(page, "menu-unificado-" + sample.name + "-390");
+    await capture(page, "menu-mobile-" + sample.name + "-390");
     await page.locator("#navlinks .nav-drawer-close").click();
     await page.locator("#navlinks.open").waitFor({ state: "hidden", timeout: 8000 });
   }
@@ -1102,8 +1073,6 @@ console.log(JSON.stringify({
     lingerieCropWarnings: (result.lingerieCropWarnings || []).length,
     mobileMenuAccountAligned: result.mobileMenu?.accountRowAligned ?? false,
     mobileMenuNavigationHierarchyCorrect: result.mobileMenu?.navigationHierarchyCorrect ?? false,
-    mobileMenuCategoryDisclosureWorks: result.mobileMenu?.categoryDisclosureWorks ?? false,
-    mobileMenuInitialListsRestoreAfterReopen: result.mobileMenu?.initialListsRestoreAfterReopen ?? false,
     experiencesPresentationOrder: result.experiencesPresentationOrder,
     productPagesChecked: result.productGalleries.length,
     productGalleryFailures: result.productGalleryFailures.length,
