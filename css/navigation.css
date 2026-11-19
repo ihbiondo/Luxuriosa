@@ -1123,6 +1123,12 @@
     display: grid;
   }
 
+  /* A regra visual de links vem antes no cascade; este estado precisa prevalecer. */
+  .navlinks .nav-menu-group:not(.is-open) > a,
+  .navlinks .nav-menu-group:not(.is-open) > .nav-submenu {
+    display: none;
+  }
+
   .navlinks .nav-menu-group > .nav-submenu > a {
     display: flex;
     align-items: center;
