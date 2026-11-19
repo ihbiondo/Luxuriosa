@@ -94,8 +94,6 @@ try {
   user = await createTestUser();
   const accessToken = await signIn(user.email);
   const sessionKey = crypto.randomUUID();
-  const orderNsu = null;
-
   const body = {
     session_key: sessionKey,
     customer: {
