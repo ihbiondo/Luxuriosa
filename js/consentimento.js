@@ -6,6 +6,33 @@
   var GA_ID = "G-YHDETK6FPS";
   var consent = null;
   var gaLoaded = false;
+  function clearOptionalAnalytics() {
+    var names = document.cookie.split(";").map(function (part) {
+      return part.split("=")[0].trim();
+    }).filter(function (name) {
+      return /^(_ga|_gid|_gat|_gac|_gcl)/i.test(name);
+    });
+    var domains = ["", location.hostname, ".luxuriosa.com.br"];
+    var expired = "expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/; SameSite=Lax";
+    names.forEach(function (name) {
+      domains.forEach(function (domain) {
+        document.cookie = name + "=; " + expired + (domain ? "; domain=" + domain : "");
+      });
+    });
+    try {
+      var keys = [];
+      for (var i = 0; i < localStorage.length; i += 1) {
+        var key = localStorage.key(i);
+        if (key && (/^(_ga|_gid|_gat|_gac|_gcl)/i.test(key) || key === "luxuriosa_traffic_context_v1")) keys.push(key);
+      }
+      keys.forEach(function (key) { localStorage.removeItem(key); });
+    } catch (_) {}
+    var script = document.querySelector('script[src*="googletagmanager.com/gtag/js"]');
+    if (script) script.remove();
+    gaLoaded = false;
+    try { delete window.gtag; } catch (_) { window.gtag = undefined; }
+    window.dataLayer = [];
+  }
   function readConsent() {
     try {
       var value = JSON.parse(localStorage.getItem(CONSENT_KEY) || "null");
