@@ -236,33 +236,41 @@ try {
             const nav = document.querySelector("#navlinks");
             const styleLink = [...document.querySelectorAll('link[rel="stylesheet"]')]
               .find(link => (link.href || "").includes("navigation.css") &&
-                (link.href || "").includes("menu-mobile-v3"));
+                (link.href || "").includes("menu-mobile-v4"));
             return Boolean(nav && nav.querySelector(".nav-drawer-close") &&
-              nav.querySelector(".nav-menu-group-toggle") && styleLink && styleLink.sheet);
+              nav.querySelector(".nav-menu-group-title") && styleLink && styleLink.sheet);
           }, null, { timeout: 10000 });
           const audit = await page.evaluate(() => {
             const nav = document.querySelector("#navlinks");
-            const toggles = [...(nav?.querySelectorAll(".nav-menu-group-toggle") || [])];
+            const groups = [...(nav?.querySelectorAll(".nav-menu-group") || [])];
+            const categories = nav?.querySelector(".nav-store-submenu");
             return {
               burger: Boolean(document.querySelector("#burger")),
               drawer: Boolean(nav && nav.querySelector(".nav-drawer-top")),
               brand: nav?.querySelector(".nav-drawer-title")?.textContent.trim() || "",
               account: Boolean(nav?.querySelector("[data-nav-account]")),
-              store: Boolean(nav?.querySelector(".nav-store-submenu")),
+              store: Boolean(categories),
               categoryLinks: nav?.querySelectorAll(".nav-store-submenu > a").length || 0,
+              categoryColumns: categories ?
+                getComputedStyle(categories).gridTemplateColumns.split(" ").filter(Boolean).length : 0,
               help: Boolean(nav?.querySelector(".nav-menu-group--help")),
               discover: Boolean(nav?.querySelector(".nav-menu-group--discover")),
-              groupToggles: toggles.length,
-              groupsExpanded: toggles.length === 2 && toggles.every(toggle =>
-                toggle.getAttribute("aria-expanded") === "true")
+              groupsVisibleInOneColumn: groups.length === 2 && groups.every(group => {
+                const entries = [...group.querySelectorAll(":scope > a, :scope > .nav-submenu")];
+                const submenus = [...group.querySelectorAll(":scope > .nav-submenu")];
+                return entries.length > 0 &&
+                  entries.every(item => getComputedStyle(item).display !== "none") &&
+                  submenus.every(item => getComputedStyle(item).display === "flex" &&
+                    getComputedStyle(item).flexDirection === "column");
+              })
             };
           });
           item.unifiedNavigation = audit;
           result.unifiedNavigationChecks.push({ route: normalizedRoute, ...audit });
           if (!audit.burger || !audit.drawer || audit.brand !== "LUXURIOSA" ||
               !audit.account || !audit.store || audit.categoryLinks < 8 ||
-              !audit.help || !audit.discover || audit.groupToggles !== 2 ||
-              !audit.groupsExpanded) {
+              !audit.help || !audit.discover || !audit.groupsVisibleInOneColumn ||
+              audit.categoryColumns !== 2) {
             result.unifiedNavigationFailures.push({ route: normalizedRoute, ...audit });
           }
         }
@@ -555,49 +563,47 @@ try {
   await page.waitForTimeout(300);
   result.mobileMenu = await page.evaluate(() => {
     const account = document.querySelector("#navlinks .nav-drawer-account-area > .nav-account-primary");
-    // Minha conta é um link principal; a referência equivalente é Loja, não Atendimento (item de grupo).
     const regular = document.querySelector("#navlinks > .nav-primary-link.nav-link-shop");
     const icon = account?.querySelector(".nav-link-icon");
     const rect = element => {
       if (!element) return null;
       const box = element.getBoundingClientRect();
-      return {
-        left: Math.round(box.left),
-        right: Math.round(box.right),
-        width: Math.round(box.width),
-        height: Math.round(box.height)
-      };
+      return { left: Math.round(box.left), right: Math.round(box.right),
+        width: Math.round(box.width), height: Math.round(box.height) };
     };
-    const accountStyle = account ? getComputedStyle(account) : null;
-    const regularStyle = regular ? getComputedStyle(regular) : null;
-    const iconStyle = icon ? getComputedStyle(icon) : null;
+    const groups = [...document.querySelectorAll("#navlinks .nav-menu-group")].map(group => {
+      const entries = [...group.querySelectorAll(":scope > a, :scope > .nav-submenu")];
+      const submenus = [...group.querySelectorAll(":scope > .nav-submenu")];
+      return {
+        name: group.querySelector(":scope > .nav-menu-group-title")?.textContent.trim() || "",
+        visibleByDefault: entries.length > 0 &&
+          entries.every(item => getComputedStyle(item).display !== "none"),
+        submenusSingleColumn: submenus.every(item =>
+          getComputedStyle(item).display === "flex" &&
+          getComputedStyle(item).flexDirection === "column")
+      };
+    });
+    const categories = document.querySelector("#navlinks .nav-store-submenu");
     return {
       viewport: document.documentElement.clientWidth,
       document: document.documentElement.scrollWidth,
       account: rect(account),
       regular: rect(regular),
-      accountDisplay: accountStyle?.display || null,
-      regularDisplay: regularStyle?.display || null,
-      accountFontSize: accountStyle?.fontSize || null,
-      regularFontSize: regularStyle?.fontSize || null,
-      accountFontWeight: accountStyle?.fontWeight || null,
-      regularFontWeight: regularStyle?.fontWeight || null,
-      accountBackground: accountStyle?.backgroundColor || null,
-      accountBorderRadius: accountStyle?.borderRadius || null,
-      iconDisplay: iconStyle?.display || null,
+      accountDisplay: account ? getComputedStyle(account).display : null,
+      regularDisplay: regular ? getComputedStyle(regular).display : null,
+      accountFontSize: account ? getComputedStyle(account).fontSize : null,
+      regularFontSize: regular ? getComputedStyle(regular).fontSize : null,
+      accountFontWeight: account ? getComputedStyle(account).fontWeight : null,
+      regularFontWeight: regular ? getComputedStyle(regular).fontWeight : null,
+      accountBackground: account ? getComputedStyle(account).backgroundColor : null,
+      accountBorderRadius: account ? getComputedStyle(account).borderRadius : null,
+      iconDisplay: icon ? getComputedStyle(icon).display : null,
       iconWidth: icon ? Math.round(icon.getBoundingClientRect().width) : 0,
       iconHeight: icon ? Math.round(icon.getBoundingClientRect().height) : 0,
-      storeCategoriesOpen: document.querySelector("#navlinks .nav-store-submenu")?.open ?? false,
-      accordionGroups: [...document.querySelectorAll("#navlinks .nav-menu-group")].map(group => {
-        const toggle = group.querySelector(":scope > .nav-menu-group-toggle");
-        const childLinks = [...group.querySelectorAll(":scope > a, :scope > .nav-submenu")];
-        return {
-          name: toggle?.textContent.trim() || "",
-          expanded: toggle?.getAttribute("aria-expanded") === "true",
-          visibleByDefault: childLinks.length > 0 &&
-            childLinks.every(item => getComputedStyle(item).display !== "none")
-        };
-      }),
+      storeCategoriesOpen: categories?.open ?? false,
+      categoryGridColumns: categories ?
+        getComputedStyle(categories).gridTemplateColumns.split(" ").filter(Boolean).length : 0,
+      groups,
       experienceMenuOrder: (() => {
         const group = document.querySelector("#navlinks .nav-menu-group--discover");
         const link = [...(group?.querySelectorAll(":scope > a") || [])]
@@ -622,32 +628,24 @@ try {
   );
   await capture(page, "menu-mobile-aberto-390");
 
-  result.mobileMenu.accordionsCorrect = Boolean(
+  result.mobileMenu.navigationHierarchyCorrect = Boolean(
     result.mobileMenu.storeCategoriesOpen &&
-    result.mobileMenu.accordionGroups.length === 2 &&
-    result.mobileMenu.accordionGroups.every(group => group.expanded && group.visibleByDefault) &&
+    result.mobileMenu.categoryGridColumns === 2 &&
+    result.mobileMenu.groups.length === 2 &&
+    result.mobileMenu.groups.every(group => group.visibleByDefault && group.submenusSingleColumn) &&
     result.mobileMenu.experienceMenuOrder.join("|") ===
       "Conexão a dois|Astrologia|Quizzes|Desafios"
   );
 
-  const conhecerGroup = page.locator("#navlinks .nav-menu-group--discover");
-  const conhecerToggle = conhecerGroup.locator(":scope > .nav-menu-group-toggle");
-  await conhecerToggle.click();
-  await page.waitForFunction(() =>
-    !document.querySelector("#navlinks .nav-menu-group--discover")?.classList.contains("is-open") &&
-    document.querySelector("#navlinks .nav-menu-group--discover > .nav-menu-group-toggle")?.getAttribute("aria-expanded") === "false"
-  );
-  const linksRecolhidos = await conhecerGroup.locator(":scope > a, :scope > .nav-submenu").evaluateAll(items =>
+  const categoryDetails = page.locator("#navlinks .nav-store-submenu");
+  await categoryDetails.locator(":scope > summary").click();
+  await page.waitForFunction(() => !document.querySelector("#navlinks .nav-store-submenu")?.open);
+  const categoryLinksHidden = await categoryDetails.locator(":scope > a").evaluateAll(items =>
     items.length > 0 && items.every(item => getComputedStyle(item).display === "none")
   );
-  await conhecerToggle.click();
-  await page.waitForFunction(() =>
-    document.querySelector("#navlinks .nav-menu-group--discover")?.classList.contains("is-open") &&
-    document.querySelector("#navlinks .nav-menu-group--discover > .nav-menu-group-toggle")?.getAttribute("aria-expanded") === "true"
-  );
-  result.mobileMenu.accordionInteractionWorks =
-    linksRecolhidos &&
-    await conhecerGroup.locator(":scope > .nav-menu-group-toggle").getAttribute("aria-expanded") === "true";
+  await categoryDetails.locator(":scope > summary").click();
+  await page.waitForFunction(() => document.querySelector("#navlinks .nav-store-submenu")?.open);
+  result.mobileMenu.categoryDisclosureWorks = categoryLinksHidden;
 
   // Fechar e reabrir o drawer restaura as listas visíveis por padrão.
   await page.locator("#navlinks .nav-drawer-close").click();
@@ -659,12 +657,12 @@ try {
       "#navlinks .nav-menu-group--help, #navlinks .nav-menu-group--discover"
     )];
     return groups.length === 2 && groups.every(group => {
-      const toggle = group.querySelector(":scope > .nav-menu-group-toggle");
       const children = [...group.querySelectorAll(":scope > a, :scope > .nav-submenu")];
-      return group.classList.contains("is-open") &&
-        toggle?.getAttribute("aria-expanded") === "true" &&
-        children.length > 0 &&
-        children.every(item => getComputedStyle(item).display !== "none");
+      const submenus = [...group.querySelectorAll(":scope > .nav-submenu")];
+      return children.length > 0 &&
+        children.every(item => getComputedStyle(item).display !== "none") &&
+        submenus.every(item => getComputedStyle(item).display === "flex" &&
+          getComputedStyle(item).flexDirection === "column");
     });
   });
 
@@ -681,7 +679,7 @@ try {
     await page.waitForFunction(() => {
       const styleLink = [...document.querySelectorAll('link[rel="stylesheet"]')]
         .find(link => (link.href || "").includes("navigation.css") &&
-          (link.href || "").includes("menu-mobile-v3"));
+          (link.href || "").includes("menu-mobile-v4"));
       const nav = document.querySelector("#navlinks");
       const backdrop = document.querySelector(".nav-drawer-backdrop");
       return Boolean(
@@ -704,16 +702,21 @@ try {
     const interaction = await page.evaluate(() => {
       const nav = document.querySelector("#navlinks");
       const rect = nav?.getBoundingClientRect();
-      const toggles = [...(nav?.querySelectorAll(".nav-menu-group-toggle") || [])];
+      const categories = nav?.querySelector(".nav-store-submenu");
+      const submenus = [...(nav?.querySelectorAll(".nav-menu-group > .nav-submenu") || [])];
       return {
         open: nav?.classList.contains("open") || false,
         widthWithinViewport: Boolean(rect && rect.left >= -1 && rect.right <= innerWidth + 1),
         heightWithinViewport: Boolean(rect && rect.height <= innerHeight + 1),
         internalScroll: Boolean(nav && ["auto", "scroll"].includes(getComputedStyle(nav).overflowY)),
         backgroundLocked: document.body.classList.contains("mobile-menu-open"),
-        categoriesOpen: nav?.querySelector(".nav-store-submenu")?.open || false,
-        groupsOpen: toggles.length === 2 && toggles.every(toggle =>
-          toggle.getAttribute("aria-expanded") === "true"),
+        categoriesOpen: categories?.open || false,
+        categoryColumns: categories ?
+          getComputedStyle(categories).gridTemplateColumns.split(" ").filter(Boolean).length : 0,
+        sectionsSingleColumn: submenus.length > 0 && submenus.every(item =>
+          getComputedStyle(item).display === "flex" &&
+          getComputedStyle(item).flexDirection === "column" &&
+          [...item.querySelectorAll(":scope > a")].every(link => getComputedStyle(link).display !== "none")),
         categoryTargetMinHeight: [...(nav?.querySelectorAll(".nav-store-submenu > a") || [])]
           .every(link => link.getBoundingClientRect().height >= 40)
       };
@@ -721,7 +724,8 @@ try {
     result.unifiedNavigationInteractions.push({ route: sample.route, ...interaction });
     if (!interaction.open || !interaction.widthWithinViewport || !interaction.heightWithinViewport ||
         !interaction.internalScroll || !interaction.backgroundLocked || !interaction.categoriesOpen ||
-        !interaction.groupsOpen || !interaction.categoryTargetMinHeight) {
+        interaction.categoryColumns !== 2 || !interaction.sectionsSingleColumn ||
+        !interaction.categoryTargetMinHeight) {
       result.unifiedNavigationFailures.push({ route: sample.route, ...interaction });
     }
     const closeHitTest = await page.evaluate(() => {
@@ -1074,8 +1078,8 @@ const failed = result.routeFailures.length > 0 ||
   result.mobileTouchTargetFailures.length > 0 ||
   result.mobileTouchTargetComfortFailures.length > 0 ||
   result.unifiedNavigationFailures.length > 0 ||
-  !result.mobileMenu?.accordionsCorrect ||
-  !result.mobileMenu?.accordionInteractionWorks ||
+  !result.mobileMenu?.navigationHierarchyCorrect ||
+  !result.mobileMenu?.categoryDisclosureWorks ||
   !result.mobileMenu?.initialListsRestoreAfterReopen ||
   result.experiencesPresentationOrder?.categories.join("|") !== "Conexão a dois|Astrologia|Quizzes|Desafios" ||
   result.experiencesPresentationOrder?.featured.join("|") !==
@@ -1124,8 +1128,8 @@ console.log(JSON.stringify({
     portraitCardFailures: (result.portraitCardFailures || []).length,
     lingerieCropWarnings: (result.lingerieCropWarnings || []).length,
     mobileMenuAccountAligned: result.mobileMenu?.accountRowAligned ?? false,
-    mobileMenuAccordionsCorrect: result.mobileMenu?.accordionsCorrect ?? false,
-    mobileMenuAccordionInteractionWorks: result.mobileMenu?.accordionInteractionWorks ?? false,
+    mobileMenuNavigationHierarchyCorrect: result.mobileMenu?.navigationHierarchyCorrect ?? false,
+    mobileMenuCategoryDisclosureWorks: result.mobileMenu?.categoryDisclosureWorks ?? false,
     mobileMenuInitialListsRestoreAfterReopen: result.mobileMenu?.initialListsRestoreAfterReopen ?? false,
     experiencesPresentationOrder: result.experiencesPresentationOrder,
     productPagesChecked: result.productGalleries.length,
@@ -1201,9 +1205,10 @@ assert.equal((result.portraitCardFailures || []).length, 0, "Cards de lingerie n
 assert.equal(result.lingerieCards.length, 14, "A auditoria deve conferir as 14 lingeries do catálogo.");
 assert.ok(result.mobileMenu?.accountRowAligned,
   "Minha conta deve alinhar-se como item comum do menu mobile: " + JSON.stringify(result.mobileMenu));
-assert.ok(result.mobileMenu?.accordionsCorrect && result.mobileMenu?.accordionInteractionWorks &&
+assert.ok(result.mobileMenu?.navigationHierarchyCorrect &&
+  result.mobileMenu?.categoryDisclosureWorks &&
   result.mobileMenu?.initialListsRestoreAfterReopen,
-  "O menu mobile deve iniciar com Loja, Atendimento e Conhecer visíveis, permitir recolher/reabrir grupos e restaurar as listas ao reabrir o painel: " +
+  "O menu mobile deve manter as categorias da loja em duas colunas e os demais destinos em uma lista contínua, restaurando a navegação ao reabrir o painel: " +
   JSON.stringify(result.mobileMenu));
 assert.deepEqual(result.experiencesPresentationOrder?.categories,
   ["Conexão a dois", "Astrologia", "Quizzes", "Desafios"],
