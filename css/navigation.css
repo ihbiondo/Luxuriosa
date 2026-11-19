@@ -774,3 +774,66 @@
     stroke-linejoin: round;
   }
 }
+
+/* Acordeão do menu lateral: somente as categorias da Loja começam expandidas. */
+@media (max-width: 1199px) {
+  .navlinks .nav-menu-group-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    min-height: 46px;
+    padding: 10px 5px;
+    border: 0;
+    border-bottom: 1px solid rgba(212, 175, 124, .12);
+    background: transparent;
+    color: var(--gold);
+    font: 700 9px/1.4 var(--sans);
+    letter-spacing: .2em;
+    text-align: left;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+
+  .navlinks .nav-menu-group-toggle::after {
+    content: "+";
+    color: var(--gold);
+    font-size: 17px;
+    font-weight: 400;
+    letter-spacing: 0;
+    line-height: 1;
+  }
+
+  .navlinks .nav-menu-group.is-open > .nav-menu-group-toggle::after {
+    content: "−";
+  }
+
+  .navlinks .nav-menu-group > a,
+  .navlinks .nav-menu-group > .nav-submenu {
+    display: none;
+  }
+
+  .navlinks .nav-menu-group.is-open > a {
+    display: flex;
+  }
+
+  .navlinks .nav-menu-group.is-open > .nav-submenu {
+    display: flex;
+  }
+
+  .navlinks .nav-menu-group.is-open > .nav-menu-group-toggle {
+    border-bottom-color: rgba(212, 175, 124, .2);
+  }
+
+  .navlinks .nav-menu-group-toggle:hover,
+  .navlinks .nav-menu-group-toggle:focus-visible {
+    color: var(--blush);
+    background: rgba(212, 175, 124, .055);
+  }
+}
+
+@media (min-width: 1200px) {
+  .navlinks .nav-menu-group-toggle {
+    display: none !important;
+  }
+}
