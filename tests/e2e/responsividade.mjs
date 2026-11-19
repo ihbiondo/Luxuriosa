@@ -156,6 +156,9 @@ const result = {
   mobileTouchTargets: [],
   mobileTouchTargetFailures: [],
   mobileTouchTargetComfortFailures: [],
+  unifiedNavigationChecks: [],
+  unifiedNavigationFailures: [],
+  unifiedNavigationInteractions: [],
   homeFeaturedImages: [],
   homeFeaturedImageFailures: [],
   experiencesPresentationOrder: null,
@@ -223,6 +226,43 @@ try {
           ...(await inspectLayout(page, route, viewport))
         };
         result.publicMobileViewportResults.push(item);
+
+        // Confirma que as 47 páginas individuais e as vitrines/serviços usam o menu público único.
+        const normalizedRoute = route.startsWith("/") ? route : "/" + route;
+        const usesSharedNavigation = normalizedRoute.startsWith("/produtos/") ||
+          ["/loja/lingerie/", "/loja/lingerie/index.html", "/atendimento.html", "/entregas/"].includes(normalizedRoute);
+        if (viewport.width === 390 && usesSharedNavigation) {
+          await page.waitForFunction(() => {
+            const nav = document.querySelector("#navlinks");
+            return Boolean(nav && nav.querySelector(".nav-drawer-close") &&
+              nav.querySelector(".nav-menu-group-toggle"));
+          }, null, { timeout: 8000 });
+          const audit = await page.evaluate(() => {
+            const nav = document.querySelector("#navlinks");
+            const toggles = [...(nav?.querySelectorAll(".nav-menu-group-toggle") || [])];
+            return {
+              burger: Boolean(document.querySelector("#burger")),
+              drawer: Boolean(nav && nav.querySelector(".nav-drawer-top")),
+              brand: nav?.querySelector(".nav-drawer-title")?.textContent.trim() || "",
+              account: Boolean(nav?.querySelector("[data-nav-account]")),
+              store: Boolean(nav?.querySelector(".nav-store-submenu")),
+              categoryLinks: nav?.querySelectorAll(".nav-store-submenu > a").length || 0,
+              help: Boolean(nav?.querySelector(".nav-menu-group--help")),
+              discover: Boolean(nav?.querySelector(".nav-menu-group--discover")),
+              groupToggles: toggles.length,
+              groupsExpanded: toggles.length === 2 && toggles.every(toggle =>
+                toggle.getAttribute("aria-expanded") === "true")
+            };
+          });
+          item.unifiedNavigation = audit;
+          result.unifiedNavigationChecks.push({ route: normalizedRoute, ...audit });
+          if (!audit.burger || !audit.drawer || audit.brand !== "LUXURIOSA" ||
+              !audit.account || !audit.store || audit.categoryLinks < 8 ||
+              !audit.help || !audit.discover || audit.groupToggles !== 2 ||
+              !audit.groupsExpanded) {
+            result.unifiedNavigationFailures.push({ route: normalizedRoute, ...audit });
+          }
+        }
 
         // Registra alvos de toque reais no celular estreito, sem tratar links inline de texto como botões.
         if (viewport.width === 320) {
@@ -625,6 +665,45 @@ try {
     });
   });
 
+  // Confere a abertura do mesmo painel em páginas que antes tinham cabeçalhos simplificados.
+  const unifiedMenuSamples = [
+    { route: "/produtos/1-dado-do-prazer-gay.html", name: "produto-detalhe" },
+    { route: "/produtos/31-body-sensual-rendado-frente-unica.html", name: "produto-lingerie" },
+    { route: "/loja/lingerie/", name: "vitrine-lingerie" },
+    { route: "/atendimento.html", name: "atendimento" },
+    { route: "/entregas/", name: "entregas" }
+  ];
+  for (const sample of unifiedMenuSamples) {
+    await openPage(page, sample.route, { name: "mobile-390", width: 390, height: 844 });
+    await page.locator("#burger").click();
+    await page.locator("#navlinks.open").waitFor({ state: "visible", timeout: 8000 });
+    const interaction = await page.evaluate(() => {
+      const nav = document.querySelector("#navlinks");
+      const rect = nav?.getBoundingClientRect();
+      const toggles = [...(nav?.querySelectorAll(".nav-menu-group-toggle") || [])];
+      return {
+        open: nav?.classList.contains("open") || false,
+        widthWithinViewport: Boolean(rect && rect.left >= -1 && rect.right <= innerWidth + 1),
+        heightWithinViewport: Boolean(rect && rect.height <= innerHeight + 1),
+        internalScroll: Boolean(nav && ["auto", "scroll"].includes(getComputedStyle(nav).overflowY)),
+        backgroundLocked: document.body.classList.contains("mobile-menu-open"),
+        categoriesOpen: nav?.querySelector(".nav-store-submenu")?.open || false,
+        groupsOpen: toggles.length === 2 && toggles.every(toggle =>
+          toggle.getAttribute("aria-expanded") === "true"),
+        categoryTargetMinHeight: [...(nav?.querySelectorAll(".nav-store-submenu > a") || [])]
+          .every(link => link.getBoundingClientRect().height >= 40)
+      };
+    });
+    result.unifiedNavigationInteractions.push({ route: sample.route, ...interaction });
+    if (!interaction.open || !interaction.widthWithinViewport || !interaction.heightWithinViewport ||
+        !interaction.internalScroll || !interaction.backgroundLocked || !interaction.categoriesOpen ||
+        !interaction.groupsOpen || !interaction.categoryTargetMinHeight) {
+      result.unifiedNavigationFailures.push({ route: sample.route, ...interaction });
+    }
+    await capture(page, "menu-unificado-" + sample.name + "-390");
+    await page.locator("#navlinks .nav-drawer-close").click();
+  }
+
   // A página Experiências deve destacar Conexão a dois e Astrologia antes das demais opções.
   await openPage(page, "/experiencias/", { name: "mobile-390", width: 390, height: 844 });
   result.experiencesPresentationOrder = await page.evaluate(() => ({
@@ -901,6 +980,7 @@ const failed = result.routeFailures.length > 0 ||
   result.productGalleryFailures.length > 0 ||
   result.mobileTouchTargetFailures.length > 0 ||
   result.mobileTouchTargetComfortFailures.length > 0 ||
+  result.unifiedNavigationFailures.length > 0 ||
   !result.mobileMenu?.accordionsCorrect ||
   !result.mobileMenu?.accordionInteractionWorks ||
   !result.mobileMenu?.initialListsRestoreAfterReopen ||
@@ -935,6 +1015,9 @@ console.log(JSON.stringify({
     mobileTouchTargetsChecked: result.mobileTouchTargets.reduce((sum, item) => sum + item.targets.length, 0),
     mobileTouchTargetsBelow24: result.mobileTouchTargets.reduce((sum, item) => sum + item.below24.length, 0),
     mobileTouchTargetsBelowComfort40: result.mobileTouchTargets.reduce((sum, item) => sum + item.belowComfort40.length, 0),
+    unifiedNavigationPagesChecked: result.unifiedNavigationChecks.length,
+    unifiedNavigationFailures: result.unifiedNavigationFailures.length,
+    unifiedNavigationInteractions: result.unifiedNavigationInteractions.length,
     homeFeaturedImages: result.homeFeaturedImages.length,
     homeFeaturedImageFailures: result.homeFeaturedImageFailures.length,
     missingViewportMeta: result.missingViewportMeta.length,
@@ -977,6 +1060,9 @@ console.log(JSON.stringify({
   mobileTouchTargets: result.mobileTouchTargets,
   mobileTouchTargetFailures: result.mobileTouchTargetFailures,
   mobileTouchTargetComfortFailures: result.mobileTouchTargetComfortFailures,
+  unifiedNavigationChecks: result.unifiedNavigationChecks,
+  unifiedNavigationFailures: result.unifiedNavigationFailures,
+  unifiedNavigationInteractions: result.unifiedNavigationInteractions,
   homeFeaturedImages: result.homeFeaturedImages,
   homeFeaturedImageFailures: result.homeFeaturedImageFailures,
   experiencesPresentationOrder: result.experiencesPresentationOrder,
@@ -1000,6 +1086,15 @@ assert.equal(result.mobileTouchTargetFailures.length, 0,
 assert.equal(result.mobileTouchTargetComfortFailures.length, 0,
   "Foram encontrados controles importantes abaixo de 40 px de altura/largura: " +
   JSON.stringify(result.mobileTouchTargetComfortFailures.slice(0, 15)));
+assert.equal(result.unifiedNavigationFailures.length, 0,
+  "O menu unificado falhou em páginas públicas: " +
+  JSON.stringify(result.unifiedNavigationFailures.slice(0, 15)));
+const expectedProductNavigationPages = catalogData.produtos.filter(product => product.pagina).length;
+const checkedProductNavigationPages = result.unifiedNavigationChecks.filter(item => item.route.startsWith("/produtos/")).length;
+assert.equal(checkedProductNavigationPages, expectedProductNavigationPages,
+  "Nem todas as páginas individuais foram verificadas quanto ao menu unificado.");
+assert.equal(result.unifiedNavigationInteractions.length, 5,
+  "Nem todas as páginas representativas tiveram a abertura do menu testada.");
 assert.equal(result.homeFeaturedImageFailures.length, 0,
   "Uma ou mais imagens dos kits em destaque da home não carregaram: " +
   JSON.stringify(result.homeFeaturedImageFailures));
@@ -1015,7 +1110,7 @@ assert.ok(result.mobileMenu?.accountRowAligned,
   "Minha conta deve alinhar-se como item comum do menu mobile: " + JSON.stringify(result.mobileMenu));
 assert.ok(result.mobileMenu?.accordionsCorrect && result.mobileMenu?.accordionInteractionWorks &&
   result.mobileMenu?.initialListsRestoreAfterReopen,
-  "O menu mobile deve iniciar com somente a Loja expandida, recolher os demais grupos e permitir expandi-los: " +
+  "O menu mobile deve iniciar com Loja, Atendimento e Conhecer visíveis, permitir recolher/reabrir grupos e restaurar as listas ao reabrir o painel: " +
   JSON.stringify(result.mobileMenu));
 assert.deepEqual(result.experiencesPresentationOrder?.categories,
   ["Conexão a dois", "Astrologia", "Quizzes", "Desafios"],

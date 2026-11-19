@@ -5,6 +5,21 @@
 (function () {
   "use strict";
 
+  /* As páginas individuais passam a usar o mesmo menu público do restante do site. */
+  function carregarMenuPublico() {
+    if (!document.querySelector("header .navlinks")) return;
+    var jaCarregado = Array.prototype.some.call(document.scripts, function (script) {
+      return /\/js\/app\.js(?:\?|$)/.test(script.getAttribute("src") || "");
+    });
+    if (jaCarregado || document.getElementById("luxuriosa-app-menu-loader")) return;
+    var script = document.createElement("script");
+    script.id = "luxuriosa-app-menu-loader";
+    script.src = "/js/app.js?v=20261119-menu-mobile-v3";
+    script.async = false;
+    (document.head || document.body).appendChild(script);
+  }
+  carregarMenuPublico();
+
   var botao = document.querySelector("[data-add-to-cart]");
   if (!botao) return;
 
