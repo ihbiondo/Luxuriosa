@@ -42,7 +42,9 @@ node tests\e2e\responsividade.mjs
 - Páginas centrais em 320, 360, 390, 430, 768, 1024 e 1440 px.
 - Rolagem horizontal, presença da meta viewport e rotas com erro.
 - Carregamento e enquadramento das imagens dos cards de lingerie.
-- `object-fit`, ponto de foco e estimativa de corte de cada foto.
+- Percorre todos os cards da vitrine geral para acionar o carregamento lazy e validar cada imagem.
+- `object-fit`, dimensões dos quadros e ponto de foco; estimativa de corte das fotos de lingerie.
+- Geometria da vitrine completa na largura de 320 px.
 - Abertura e altura do modal de detalhes em celular.
 - Screenshots e relatório JSON para revisão dos problemas encontrados.
 
