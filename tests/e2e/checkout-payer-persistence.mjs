@@ -189,7 +189,7 @@ try {
     authenticatedAccountStored: order.customer_id === user.id,
     recipientStoredSeparately: order.customer_name === "Destinatário E2E Persistência",
     thirdPartyPayerStored: order.payment_payer_name === "Pagador Terceiro Persistência",
-    payerPhoneNormalizedToE164: order.payment_payer_phone === "+551498887777",
+    payerPhoneNormalizedToE164: order.payment_payer_phone === "+5514988887777",
     declarationSourceAndTimestampStored: Boolean(order.payment_payer_source && order.payment_payer_declared_at),
     orderAndItemPersisted: items.length === 1,
     paymentProviderMocked: true,
