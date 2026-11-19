@@ -577,65 +577,76 @@ try {
   };
   await capture(page, "lingerie-produto-mobile-320");
 
-  // Valida a galeria nas páginas individuais para todos os produtos com fotos extras no catálogo.
-  const productsWithGallery = catalogData.produtos.filter(product =>
-    Array.isArray(product.imagens) && product.imagens.length > 1 && product.pagina
-  );
-  for (const product of productsWithGallery) {
+  // Confere a escala da foto principal em todas as páginas individuais e a troca de miniaturas onde houver galeria.
+  const productsWithPage = catalogData.produtos.filter(product => product.pagina);
+  for (const product of productsWithPage) {
     const route = product.pagina.charAt(0) === "/" ? product.pagina : "/" + product.pagina;
     try {
-      const galleryViewport = Number(product.id) === 31
+      const pageViewport = Number(product.id) === 31
         ? { name: "mobile-360", width: 360, height: 800 }
         : { name: "mobile-390", width: 390, height: 844 };
-      await openPage(page, route, galleryViewport);
-      const gallery = page.locator(".product-detail-gallery");
-      await gallery.waitFor({ state: "visible", timeout: 10000 });
-      const thumbCount = await gallery.locator("button").count();
+      await openPage(page, route, pageViewport);
       const mainImage = page.locator(".product-detail-image > img").first();
+      await page.waitForFunction(() => {
+        const image = document.querySelector(".product-detail-image > img");
+        return Boolean(image && image.complete && image.naturalWidth > 0);
+      }, null, { timeout: 10000 });
+
+      const productImages = Array.isArray(product.imagens)
+        ? product.imagens.filter(image => typeof image === "string" && image.trim())
+        : [];
+      if (product.imagem && !productImages.includes(product.imagem)) productImages.unshift(product.imagem);
+      const expectedThumbCount = productImages.length > 1 ? productImages.length : 0;
+      const gallery = page.locator(".product-detail-gallery");
+      const galleryCount = await gallery.count();
+      const thumbCount = galleryCount ? await gallery.locator("button").count() : 0;
       const initialSrc = await mainImage.getAttribute("src");
-      if (Number(product.id) === 31) {
-        await page.waitForFunction(() => {
-          const image = document.querySelector(".product-detail-image > img");
-          return Boolean(image && image.complete && image.naturalWidth > 0);
-        }, null, { timeout: 10000 });
-        result.productGalleryLayout = await page.evaluate(() => {
-          const frame = document.querySelector(".product-detail-image");
-          const image = frame?.querySelector(":scope > img");
-          const galleryElement = frame?.querySelector(".product-detail-gallery");
-          const thumbRects = [...(galleryElement?.querySelectorAll(".product-detail-gallery-thumb") || [])]
-            .map(thumb => thumb.getBoundingClientRect());
-          const galleryRect = galleryElement?.getBoundingClientRect();
-          const groupLeft = thumbRects.length ? Math.min(...thumbRects.map(rect => rect.left)) : 0;
-          const groupRight = thumbRects.length ? Math.max(...thumbRects.map(rect => rect.right)) : 0;
-          const groupCenterDelta = galleryRect && thumbRects.length
-            ? Math.abs((groupLeft + groupRight) / 2 - (galleryRect.left + galleryRect.right) / 2)
-            : null;
-          return {
-            frameWidth: frame?.clientWidth || 0,
-            imageWidth: image ? image.getBoundingClientRect().width : 0,
-            imageFillRatio: frame?.clientWidth && image
-              ? Number((image.getBoundingClientRect().width / frame.clientWidth).toFixed(3))
-              : 0,
-            galleryWidth: galleryElement?.clientWidth || 0,
-            galleryScrollWidth: galleryElement?.scrollWidth || 0,
-            justifyContent: galleryElement ? getComputedStyle(galleryElement).justifyContent : "",
-            groupCenterDelta: groupCenterDelta === null ? null : Number(groupCenterDelta.toFixed(2))
-          };
-        });
-      }
-      let changedAfterClick = false;
-      if (thumbCount > 1) {
+
+      const imageLayout = await page.evaluate(() => {
+        const frame = document.querySelector(".product-detail-image");
+        const image = frame?.querySelector(":scope > img");
+        const galleryElement = frame?.querySelector(".product-detail-gallery");
+        const frameRect = frame?.getBoundingClientRect();
+        const imageRect = image?.getBoundingClientRect();
+        const thumbRects = [...(galleryElement?.querySelectorAll(".product-detail-gallery-thumb") || [])]
+          .map(thumb => thumb.getBoundingClientRect());
+        const galleryRect = galleryElement?.getBoundingClientRect();
+        const groupLeft = thumbRects.length ? Math.min(...thumbRects.map(rect => rect.left)) : 0;
+        const groupRight = thumbRects.length ? Math.max(...thumbRects.map(rect => rect.right)) : 0;
+        const groupCenterDelta = galleryRect && thumbRects.length
+          ? Math.abs((groupLeft + groupRight) / 2 - (galleryRect.left + galleryRect.right) / 2)
+          : null;
+        return {
+          frameWidth: frame?.clientWidth || 0,
+          imageWidth: imageRect?.width || 0,
+          imageFillRatio: frame?.clientWidth && imageRect
+            ? Number((imageRect.width / frame.clientWidth).toFixed(3))
+            : 0,
+          imageCenterDelta: frameRect && imageRect
+            ? Number(Math.abs((imageRect.left + imageRect.right) / 2 - (frameRect.left + frameRect.right) / 2).toFixed(2))
+            : null,
+          groupCenterDelta: groupCenterDelta === null ? null : Number(groupCenterDelta.toFixed(2))
+        };
+      });
+
+      if (Number(product.id) === 31) result.productGalleryLayout = imageLayout;
+      let changedAfterClick = expectedThumbCount === 0;
+      if (expectedThumbCount > 1 && thumbCount > 1) {
         const secondThumb = gallery.locator("button").nth(1);
         const expectedSrc = await secondThumb.locator("img").getAttribute("src");
         await secondThumb.click();
         changedAfterClick = (await mainImage.getAttribute("src")) === expectedSrc;
       }
-      const item = { id: product.id, route, expected: product.imagens.length, actual: thumbCount, changedAfterClick, initialSrc };
+      const item = {
+        id: product.id, route, expected: expectedThumbCount, actual: thumbCount,
+        changedAfterClick, initialSrc, ...imageLayout
+      };
       result.productGalleries.push(item);
-      if (thumbCount !== product.imagens.length || !changedAfterClick) {
+      if (thumbCount !== expectedThumbCount || !changedAfterClick ||
+          item.imageFillRatio < 0.90 || item.imageCenterDelta > 2) {
         result.productGalleryFailures.push(item);
       }
-      await capture(page, "produto-galeria-" + product.id + "-390");
+      if (expectedThumbCount > 1) await capture(page, "produto-galeria-" + product.id + "-mobile");
     } catch (error) {
       const item = { id: product.id, route, error: error.message.slice(0, 220) };
       result.productGalleries.push(item);
@@ -688,7 +699,7 @@ console.log(JSON.stringify({
     portraitCardFailures: (result.portraitCardFailures || []).length,
     lingerieCropWarnings: (result.lingerieCropWarnings || []).length,
     mobileMenuAccountAligned: result.mobileMenu?.accountRowAligned ?? false,
-    productGalleriesChecked: result.productGalleries.length,
+    productPagesChecked: result.productGalleries.length,
     productGalleryFailures: result.productGalleryFailures.length,
     catalogGridNavigation: result.catalogGridNavigation,
     catalogImageNavigation: result.catalogImageNavigation,
@@ -729,7 +740,7 @@ assert.equal((result.portraitCardFailures || []).length, 0, "Cards de lingerie n
 assert.equal(result.lingerieCards.length, 14, "A auditoria deve conferir as 14 lingeries do catálogo.");
 assert.ok(result.mobileMenu?.accountRowAligned,
   "Minha conta deve alinhar-se como item comum do menu mobile: " + JSON.stringify(result.mobileMenu));
-assert.equal(result.productGalleryFailures.length, 0, "Uma ou mais páginas individuais não exibem/trocam todas as fotos cadastradas.");
+assert.equal(result.productGalleryFailures.length, 0, "Uma ou mais páginas individuais apresentam foto principal pequena/descentralizada ou galeria incompleta: " + JSON.stringify(result.productGalleryFailures));
 assert.equal(result.catalogGridNavigation?.rendered, expectedCatalogCards,
   "A auditoria deve validar a navegação de todos os cards.");
 assert.equal(result.catalogGridNavigation?.failures.length, 0,
@@ -746,9 +757,11 @@ assert.ok(result.catalogImageNavigation?.destinationMatched,
   "Clicar na foto do card não abriu a página de detalhes correspondente.");
 assert.ok(result.catalogImageNavigation?.clickStaysOutsideCard,
   "O clique na foto também acionou o modal do card.");
-assert.ok(result.productGalleryLayout?.imageFillRatio >= 0.84,
-  "A foto principal da lingerie não preencheu o quadro mobile.");
+assert.ok(result.productGalleryLayout?.imageFillRatio >= 0.90,
+  "A foto principal da lingerie não preencheu suficientemente o quadro mobile: " + JSON.stringify(result.productGalleryLayout));
 assert.ok(result.productGalleryLayout?.groupCenterDelta <= 2,
   "As miniaturas da página do produto não ficaram centralizadas.");
+assert.ok(result.productGalleryLayout?.imageCenterDelta <= 2,
+  "A foto principal da página do produto não ficou centralizada.");
 
 console.log("Auditoria responsiva Playwright: PASS.");
