@@ -524,7 +524,7 @@
 @media (max-width: 760px) {
   .product-detail-page .product-detail-image {
     gap: 11px;
-    padding: 12px;
+    padding: 8px;
   }
   .product-detail-gallery {
     justify-content: safe center;
@@ -554,9 +554,11 @@
   }
   .product-detail-page .product-detail-image > img {
     width: 100%;
+    max-width: 100%;
     height: auto;
-    max-height: min(74dvh, 540px);
+    max-height: min(82dvh, 620px);
     object-fit: contain;
+    object-position: center;
   }
   .product-detail-page .product-detail-image .product-detail-gallery-thumb img {
     height: 100%;
