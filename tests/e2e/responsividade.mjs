@@ -641,8 +641,8 @@ try {
   const categoryDetails = page.locator("#navlinks .nav-store-submenu");
   await categoryDetails.locator(":scope > summary").click();
   await page.waitForFunction(() => !document.querySelector("#navlinks .nav-store-submenu")?.open);
-  const categoryLinksHidden = await categoryDetails.locator(".nav-store-grid > a").evaluateAll(items =>
-    items.length > 0 && items.every(item => getComputedStyle(item).display === "none")
+  const categoryLinksHidden = await categoryDetails.locator(".nav-store-grid").evaluate(grid =>
+    getComputedStyle(grid).display === "none"
   );
   await categoryDetails.locator(":scope > summary").click();
   await page.waitForFunction(() => document.querySelector("#navlinks .nav-store-submenu")?.open);
