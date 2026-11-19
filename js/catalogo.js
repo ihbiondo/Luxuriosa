@@ -329,7 +329,7 @@
       var miniatura = criarElemento("img");
       miniatura.src = caminho;
       miniatura.alt = "";
-      miniatura.loading = "lazy";
+      miniatura.loading = "eager";
       miniatura.decoding = "async";
       botaoMiniatura.appendChild(miniatura);
 
