@@ -637,9 +637,6 @@ try {
     result.mobileMenu.secondDivider === "solid" &&
     result.mobileMenu.uniformHeights &&
     result.mobileMenu.uniformTypography;
-  result.mobileMenu.sectionsCollapseIndependently = true;
-  result.mobileMenu.categoryDisclosureWorks = true;
-  result.mobileMenu.initialListsRestoreAfterReopen = true;
   await capture(page, "menu-mobile-simplificado-390");
 
   // Confere a abertura do mesmo painel em páginas que antes tinham cabeçalhos simplificados.
@@ -1181,11 +1178,8 @@ assert.equal((result.portraitCardFailures || []).length, 0, "Cards de lingerie n
 assert.equal(result.lingerieCards.length, 14, "A auditoria deve conferir as 14 lingeries do catálogo.");
 assert.ok(result.mobileMenu?.accountRowAligned,
   "Minha conta deve alinhar-se como item comum do menu mobile: " + JSON.stringify(result.mobileMenu));
-assert.ok(result.mobileMenu?.navigationHierarchyCorrect &&
-  result.mobileMenu?.sectionsCollapseIndependently &&
-  result.mobileMenu?.categoryDisclosureWorks &&
-  result.mobileMenu?.initialListsRestoreAfterReopen,
-  "O menu mobile deve priorizar Minha conta, manter as listas visíveis e recolhíveis separadamente, usar duas colunas apenas nas categorias e restaurar as seções ao reabrir o painel: " +
+assert.ok(result.mobileMenu?.navigationHierarchyCorrect,
+  "O menu mobile deve exibir somente os sete links aprovados, em lista plana e sem destaques ou submenus: " +
   JSON.stringify(result.mobileMenu));
 assert.deepEqual(result.experiencesPresentationOrder?.categories,
   ["Conexão a dois", "Astrologia", "Quizzes", "Desafios"],
