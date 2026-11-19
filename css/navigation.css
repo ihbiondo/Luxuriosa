@@ -844,6 +844,7 @@
 @media (max-width: 1199px) {
   header .navlinks {
     z-index: 30;
+    box-sizing: border-box;
     width: min(94vw, 420px);
     padding: max(18px, env(safe-area-inset-top)) 18px calc(22px + env(safe-area-inset-bottom));
     border-left: 1px solid rgba(212, 175, 124, .3);
