@@ -442,12 +442,10 @@ jobs:
             # O runtime de Functions usa uma porta própria, diferente da API REST.
             function_url="$(grep -Eo 'http://127\.0\.0\.1:[0-9]+/functions/v1/create-payment-order' "$test_root/function-server.log" | tail -n 1 || true)"
             if [[ -n "$function_url" ]]; then
+              # GET não cria pedido: a resposta 405 confirma que a função respondeu.
               status_code="$(curl --silent --output /dev/null --write-out '%{http_code}' \
-                --request OPTIONS "$function_url" \
-                --header 'Origin: http://127.0.0.1:4173' \
-                --header 'Access-Control-Request-Method: POST' \
-                --header 'Access-Control-Request-Headers: authorization, apikey, content-type' || true)"
-              if [[ "$status_code" == "204" ]]; then
+                --request GET "$function_url" || true)"
+              if [[ "$status_code" == "405" ]]; then
                 function_ready=true
                 break
               fi
@@ -456,7 +454,7 @@ jobs:
           done
           if [[ "$function_ready" != "true" ]]; then
             cat "$test_root/function-server.log"
-            echo "A Edge Function local não iniciou com o preflight CORS esperado."
+            echo "A Edge Function local não respondeu ao GET de prontidão esperado (405)."
             exit 1
           fi
 
