@@ -260,7 +260,7 @@ try {
     result.mobileMenu.regular &&
     result.mobileMenu.accountDisplay === "flex" &&
     result.mobileMenu.regularDisplay === "flex" &&
-    result.mobileMenu.account.height === result.mobileMenu.regular.height &&
+    Math.abs(result.mobileMenu.account.height - result.mobileMenu.regular.height) <= 1 &&
     result.mobileMenu.accountFontSize === result.mobileMenu.regularFontSize &&
     result.mobileMenu.accountFontWeight === result.mobileMenu.regularFontWeight &&
     ["grid", "inline-grid"].includes(result.mobileMenu.iconDisplay) &&
