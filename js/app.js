@@ -281,12 +281,6 @@
         toggle.type = "button";
         toggle.className = "nav-menu-group-toggle";
         toggle.textContent = title.textContent.trim();
-        if (!group.id) {
-          group.id = group.classList.contains("nav-menu-group--help")
-            ? "nav-menu-help"
-            : "nav-menu-discover";
-        }
-        toggle.setAttribute("aria-controls", group.id);
         toggle.setAttribute("aria-expanded", "true");
         group.classList.add("is-open");
         title.replaceWith(toggle);
