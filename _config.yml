@@ -5,4 +5,5 @@ exclude:
   - docs/
   - supabase/
   - tests/
-  - scripts/validar_educacao.py
+  - scripts/
+  - previa/
