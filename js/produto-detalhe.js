@@ -50,6 +50,67 @@
 
       if (!produto) throw new Error("Este produto não foi encontrado no catálogo.");
 
+      /* Galeria compartilhada das páginas individuais: usa somente fotos cadastradas no catálogo. */
+      var quadroProduto = document.querySelector(".product-detail-image");
+      var imagemPrincipal = quadroProduto && quadroProduto.querySelector("img");
+      var galeriaLegada = document.querySelector(".product-image-gallery");
+      if (galeriaLegada) galeriaLegada.remove();
+
+      if (quadroProduto && imagemPrincipal) {
+        var fotosProduto = Array.isArray(produto.imagens)
+          ? produto.imagens.filter(function (foto) { return typeof foto === "string" && foto.trim(); })
+          : [];
+        if (produto.imagem && fotosProduto.indexOf(produto.imagem) === -1) {
+          fotosProduto.unshift(produto.imagem);
+        }
+
+        function caminhoFotoProduto(caminho) {
+          if (caminho.indexOf("http://") === 0 || caminho.indexOf("https://") === 0 || caminho.charAt(0) === "/" || caminho.indexOf("../") === 0) return caminho;
+          return "../" + (caminho.indexOf("./") === 0 ? caminho.slice(2) : caminho);
+        }
+
+        if (fotosProduto.length) {
+          imagemPrincipal.src = caminhoFotoProduto(fotosProduto[0]);
+          imagemPrincipal.alt = produto.nome || "Produto Luxuriosa";
+        }
+
+        if (fotosProduto.length > 1) {
+          var galeria = document.createElement("div");
+          galeria.className = "product-detail-gallery";
+          galeria.setAttribute("role", "group");
+          galeria.setAttribute("aria-label", "Fotos de " + (produto.nome || "produto"));
+
+          fotosProduto.forEach(function (foto, indice) {
+            var miniaturaBotao = document.createElement("button");
+            miniaturaBotao.type = "button";
+            miniaturaBotao.className = "product-detail-gallery-thumb";
+            miniaturaBotao.setAttribute("aria-label", "Ver foto " + (indice + 1) + " de " + fotosProduto.length);
+            miniaturaBotao.setAttribute("aria-pressed", indice === 0 ? "true" : "false");
+
+            var miniaturaImagem = document.createElement("img");
+            miniaturaImagem.src = caminhoFotoProduto(foto);
+            miniaturaImagem.alt = "";
+            miniaturaImagem.loading = "lazy";
+            miniaturaImagem.decoding = "async";
+            miniaturaBotao.appendChild(miniaturaImagem);
+
+            miniaturaBotao.addEventListener("click", function () {
+              imagemPrincipal.src = caminhoFotoProduto(foto);
+              imagemPrincipal.alt = (produto.nome || "Produto Luxuriosa") + " — foto " + (indice + 1);
+              galeria.querySelectorAll("button").forEach(function (outro) {
+                outro.setAttribute("aria-pressed", "false");
+              });
+              miniaturaBotao.setAttribute("aria-pressed", "true");
+            });
+
+            galeria.appendChild(miniaturaBotao);
+          });
+
+          quadroProduto.appendChild(galeria);
+        }
+      }
+
+
       window.LuxuriosaCarrinho.sincronizarCatalogo(dados.produtos);
 
       if (produto.esgotado) {

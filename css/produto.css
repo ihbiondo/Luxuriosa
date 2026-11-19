@@ -472,3 +472,93 @@
     font-size: 11px;
   }
 }
+
+
+/* Galeria das páginas individuais: miniaturas sempre vinculadas ao quadro principal. */
+.product-detail-page .product-detail-image {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  min-width: 0;
+}
+.product-detail-page .product-detail-image > img {
+  width: 100%;
+  max-width: 100%;
+}
+.product-detail-gallery {
+  display: flex;
+  width: 100%;
+  max-width: 100%;
+  gap: 9px;
+  overflow-x: auto;
+  padding: 2px 1px 7px;
+  overscroll-behavior-x: contain;
+  scrollbar-width: thin;
+}
+.product-detail-gallery-thumb {
+  flex: 0 0 68px;
+  width: 68px;
+  height: 68px;
+  padding: 5px;
+  border: 1px solid rgba(212,175,124,.28);
+  border-radius: 10px;
+  background: rgba(255,255,255,.035);
+  cursor: pointer;
+}
+.product-detail-gallery-thumb[aria-pressed="true"] {
+  border: 2px solid var(--gold);
+  background: rgba(139,30,63,.18);
+}
+.product-detail-gallery-thumb img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.product-detail-gallery-thumb:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 3px;
+}
+@media (max-width: 760px) {
+  .product-detail-page .product-detail-image {
+    gap: 11px;
+    padding: 12px;
+  }
+  .product-detail-gallery {
+    justify-content: flex-start;
+    gap: 8px;
+  }
+  .product-detail-gallery-thumb {
+    flex-basis: 60px;
+    width: 60px;
+    height: 60px;
+  }
+}
+
+
+/* Ajustes finais da galeria: evita que a regra da foto principal amplie miniaturas. */
+.product-detail-page .product-detail-image .product-detail-gallery-thumb img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  max-height: none;
+  object-fit: contain;
+}
+@media (max-width: 760px) {
+  .product-detail-page .product-detail-image {
+    height: auto;
+    max-height: none;
+    min-height: 0;
+  }
+  .product-detail-page .product-detail-image > img {
+    width: 100%;
+    height: auto;
+    max-height: min(70dvh, 380px);
+    object-fit: contain;
+  }
+  .product-detail-page .product-detail-image .product-detail-gallery-thumb img {
+    height: 100%;
+    max-height: none;
+  }
+}
