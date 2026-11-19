@@ -569,10 +569,13 @@
 
 /* Breadcrumbs com área confortável para toque nas páginas individuais. */
 @media (max-width: 760px) {
-  .product-detail-page .product-breadcrumb a {
-    display: inline-flex;
+  .product-breadcrumb a {
+    display: inline-flex !important;
     align-items: center;
-    min-height: 40px;
-    padding: 4px 0;
+    height: 40px !important;
+    min-height: 40px !important;
+    padding: 4px 0 !important;
+    box-sizing: border-box;
+    vertical-align: middle;
   }
 }
