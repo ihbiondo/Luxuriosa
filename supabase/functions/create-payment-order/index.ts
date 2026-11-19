@@ -110,6 +110,17 @@ type CatalogProduct = {
 };
 
 async function loadCatalog(): Promise<Map<string, CatalogProduct>> {
+  if (LOCAL_E2E_MODE) {
+    const fixture: CatalogProduct = {
+      id: 6,
+      nome: "Ducha Higiênica — Preta",
+      categoria: "Higiene íntima",
+      sku: "E2E-ONLY",
+      preco: 34.9,
+      esgotado: false
+    };
+    return new Map([[String(fixture.id), fixture]]);
+  }
   const response = await fetch(CATALOG_URL + "?v=" + Date.now(), {
     headers: { "cache-control": "no-cache" }
   });
