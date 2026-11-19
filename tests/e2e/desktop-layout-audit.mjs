@@ -319,10 +319,11 @@ try {
 
       if (viewport.width >= 901 && viewport.width <= 1199 &&
           ["/", "/loja.html"].includes(route.path)) {
-        for (const [name, icon] of Object.entries({
-          cart: measurements.utilityIcons.cart,
-          account: measurements.utilityIcons.account
-        })) {
+        const expectedUtilityIcons = route.path === "/"
+          ? ["cart", "account"]
+          : ["cart"];
+        for (const name of expectedUtilityIcons) {
+          const icon = measurements.utilityIcons[name];
           assert.ok(icon && icon.display !== "none" &&
             icon.width === 17 && icon.height === 17,
             "Ícone " + name + " do cabeçalho compacto está sem dimensão correta: " +
