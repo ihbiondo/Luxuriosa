@@ -99,7 +99,8 @@
     if (!header) return;
 
     /*
-     * O drawer mobile inicia com a Loja expandida e os demais grupos recolhidos.
+     * O drawer mobile inicia com Loja, Atendimento e Conhecer expandidos.
+     * O usuário pode recolher/reabrir Atendimento e Conhecer pelos botões.
      * Os botões são criados no JS para manter a navegação desktop sem alteração.
      */
     function configurarGruposRecolhiveis() {
@@ -111,7 +112,10 @@
         toggle.type = "button";
         toggle.className = "nav-menu-group-toggle";
         toggle.textContent = title.textContent.trim();
-        toggle.setAttribute("aria-expanded", "false");
+        var abrirInicialmente = group.classList.contains("nav-menu-group--help") ||
+          group.classList.contains("nav-menu-group--discover");
+        group.classList.toggle("is-open", abrirInicialmente);
+        toggle.setAttribute("aria-expanded", String(abrirInicialmente));
 
         title.replaceWith(toggle);
         toggle.addEventListener("click", function () {
@@ -148,10 +152,12 @@
     }
 
     function redefinirGruposDoMenu() {
-      menu.querySelectorAll(".nav-menu-group.is-open").forEach(function (group) {
-        group.classList.remove("is-open");
+      menu.querySelectorAll(".nav-menu-group").forEach(function (group) {
+        var abrirInicialmente = group.classList.contains("nav-menu-group--help") ||
+          group.classList.contains("nav-menu-group--discover");
+        group.classList.toggle("is-open", abrirInicialmente);
         var toggle = group.querySelector(":scope > .nav-menu-group-toggle");
-        if (toggle) toggle.setAttribute("aria-expanded", "false");
+        if (toggle) toggle.setAttribute("aria-expanded", String(abrirInicialmente));
       });
       var loja = menu.querySelector(".nav-store-submenu");
       if (loja) loja.open = true;
