@@ -363,3 +363,16 @@
     transition: none !important;
   }
 }
+
+/* A navegação desktop preserva o visual horizontal original. */
+@media (min-width: 1200px) {
+  .nav-submenu { display: none; }
+  .navlinks > .nav-link-shop,
+  .navlinks > .nav-link-shop:hover {
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    color: inherit;
+  }
+  .navlinks .nav-menu-group-toggle { display: none !important; }
+}
