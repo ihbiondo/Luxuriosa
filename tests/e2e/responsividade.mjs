@@ -242,9 +242,12 @@ try {
             return [...document.querySelectorAll(selectors)].map(element => {
               const style = getComputedStyle(element);
               const controlRect = element.getBoundingClientRect();
-              const label = element.labels?.[0] || element.closest("label");
-              const targetRect = label ? label.getBoundingClientRect() : controlRect;
-              const targetStyle = label ? getComputedStyle(label) : style;
+              const wrappingLabel = element.closest("label");
+              const associatedLabel = element.labels?.[0] || null;
+              // Só substitui a área do controle pela área do label quando o label o envolve.
+              // Labels externos de campos de busca podem ser apenas o texto do rótulo, não a área clicável.
+              const targetRect = wrappingLabel ? wrappingLabel.getBoundingClientRect() : controlRect;
+              const targetStyle = wrappingLabel ? getComputedStyle(wrappingLabel) : style;
               const hidden = style.display === "none" ||
                 style.visibility === "hidden" ||
                 targetStyle.display === "none" ||
@@ -254,10 +257,11 @@ try {
               const text = (element.getAttribute("aria-label") ||
                 element.getAttribute("title") ||
                 element.getAttribute("placeholder") ||
-                label?.textContent ||
+                wrappingLabel?.textContent ||
+                associatedLabel?.textContent ||
                 element.textContent || "").trim().replace(/\s+/g, " ").slice(0, 90);
               const iconOnly = !((element.textContent || "").trim()) &&
-                !element.getAttribute("placeholder") && !label;
+                !element.getAttribute("placeholder") && !wrappingLabel;
               return {
                 tag: element.tagName.toLowerCase(),
                 type: element.getAttribute("type") || "",
@@ -268,7 +272,7 @@ try {
                 height: Number(targetRect.height.toFixed(1)),
                 controlWidth: Number(controlRect.width.toFixed(1)),
                 controlHeight: Number(controlRect.height.toFixed(1)),
-                measuredViaLabel: Boolean(label),
+                measuredViaLabel: Boolean(wrappingLabel),
                 below24: targetRect.width < 24 || targetRect.height < 24,
                 belowComfort40: targetRect.height < 40 || (iconOnly && targetRect.width < 40),
                 iconOnly
