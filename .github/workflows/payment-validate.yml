@@ -161,8 +161,8 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: responsividade-mobile-${{ github.run_id }}
-          path: e2e-screenshots/responsividade/
+          name: auditoria-visual-site-${{ github.run_id }}
+          path: e2e-screenshots/
           if-no-files-found: warn
           retention-days: 7
 
