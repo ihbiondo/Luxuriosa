@@ -471,7 +471,8 @@ try {
         return {
           name: toggle?.textContent.trim() || "",
           expanded: toggle?.getAttribute("aria-expanded") === "true",
-          hiddenByDefault: childLinks.every(item => getComputedStyle(item).display === "none")
+          visibleByDefault: childLinks.length > 0 &&
+            childLinks.every(item => getComputedStyle(item).display !== "none")
         };
       }),
       experienceMenuOrder: (() => {
@@ -501,21 +502,48 @@ try {
   result.mobileMenu.accordionsCorrect = Boolean(
     result.mobileMenu.storeCategoriesOpen &&
     result.mobileMenu.accordionGroups.length === 2 &&
-    result.mobileMenu.accordionGroups.every(group => !group.expanded && group.hiddenByDefault) &&
+    result.mobileMenu.accordionGroups.every(group => group.expanded && group.visibleByDefault) &&
     result.mobileMenu.experienceMenuOrder.join("|") ===
       "Conexão a dois|Astrologia|Quizzes|Desafios"
   );
 
-  const conhecerToggle = page.locator("#navlinks .nav-menu-group--discover > .nav-menu-group-toggle");
+  const conhecerGroup = page.locator("#navlinks .nav-menu-group--discover");
+  const conhecerToggle = conhecerGroup.locator(":scope > .nav-menu-group-toggle");
+  await conhecerToggle.click();
+  await page.waitForFunction(() =>
+    !document.querySelector("#navlinks .nav-menu-group--discover")?.classList.contains("is-open") &&
+    document.querySelector("#navlinks .nav-menu-group--discover > .nav-menu-group-toggle")?.getAttribute("aria-expanded") === "false"
+  );
+  const linksRecolhidos = await conhecerGroup.locator(":scope > a, :scope > .nav-submenu").evaluateAll(items =>
+    items.length > 0 && items.every(item => getComputedStyle(item).display === "none")
+  );
   await conhecerToggle.click();
   await page.waitForFunction(() =>
     document.querySelector("#navlinks .nav-menu-group--discover")?.classList.contains("is-open") &&
     document.querySelector("#navlinks .nav-menu-group--discover > .nav-menu-group-toggle")?.getAttribute("aria-expanded") === "true"
   );
-  result.mobileMenu.accordionInteractionWorks = await page.locator(
-    "#navlinks .nav-menu-group--discover.is-open > .nav-menu-group-toggle"
-  ).getAttribute("aria-expanded") === "true";
-  await conhecerToggle.click();
+  result.mobileMenu.accordionInteractionWorks =
+    linksRecolhidos &&
+    await conhecerGroup.locator(":scope > .nav-menu-group-toggle").getAttribute("aria-expanded") === "true";
+
+  // Fechar e reabrir o drawer restaura as listas visíveis por padrão.
+  await page.locator("#navlinks .nav-drawer-close").click();
+  await page.locator("#navlinks.open").waitFor({ state: "detached", timeout: 1000 }).catch(() => {});
+  await page.locator("#burger").click();
+  await page.locator("#navlinks.open").waitFor({ state: "visible", timeout: 8000 });
+  result.mobileMenu.initialListsRestoreAfterReopen = await page.evaluate(() => {
+    const groups = [...document.querySelectorAll(
+      "#navlinks .nav-menu-group--help, #navlinks .nav-menu-group--discover"
+    )];
+    return groups.length === 2 && groups.every(group => {
+      const toggle = group.querySelector(":scope > .nav-menu-group-toggle");
+      const children = [...group.querySelectorAll(":scope > a, :scope > .nav-submenu")];
+      return group.classList.contains("is-open") &&
+        toggle?.getAttribute("aria-expanded") === "true" &&
+        children.length > 0 &&
+        children.every(item => getComputedStyle(item).display !== "none");
+    });
+  });
 
   // A página Experiências deve destacar Conexão a dois e Astrologia antes das demais opções.
   await openPage(page, "/experiencias/", { name: "mobile-390", width: 390, height: 844 });
@@ -793,6 +821,7 @@ const failed = result.routeFailures.length > 0 ||
   result.productGalleryFailures.length > 0 ||
   !result.mobileMenu?.accordionsCorrect ||
   !result.mobileMenu?.accordionInteractionWorks ||
+  !result.mobileMenu?.initialListsRestoreAfterReopen ||
   result.experiencesPresentationOrder?.categories.join("|") !== "Conexão a dois|Astrologia|Quizzes|Desafios" ||
   result.experiencesPresentationOrder?.featured.join("|") !==
     "Conexão a dois.|Seu signo, suas descobertas.|Descubra seu estilo.|Mitos ou verdades?|Pequenas descobertas." ||
@@ -835,6 +864,7 @@ console.log(JSON.stringify({
     mobileMenuAccountAligned: result.mobileMenu?.accountRowAligned ?? false,
     mobileMenuAccordionsCorrect: result.mobileMenu?.accordionsCorrect ?? false,
     mobileMenuAccordionInteractionWorks: result.mobileMenu?.accordionInteractionWorks ?? false,
+    mobileMenuInitialListsRestoreAfterReopen: result.mobileMenu?.initialListsRestoreAfterReopen ?? false,
     experiencesPresentationOrder: result.experiencesPresentationOrder,
     productPagesChecked: result.productGalleries.length,
     productGalleryFailures: result.productGalleryFailures.length,
@@ -888,7 +918,8 @@ assert.equal((result.portraitCardFailures || []).length, 0, "Cards de lingerie n
 assert.equal(result.lingerieCards.length, 14, "A auditoria deve conferir as 14 lingeries do catálogo.");
 assert.ok(result.mobileMenu?.accountRowAligned,
   "Minha conta deve alinhar-se como item comum do menu mobile: " + JSON.stringify(result.mobileMenu));
-assert.ok(result.mobileMenu?.accordionsCorrect && result.mobileMenu?.accordionInteractionWorks,
+assert.ok(result.mobileMenu?.accordionsCorrect && result.mobileMenu?.accordionInteractionWorks &&
+  result.mobileMenu?.initialListsRestoreAfterReopen,
   "O menu mobile deve iniciar com somente a Loja expandida, recolher os demais grupos e permitir expandi-los: " +
   JSON.stringify(result.mobileMenu));
 assert.deepEqual(result.experiencesPresentationOrder?.categories,
