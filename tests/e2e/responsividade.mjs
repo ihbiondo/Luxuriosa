@@ -665,6 +665,7 @@ const failed = result.routeFailures.length > 0 ||
   result.lingerieBodyNavigation?.modalOpened ||
   !result.lingerieBodyNavigation320?.destinationMatched ||
   result.lingerieBodyNavigation320?.modalOpened ||
+  result.lingerieBodyNavigation320?.horizontalOverflow ||
   !result.catalogImageNavigation?.clickStaysOutsideCard ||
   !result.productGalleryLayout ||
   result.productGalleryLayout.imageFillRatio < 0.84 ||
@@ -729,14 +730,18 @@ assert.equal(result.lingerieCards.length, 14, "A auditoria deve conferir as 14 l
 assert.ok(result.mobileMenu?.accountRowAligned,
   "Minha conta deve alinhar-se como item comum do menu mobile: " + JSON.stringify(result.mobileMenu));
 assert.equal(result.productGalleryFailures.length, 0, "Uma ou mais páginas individuais não exibem/trocam todas as fotos cadastradas.");
+assert.equal(result.catalogGridNavigation?.rendered, expectedCatalogCards,
+  "A auditoria deve validar a navegação de todos os cards.");
 assert.equal(result.catalogGridNavigation?.failures.length, 0,
   "Um ou mais cards não apontam para sua página individual: " + JSON.stringify(result.catalogGridNavigation?.failures));
 assert.ok(result.catalogBodyNavigation?.destinationMatched && !result.catalogBodyNavigation?.modalOpened,
   "Clicar no corpo do card da loja não abriu a página individual.");
 assert.ok(result.lingerieBodyNavigation?.destinationMatched && !result.lingerieBodyNavigation?.modalOpened,
   "Clicar no corpo do card de Lingerie não abriu a página individual.");
-assert.ok(result.lingerieBodyNavigation320?.destinationMatched && !result.lingerieBodyNavigation320?.modalOpened,
-  "A navegação do card de Lingerie falhou em 320 px.");
+assert.ok(result.lingerieBodyNavigation320?.destinationMatched &&
+  !result.lingerieBodyNavigation320?.modalOpened &&
+  !result.lingerieBodyNavigation320?.horizontalOverflow,
+  "A navegação do card de Lingerie falhou ou gerou rolagem horizontal em 320 px.");
 assert.ok(result.catalogImageNavigation?.destinationMatched,
   "Clicar na foto do card não abriu a página de detalhes correspondente.");
 assert.ok(result.catalogImageNavigation?.clickStaysOutsideCard,
