@@ -489,12 +489,14 @@ try {
       element.style.setProperty("display", "none", "important");
     });
   });
-  await page.locator("#grid .product").first().click({ force: true });
+  // A foto agora é um link de navegação e não deve abrir o modal.
+  // O título está na área de conteúdo do card e continua abrindo o modal.
+  await page.locator("#grid .product").first().locator(".product-body h3").click();
   await page.waitForFunction(() => {
     const modal = document.querySelector("#modal");
     return modal && getComputedStyle(modal).display !== "none" &&
       getComputedStyle(modal).visibility !== "hidden";
-  }, null, { timeout: 8000 }).catch(() => {});
+  }, null, { timeout: 8000 });
   const modalState = await page.evaluate(() => {
     const modal = document.querySelector("#modal");
     const content = modal?.querySelector(".modal");
