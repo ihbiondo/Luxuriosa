@@ -155,6 +155,7 @@ const result = {
   publicMobileViewportFailures: [],
   mobileTouchTargets: [],
   mobileTouchTargetFailures: [],
+  mobileTouchTargetComfortFailures: [],
   homeFeaturedImages: [],
   homeFeaturedImageFailures: [],
   experiencesPresentationOrder: null,
@@ -287,6 +288,7 @@ try {
           };
           result.mobileTouchTargets.push(pageTargets);
           if (pageTargets.below24.length) result.mobileTouchTargetFailures.push(pageTargets);
+          if (pageTargets.belowComfort40.length) result.mobileTouchTargetComfortFailures.push(pageTargets);
         }
 
         if ((item.status !== null && item.status >= 400) ||
@@ -963,6 +965,7 @@ console.log(JSON.stringify({
   publicMobileViewportFailures: result.publicMobileViewportFailures,
   mobileTouchTargets: result.mobileTouchTargets,
   mobileTouchTargetFailures: result.mobileTouchTargetFailures,
+  mobileTouchTargetComfortFailures: result.mobileTouchTargetComfortFailures,
   homeFeaturedImages: result.homeFeaturedImages,
   homeFeaturedImageFailures: result.homeFeaturedImageFailures,
   experiencesPresentationOrder: result.experiencesPresentationOrder,
@@ -983,6 +986,9 @@ assert.equal(result.publicMobileViewportFailures.length, 0,
 assert.equal(result.mobileTouchTargetFailures.length, 0,
   "Foram encontrados controles essenciais menores que 24 × 24 px: " +
   JSON.stringify(result.mobileTouchTargetFailures.slice(0, 15)));
+assert.equal(result.mobileTouchTargetComfortFailures.length, 0,
+  "Foram encontrados controles importantes abaixo de 40 px de altura/largura: " +
+  JSON.stringify(result.mobileTouchTargetComfortFailures.slice(0, 15)));
 assert.equal(result.homeFeaturedImageFailures.length, 0,
   "Uma ou mais imagens dos kits em destaque da home não carregaram: " +
   JSON.stringify(result.homeFeaturedImageFailures));
