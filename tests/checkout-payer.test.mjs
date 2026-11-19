@@ -2,15 +2,20 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 
-const html = readFileSync("loja.html", "utf8");
+const checkoutPages = ["index.html", "loja.html"].map((path) => ({ path, html: readFileSync(path, "utf8") }));
 const client = readFileSync("js/clientes.js", "utf8");
 const backend = readFileSync("supabase/functions/create-payment-order/index.ts", "utf8");
 
 test("checkout apresenta a escolha do responsável pelo pagamento", () => {
-  assert.match(html, /id="customerPayerType"[\s\S]*?value="account_holder"/);
-  assert.match(html, /value="third_party"/);
-  assert.match(html, /id="customerPayerName"/);
-  assert.match(html, /id="customerPayerPhone"/);
+  for (const { path, html } of checkoutPages) {
+    assert.match(html, /id="customerPayerType"[\s\S]*?value="account_holder"/, path);
+    assert.match(html, /value="third_party"/, path);
+    assert.match(html, /id="customerPayerName"/, path);
+    assert.match(html, /id="customerPayerPhone"/, path);
+    assert.match(html, /id="customerMarketingWhatsAppOptIn"/, path);
+  }
+  const customerIds = (html) => [...html.matchAll(/\bid="(customer[^"]+)"/g)].map((match) => match[1]).sort();
+  assert.deepEqual(customerIds(checkoutPages[0].html), customerIds(checkoutPages[1].html), "A home e a loja devem manter os mesmos controles de checkout.");
 });
 
 test("frontend valida, preserva e envia os dados do pagador dentro de customer", () => {
