@@ -241,27 +241,36 @@ try {
             ].join(",");
             return [...document.querySelectorAll(selectors)].map(element => {
               const style = getComputedStyle(element);
-              const rect = element.getBoundingClientRect();
+              const controlRect = element.getBoundingClientRect();
+              const label = element.labels?.[0] || element.closest("label");
+              const targetRect = label ? label.getBoundingClientRect() : controlRect;
+              const targetStyle = label ? getComputedStyle(label) : style;
               const hidden = style.display === "none" ||
                 style.visibility === "hidden" ||
+                targetStyle.display === "none" ||
+                targetStyle.visibility === "hidden" ||
                 Boolean(element.closest("[hidden], [aria-hidden='true']"));
-              if (hidden || rect.width <= 0 || rect.height <= 0) return null;
+              if (hidden || targetRect.width <= 0 || targetRect.height <= 0) return null;
               const text = (element.getAttribute("aria-label") ||
                 element.getAttribute("title") ||
                 element.getAttribute("placeholder") ||
+                label?.textContent ||
                 element.textContent || "").trim().replace(/\s+/g, " ").slice(0, 90);
               const iconOnly = !((element.textContent || "").trim()) &&
-                !element.getAttribute("placeholder");
+                !element.getAttribute("placeholder") && !label;
               return {
                 tag: element.tagName.toLowerCase(),
                 type: element.getAttribute("type") || "",
                 text,
                 id: element.id || "",
                 className: typeof element.className === "string" ? element.className.slice(0, 100) : "",
-                width: Number(rect.width.toFixed(1)),
-                height: Number(rect.height.toFixed(1)),
-                below24: rect.width < 24 || rect.height < 24,
-                belowComfort40: rect.height < 40 || (iconOnly && rect.width < 40),
+                width: Number(targetRect.width.toFixed(1)),
+                height: Number(targetRect.height.toFixed(1)),
+                controlWidth: Number(controlRect.width.toFixed(1)),
+                controlHeight: Number(controlRect.height.toFixed(1)),
+                measuredViaLabel: Boolean(label),
+                below24: targetRect.width < 24 || targetRect.height < 24,
+                belowComfort40: targetRect.height < 40 || (iconOnly && targetRect.width < 40),
                 iconOnly
               };
             }).filter(Boolean);
