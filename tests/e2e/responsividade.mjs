@@ -491,7 +491,7 @@ try {
   });
   // A foto agora é um link de navegação e não deve abrir o modal.
   // O título está na área de conteúdo do card e continua abrindo o modal.
-  await page.locator("#grid .product").first().locator(".product-body h3").click();
+  await page.locator("#grid .product").filter({ hasText: "Body Sensual Rendado — Frente Única" }).first().locator(".product-body h3").click();
   await page.waitForFunction(() => {
     const modal = document.querySelector("#modal");
     return modal && getComputedStyle(modal).display !== "none" &&
@@ -520,6 +520,25 @@ try {
     };
   });
   result.modal = modalState;
+
+  const modalThumbPrecheck = await page.evaluate(() => {
+    const modal = document.querySelector("#modal");
+    const images = [...document.querySelectorAll("#modal .product-gallery-thumb img")];
+    return {
+      open: Boolean(modal?.classList.contains("open")),
+      product: document.querySelector("#mNome")?.textContent || "",
+      count: images.length,
+      images: images.map(image => ({
+        src: image.getAttribute("src"),
+        complete: image.complete,
+        naturalWidth: image.naturalWidth
+      }))
+    };
+  });
+  console.log("Modal gallery precheck: " + JSON.stringify(modalThumbPrecheck));
+  if (!modalThumbPrecheck.open || modalThumbPrecheck.count < 2) {
+    throw new Error("O modal não abriu a galeria esperada do Body ID 31: " + JSON.stringify(modalThumbPrecheck));
+  }
 
   // As miniaturas do modal estão na tela: exige que todas terminem de carregar antes da captura.
   await page.waitForFunction(() => {
@@ -559,7 +578,7 @@ try {
       element.style.setProperty("display", "none", "important");
     });
   });
-  await page.locator("#grid .product").first().click({ force: true }).catch(() => {});
+  await page.locator("#grid .product").filter({ hasText: "Body Sensual Rendado — Frente Única" }).first().locator(".product-body h3").click({ force: true }).catch(() => {});
   await page.waitForTimeout(120);
   const modal320 = await inspectLayout(page, "/loja/lingerie/ (modal 320 px)", {
     name: "mobile-320", width: 320, height: 740
