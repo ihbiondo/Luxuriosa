@@ -153,6 +153,10 @@ jobs:
           RESPONSIVE_REPORT_PATH="$GITHUB_WORKSPACE/e2e-screenshots/responsividade/report.json" \
           E2E_BASE_URL="http://127.0.0.1:4173" \
           node tests/e2e/responsividade.mjs
+          DESKTOP_SCREENSHOT_DIR="$GITHUB_WORKSPACE/e2e-screenshots/desktop" \
+          DESKTOP_REPORT_PATH="$GITHUB_WORKSPACE/e2e-screenshots/desktop/report.json" \
+          E2E_BASE_URL="http://127.0.0.1:4173" \
+          node tests/e2e/desktop-layout-audit.mjs
       - name: Publicar relatório e capturas responsivas
         if: always()
         uses: actions/upload-artifact@v4
