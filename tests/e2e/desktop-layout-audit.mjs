@@ -202,6 +202,37 @@ async function inspect(page, route, viewport) {
       accountStroke: document.querySelector("header .account-trigger-icon svg")
         ? getComputedStyle(document.querySelector("header .account-trigger-icon svg")).stroke : null
     };
+    const nav = document.querySelector("header .navlinks");
+    const navStyle = nav ? getComputedStyle(nav) : null;
+    const visibleNavItems = nav
+      ? [...nav.querySelectorAll("a[href]")].filter(visible).map(element => {
+          const box = element.getBoundingClientRect();
+          return {
+            label: (element.innerText || "").trim().replace(/\\s+/g, " "),
+            href: element.getAttribute("href"),
+            left: Math.round(box.left),
+            right: Math.round(box.right),
+            top: Math.round(box.top),
+            bottom: Math.round(box.bottom)
+          };
+        })
+      : [];
+    const accountUtility = document.querySelector("header .nav-right > .account-trigger");
+    const burger = document.querySelector("header .nav-right > .burger");
+    const desktopNavigation = {
+      display: navStyle?.display || null,
+      position: navStyle?.position || null,
+      flexDirection: navStyle?.flexDirection || null,
+      bounds: rect(nav),
+      clientWidth: nav?.clientWidth ?? 0,
+      scrollWidth: nav?.scrollWidth ?? 0,
+      items: visibleNavItems,
+      submenusVisible: nav
+        ? [...nav.querySelectorAll(".nav-submenu, .nav-store-submenu, .nav-drawer-top, .nav-drawer-footer")].some(visible)
+        : false,
+      accountUtilityVisible: Boolean(accountUtility && visible(accountUtility)),
+      burgerVisible: Boolean(burger && visible(burger))
+    };
 
     return {
       route: routePath,
@@ -210,6 +241,7 @@ async function inspect(page, route, viewport) {
       navigationCss: navigationStylesheet?.getAttribute("href") || null,
       menuIcons,
       utilityIcons,
+      desktopNavigation,
       document: {
         clientWidth: document.documentElement.clientWidth,
         scrollWidth: document.documentElement.scrollWidth,
@@ -245,6 +277,44 @@ try {
           "Ícones do menu mobile não foram ocultados no desktop: " +
             JSON.stringify(measurements.menuIcons)
         );
+
+        const navigation = measurements.desktopNavigation;
+        const expectedItems = [
+          "Minha conta",
+          "Loja",
+          "Atendimento",
+          "Entregas",
+          "Dúvidas frequentes",
+          "Educação",
+          "Experiências"
+        ];
+        assert.deepEqual(
+          navigation.items.map(item => item.label),
+          expectedItems,
+          "A navegação desktop deve reproduzir a lista plana aprovada no mobile."
+        );
+        assert.equal(navigation.display, "flex", "Menu desktop não está visível.");
+        assert.equal(navigation.position, "static", "Menu desktop não deve funcionar como painel flutuante.");
+        assert.equal(navigation.flexDirection, "row", "Menu desktop deve permanecer horizontal.");
+        assert.ok(
+          navigation.scrollWidth <= navigation.clientWidth + 2,
+          "Os links do menu desktop não cabem na largura disponível."
+        );
+        assert.equal(navigation.submenusVisible, false, "Submenus antigos não devem aparecer no desktop.");
+        assert.equal(navigation.accountUtilityVisible, false, "Minha conta não deve aparecer duplicada no cabeçalho.");
+        assert.equal(navigation.burgerVisible, false, "O botão lateral não deve aparecer no desktop.");
+
+        const centers = navigation.items.map(item => item.top);
+        assert.ok(
+          Math.max(...centers) - Math.min(...centers) <= 4,
+          "Os links do menu desktop não estão alinhados na mesma linha."
+        );
+        for (let index = 1; index < navigation.items.length; index += 1) {
+          assert.ok(
+            navigation.items[index].left >= navigation.items[index - 1].right - 2,
+            "Os links do menu desktop estão sobrepostos: " + JSON.stringify(navigation.items)
+          );
+        }
       }
 
       if (viewport.width >= 901 && viewport.width <= 1199 &&
