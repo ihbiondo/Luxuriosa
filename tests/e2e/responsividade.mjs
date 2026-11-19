@@ -153,6 +153,8 @@ const result = {
   overflowFailures: [],
   publicMobileViewportResults: [],
   publicMobileViewportFailures: [],
+  mobileTouchTargets: [],
+  mobileTouchTargetFailures: [],
   homeFeaturedImages: [],
   homeFeaturedImageFailures: [],
   experiencesPresentationOrder: null,
@@ -220,6 +222,73 @@ try {
           ...(await inspectLayout(page, route, viewport))
         };
         result.publicMobileViewportResults.push(item);
+
+        // Registra alvos de toque reais no celular estreito, sem tratar links inline de texto como botões.
+        if (viewport.width === 320) {
+          const targets = await page.evaluate(() => {
+            const selectors = [
+              "button",
+              "input:not([type='hidden'])",
+              "select",
+              "textarea",
+              "summary",
+              "[role='button']",
+              "a.btn",
+              "a.button",
+              ".navlinks a",
+              ".product-detail-gallery button",
+              ".filters button"
+            ].join(",");
+            return [...document.querySelectorAll(selectors)].map(element => {
+              const style = getComputedStyle(element);
+              const controlRect = element.getBoundingClientRect();
+              const wrappingLabel = element.closest("label");
+              const associatedLabel = element.labels?.[0] || null;
+              // Só substitui a área do controle pela área do label quando o label o envolve.
+              // Labels externos de campos de busca podem ser apenas o texto do rótulo, não a área clicável.
+              const targetRect = wrappingLabel ? wrappingLabel.getBoundingClientRect() : controlRect;
+              const targetStyle = wrappingLabel ? getComputedStyle(wrappingLabel) : style;
+              const hidden = style.display === "none" ||
+                style.visibility === "hidden" ||
+                targetStyle.display === "none" ||
+                targetStyle.visibility === "hidden" ||
+                Boolean(element.closest("[hidden], [aria-hidden='true']"));
+              if (hidden || targetRect.width <= 0 || targetRect.height <= 0) return null;
+              const text = (element.getAttribute("aria-label") ||
+                element.getAttribute("title") ||
+                element.getAttribute("placeholder") ||
+                wrappingLabel?.textContent ||
+                associatedLabel?.textContent ||
+                element.textContent || "").trim().replace(/\s+/g, " ").slice(0, 90);
+              const iconOnly = !((element.textContent || "").trim()) &&
+                !element.getAttribute("placeholder") && !wrappingLabel;
+              return {
+                tag: element.tagName.toLowerCase(),
+                type: element.getAttribute("type") || "",
+                text,
+                id: element.id || "",
+                className: typeof element.className === "string" ? element.className.slice(0, 100) : "",
+                width: Number(targetRect.width.toFixed(1)),
+                height: Number(targetRect.height.toFixed(1)),
+                controlWidth: Number(controlRect.width.toFixed(1)),
+                controlHeight: Number(controlRect.height.toFixed(1)),
+                measuredViaLabel: Boolean(wrappingLabel),
+                below24: targetRect.width < 24 || targetRect.height < 24,
+                belowComfort40: targetRect.height < 40 || (iconOnly && targetRect.width < 40),
+                iconOnly
+              };
+            }).filter(Boolean);
+          });
+          const pageTargets = {
+            route,
+            targets,
+            below24: targets.filter(target => target.below24),
+            belowComfort40: targets.filter(target => target.belowComfort40)
+          };
+          result.mobileTouchTargets.push(pageTargets);
+          if (pageTargets.below24.length) result.mobileTouchTargetFailures.push(pageTargets);
+        }
+
         if ((item.status !== null && item.status >= 400) ||
             item.horizontalOverflow || !item.hasViewportMeta) {
           result.publicMobileViewportFailures.push(item);
@@ -849,6 +918,10 @@ console.log(JSON.stringify({
     horizontalOverflowFailures: result.overflowFailures.length,
     publicMobileViewportChecks: result.publicMobileViewportResults.length,
     publicMobileViewportFailures: result.publicMobileViewportFailures.length,
+    mobileTouchTargetRoutes: result.mobileTouchTargets.length,
+    mobileTouchTargetsChecked: result.mobileTouchTargets.reduce((sum, item) => sum + item.targets.length, 0),
+    mobileTouchTargetsBelow24: result.mobileTouchTargets.reduce((sum, item) => sum + item.below24.length, 0),
+    mobileTouchTargetsBelowComfort40: result.mobileTouchTargets.reduce((sum, item) => sum + item.belowComfort40.length, 0),
     homeFeaturedImages: result.homeFeaturedImages.length,
     homeFeaturedImageFailures: result.homeFeaturedImageFailures.length,
     missingViewportMeta: result.missingViewportMeta.length,
@@ -888,6 +961,8 @@ console.log(JSON.stringify({
   overflowFailures: result.overflowFailures,
   publicMobileViewportResults: result.publicMobileViewportResults,
   publicMobileViewportFailures: result.publicMobileViewportFailures,
+  mobileTouchTargets: result.mobileTouchTargets,
+  mobileTouchTargetFailures: result.mobileTouchTargetFailures,
   homeFeaturedImages: result.homeFeaturedImages,
   homeFeaturedImageFailures: result.homeFeaturedImageFailures,
   experiencesPresentationOrder: result.experiencesPresentationOrder,
@@ -905,6 +980,9 @@ assert.equal(result.overflowFailures.length, 0, "Foram encontrados casos de rola
 assert.equal(result.publicMobileViewportFailures.length, 0,
   "Foram encontradas falhas nas rotas públicas em 320/390 px: " +
   JSON.stringify(result.publicMobileViewportFailures.slice(0, 20)));
+assert.equal(result.mobileTouchTargetFailures.length, 0,
+  "Foram encontrados controles essenciais menores que 24 × 24 px: " +
+  JSON.stringify(result.mobileTouchTargetFailures.slice(0, 15)));
 assert.equal(result.homeFeaturedImageFailures.length, 0,
   "Uma ou mais imagens dos kits em destaque da home não carregaram: " +
   JSON.stringify(result.homeFeaturedImageFailures));
