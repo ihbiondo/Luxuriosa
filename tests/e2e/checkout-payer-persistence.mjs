@@ -164,7 +164,7 @@ try {
   assert.equal(order.customer_phone, "(14) 97777-6666");
   assert.equal(order.payment_payer_type, "third_party");
   assert.equal(order.payment_payer_name, "Pagador Terceiro Persistência");
-  assert.equal(order.payment_payer_phone, "+551498887777");
+  assert.equal(order.payment_payer_phone, "+5514988887777");
   assert.equal(order.payment_payer_source, "website_checkout");
   assert.ok(order.payment_payer_declared_at, "A declaração do pagador deve ter data/hora.");
   assert.equal(order.payment_status, "pending");
