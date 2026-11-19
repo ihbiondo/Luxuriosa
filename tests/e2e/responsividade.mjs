@@ -214,6 +214,62 @@ try {
     }
   }
 
+  // Abre o menu mobile e compara Minha conta com um item comum de navegação.
+  await openPage(page, "/", { name: "mobile-390", width: 390, height: 844 });
+  await page.locator("#burger").click();
+  await page.locator("#navlinks.open").waitFor({ state: "visible", timeout: 8000 });
+  await page.waitForTimeout(300);
+  result.mobileMenu = await page.evaluate(() => {
+    const account = document.querySelector("#navlinks .nav-drawer-account-area > .nav-account-primary");
+    // Minha conta é um link principal; a referência equivalente é Loja, não Atendimento (item de grupo).
+    const regular = document.querySelector("#navlinks > .nav-primary-link.nav-link-shop");
+    const icon = account?.querySelector(".nav-link-icon");
+    const rect = element => {
+      if (!element) return null;
+      const box = element.getBoundingClientRect();
+      return {
+        left: Math.round(box.left),
+        right: Math.round(box.right),
+        width: Math.round(box.width),
+        height: Math.round(box.height)
+      };
+    };
+    const accountStyle = account ? getComputedStyle(account) : null;
+    const regularStyle = regular ? getComputedStyle(regular) : null;
+    const iconStyle = icon ? getComputedStyle(icon) : null;
+    return {
+      viewport: document.documentElement.clientWidth,
+      document: document.documentElement.scrollWidth,
+      account: rect(account),
+      regular: rect(regular),
+      accountDisplay: accountStyle?.display || null,
+      regularDisplay: regularStyle?.display || null,
+      accountFontSize: accountStyle?.fontSize || null,
+      regularFontSize: regularStyle?.fontSize || null,
+      accountFontWeight: accountStyle?.fontWeight || null,
+      regularFontWeight: regularStyle?.fontWeight || null,
+      accountBackground: accountStyle?.backgroundColor || null,
+      accountBorderRadius: accountStyle?.borderRadius || null,
+      iconDisplay: iconStyle?.display || null,
+      iconWidth: icon ? Math.round(icon.getBoundingClientRect().width) : 0,
+      iconHeight: icon ? Math.round(icon.getBoundingClientRect().height) : 0
+    };
+  });
+  result.mobileMenu.accountRowAligned = Boolean(
+    result.mobileMenu.account &&
+    result.mobileMenu.regular &&
+    result.mobileMenu.accountDisplay === "flex" &&
+    result.mobileMenu.regularDisplay === "flex" &&
+    Math.abs(result.mobileMenu.account.height - result.mobileMenu.regular.height) <= 1 &&
+    result.mobileMenu.accountFontSize === result.mobileMenu.regularFontSize &&
+    result.mobileMenu.accountFontWeight === result.mobileMenu.regularFontWeight &&
+    ["grid", "inline-grid"].includes(result.mobileMenu.iconDisplay) &&
+    result.mobileMenu.iconWidth === 25 &&
+    result.mobileMenu.iconHeight === 25 &&
+    result.mobileMenu.document <= result.mobileMenu.viewport + 1
+  );
+  await capture(page, "menu-mobile-aberto-390");
+
   // Inspeção específica dos cards: preenchimento, carregamento e percentual estimado de corte.
   await openPage(page, "/loja/lingerie/", { name: "mobile-390", width: 390, height: 844 });
   await page.evaluate(() => {
@@ -397,6 +453,7 @@ console.log(JSON.stringify({
     wrongImageFit: (result.imageFitFailures || []).length,
     portraitCardFailures: (result.portraitCardFailures || []).length,
     lingerieCropWarnings: (result.lingerieCropWarnings || []).length,
+    mobileMenuAccountAligned: result.mobileMenu?.accountRowAligned ?? false,
     modalVisible: result.modal?.visible ?? false,
     modalHeight: result.modal?.height ?? null,
     failed
@@ -422,6 +479,8 @@ assert.equal((result.imageFailures || []).length, 0, "Uma ou mais imagens de lin
 assert.equal((result.imageFitFailures || []).length, 0, "Há imagens de cards que não usam object-fit: cover.");
 assert.equal((result.portraitCardFailures || []).length, 0, "Cards de lingerie não receberam o formato vertical.");
 assert.equal(result.lingerieCards.length, 14, "A auditoria deve conferir as 14 lingeries do catálogo.");
+assert.ok(result.mobileMenu?.accountRowAligned,
+  "Minha conta deve alinhar-se como item comum do menu mobile: " + JSON.stringify(result.mobileMenu));
 assert.ok(result.modal?.visible, "O modal de produto não abriu durante a auditoria.");
 assert.ok(
   result.modal.height <= result.modal.viewportHeight + 2,
