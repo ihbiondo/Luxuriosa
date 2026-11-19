@@ -69,6 +69,10 @@ create table public.contact_consents (
   created_at timestamptz not null default now()
 );
 
+-- Reproduz as permissões da tabela hospedada: leitura somente para autenticados,
+-- sem inserção ou atualização direta; gravações passam pela função controlada.
+revoke all on public.contact_consents from anon, authenticated;
+
 create table public.orders (
   id uuid primary key default gen_random_uuid(),
   customer_id uuid not null references auth.users(id) on delete cascade,
