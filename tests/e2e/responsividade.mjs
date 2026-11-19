@@ -236,21 +236,21 @@ try {
             const nav = document.querySelector("#navlinks");
             const styleLink = [...document.querySelectorAll('link[rel="stylesheet"]')]
               .find(link => (link.href || "").includes("navigation.css") &&
-                (link.href || "").includes("menu-mobile-v4"));
+                (link.href || "").includes("menu-mobile-v5"));
             return Boolean(nav && nav.querySelector(".nav-drawer-close") &&
               nav.querySelector(".nav-menu-group-title") && styleLink && styleLink.sheet);
           }, null, { timeout: 10000 });
           const audit = await page.evaluate(() => {
             const nav = document.querySelector("#navlinks");
             const groups = [...(nav?.querySelectorAll(".nav-menu-group") || [])];
-            const categories = nav?.querySelector(".nav-store-submenu");
+            const categories = nav?.querySelector(".nav-store-grid");
             return {
               burger: Boolean(document.querySelector("#burger")),
               drawer: Boolean(nav && nav.querySelector(".nav-drawer-top")),
               brand: nav?.querySelector(".nav-drawer-title")?.textContent.trim() || "",
               account: Boolean(nav?.querySelector("[data-nav-account]")),
               store: Boolean(categories),
-              categoryLinks: nav?.querySelectorAll(".nav-store-submenu > a").length || 0,
+              categoryLinks: nav?.querySelectorAll(".nav-store-grid > a").length || 0,
               categoryColumns: categories ?
                 getComputedStyle(categories).gridTemplateColumns.split(" ").filter(Boolean).length : 0,
               help: Boolean(nav?.querySelector(".nav-menu-group--help")),
@@ -583,7 +583,8 @@ try {
           getComputedStyle(item).flexDirection === "column")
       };
     });
-    const categories = document.querySelector("#navlinks .nav-store-submenu");
+    const categoryDetails = document.querySelector("#navlinks .nav-store-submenu");
+    const categories = document.querySelector("#navlinks .nav-store-grid");
     return {
       viewport: document.documentElement.clientWidth,
       document: document.documentElement.scrollWidth,
@@ -600,7 +601,7 @@ try {
       iconDisplay: icon ? getComputedStyle(icon).display : null,
       iconWidth: icon ? Math.round(icon.getBoundingClientRect().width) : 0,
       iconHeight: icon ? Math.round(icon.getBoundingClientRect().height) : 0,
-      storeCategoriesOpen: categories?.open ?? false,
+      storeCategoriesOpen: categoryDetails?.open ?? false,
       categoryGridColumns: categories ?
         getComputedStyle(categories).gridTemplateColumns.split(" ").filter(Boolean).length : 0,
       groups,
@@ -640,7 +641,7 @@ try {
   const categoryDetails = page.locator("#navlinks .nav-store-submenu");
   await categoryDetails.locator(":scope > summary").click();
   await page.waitForFunction(() => !document.querySelector("#navlinks .nav-store-submenu")?.open);
-  const categoryLinksHidden = await categoryDetails.locator(":scope > a").evaluateAll(items =>
+  const categoryLinksHidden = await categoryDetails.locator(".nav-store-grid > a").evaluateAll(items =>
     items.length > 0 && items.every(item => getComputedStyle(item).display === "none")
   );
   await categoryDetails.locator(":scope > summary").click();
@@ -679,7 +680,7 @@ try {
     await page.waitForFunction(() => {
       const styleLink = [...document.querySelectorAll('link[rel="stylesheet"]')]
         .find(link => (link.href || "").includes("navigation.css") &&
-          (link.href || "").includes("menu-mobile-v4"));
+          (link.href || "").includes("menu-mobile-v5"));
       const nav = document.querySelector("#navlinks");
       const backdrop = document.querySelector(".nav-drawer-backdrop");
       return Boolean(
@@ -702,7 +703,8 @@ try {
     const interaction = await page.evaluate(() => {
       const nav = document.querySelector("#navlinks");
       const rect = nav?.getBoundingClientRect();
-      const categories = nav?.querySelector(".nav-store-submenu");
+      const categoryDetails = nav?.querySelector(".nav-store-submenu");
+      const categories = nav?.querySelector(".nav-store-grid");
       const submenus = [...(nav?.querySelectorAll(".nav-menu-group > .nav-submenu") || [])];
       return {
         open: nav?.classList.contains("open") || false,
@@ -710,14 +712,14 @@ try {
         heightWithinViewport: Boolean(rect && rect.height <= innerHeight + 1),
         internalScroll: Boolean(nav && ["auto", "scroll"].includes(getComputedStyle(nav).overflowY)),
         backgroundLocked: document.body.classList.contains("mobile-menu-open"),
-        categoriesOpen: categories?.open || false,
+        categoriesOpen: categoryDetails?.open || false,
         categoryColumns: categories ?
           getComputedStyle(categories).gridTemplateColumns.split(" ").filter(Boolean).length : 0,
         sectionsSingleColumn: submenus.length > 0 && submenus.every(item =>
           getComputedStyle(item).display === "flex" &&
           getComputedStyle(item).flexDirection === "column" &&
           [...item.querySelectorAll(":scope > a")].every(link => getComputedStyle(link).display !== "none")),
-        categoryTargetMinHeight: [...(nav?.querySelectorAll(".nav-store-submenu > a") || [])]
+        categoryTargetMinHeight: [...(nav?.querySelectorAll(".nav-store-grid > a") || [])]
           .every(link => link.getBoundingClientRect().height >= 40)
       };
     });
