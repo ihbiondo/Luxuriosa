@@ -14,7 +14,10 @@ const VIEWPORTS = [
 ];
 const ROUTES = [
   { path: "/", name: "home" },
-  { path: "/loja.html", name: "loja" }
+  { path: "/loja.html", name: "loja" },
+  { path: "/atendimento.html", name: "atendimento" },
+  { path: "/entregas/", name: "entregas" },
+  { path: "/loja/lingerie/", name: "lingerie" }
 ];
 
 const report = {
@@ -177,10 +180,36 @@ async function inspect(page, route, viewport) {
       };
     });
 
+    const navigationStylesheet = [...document.querySelectorAll('link[rel~="stylesheet"]')]
+      .find(link => link.href.includes("navigation.css"));
+    const menuIcons = [...document.querySelectorAll("header .navlinks .nav-link-icon")]
+      .map(element => {
+        const box = element.getBoundingClientRect();
+        const style = getComputedStyle(element);
+        return {
+          display: style.display,
+          width: Math.round(box.width),
+          height: Math.round(box.height),
+          visible: style.display !== "none" && style.visibility !== "hidden" &&
+            box.width > 0 && box.height > 0
+        };
+      });
+    const utilityIcons = {
+      cart: rect(document.querySelector("header .cart-icon svg")),
+      account: rect(document.querySelector("header .account-trigger-icon svg")),
+      cartStroke: document.querySelector("header .cart-icon svg")
+        ? getComputedStyle(document.querySelector("header .cart-icon svg")).stroke : null,
+      accountStroke: document.querySelector("header .account-trigger-icon svg")
+        ? getComputedStyle(document.querySelector("header .account-trigger-icon svg")).stroke : null
+    };
+
     return {
       route: routePath,
       viewport: viewportWidth,
       viewportHeight: innerHeight,
+      navigationCss: navigationStylesheet?.getAttribute("href") || null,
+      menuIcons,
+      utilityIcons,
       document: {
         clientWidth: document.documentElement.clientWidth,
         scrollWidth: document.documentElement.scrollWidth,
@@ -210,6 +239,32 @@ try {
     for (const viewport of VIEWPORTS) {
       await preparePage(page, route, viewport);
       const measurements = await inspect(page, route, viewport);
+      assert.ok(
+        measurements.navigationCss?.includes("desktop-header-fix-v1"),
+        "A página " + route.path + " não carregou a versão corrigida da navegação."
+      );
+
+      if (viewport.width >= 1200) {
+        assert.ok(
+          measurements.menuIcons.every(icon => !icon.visible),
+          "Ícones do menu mobile não foram ocultados no desktop: " +
+            JSON.stringify(measurements.menuIcons)
+        );
+      }
+
+      if (viewport.width >= 901 && viewport.width <= 1199) {
+        for (const [name, icon] of Object.entries({
+          cart: measurements.utilityIcons.cart,
+          account: measurements.utilityIcons.account
+        })) {
+          assert.ok(icon && icon.display !== "none" &&
+            icon.width === 17 && icon.height === 17,
+            "Ícone " + name + " do cabeçalho compacto está sem dimensão correta: " +
+              JSON.stringify(icon)
+          );
+        }
+      }
+
       const screenshotName = route.name + "-" + viewport.name + ".png";
 
       if (SCREENSHOT_DIR) {
