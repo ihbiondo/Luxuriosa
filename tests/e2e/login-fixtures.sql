@@ -35,6 +35,15 @@ create table public.addresses (
   is_default boolean not null default false
 );
 
+create table public.account_privacy_acceptances (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null references auth.users(id) on delete cascade,
+  notice_version text not null,
+  source text not null,
+  event_key uuid not null unique,
+  accepted_at timestamptz not null default now()
+);
+
 create table public.account_data_consents (
   id uuid primary key default gen_random_uuid(),
   user_id uuid not null references auth.users(id) on delete cascade,
@@ -44,13 +53,19 @@ create table public.account_data_consents (
   created_at timestamptz not null default now()
 );
 
+create schema if not exists private;
+
 create table public.contact_consents (
   id uuid primary key default gen_random_uuid(),
-  user_id uuid not null references auth.users(id) on delete cascade,
+  user_id uuid references auth.users(id) on delete cascade,
+  cart_session_id uuid,
   channel text not null,
   purpose text not null,
   granted boolean not null,
-  consent_text_version text not null,
+  source text not null,
+  consent_text_version text,
+  granted_at timestamptz,
+  revoked_at timestamptz,
   created_at timestamptz not null default now()
 );
 
