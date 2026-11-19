@@ -285,7 +285,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    min-height: 35px;
+    min-height: 40px;
     padding: 4px 8px;
     color: #bcaab0;
     font: 600 10px/1.4 var(--sans);
