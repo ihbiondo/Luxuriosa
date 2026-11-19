@@ -505,6 +505,7 @@ try {
     try {
       await openPage(page, route, { name: "mobile-390", width: 390, height: 844 });
       const gallery = page.locator(".product-detail-gallery");
+      await gallery.waitFor({ state: "visible", timeout: 10000 });
       const thumbCount = await gallery.locator("button").count();
       const mainImage = page.locator(".product-detail-image > img").first();
       const initialSrc = await mainImage.getAttribute("src");
