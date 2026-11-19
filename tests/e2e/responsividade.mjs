@@ -236,7 +236,7 @@ try {
             const nav = document.querySelector("#navlinks");
             const styleLink = [...document.querySelectorAll('link[rel="stylesheet"]')]
               .find(link => (link.href || "").includes("navigation.css") &&
-                (link.href || "").includes("menu-mobile-v5"));
+                (link.href || "").includes("menu-mobile-v6"));
             return Boolean(nav && nav.querySelector(".nav-drawer-close") &&
               nav.querySelector(".nav-menu-group-title") && styleLink && styleLink.sheet);
           }, null, { timeout: 10000 });
@@ -680,7 +680,7 @@ try {
     await page.waitForFunction(() => {
       const styleLink = [...document.querySelectorAll('link[rel="stylesheet"]')]
         .find(link => (link.href || "").includes("navigation.css") &&
-          (link.href || "").includes("menu-mobile-v5"));
+          (link.href || "").includes("menu-mobile-v6"));
       const nav = document.querySelector("#navlinks");
       const backdrop = document.querySelector(".nav-drawer-backdrop");
       return Boolean(
