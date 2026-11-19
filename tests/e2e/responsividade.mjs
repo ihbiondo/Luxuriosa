@@ -443,6 +443,29 @@ try {
     { timeout: 15000 }
   );
 
+  // Foto e botão "Mais detalhes" precisam levar à mesma página individual.
+  const primeiroCardComDetalhes = page.locator("#grid .product").first();
+  const hrefMaisDetalhes = await primeiroCardComDetalhes.locator(".product-detail-link").getAttribute("href");
+  const linkDaFoto = primeiroCardComDetalhes.locator(".product-image-link");
+  const hrefDaFoto = await linkDaFoto.getAttribute("href");
+  assert.ok(hrefMaisDetalhes, "O card selecionado não possui o link Mais detalhes.");
+  assert.equal(hrefDaFoto, hrefMaisDetalhes, "A foto e Mais detalhes devem compartilhar o mesmo destino.");
+  const rotaEsperadaDaFoto = new URL(hrefMaisDetalhes, BASE_URL).pathname;
+  await Promise.all([
+    page.waitForURL(url => url.pathname === rotaEsperadaDaFoto, { timeout: 10000 }),
+    linkDaFoto.click()
+  ]);
+  assert.equal(new URL(page.url()).pathname, rotaEsperadaDaFoto,
+    "Clicar na foto não abriu a página individual do produto.");
+
+  // Retorna à vitrine para validar separadamente o modal do card.
+  await openPage(page, "/loja/lingerie/", { name: "mobile-390", width: 390, height: 844 });
+  await page.waitForFunction(
+    () => document.querySelectorAll("#grid .product").length > 0,
+    null,
+    { timeout: 15000 }
+  );
+
   // Abre um card para validar o modal vertical em telas estreitas.
   await page.evaluate(() => {
     document.querySelectorAll("#gate, #ageGate, .age-gate").forEach(element => {
@@ -546,9 +569,28 @@ try {
         await secondThumb.click();
         changedAfterClick = (await mainImage.getAttribute("src")) === expectedSrc;
       }
-      const item = { id: product.id, route, expected: product.imagens.length, actual: thumbCount, changedAfterClick, initialSrc };
+      const imageLayout = await page.evaluate(() => {
+        const card = document.querySelector(".product-detail-image");
+        const image = card && card.querySelector(":scope > img");
+        const gallery = card && card.querySelector(".product-detail-gallery");
+        const cardWidth = card ? card.getBoundingClientRect().width : 0;
+        const imageWidth = image ? image.getBoundingClientRect().width : 0;
+        const galleryStyle = gallery ? getComputedStyle(gallery) : null;
+        return {
+          imageWidthRatio: cardWidth ? Number((imageWidth / cardWidth).toFixed(3)) : 0,
+          galleryJustifyContent: galleryStyle ? galleryStyle.justifyContent : null,
+          galleryFlexWrap: galleryStyle ? galleryStyle.flexWrap : null
+        };
+      });
+      const item = {
+        id: product.id, route, expected: product.imagens.length, actual: thumbCount,
+        changedAfterClick, initialSrc, ...imageLayout
+      };
       result.productGalleries.push(item);
-      if (thumbCount !== product.imagens.length || !changedAfterClick) {
+      if (thumbCount !== product.imagens.length || !changedAfterClick ||
+          item.imageWidthRatio < 0.90 ||
+          item.galleryJustifyContent !== "center" ||
+          item.galleryFlexWrap !== "wrap") {
         result.productGalleryFailures.push(item);
       }
       await capture(page, "produto-galeria-" + product.id + "-390");
