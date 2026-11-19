@@ -168,7 +168,7 @@
 
 
 /* =========================================================
-   MENU LATERAL MOBILE — UM ÚNICO PADRÃO VISUAL
+   MENU LATERAL MOBILE — HIERARQUIA ÚNICA E LEGÍVEL
    ========================================================= */
 .nav-drawer-top,
 .nav-drawer-footer,
@@ -180,24 +180,25 @@
 
   .nav-drawer-backdrop {
     position: fixed; z-index: 10; inset: 0; display: block;
-    width: 100vw; height: 100vh; height: 100dvh; padding: 0; border: 0;
-    background: rgba(5, 3, 5, .72); opacity: 0; visibility: hidden;
-    pointer-events: none; transition: opacity .24s ease, visibility .24s ease;
+    width: 100vw; height: 100vh; height: 100dvh;
+    padding: 0; border: 0; background: rgba(5, 3, 5, .74);
+    opacity: 0; visibility: hidden; pointer-events: none;
+    transition: opacity .22s ease, visibility .22s ease;
   }
   .nav-drawer-backdrop.open { opacity: 1; visibility: visible; pointer-events: auto; }
 
   header .navlinks {
     position: fixed; z-index: 20; inset: 0 0 0 auto;
-    display: flex !important; width: min(88vw, 390px);
+    display: flex !important; width: min(92vw, 390px);
     height: 100vh; height: 100dvh; max-height: none;
     box-sizing: border-box; flex-direction: column; align-items: stretch; gap: 0;
     overflow-x: hidden; overflow-y: auto; overscroll-behavior: contain;
     -webkit-overflow-scrolling: touch;
-    padding: max(16px, env(safe-area-inset-top)) 21px calc(20px + env(safe-area-inset-bottom));
+    padding: max(14px, env(safe-area-inset-top)) 18px calc(22px + env(safe-area-inset-bottom));
     border: 0; border-left: 1px solid rgba(212, 175, 124, .25); border-radius: 0;
-    background: radial-gradient(ellipse at 0 0, rgba(139, 30, 63, .18), transparent 48%),
+    background: radial-gradient(ellipse at 0 0, rgba(139, 30, 63, .19), transparent 48%),
       linear-gradient(160deg, #190d12 0%, #10090d 58%, #0a0809 100%);
-    box-shadow: -20px 0 55px rgba(0, 0, 0, .42); color: #e8dce0;
+    box-shadow: -20px 0 55px rgba(0, 0, 0, .44); color: #e8dce0;
     text-transform: none; transform: translate3d(105%, 0, 0);
     visibility: hidden; pointer-events: none;
     transition: transform .28s cubic-bezier(.22, .75, .24, 1), visibility .28s ease;
@@ -207,52 +208,49 @@
   header .navlinks::-webkit-scrollbar { width: 4px; }
   header .navlinks::-webkit-scrollbar-track { background: transparent; }
   header .navlinks::-webkit-scrollbar-thumb { border-radius: 10px; background: rgba(212, 175, 124, .35); }
-  header .navlinks.open {
-    transform: translate3d(0, 0, 0); visibility: visible; pointer-events: auto;
-  }
+  header .navlinks.open { transform: translate3d(0, 0, 0); visibility: visible; pointer-events: auto; }
 
-  /* Cabeçalho fixo e discreto. */
+  /* Marca e fechar: cabeçalho fixo durante a rolagem interna. */
   .nav-drawer-top {
     position: sticky; top: 0; z-index: 5; display: flex; flex: 0 0 auto;
     align-items: center; justify-content: space-between; gap: 14px;
-    min-height: 66px; margin: -1px 0 10px; padding: 5px 0 13px;
-    border-bottom: 1px solid rgba(212, 175, 124, .18);
+    min-height: 68px; margin: -1px 0 8px; padding: 5px 0 13px;
+    border-bottom: 1px solid rgba(212, 175, 124, .2);
     background: linear-gradient(160deg, #190d12 0%, rgba(16, 9, 13, .98) 78%);
   }
-  .nav-drawer-brand { display: flex; min-width: 0; flex-direction: column; gap: 4px; }
-  .nav-drawer-title { color: var(--gold); font: 500 21px/1 var(--serif); letter-spacing: .07em; }
-  .nav-drawer-subtitle { color: #bcaab0; font: 500 9px/1.4 var(--sans); letter-spacing: .06em; }
+  .nav-drawer-brand { display: flex; min-width: 0; flex-direction: column; gap: 5px; }
+  .nav-drawer-title { color: var(--gold); font: 500 22px/1 var(--serif); letter-spacing: .07em; }
+  .nav-drawer-subtitle { color: #bcaab0; font: 500 10px/1.4 var(--sans); letter-spacing: .045em; }
   .nav-drawer-close {
-    display: inline-grid; width: 42px; height: 42px; min-width: 42px; flex: 0 0 42px;
-    place-items: center; padding: 0 0 2px; border: 1px solid rgba(212, 175, 124, .3);
-    border-radius: 50%; background: rgba(212, 175, 124, .055); color: var(--gold);
-    font: 300 26px/1 Arial, sans-serif; cursor: pointer;
+    display: inline-grid; width: 44px; height: 44px; min-width: 44px; min-height: 44px;
+    flex: 0 0 44px; place-items: center; padding: 0 0 2px;
+    border: 1px solid rgba(212, 175, 124, .34); border-radius: 50%;
+    background: rgba(212, 175, 124, .07); color: var(--gold);
+    font: 300 27px/1 Arial, sans-serif; cursor: pointer;
   }
 
-  /* Todos os links principais compartilham a mesma linha e altura. */
+  /* Minha conta vem primeiro, sem virar um cartão de aparência diferente. */
   .navlinks .nav-drawer-account-area {
-    display: grid; gap: 0; margin: 0; padding: 0; border: 0; background: transparent;
+    display: grid; gap: 0; margin: 0 0 7px; padding: 0;
+    border: 0; border-bottom: 1px solid rgba(212, 175, 124, .15); background: transparent;
   }
   .navlinks .nav-drawer-account-area > .nav-account-primary,
-  .navlinks > .nav-link-shop,
-  .navlinks .nav-menu-group > a {
-    display: flex; align-items: center; justify-content: flex-start; gap: 12px;
-    width: 100%; min-height: 48px; box-sizing: border-box; margin: 0; padding: 10px 8px;
-    border: 0; border-bottom: 1px solid rgba(212, 175, 124, .09); border-radius: 0;
-    background: transparent; color: #e5d8dc; font: 500 13px/1.4 var(--sans);
-    letter-spacing: .01em; text-align: left; text-decoration: none; text-transform: none;
-    transition: color .16s ease, background .16s ease;
+  .navlinks > .nav-link-shop {
+    display: flex !important; align-items: center; justify-content: flex-start; gap: 13px;
+    width: 100%; min-height: 52px; box-sizing: border-box; margin: 0; padding: 11px 8px;
+    border: 0; border-bottom: 1px solid rgba(212, 175, 124, .12); border-radius: 0;
+    background: transparent; color: #eee1e5;
+    font: 500 14px/1.4 var(--sans); letter-spacing: .01em;
+    text-align: left; text-decoration: none; text-transform: none;
   }
+  .navlinks > .nav-link-shop { margin-top: 4px; color: var(--gold); }
   .navlinks .nav-drawer-account-area > .nav-account-primary:hover,
   .navlinks .nav-drawer-account-area > .nav-account-primary:focus-visible,
   .navlinks > .nav-link-shop:hover,
-  .navlinks > .nav-link-shop:focus-visible,
-  .navlinks .nav-menu-group > a:hover,
-  .navlinks .nav-menu-group > a:focus-visible {
+  .navlinks > .nav-link-shop:focus-visible {
     background: rgba(212, 175, 124, .055); color: var(--gold);
   }
-  .navlinks a[aria-current="page"] { color: var(--gold); background: rgba(212, 175, 124, .055); }
-
+  .navlinks a[aria-current="page"] { color: var(--gold); background: rgba(212, 175, 124, .045); }
   .nav-link-icon {
     display: inline-grid; width: 25px; height: 25px; flex: 0 0 25px;
     place-items: center; color: #d4af7c;
@@ -261,123 +259,112 @@
     display: block; width: 19px; height: 19px; fill: none; stroke: currentColor;
     stroke-width: 1.55; stroke-linecap: round; stroke-linejoin: round;
   }
-
   .navlinks .nav-account-submenu[hidden],
   .navlinks [data-nav-auth-only][hidden] { display: none !important; }
   .navlinks .nav-account-submenu:not([hidden]) {
-    display: flex; flex-direction: column; padding: 0 0 5px 31px;
+    display: flex; flex-direction: column; padding: 0 0 5px 38px;
   }
   .navlinks .nav-account-submenu > a {
-    display: flex; align-items: center; min-height: 40px; padding: 8px 9px;
-    border-bottom: 1px solid rgba(212, 175, 124, .07); color: #bcaab0;
-    font-size: 12px; text-decoration: none;
+    display: flex; align-items: center; min-height: 44px; padding: 9px 8px;
+    border-bottom: 1px solid rgba(212, 175, 124, .08); color: #cdbdc2;
+    font: 400 13px/1.4 var(--sans); text-decoration: none;
   }
 
-  /* Única grade do menu: os links das categorias formam duas colunas reais. */
+  /* As únicas duas colunas do menu são as categorias da Loja. */
   .navlinks > .nav-store-submenu {
-    display: block;
-    margin: 8px 0 5px;
-    padding: 0;
-    border: 0;
-    background: transparent;
+    display: block; margin: 5px 0 7px; padding: 0;
+    border: 0; background: transparent;
   }
   .navlinks > .nav-store-submenu > summary {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    min-height: 40px;
-    padding: 4px 8px;
-    color: #bcaab0;
-    font: 600 10px/1.4 var(--sans);
-    letter-spacing: .12em;
-    text-transform: uppercase;
-    list-style: none;
-    cursor: pointer;
+    display: flex; align-items: center; justify-content: space-between;
+    min-height: 44px; padding: 5px 8px; color: #d2c0c6;
+    font: 700 12px/1.4 var(--sans); letter-spacing: .1em;
+    text-transform: uppercase; list-style: none; cursor: pointer;
   }
   .navlinks > .nav-store-submenu > summary::-webkit-details-marker { display: none; }
   .navlinks > .nav-store-submenu > summary::after {
-    content: "−";
-    color: var(--gold);
-    font-size: 15px;
-    font-weight: 400;
+    content: "−"; color: var(--gold); font: 400 18px/1 Arial, sans-serif;
   }
   .navlinks > .nav-store-submenu:not([open]) > summary::after { content: "+"; }
   .navlinks > .nav-store-submenu:not([open]) > .nav-store-grid { display: none; }
   .navlinks .nav-store-grid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    align-items: stretch;
-    gap: 7px;
+    display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: stretch; gap: 8px;
   }
   .navlinks .nav-store-grid > a {
-    display: flex;
-    align-items: center;
-    min-width: 0;
-    min-height: 43px;
-    box-sizing: border-box;
-    margin: 0;
-    padding: 8px 10px;
-    border: 1px solid rgba(212, 175, 124, .16);
-    border-radius: 8px;
-    background: rgba(255, 255, 255, .018);
-    color: #ded0d5;
-    font: 500 11px/1.3 var(--sans);
-    letter-spacing: .01em;
-    text-decoration: none;
-    overflow-wrap: anywhere;
+    display: flex; align-items: center; min-width: 0; min-height: 48px;
+    box-sizing: border-box; margin: 0; padding: 9px 10px;
+    border: 1px solid rgba(212, 175, 124, .18); border-radius: 9px;
+    background: rgba(255, 255, 255, .025); color: #e6d9de;
+    font: 500 12px/1.35 var(--sans); letter-spacing: 0;
+    text-decoration: none; overflow-wrap: anywhere;
   }
   .navlinks .nav-store-grid > a:hover,
   .navlinks .nav-store-grid > a:focus-visible {
-    border-color: rgba(212, 175, 124, .4);
-    background: rgba(212, 175, 124, .055);
-    color: var(--gold);
+    border-color: rgba(212, 175, 124, .42); background: rgba(212, 175, 124, .065); color: var(--gold);
   }
   .navlinks .nav-store-grid > .nav-submenu-all {
-    grid-column: 1 / -1;
-    justify-content: center;
-    color: var(--gold);
-    font-weight: 600;
+    grid-column: 1 / -1; justify-content: center; color: var(--gold); font-weight: 650;
   }
 
-  /* Seções inferiores: títulos discretos e links em coluna, sem cartões ou grades. */
+  /* Atendimento e Conhecer: abertas por padrão e recolhíveis separadamente. */
   .navlinks .nav-menu-group {
     display: flex; width: 100%; flex-direction: column; align-items: stretch;
-    gap: 0; margin: 15px 0 0; padding: 11px 0 0;
-    border: 0; border-top: 1px solid rgba(212, 175, 124, .17);
+    gap: 0; margin: 9px 0 0; padding: 8px 0 0;
+    border: 0; border-top: 1px solid rgba(212, 175, 124, .2);
   }
-  .navlinks .nav-menu-group-title {
-    display: block; margin: 0; padding: 2px 8px 6px; color: var(--gold);
-    font: 700 9px/1.5 var(--sans); letter-spacing: .16em; text-transform: uppercase;
+  .navlinks .nav-menu-group-toggle {
+    display: flex; align-items: center; justify-content: space-between;
+    width: 100%; min-height: 48px; box-sizing: border-box; margin: 0; padding: 10px 8px;
+    border: 0; border-bottom: 1px solid rgba(212, 175, 124, .11); border-radius: 0;
+    background: transparent; color: var(--gold);
+    font: 700 12.5px/1.4 var(--sans); letter-spacing: .085em;
+    text-align: left; text-transform: uppercase; cursor: pointer;
   }
-  .navlinks .nav-menu-group-toggle { display: none !important; }
-  .navlinks .nav-menu-group > .nav-submenu {
-    display: flex !important; flex-direction: column; gap: 0;
-    margin: 0 0 7px 37px; padding: 0;
-    border: 0; background: transparent;
+  .navlinks .nav-menu-group-toggle::after {
+    content: "⌄"; color: var(--gold); font: 400 19px/1 Arial, sans-serif;
+    transition: transform .18s ease;
   }
-  .navlinks .nav-menu-group > .nav-submenu > a {
-    display: flex; align-items: center; min-height: 48px;
-    box-sizing: border-box; margin: 0; padding: 10px 8px;
-    border: 0; border-bottom: 1px solid rgba(212, 175, 124, .09);
-    border-radius: 0; background: transparent; color: #e5d8dc;
-    font: 500 13px/1.4 var(--sans); letter-spacing: .01em;
-    text-decoration: none; text-transform: none;
-    transition: color .16s ease, background .16s ease;
+  .navlinks .nav-menu-group.is-open > .nav-menu-group-toggle::after { transform: rotate(180deg); }
+  .navlinks .nav-menu-group-toggle:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+  .navlinks .nav-menu-group > a {
+    display: flex !important; align-items: center; gap: 12px;
+    width: 100%; min-height: 48px; box-sizing: border-box; margin: 0; padding: 10px 8px;
+    border: 0; border-bottom: 1px solid rgba(212, 175, 124, .09); border-radius: 0;
+    background: transparent; color: #e5d8dc;
+    font: 500 14px/1.4 var(--sans); letter-spacing: .005em;
+    text-align: left; text-decoration: none; text-transform: none;
   }
+  .navlinks a[aria-current="page"] {
+    background: transparent !important;
+    color: #e8dce0 !important;
+  }
+  .navlinks .nav-menu-group > a:hover,
+  .navlinks .nav-menu-group > a:focus-visible,
   .navlinks .nav-menu-group > .nav-submenu > a:hover,
   .navlinks .nav-menu-group > .nav-submenu > a:focus-visible {
-    color: var(--gold); background: rgba(212, 175, 124, .04);
+    color: var(--gold); background: rgba(212, 175, 124, .05);
   }
-
+  .navlinks .nav-menu-group > .nav-submenu {
+    display: flex !important; flex-direction: column; gap: 0;
+    margin: 0 0 5px 19px; padding: 0 0 0 13px;
+    border: 0; border-left: 1px solid rgba(212, 175, 124, .2); background: transparent;
+  }
+  .navlinks .nav-menu-group > .nav-submenu > a {
+    display: flex; align-items: center; min-height: 44px; box-sizing: border-box;
+    margin: 0; padding: 9px 8px; border: 0;
+    border-bottom: 1px solid rgba(212, 175, 124, .075); border-radius: 0;
+    background: transparent; color: #cbbbc1;
+    font: 400 13.5px/1.4 var(--sans); text-decoration: none; text-transform: none;
+  }
   .nav-drawer-footer {
-    display: block; margin-top: 17px; padding: 15px 0 2px;
-    border-top: 1px solid rgba(212, 175, 124, .17);
+    display: block; margin-top: 17px; padding: 14px 0 2px;
+    border-top: 1px solid rgba(212, 175, 124, .18);
   }
   .nav-drawer-footer > p {
-    margin: 0; color: #9f8b93; font: 600 8px/1.6 var(--sans);
-    letter-spacing: .13em; text-align: center;
+    margin: 0; color: #a8949b; font: 600 9px/1.6 var(--sans);
+    letter-spacing: .12em; text-align: center;
   }
-
   header .burger {
     display: inline-flex; align-items: center; justify-content: center;
     width: 44px; height: 44px; min-width: 44px; min-height: 44px;
@@ -385,13 +372,12 @@
 }
 
 @media (max-width: 360px) {
-  header .navlinks { width: 90vw; padding-right: 16px; padding-left: 16px; }
-  .navlinks .nav-store-grid > a { padding-right: 8px; padding-left: 8px; font-size: 10.5px; }
+  header .navlinks { width: min(94vw, 380px); padding-right: 15px; padding-left: 15px; }
+  .navlinks .nav-store-grid > a { padding-right: 8px; padding-left: 8px; font-size: 11.5px; }
 }
+
 @media (prefers-reduced-motion: reduce) {
-  .nav-drawer-backdrop, header .navlinks,
-  .navlinks .nav-drawer-account-area > .nav-account-primary,
-  .navlinks > .nav-link-shop, .navlinks .nav-menu-group > a {
+  .nav-drawer-backdrop, header .navlinks, .navlinks .nav-menu-group-toggle::after {
     transition: none !important;
   }
 }
@@ -401,10 +387,80 @@
   .nav-submenu { display: none; }
   .navlinks > .nav-link-shop,
   .navlinks > .nav-link-shop:hover {
+    border: 0; border-radius: 0; background: transparent; color: inherit;
+  }
+  .navlinks .nav-menu-group-toggle { display: none !important; }
+}
+
+
+/* =========================================================
+   MENU MOBILE SIMPLIFICADO — LISTA ÚNICA, SEM SUBMENUS
+   ========================================================= */
+@media (max-width: 1199px) {
+  /* No painel mobile, a navegação é uma lista plana. */
+  .navlinks .nav-drawer-account-area {
+    margin: 0;
+    border: 0;
+  }
+  .navlinks .nav-drawer-footer,
+  .navlinks .nav-account-submenu,
+  .navlinks .nav-store-submenu,
+  .navlinks .nav-store-submenu > summary,
+  .navlinks .nav-store-grid,
+  .navlinks .nav-menu-group > .nav-submenu,
+  .navlinks .nav-menu-group > .nav-menu-group-toggle,
+  .navlinks .nav-menu-group > .nav-menu-group-title {
+    display: none !important;
+  }
+  .navlinks .nav-menu-group {
+    display: flex !important;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    gap: 0;
+  }
+  .navlinks .nav-menu-group--help {
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px solid rgba(212, 175, 124, .22);
+  }
+  .navlinks .nav-menu-group--discover {
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px solid rgba(212, 175, 124, .22);
+  }
+  .navlinks .nav-drawer-account-area > .nav-account-primary,
+  .navlinks > .nav-link-shop,
+  .navlinks .nav-menu-group > a {
+    display: flex !important;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 13px;
+    width: 100%;
+    min-height: 50px;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 11px 8px;
     border: 0;
     border-radius: 0;
     background: transparent;
-    color: inherit;
+    color: #e8dce0;
+    font: 500 14px/1.4 var(--sans);
+    letter-spacing: .01em;
+    text-align: left;
+    text-decoration: none;
+    text-transform: none;
   }
-  .navlinks .nav-menu-group-toggle { display: none !important; }
+  .navlinks .nav-menu-group > a {
+    border-bottom: 0;
+  }
+  .navlinks .nav-drawer-account-area > .nav-account-primary:hover,
+  .navlinks .nav-drawer-account-area > .nav-account-primary:focus-visible,
+  .navlinks > .nav-link-shop:hover,
+  .navlinks > .nav-link-shop:focus-visible,
+  .navlinks .nav-menu-group > a:hover,
+  .navlinks .nav-menu-group > a:focus-visible {
+    background: rgba(212, 175, 124, .045);
+    color: var(--gold);
+  }
 }
