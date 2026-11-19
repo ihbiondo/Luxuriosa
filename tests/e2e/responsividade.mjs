@@ -236,19 +236,23 @@ try {
             const nav = document.querySelector("#navlinks");
             const styleLink = [...document.querySelectorAll('link[rel="stylesheet"]')]
               .find(link => (link.href || "").includes("navigation.css") &&
-                (link.href || "").includes("menu-mobile-v7"));
+                (link.href || "").includes("menu-mobile-v8"));
             return Boolean(nav && nav.querySelector(".nav-drawer-close") &&
-              nav.querySelector(".nav-menu-group-title") && styleLink && styleLink.sheet);
+              nav.querySelector(".nav-menu-group-toggle") && styleLink && styleLink.sheet);
           }, null, { timeout: 10000 });
           const audit = await page.evaluate(() => {
             const nav = document.querySelector("#navlinks");
             const groups = [...(nav?.querySelectorAll(".nav-menu-group") || [])];
             const categories = nav?.querySelector(".nav-store-grid");
+            const accountArea = nav?.querySelector(".nav-drawer-account-area");
+            const shopLink = nav?.querySelector(".nav-link-shop");
             return {
               burger: Boolean(document.querySelector("#burger")),
               drawer: Boolean(nav && nav.querySelector(".nav-drawer-top")),
               brand: nav?.querySelector(".nav-drawer-title")?.textContent.trim() || "",
               account: Boolean(nav?.querySelector("[data-nav-account]")),
+              accountBeforeShop: Boolean(accountArea && shopLink &&
+                (accountArea.compareDocumentPosition(shopLink) & Node.DOCUMENT_POSITION_FOLLOWING)),
               store: Boolean(categories),
               categoryLinks: nav?.querySelectorAll(".nav-store-grid > a").length || 0,
               categoryColumns: categories ?
@@ -256,9 +260,12 @@ try {
               help: Boolean(nav?.querySelector(".nav-menu-group--help")),
               discover: Boolean(nav?.querySelector(".nav-menu-group--discover")),
               groupsVisibleInOneColumn: groups.length === 2 && groups.every(group => {
+                const toggle = group.querySelector(":scope > .nav-menu-group-toggle");
                 const entries = [...group.querySelectorAll(":scope > a, :scope > .nav-submenu")];
                 const submenus = [...group.querySelectorAll(":scope > .nav-submenu")];
-                return entries.length > 0 &&
+                return Boolean(toggle && toggle.getAttribute("aria-expanded") === "true" &&
+                  group.classList.contains("is-open")) &&
+                  entries.length > 0 &&
                   entries.every(item => getComputedStyle(item).display !== "none") &&
                   submenus.every(item => getComputedStyle(item).display === "flex" &&
                     getComputedStyle(item).flexDirection === "column");
@@ -268,7 +275,7 @@ try {
           item.unifiedNavigation = audit;
           result.unifiedNavigationChecks.push({ route: normalizedRoute, ...audit });
           if (!audit.burger || !audit.drawer || audit.brand !== "LUXURIOSA" ||
-              !audit.account || !audit.store || audit.categoryLinks < 8 ||
+              !audit.account || !audit.accountBeforeShop || !audit.store || audit.categoryLinks < 8 ||
               !audit.help || !audit.discover || !audit.groupsVisibleInOneColumn ||
               audit.categoryColumns !== 2) {
             result.unifiedNavigationFailures.push({ route: normalizedRoute, ...audit });
@@ -572,10 +579,12 @@ try {
         width: Math.round(box.width), height: Math.round(box.height) };
     };
     const groups = [...document.querySelectorAll("#navlinks .nav-menu-group")].map(group => {
+      const toggle = group.querySelector(":scope > .nav-menu-group-toggle");
       const entries = [...group.querySelectorAll(":scope > a, :scope > .nav-submenu")];
       const submenus = [...group.querySelectorAll(":scope > .nav-submenu")];
       return {
-        name: group.querySelector(":scope > .nav-menu-group-title")?.textContent.trim() || "",
+        name: toggle?.textContent.trim() || "",
+        expanded: toggle?.getAttribute("aria-expanded") === "true",
         visibleByDefault: entries.length > 0 &&
           entries.every(item => getComputedStyle(item).display !== "none"),
         submenusSingleColumn: submenus.every(item =>
@@ -590,6 +599,8 @@ try {
       document: document.documentElement.scrollWidth,
       account: rect(account),
       regular: rect(regular),
+      accountBeforeShop: Boolean(account && regular &&
+        (account.closest(".nav-drawer-account-area").compareDocumentPosition(regular) & Node.DOCUMENT_POSITION_FOLLOWING)),
       accountDisplay: account ? getComputedStyle(account).display : null,
       regularDisplay: regular ? getComputedStyle(regular).display : null,
       accountFontSize: account ? getComputedStyle(account).fontSize : null,
@@ -617,6 +628,7 @@ try {
   result.mobileMenu.accountRowAligned = Boolean(
     result.mobileMenu.account &&
     result.mobileMenu.regular &&
+    result.mobileMenu.accountBeforeShop &&
     result.mobileMenu.accountDisplay === "flex" &&
     result.mobileMenu.regularDisplay === "flex" &&
     Math.abs(result.mobileMenu.account.height - result.mobileMenu.regular.height) <= 1 &&
@@ -633,9 +645,42 @@ try {
     result.mobileMenu.storeCategoriesOpen &&
     result.mobileMenu.categoryGridColumns === 2 &&
     result.mobileMenu.groups.length === 2 &&
-    result.mobileMenu.groups.every(group => group.visibleByDefault && group.submenusSingleColumn) &&
+    result.mobileMenu.groups.every(group => group.expanded && group.visibleByDefault && group.submenusSingleColumn) &&
     result.mobileMenu.experienceMenuOrder.join("|") ===
       "Conexão a dois|Astrologia|Quizzes|Desafios"
+  );
+
+  // Atendimento e Conhecer devem poder ser recolhidos separadamente.
+  const helpGroup = page.locator("#navlinks .nav-menu-group--help");
+  const discoverGroup = page.locator("#navlinks .nav-menu-group--discover");
+  const helpToggle = helpGroup.locator(":scope > .nav-menu-group-toggle");
+  const discoverToggle = discoverGroup.locator(":scope > .nav-menu-group-toggle");
+  await helpToggle.click();
+  const helpCollapsed = await helpGroup.evaluate(group =>
+    group.querySelector(":scope > .nav-menu-group-toggle")?.getAttribute("aria-expanded") === "false" &&
+    [...group.querySelectorAll(":scope > a, :scope > .nav-submenu")].every(item =>
+      getComputedStyle(item).display === "none")
+  );
+  const discoverStayedOpen = await discoverGroup.evaluate(group =>
+    group.querySelector(":scope > .nav-menu-group-toggle")?.getAttribute("aria-expanded") === "true" &&
+    [...group.querySelectorAll(":scope > a, :scope > .nav-submenu")].every(item =>
+      getComputedStyle(item).display !== "none")
+  );
+  await helpToggle.click();
+  await discoverToggle.click();
+  const discoverCollapsed = await discoverGroup.evaluate(group =>
+    group.querySelector(":scope > .nav-menu-group-toggle")?.getAttribute("aria-expanded") === "false" &&
+    [...group.querySelectorAll(":scope > a, :scope > .nav-submenu")].every(item =>
+      getComputedStyle(item).display === "none")
+  );
+  const helpStayedOpen = await helpGroup.evaluate(group =>
+    group.querySelector(":scope > .nav-menu-group-toggle")?.getAttribute("aria-expanded") === "true" &&
+    [...group.querySelectorAll(":scope > a, :scope > .nav-submenu")].every(item =>
+      getComputedStyle(item).display !== "none")
+  );
+  await discoverToggle.click();
+  result.mobileMenu.sectionsCollapseIndependently = Boolean(
+    helpCollapsed && discoverStayedOpen && discoverCollapsed && helpStayedOpen
   );
 
   const categoryDetails = page.locator("#navlinks .nav-store-submenu");
@@ -658,9 +703,12 @@ try {
       "#navlinks .nav-menu-group--help, #navlinks .nav-menu-group--discover"
     )];
     return groups.length === 2 && groups.every(group => {
+      const toggle = group.querySelector(":scope > .nav-menu-group-toggle");
       const children = [...group.querySelectorAll(":scope > a, :scope > .nav-submenu")];
       const submenus = [...group.querySelectorAll(":scope > .nav-submenu")];
-      return children.length > 0 &&
+      return toggle?.getAttribute("aria-expanded") === "true" &&
+        group.classList.contains("is-open") &&
+        children.length > 0 &&
         children.every(item => getComputedStyle(item).display !== "none") &&
         submenus.every(item => getComputedStyle(item).display === "flex" &&
           getComputedStyle(item).flexDirection === "column");
@@ -680,7 +728,7 @@ try {
     await page.waitForFunction(() => {
       const styleLink = [...document.querySelectorAll('link[rel="stylesheet"]')]
         .find(link => (link.href || "").includes("navigation.css") &&
-          (link.href || "").includes("menu-mobile-v7"));
+          (link.href || "").includes("menu-mobile-v8"));
       const nav = document.querySelector("#navlinks");
       const backdrop = document.querySelector(".nav-drawer-backdrop");
       return Boolean(
