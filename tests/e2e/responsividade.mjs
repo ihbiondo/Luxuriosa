@@ -249,7 +249,7 @@ try {
               const text = (element.getAttribute("aria-label") ||
                 element.getAttribute("title") ||
                 element.getAttribute("placeholder") ||
-                element.textContent || "").trim().replace(/\\s+/g, " ").slice(0, 90);
+                element.textContent || "").trim().replace(/\s+/g, " ").slice(0, 90);
               const iconOnly = !((element.textContent || "").trim()) &&
                 !element.getAttribute("placeholder");
               return {
