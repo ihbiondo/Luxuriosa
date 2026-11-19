@@ -1309,3 +1309,67 @@
   aspect-ratio: 2 / 3;
   overflow: hidden;
 }
+
+
+/* Modal de produto — proporção vertical e escala compacta em celulares. */
+@media (max-width: 600px) {
+  #modal.overlay {
+    padding: 8px;
+    align-items: center;
+  }
+  #modal .modal {
+    box-sizing: border-box;
+    width: min(94vw, 420px);
+    max-width: 420px;
+    max-height: 88dvh;
+    border-radius: 16px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto auto;
+  }
+  #modal .m-img {
+    min-width: 0;
+    min-height: 0;
+    max-height: none;
+    padding: 8px 8px 2px;
+    gap: 8px;
+  }
+  #modal .m-img .product-detail-image-frame {
+    box-sizing: border-box;
+    width: min(58vw, 176px, 23dvh);
+    height: auto;
+    aspect-ratio: 3 / 4;
+    min-width: 0;
+    min-height: 0;
+    max-width: none;
+    max-height: none;
+    flex: 0 0 auto;
+  }
+  #modal .product-gallery-thumbnails {
+    width: 100%;
+    max-width: 100%;
+    gap: 7px;
+    padding: 0 2px 5px;
+  }
+  #modal .product-gallery-thumb {
+    flex-basis: 50px;
+    width: 50px;
+    height: 50px;
+  }
+  #modal .m-body {
+    min-width: 0;
+    padding: 14px;
+    gap: 8px;
+  }
+  #modal h3 {
+    font-size: clamp(21px, 6vw, 25px);
+  }
+  #modal .m-desc {
+    font-size: 12px;
+    line-height: 1.5;
+  }
+  #modal #mBtn {
+    min-height: 46px;
+  }
+}
