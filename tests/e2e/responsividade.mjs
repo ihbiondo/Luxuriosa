@@ -791,6 +791,12 @@ const failed = result.routeFailures.length > 0 ||
   result.catalogImageFitFailures.length > 0 ||
   result.catalogCardFrameFailures.length > 0 ||
   result.productGalleryFailures.length > 0 ||
+  !result.mobileMenu?.accordionsCorrect ||
+  !result.mobileMenu?.accordionInteractionWorks ||
+  result.experiencesPresentationOrder?.categories.join("|") !== "Conexão a dois|Astrologia|Quizzes|Desafios" ||
+  result.experiencesPresentationOrder?.featured.join("|") !==
+    "Conexão a dois.|Seu signo, suas descobertas.|Descubra seu estilo.|Mitos ou verdades?|Pequenas descobertas." ||
+  result.experiencesPresentationOrder?.filters.join("|") !== "all|couple|astrology|quiz|challenge|favorites" ||
   result.catalogGridNavigation?.failures.length > 0 ||
   result.catalogGridNavigation?.rendered !== expectedCatalogCards ||
   !result.catalogImageNavigation?.destinationMatched ||
@@ -891,6 +897,9 @@ assert.deepEqual(result.experiencesPresentationOrder?.categories,
 assert.deepEqual(result.experiencesPresentationOrder?.featured,
   ["Conexão a dois.", "Seu signo, suas descobertas.", "Descubra seu estilo.", "Mitos ou verdades?", "Pequenas descobertas."],
   "Os cards em destaque da página Experiências devem seguir a nova prioridade.");
+assert.deepEqual(result.experiencesPresentationOrder?.filters,
+  ["all", "couple", "astrology", "quiz", "challenge", "favorites"],
+  "Os filtros devem seguir a nova prioridade de categorias.");
 assert.equal(result.productGalleryFailures.length, 0, "Uma ou mais páginas individuais apresentam foto principal pequena/descentralizada ou galeria incompleta: " + JSON.stringify(result.productGalleryFailures));
 assert.equal(result.catalogGridNavigation?.rendered, expectedCatalogCards,
   "A auditoria deve validar a navegação de todos os cards.");
