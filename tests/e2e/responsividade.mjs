@@ -221,7 +221,8 @@ try {
   await page.waitForTimeout(300);
   result.mobileMenu = await page.evaluate(() => {
     const account = document.querySelector("#navlinks .nav-drawer-account-area > .nav-account-primary");
-    const regular = document.querySelector("#navlinks .nav-menu-group--help a[href='/atendimento.html']");
+    // Minha conta é um link principal; a referência equivalente é Loja, não Atendimento (item de grupo).
+    const regular = document.querySelector("#navlinks > .nav-primary-link.nav-link-shop");
     const icon = account?.querySelector(".nav-link-icon");
     const rect = element => {
       if (!element) return null;
@@ -250,7 +251,8 @@ try {
       accountBackground: accountStyle?.backgroundColor || null,
       accountBorderRadius: accountStyle?.borderRadius || null,
       iconDisplay: iconStyle?.display || null,
-      iconWidth: icon ? Math.round(icon.getBoundingClientRect().width) : 0
+      iconWidth: icon ? Math.round(icon.getBoundingClientRect().width) : 0,
+      iconHeight: icon ? Math.round(icon.getBoundingClientRect().height) : 0
     };
   });
   result.mobileMenu.accountRowAligned = Boolean(
@@ -261,8 +263,9 @@ try {
     result.mobileMenu.account.height === result.mobileMenu.regular.height &&
     result.mobileMenu.accountFontSize === result.mobileMenu.regularFontSize &&
     result.mobileMenu.accountFontWeight === result.mobileMenu.regularFontWeight &&
-    result.mobileMenu.iconDisplay === "inline-grid" &&
-    result.mobileMenu.iconWidth > 0 &&
+    ["grid", "inline-grid"].includes(result.mobileMenu.iconDisplay) &&
+    result.mobileMenu.iconWidth === 25 &&
+    result.mobileMenu.iconHeight === 25 &&
     result.mobileMenu.document <= result.mobileMenu.viewport + 1
   );
   await capture(page, "menu-mobile-aberto-390");
