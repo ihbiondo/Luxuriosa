@@ -712,6 +712,15 @@
     produto
   ) {
 
+    var urlDetalhesProduto = null;
+    if (produto.pagina) {
+      try {
+        urlDetalhesProduto = new URL(produto.pagina, document.baseURI).href;
+      } catch (erro) {
+        urlDetalhesProduto = null;
+      }
+    }
+
     var card =
       criarElemento(
         "article",
@@ -729,7 +738,7 @@
       0;
 
 
-    /* O card abre o modal, mas links e botões internos continuam independentes. */
+    /* O card inteiro navega para a página individual; controles internos preservam suas ações. */
 
 
     card.setAttribute(
@@ -775,7 +784,7 @@
     var imagemParaExibir = imagem;
     if (produto.pagina) {
       var linkImagem = criarElemento("a", "product-image-link");
-      linkImagem.href = produto.pagina;
+      linkImagem.href = urlDetalhesProduto;
       linkImagem.setAttribute("aria-label", "Ver detalhes de " + (produto.nome || "produto"));
       linkImagem.addEventListener("click", function (evento) {
         evento.stopPropagation();
@@ -821,7 +830,7 @@
 
     if (produto.pagina) {
       var linkDetalhes = criarElemento("a", "btn ghost small product-detail-link", "Mais detalhes");
-      linkDetalhes.href = produto.pagina;
+      linkDetalhes.href = urlDetalhesProduto;
       linkDetalhes.setAttribute("aria-label", "Ver detalhes de " + (produto.nome || "produto"));
       linkDetalhes.addEventListener("click", function (evento) {
         evento.stopPropagation();
@@ -976,20 +985,17 @@
 
 
     /* =====================================================
-       ABRIR MODAL
+       NAVEGAÇÃO UNIFICADA DO CARD
        ===================================================== */
 
-    function abrir() {
-      elementoQueAbriuModal = card;
-      abrirModalProduto(
-        produto
-      );
+    function abrirPaginaDetalhes() {
+      if (!urlDetalhesProduto) return;
+      window.location.assign(urlDetalhesProduto);
     }
-
 
     card.addEventListener(
       "click",
-      abrir
+      abrirPaginaDetalhes
     );
 
 
@@ -1010,7 +1016,7 @@
 
           evento.preventDefault();
 
-          abrir();
+          abrirPaginaDetalhes();
         }
       }
     );
