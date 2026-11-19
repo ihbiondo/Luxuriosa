@@ -490,6 +490,7 @@
   display: flex;
   width: 100%;
   max-width: 100%;
+  justify-content: safe center;
   gap: 9px;
   overflow-x: auto;
   padding: 2px 1px 7px;
@@ -526,7 +527,7 @@
     padding: 12px;
   }
   .product-detail-gallery {
-    justify-content: flex-start;
+    justify-content: safe center;
     gap: 8px;
   }
   .product-detail-gallery-thumb {
@@ -554,7 +555,7 @@
   .product-detail-page .product-detail-image > img {
     width: 100%;
     height: auto;
-    max-height: min(70dvh, 380px);
+    max-height: min(74dvh, 540px);
     object-fit: contain;
   }
   .product-detail-page .product-detail-image .product-detail-gallery-thumb img {

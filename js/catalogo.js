@@ -768,6 +768,22 @@
       imagem
     );
 
+    /*
+     * A foto principal leva à mesma página do link "Mais detalhes".
+     * O restante do card continua abrindo o modal como antes.
+     */
+    var imagemParaExibir = imagem;
+    if (produto.pagina) {
+      var linkImagem = criarElemento("a", "product-image-link");
+      linkImagem.href = produto.pagina;
+      linkImagem.setAttribute("aria-label", "Ver detalhes de " + (produto.nome || "produto"));
+      linkImagem.addEventListener("click", function (evento) {
+        evento.stopPropagation();
+      });
+      linkImagem.appendChild(imagem);
+      imagemParaExibir = linkImagem;
+    }
+
 
     /* =====================================================
        CORPO
@@ -951,7 +967,7 @@
        ===================================================== */
 
     card.appendChild(
-      imagem
+      imagemParaExibir
     );
 
     card.appendChild(

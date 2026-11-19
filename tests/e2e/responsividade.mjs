@@ -161,6 +161,8 @@ const result = {
   catalogViewport320: null,
   modal: null,
   modalGallery: null,
+  catalogImageNavigation: null,
+  productGalleryLayout: null,
   pageErrors: [],
   productGalleries: [],
   productGalleryFailures: []
@@ -270,6 +272,44 @@ try {
   result.catalogImageFitFailures = result.catalogCards.filter(item => item.objectFit !== "cover");
   result.catalogCardFrameFailures = result.catalogCards.filter(item => item.frameWidth <= 0 || item.frameHeight <= 0);
   await capture(page, "catalogo-completo-mobile-390");
+
+  // A foto do card deve seguir o mesmo destino do link "Mais detalhes", sem abrir o modal.
+  const firstImageLink = page.locator("#grid .product-image-link").first();
+  await firstImageLink.waitFor({ state: "visible", timeout: 10000 });
+  const imageLinkData = await firstImageLink.evaluate(link => ({
+    href: link.getAttribute("href"),
+    cardLabel: link.closest(".product")?.getAttribute("aria-label") || ""
+  }));
+  const linkedProduct = catalogData.produtos.find(product =>
+    imageLinkData.cardLabel === "Ver detalhes de " + product.nome
+  );
+  const expectedImagePath = linkedProduct?.pagina
+    ? new URL(linkedProduct.pagina, BASE_URL).pathname
+    : null;
+  const clickStaysOutsideCard = await firstImageLink.evaluate(link => {
+    const card = link.closest(".product");
+    let bubbledToCard = false;
+    const watchCard = () => { bubbledToCard = true; };
+    const preventNavigation = event => event.preventDefault();
+    link.addEventListener("click", preventNavigation);
+    card.addEventListener("click", watchCard);
+    link.dispatchEvent(new MouseEvent("click", { bubbles: true, cancelable: true }));
+    card.removeEventListener("click", watchCard);
+    link.removeEventListener("click", preventNavigation);
+    return !bubbledToCard && !document.querySelector("#modal.open");
+  });
+  await Promise.all([
+    page.waitForURL(url => url.pathname === expectedImagePath, { timeout: 10000 }),
+    firstImageLink.click()
+  ]);
+  const actualImagePath = new URL(page.url()).pathname;
+  result.catalogImageNavigation = {
+    href: imageLinkData.href,
+    expectedPath: expectedImagePath,
+    actualPath: actualImagePath,
+    destinationMatched: Boolean(expectedImagePath && actualImagePath === expectedImagePath),
+    clickStaysOutsideCard
+  };
 
   // Confere também se os quadros dos cards continuam utilizáveis na menor largura.
   await page.setViewportSize({ width: 320, height: 740 });
@@ -449,12 +489,14 @@ try {
       element.style.setProperty("display", "none", "important");
     });
   });
-  await page.locator("#grid .product").first().click({ force: true });
+  // A foto agora é um link de navegação e não deve abrir o modal.
+  // O título está na área de conteúdo do card e continua abrindo o modal.
+  await page.locator("#grid .product").filter({ hasText: "Body Sensual Rendado — Frente Única" }).first().locator(".product-body h3").click();
   await page.waitForFunction(() => {
     const modal = document.querySelector("#modal");
     return modal && getComputedStyle(modal).display !== "none" &&
       getComputedStyle(modal).visibility !== "hidden";
-  }, null, { timeout: 8000 }).catch(() => {});
+  }, null, { timeout: 8000 });
   const modalState = await page.evaluate(() => {
     const modal = document.querySelector("#modal");
     const content = modal?.querySelector(".modal");
@@ -478,6 +520,25 @@ try {
     };
   });
   result.modal = modalState;
+
+  const modalThumbPrecheck = await page.evaluate(() => {
+    const modal = document.querySelector("#modal");
+    const images = [...document.querySelectorAll("#modal .product-gallery-thumb img")];
+    return {
+      open: Boolean(modal?.classList.contains("open")),
+      product: document.querySelector("#mNome")?.textContent || "",
+      count: images.length,
+      images: images.map(image => ({
+        src: image.getAttribute("src"),
+        complete: image.complete,
+        naturalWidth: image.naturalWidth
+      }))
+    };
+  });
+  console.log("Modal gallery precheck: " + JSON.stringify(modalThumbPrecheck));
+  if (!modalThumbPrecheck.open || modalThumbPrecheck.count < 2) {
+    throw new Error("O modal não abriu a galeria esperada do Body ID 31: " + JSON.stringify(modalThumbPrecheck));
+  }
 
   // As miniaturas do modal estão na tela: exige que todas terminem de carregar antes da captura.
   await page.waitForFunction(() => {
@@ -517,7 +578,7 @@ try {
       element.style.setProperty("display", "none", "important");
     });
   });
-  await page.locator("#grid .product").first().click({ force: true }).catch(() => {});
+  await page.locator("#grid .product").filter({ hasText: "Body Sensual Rendado — Frente Única" }).first().locator(".product-body h3").click({ force: true }).catch(() => {});
   await page.waitForTimeout(120);
   const modal320 = await inspectLayout(page, "/loja/lingerie/ (modal 320 px)", {
     name: "mobile-320", width: 320, height: 740
@@ -533,12 +594,45 @@ try {
   for (const product of productsWithGallery) {
     const route = product.pagina.charAt(0) === "/" ? product.pagina : "/" + product.pagina;
     try {
-      await openPage(page, route, { name: "mobile-390", width: 390, height: 844 });
+      const galleryViewport = Number(product.id) === 31
+        ? { name: "mobile-360", width: 360, height: 800 }
+        : { name: "mobile-390", width: 390, height: 844 };
+      await openPage(page, route, galleryViewport);
       const gallery = page.locator(".product-detail-gallery");
       await gallery.waitFor({ state: "visible", timeout: 10000 });
       const thumbCount = await gallery.locator("button").count();
       const mainImage = page.locator(".product-detail-image > img").first();
       const initialSrc = await mainImage.getAttribute("src");
+      if (Number(product.id) === 31) {
+        await page.waitForFunction(() => {
+          const image = document.querySelector(".product-detail-image > img");
+          return Boolean(image && image.complete && image.naturalWidth > 0);
+        }, null, { timeout: 10000 });
+        result.productGalleryLayout = await page.evaluate(() => {
+          const frame = document.querySelector(".product-detail-image");
+          const image = frame?.querySelector(":scope > img");
+          const galleryElement = frame?.querySelector(".product-detail-gallery");
+          const thumbRects = [...(galleryElement?.querySelectorAll(".product-detail-gallery-thumb") || [])]
+            .map(thumb => thumb.getBoundingClientRect());
+          const galleryRect = galleryElement?.getBoundingClientRect();
+          const groupLeft = thumbRects.length ? Math.min(...thumbRects.map(rect => rect.left)) : 0;
+          const groupRight = thumbRects.length ? Math.max(...thumbRects.map(rect => rect.right)) : 0;
+          const groupCenterDelta = galleryRect && thumbRects.length
+            ? Math.abs((groupLeft + groupRight) / 2 - (galleryRect.left + galleryRect.right) / 2)
+            : null;
+          return {
+            frameWidth: frame?.clientWidth || 0,
+            imageWidth: image ? image.getBoundingClientRect().width : 0,
+            imageFillRatio: frame?.clientWidth && image
+              ? Number((image.getBoundingClientRect().width / frame.clientWidth).toFixed(3))
+              : 0,
+            galleryWidth: galleryElement?.clientWidth || 0,
+            galleryScrollWidth: galleryElement?.scrollWidth || 0,
+            justifyContent: galleryElement ? getComputedStyle(galleryElement).justifyContent : "",
+            groupCenterDelta: groupCenterDelta === null ? null : Number(groupCenterDelta.toFixed(2))
+          };
+        });
+      }
       let changedAfterClick = false;
       if (thumbCount > 1) {
         const secondThumb = gallery.locator("button").nth(1);
@@ -574,7 +668,12 @@ const failed = result.routeFailures.length > 0 ||
   result.productGalleryFailures.length > 0 ||
   !result.modalGallery?.countMatchesExpected ||
   result.modalGallery?.loaded !== result.modalGallery?.count ||
-  !result.modalGallery?.changesMainImage;
+  !result.modalGallery?.changesMainImage ||
+  !result.catalogImageNavigation?.destinationMatched ||
+  !result.catalogImageNavigation?.clickStaysOutsideCard ||
+  !result.productGalleryLayout ||
+  result.productGalleryLayout.imageFillRatio < 0.84 ||
+  result.productGalleryLayout.groupCenterDelta > 2;
 
 console.log(JSON.stringify({
   summary: {
@@ -600,6 +699,8 @@ console.log(JSON.stringify({
     modalThumbnails: result.modalGallery?.count ?? 0,
     modalThumbnailsLoaded: result.modalGallery?.loaded ?? 0,
     modalThumbnailSwitchWorks: result.modalGallery?.changesMainImage ?? false,
+    catalogImageNavigation: result.catalogImageNavigation,
+    productGalleryLayout: result.productGalleryLayout,
     failed
   },
   catalogCards: result.catalogCards,
@@ -648,5 +749,13 @@ assert.equal(result.productGalleryFailures.length, 0, "Uma ou mais páginas indi
 assert.ok(result.modalGallery && result.modalGallery.count > 1, "O modal não exibiu uma galeria de miniaturas.");
 assert.equal(result.modalGallery.loaded, result.modalGallery.count, "Há miniaturas do modal que não carregaram.");
 assert.ok(result.modalGallery.changesMainImage, "Clicar em uma miniatura do modal não trocou a foto principal.");
+assert.ok(result.catalogImageNavigation?.destinationMatched,
+  "Clicar na foto do card não abriu a página de detalhes correspondente.");
+assert.ok(result.catalogImageNavigation?.clickStaysOutsideCard,
+  "O clique na foto também acionou o modal do card.");
+assert.ok(result.productGalleryLayout?.imageFillRatio >= 0.84,
+  "A foto principal da lingerie não preencheu o quadro mobile.");
+assert.ok(result.productGalleryLayout?.groupCenterDelta <= 2,
+  "As miniaturas da página do produto não ficaram centralizadas.");
 
 console.log("Auditoria responsiva Playwright: PASS.");
