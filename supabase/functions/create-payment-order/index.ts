@@ -7,11 +7,27 @@ const INFINITEPAY_API_KEY = Deno.env.get("INFINITEPAY_API_KEY") || "";
 const INFINITEPAY_HANDLE = Deno.env.get("INFINITEPAY_HANDLE") || "";
 const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY") || "";
 const EMAIL_FROM = Deno.env.get("EMAIL_FROM") || "";
+
+function isLocalSupabaseUrl(value: string): boolean {
+  try {
+    const url = new URL(value);
+    return url.protocol === "http:" &&
+      ["kong", "localhost", "127.0.0.1"].includes(url.hostname);
+  } catch {
+    return false;
+  }
+}
+
+// Este modo só existe para o teste descartável do CI. Ele é recusado fora
+// de um Supabase local, não aceita origem externa e nunca chama a InfinitePay.
+const LOCAL_E2E_MODE =
+  Deno.env.get("LUX_E2E_LOCAL_MODE") === "true" && isLocalSupabaseUrl(SUPABASE_URL);
 const admin = createClient(SUPABASE_URL, SERVICE_ROLE_KEY, {
   auth: { persistSession: false, autoRefreshToken: false }
 });
 
 const ALLOWED_ORIGINS = new Set(["https://luxuriosa.com.br", "https://www.luxuriosa.com.br"]);
+if (LOCAL_E2E_MODE) ALLOWED_ORIGINS.add("http://127.0.0.1:4173");
 const CATALOG_URL = "https://luxuriosa.com.br/data/produtos.json";
 const CHECKOUT_URL = "https://api.checkout.infinitepay.io/links";
 const PAYMENT_CHECKOUT_PAYLOAD_VERSION = 8;
@@ -115,7 +131,7 @@ Deno.serve(async (req: Request) => {
   if (Number(req.headers.get("content-length") || 0) > 32 * 1024) {
     return reply({ error: "Solicitação muito grande." }, 413, origin);
   }
-  if (!INFINITEPAY_API_KEY || !INFINITEPAY_HANDLE) return reply({ error: "O pagamento automático precisa da API Key e da InfiniteTag configuradas no servidor." }, 503, origin);
+  if ((!INFINITEPAY_API_KEY || !INFINITEPAY_HANDLE) && !LOCAL_E2E_MODE) return reply({ error: "O pagamento automático precisa da API Key e da InfiniteTag configuradas no servidor." }, 503, origin);
   
   try {
     const rawBody = await req.text();
@@ -742,14 +758,19 @@ Deno.serve(async (req: Request) => {
       }
     };
 
-    const checkoutResponse = await fetch(CHECKOUT_URL, {
-      method: "POST",
-      headers: {
-        "content-type": "application/json",
-        "X-Api-Key": INFINITEPAY_API_KEY
-      },
-      body: JSON.stringify(checkoutPayload)
-    });
+    const checkoutResponse = LOCAL_E2E_MODE
+      ? new Response(JSON.stringify({ url: "https://checkout.infinitepay.io/e2e-mock" }), {
+          status: 200,
+          headers: { "content-type": "application/json" }
+        })
+      : await fetch(CHECKOUT_URL, {
+          method: "POST",
+          headers: {
+            "content-type": "application/json",
+            "X-Api-Key": INFINITEPAY_API_KEY
+          },
+          body: JSON.stringify(checkoutPayload)
+        });
     const checkoutText = await checkoutResponse.text();
     let checkoutData: any = {};
     try { checkoutData = checkoutText ? JSON.parse(checkoutText) : {}; } catch { checkoutData = {}; }
