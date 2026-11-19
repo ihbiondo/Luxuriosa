@@ -160,7 +160,9 @@ const result = {
   lingerieCards: [],
   catalogViewport320: null,
   modal: null,
-  pageErrors: []
+  pageErrors: [],
+  productGalleries: [],
+  productGalleryFailures: []
 };
 
 const browser = await chromium.launch({
@@ -494,6 +496,38 @@ try {
   if (modal320.horizontalOverflow) result.overflowFailures.push(modal320);
   await capture(page, "modal-lingerie-mobile-320");
 
+  // Valida a galeria nas páginas individuais para todos os produtos com fotos extras no catálogo.
+  const productsWithGallery = catalogData.produtos.filter(product =>
+    Array.isArray(product.imagens) && product.imagens.length > 1 && product.pagina
+  );
+  for (const product of productsWithGallery) {
+    const route = "/" + product.pagina.replace(/^\\//, "");
+    try {
+      await openPage(page, route, { name: "mobile-390", width: 390, height: 844 });
+      const gallery = page.locator(".product-detail-gallery");
+      const thumbCount = await gallery.locator("button").count();
+      const mainImage = page.locator(".product-detail-image > img").first();
+      const initialSrc = await mainImage.getAttribute("src");
+      let changedAfterClick = false;
+      if (thumbCount > 1) {
+        const secondThumb = gallery.locator("button").nth(1);
+        const expectedSrc = await secondThumb.locator("img").getAttribute("src");
+        await secondThumb.click();
+        changedAfterClick = (await mainImage.getAttribute("src")) === expectedSrc;
+      }
+      const item = { id: product.id, route, expected: product.imagens.length, actual: thumbCount, changedAfterClick, initialSrc };
+      result.productGalleries.push(item);
+      if (thumbCount !== product.imagens.length || !changedAfterClick) {
+        result.productGalleryFailures.push(item);
+      }
+      await capture(page, "produto-galeria-" + product.id + "-390");
+    } catch (error) {
+      const item = { id: product.id, route, error: error.message.slice(0, 220) };
+      result.productGalleries.push(item);
+      result.productGalleryFailures.push(item);
+    }
+  }
+
 } finally {
   await browser.close();
 }
@@ -526,6 +560,8 @@ console.log(JSON.stringify({
     mobileMenuAccountAligned: result.mobileMenu?.accountRowAligned ?? false,
     modalVisible: result.modal?.visible ?? false,
     modalHeight: result.modal?.height ?? null,
+    productGalleriesChecked: result.productGalleries.length,
+    productGalleryFailures: result.productGalleryFailures.length,
     failed
   },
   catalogCards: result.catalogCards,
@@ -562,8 +598,9 @@ assert.ok(result.mobileMenu?.accountRowAligned,
   "Minha conta deve alinhar-se como item comum do menu mobile: " + JSON.stringify(result.mobileMenu));
 assert.ok(result.modal?.visible, "O modal de produto não abriu durante a auditoria.");
 assert.ok(
-  result.modal.height <= result.modal.viewportHeight + 2,
-  "O modal excede a altura do viewport mobile."
+  result.modal.height <= result.modal.viewportHeight * 0.88 + 2,
+  "O modal excede 88% da altura do viewport mobile."
 );
+assert.equal(result.productGalleryFailures.length, 0, "Uma ou mais páginas individuais não exibem/trocam todas as fotos cadastradas.");
 
 console.log("Auditoria responsiva Playwright: PASS.");
