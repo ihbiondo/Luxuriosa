@@ -890,6 +890,8 @@ const failed = result.routeFailures.length > 0 ||
   result.catalogImageFitFailures.length > 0 ||
   result.catalogCardFrameFailures.length > 0 ||
   result.productGalleryFailures.length > 0 ||
+  result.mobileTouchTargetFailures.length > 0 ||
+  result.mobileTouchTargetComfortFailures.length > 0 ||
   !result.mobileMenu?.accordionsCorrect ||
   !result.mobileMenu?.accordionInteractionWorks ||
   !result.mobileMenu?.initialListsRestoreAfterReopen ||
