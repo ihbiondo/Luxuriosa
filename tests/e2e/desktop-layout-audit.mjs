@@ -352,6 +352,14 @@ try {
               control.label.toLowerCase().includes("abrir menu")
             ))
         );
+        const desktopBackdrops = navigation.headerControls.filter(control =>
+          control.className.split(/s+/).includes("nav-drawer-backdrop")
+        );
+        assert.ok(
+          desktopBackdrops.every(control => control.display === "none"),
+          "O fundo do menu lateral deve ficar oculto no desktop: " +
+            JSON.stringify(desktopBackdrops)
+        );
         assert.ok(navigation.bounds.x >= navigation.logoBounds.right - 2,
           "A navegação desktop está invadindo a área da marca: " +
             JSON.stringify({ logo: navigation.logoBounds, navigation: navigation.bounds }));
