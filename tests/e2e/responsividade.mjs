@@ -109,6 +109,27 @@ async function inspectLayout(page, route, viewport) {
 
 async function capture(page, name) {
   if (!SCREENSHOT_DIR) return;
+
+  // Full-page screenshots do not trigger every lazy image before capture.
+  // Visit each image, wait for decoding, then restore the initial scroll position.
+  await page.evaluate(async () => {
+    const images = [...document.images].filter(image => image.getAttribute("src"));
+    for (const image of images) {
+      image.scrollIntoView({ block: "center", behavior: "auto" });
+      if (typeof image.decode === "function") {
+        await Promise.race([
+          image.decode().catch(() => {}),
+          new Promise(resolve => setTimeout(resolve, 4000))
+        ]);
+      }
+    }
+    if (document.fonts?.ready) await document.fonts.ready;
+    window.scrollTo(0, 0);
+    await new Promise(resolve => requestAnimationFrame(() =>
+      requestAnimationFrame(resolve)
+    ));
+  });
+
   fs.mkdirSync(SCREENSHOT_DIR, { recursive: true });
   await page.screenshot({
     path: path.join(SCREENSHOT_DIR, name + ".png"),
