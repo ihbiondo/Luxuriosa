@@ -9,7 +9,8 @@ alter table public.account_data_consents
 alter table public.account_data_consents
   add constraint account_data_consents_event_key_key unique (event_key);
 
-grant insert on public.account_data_consents to authenticated;
+revoke all on public.account_data_consents from public, anon, authenticated;
+grant select, insert on public.account_data_consents to authenticated;
 
 create policy account_data_consents_insert_own
   on public.account_data_consents
