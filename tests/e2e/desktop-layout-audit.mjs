@@ -8,6 +8,9 @@ const SCREENSHOT_DIR = process.env.DESKTOP_SCREENSHOT_DIR || "";
 const REPORT_PATH = process.env.DESKTOP_REPORT_PATH || "";
 const VIEWPORTS = [
   { name: "notebook-1024", width: 1024, height: 900 },
+  { name: "desktop-1200", width: 1200, height: 900 },
+  { name: "desktop-1280", width: 1280, height: 900 },
+  { name: "desktop-1360", width: 1360, height: 900 },
   { name: "desktop-1366", width: 1366, height: 900 },
   { name: "desktop-1440", width: 1440, height: 960 },
   { name: "wide-1920", width: 1920, height: 1080 }
@@ -204,6 +207,8 @@ async function inspect(page, route, viewport) {
     };
     const nav = document.querySelector("header .navlinks");
     const navStyle = nav ? getComputedStyle(nav) : null;
+    const logo = document.querySelector("header .nav > .logo");
+    const navRight = document.querySelector("header .nav-right");
     const visibleNavItems = nav
       ? [...nav.querySelectorAll("a[href]")].filter(visible).map(element => {
           const box = element.getBoundingClientRect();
@@ -223,7 +228,9 @@ async function inspect(page, route, viewport) {
       display: navStyle?.display || null,
       position: navStyle?.position || null,
       flexDirection: navStyle?.flexDirection || null,
+      logoBounds: rect(logo),
       bounds: rect(nav),
+      actionsBounds: rect(navRight),
       clientWidth: nav?.clientWidth ?? 0,
       scrollWidth: nav?.scrollWidth ?? 0,
       items: visibleNavItems,
@@ -303,6 +310,20 @@ try {
         assert.equal(navigation.submenusVisible, false, "Submenus antigos não devem aparecer no desktop.");
         assert.equal(navigation.accountUtilityVisible, false, "Minha conta não deve aparecer duplicada no cabeçalho.");
         assert.equal(navigation.burgerVisible, false, "O botão lateral não deve aparecer no desktop.");
+        assert.ok(navigation.logoBounds && navigation.bounds && navigation.actionsBounds,
+          "O cabeçalho deve manter logo, navegação e ações visíveis.");
+        assert.ok(navigation.bounds.x >= navigation.logoBounds.right - 2,
+          "A navegação desktop está invadindo a área da marca: " +
+            JSON.stringify({ logo: navigation.logoBounds, navigation: navigation.bounds }));
+        assert.ok(navigation.bounds.right <= navigation.actionsBounds.x + 2,
+          "A navegação desktop está invadindo a área do carrinho/WhatsApp: " +
+            JSON.stringify({ navigation: navigation.bounds, actions: navigation.actionsBounds }));
+        assert.ok(
+          measurements.document.scrollWidth <= measurements.document.clientWidth + 1,
+          "A página apresenta rolagem horizontal no desktop: " + route.path + " " +
+            viewport.width + "px (" + measurements.document.scrollWidth + "/" +
+            measurements.document.clientWidth + ")."
+        );
 
         const centers = navigation.items.map(item => item.top);
         assert.ok(
