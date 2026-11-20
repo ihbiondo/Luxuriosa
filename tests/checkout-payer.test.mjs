@@ -61,3 +61,21 @@ test("checkout limita a espera da preparação do pagamento e libera o botão em
   assert.match(client, /finally \{\s*if \(paymentTimeout !== null\) window\.clearTimeout\(paymentTimeout\);\s*\}/);
   assert.match(client, /button\.disabled = false/);
 });
+
+test("backend diferencia retirada de entrega e valida CEP no servidor", () => {
+  assert.match(backend, /const fulfillmentType = suppliedFulfillmentType \|\| "express"/);
+  assert.match(backend, /const isPickup = fulfillmentType === "pickup"/);
+  assert.match(backend, /code: "invalid_pickup_schedule"/);
+  assert.match(backend, /code: "invalid_delivery_cep"/);
+  assert.match(backend, /if \(!isPickup && !\/\^\\d\{8\}\$\//);
+  assert.match(backend, /if \(!isPickup\) \{/);
+});
+
+test("backend persiste a retirada e não envia endereço de entrega à InfinitePay", () => {
+  assert.match(backend, /const PICKUP_PREPARATION_MINUTES = 30/);
+  assert.match(backend, /pickup_requested_at: pickupRequestedAt\?\.toISOString\(\) \|\| null/);
+  assert.match(backend, /pendingOrder\.pickup_requested_at/);
+  assert.match(backend, /const baseFeeCents = isPickup \? 0/);
+  assert.match(backend, /const shippingCents = baseFeeCents/);
+  assert.match(backend, /\.\.\.\(isPickup \? \{\} : \{/);
+});
