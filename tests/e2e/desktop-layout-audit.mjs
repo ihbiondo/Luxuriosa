@@ -233,6 +233,26 @@ async function inspect(page, route, viewport) {
       : [];
     const accountUtility = document.querySelector("header .nav-right > .account-trigger");
     const burger = document.querySelector("header .nav-right > .burger");
+    const pageNavigationElement = document.querySelector(
+      "header nav, nav[aria-label*='Navegação']"
+    );
+    const pageNavigation = {
+      bounds: rect(pageNavigationElement),
+      clientWidth: pageNavigationElement?.clientWidth ?? 0,
+      scrollWidth: pageNavigationElement?.scrollWidth ?? 0,
+      items: pageNavigationElement
+        ? [...pageNavigationElement.querySelectorAll("a[href]")].filter(visible).map(element => {
+            const box = element.getBoundingClientRect();
+            return {
+              label: (element.innerText || "").trim().replace(/\\s+/g, " "),
+              left: Math.round(box.left),
+              right: Math.round(box.right),
+              top: Math.round(box.top),
+              bottom: Math.round(box.bottom)
+            };
+          })
+        : []
+    };
     const desktopNavigation = {
       display: navStyle?.display || null,
       position: navStyle?.position || null,
@@ -285,6 +305,7 @@ async function inspect(page, route, viewport) {
       menuIcons,
       utilityIcons,
       desktopNavigation,
+      pageNavigation,
       document: {
         clientWidth: document.documentElement.clientWidth,
         scrollWidth: document.documentElement.scrollWidth,
@@ -317,7 +338,7 @@ try {
     for (const viewport of routeViewports) {
       await preparePage(page, route, viewport);
       const measurements = await inspect(page, route, viewport);
-      if (viewport.width >= 1200) {
+      if (viewport.width >= 1200 && !route.fullPageOnly) {
         assert.ok(
           measurements.menuIcons.every(icon => !icon.visible),
           "Ícones do menu mobile não foram ocultados no desktop: " +
@@ -396,6 +417,25 @@ try {
             "Os links do menu desktop estão sobrepostos: " + JSON.stringify(navigation.items)
           );
         }
+      } else if (viewport.width >= 1200) {
+        const navigation = measurements.pageNavigation;
+        assert.ok(navigation.bounds && navigation.bounds.width > 0,
+          "A página interna precisa exibir sua própria área de navegação: " + route.path);
+        assert.ok(navigation.items.length > 0,
+          "A navegação da página interna não contém links visíveis: " + route.path);
+        assert.ok(navigation.scrollWidth <= navigation.clientWidth + 2,
+          "Os links da navegação interna não cabem na largura disponível: " + route.path);
+        assert.ok(
+          navigation.items.every(item => item.left >= -2 && item.right <= viewport.width + 2),
+          "Há links da navegação interna fora da área visível: " + route.path
+        );
+        assert.ok(
+          measurements.document.scrollWidth <= measurements.document.clientWidth + 1,
+          "A página interna apresenta rolagem horizontal no desktop: " + route.path
+        );
+        assert.equal(measurements.visibleViewportOverflows.length, 0,
+          "Há elementos visíveis ultrapassando a viewport desktop: " + route.path + " " +
+            JSON.stringify(measurements.visibleViewportOverflows));
       }
 
       if (viewport.width >= 901 && viewport.width <= 1199 &&
