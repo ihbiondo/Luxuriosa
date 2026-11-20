@@ -14,7 +14,7 @@
     if (jaCarregado || document.getElementById("luxuriosa-app-menu-loader")) return;
     var script = document.createElement("script");
     script.id = "luxuriosa-app-menu-loader";
-    script.src = "/js/app.js?v=20261119-menu-mobile-v9";
+    script.src = "/js/app.js?v=20261120-desktop-backdrop-v1";
     script.async = false;
     (document.head || document.body).appendChild(script);
   }

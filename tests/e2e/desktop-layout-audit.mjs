@@ -231,6 +231,33 @@ async function inspect(page, route, viewport) {
       logoBounds: rect(logo),
       bounds: rect(nav),
       actionsBounds: rect(navRight),
+      headerControls: [...document.querySelectorAll("header a, header button, header [role='button']")]
+        .map(element => {
+          const box = element.getBoundingClientRect();
+          const style = getComputedStyle(element);
+          const before = getComputedStyle(element, "::before");
+          const after = getComputedStyle(element, "::after");
+          return {
+            tag: element.tagName.toLowerCase(),
+            id: element.id || "",
+            className: typeof element.className === "string"
+              ? element.className.trim().slice(0, 100) : "",
+            label: element.getAttribute("aria-label") || element.getAttribute("title") || "",
+            text: (element.innerText || element.textContent || "").trim().replace(/\\s+/g, " ").slice(0, 80),
+            display: style.display,
+            visibility: style.visibility,
+            opacity: style.opacity,
+            position: style.position,
+            color: style.color,
+            fontSize: style.fontSize,
+            width: Math.round(box.width),
+            height: Math.round(box.height),
+            left: Math.round(box.left),
+            right: Math.round(box.right),
+            before: before.content !== "none" ? before.content : null,
+            after: after.content !== "none" ? after.content : null
+          };
+        }),
       clientWidth: nav?.clientWidth ?? 0,
       scrollWidth: nav?.scrollWidth ?? 0,
       items: visibleNavItems,
@@ -312,6 +339,27 @@ try {
         assert.equal(navigation.burgerVisible, false, "O botão lateral não deve aparecer no desktop.");
         assert.ok(navigation.logoBounds && navigation.bounds && navigation.actionsBounds,
           "O cabeçalho deve manter logo, navegação e ações visíveis.");
+        assert.ok(
+          !navigation.headerControls.some(control =>
+            control.label.toLowerCase().includes("abrir menu") &&
+            control.display !== "none" &&
+            control.visibility !== "hidden" &&
+            control.opacity !== "0" &&
+            control.width > 1 && control.height > 1
+          ),
+          "O controle do menu recolhido não deve aparecer no desktop: " +
+            JSON.stringify(navigation.headerControls.filter(control =>
+              control.label.toLowerCase().includes("abrir menu")
+            ))
+        );
+        const desktopBackdrops = navigation.headerControls.filter(control =>
+          control.className.split(/s+/).includes("nav-drawer-backdrop")
+        );
+        assert.ok(
+          desktopBackdrops.every(control => control.display === "none"),
+          "O fundo do menu lateral deve ficar oculto no desktop: " +
+            JSON.stringify(desktopBackdrops)
+        );
         assert.ok(navigation.bounds.x >= navigation.logoBounds.right - 2,
           "A navegação desktop está invadindo a área da marca: " +
             JSON.stringify({ logo: navigation.logoBounds, navigation: navigation.bounds }));
