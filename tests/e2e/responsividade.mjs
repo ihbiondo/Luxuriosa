@@ -235,11 +235,9 @@ try {
           await page.waitForFunction(() => {
             const nav = document.querySelector("#navlinks");
             const styleLink = [...document.querySelectorAll('link[rel="stylesheet"]')]
-              .find(link => (link.href || "").includes("navigation.css") &&
-                (link.href || "").includes("menu-mobile-v9"));
+              .find(link => (link.href || "").includes("navigation.css"));
             const appScript = [...document.scripts].find(script =>
-              (script.src || "").includes("/js/app.js") &&
-              (script.src || "").includes("menu-mobile-v9"));
+              (script.src || "").includes("/js/app.js"));
             return Boolean(nav && nav.querySelector(".nav-drawer-close") &&
               styleLink && styleLink.sheet && appScript);
           }, null, { timeout: 10000 });
@@ -292,8 +290,8 @@ try {
           item.unifiedNavigation = audit;
           result.unifiedNavigationChecks.push({ route: normalizedRoute, ...audit });
           if (!audit.burger || !audit.drawer || !audit.brand ||
-              !audit.appScriptVersion.includes("menu-mobile-v9") ||
-              !audit.navigationCssVersion.includes("menu-mobile-v9") ||
+              !audit.appScriptVersion.includes("20261120-desktop-backdrop-v1") ||
+              !audit.navigationCssVersion.includes("20261120-desktop-backdrop-v1") ||
               audit.visibleLinks.join("|") !== audit.expectedLinks.join("|") ||
               !audit.accountBeforeShop || !audit.hiddenSubmenus || audit.visibleToggles ||
               audit.categoryGridVisible || audit.firstDivider !== "solid" ||
