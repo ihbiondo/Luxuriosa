@@ -488,14 +488,14 @@
 }
 .product-detail-gallery {
   display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
   width: 100%;
   max-width: 100%;
-  justify-content: safe center;
   gap: 9px;
-  overflow-x: auto;
+  overflow: visible;
   padding: 2px 1px 7px;
-  overscroll-behavior-x: contain;
-  scrollbar-width: thin;
 }
 .product-detail-gallery-thumb {
   flex: 0 0 68px;
@@ -527,8 +527,10 @@
     padding: 8px;
   }
   .product-detail-gallery {
-    justify-content: safe center;
+    flex-wrap: wrap;
+    justify-content: center;
     gap: 8px;
+    overflow: visible;
   }
   .product-detail-gallery-thumb {
     flex-basis: 60px;
