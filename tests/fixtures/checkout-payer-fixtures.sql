@@ -38,7 +38,12 @@ alter table public.orders
   add column payment_expires_at timestamptz,
   add column dispatch_sla_minutes integer,
   add column delivery_sla_minutes integer,
-  add column fulfillment_type text,
+  add column fulfillment_type text not null default 'express',
+  add column pickup_requested_at timestamptz,
+  add column picked_up_at timestamptz,
+  add column scheduled_delivery_date date,
+  add column scheduled_window_start time,
+  add column scheduled_window_end time,
   add column delivery_origin_cep text,
   add column delivery_distance_km numeric(10,2),
   add column delivery_base_fee_cents integer,
@@ -49,6 +54,26 @@ alter table public.orders
 alter table public.orders
   alter column order_number set default
     ('E2E-' || upper(substr(replace(gen_random_uuid()::text, '-', ''), 1, 8)));
+
+alter table public.orders
+  add constraint orders_fulfillment_type_check
+    check (fulfillment_type in ('express', 'scheduled', 'pickup')),
+  add constraint orders_scheduled_delivery_fields_check
+    check (
+      (fulfillment_type = 'express' and scheduled_delivery_date is null
+        and scheduled_window_start is null and scheduled_window_end is null
+        and pickup_requested_at is null)
+      or
+      (fulfillment_type = 'scheduled' and scheduled_delivery_date is not null
+        and scheduled_window_start is not null and scheduled_window_end is not null
+        and scheduled_window_end > scheduled_window_start and pickup_requested_at is null)
+      or
+      (fulfillment_type = 'pickup' and scheduled_delivery_date is null
+        and scheduled_window_start is null and scheduled_window_end is null
+        and pickup_requested_at is not null)
+    ),
+  add constraint orders_pickup_lifecycle_check
+    check (picked_up_at is null or fulfillment_type = 'pickup');
 
 alter table public.order_items
   add column product_id text,
