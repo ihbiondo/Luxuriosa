@@ -38,6 +38,17 @@ const CLUB_DISCOUNT_THRESHOLD_CENTS = 10000;
 const CLUB_DISCOUNT_PERCENT = 10;
 const CLUB_DISCOUNT_RULE_VERSION = "clube-10-v1-2026-11";
 const CHECKOUT_VALIDITY_MINUTES = 60;
+const PICKUP_PREPARATION_MINUTES = 30;
+const PICKUP_ADDRESS = {
+  zip: "17030290",
+  street: "Rua Madre Clélia",
+  number: "5-44",
+  complement: "",
+  district: "Jardim Cruzeiro do Sul",
+  city: "Bauru",
+  state: "SP",
+  reference: ""
+};
 const WEBHOOK_URL = "https://byiykxfugvxuowueuxca.supabase.co/functions/v1/infinitepay-webhook";
 const RETURN_URL = "https://luxuriosa.com.br/pagamento-retorno.html";
 
@@ -159,6 +170,26 @@ Deno.serve(async (req: Request) => {
     const sessionKey = body?.session_key;
     if (!isUuid(sessionKey)) return reply({ error: "Sessão inválida. Atualize a página e tente novamente." }, 400, origin);
 
+    const suppliedFulfillmentType = textValue(body?.fulfillment_type, 20);
+    const fulfillmentType = suppliedFulfillmentType || "express";
+    if (!["express", "scheduled", "pickup"].includes(fulfillmentType)) {
+      return reply({ error: "Modalidade de recebimento inválida. Atualize a página e tente novamente." }, 400, origin);
+    }
+    const isPickup = fulfillmentType === "pickup";
+    const pickupRequestedAt = isPickup && typeof body?.pickup_requested_at === "string"
+      ? new Date(body.pickup_requested_at)
+      : null;
+    if (isPickup && (
+      !pickupRequestedAt ||
+      !Number.isFinite(pickupRequestedAt.getTime()) ||
+      pickupRequestedAt.getTime() <= Date.now()
+    )) {
+      return reply({
+        code: "invalid_pickup_schedule",
+        error: "Informe uma data e um horário futuros para a retirada agendada."
+      }, 400, origin);
+    }
+
     const customer = body?.customer || {};
     const name = textValue(customer.name, 160);
     const phone = textValue(customer.phone, 30);
@@ -170,7 +201,7 @@ Deno.serve(async (req: Request) => {
       ? brazilPhone(textValue(customer.paymentPayerPhone, 30))
       : null;
     const address = customer.address && typeof customer.address === "object" ? customer.address : {};
-    const deliveryAddress = {
+    const deliveryAddress = isPickup ? { ...PICKUP_ADDRESS } : {
       zip: digits(textValue(address.zip, 12)),
       street: textValue(address.street, 180),
       number: textValue(address.number, 30),
@@ -189,9 +220,18 @@ Deno.serve(async (req: Request) => {
       }, 400, origin);
     }
 
+    if (!isPickup && !/^\d{8}$/.test(deliveryAddress.zip)) {
+      return reply({
+        code: "invalid_delivery_cep",
+        error: "Informe um CEP válido com 8 números para entrega."
+      }, 400, origin);
+    }
+
     if (!name || !phoneE164 || !/^\+55[1-9]\d{9,10}$/.test(phoneE164) ||
-        !deliveryAddress.street || !deliveryAddress.number || !deliveryAddress.district ||
-        !deliveryAddress.city || !/^[A-Z]{2}$/.test(deliveryAddress.state)) {
+        (!isPickup && (
+          !deliveryAddress.street || !deliveryAddress.number || !deliveryAddress.district ||
+          !deliveryAddress.city || !/^[A-Z]{2}$/.test(deliveryAddress.state)
+        ))) {
       return reply({
         code: "invalid_customer_data",
         error: "Confira seu nome, telefone brasileiro com DDD e endereço de entrega."
@@ -357,40 +397,45 @@ Deno.serve(async (req: Request) => {
 
     const cityNormalized = normalizeCity(deliveryAddress.city);
     const districtNormalized = normalizeCity(deliveryAddress.district);
-    const isTibiriçaDelivery = (cityNormalized === "bauru" && districtNormalized === "tibirica") ||
-      cityNormalized === "tibirica";
-    const isBauruDelivery = cityNormalized === "bauru" || isTibiriçaDelivery;
+    const isTibiriçaDelivery = !isPickup && (
+      (cityNormalized === "bauru" && districtNormalized === "tibirica") ||
+      cityNormalized === "tibirica"
+    );
+    const isBauruDelivery = isPickup || cityNormalized === "bauru" || isTibiriçaDelivery;
     const officialDeliveryCities = new Set([
       "bauru", "agudos", "pederneiras", "piratininga", "lencois paulista", "borebi"
     ]);
-    if (!officialDeliveryCities.has(cityNormalized) && !isTibiriçaDelivery) {
-      return reply({
-        code: "freight_quote_required",
-        error: "Para essa localidade, o frete é cotado pelo atendimento. Fale com a Luxuriosa para consultar a disponibilidade e o valor."
-      }, 409, origin);
-    }
+    let rule: any = null;
+    if (!isPickup) {
+      if (!officialDeliveryCities.has(cityNormalized) && !isTibiriçaDelivery) {
+        return reply({
+          code: "freight_quote_required",
+          error: "Para essa localidade, o frete é cotado pelo atendimento. Fale com a Luxuriosa para consultar a disponibilidade e o valor."
+        }, 409, origin);
+      }
 
-    const ruleCityNormalized = isTibiriçaDelivery ? "bauru" : cityNormalized;
-    const { data: rule, error: ruleError } = await admin.from("fulfillment_sla_rules")
-      .select("id, dispatch_minutes, delivery_minutes, delivery_fee_cents, club_delivery_fee_cents, automatic_payment_enabled, freight_origin_cep, minimum_order_up_to_12km_cents, minimum_order_up_to_55km_cents, scheduled_delivery_enabled, scheduled_max_advance_hours")
-      .eq("city_normalized", ruleCityNormalized)
-      .eq("state", deliveryAddress.state)
-      .eq("fulfillment_mode", "delivery")
-      .eq("active", true)
-      .maybeSingle();
-    if (ruleError) throw ruleError;
-    if (!rule || rule.automatic_payment_enabled !== true ||
-        !Number.isInteger(rule.dispatch_minutes) || rule.dispatch_minutes < 1 ||
-        !Number.isInteger(rule.delivery_minutes) || rule.delivery_minutes < 1) {
-      const message = cityNormalized === "borebi"
-        ? "O frete para Borebi tem valor fixo, mas o pagamento automático ainda não está habilitado para esse destino. Finalize pelo atendimento da Luxuriosa."
-        : "O pagamento automático ainda não está liberado para essa localidade. Fale com a equipe da Luxuriosa para concluir o pedido.";
-      return reply({ error: message }, 409, origin);
-    }
+      const ruleCityNormalized = isTibiriçaDelivery ? "bauru" : cityNormalized;
+      const { data, error: ruleError } = await admin.from("fulfillment_sla_rules")
+        .select("id, dispatch_minutes, delivery_minutes, delivery_fee_cents, club_delivery_fee_cents, automatic_payment_enabled, freight_origin_cep, minimum_order_up_to_12km_cents, minimum_order_up_to_55km_cents, scheduled_delivery_enabled, scheduled_max_advance_hours")
+        .eq("city_normalized", ruleCityNormalized)
+        .eq("state", deliveryAddress.state)
+        .eq("fulfillment_mode", "delivery")
+        .eq("active", true)
+        .maybeSingle();
+      if (ruleError) throw ruleError;
+      rule = data;
+      if (!rule || rule.automatic_payment_enabled !== true ||
+          !Number.isInteger(rule.dispatch_minutes) || rule.dispatch_minutes < 1 ||
+          !Number.isInteger(rule.delivery_minutes) || rule.delivery_minutes < 1) {
+        const message = cityNormalized === "borebi"
+          ? "O frete para Borebi tem valor fixo, mas o pagamento automático ainda não está habilitado para esse destino. Finalize pelo atendimento da Luxuriosa."
+          : "O pagamento automático ainda não está liberado para essa localidade. Fale com a equipe da Luxuriosa para concluir o pedido.";
+        return reply({ error: message }, 409, origin);
+      }
 
-    const fulfillmentType = body?.fulfillment_type === "scheduled" ? "scheduled" : "express";
-    if (fulfillmentType === "scheduled" && rule.scheduled_delivery_enabled !== true) {
-      return reply({ error: "A entrega agendada ainda não está disponível para esse destino. Escolha entrega imediata ou fale com a Luxuriosa." }, 409, origin);
+      if (fulfillmentType === "scheduled" && rule.scheduled_delivery_enabled !== true) {
+        return reply({ error: "A entrega agendada ainda não está disponível para esse destino. Escolha entrega imediata ou fale com a Luxuriosa." }, 409, origin);
+      }
     }
     // Pedidos do site devem pertencer a uma conta autenticada para permitir acompanhamento privado.
     // O gateway da Edge Function não exige JWT; por isso validamos a sessão manualmente.
@@ -427,27 +472,30 @@ Deno.serve(async (req: Request) => {
     if (clubMembershipError) throw clubMembershipError;
     const isClubMember = clubMembership?.active === true;
 
-    const minimum = Number(isBauruDelivery
+    const minimum = isPickup ? 0 : Number(isBauruDelivery
       ? rule.minimum_order_up_to_12km_cents
       : rule.minimum_order_up_to_55km_cents);
     if (!Number.isSafeInteger(minimum) || minimum < 0) {
       return reply({ error: "O pedido mínimo para esse destino ainda não está configurado. Fale com a Luxuriosa." }, 409, origin);
     }
-    if (subtotalCents < minimum) {
+    if (!isPickup && subtotalCents < minimum) {
       return reply({
         error: "Para entrega em " + deliveryAddress.city + ", o pedido mínimo é R$ " + (minimum / 100).toFixed(2).replace(".", ",") +
           ". Seu subtotal atual é R$ " + (subtotalCents / 100).toFixed(2).replace(".", ",") + "."
       }, 409, origin);
     }
 
-    const configuredFee = configuredFreightFee(rule, isClubMember, isTibiriçaDelivery);
-    if (configuredFee === null) {
+    const configuredFee = isPickup ? 0 : configuredFreightFee(rule, isClubMember, isTibiriçaDelivery);
+    if (!isPickup && configuredFee === null) {
       return reply({ error: "A tarifa fixa de entrega para sua modalidade ainda não está configurada. Fale com a Luxuriosa." }, 409, origin);
     }
-    const kitFreightWaived = isKitOrderEligibleForFreeBauruDelivery(orderItems, deliveryAddress);
-    const baseFeeCents = kitFreightWaived ? 0 : configuredFee;
+    const kitFreightWaived = !isPickup && isKitOrderEligibleForFreeBauruDelivery(orderItems, deliveryAddress);
+    const baseFeeCents = isPickup ? 0 : kitFreightWaived ? 0 : configuredFee!;
     const tollCents = 0;
     const shippingCents = baseFeeCents;
+    const dispatchSlaMinutes = isPickup ? PICKUP_PREPARATION_MINUTES : rule.dispatch_minutes;
+    const deliverySlaMinutes = isPickup ? 0 : rule.delivery_minutes;
+    const deliveryOriginCep = isPickup ? null : rule.freight_origin_cep;
     if (!Number.isSafeInteger(shippingCents) || shippingCents < 0 || shippingCents > 1000000) {
       return reply({ error: "O frete informado ultrapassou o limite permitido. Fale com a Luxuriosa." }, 409, origin);
     }
@@ -503,7 +551,7 @@ Deno.serve(async (req: Request) => {
     if (cartError) throw cartError;
 
     const { data: pendingOrder, error: pendingOrderError } = await admin.from("orders")
-      .select("id, order_number, customer_name, subtotal, shipping_amount, club_discount_amount_cents, club_discount_percent, payment_checkout_payload_version, payment_customer_phone_hash, payment_customer_email_hash, payment_amount_cents, payment_checkout_url, payment_expires_at, delivery_address, fulfillment_type, payment_payer_type, payment_payer_name, payment_payer_phone")
+      .select("id, order_number, customer_name, subtotal, shipping_amount, club_discount_amount_cents, club_discount_percent, payment_checkout_payload_version, payment_customer_phone_hash, payment_customer_email_hash, payment_amount_cents, payment_checkout_url, payment_expires_at, delivery_address, fulfillment_type, pickup_requested_at, payment_payer_type, payment_payer_name, payment_payer_phone")
       .eq("cart_session_id", cart.id)
       .eq("payment_provider", "infinitepay")
       .eq("payment_status", "pending")
@@ -552,6 +600,10 @@ Deno.serve(async (req: Request) => {
         const sameAddress = addressKeys.every(key =>
           String(priorAddress[key] || "") === String(deliveryAddress[key] || "")
         );
+        const samePickupRequest = isPickup
+          ? Boolean(pendingOrder.pickup_requested_at) &&
+            new Date(pendingOrder.pickup_requested_at).getTime() === pickupRequestedAt!.getTime()
+          : !pendingOrder.pickup_requested_at;
         const sameCheckoutContact =
           Number(pendingOrder.payment_checkout_payload_version) === PAYMENT_CHECKOUT_PAYLOAD_VERSION &&
           pendingOrder.customer_name === name &&
@@ -575,7 +627,7 @@ Deno.serve(async (req: Request) => {
 
         if (Number(pendingOrder.payment_amount_cents) === totalCents && samePaymentBreakdown &&
             sameItems && sameAddress && pendingOrder.fulfillment_type === fulfillmentType &&
-            sameCheckoutContact && sameCheckoutPayer && pendingOrder.payment_checkout_url) {
+            samePickupRequest && sameCheckoutContact && sameCheckoutPayer && pendingOrder.payment_checkout_url) {
           return reply({
             ok: true,
             order_number: pendingOrder.order_number,
@@ -658,10 +710,11 @@ Deno.serve(async (req: Request) => {
       payment_customer_email_hash: customerEmailHash,
       payment_order_nsu: orderId,
       payment_amount_cents: totalCents,
-      dispatch_sla_minutes: rule.dispatch_minutes,
-      delivery_sla_minutes: rule.delivery_minutes,
+      dispatch_sla_minutes: dispatchSlaMinutes,
+      delivery_sla_minutes: deliverySlaMinutes,
       fulfillment_type: fulfillmentType,
-      delivery_origin_cep: rule.freight_origin_cep,
+      pickup_requested_at: pickupRequestedAt?.toISOString() || null,
+      delivery_origin_cep: deliveryOriginCep,
       delivery_distance_km: null,
       delivery_base_fee_cents: baseFeeCents,
       delivery_toll_amount_cents: tollCents,
@@ -753,15 +806,17 @@ Deno.serve(async (req: Request) => {
         events: ["created", "paid", "settled", "refunded", "canceled", "payment_failed"]
       },
       customer: checkoutCustomer,
-      address: {
-        cep: deliveryAddress.zip,
-        street: deliveryAddress.street,
-        number: deliveryAddress.number,
-        neighborhood: deliveryAddress.district,
-        city: deliveryAddress.city,
-        state: deliveryAddress.state,
-        complement: deliveryAddress.complement
-      },
+      ...(isPickup ? {} : {
+        address: {
+          cep: deliveryAddress.zip,
+          street: deliveryAddress.street,
+          number: deliveryAddress.number,
+          neighborhood: deliveryAddress.district,
+          city: deliveryAddress.city,
+          state: deliveryAddress.state,
+          complement: deliveryAddress.complement
+        }
+      }),
       items: checkoutItems,
       options: {
         single_payment: true,
