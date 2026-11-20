@@ -625,4 +625,8 @@
   header .nav-right > .burger {
     display: none !important;
   }
+  /* O backdrop só existe para o menu lateral usado até 1199px. */
+  .nav-drawer-backdrop {
+    display: none !important;
+  }
 }
