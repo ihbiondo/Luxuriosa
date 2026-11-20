@@ -29,7 +29,12 @@ const FULL_PAGE_ONLY_ROUTES = [
   { path: "/educacao/", name: "educacao", fullPageOnly: true },
   { path: "/experiencias/", name: "experiencias", fullPageOnly: true },
   { path: "/privacidade.html", name: "privacidade", fullPageOnly: true },
-  { path: "/produtos/31-body-sensual-rendado-frente-unica.html", name: "produto-detalhe", fullPageOnly: true }
+  { path: "/produtos/31-body-sensual-rendado-frente-unica.html", name: "produto-detalhe", fullPageOnly: true },
+  { path: "/login.html", name: "login", fullPageOnly: true },
+  { path: "/minha-conta/", name: "minha-conta", fullPageOnly: true },
+  { path: "/meus-pedidos/", name: "meus-pedidos", fullPageOnly: true },
+  { path: "/portal/", name: "portal", fullPageOnly: true },
+  { path: "/pagamento-retorno.html", name: "pagamento-retorno", fullPageOnly: true }
 ];
 
 const report = {
@@ -271,7 +276,7 @@ async function inspect(page, route, viewport) {
     const burger = document.querySelector("header .nav-right > .burger");
     const pageNavigationElement = document.querySelector(
       "header nav, nav[aria-label*='Navegação']"
-    );
+    ) || document.querySelector("header") || document.querySelector("main");
     const pageNavigation = {
       bounds: rect(pageNavigationElement),
       clientWidth: pageNavigationElement?.clientWidth ?? 0,
