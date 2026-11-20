@@ -95,6 +95,11 @@ test("e-mail usa a modalidade, local, agendamento e frete retornados pelo pedido
   assert.match(paymentSource, /escapeHtml\(fulfillmentDetails\.destinationText\)/);
 });
 
+test("cabeçalho do e-mail prioriza SexShop e mantém lingerie como complemento", () => {
+  assert.match(paymentSource, /SEXSHOP • INTIMIDADE &amp; LINGERIE/);
+  assert.doesNotMatch(paymentSource, /LINGERIE &amp; INTIMIDADE/);
+});
+
 test("a configuração versionada mantém o webhook sem exigência de JWT", () => {
   assert.match(supabaseConfig, /^\[functions\.infinitepay-webhook\]$/m);
   assert.match(supabaseConfig, /^verify_jwt = false$/m);

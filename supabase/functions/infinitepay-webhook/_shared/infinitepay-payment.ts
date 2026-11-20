@@ -201,7 +201,7 @@ export async function notifyOwnerByEmail(admin: any, order: any, items: any[]) {
          "Telefone do pagador indicado: " + (order.payment_payer_phone || "Não informado")]
       : [];
     const html = "<div style='font-family:Arial,sans-serif;color:#21171b;max-width:640px;margin:auto'>" +
-      "<div style='background:#0b0b0b;padding:22px;color:#d4af7c'><strong style='font-size:22px'>LUXURIOSA</strong><div style='color:#f7d7d9;font-size:12px'>LINGERIE &amp; INTIMIDADE</div></div>" +
+      "<div style='background:#0b0b0b;padding:22px;color:#d4af7c'><strong style='font-size:22px'>LUXURIOSA</strong><div style='color:#f7d7d9;font-size:12px'>SEXSHOP • INTIMIDADE &amp; LINGERIE</div></div>" +
       "<div style='padding:22px;border:1px solid #eee'><h2 style='margin-top:0'>Novo pagamento confirmado</h2>" +
       "<p>O pedido <strong>#" + escapeHtml(order.order_number) + "</strong> foi " + confirmationLabel + ".</p>" +
       "<p><strong>Cliente:</strong> " + escapeHtml(order.customer_name || "Não informado") + "<br>" +
