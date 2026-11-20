@@ -30,7 +30,7 @@ test("páginas de produto não repetem CSS inline", () => {
 });
 
 test("a folha compartilhada contém as regras retiradas dos blocos antigos", () => {
-  assert.match(productCss, /\.product-detail-page \.product-detail-layout\\s*\\{[^}]*display:\\s*grid/s, "O layout de produto deve ativar a grade de duas colunas no desktop.");
+  assert.match(productCss, /\.product-detail-page \.product-detail-layout\s*\{[^}]*display:\s*grid/s, "O layout de produto deve ativar a grade de duas colunas no desktop.");
   assert.match(productCss, /\.product-detail-page \.product-detail-description p/);
   assert.match(productCss, /\.product-detail-page \.product-detail-description ul/);
   assert.match(productCss, /\.product-detail-page \.product-status/);
