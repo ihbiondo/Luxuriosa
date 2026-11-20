@@ -1,5 +1,6 @@
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { isKitOrderEligibleForFreeBauruDelivery } from "../_shared/freight.mjs";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
@@ -443,7 +444,8 @@ Deno.serve(async (req: Request) => {
     if (configuredFee === null) {
       return reply({ error: "A tarifa fixa de entrega para sua modalidade ainda não está configurada. Fale com a Luxuriosa." }, 409, origin);
     }
-    const baseFeeCents = configuredFee;
+    const kitFreightWaived = isKitOrderEligibleForFreeBauruDelivery(orderItems, deliveryAddress);
+    const baseFeeCents = kitFreightWaived ? 0 : configuredFee;
     const tollCents = 0;
     const shippingCents = baseFeeCents;
     if (!Number.isSafeInteger(shippingCents) || shippingCents < 0 || shippingCents > 1000000) {

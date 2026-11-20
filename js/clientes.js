@@ -251,10 +251,20 @@
     var estado = texto("customerState").toUpperCase();
     var distrito = texto("customerDistrict");
     var api = window.LuxuriosaCarrinho;
+    var itens = api && typeof api.obterItens === "function" ? api.obterItens() : [];
     var subtotal = api && typeof api.obterTotal === "function" ? Number(api.obterTotal()) : 0;
 
     if (!cidade || !estado) {
       aviso.textContent = "Informe a cidade e o estado para conferir o valor de entrega.";
+      return;
+    }
+
+    var kitComFreteGratis = pedidoContemKit(itens) &&
+      normalizarLocalidade(cidade) === "bauru" &&
+      estado === "SP" &&
+      normalizarLocalidade(distrito) !== "tibirica";
+    if (kitComFreteGratis) {
+      aviso.textContent = "Frete gratuito para pedidos com kit em Bauru/SP. Pedido mínimo: R$ 20,00 em produtos.";
       return;
     }
 
@@ -296,7 +306,7 @@
     var primeiroErro = null;
     var exigirEnderecoEntrega = exigirEndereco && !modalidadeRetirada();
     var required = exigirEnderecoEntrega
-      ? ["customerName", "customerPhone", "customerEmail", "customerCep", "customerStreet", "customerNumber", "customerDistrict", "customerCity", "customerState"]
+      ? ["customerName", "customerPhone", "customerEmail", "customerStreet", "customerNumber", "customerDistrict", "customerCity", "customerState"]
       : ["customerName", "customerPhone", "customerEmail"];
     if (data.paymentPayerType === "third_party") {
       required.push("customerPayerName", "customerPayerPhone");
@@ -363,7 +373,7 @@
     if (primeiroErro) {
       avisar(
         exigirEnderecoEntrega
-          ? "Preencha nome, telefone/WhatsApp, CEP, rua, número, bairro, cidade e estado para entrega."
+          ? "Preencha nome, telefone/WhatsApp, rua, número, bairro, cidade e estado para entrega."
           : "Preencha nome, telefone/WhatsApp e e-mail.",
         "error"
       );
@@ -426,6 +436,11 @@
     }
 
     var subtotal = integridade.subtotal;
+    var kitComFreteGratis = data.fulfillmentType !== "pickup" &&
+      pedidoContemKit(items) &&
+      normalizarLocalidade(data.address && data.address.city) === "bauru" &&
+      String(data.address && data.address.state || "").trim().toUpperCase() === "SP" &&
+      normalizarLocalidade(data.address && data.address.district) !== "tibirica";
     if (!items.length) return "";
 
     var totalProdutos = subtotal;
@@ -445,7 +460,11 @@
 
     lines.push("", "*Subtotal: " + formatarPreco(subtotal) + "*");
 
-    lines.push(data.fulfillmentType === "pickup" ? "Frete: gratuito · retirada agendada em Bauru" : "Frete: valor fixo conforme a localidade e a modalidade do Clube, de acordo com a tabela oficial");
+    lines.push(data.fulfillmentType === "pickup"
+      ? "Frete: gratuito · retirada agendada em Bauru"
+      : kitComFreteGratis
+        ? "Frete: gratuito · pedido com kit em Bauru/SP (inclui produtos avulsos no mesmo pedido)"
+        : "Frete: valor fixo conforme a localidade e a modalidade do Clube, de acordo com a tabela oficial");
     lines.push("*Total dos produtos: " + formatarPreco(totalProdutos) + "*");
 
     lines.push("", "*PAGAMENTO*");
@@ -497,6 +516,7 @@
     var marketingOptIn = $("customerMarketingWhatsAppOptIn");
     if (marketingOptIn) marketingOptIn.checked = false;
     overlay.hidden = false;
+    atualizarAvisoFrete();
     if (window.LuxuriosaInteligencia && typeof window.LuxuriosaInteligencia.registrarEtapa === "function") {
       window.LuxuriosaInteligencia.registrarEtapa("checkout_started", window.LuxuriosaCarrinho.obterItens()).catch(function () {});
     }
