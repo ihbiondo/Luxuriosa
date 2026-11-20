@@ -59,7 +59,9 @@ test("checkout só exige endereço na entrega e libera retirada agendada", () =>
   const index = read("index.html");
   const shop = read("loja.html");
   assert.match(clients, /exigirEnderecoEntrega = exigirEndereco && !modalidadeRetirada\(\)/);
-  assert.match(clients, /"customerCep", "customerStreet", "customerNumber", "customerDistrict", "customerCity", "customerState"/);
+  assert.match(clients, /\? \["customerName", "customerPhone", "customerEmail", "customerStreet", "customerNumber", "customerDistrict", "customerCity", "customerState"\]/);
+  assert.doesNotMatch(clients, /\? \["customerName", "customerPhone", "customerEmail", "customerCep"/);
+  assert.match(shop, /id="customerCepHelp">Opcional\./);
   for (const [name, html] of [["index.html", index], ["loja.html", shop]]) {
     assert.match(html, /id="customerFulfillmentMode"/, name + " precisa oferecer modalidade de retirada");
     assert.match(html, /value="pickup">Retirada agendada gratuita em Bauru/);
