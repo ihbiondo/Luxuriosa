@@ -22,6 +22,15 @@ const ROUTES = [
   { path: "/entregas/", name: "entregas" },
   { path: "/loja/lingerie/", name: "lingerie" }
 ];
+const FULL_PAGE_ONLY_ROUTES = [
+  { path: "/sobre.html", name: "sobre", fullPageOnly: true },
+  { path: "/faq.html", name: "faq", fullPageOnly: true },
+  { path: "/clube/", name: "clube", fullPageOnly: true },
+  { path: "/educacao/", name: "educacao", fullPageOnly: true },
+  { path: "/experiencias/", name: "experiencias", fullPageOnly: true },
+  { path: "/privacidade.html", name: "privacidade", fullPageOnly: true },
+  { path: "/produtos/31-body-sensual-rendado-frente-unica.html", name: "produto-detalhe", fullPageOnly: true }
+];
 
 const report = {
   baseUrl: BASE_URL,
@@ -66,6 +75,42 @@ async function preparePage(page, route, viewport) {
   }
 
   await page.waitForTimeout(350);
+}
+
+async function prepareFullPageAssets(page, route) {
+  const productImageSelector = "#grid .product-card-main-image";
+  if (["/loja.html", "/loja/lingerie/"].includes(route.path)) {
+    const images = page.locator(productImageSelector);
+    const count = await images.count();
+    assert.ok(count > 0, "A vitrine não contém imagens de produto: " + route.path);
+
+    for (let index = 0; index < count; index += 1) {
+      const image = images.nth(index);
+      await image.evaluate(element => { element.loading = "eager"; });
+      await image.scrollIntoViewIfNeeded();
+      await page.waitForFunction(indexAtual => {
+        const current = document.querySelectorAll("#grid .product-card-main-image")[indexAtual];
+        return Boolean(current && current.complete);
+      }, index, { timeout: 15000 });
+      await image.evaluate(async element => {
+        if (element.complete && element.naturalWidth > 0 && element.decode) {
+          await element.decode().catch(() => {});
+        }
+      });
+    }
+
+    const failures = await images.evaluateAll(elements => elements
+      .filter(element => !element.complete || element.naturalWidth <= 0)
+      .map(element => ({
+        alt: element.alt || "",
+        src: element.getAttribute("src") || "",
+        naturalWidth: element.naturalWidth
+      }))
+    );
+    assert.equal(failures.length, 0,
+      "Imagens de produto não carregaram antes da captura: " +
+      JSON.stringify({ route: route.path, failures }));
+  }
 }
 
 async function inspect(page, route, viewport) {
@@ -224,6 +269,26 @@ async function inspect(page, route, viewport) {
       : [];
     const accountUtility = document.querySelector("header .nav-right > .account-trigger");
     const burger = document.querySelector("header .nav-right > .burger");
+    const pageNavigationElement = document.querySelector(
+      "header nav, nav[aria-label*='Navegação']"
+    );
+    const pageNavigation = {
+      bounds: rect(pageNavigationElement),
+      clientWidth: pageNavigationElement?.clientWidth ?? 0,
+      scrollWidth: pageNavigationElement?.scrollWidth ?? 0,
+      items: pageNavigationElement
+        ? [...pageNavigationElement.querySelectorAll("a[href]")].filter(visible).map(element => {
+            const box = element.getBoundingClientRect();
+            return {
+              label: (element.innerText || "").trim().replace(/\\s+/g, " "),
+              left: Math.round(box.left),
+              right: Math.round(box.right),
+              top: Math.round(box.top),
+              bottom: Math.round(box.bottom)
+            };
+          })
+        : []
+    };
     const desktopNavigation = {
       display: navStyle?.display || null,
       position: navStyle?.position || null,
@@ -276,6 +341,7 @@ async function inspect(page, route, viewport) {
       menuIcons,
       utilityIcons,
       desktopNavigation,
+      pageNavigation,
       document: {
         clientWidth: document.documentElement.clientWidth,
         scrollWidth: document.documentElement.scrollWidth,
@@ -301,11 +367,14 @@ page.on("pageerror", error => report.pageErrors.push({
 }));
 
 try {
-  for (const route of ROUTES) {
-    for (const viewport of VIEWPORTS) {
+  for (const route of [...ROUTES, ...FULL_PAGE_ONLY_ROUTES]) {
+    const routeViewports = route.fullPageOnly
+      ? [VIEWPORTS.find(viewport => viewport.width === 1366)]
+      : VIEWPORTS;
+    for (const viewport of routeViewports) {
       await preparePage(page, route, viewport);
       const measurements = await inspect(page, route, viewport);
-      if (viewport.width >= 1200) {
+      if (viewport.width >= 1200 && !route.fullPageOnly) {
         assert.ok(
           measurements.menuIcons.every(icon => !icon.visible),
           "Ícones do menu mobile não foram ocultados no desktop: " +
@@ -384,6 +453,25 @@ try {
             "Os links do menu desktop estão sobrepostos: " + JSON.stringify(navigation.items)
           );
         }
+      } else if (viewport.width >= 1200) {
+        const navigation = measurements.pageNavigation;
+        assert.ok(navigation.bounds && navigation.bounds.width > 0,
+          "A página interna precisa exibir sua própria área de navegação: " + route.path);
+        assert.ok(navigation.items.length > 0,
+          "A navegação da página interna não contém links visíveis: " + route.path);
+        assert.ok(navigation.scrollWidth <= navigation.clientWidth + 2,
+          "Os links da navegação interna não cabem na largura disponível: " + route.path);
+        assert.ok(
+          navigation.items.every(item => item.left >= -2 && item.right <= viewport.width + 2),
+          "Há links da navegação interna fora da área visível: " + route.path
+        );
+        assert.ok(
+          measurements.document.scrollWidth <= measurements.document.clientWidth + 1,
+          "A página interna apresenta rolagem horizontal no desktop: " + route.path
+        );
+        assert.equal(measurements.visibleViewportOverflows.length, 0,
+          "Há elementos visíveis ultrapassando a viewport desktop: " + route.path + " " +
+            JSON.stringify(measurements.visibleViewportOverflows));
       }
 
       if (viewport.width >= 901 && viewport.width <= 1199 &&
@@ -401,15 +489,31 @@ try {
         }
       }
 
-      const screenshotName = route.name + "-" + viewport.name + ".png";
+      const fullPageCapture = viewport.width === 1366;
+      if (fullPageCapture) {
+        await prepareFullPageAssets(page, route);
+        await page.evaluate(async () => {
+          const step = Math.max(600, window.innerHeight - 120);
+          const pageHeight = document.documentElement.scrollHeight;
+          for (let y = 0; y < pageHeight; y += step) {
+            window.scrollTo(0, y);
+            await new Promise(resolve => setTimeout(resolve, 120));
+          }
+          window.scrollTo(0, 0);
+        });
+        await page.waitForTimeout(500);
+      }
+
+      const screenshotName = route.name + "-" + viewport.name +
+        (fullPageCapture ? "-fullpage" : "") + ".png";
 
       if (SCREENSHOT_DIR) {
         ensureDirectory(SCREENSHOT_DIR);
         await page.screenshot({
           path: path.join(SCREENSHOT_DIR, screenshotName),
-          fullPage: false,
+          fullPage: fullPageCapture,
           animations: "disabled",
-          timeout: 20000
+          timeout: 30000
         });
       }
 
