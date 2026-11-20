@@ -24,6 +24,12 @@
     return String(value || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim().toLowerCase();
   }
 
+  function minimoEntregaPorEndereco(address) {
+    var cidade = normalizarLocalidade(address && address.city);
+    var estado = String(address && address.state || "").trim().toUpperCase();
+    return estado === "SP" && (cidade === "bauru" || cidade === "tibirica") ? 20 : 50;
+  }
+
   function obterTarifasOficiais(address) {
     var cidade = normalizarLocalidade(address && address.city);
     var distrito = normalizarLocalidade(address && address.district);
@@ -282,7 +288,7 @@
     var textoFrete = "Frete fixo em " + tarifa.nome + ": Sem Clube " + formatarPreco(tarifa.comum) +
       " | Clube gratuito " + formatarPreco(tarifa.clube) + ".";
     if (tarifa.pedagio) textoFrete += " Pedágio já incluído.";
-    var pedidoMinimo = normalizarLocalidade(cidade) === "bauru" ? 20 : 50;
+    var pedidoMinimo = minimoEntregaPorEndereco({ city: cidade, state: estado });
     var textoMinimo = " Pedido mínimo: " + formatarPreco(pedidoMinimo) + " em produtos.";
     if (subtotal > 0 && subtotal < pedidoMinimo) {
       textoMinimo += " Faltam " + formatarPreco(pedidoMinimo - subtotal) + " para atingir o mínimo.";
@@ -592,12 +598,11 @@
       if (dadosAtuais.fulfillmentType === "pickup") {
         paymentMinimumInfo.textContent = "Retirada gratuita em Bauru. Não há frete nem pedido mínimo de entrega.";
       } else {
-        var reviewCity = String(dadosAtuais.address.city || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim().toLowerCase();
-        var reviewState = String(dadosAtuais.address.state || "").trim().toUpperCase();
-        if (reviewCity === "bauru" && reviewState === "SP") {
+        var minimoLocalidade = minimoEntregaPorEndereco(dadosAtuais.address);
+        if (minimoLocalidade === 20) {
           paymentMinimumInfo.textContent = integridade.subtotal < 20
-            ? "Atenção: o pedido em Bauru deve ter mínimo de R$ 20,00 em produtos. Seu pedido está em " + formatarPreco(integridade.subtotal) + "; acrescente pelo menos " + formatarPreco(20 - integridade.subtotal) + "."
-            : "Pedido mínimo em Bauru: mínimo de R$ 20,00 em produtos.";
+            ? "Atenção: o pedido para essa localidade deve ter mínimo de R$ 20,00 em produtos. Seu pedido está em " + formatarPreco(integridade.subtotal) + "; acrescente pelo menos " + formatarPreco(20 - integridade.subtotal) + "."
+            : "Pedido mínimo nesta localidade: R$ 20,00 em produtos.";
         } else {
           paymentMinimumInfo.textContent = integridade.subtotal < 50
             ? "Atenção: para entregas fora de Bauru, o pedido deve ter mínimo de R$ 50,00 em produtos. Seu pedido está em " + formatarPreco(integridade.subtotal) + "; acrescente pelo menos " + formatarPreco(50 - integridade.subtotal) + "."
@@ -699,10 +704,7 @@
     }
     dadosAtuais = formData;
 
-    var cidadePagamento = String(dadosAtuais.address.city || "").normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "").trim().toLowerCase();
-    var estadoPagamento = String(dadosAtuais.address.state || "").trim().toUpperCase();
-    var minimoProdutos = cidadePagamento === "bauru" && estadoPagamento === "SP" ? 20 : 50;
+    var minimoProdutos = minimoEntregaPorEndereco(dadosAtuais.address);
     if (!modalidadeRetirada() && integridade.subtotal < minimoProdutos) {
       avisar("O pedido deve ter no mínimo R$ " + minimoProdutos.toFixed(2).replace(".", ",") + " em produtos para entrega nesse destino. Abaixo desse valor, acrescente produtos ao carrinho.", "error");
       return;
