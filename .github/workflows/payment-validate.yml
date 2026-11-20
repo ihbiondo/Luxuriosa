@@ -30,6 +30,8 @@ on:
       - "js/carrinho.js"
       - "supabase/functions/create-payment-order/index.ts"
       - "supabase/functions/create-payment-order/freight.mjs"
+      - "supabase/functions/infinitepay-webhook/**"
+      - "tests/infinitepay-webhook-notification.test.mjs"
       - "supabase/migrations/20261118162000_add_order_payer_identity.sql"
       - "supabase/migrations/20261118190000_add_account_whatsapp_marketing_consent.sql"
       - "supabase/tests/database/contact_consents.test.sql"
@@ -90,6 +92,8 @@ on:
       - "js/carrinho.js"
       - "supabase/functions/create-payment-order/index.ts"
       - "supabase/functions/create-payment-order/freight.mjs"
+      - "supabase/functions/infinitepay-webhook/**"
+      - "tests/infinitepay-webhook-notification.test.mjs"
       - "supabase/migrations/20261118162000_add_order_payer_identity.sql"
       - "supabase/migrations/20261118190000_add_account_whatsapp_marketing_consent.sql"
       - "supabase/tests/database/contact_consents.test.sql"
@@ -186,6 +190,7 @@ jobs:
           node --check js/carrinho.js
           node --test tests/pedido-whatsapp.test.mjs
           node --test tests/checkout-payer.test.mjs
+          node --test tests/infinitepay-webhook-notification.test.mjs
           node --test tests/freight-kit.test.mjs
           node --test tests/product-featured.test.mjs
           node --test tests/consent-ui.test.mjs
@@ -193,6 +198,8 @@ jobs:
           node --test .github/scripts/account-registration.test.cjs
           node --test .github/scripts/google-oauth.test.cjs
           npx --yes esbuild@0.25.0 supabase/functions/create-payment-order/index.ts --format=esm --platform=neutral --outfile=/tmp/create-payment-order.js
+          npx --yes esbuild@0.25.0 supabase/functions/infinitepay-webhook/index.ts --format=esm --platform=neutral --outfile=/tmp/infinitepay-webhook.js
+          npx --yes esbuild@0.25.0 supabase/functions/infinitepay-webhook/_shared/infinitepay-payment.ts --format=esm --platform=neutral --outfile=/tmp/infinitepay-payment.js
           node --input-type=module <<'NODE'
           import fs from "node:fs";
           import { execFileSync } from "node:child_process";
@@ -371,6 +378,12 @@ jobs:
           mkdir -p "$test_root/supabase/functions/create-payment-order"
           cp "$GITHUB_WORKSPACE/supabase/functions/create-payment-order/index.ts" "$test_root/supabase/functions/create-payment-order/index.ts"
           cp "$GITHUB_WORKSPACE/supabase/functions/create-payment-order/freight.mjs" "$test_root/supabase/functions/create-payment-order/freight.mjs"
+          # O supabase/config.toml contém a configuração do webhook. Copia a
+          # função inteira para a pilha descartável, mesmo sem invocá-la no E2E.
+          mkdir -p "$test_root/supabase/functions/infinitepay-webhook/_shared"
+          cp "$GITHUB_WORKSPACE/supabase/functions/infinitepay-webhook/index.ts" "$test_root/supabase/functions/infinitepay-webhook/index.ts"
+          cp "$GITHUB_WORKSPACE/supabase/functions/infinitepay-webhook/fulfillment-notification.mjs" "$test_root/supabase/functions/infinitepay-webhook/fulfillment-notification.mjs"
+          cp "$GITHUB_WORKSPACE/supabase/functions/infinitepay-webhook/_shared/infinitepay-payment.ts" "$test_root/supabase/functions/infinitepay-webhook/_shared/infinitepay-payment.ts"
           cp "$GITHUB_WORKSPACE/supabase/migrations/20261115181510_create_experience_results.sql" "$test_root/supabase/migrations/"
           cp "$GITHUB_WORKSPACE/supabase/tests/database/experience_results.test.sql" "$test_root/supabase/tests/database/"
           cp "$GITHUB_WORKSPACE/supabase/tests/database/contact_consents.test.sql" "$test_root/supabase/tests/database/"

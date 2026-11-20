@@ -28,3 +28,8 @@ enabled = false
 [local_smtp]
 enabled = true
 port = 54330
+
+# O webhook da InfinitePay recebe notificações servidor-a-servidor e valida
+# a confirmação consultando payment_check; não depende de sessão de usuário.
+[functions.infinitepay-webhook]
+verify_jwt = false
