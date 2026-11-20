@@ -62,6 +62,18 @@ test("checkout limita a espera da preparação do pagamento e libera o botão em
   assert.match(client, /button\.disabled = false/);
 });
 
+test("frontend aplica pedido mínimo de Bauru também quando a cidade vem como Tibiriçá", () => {
+  const helper = client.match(/function minimoEntregaPorEndereco\(address\)\s*\{[\s\S]*?\n  \}/)?.[0];
+  assert.ok(helper, "A regra de pedido mínimo deve ficar centralizada no helper.");
+  assert.match(helper, /estado === "SP"/);
+  assert.match(helper, /cidade === "bauru" \|\| cidade === "tibirica"/);
+  assert.match(helper, /\? 20 : 50/);
+  assert.match(client, /minimoEntregaPorEndereco\(\{ city: cidade, state: estado \}\)/);
+  assert.equal((client.match(/minimoEntregaPorEndereco\(dadosAtuais\.address\)/g) || []).length, 2);
+  assert.match(backend, /const isTibiriçaDelivery = !isPickup/);
+  assert.match(backend, /const minimum = isPickup \? 0 : Number\(isBauruDelivery/);
+});
+
 test("backend diferencia retirada de entrega e valida CEP no servidor", () => {
   assert.match(backend, /const fulfillmentType = suppliedFulfillmentType \|\| "express"/);
   assert.match(backend, /const isPickup = fulfillmentType === "pickup"/);
