@@ -981,9 +981,8 @@ try {
             : null,
           groupCenterDelta: groupCenterDelta === null ? null : Number(groupCenterDelta.toFixed(2)),
           galleryFlexWrap: galleryStyle?.flexWrap || null,
-          galleryNoHorizontalOverflow: galleryElement
-            ? galleryElement.scrollWidth <= galleryElement.clientWidth + 2
-            : expectedThumbCount === 0
+          galleryNoHorizontalOverflow: !galleryElement ||
+            galleryElement.scrollWidth <= galleryElement.clientWidth + 2
         };
       });
 
