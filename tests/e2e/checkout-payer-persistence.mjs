@@ -126,6 +126,29 @@ try {
     fulfillment_type: "express"
   };
 
+  const missingCepBody = {
+    ...body,
+    session_key: crypto.randomUUID(),
+    customer: {
+      ...body.customer,
+      address: { ...body.customer.address, zip: "" }
+    }
+  };
+  const missingCepResponse = await fetch(FUNCTION_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      apikey: ANON_KEY,
+      Authorization: `Bearer ${accessToken}`,
+      Origin: ORIGIN
+    },
+    body: JSON.stringify(missingCepBody),
+    signal: AbortSignal.timeout(60000)
+  });
+  const missingCepResult = await missingCepResponse.json();
+  assert.equal(missingCepResponse.status, 400);
+  assert.equal(missingCepResult.code, "invalid_delivery_cep");
+
   const response = await fetch(FUNCTION_URL, {
     method: "POST",
     headers: {
@@ -183,8 +206,62 @@ try {
   assert.equal(Number(items[0].quantity), 1);
   assert.equal(Number(items[0].unit_price), 34.9);
 
+  const pickupRequestedAt = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString();
+  const pickupBody = {
+    ...body,
+    session_key: crypto.randomUUID(),
+    customer: { ...body.customer, address: undefined },
+    fulfillment_type: "pickup",
+    pickup_requested_at: pickupRequestedAt
+  };
+  const pickupResponse = await fetch(FUNCTION_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      apikey: ANON_KEY,
+      Authorization: `Bearer ${accessToken}`,
+      Origin: ORIGIN
+    },
+    body: JSON.stringify(pickupBody),
+    signal: AbortSignal.timeout(60000)
+  });
+  const pickupResult = await pickupResponse.json();
+  assert.equal(
+    pickupResponse.status,
+    200,
+    `create-payment-order não aceitou retirada (${pickupResponse.status}): ${JSON.stringify(pickupResult)}`
+  );
+  assert.equal(pickupResult.ok, true);
+  assert.match(pickupResult.checkout_url || "", /^https:\/\/checkout\.infinitepay\.io\/e2e-mock$/);
+
+  const pickupOrdersResponse = await adminRequest(
+    `orders?select=id,order_number,customer_id,fulfillment_type,pickup_requested_at,delivery_address,shipping_amount,dispatch_sla_minutes,delivery_sla_minutes,delivery_base_fee_cents,payment_status&order_number=eq.${encodeURIComponent(pickupResult.order_number)}`
+  );
+  const pickupOrders = await pickupOrdersResponse.json();
+  assert.ok(pickupOrdersResponse.ok, `Não foi possível ler o pedido de retirada: ${JSON.stringify(pickupOrders)}`);
+  assert.equal(pickupOrders.length, 1);
+  const pickupOrder = pickupOrders[0];
+  assert.equal(pickupOrder.customer_id, user.id);
+  assert.equal(pickupOrder.fulfillment_type, "pickup");
+  assert.equal(Date.parse(pickupOrder.pickup_requested_at), Date.parse(pickupRequestedAt));
+  assert.equal(Number(pickupOrder.shipping_amount), 0);
+  assert.equal(Number(pickupOrder.delivery_base_fee_cents), 0);
+  assert.equal(Number(pickupOrder.dispatch_sla_minutes), 30);
+  assert.equal(Number(pickupOrder.delivery_sla_minutes), 0);
+  assert.equal(pickupOrder.payment_status, "pending");
+  assert.deepEqual(pickupOrder.delivery_address, {
+    zip: "17030290",
+    street: "Rua Madre Clélia",
+    number: "5-44",
+    complement: "",
+    district: "Jardim Cruzeiro do Sul",
+    city: "Bauru",
+    state: "SP",
+    reference: ""
+  });
+
   console.log(JSON.stringify({
-    test: "persistência do pedido com pagador terceiro",
+    test: "persistência do pedido com pagador terceiro e retirada agendada",
     result: "PASS",
     authenticatedAccountStored: order.customer_id === user.id,
     recipientStoredSeparately: order.customer_name === "Destinatário E2E Persistência",
