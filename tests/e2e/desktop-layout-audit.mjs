@@ -77,6 +77,42 @@ async function preparePage(page, route, viewport) {
   await page.waitForTimeout(350);
 }
 
+async function prepareFullPageAssets(page, route) {
+  const productImageSelector = "#grid .product-card-main-image";
+  if (["/loja.html", "/loja/lingerie/"].includes(route.path)) {
+    const images = page.locator(productImageSelector);
+    const count = await images.count();
+    assert.ok(count > 0, "A vitrine não contém imagens de produto: " + route.path);
+
+    for (let index = 0; index < count; index += 1) {
+      const image = images.nth(index);
+      await image.evaluate(element => { element.loading = "eager"; });
+      await image.scrollIntoViewIfNeeded();
+      await page.waitForFunction(indexAtual => {
+        const current = document.querySelectorAll("#grid .product-card-main-image")[indexAtual];
+        return Boolean(current && current.complete);
+      }, index, { timeout: 15000 });
+      await image.evaluate(async element => {
+        if (element.complete && element.naturalWidth > 0 && element.decode) {
+          await element.decode().catch(() => {});
+        }
+      });
+    }
+
+    const failures = await images.evaluateAll(elements => elements
+      .filter(element => !element.complete || element.naturalWidth <= 0)
+      .map(element => ({
+        alt: element.alt || "",
+        src: element.getAttribute("src") || "",
+        naturalWidth: element.naturalWidth
+      }))
+    );
+    assert.equal(failures.length, 0,
+      "Imagens de produto não carregaram antes da captura: " +
+      JSON.stringify({ route: route.path, failures }));
+  }
+}
+
 async function inspect(page, route, viewport) {
   return page.evaluate(({ routePath, viewportWidth }) => {
     const rect = element => {
@@ -455,16 +491,17 @@ try {
 
       const fullPageCapture = viewport.width === 1366;
       if (fullPageCapture) {
+        await prepareFullPageAssets(page, route);
         await page.evaluate(async () => {
           const step = Math.max(600, window.innerHeight - 120);
           const pageHeight = document.documentElement.scrollHeight;
           for (let y = 0; y < pageHeight; y += step) {
             window.scrollTo(0, y);
-            await new Promise(resolve => setTimeout(resolve, 90));
+            await new Promise(resolve => setTimeout(resolve, 120));
           }
           window.scrollTo(0, 0);
         });
-        await page.waitForTimeout(450);
+        await page.waitForTimeout(500);
       }
 
       const screenshotName = route.name + "-" + viewport.name +
