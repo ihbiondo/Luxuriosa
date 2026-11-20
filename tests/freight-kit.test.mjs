@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { isKitOrderEligibleForFreeBauruDelivery } from "../supabase/functions/_shared/freight.mjs";
+import { isKitOrderEligibleForFreeBauruDelivery } from "../supabase/functions/create-payment-order/freight.mjs";
 
 const kit = { product_snapshot: { category: "Kits" } };
 const regular = { product_snapshot: { category: "Vibradores" } };
