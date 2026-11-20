@@ -175,7 +175,7 @@ def main() -> int:
         if "/js/educacao.js" not in audit.scripts:
             errors.append(f"{rel}: script modular compartilhado ausente")
         age_required = rel.as_posix() in AGE_REQUIRED_PAGES
-        has_age_marker = bool(re.search(r'<html\\b[^>]*\\bdata-ed-age-required="true"', page_text, re.IGNORECASE))
+        has_age_marker = 'data-ed-age-required="true"' in page_text
         if has_age_marker != age_required:
             errors.append(f"{rel}: marcação de público adulto incompatível com a política de acesso")
         if (
@@ -184,7 +184,7 @@ def main() -> int:
             or "ed-age-pending" not in page_text
         ):
             errors.append(f"{rel}: inicialização condicional da declaração 18+ ausente")
-        has_adult_banner = bool(re.search(r'<div\\b[^>]*class=["\\'][^"\\']*\\bed-adult\\b', page_text, re.IGNORECASE))
+        has_adult_banner = 'class="ed-adult"' in page_text
         if has_adult_banner != age_required:
             errors.append(f"{rel}: faixa 18+ deve existir apenas nas páginas destinadas ao público adulto")
         if not age_required:
