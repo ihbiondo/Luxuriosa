@@ -52,7 +52,7 @@ on:
       - "css/portal.css"
       - "css/educacao.css"
       - "supabase/migrations/20261115181510_create_experience_results.sql"
-      - "supabase/migrations/20261120131000_enforce_consent_event_timestamps.sql"
+      - "supabase/migrations/20261120200000_enforce_consent_event_timestamps.sql"
       - "supabase/tests/database/consent_timestamps.test.sql"
       - "tests/fixtures/consent_timestamp_fixtures.sql"
       - "supabase/tests/database/experience_results.test.sql"
@@ -116,7 +116,7 @@ on:
       - "css/portal.css"
       - "css/educacao.css"
       - "supabase/migrations/20261115181510_create_experience_results.sql"
-      - "supabase/migrations/20261120131000_enforce_consent_event_timestamps.sql"
+      - "supabase/migrations/20261120200000_enforce_consent_event_timestamps.sql"
       - "supabase/tests/database/consent_timestamps.test.sql"
       - "tests/fixtures/consent_timestamp_fixtures.sql"
       - "supabase/tests/database/experience_results.test.sql"
@@ -245,7 +245,7 @@ jobs:
           from pathlib import Path
 
           migration = Path("supabase/migrations/20261115181510_create_experience_results.sql").read_text()
-          consent_timestamp_migration = Path("supabase/migrations/20261120131000_enforce_consent_event_timestamps.sql").read_text()
+          consent_timestamp_migration = Path("supabase/migrations/20261120200000_enforce_consent_event_timestamps.sql").read_text()
           consent_timestamp_fixture = Path("tests/fixtures/consent_timestamp_fixtures.sql").read_text()
           consent_timestamp_test = Path("supabase/tests/database/consent_timestamps.test.sql").read_text()
           freight_migration = Path("supabase/migrations/20261116181752_standardize_delivery_fees.sql").read_text()
@@ -403,7 +403,7 @@ jobs:
           cp "$GITHUB_WORKSPACE/supabase/functions/infinitepay-webhook/_shared/infinitepay-payment.ts" "$test_root/supabase/functions/infinitepay-webhook/_shared/infinitepay-payment.ts"
           cp "$GITHUB_WORKSPACE/supabase/migrations/20261115181510_create_experience_results.sql" "$test_root/supabase/migrations/"
           cp "$GITHUB_WORKSPACE/tests/fixtures/consent_timestamp_fixtures.sql" "$test_root/supabase/migrations/20261120130900_consent_timestamp_fixtures.sql"
-          cp "$GITHUB_WORKSPACE/supabase/migrations/20261120131000_enforce_consent_event_timestamps.sql" "$test_root/supabase/migrations/"
+          cp "$GITHUB_WORKSPACE/supabase/migrations/20261120200000_enforce_consent_event_timestamps.sql" "$test_root/supabase/migrations/"
           cp "$GITHUB_WORKSPACE/supabase/tests/database/consent_timestamps.test.sql" "$test_root/supabase/tests/database/"
           cp "$GITHUB_WORKSPACE/supabase/tests/database/experience_results.test.sql" "$test_root/supabase/tests/database/"
           cp "$GITHUB_WORKSPACE/supabase/tests/database/contact_consents.test.sql" "$test_root/supabase/tests/database/"
