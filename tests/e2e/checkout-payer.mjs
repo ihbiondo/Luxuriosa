@@ -228,6 +228,52 @@ try {
     "A InfinitePay não pode ser acessada durante a validação."
   );
 
+  // Segundo cenário: kit + produto avulso em Bauru deve receber frete gratuito.
+  // O teste revisa o cálculo, sem criar pedido nem chamar o provedor de pagamento.
+  await page.evaluate(() => window.LuxuriosaCarrinho.limpar());
+  await page.goto(`${BASE_URL}/loja.html`, { waitUntil: "domcontentloaded" });
+
+  const regularProduct = page.locator("#grid article.product")
+    .filter({ hasText: "Ducha Higiênica — Preta" })
+    .first();
+  await regularProduct.waitFor({ state: "visible", timeout: 20000 });
+  await regularProduct.locator("button.product-cart-button").click();
+  await page.locator('#cart[aria-hidden="false"]').waitFor({ state: "visible", timeout: 10000 });
+  await page.locator("#cartClose").click();
+  await page.waitForFunction(
+    () => document.querySelector("#cart")?.getAttribute("aria-hidden") === "true"
+  );
+
+  const kitProduct = page.locator("#grid article.product")
+    .filter({ hasText: "Kit Descoberta" })
+    .first();
+  await kitProduct.waitFor({ state: "visible", timeout: 20000 });
+  page.once("dialog", dialog => dialog.accept("1"));
+  await kitProduct.locator("button.product-cart-button").click();
+
+  await page.locator('#cart[aria-hidden="false"]').waitFor({ state: "visible", timeout: 10000 });
+  await page.locator("#cartCheckout").click();
+  await page.locator("#customerOverlay").waitFor({ state: "visible", timeout: 20000 });
+  await page.locator("#customerFulfillmentMode").selectOption("delivery");
+  await page.locator("#customerName").fill("Destinatário E2E Kit");
+  await page.locator("#customerPhone").fill("(14) 97777-6666");
+  await page.locator("#customerEmail").fill(user.email);
+  await page.locator("#customerStreet").fill("Rua Madre Clélia");
+  await page.locator("#customerNumber").fill("5-44");
+  await page.locator("#customerDistrict").fill("Jardim Cruzeiro do Sul");
+  await page.locator("#customerCity").fill("Bauru");
+  await page.locator("#customerState").fill("SP");
+
+  const freightNotice = await page.locator("#customerFreightInfo").innerText();
+  assert.match(freightNotice, /frete gratuito para pedidos com kit em Bauru\/SP/i);
+
+  await page.locator("#customerReviewButton").click();
+  await page.locator("#customerReview").waitFor({ state: "visible", timeout: 10000 });
+  const kitReviewText = await page.locator("#customerMessagePreview").innerText();
+  assert.match(kitReviewText, /Ducha Higiênica — Preta/i);
+  assert.match(kitReviewText, /Kit Descoberta/i);
+  assert.match(kitReviewText, /Frete: gratuito.*pedido com kit em Bauru\/SP/i);
+
   console.log(JSON.stringify({
     test: "checkout autenticado com pagador terceiro",
     result: "PASS",
@@ -237,6 +283,7 @@ try {
     requestSentToLocalSupabaseOnly: true,
     paymentProviderRequests: checkoutProviderRequests.length,
     interceptedPaymentRequests: paymentRequestCount,
+    kitWithRegularProductGetsFreeBauruFreight: true,
     orderOrChargeCreated: false
   }, null, 2));
 

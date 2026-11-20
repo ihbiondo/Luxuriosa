@@ -22,12 +22,14 @@ on:
       - "tests/consent-ui.test.mjs"
       - "tests/product-css.test.mjs"
       - "tests/checkout-payer.test.mjs"
+      - "tests/freight-kit.test.mjs"
       - "portal/**"
       - "experiencias/**"
       - "educacao/interatividade/**"
       - "js/clientes.js"
       - "js/carrinho.js"
       - "supabase/functions/create-payment-order/index.ts"
+      - "supabase/functions/_shared/freight.mjs"
       - "supabase/migrations/20261118162000_add_order_payer_identity.sql"
       - "supabase/migrations/20261118190000_add_account_whatsapp_marketing_consent.sql"
       - "supabase/tests/database/contact_consents.test.sql"
@@ -86,6 +88,7 @@ on:
       - "js/clientes.js"
       - "js/carrinho.js"
       - "supabase/functions/create-payment-order/index.ts"
+      - "supabase/functions/_shared/freight.mjs"
       - "supabase/migrations/20261118162000_add_order_payer_identity.sql"
       - "supabase/migrations/20261118190000_add_account_whatsapp_marketing_consent.sql"
       - "supabase/tests/database/contact_consents.test.sql"
@@ -181,6 +184,7 @@ jobs:
           node --check js/carrinho.js
           node --test tests/pedido-whatsapp.test.mjs
           node --test tests/checkout-payer.test.mjs
+          node --test tests/freight-kit.test.mjs
           node --test tests/consent-ui.test.mjs
           node --test tests/product-css.test.mjs
           node --test .github/scripts/account-registration.test.cjs

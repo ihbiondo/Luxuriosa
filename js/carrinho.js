@@ -1454,6 +1454,16 @@
       "_O envio desta mensagem não confirma o pedido nem processa pagamento._"
     );
 
+    if (carrinho.some(function (item) {
+      return String(item && item.categoria || "").trim().toLowerCase() === "kits";
+    })) {
+      linhas.splice(
+        linhas.indexOf("*PRÓXIMO PASSO*"),
+        0,
+        "• Pedidos com kit têm frete gratuito em Bauru/SP, inclusive quando acompanhados de produtos avulsos. A condição não se aplica a Tibiriçá; nas demais localidades, valem as tarifas da tabela."
+      );
+    }
+
     var mensagem = linhas.join("\n");
 
 
