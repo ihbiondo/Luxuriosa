@@ -306,7 +306,7 @@
     var primeiroErro = null;
     var exigirEnderecoEntrega = exigirEndereco && !modalidadeRetirada();
     var required = exigirEnderecoEntrega
-      ? ["customerName", "customerPhone", "customerEmail", "customerCep", "customerStreet", "customerNumber", "customerDistrict", "customerCity", "customerState"]
+      ? ["customerName", "customerPhone", "customerEmail", "customerStreet", "customerNumber", "customerDistrict", "customerCity", "customerState"]
       : ["customerName", "customerPhone", "customerEmail"];
     if (data.paymentPayerType === "third_party") {
       required.push("customerPayerName", "customerPayerPhone");
@@ -373,7 +373,7 @@
     if (primeiroErro) {
       avisar(
         exigirEnderecoEntrega
-          ? "Preencha nome, telefone/WhatsApp, CEP, rua, número, bairro, cidade e estado para entrega."
+          ? "Preencha nome, telefone/WhatsApp, rua, número, bairro, cidade e estado para entrega."
           : "Preencha nome, telefone/WhatsApp e e-mail.",
         "error"
       );
