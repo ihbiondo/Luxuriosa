@@ -361,6 +361,8 @@
   }
 
   function setupAgeDeclaration() {
+    if (document.documentElement.getAttribute("data-ed-age-required") !== "true") return;
+
     let approved = false;
     try {
       approved = window.localStorage.getItem(AGE_KEY) === "1";
