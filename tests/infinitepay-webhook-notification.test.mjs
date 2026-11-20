@@ -4,6 +4,7 @@ import { readFileSync } from "node:fs";
 import { buildFulfillmentNotification } from "../supabase/functions/infinitepay-webhook/fulfillment-notification.mjs";
 
 const paymentSource = readFileSync(new URL("../supabase/functions/infinitepay-webhook/_shared/infinitepay-payment.ts", import.meta.url), "utf8");
+const supabaseConfig = readFileSync(new URL("../supabase/config.toml", import.meta.url), "utf8");
 
 test("retirada mostra local, horário de Brasília e frete gratuito", () => {
   const result = buildFulfillmentNotification({
@@ -92,4 +93,9 @@ test("e-mail usa a modalidade, local, agendamento e frete retornados pelo pedido
   assert.match(paymentSource, /fulfillmentDetails\.scheduleText/);
   assert.match(paymentSource, /fulfillmentDetails\.freightText/);
   assert.match(paymentSource, /escapeHtml\(fulfillmentDetails\.destinationText\)/);
+});
+
+test("a configuração versionada mantém o webhook sem exigência de JWT", () => {
+  assert.match(supabaseConfig, /^\[functions\.infinitepay-webhook\]$/m);
+  assert.match(supabaseConfig, /^verify_jwt = false$/m);
 });
