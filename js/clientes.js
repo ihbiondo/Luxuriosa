@@ -601,8 +601,8 @@
         var minimoLocalidade = minimoEntregaPorEndereco(dadosAtuais.address);
         if (minimoLocalidade === 20) {
           paymentMinimumInfo.textContent = integridade.subtotal < 20
-            ? "Atenção: o pedido em Bauru deve ter mínimo de R$ 20,00 em produtos. Seu pedido está em " + formatarPreco(integridade.subtotal) + "; acrescente pelo menos " + formatarPreco(20 - integridade.subtotal) + "."
-            : "Pedido mínimo em Bauru: mínimo de R$ 20,00 em produtos.";
+            ? "Atenção: o pedido para essa localidade deve ter mínimo de R$ 20,00 em produtos. Seu pedido está em " + formatarPreco(integridade.subtotal) + "; acrescente pelo menos " + formatarPreco(20 - integridade.subtotal) + "."
+            : "Pedido mínimo nesta localidade: R$ 20,00 em produtos.";
         } else {
           paymentMinimumInfo.textContent = integridade.subtotal < 50
             ? "Atenção: para entregas fora de Bauru, o pedido deve ter mínimo de R$ 50,00 em produtos. Seu pedido está em " + formatarPreco(integridade.subtotal) + "; acrescente pelo menos " + formatarPreco(50 - integridade.subtotal) + "."
