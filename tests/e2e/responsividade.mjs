@@ -964,6 +964,7 @@ try {
         const thumbRects = [...(galleryElement?.querySelectorAll(".product-detail-gallery-thumb") || [])]
           .map(thumb => thumb.getBoundingClientRect());
         const galleryRect = galleryElement?.getBoundingClientRect();
+        const galleryStyle = galleryElement ? getComputedStyle(galleryElement) : null;
         const groupLeft = thumbRects.length ? Math.min(...thumbRects.map(rect => rect.left)) : 0;
         const groupRight = thumbRects.length ? Math.max(...thumbRects.map(rect => rect.right)) : 0;
         const groupCenterDelta = galleryRect && thumbRects.length
@@ -978,7 +979,10 @@ try {
           imageCenterDelta: frameRect && imageRect
             ? Number(Math.abs((imageRect.left + imageRect.right) / 2 - (frameRect.left + frameRect.right) / 2).toFixed(2))
             : null,
-          groupCenterDelta: groupCenterDelta === null ? null : Number(groupCenterDelta.toFixed(2))
+          groupCenterDelta: groupCenterDelta === null ? null : Number(groupCenterDelta.toFixed(2)),
+          galleryFlexWrap: galleryStyle?.flexWrap || null,
+          galleryNoHorizontalOverflow: !galleryElement ||
+            galleryElement.scrollWidth <= galleryElement.clientWidth + 2
         };
       });
 
@@ -996,7 +1000,9 @@ try {
       };
       result.productGalleries.push(item);
       if (thumbCount !== expectedThumbCount || !changedAfterClick ||
-          item.imageFillRatio < 0.90 || item.imageCenterDelta > 2) {
+          item.imageFillRatio < 0.90 || item.imageCenterDelta > 2 ||
+          (expectedThumbCount > 1 &&
+            (item.galleryFlexWrap !== "wrap" || !item.galleryNoHorizontalOverflow))) {
         result.productGalleryFailures.push(item);
       }
       if (expectedThumbCount > 1) await capture(page, "produto-galeria-" + product.id + "-mobile");
