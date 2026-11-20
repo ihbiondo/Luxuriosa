@@ -110,6 +110,14 @@ async function inspectLayout(page, route, viewport) {
 async function capture(page, name) {
   if (!SCREENSHOT_DIR) return;
 
+  // Playwright full-page capture also considers body.scrollWidth. The closed cart
+  // drawer is fixed and translated outside the viewport, so it can widen the PNG
+  // even though html/body clip horizontal overflow for real visitors. Hide only
+  // the closed drawer in this test-only capture; never hide an open cart.
+  await page.addStyleTag({
+    content: "#cart:not(.open), #cartOverlay:not(.open) { display: none !important; }"
+  });
+
   // Full-page screenshots do not trigger every lazy image before capture.
   // Visit each image, wait for decoding, then restore the initial scroll position.
   await page.evaluate(async () => {
