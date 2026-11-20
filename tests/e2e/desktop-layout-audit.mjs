@@ -22,6 +22,15 @@ const ROUTES = [
   { path: "/entregas/", name: "entregas" },
   { path: "/loja/lingerie/", name: "lingerie" }
 ];
+const FULL_PAGE_ONLY_ROUTES = [
+  { path: "/sobre.html", name: "sobre", fullPageOnly: true },
+  { path: "/faq.html", name: "faq", fullPageOnly: true },
+  { path: "/clube/", name: "clube", fullPageOnly: true },
+  { path: "/educacao/", name: "educacao", fullPageOnly: true },
+  { path: "/experiencias/", name: "experiencias", fullPageOnly: true },
+  { path: "/privacidade.html", name: "privacidade", fullPageOnly: true },
+  { path: "/produtos/31-body-sensual-rendado-frente-unica.html", name: "produto-detalhe", fullPageOnly: true }
+];
 
 const report = {
   baseUrl: BASE_URL,
@@ -301,8 +310,11 @@ page.on("pageerror", error => report.pageErrors.push({
 }));
 
 try {
-  for (const route of ROUTES) {
-    for (const viewport of VIEWPORTS) {
+  for (const route of [...ROUTES, ...FULL_PAGE_ONLY_ROUTES]) {
+    const routeViewports = route.fullPageOnly
+      ? [VIEWPORTS.find(viewport => viewport.width === 1366)]
+      : VIEWPORTS;
+    for (const viewport of routeViewports) {
       await preparePage(page, route, viewport);
       const measurements = await inspect(page, route, viewport);
       if (viewport.width >= 1200) {
@@ -401,15 +413,30 @@ try {
         }
       }
 
-      const screenshotName = route.name + "-" + viewport.name + ".png";
+      const fullPageCapture = viewport.width === 1366;
+      if (fullPageCapture) {
+        await page.evaluate(async () => {
+          const step = Math.max(600, window.innerHeight - 120);
+          const pageHeight = document.documentElement.scrollHeight;
+          for (let y = 0; y < pageHeight; y += step) {
+            window.scrollTo(0, y);
+            await new Promise(resolve => setTimeout(resolve, 90));
+          }
+          window.scrollTo(0, 0);
+        });
+        await page.waitForTimeout(450);
+      }
+
+      const screenshotName = route.name + "-" + viewport.name +
+        (fullPageCapture ? "-fullpage" : "") + ".png";
 
       if (SCREENSHOT_DIR) {
         ensureDirectory(SCREENSHOT_DIR);
         await page.screenshot({
           path: path.join(SCREENSHOT_DIR, screenshotName),
-          fullPage: false,
+          fullPage: fullPageCapture,
           animations: "disabled",
-          timeout: 20000
+          timeout: 30000
         });
       }
 
