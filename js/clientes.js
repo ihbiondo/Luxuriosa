@@ -768,7 +768,7 @@
       etapaPagamento = "redirecionamento para a InfinitePay";
       messagePreview.textContent =
         "Pedido Luxuriosa #" + result.order_number + "\n" +
-        "Total para pagamento: " + formatarPreco(result.total_amount) + "\n\n"+
+        "Total para pagamento: " + formatarPreco(result.total_amount) + "\n\n" +
         "Você será direcionado à InfinitePay para pagar com Pix ou cartão. " +
         "A expedição só começa depois da confirmação do pagamento.";
       avisar("Pedido criado. Abrindo o checkout seguro da InfinitePay...", "success");
