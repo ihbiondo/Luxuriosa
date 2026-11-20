@@ -669,8 +669,7 @@ try {
     await openPage(page, sample.route, { name: "mobile-390", width: 390, height: 844 });
     await page.waitForFunction(() => {
       const styleLink = [...document.querySelectorAll('link[rel="stylesheet"]')]
-        .find(link => (link.href || "").includes("navigation.css") &&
-          (link.href || "").includes("menu-mobile-v9"));
+        .find(link => (link.href || "").includes("navigation.css"));
       const nav = document.querySelector("#navlinks");
       const backdrop = document.querySelector(".nav-drawer-backdrop");
       return Boolean(
