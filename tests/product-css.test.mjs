@@ -14,7 +14,7 @@ test("todas as páginas de produto usam a folha compartilhada com cache versiona
   const failures = [];
   for (const name of productPages) {
     const html = readFileSync(join(productDirectory, name), "utf8");
-    if (!html.includes('../css/produto.css?v=20261119-produto-css-v1')) {
+    if (!html.includes('../css/produto.css?v=20261120-desktop-product-grid-v1')) {
       failures.push(name + ": referência de css/produto.css ausente ou sem versão atual");
     }
   }
@@ -30,6 +30,7 @@ test("páginas de produto não repetem CSS inline", () => {
 });
 
 test("a folha compartilhada contém as regras retiradas dos blocos antigos", () => {
+  assert.match(productCss, /\.product-detail-page \.product-detail-layout\s*\{[^}]*display:\s*grid/s, "O layout de produto deve ativar a grade de duas colunas no desktop.");
   assert.match(productCss, /\.product-detail-page \.product-detail-description p/);
   assert.match(productCss, /\.product-detail-page \.product-detail-description ul/);
   assert.match(productCss, /\.product-detail-page \.product-status/);
