@@ -52,6 +52,9 @@ on:
       - "css/portal.css"
       - "css/educacao.css"
       - "supabase/migrations/20261115181510_create_experience_results.sql"
+      - "supabase/migrations/20261120131000_enforce_consent_event_timestamps.sql"
+      - "supabase/tests/database/consent_timestamps.test.sql"
+      - "tests/fixtures/consent_timestamp_fixtures.sql"
       - "supabase/tests/database/experience_results.test.sql"
       - "tests/conquistas.test.js"
       - "tests/e2e/**"
@@ -113,6 +116,9 @@ on:
       - "css/portal.css"
       - "css/educacao.css"
       - "supabase/migrations/20261115181510_create_experience_results.sql"
+      - "supabase/migrations/20261120131000_enforce_consent_event_timestamps.sql"
+      - "supabase/tests/database/consent_timestamps.test.sql"
+      - "tests/fixtures/consent_timestamp_fixtures.sql"
       - "supabase/tests/database/experience_results.test.sql"
       - "tests/conquistas.test.js"
       - "tests/e2e/**"
@@ -239,6 +245,9 @@ jobs:
           from pathlib import Path
 
           migration = Path("supabase/migrations/20261115181510_create_experience_results.sql").read_text()
+          consent_timestamp_migration = Path("supabase/migrations/20261120131000_enforce_consent_event_timestamps.sql").read_text()
+          consent_timestamp_fixture = Path("tests/fixtures/consent_timestamp_fixtures.sql").read_text()
+          consent_timestamp_test = Path("supabase/tests/database/consent_timestamps.test.sql").read_text()
           freight_migration = Path("supabase/migrations/20261116181752_standardize_delivery_fees.sql").read_text()
           freight_backend = Path("supabase/functions/create-payment-order/index.ts").read_text()
           delivery_page = Path("entregas/index.html").read_text()
@@ -288,6 +297,14 @@ jobs:
           from pglast import parse_sql
           parse_sql(migration)
           print("Sintaxe SQL da migração validada.")
+          parse_sql(consent_timestamp_migration)
+          parse_sql(consent_timestamp_fixture)
+          parse_sql(consent_timestamp_test)
+          assert "clock_timestamp" in consent_timestamp_migration
+          assert "before insert or update" in consent_timestamp_migration.lower()
+          assert "new.created_at := old.created_at" in consent_timestamp_migration.lower()
+          assert "1900-01-01" in consent_timestamp_test and "2999-01-01" in consent_timestamp_test
+          print("Sintaxe e regras de integridade dos timestamps de consentimento verificadas.")
           parse_sql(freight_migration)
           print("Sintaxe SQL da migração de frete validada.")
           assert "club_delivery_fee_cents" in freight_migration
@@ -385,6 +402,9 @@ jobs:
           cp "$GITHUB_WORKSPACE/supabase/functions/infinitepay-webhook/fulfillment-notification.mjs" "$test_root/supabase/functions/infinitepay-webhook/fulfillment-notification.mjs"
           cp "$GITHUB_WORKSPACE/supabase/functions/infinitepay-webhook/_shared/infinitepay-payment.ts" "$test_root/supabase/functions/infinitepay-webhook/_shared/infinitepay-payment.ts"
           cp "$GITHUB_WORKSPACE/supabase/migrations/20261115181510_create_experience_results.sql" "$test_root/supabase/migrations/"
+          cp "$GITHUB_WORKSPACE/tests/fixtures/consent_timestamp_fixtures.sql" "$test_root/supabase/migrations/20261120130900_consent_timestamp_fixtures.sql"
+          cp "$GITHUB_WORKSPACE/supabase/migrations/20261120131000_enforce_consent_event_timestamps.sql" "$test_root/supabase/migrations/"
+          cp "$GITHUB_WORKSPACE/supabase/tests/database/consent_timestamps.test.sql" "$test_root/supabase/tests/database/"
           cp "$GITHUB_WORKSPACE/supabase/tests/database/experience_results.test.sql" "$test_root/supabase/tests/database/"
           cp "$GITHUB_WORKSPACE/supabase/tests/database/contact_consents.test.sql" "$test_root/supabase/tests/database/"
           cp "$GITHUB_WORKSPACE/tests/fixtures/freight_rules_fixture.sql" "$test_root/supabase/migrations/20261115120000_freight_rules_fixture.sql"
