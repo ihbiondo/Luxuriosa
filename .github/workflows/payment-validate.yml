@@ -365,7 +365,7 @@ jobs:
           cp "$GITHUB_WORKSPACE/supabase/migrations/20261118162000_add_order_payer_identity.sql" "$test_root/supabase/migrations/"
           cp "$GITHUB_WORKSPACE/supabase/migrations/20261118190000_add_account_whatsapp_marketing_consent.sql" "$test_root/supabase/migrations/"
           cp "$GITHUB_WORKSPACE/supabase/migrations/20261119115544_add_account_privacy_acceptances_user_idx.sql" "$test_root/supabase/migrations/"
-          mkdir -p "$test_root/supabase/functions/create-payment-order" "$test_root/supabase/functions/create-payment-order"
+          mkdir -p "$test_root/supabase/functions/create-payment-order"
           cp "$GITHUB_WORKSPACE/supabase/functions/create-payment-order/index.ts" "$test_root/supabase/functions/create-payment-order/index.ts"
           cp "$GITHUB_WORKSPACE/supabase/functions/create-payment-order/freight.mjs" "$test_root/supabase/functions/create-payment-order/freight.mjs"
           cp "$GITHUB_WORKSPACE/supabase/migrations/20261115181510_create_experience_results.sql" "$test_root/supabase/migrations/"
