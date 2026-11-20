@@ -258,6 +258,7 @@ try {
   await page.locator("#customerName").fill("Destinatário E2E Kit");
   await page.locator("#customerPhone").fill("(14) 97777-6666");
   await page.locator("#customerEmail").fill(user.email);
+  await page.locator("#customerCep").fill("17030-290");
   await page.locator("#customerStreet").fill("Rua Madre Clélia");
   await page.locator("#customerNumber").fill("5-44");
   await page.locator("#customerDistrict").fill("Jardim Cruzeiro do Sul");

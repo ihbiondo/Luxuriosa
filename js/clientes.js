@@ -97,6 +97,11 @@
     var pickupFields = $("customerPickupFields");
     if (addressFields) addressFields.hidden = pickup;
     if (pickupFields) pickupFields.hidden = !pickup;
+    var campoCep = $("customerCep");
+    if (campoCep) {
+      campoCep.required = !pickup;
+      campoCep.setAttribute("aria-required", pickup ? "false" : "true");
+    }
     atualizarAvisoFrete();
   }
 
@@ -306,7 +311,7 @@
     var primeiroErro = null;
     var exigirEnderecoEntrega = exigirEndereco && !modalidadeRetirada();
     var required = exigirEnderecoEntrega
-      ? ["customerName", "customerPhone", "customerEmail", "customerStreet", "customerNumber", "customerDistrict", "customerCity", "customerState"]
+      ? ["customerName", "customerPhone", "customerEmail", "customerCep", "customerStreet", "customerNumber", "customerDistrict", "customerCity", "customerState"]
       : ["customerName", "customerPhone", "customerEmail"];
     if (data.paymentPayerType === "third_party") {
       required.push("customerPayerName", "customerPayerPhone");
@@ -323,12 +328,12 @@
 
     var campoCep = $("customerCep");
     var cepDigits = texto("customerCep").replace(/\D/g, "");
-    if (!modalidadeRetirada() && cepDigits && cepDigits.length !== 8) {
+    if (!modalidadeRetirada() && cepDigits.length !== 8) {
       if (campoCep) {
         campoCep.setAttribute("aria-invalid", "true");
         primeiroErro = primeiroErro || campoCep;
       }
-      mostrarStatusCep("Se informar o CEP, digite os 8 números completos.", "error");
+      mostrarStatusCep("Informe um CEP válido com 8 números para entrega.", "error");
       if (campoCep) campoCep.focus();
       return false;
     }
@@ -373,7 +378,7 @@
     if (primeiroErro) {
       avisar(
         exigirEnderecoEntrega
-          ? "Preencha nome, telefone/WhatsApp, rua, número, bairro, cidade e estado para entrega."
+          ? "Preencha nome, telefone/WhatsApp, CEP, rua, número, bairro, cidade e estado para entrega."
           : "Preencha nome, telefone/WhatsApp e e-mail.",
         "error"
       );
