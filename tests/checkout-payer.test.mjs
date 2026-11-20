@@ -6,6 +6,12 @@ const checkoutPages = ["index.html", "loja.html"].map((path) => ({ path, html: r
 const client = readFileSync("js/clientes.js", "utf8");
 const backend = readFileSync("supabase/functions/create-payment-order/index.ts", "utf8");
 
+test("home e loja invalidam o cache do módulo de checkout atualizado", () => {
+  for (const { path, html } of checkoutPages) {
+    assert.ok(html.includes('src="js/clientes.js?v=20261120-tibirica-minimum-v1'), path);
+  }
+});
+
 test("checkout apresenta a escolha do responsável pelo pagamento", () => {
   for (const { path, html } of checkoutPages) {
     assert.match(html, /id="customerPayerType"[\s\S]*?value="account_holder"/, path);
