@@ -115,7 +115,8 @@ async function capture(page, name) {
   // even though html/body clip horizontal overflow for real visitors. Hide only
   // the closed drawer in this test-only capture; never hide an open cart.
   await page.addStyleTag({
-    content: "#cart:not(.open), #cartOverlay:not(.open) { display: none !important; }"
+    content: "#cart:not(.open), #cartOverlay:not(.open),
+    header:not(.mobile-menu-active) .navlinks { display: none !important; }"
   });
 
   // Full-page screenshots do not trigger every lazy image before capture.
