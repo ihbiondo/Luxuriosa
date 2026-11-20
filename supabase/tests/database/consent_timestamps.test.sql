@@ -68,6 +68,11 @@ values
   ('30000000-0000-4000-8000-000000000001', 'timestamp-a@test.invalid'),
   ('31000000-0000-4000-8000-000000000002', 'timestamp-b@test.invalid');
 
+insert into public.profiles (id)
+values
+  ('30000000-0000-4000-8000-000000000001'),
+  ('31000000-0000-4000-8000-000000000002');
+
 set local role authenticated;
 set local request.jwt.claim.sub = '30000000-0000-4000-8000-000000000001';
 
