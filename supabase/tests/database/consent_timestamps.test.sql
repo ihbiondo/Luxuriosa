@@ -29,6 +29,14 @@ select extensions.ok(
   'visitantes anônimos não podem inserir eventos de consentimento íntimo'
 );
 select extensions.ok(
+  not has_table_privilege('anon', 'public.account_data_consents', 'SELECT'),
+  'visitantes anônimos não podem consultar eventos de consentimento de conta'
+);
+select extensions.ok(
+  not has_table_privilege('anon', 'public.club_intimate_consent_events', 'SELECT'),
+  'visitantes anônimos não podem consultar eventos de consentimento íntimo'
+);
+select extensions.ok(
   not has_function_privilege('authenticated', 'private.enforce_consent_event_created_at()', 'EXECUTE'),
   'o cliente autenticado não pode chamar a função interna do gatilho como RPC'
 );
