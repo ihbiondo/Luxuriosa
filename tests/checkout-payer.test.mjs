@@ -47,3 +47,17 @@ test("backend grava o pagador declarado e compara os dados em pedidos pendentes"
   assert.match(backend, /pendingOrder\.payment_payer_name/);
   assert.match(backend, /pendingOrder\.payment_payer_phone/);
 });
+
+test("checkout limita a espera da preparação do pagamento e libera o botão em caso de timeout", () => {
+  assert.match(client, /var etapaPagamento = "identificação da sessão"/);
+  assert.match(client, /etapaPagamento = "comunicação com o servidor de pagamentos"/);
+  assert.match(client, /controller = new AbortController\(\)/);
+  assert.match(client, /controller\.abort\(\)/);
+  assert.match(client, /\}, 30000\)/);
+  assert.match(client, /signal: controller \? controller\.signal : undefined/);
+  assert.match(client, /paymentResponseStatus = response\.status/);
+  assert.match(client, /error && error\.name === "AbortError"/);
+  assert.match(client, /demorou mais que o esperado/);
+  assert.match(client, /finally \{\s*if \(paymentTimeout !== null\) window\.clearTimeout\(paymentTimeout\);\s*\}/);
+  assert.match(client, /button\.disabled = false/);
+});
