@@ -68,6 +68,7 @@ test("frontend aplica pedido mínimo de Bauru também quando a cidade vem como T
   assert.match(helper, /estado === "SP"/);
   assert.match(helper, /cidade === "bauru" \|\| cidade === "tibirica"/);
   assert.match(helper, /\? 20 : 50/);
+  assert.match(client, /pedido para essa localidade deve ter mínimo de R\$ 20,00/);
   assert.match(client, /minimoEntregaPorEndereco\(\{ city: cidade, state: estado \}\)/);
   assert.equal((client.match(/minimoEntregaPorEndereco\(dadosAtuais\.address\)/g) || []).length, 2);
   assert.match(backend, /const isTibiriçaDelivery = !isPickup/);
