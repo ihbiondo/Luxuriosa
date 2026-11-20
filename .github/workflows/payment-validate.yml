@@ -56,6 +56,7 @@ on:
       - "termos-experiencias.html"
       - "privacidade.html"
       - "data/produtos.json"
+      - "tests/product-featured.test.mjs"
       - "css/**"
       - "js/catalogo.js"
       - "produtos/**"
@@ -114,6 +115,7 @@ on:
       - "termos-experiencias.html"
       - "privacidade.html"
       - "data/produtos.json"
+      - "tests/product-featured.test.mjs"
       - "css/**"
       - "js/catalogo.js"
       - "produtos/**"
@@ -185,6 +187,7 @@ jobs:
           node --test tests/pedido-whatsapp.test.mjs
           node --test tests/checkout-payer.test.mjs
           node --test tests/freight-kit.test.mjs
+          node --test tests/product-featured.test.mjs
           node --test tests/consent-ui.test.mjs
           node --test tests/product-css.test.mjs
           node --test .github/scripts/account-registration.test.cjs
