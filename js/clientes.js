@@ -710,6 +710,11 @@
     }
     avisar("Estamos validando os produtos, o frete e preparando seu pagamento.", "info");
 
+    var etapaPagamento = "identificação da sessão";
+    var controller = null;
+    var paymentTimeout = null;
+    var paymentResponseStatus = null;
+
     try {
       var sessionKey = window.LuxuriosaInteligencia &&
         typeof window.LuxuriosaInteligencia.obterSessao === "function"
@@ -732,6 +737,14 @@
       }
       headers.authorization = "Bearer " + accessToken;
 
+      etapaPagamento = "comunicação com o servidor de pagamentos";
+      if (typeof AbortController === "function") {
+        controller = new AbortController();
+        paymentTimeout = window.setTimeout(function () {
+          controller.abort();
+        }, 30000);
+      }
+
       var response = await fetch("https://byiykxfugvxuowueuxca.supabase.co/functions/v1/create-payment-order", {
         method: "POST",
         headers: headers,
@@ -741,27 +754,42 @@
           customer: dadosAtuais,
           fulfillment_type: dadosAtuais.fulfillmentType,
           pickup_requested_at: dadosAtuais.pickupRequestedAt
-        })
+        }),
+        signal: controller ? controller.signal : undefined
       });
+      paymentResponseStatus = response.status;
+
+      etapaPagamento = "leitura da resposta do servidor";
       var result = await response.json().catch(function () { return {}; });
       if (!response.ok || !result.ok || !result.checkout_url) {
         throw new Error(result.error || "Não foi possível preparar o pagamento. Tente novamente.");
       }
 
+      etapaPagamento = "redirecionamento para a InfinitePay";
       messagePreview.textContent =
         "Pedido Luxuriosa #" + result.order_number + "\n" +
-        "Total para pagamento: " + formatarPreco(result.total_amount) + "\n\n" +
+        "Total para pagamento: " + formatarPreco(result.total_amount) + "\n\n"+
         "Você será direcionado à InfinitePay para pagar com Pix ou cartão. " +
         "A expedição só começa depois da confirmação do pagamento.";
       avisar("Pedido criado. Abrindo o checkout seguro da InfinitePay...", "success");
 
       window.location.assign(result.checkout_url);
     } catch (error) {
-      avisar(error && error.message ? error.message : "Não foi possível iniciar o pagamento. Tente novamente.", "error");
+      var mensagemErro = error && error.name === "AbortError"
+        ? "A preparação do pagamento demorou mais que o esperado. Verifique sua conexão e tente novamente."
+        : (error && error.message ? error.message : "Não foi possível iniciar o pagamento. Tente novamente.");
+      console.error("Luxuriosa: falha ao preparar pagamento.", {
+        etapa: etapaPagamento,
+        statusHttp: paymentResponseStatus,
+        tipoErro: error && error.name ? error.name : "Error"
+      });
+      avisar(mensagemErro, "error");
       if (button) {
         button.disabled = false;
         button.textContent = "PAGAR COM PIX OU CARTÃO";
       }
+    } finally {
+      if (paymentTimeout !== null) window.clearTimeout(paymentTimeout);
     }
   }
 
