@@ -8,7 +8,7 @@ const backend = readFileSync("supabase/functions/create-payment-order/index.ts",
 
 test("home e loja invalidam o cache do módulo de checkout atualizado", () => {
   for (const { path, html } of checkoutPages) {
-    assert.ok(html.includes("src=\\\"js/clientes.js?v=20261120-tibirica-minimum-v1"), path);
+    assert.ok(html.includes('src="js/clientes.js?v=20261120-tibirica-minimum-v1'), path);
   }
 });
 
