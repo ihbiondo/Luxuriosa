@@ -1,27 +1,15 @@
--- Estruturas mínimas e isoladas para testar a integridade temporal dos
--- eventos de consentimento no banco descartável do CI. Nunca é aplicada em produção.
+-- Complementa as fixtures de login no banco descartável do CI com o
+-- schema mínimo dos eventos de consentimento. Nunca é aplicada em produção.
 
-create table public.account_data_consents (
-  id uuid primary key default gen_random_uuid(),
-  user_id uuid not null,
-  purpose text not null
-    check (purpose in ('experience_personalization', 'aggregated_insights_sharing')),
-  granted boolean not null,
-  source text not null
+alter table public.account_data_consents
+  add column source text not null
     check (source in ('signup', 'account_settings')),
-  consent_text_version text not null,
-  event_key uuid not null unique,
-  created_at timestamptz not null default now()
-);
+  add column event_key uuid not null;
 
-alter table public.account_data_consents enable row level security;
-revoke all on public.account_data_consents from public, anon, authenticated;
-grant select, insert on public.account_data_consents to authenticated;
+alter table public.account_data_consents
+  add constraint account_data_consents_event_key_key unique (event_key);
 
-create policy account_data_consents_select_own
-  on public.account_data_consents
-  for select to authenticated
-  using ((select auth.uid()) = user_id);
+grant insert on public.account_data_consents to authenticated;
 
 create policy account_data_consents_insert_own
   on public.account_data_consents
@@ -31,7 +19,7 @@ create policy account_data_consents_insert_own
 
 create table public.club_intimate_consent_events (
   id uuid primary key default gen_random_uuid(),
-  user_id uuid not null,
+  user_id uuid not null references public.profiles(id) on delete cascade,
   granted boolean not null,
   consent_version text not null
     check (consent_version = 'luxuriosa-intimate-profile-v1-2026-11'),
