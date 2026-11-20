@@ -875,12 +875,12 @@
           <legend>Endereço de entrega</legend>
           <div class="customer-grid">
             <div class="customer-field customer-span-2">
-              <label for="customerCep">CEP</label>
+              <label for="customerCep">CEP <span aria-hidden="true">*</span></label>
               <div class="customer-cep-row">
-                <input id="customerCep" name="postalCode" type="text" inputmode="numeric" autocomplete="postal-code" maxlength="9" placeholder="00000-000" aria-describedby="customerCepHelp customerCepStatus">
+                <input id="customerCep" name="postalCode" type="text" inputmode="numeric" autocomplete="postal-code" maxlength="9" placeholder="00000-000" required aria-required="true" aria-describedby="customerCepHelp customerCepStatus">
                 <button class="btn secondary" id="customerCepSearch" type="button">Buscar CEP</button>
               </div>
-              <small id="customerCepHelp">Consulte o CEP para preencher rua, bairro, cidade e estado automaticamente.</small>
+              <small id="customerCepHelp">Obrigatório para entrega. Use Buscar CEP para preencher rua, bairro, cidade e estado. A retirada agendada não exige endereço.</small>
               <small id="customerCepStatus" class="customer-cep-status" role="status" aria-live="polite" hidden></small>
               <p id="customerFreightInfo" class="customer-freight-info" role="status" aria-live="polite">Informe a cidade e o estado para consultar as condições de entrega. O frete será confirmado no atendimento.</p>
             </div>
