@@ -318,7 +318,7 @@ jobs:
           PY
 
       - name: Setup Supabase CLI
-        uses: supabase/setup-cli@v1
+        uses: supabase/setup-cli@v3
         with:
           version: 3.0.0
       - name: Testar banco e jornada E2E em ambiente local descartável
