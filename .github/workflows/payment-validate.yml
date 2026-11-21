@@ -174,7 +174,7 @@ jobs:
           node tests/e2e/desktop-layout-audit.mjs
       - name: Publicar relatório e capturas responsivas
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: auditoria-visual-site-${{ github.run_id }}
           path: e2e-screenshots/
@@ -526,7 +526,7 @@ jobs:
 
       - name: Publicar evidências visuais do E2E
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: minhas-conquistas-visual-${{ github.run_id }}
           path: e2e-screenshots/
