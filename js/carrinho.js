@@ -1464,6 +1464,22 @@
       });
     }
 
+    /* Registra o avanço no funil sem criar pedido nem afirmar que houve venda. */
+    if (window.LuxuriosaInteligencia) {
+      if (typeof window.LuxuriosaInteligencia.registrarEtapa === "function") {
+        window.LuxuriosaInteligencia.registrarEtapa("checkout_started", carrinho)
+          .catch(function (erro) {
+            console.warn("Luxuriosa: não foi possível registrar o início da finalização.", erro);
+          });
+      }
+      if (typeof window.LuxuriosaInteligencia.registrarEvento === "function") {
+        window.LuxuriosaInteligencia.registrarEvento("whatsapp_opened")
+          .catch(function (erro) {
+            console.warn("Luxuriosa: não foi possível registrar a abertura do WhatsApp.", erro);
+          });
+      }
+    }
+
     abrirWhatsApp(montarMensagemPedido());
 
   }
