@@ -403,6 +403,29 @@ async function auditCartAndCheckout(page) {
   assert.equal(cartSnapshot.analytics_consent, true,
     "O snapshot só deve ser enviado com consentimento analítico.");
 
+  const checkoutStartedPromise = page.waitForRequest(request => {
+    if (!request.url().includes("/functions/v1/cart-orders")) return false;
+    try {
+      const payload = request.postDataJSON();
+      return Boolean(payload && payload.action === "checkout_started" &&
+        Array.isArray(payload.items) &&
+        payload.items.some(item => String(item.id) === product.id));
+    } catch (_) {
+      return false;
+    }
+  }, { timeout: 15000 }).then(request => request.postDataJSON());
+
+  const whatsappOpenedPromise = page.waitForRequest(request => {
+    if (!request.url().includes("/functions/v1/cart-orders")) return false;
+    try {
+      const payload = request.postDataJSON();
+      return Boolean(payload && payload.action === "site_event" &&
+        payload.event_name === "whatsapp_opened");
+    } catch (_) {
+      return false;
+    }
+  }, { timeout: 15000 }).then(request => request.postDataJSON());
+
   await page.locator("#cartCheckout").click();
   await page.waitForFunction(() =>
     typeof window.__capturedWhatsAppUrl === "string" &&
@@ -410,6 +433,15 @@ async function auditCartAndCheckout(page) {
     null,
     { timeout: 10000 }
   );
+
+  const [checkoutStarted, whatsappOpened] = await Promise.all([
+    checkoutStartedPromise,
+    whatsappOpenedPromise
+  ]);
+  assert.ok(checkoutStarted.items.some(item => String(item.id) === product.id),
+    "A inteligência deve registrar os itens quando a pessoa inicia a finalização.");
+  assert.equal(whatsappOpened.event_name, "whatsapp_opened",
+    "A inteligência deve registrar o clique que encaminha ao WhatsApp.");
 
   const whatsappUrl = await page.evaluate(() => window.__capturedWhatsAppUrl);
   const parsedWhatsAppUrl = new URL(whatsappUrl);
