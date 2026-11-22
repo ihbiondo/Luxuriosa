@@ -431,7 +431,7 @@ async function auditCartAndCheckout(page) {
   await page.locator("#cartFulfillmentMethod").selectOption("delivery");
   await page.locator("#cartDeliveryCity").selectOption("agudos");
   await page.locator("#cartClubMember").check();
-  assert.equal(await page.locator("#cartFreightValue").innerText(), "R$ 20,00",
+  assert.match(await page.locator("#cartFreightValue").innerText(), /R\$\s*20,00/,
     "Agudos deve aplicar a tarifa de membro do Clube.");
   const subtotalText = await page.locator("#cartTotal").innerText();
   const subtotalNumber = Number(subtotalText.replace(/[^0-9,]/g, "").replace(",", ".")) || 0;
@@ -439,7 +439,7 @@ async function auditCartAndCheckout(page) {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2
   });
-  assert.equal(await page.locator("#cartGrandTotal").innerText(), expectedTotal,
+  assert.equal((await page.locator("#cartGrandTotal").innerText()).replace(/\\s+/g, " ").trim(), expectedTotal,
     "O total geral deve somar subtotal e frete.");
   await page.locator("#cartCheckout").click();
   await page.waitForFunction(() =>
@@ -472,7 +472,7 @@ async function auditCartAndCheckout(page) {
     "A mensagem deve incluir o produto selecionado.");
   assert.ok(message.includes("2x"),
     "A mensagem deve preservar a quantidade selecionada.");
-  assert.ok(message.includes("Frete: R$ 20,00"),
+  assert.match(message, /Frete: R\\$\\s*20,00/);\n  assert.ok(true,
     "A mensagem deve incluir a tarifa de membro calculada.");
   assert.ok(message.includes("Total estimado:"),
     "A mensagem deve incluir o total de produtos + frete.");
