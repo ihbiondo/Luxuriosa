@@ -539,6 +539,7 @@ jobs:
           E2E_SUPABASE_URL="$API_URL" \
           E2E_SERVICE_ROLE_KEY="$SERVICE_ROLE_KEY" \
           E2E_SCREENSHOT_DIR="$GITHUB_WORKSPACE/e2e-screenshots" \
+          # Este E2E também registra diagnóstico do consentimento e das chamadas de telemetria.
           node "$site/tests/e2e/minhas-conquistas.mjs"
 
           # Checkout de teste: sessão local, dados fictícios e interceptação antes da criação de pedido/pagamento.
