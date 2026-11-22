@@ -471,6 +471,25 @@ Deno.serve(async (req: Request) => {
     if (clubMembershipError) throw clubMembershipError;
     const isClubMember = clubMembership?.active === true;
 
+    // O preço promocional do catálogo é reservado a membros ativos do Clube.
+    // Visitantes e clientes sem adesão ativa pagam o preço regular (precoAntigo).
+    subtotalCents = 0;
+    for (const item of orderItems) {
+      const product = catalog.get(String(item.product_id));
+      if (!product) throw new Error("Produto indisponível para recalcular o preço.");
+      const clubPrice = cents(product.preco);
+      const regularPrice = Number(product.precoAntigo);
+      const hasClubPromotion = Number.isFinite(regularPrice) && regularPrice > clubPrice;
+      const unitCents = hasClubPromotion && !isClubMember ? cents(regularPrice) : clubPrice;
+      if (unitCents < 1) throw new Error("Um produto está sem preço válido. Fale com a Luxuriosa.");
+      item.unit_price = unitCents / 100;
+      item.product_snapshot.club_promotion = hasClubPromotion;
+      item.product_snapshot.applied_price_tier = hasClubPromotion
+        ? (isClubMember ? "club" : "regular")
+        : "standard";
+      subtotalCents += unitCents * Number(item.quantity);
+    }
+
     const minimum = isPickup ? 0 : Number(isBauruDelivery
       ? rule.minimum_order_up_to_12km_cents
       : rule.minimum_order_up_to_55km_cents);
