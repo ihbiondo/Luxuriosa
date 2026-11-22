@@ -472,6 +472,7 @@ jobs:
               "js/portal.js",
               "js/conquistas.js",
               "js/experiencias-salvar.js",
+              "js/inteligencia.js",
           ]
           for relative in files:
               path = site / relative
