@@ -133,6 +133,7 @@
   }
 
   window.LuxuriosaClubePrecos = {
+    obterCliente: obterCliente,
     pronto: function () {
       if (!initialPromise) initialPromise = atualizar();
       return initialPromise;
