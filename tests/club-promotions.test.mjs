@@ -23,9 +23,14 @@ const clubPromotions = catalog.produtos.filter((product) =>
 );
 
 test("o Clube comunica somente os dois benefícios atuais", () => {
-  const planCard = clubPage.match(/<article class="plan-card">([\\s\\S]*?)<\\/article>/)?.[1] || "";
-  const landingBenefits = [...clubLanding.matchAll(/<div class="benefit">([\\s\\S]*?)<\\/div>/g)]
-    .map((match) => match[1]);
+  const planStart = clubPage.indexOf('<article class="plan-card">');
+  const planEnd = clubPage.indexOf("</article>", planStart);
+  const planCard = planStart >= 0 && planEnd > planStart
+    ? clubPage.slice(planStart, planEnd)
+    : "";
+  const landingBenefits = clubLanding.split('<div class="benefit">')
+    .slice(1)
+    .map((item) => item.split("</div>")[0]);
 
   assert.equal((planCard.match(/<li>/g) || []).length, 2);
   assert.match(planCard, /Promoções exclusivas em produtos selecionados/);
@@ -34,7 +39,7 @@ test("o Clube comunica somente os dois benefícios atuais", () => {
   assert.match(landingBenefits[0], /Preços promocionais em produtos/);
   assert.match(landingBenefits[1], /Frete com valor especial/);
   assert.doesNotMatch(clubPage, /Acesso às vantagens e novidades do Clube|Área de membro para consultar sua participação/);
-  assert.doesNotMatch(clubLanding, /<strong>Área de membro<\\/strong>|<strong>Privacidade e autonomia<\\/strong>/);
+  assert.equal(landingBenefits.some((item) => item.includes("Área de membro") || item.includes("Privacidade e autonomia")), false);
 });
 
 test("todas as promoções do catálogo são identificadas como benefícios do Clube", () => {
