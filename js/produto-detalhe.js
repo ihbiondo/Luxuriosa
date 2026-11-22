@@ -14,7 +14,7 @@
     if (jaCarregado || document.getElementById("luxuriosa-app-menu-loader")) return;
     var script = document.createElement("script");
     script.id = "luxuriosa-app-menu-loader";
-    script.src = "/js/app.js?v=20261120-desktop-backdrop-v1";
+    script.src = "/js/app.js?v=20261122-club-promotions-v1";
     script.async = false;
     (document.head || document.body).appendChild(script);
   }
@@ -49,7 +49,30 @@
     return;
   }
 
-  fetch("../data/produtos.json", { cache: "no-cache" })
+  function carregarStatusClube() {
+    if (window.LuxuriosaClubePrecos &&
+        typeof window.LuxuriosaClubePrecos.pronto === "function") {
+      return window.LuxuriosaClubePrecos.pronto();
+    }
+    return new Promise(function (resolve) {
+      var script = document.createElement("script");
+      script.src = "/js/clube-precos.js?v=20261122-club-profile-v2";
+      script.onload = function () {
+        var clube = window.LuxuriosaClubePrecos;
+        if (clube && typeof clube.pronto === "function") {
+          clube.pronto().then(resolve).catch(resolve);
+        } else {
+          resolve();
+        }
+      };
+      script.onerror = resolve;
+      document.head.appendChild(script);
+    });
+  }
+
+  carregarStatusClube().then(function () {
+    return fetch("../data/produtos.json", { cache: "no-cache" });
+  })
     .then(function (resposta) {
       if (!resposta.ok) throw new Error("Não foi possível consultar o catálogo.");
       return resposta.json();
@@ -127,6 +150,34 @@
 
 
       window.LuxuriosaCarrinho.sincronizarCatalogo(dados.produtos);
+
+      var precoDetalhe = document.querySelector(".product-detail-price");
+      var precoRegular = Number(produto.precoAntigo);
+      var precoClube = Number(produto.preco);
+      var temPromocaoClube = Number.isFinite(precoRegular) &&
+        Number.isFinite(precoClube) && precoRegular > precoClube;
+      if (precoDetalhe && Number.isFinite(precoClube) && precoClube > 0) {
+        precoDetalhe.textContent = "";
+        var precoAtual = document.createElement("strong");
+        precoAtual.textContent = precoClube.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+        precoDetalhe.appendChild(precoAtual);
+        if (temPromocaoClube) {
+          var precoAntigo = document.createElement("s");
+          precoAntigo.textContent = precoRegular.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+          precoDetalhe.appendChild(precoAntigo);
+          var avisoClube = document.createElement("span");
+          avisoClube.className = "club-promo-note";
+          avisoClube.textContent = "🏷️ Promoção exclusiva para membros do Clube Luxuriosa · Cadastre-se grátis para aproveitar";
+          avisoClube.style.flexBasis = "100%";
+          avisoClube.style.display = "block";
+          avisoClube.style.marginTop = "8px";
+          avisoClube.style.color = "#D4AF7C";
+          avisoClube.style.fontSize = "12px";
+          avisoClube.style.fontWeight = "600";
+          avisoClube.style.lineHeight = "1.45";
+          precoDetalhe.appendChild(avisoClube);
+        }
+      }
 
       if (produto.esgotado) {
         bloquear("Produto esgotado");

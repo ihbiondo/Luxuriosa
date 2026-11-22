@@ -30,12 +30,9 @@ const ALLOWED_ORIGINS = new Set(["https://luxuriosa.com.br", "https://www.luxuri
 if (LOCAL_E2E_MODE) ALLOWED_ORIGINS.add("http://127.0.0.1:4173");
 const CATALOG_URL = "https://luxuriosa.com.br/data/produtos.json";
 const CHECKOUT_URL = "https://api.checkout.infinitepay.io/links";
-const PAYMENT_CHECKOUT_PAYLOAD_VERSION = 8;
+const PAYMENT_CHECKOUT_PAYLOAD_VERSION = 10;
 const VARIABLE_DICE_KIT_IDS = new Set(["22", "23", "24", "27", "28", "29"]);
 const ALLOWED_DICE_VARIANT_IDS = new Set(["1", "2", "3"]);
-const CLUB_DISCOUNT_THRESHOLD_CENTS = 10000;
-const CLUB_DISCOUNT_PERCENT = 10;
-const CLUB_DISCOUNT_RULE_VERSION = "clube-10-v1-2026-11";
 const CHECKOUT_VALIDITY_MINUTES = 60;
 const PICKUP_PREPARATION_MINUTES = 30;
 const PICKUP_ADDRESS = {
@@ -110,6 +107,22 @@ function configuredFreightFee(rule: any, isClubMember: boolean, isTibiriçaDeliv
   return Number.isSafeInteger(value) && value >= 0 ? value : null;
 }
 
+async function getClubMembershipIsActive(token: string): Promise<boolean> {
+  if (!token) return false;
+  const anonKey = Deno.env.get("SUPABASE_ANON_KEY");
+  if (!anonKey) throw new Error("Não foi possível validar a participação no Clube. Tente novamente.");
+  const userClient = createClient(SUPABASE_URL, anonKey, {
+    auth: { persistSession: false, autoRefreshToken: false },
+    global: { headers: { Authorization: "Bearer " + token } }
+  });
+  const { data, error } = await userClient.rpc("get_club_membership_state");
+  if (error) {
+    console.error("create-payment-order club membership validation failed:", error);
+    throw new Error("Não foi possível confirmar a participação no Clube. Tente novamente.");
+  }
+  return data?.is_member === true && data?.profile_complete === true;
+}
+
 type CatalogProduct = {
   id: string | number;
   esgotado?: boolean;
@@ -118,6 +131,7 @@ type CatalogProduct = {
   categoria?: unknown;
   tipoProduto?: unknown;
   sku?: unknown;
+  precoAntigo?: unknown;
 };
 
 async function loadCatalog(): Promise<Map<string, CatalogProduct>> {
@@ -464,12 +478,29 @@ Deno.serve(async (req: Request) => {
 
     // Benefícios de entrega são definidos exclusivamente pelo banco.
     const nowIso = new Date().toISOString();
-    const { data: clubMembership, error: clubMembershipError } = await admin.from("club_memberships")
-      .select("active")
-      .eq("user_id", customerId)
-      .maybeSingle();
-    if (clubMembershipError) throw clubMembershipError;
-    const isClubMember = clubMembership?.active === true;
+    const isClubMember = await getClubMembershipIsActive(token);
+
+    // O preço promocional do catálogo é reservado a membros ativos do Clube.
+    // Visitantes e clientes sem adesão ativa pagam o preço regular (precoAntigo).
+    subtotalCents = 0;
+    for (const item of orderItems) {
+      const product = catalog.get(String(item.product_id));
+      if (!product) throw new Error("Produto indisponível para recalcular o preço.");
+      const clubPrice = cents(product.preco);
+      const regularPrice = Number(product.precoAntigo);
+      const regularPriceCents = Number.isFinite(regularPrice) && regularPrice > 0
+        ? cents(regularPrice)
+        : clubPrice;
+      const hasClubPromotion = regularPriceCents > clubPrice;
+      const unitCents = hasClubPromotion && !isClubMember ? regularPriceCents : clubPrice;
+      if (unitCents < 1) throw new Error("Um produto está sem preço válido. Fale com a Luxuriosa.");
+      item.unit_price = unitCents / 100;
+      item.product_snapshot.club_promotion = hasClubPromotion;
+      item.product_snapshot.applied_price_tier = hasClubPromotion
+        ? (isClubMember ? "club" : "regular")
+        : "standard";
+      subtotalCents += unitCents * Number(item.quantity);
+    }
 
     const minimum = isPickup ? 0 : Number(isBauruDelivery
       ? rule.minimum_order_up_to_12km_cents
@@ -498,10 +529,10 @@ Deno.serve(async (req: Request) => {
       return reply({ error: "O frete informado ultrapassou o limite permitido. Fale com a Luxuriosa." }, 409, origin);
     }
 
-    const clubDiscountCents = isClubMember && subtotalCents > CLUB_DISCOUNT_THRESHOLD_CENTS
-      ? Math.round(subtotalCents * CLUB_DISCOUNT_PERCENT / 100)
-      : 0;
-    const totalCents = subtotalCents - clubDiscountCents + shippingCents;
+    // O Clube não acumula desconto percentual: o benefício de produto já está
+    // refletido no preço de catálogo; a vantagem adicional permanece no frete.
+    const clubDiscountCents = 0;
+    const totalCents = subtotalCents + shippingCents;
     if (!Number.isSafeInteger(totalCents) || totalCents < 100) {
       return reply({ error: "O total mínimo para pagamento é R$ 1,00." }, 400, origin);
     }
@@ -559,7 +590,10 @@ Deno.serve(async (req: Request) => {
     if (pendingOrderError) throw pendingOrderError;
     if (pendingOrder) {
       const expiry = pendingOrder.payment_expires_at ? new Date(pendingOrder.payment_expires_at).getTime() : Number.POSITIVE_INFINITY;
-      if (expiry <= now.getTime()) {
+      const payloadVersionIsCurrent =
+        Number(pendingOrder.payment_checkout_payload_version) === PAYMENT_CHECKOUT_PAYLOAD_VERSION;
+      if (expiry <= now.getTime() || !payloadVersionIsCurrent) {
+        // Links gerados com regras antigas de preço não podem continuar válidos.
         const { error: expireError } = await admin.from("orders").update({
           payment_status: "cancelled",
           status: "cancelled",
@@ -616,7 +650,7 @@ Deno.serve(async (req: Request) => {
         const pendingShippingCents = Math.round(Number(pendingOrder.shipping_amount || 0) * 100);
         const pendingDiscountCents = Number(pendingOrder.club_discount_amount_cents || 0);
         const pendingDiscountPercent = Number(pendingOrder.club_discount_percent || 0);
-        const expectedDiscountPercent = clubDiscountCents > 0 ? CLUB_DISCOUNT_PERCENT : 0;
+        const expectedDiscountPercent = 0;
         const samePaymentBreakdown =
           pendingSubtotalCents === subtotalCents &&
           pendingShippingCents === shippingCents &&
@@ -699,8 +733,8 @@ Deno.serve(async (req: Request) => {
       shipping_amount: shippingCents / 100,
       total_amount: totalCents / 100,
       club_discount_amount_cents: clubDiscountCents,
-      club_discount_percent: clubDiscountCents > 0 ? CLUB_DISCOUNT_PERCENT : 0,
-      club_discount_rule_version: clubDiscountCents > 0 ? CLUB_DISCOUNT_RULE_VERSION : null,
+      club_discount_percent: 0,
+      club_discount_rule_version: null,
       payment_status: "pending",
       payment_provider: "infinitepay",
       payment_checkout_payload_version: PAYMENT_CHECKOUT_PAYLOAD_VERSION,
@@ -735,41 +769,11 @@ Deno.serve(async (req: Request) => {
     }
 
     let checkoutItems: Array<{ quantity: number; price: number; description: string }> = [];
-    if (clubDiscountCents > 0) {
-      // Allocate the discount proportionally by product line. InfinitePay accepts
-      // positive item prices in cents; quantity is embedded in the description so
-      // each discounted line can carry its exact net line total without rounding drift.
-      const allocations = orderItems.map((item, index) => {
-        const lineCents = Math.round(Number(item.unit_price) * 100) * item.quantity;
-        const weightedDiscount = lineCents * clubDiscountCents;
-        return {
-          index,
-          lineCents,
-          discountCents: Math.floor(weightedDiscount / subtotalCents),
-          remainder: weightedDiscount % subtotalCents
-        };
-      });
-      let centsLeft = clubDiscountCents - allocations.reduce((sum, row) => sum + row.discountCents, 0);
-      allocations.slice().sort((a, b) => b.remainder - a.remainder || a.index - b.index)
-        .slice(0, centsLeft).forEach(row => { allocations[row.index].discountCents += 1; });
-      checkoutItems = orderItems.map((item, index) => {
-        const netLineCents = allocations[index].lineCents - allocations[index].discountCents;
-        if (!Number.isSafeInteger(netLineCents) || netLineCents < 1) {
-          throw new Error("Não foi possível distribuir o desconto do Clube com segurança.");
-        }
-        return {
-          quantity: 1,
-          price: netLineCents,
-          description: item.quantity + "x " + item.product_name
-        };
-      });
-    } else {
-      checkoutItems = orderItems.map((item) => ({
-        quantity: item.quantity,
-        price: Math.round(Number(item.unit_price) * 100),
-        description: item.product_name
-      }));
-    }
+    checkoutItems = orderItems.map((item) => ({
+      quantity: item.quantity,
+      price: Math.round(Number(item.unit_price) * 100),
+      description: item.product_name
+    }));
     if (shippingCents > 0) {
       checkoutItems.push({
         quantity: 1,
@@ -888,7 +892,7 @@ Deno.serve(async (req: Request) => {
       checkout_url: checkoutLink,
       subtotal_amount: subtotalCents / 100,
       club_discount_amount: clubDiscountCents / 100,
-      club_discount_percent: clubDiscountCents > 0 ? CLUB_DISCOUNT_PERCENT : 0,
+      club_discount_percent: 0,
       shipping_amount: shippingCents / 100,
       total_amount: totalCents / 100,
       expires_at: expiresAt.toISOString()

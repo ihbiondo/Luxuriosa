@@ -21,13 +21,24 @@ on:
       - "tests/pedido-whatsapp.test.mjs"
       - "tests/consent-ui.test.mjs"
       - "tests/product-css.test.mjs"
+      - "clube.html"
+      - "clube/index.html"
+      - "js/clube.js"
+      - "js/clube-precos.js"
+      - "tests/club-promotions.test.mjs"
+      - "supabase/migrations/20261122190000_club_membership_requires_complete_profile.sql"
       - "tests/checkout-payer.test.mjs"
+      - "tests/club-promotions.test.mjs"
+      - "js/clube-precos.js"
+      - "js/clube.js"
+      - "supabase/migrations/20261122190000_club_membership_requires_complete_profile.sql"
       - "portal/**"
       - "experiencias/**"
       - "educacao/interatividade/**"
       - "js/clientes.js"
       - "js/carrinho.js"
       - "supabase/functions/create-payment-order/index.ts"
+      - "supabase/functions/cart-orders/index.ts"
       - "supabase/functions/infinitepay-webhook/**"
       - "tests/infinitepay-webhook-notification.test.mjs"
       - "supabase/migrations/20261118162000_add_order_payer_identity.sql"
@@ -86,12 +97,19 @@ on:
       - "tests/pedido-whatsapp.test.mjs"
       - "tests/consent-ui.test.mjs"
       - "tests/product-css.test.mjs"
+      - "clube.html"
+      - "clube/index.html"
+      - "js/clube.js"
+      - "js/clube-precos.js"
+      - "tests/club-promotions.test.mjs"
+      - "supabase/migrations/20261122190000_club_membership_requires_complete_profile.sql"
       - "portal/**"
       - "experiencias/**"
       - "educacao/interatividade/**"
       - "js/clientes.js"
       - "js/carrinho.js"
       - "supabase/functions/create-payment-order/index.ts"
+      - "supabase/functions/cart-orders/index.ts"
       - "supabase/functions/infinitepay-webhook/**"
       - "tests/infinitepay-webhook-notification.test.mjs"
       - "supabase/migrations/20261118162000_add_order_payer_identity.sql"
@@ -191,6 +209,9 @@ jobs:
         run: |
           node --check js/clientes.js
           node --check js/carrinho.js
+          node --check js/clube-precos.js
+          node --check --input-type=module < js/clube.js
+          node --test tests/club-promotions.test.mjs
           node --test tests/pedido-whatsapp.test.mjs
           node --test tests/checkout-payer.test.mjs
           node --test tests/infinitepay-webhook-notification.test.mjs
@@ -200,6 +221,7 @@ jobs:
           node --test .github/scripts/account-registration.test.cjs
           node --test .github/scripts/google-oauth.test.cjs
           npx --yes esbuild@0.25.0 supabase/functions/create-payment-order/index.ts --format=esm --platform=neutral --outfile=/tmp/create-payment-order.js
+          npx --yes esbuild@0.25.0 supabase/functions/cart-orders/index.ts --format=esm --platform=neutral --outfile=/tmp/cart-orders.js
           npx --yes esbuild@0.25.0 supabase/functions/infinitepay-webhook/index.ts --format=esm --platform=neutral --outfile=/tmp/infinitepay-webhook.js
           npx --yes esbuild@0.25.0 supabase/functions/infinitepay-webhook/_shared/infinitepay-payment.ts --format=esm --platform=neutral --outfile=/tmp/infinitepay-payment.js
           node --input-type=module <<'NODE'
@@ -245,6 +267,7 @@ jobs:
           consent_timestamp_fixture = Path("tests/fixtures/consent_timestamp_fixtures.sql").read_text()
           consent_timestamp_test = Path("supabase/tests/database/consent_timestamps.test.sql").read_text()
           freight_migration = Path("supabase/migrations/20261116181752_standardize_delivery_fees.sql").read_text()
+          club_membership_migration = Path("supabase/migrations/20261122190000_club_membership_requires_complete_profile.sql").read_text()
           freight_backend = Path("supabase/functions/create-payment-order/index.ts").read_text()
           delivery_page = Path("entregas/index.html").read_text()
           delivery_faq = Path("faq.html").read_text()
@@ -302,8 +325,12 @@ jobs:
           assert "1900-01-01" in consent_timestamp_test and "2999-01-01" in consent_timestamp_test
           print("Sintaxe e regras de integridade dos timestamps de consentimento verificadas.")
           parse_sql(freight_migration)
-          print("Sintaxe SQL da migração de frete validada.")
+          parse_sql(club_membership_migration)
+          print("Sintaxe SQL das migrações de frete e adesão ao Clube validada.")
           assert "club_delivery_fee_cents" in freight_migration
+          assert "profile_complete" in club_membership_migration
+          assert "interval '18 years'" in club_membership_migration
+          assert "Endereço não é obrigatório" in club_membership_migration
           assert "tibirica" in freight_backend and "freight_quote_required" in freight_backend
           assert "R$ 15,00" in delivery_page and "R$ 10,00" in delivery_page
           assert "R$ 50,00" in delivery_page and "R$ 40,00" in delivery_page
@@ -388,7 +415,11 @@ jobs:
           cp "$GITHUB_WORKSPACE/supabase/migrations/20261118162000_add_order_payer_identity.sql" "$test_root/supabase/migrations/"
           cp "$GITHUB_WORKSPACE/supabase/migrations/20261118190000_add_account_whatsapp_marketing_consent.sql" "$test_root/supabase/migrations/"
           cp "$GITHUB_WORKSPACE/supabase/migrations/20261119115544_add_account_privacy_acceptances_user_idx.sql" "$test_root/supabase/migrations/"
+          cp "$GITHUB_WORKSPACE/supabase/migrations/20261122190000_club_membership_requires_complete_profile.sql" "$test_root/supabase/migrations/"
+          cp "$GITHUB_WORKSPACE/tests/fixtures/club-membership-e2e.sql" "$test_root/supabase/migrations/20261122190100_club_membership_e2e.sql"
           mkdir -p "$test_root/supabase/functions/create-payment-order"
+          mkdir -p "$test_root/supabase/functions/cart-orders"
+          cp "$GITHUB_WORKSPACE/supabase/functions/cart-orders/index.ts" "$test_root/supabase/functions/cart-orders/index.ts"
           cp "$GITHUB_WORKSPACE/supabase/functions/create-payment-order/index.ts" "$test_root/supabase/functions/create-payment-order/index.ts"
           # O supabase/config.toml contém a configuração do webhook. Copia a
           # função inteira para a pilha descartável, mesmo sem invocá-la no E2E.
@@ -440,9 +471,11 @@ jobs:
               "login.html",
               "js/app.js",
               "js/clientes.js",
+              "js/clube-precos.js",
               "js/portal.js",
               "js/conquistas.js",
               "js/experiencias-salvar.js",
+              "js/inteligencia.js",
           ]
           for relative in files:
               path = site / relative
@@ -472,24 +505,12 @@ jobs:
           done
           curl --fail --silent http://127.0.0.1:4173/login.html >/dev/null
 
-          mkdir -p "$GITHUB_WORKSPACE/e2e-screenshots"
-          E2E_BASE_URL="http://127.0.0.1:4173" \
-          E2E_SUPABASE_URL="$API_URL" \
-          E2E_SERVICE_ROLE_KEY="$SERVICE_ROLE_KEY" \
-          E2E_SCREENSHOT_DIR="$GITHUB_WORKSPACE/e2e-screenshots" \
-          node "$site/tests/e2e/minhas-conquistas.mjs"
-
-          # Checkout de teste: sessão local, dados fictícios e interceptação antes da criação de pedido/pagamento.
-          E2E_BASE_URL="http://127.0.0.1:4173" \
-          E2E_SUPABASE_URL="$API_URL" \
-          E2E_SERVICE_ROLE_KEY="$SERVICE_ROLE_KEY" \
-          E2E_SCREENSHOT_DIR="$GITHUB_WORKSPACE/e2e-screenshots" \
-          node "$site/tests/e2e/checkout-payer.mjs"
-
+          # Inicializa todas as Edge Functions locais antes dos testes de navegador,
+          # incluindo cart-orders (telemetria e finalização WhatsApp) e create-payment-order.
           # Executa a Edge Function real sobre o banco local. O modo de pagamento
           # sintético só é ativado quando SUPABASE_URL aponta para o container local.
           printf 'LUX_E2E_LOCAL_MODE=true\n' > "$test_root/function.env"
-          (cd "$test_root" && supabase functions serve create-payment-order --no-verify-jwt --env-file "$test_root/function.env") > "$test_root/function-server.log" 2>&1 &
+          (cd "$test_root" && supabase functions serve --no-verify-jwt --env-file "$test_root/function.env") > "$test_root/function-server.log" 2>&1 &
           function_server_pid=$!
           function_ready=false
           function_url=""
@@ -512,6 +533,22 @@ jobs:
             echo "A Edge Function local não respondeu ao GET de prontidão esperado (405)."
             exit 1
           fi
+
+
+          mkdir -p "$GITHUB_WORKSPACE/e2e-screenshots"
+          # Este E2E também registra diagnóstico do consentimento e das chamadas de telemetria.
+          E2E_BASE_URL="http://127.0.0.1:4173" \
+          E2E_SUPABASE_URL="$API_URL" \
+          E2E_SERVICE_ROLE_KEY="$SERVICE_ROLE_KEY" \
+          E2E_SCREENSHOT_DIR="$GITHUB_WORKSPACE/e2e-screenshots" \
+          node "$site/tests/e2e/minhas-conquistas.mjs"
+
+          # Checkout de teste: sessão local, dados fictícios e interceptação antes da criação de pedido/pagamento.
+          E2E_BASE_URL="http://127.0.0.1:4173" \
+          E2E_SUPABASE_URL="$API_URL" \
+          E2E_SERVICE_ROLE_KEY="$SERVICE_ROLE_KEY" \
+          E2E_SCREENSHOT_DIR="$GITHUB_WORKSPACE/e2e-screenshots" \
+          node "$site/tests/e2e/checkout-payer.mjs"
 
           E2E_SUPABASE_URL="$API_URL" \
           E2E_SERVICE_ROLE_KEY="$SERVICE_ROLE_KEY" \

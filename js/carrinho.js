@@ -40,6 +40,9 @@
 
   var carrinho = [];
   var catalogoSincronizado = false;
+  var catalogoAtual = [];
+  var membroClubeAtivo = false;
+  var membroClubeVerificado = false;
   var focoAnteriorCarrinho = null;
 
 
@@ -62,6 +65,36 @@
       }
     );
 
+  }
+
+
+  function precoDoCliente(produto) {
+    if (window.LuxuriosaClubePrecos &&
+        typeof window.LuxuriosaClubePrecos.precoParaCliente === "function") {
+      return window.LuxuriosaClubePrecos.precoParaCliente(produto);
+    }
+    var precoClube = Number(produto && produto.preco);
+    var precoRegular = Number(produto && produto.precoAntigo);
+    var temPromocaoClube = Number.isFinite(precoRegular) &&
+      Number.isFinite(precoClube) && precoRegular > precoClube;
+    return temPromocaoClube && !membroClubeAtivo ? precoRegular : precoClube;
+  }
+
+  function atualizarControlesClube() {
+    var controle = $("cartClubMember");
+    var texto = document.querySelector(".cart-club-row span");
+    if (controle) {
+      controle.checked = membroClubeVerificado && membroClubeAtivo;
+      controle.disabled = true;
+      controle.setAttribute("aria-disabled", "true");
+    }
+    if (texto) {
+      texto.textContent = !membroClubeVerificado
+        ? "Verificando sua participação no Clube…"
+        : membroClubeAtivo
+          ? "Tarifa especial do Clube aplicada automaticamente"
+          : "Entre no Clube gratuitamente para acessar a tarifa especial";
+    }
   }
 
 
@@ -251,6 +284,19 @@
       preco:
         precoNormalizado,
 
+      precoClube:
+        Number.isFinite(Number(item.precoClube)) && Number(item.precoClube) > 0
+          ? Number(item.precoClube)
+          : null,
+
+      precoRegular:
+        Number.isFinite(Number(item.precoRegular)) && Number(item.precoRegular) > 0
+          ? Number(item.precoRegular)
+          : null,
+
+      promocaoClube:
+        item.promocaoClube === true,
+
       imagem:
         String(
           item.imagem ||
@@ -422,7 +468,7 @@
       return;
     }
 
-    var precoOriginal = produto.preco;
+    var precoOriginal = precoDoCliente(produto);
     var precoProduto = Number(precoOriginal);
     if (
       precoOriginal === null ||
@@ -531,9 +577,17 @@
           "Produto Luxuriosa",
 
         preco:
-          Number(
-            produto.preco
-          ) || 0,
+          Number(precoProduto) || 0,
+
+        precoClube:
+          Number(produto.preco) || null,
+
+        precoRegular:
+          Number(produto.precoAntigo) || null,
+
+        promocaoClube:
+          Number.isFinite(Number(produto.precoAntigo)) &&
+          Number(produto.precoAntigo) > Number(produto.preco),
 
         imagem:
           produto.imagem ||
@@ -1019,6 +1073,24 @@
           )
         );
 
+        if (item.promocaoClube && Number(item.precoClube) > 0) {
+          var avisoPrecoClube = criarElemento(
+            "a",
+            "cart-item-club-promo",
+            membroClubeAtivo
+              ? "🏷️ Preço exclusivo para membros do Clube"
+              : "🏷️ Cadastre-se grátis no Clube e aproveite " + formatarPreco(item.precoClube)
+          );
+          avisoPrecoClube.href = "/clube/";
+          avisoPrecoClube.style.display = "block";
+          avisoPrecoClube.style.marginTop = "4px";
+          avisoPrecoClube.style.color = "#D4AF7C";
+          avisoPrecoClube.style.fontSize = "11px";
+          avisoPrecoClube.style.fontWeight = "600";
+          avisoPrecoClube.style.lineHeight = "1.4";
+          info.appendChild(avisoPrecoClube);
+        }
+
         if (item.kit_variant_name) {
           info.appendChild(
             criarElemento(
@@ -1451,7 +1523,7 @@
       return { valid: false, method: "delivery", city: "", freight: null, total: null };
     }
 
-    var membroClube = Boolean($("cartClubMember") && $("cartClubMember").checked);
+    var membroClube = membroClubeVerificado && membroClubeAtivo;
     if (cidade === "other") {
       return {
         valid: true, method: "delivery", city: "other",
@@ -1816,6 +1888,7 @@
     }
 
     catalogoSincronizado = true;
+    catalogoAtual = listaProdutos.slice();
 
     if (!carrinho.length) {
       return;
@@ -1870,14 +1943,8 @@
         return;
       }
 
-      var precoOriginal = produtoAtual.preco;
-      var precoAtual = Number(precoOriginal);
-      var precoValido =
-        precoOriginal !== null &&
-        precoOriginal !== undefined &&
-        precoOriginal !== "" &&
-        Number.isFinite(precoAtual) &&
-        precoAtual > 0;
+      var precoAtual = precoDoCliente(produtoAtual);
+      var precoValido = Number.isFinite(precoAtual) && precoAtual > 0;
 
       if (!precoValido) {
         var motivoPrecoInvalido = "Não foi possível confirmar o preço deste produto. Remova-o e consulte o atendimento antes de continuar.";
@@ -1893,6 +1960,10 @@
       item.indisponivel = false;
       item.motivoIndisponibilidade = "";
 
+      var precoClubeAtual = Number(produtoAtual.preco) || null;
+      var precoRegularAtual = Number(produtoAtual.precoAntigo) || null;
+      var promocaoClubeAtual = Number.isFinite(precoRegularAtual) &&
+        Number.isFinite(precoClubeAtual) && precoRegularAtual > precoClubeAtual;
       var nomeAtual = String(produtoAtual.nome || item.nome);
       var imagemAtual = String(produtoAtual.imagem || item.imagem || "");
       var categoriaAtual = String(produtoAtual.categoria || item.categoria || "");
@@ -1908,11 +1979,17 @@
 
       if (item.nome !== nomeAtual ||
           item.preco !== precoAtual ||
+          item.precoClube !== precoClubeAtual ||
+          item.precoRegular !== precoRegularAtual ||
+          item.promocaoClube !== promocaoClubeAtual ||
           item.imagem !== imagemAtual ||
           item.categoria !== categoriaAtual ||
           item.tamanhos !== tamanhosAtual) {
         item.nome = nomeAtual;
         item.preco = precoAtual;
+        item.precoClube = precoClubeAtual;
+        item.precoRegular = precoRegularAtual;
+        item.promocaoClube = promocaoClubeAtual;
         item.imagem = imagemAtual;
         item.categoria = categoriaAtual;
         item.tamanhos = tamanhosAtual;
@@ -1926,6 +2003,25 @@
 
     /* Atualiza o botão mesmo quando os dados do carrinho já estavam corretos. */
     renderizar();
+  }
+
+
+  function aplicarEstadoClubeNoCarrinho(detail) {
+    if (!detail) return;
+    membroClubeVerificado = detail.loaded === true;
+    membroClubeAtivo = membroClubeVerificado &&
+      detail.isMember === true && detail.profileComplete === true;
+    atualizarControlesClube();
+    if (catalogoAtual.length) sincronizarCatalogo(catalogoAtual);
+    else renderizar();
+  }
+
+  window.addEventListener("luxuriosa:club-state-changed", function (event) {
+    aplicarEstadoClubeNoCarrinho(event && event.detail);
+  });
+  if (window.LuxuriosaClubePrecos &&
+      typeof window.LuxuriosaClubePrecos.obterEstado === "function") {
+    aplicarEstadoClubeNoCarrinho(window.LuxuriosaClubePrecos.obterEstado());
   }
 
 
@@ -1981,6 +2077,7 @@
     carregar();
 
     configurarEventos();
+    atualizarControlesClube();
 
     renderizar();
     if (window.LuxuriosaInteligencia && typeof window.LuxuriosaInteligencia.registrarCarrinho === "function") {

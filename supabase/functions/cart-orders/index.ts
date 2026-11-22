@@ -5,7 +5,21 @@ const SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 const admin = createClient(SUPABASE_URL, SERVICE_ROLE_KEY, {
   auth: { persistSession: false, autoRefreshToken: false }
 });
+function isLocalSupabaseUrl(value: string): boolean {
+  try {
+    const url = new URL(value);
+    return url.protocol === "http:" &&
+      ["kong", "localhost", "127.0.0.1", "host.docker.internal"].includes(url.hostname);
+  } catch {
+    return false;
+  }
+}
+
+// A origem local só é autorizada no ambiente E2E descartável, nunca no projeto hospedado.
+const LOCAL_E2E_MODE =
+  Deno.env.get("LUX_E2E_LOCAL_MODE") === "true" && isLocalSupabaseUrl(SUPABASE_URL);
 const allowedOrigins = new Set(["https://luxuriosa.com.br", "https://www.luxuriosa.com.br"]);
+if (LOCAL_E2E_MODE) allowedOrigins.add("http://127.0.0.1:4173");
 const CATALOG_URL = "https://luxuriosa.com.br/data/produtos.json";
 
 async function sha256Hex(value: string): Promise<string> {
@@ -104,7 +118,7 @@ async function loadCatalog(): Promise<Map<string, any>> {
   if (!Array.isArray(data?.produtos)) throw new Error("Catálogo indisponível.");
   return new Map(data.produtos.map((product: any) => [String(product.id), product]));
 }
-function cleanItems(value: unknown, catalog: Map<string, any>) {
+function cleanItems(value: unknown, catalog: Map<string, any>, isClubMember: boolean) {
   if (!Array.isArray(value) || value.length > 80) throw new Error("Carrinho inválido.");
   return value.map((raw: any) => {
     const productId = cleanText(String(raw?.id ?? ""), 100);
@@ -114,7 +128,11 @@ function cleanItems(value: unknown, catalog: Map<string, any>) {
     const product = catalog.get(productId);
     if (!product || product.esgotado === true) throw new Error("Um produto do carrinho está indisponível. Atualize o carrinho.");
     if (!Number.isInteger(quantity) || quantity < 1 || quantity > 999) throw new Error("Quantidade inválida.");
-    const price = Number(product.preco);
+    const clubPrice = Number(product.preco);
+    const regularPrice = Number(product.precoAntigo);
+    const hasClubPromotion = Number.isFinite(regularPrice) && regularPrice > clubPrice &&
+      Number.isFinite(clubPrice) && clubPrice >= 0;
+    const price = hasClubPromotion && !isClubMember ? regularPrice : clubPrice;
     if (!Number.isFinite(price) || price < 0 || price > 100000) throw new Error("Preço inválido no catálogo.");
     const isVariableKit = VARIABLE_DICE_KIT_IDS.has(productId);
     let selectedDiceName: string | null = null;
@@ -132,7 +150,9 @@ function cleanItems(value: unknown, catalog: Map<string, any>) {
       unit_price: Math.round(price * 100) / 100,
       product_snapshot: {
         selected_dice_product_id: isVariableKit ? selectedDiceId : null,
-        selected_dice_product_name: isVariableKit ? selectedDiceName : null
+        selected_dice_product_name: isVariableKit ? selectedDiceName : null,
+        club_promotion: hasClubPromotion,
+        applied_price_tier: hasClubPromotion ? (isClubMember ? "club" : "regular") : "standard"
       }
     };
   });
@@ -140,6 +160,22 @@ function cleanItems(value: unknown, catalog: Map<string, any>) {
 
 function total(items: ReturnType<typeof cleanItems>) {
   return Math.round(items.reduce((sum, item) => sum + item.quantity * item.unit_price, 0) * 100) / 100;
+}
+
+async function getClubMembershipIsActive(token: string): Promise<boolean> {
+  if (!token) return false;
+  const anonKey = Deno.env.get("SUPABASE_ANON_KEY");
+  if (!anonKey) throw new Error("Não foi possível validar a participação no Clube. Tente novamente.");
+  const userClient = createClient(SUPABASE_URL, anonKey, {
+    auth: { persistSession: false, autoRefreshToken: false },
+    global: { headers: { Authorization: "Bearer " + token } }
+  });
+  const { data, error } = await userClient.rpc("get_club_membership_state");
+  if (error) {
+    console.error("cart-orders club membership validation failed:", error);
+    throw new Error("Não foi possível confirmar a participação no Clube. Tente novamente.");
+  }
+  return data?.is_member === true && data?.profile_complete === true;
 }
 
 async function recordMarketingConsent(cartId: string, userId: string | null, customer: any, now: string) {
@@ -253,7 +289,8 @@ Deno.serve(async (req: Request) => {
     }
     if (!withinRateLimit) return response({ error: "Muitas solicitações. Aguarde um instante e tente novamente." }, 429, origin);
     const catalog = await loadCatalog();
-    const items = cleanItems(body.items || [], catalog);
+    const isClubMember = userId ? await getClubMembershipIsActive(token) : false;
+    const items = cleanItems(body.items || [], catalog, isClubMember);
     const subtotal = total(items);
     if (subtotal > 1000000) return response({ error: "Valor do carrinho inválido." }, 400, origin);
 

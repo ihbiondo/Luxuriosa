@@ -252,6 +252,19 @@ async function auditCartAndCheckout(page) {
   );
 
   // Usa somente um produto real do catálogo local; não cria pedido nem inicia pagamento.
+  const telemetryRequests = [];
+  const telemetryConsole = [];
+  page.on("request", request => {
+    if (!request.url().includes("/functions/v1/cart-orders")) return;
+    try { telemetryRequests.push(request.postDataJSON()); }
+    catch (_) { telemetryRequests.push({ raw: request.postData() || null }); }
+  });
+  page.on("console", message => {
+    if (message.type() === "error" || message.type() === "warning") {
+      telemetryConsole.push(message.text().slice(0, 300));
+    }
+  });
+
   await page.setViewportSize({ width: 320, height: 740 });
   await page.goto(`${BASE_URL}/loja.html`, { waitUntil: "domcontentloaded" });
 
@@ -397,6 +410,29 @@ async function auditCartAndCheckout(page) {
     };
   });
 
+  await page.evaluate(() => {
+    const api = window.LuxuriosaInteligencia;
+    const consentRaw = localStorage.getItem("lux_cookie_consent_v1");
+    window.__e2eTelemetryDiagnostics = {
+      apiExists: Boolean(api),
+      consentRaw,
+      calls: []
+    };
+    ["registrarEtapa", "registrarEvento"].forEach(name => {
+      if (!api || typeof api[name] !== "function") return;
+      const original = api[name];
+      api[name] = function () {
+        const args = Array.from(arguments);
+        const entry = { name, action: args[0] || null, started: Date.now() };
+        window.__e2eTelemetryDiagnostics.calls.push(entry);
+        const result = original.apply(this, args);
+        Promise.resolve(result).then(value => { entry.result = value; })
+          .catch(error => { entry.error = String(error); });
+        return result;
+      };
+    });
+  });
+
   // O envio do snapshot é a medição de carrinho já existente; confirma que o conteúdo
   // do carrinho chega ao endpoint de inteligência quando há consentimento analítico.
   const cartSnapshot = await cartSnapshotPromise;
@@ -405,34 +441,14 @@ async function auditCartAndCheckout(page) {
   assert.equal(cartSnapshot.analytics_consent, true,
     "O snapshot só deve ser enviado com consentimento analítico.");
 
-  const checkoutStartedPromise = page.waitForRequest(request => {
-    if (!request.url().includes("/functions/v1/cart-orders")) return false;
-    try {
-      const payload = request.postDataJSON();
-      return Boolean(payload && payload.action === "checkout_started" &&
-        Array.isArray(payload.items) &&
-        payload.items.some(item => String(item.id) === product.id));
-    } catch (_) {
-      return false;
-    }
-  }, { timeout: 15000 }).then(request => request.postDataJSON());
-
-  const whatsappOpenedPromise = page.waitForRequest(request => {
-    if (!request.url().includes("/functions/v1/cart-orders")) return false;
-    try {
-      const payload = request.postDataJSON();
-      return Boolean(payload && payload.action === "site_event" &&
-        payload.event_name === "whatsapp_opened");
-    } catch (_) {
-      return false;
-    }
-  }, { timeout: 15000 }).then(request => request.postDataJSON());
-
   await page.locator("#cartFulfillmentMethod").selectOption("delivery");
   await page.locator("#cartDeliveryCity").selectOption("agudos");
-  await page.locator("#cartClubMember").check();
+  await page.waitForFunction(() => {
+    const control = document.querySelector("#cartClubMember");
+    return control && control.disabled && control.checked;
+  }, null, { timeout: 30000 });
   assert.match(await page.locator("#cartFreightValue").innerText(), /R\$\s*20,00/,
-    "Agudos deve aplicar a tarifa de membro do Clube.");
+    "Agudos deve aplicar automaticamente a tarifa de membro validado pelo servidor.");
   const subtotalText = await page.locator("#cartTotal").innerText();
   const subtotalNumber = Number(subtotalText.replace(/[^0-9,]/g, "").replace(",", ".")) || 0;
   const expectedTotal = "R$ " + (subtotalNumber + 20).toLocaleString("pt-BR", {
@@ -449,14 +465,17 @@ async function auditCartAndCheckout(page) {
     { timeout: 10000 }
   );
 
-  const [checkoutStarted, whatsappOpened] = await Promise.all([
-    checkoutStartedPromise,
-    whatsappOpenedPromise
-  ]);
-  assert.ok(checkoutStarted.items.some(item => String(item.id) === product.id),
-    "A inteligência deve registrar os itens quando a pessoa inicia a finalização.");
-  assert.equal(whatsappOpened.event_name, "whatsapp_opened",
-    "A inteligência deve registrar o clique que encaminha ao WhatsApp.");
+  await page.waitForTimeout(750);
+  const telemetryDiagnostics = await page.evaluate(() => window.__e2eTelemetryDiagnostics || null);
+  const checkoutStarted = telemetryRequests.find(payload => payload && payload.action === "checkout_started" &&
+    Array.isArray(payload.items) && payload.items.some(item => String(item.id) === product.id));
+  const whatsappOpened = telemetryRequests.find(payload => payload && payload.action === "site_event" &&
+    payload.event_name === "whatsapp_opened");
+  assert.ok(checkoutStarted, "A inteligência não enviou checkout_started. Diagnóstico: " +
+    JSON.stringify({ telemetryDiagnostics, telemetryRequests, telemetryConsole }));
+  assert.ok(whatsappOpened, "A inteligência não enviou whatsapp_opened. Diagnóstico: " +
+    JSON.stringify({ telemetryDiagnostics, telemetryRequests, telemetryConsole }));
+  
 
   const whatsappUrl = await page.evaluate(() => window.__capturedWhatsAppUrl);
   const parsedWhatsAppUrl = new URL(whatsappUrl);
@@ -495,6 +514,40 @@ async function auditCartAndCheckout(page) {
 
   // Não há cobrança real nem mensagem enviada: window.open foi interceptado no navegador de teste.
   await page.evaluate(() => localStorage.removeItem("luxuriosa_carrinho"));
+}
+
+async function upsertLocalRow(table, conflictColumn, row) {
+  const url = new URL(SUPABASE_URL + "/rest/v1/" + table);
+  url.searchParams.set("on_conflict", conflictColumn);
+  const response = await fetch(url, {
+    method: "POST",
+    headers: {
+      apikey: SERVICE_ROLE_KEY,
+      Authorization: "Bearer " + SERVICE_ROLE_KEY,
+      "Content-Type": "application/json",
+      Prefer: "resolution=merge-duplicates,return=minimal"
+    },
+    body: JSON.stringify(row)
+  });
+  const detail = await response.text();
+  assert.ok(response.ok, "Não foi possível preparar membro E2E em " + table + ": " + response.status + " " + detail);
+}
+
+async function activateCompleteClubMember(user) {
+  await upsertLocalRow("profiles", "id", {
+    id: user.id,
+    username: "e2e-clube-" + user.id.slice(0, 8),
+    full_name: "Conta E2E Clube",
+    display_name: "Conta E2E Clube",
+    phone: "14988887777",
+    birth_date: "1995-01-01"
+  });
+  await upsertLocalRow("club_memberships", "user_id", {
+    user_id: user.id,
+    active: true,
+    joined_at: new Date().toISOString(),
+    terms_version: "luxuriosa-club-terms-v1-2026-11"
+  });
 }
 
 async function readResultsForUser(userId) {
@@ -633,6 +686,9 @@ try {
   await pageA.setViewportSize({ width: 1440, height: 1000 });
   await assertNoHorizontalOverflow(pageA, "Histórico desktop em 1440 px");
   await captureScreenshot(pageA, "dashboard-historico-desktop-1440");
+
+  // Prepara um membro completo no banco descartável para testar o frete especial.
+  await activateCompleteClubMember(userA);
 
   // 7. Carrinho e formulário de dados responsivos, sem efetuar compra.
   await auditCartAndCheckout(pageA);

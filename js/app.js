@@ -67,13 +67,18 @@
     }
 
     atualizarNavegacao(null);
-    import("https://esm.sh/@supabase/supabase-js@2")
-      .then(function (mod) {
-        var supabase = mod.createClient(
-          "https://byiykxfugvxuowueuxca.supabase.co",
-          "sb_publishable_LaMBeWQ1PNANEQ85SD_35Q_wDzswy8y",
-          { auth: { autoRefreshToken: true, persistSession: true, detectSessionInUrl: true } }
-        );
+    var clienteSupabase = window.LuxuriosaClubePrecos &&
+      typeof window.LuxuriosaClubePrecos.obterCliente === "function"
+        ? window.LuxuriosaClubePrecos.obterCliente()
+        : import("https://esm.sh/@supabase/supabase-js@2").then(function (mod) {
+            return mod.createClient(
+              "https://byiykxfugvxuowueuxca.supabase.co",
+              "sb_publishable_LaMBeWQ1PNANEQ85SD_35Q_wDzswy8y",
+              { auth: { autoRefreshToken: true, persistSession: true, detectSessionInUrl: true } }
+            );
+          });
+    clienteSupabase.then(function (supabase) {
+        window.LuxuriosaSupabase = supabase;
         supabase.auth.onAuthStateChange(function (_event, session) {
           atualizarNavegacao(session);
         });
