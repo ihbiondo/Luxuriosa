@@ -599,15 +599,3 @@
   color: var(--blush);
 }
 
-
-/* Identificação da promoção reservada a membros do Clube. */
-.product-detail-page .club-promo-note {
-  display: block;
-  flex-basis: 100%;
-  margin-top: 8px;
-  color: var(--gold);
-  font-family: var(--sans);
-  font-size: 12px;
-  font-weight: 600;
-  line-height: 1.45;
-}
