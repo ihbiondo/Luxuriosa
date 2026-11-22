@@ -22,8 +22,10 @@ function setBusy(busy) {
 
 function renderState(state) {
   isMember = state?.is_member === true && state?.profile_complete === true;
+  const membershipActive = state?.membership_active === true || isMember;
   $("joinChoice").hidden = isMember;
-  $("leaveClub").hidden = !isMember;
+  // Mesmo sem perfil completo, quem já aderiu mantém a opção de sair do Clube.
+  $("leaveClub").hidden = !membershipActive;
   $("joinClub").checked = false;
   $("personalization").checked = state?.personalization === true;
   $("anonymousStatistics").checked = state?.anonymous_statistics === true;
