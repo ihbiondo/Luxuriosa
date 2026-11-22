@@ -74,6 +74,7 @@
           "sb_publishable_LaMBeWQ1PNANEQ85SD_35Q_wDzswy8y",
           { auth: { autoRefreshToken: true, persistSession: true, detectSessionInUrl: true } }
         );
+        window.LuxuriosaSupabase = supabase;
         supabase.auth.onAuthStateChange(function (_event, session) {
           atualizarNavegacao(session);
         });
