@@ -79,6 +79,23 @@
     return temPromocaoClube && !membroClubeAtivo ? precoRegular : precoClube;
   }
 
+  function atualizarControlesClube() {
+    var controle = $("cartClubMember");
+    var texto = document.querySelector(".cart-club-row span");
+    if (controle) {
+      controle.checked = membroClubeVerificado && membroClubeAtivo;
+      controle.disabled = true;
+      controle.setAttribute("aria-disabled", "true");
+    }
+    if (texto) {
+      texto.textContent = !membroClubeVerificado
+        ? "Verificando sua participação no Clube…"
+        : membroClubeAtivo
+          ? "Tarifa especial do Clube aplicada automaticamente"
+          : "Entre no Clube gratuitamente para acessar a tarifa especial";
+    }
+  }
+
 
   function obterWhatsApp() {
 
@@ -1505,7 +1522,7 @@
       return { valid: false, method: "delivery", city: "", freight: null, total: null };
     }
 
-    var membroClube = Boolean($("cartClubMember") && $("cartClubMember").checked);
+    var membroClube = membroClubeVerificado && membroClubeAtivo;
     if (cidade === "other") {
       return {
         valid: true, method: "delivery", city: "other",
@@ -1988,13 +2005,22 @@
   }
 
 
-  window.addEventListener("luxuriosa:club-state-changed", function (event) {
-    membroClubeAtivo = !!(event && event.detail && event.detail.isMember === true);
+  function aplicarEstadoClubeNoCarrinho(detail) {
+    if (!detail) return;
+    membroClubeVerificado = detail.loaded === true;
+    membroClubeAtivo = membroClubeVerificado &&
+      detail.isMember === true && detail.profileComplete === true;
+    atualizarControlesClube();
     if (catalogoAtual.length) sincronizarCatalogo(catalogoAtual);
+    else renderizar();
+  }
+
+  window.addEventListener("luxuriosa:club-state-changed", function (event) {
+    aplicarEstadoClubeNoCarrinho(event && event.detail);
   });
   if (window.LuxuriosaClubePrecos &&
       typeof window.LuxuriosaClubePrecos.obterEstado === "function") {
-    membroClubeAtivo = window.LuxuriosaClubePrecos.obterEstado().isMember === true;
+    aplicarEstadoClubeNoCarrinho(window.LuxuriosaClubePrecos.obterEstado());
   }
 
 
@@ -2050,6 +2076,7 @@
     carregar();
 
     configurarEventos();
+    atualizarControlesClube();
 
     renderizar();
     if (window.LuxuriosaInteligencia && typeof window.LuxuriosaInteligencia.registrarCarrinho === "function") {
