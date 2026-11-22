@@ -42,6 +42,7 @@
   var catalogoSincronizado = false;
   var catalogoAtual = [];
   var membroClubeAtivo = false;
+  var membroClubeVerificado = false;
   var focoAnteriorCarrinho = null;
 
 
