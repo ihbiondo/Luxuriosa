@@ -471,6 +471,7 @@ jobs:
               "login.html",
               "js/app.js",
               "js/clientes.js",
+              "js/clube-precos.js",
               "js/portal.js",
               "js/conquistas.js",
               "js/experiencias-salvar.js",
