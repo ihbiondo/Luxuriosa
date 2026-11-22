@@ -578,7 +578,10 @@ Deno.serve(async (req: Request) => {
     if (pendingOrderError) throw pendingOrderError;
     if (pendingOrder) {
       const expiry = pendingOrder.payment_expires_at ? new Date(pendingOrder.payment_expires_at).getTime() : Number.POSITIVE_INFINITY;
-      if (expiry <= now.getTime()) {
+      const payloadVersionIsCurrent =
+        Number(pendingOrder.payment_checkout_payload_version) === PAYMENT_CHECKOUT_PAYLOAD_VERSION;
+      if (expiry <= now.getTime() || !payloadVersionIsCurrent) {
+        // Links gerados com regras antigas de preço não podem continuar válidos.
         const { error: expireError } = await admin.from("orders").update({
           payment_status: "cancelled",
           status: "cancelled",
