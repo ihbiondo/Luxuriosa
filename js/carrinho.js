@@ -1430,16 +1430,6 @@
      WHATSAPP / PEDIDO
      ======================================================= */
 
-  function pedidoContemKit() {
-    return carrinho.some(function (item) {
-      return String(item.categoria || "")
-        .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g, "")
-        .trim()
-        .toLowerCase() === "kits";
-    });
-  }
-
   function obterResumoRecebimento() {
     var metodo = $("cartFulfillmentMethod") ? $("cartFulfillmentMethod").value : "";
     var subtotal = valorTotal();
@@ -1448,7 +1438,7 @@
       return {
         valid: true, method: "pickup", city: "", cityLabel: "",
         clubMember: false, freight: 0, total: subtotal,
-        minimum: 0, minimumMet: true, freeBauruKit: false
+        minimum: 0, minimumMet: true
       };
     }
 
@@ -1466,8 +1456,7 @@
       return {
         valid: true, method: "delivery", city: "other",
         cityLabel: "Outra localidade", clubMember: membroClube,
-        freight: null, total: null, minimum: null, minimumMet: null,
-        freeBauruKit: false
+        freight: null, total: null, minimum: null, minimumMet: null
       };
     }
 
@@ -1476,8 +1465,7 @@
       return { valid: false, method: "delivery", city: cidade, freight: null, total: null };
     }
 
-    var freteGratisKitBauru = cidade === "bauru" && pedidoContemKit();
-    var freteCentavos = freteGratisKitBauru ? 0 : (membroClube ? tarifa.member : tarifa.standard);
+    var freteCentavos = membroClube ? tarifa.member : tarifa.standard;
     var minimo = tarifa.minimum;
 
     return {
@@ -1490,7 +1478,6 @@
       total: subtotal + (freteCentavos / 100),
       minimum: minimo / 100,
       minimumMet: Math.round(subtotal * 100) >= minimo,
-      freeBauruKit: freteGratisKitBauru,
       tollIncluded: cidade === "lencois" || cidade === "borebi"
     };
   }
@@ -1536,9 +1523,7 @@
     if (valorTotalGeral) valorTotalGeral.textContent = formatarPreco(resumo.total);
 
     var notas = [];
-    if (resumo.freeBauruKit) {
-      notas.push("🎁 Frete grátis aplicado: pedido com kit e entrega em Bauru (exceto Tibiriçá).");
-    } else if (resumo.clubMember) {
+    if (resumo.clubMember) {
       notas.push("🏷️ Tarifa de membro do Clube selecionada; o cadastro ativo será conferido pela equipe.");
     }
     if (resumo.minimumMet === false) {
@@ -1593,9 +1578,7 @@
         );
       }
 
-      if (resumo.freeBauruKit) {
-        linhas.push("🎁 Frete grátis aplicado por conter kit em pedido com entrega em Bauru.");
-      } else if (resumo.clubMember) {
+      if (resumo.clubMember) {
         linhas.push("🏷️ Tarifa de membro do Clube solicitada (cadastro ativo sujeito à conferência).");
       }
       if (resumo.minimumMet === false) {
