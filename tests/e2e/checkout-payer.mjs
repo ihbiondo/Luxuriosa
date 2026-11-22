@@ -190,6 +190,25 @@ try {
   assert.match(message, /link de pagamento ou a chave PIX/i);
   assert.match(message, /O pedido só será confirmado após a identificação do pagamento/i);
 
+  // Retirada agendada em Bauru não adiciona frete ao pedido.
+  await page.locator("#cartFulfillmentMethod").selectOption("pickup");
+  assert.equal(await page.locator("#cartFreightValue").innerText(), "R$ 0,00",
+    "A retirada agendada deve ser gratuita.");
+  await page.evaluate(() => { window.__capturedWhatsAppUrl = ""; });
+  await page.locator("#cartCheckout").click();
+  await page.waitForFunction(() =>
+    typeof window.__capturedWhatsAppUrl === "string" &&
+    window.__capturedWhatsAppUrl.length > 0,
+    null,
+    { timeout: 10000 }
+  );
+  const pickupUrl = new URL(await page.evaluate(() => window.__capturedWhatsAppUrl));
+  const pickupMessage = pickupUrl.searchParams.get("text") || "";
+  assert.match(pickupMessage, /RETIRADA AGENDADA EM BAURU/i);
+  assert.match(pickupMessage, /Frete para retirada: R\$ 0,00/i);
+  assert.match(pickupMessage, /Total estimado:/i);
+
+
   assert.equal(await page.locator("#customerOverlay").evaluate(element => element.hidden), true,
     "O novo fluxo não deve abrir o formulário antigo de dados de pagamento.");
   assert.deepEqual(paymentRequests, [],
