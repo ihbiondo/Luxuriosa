@@ -30,6 +30,9 @@
   }
 
   function obterCliente() {
+    if (!clientPromise && window.LuxuriosaSupabase) {
+      clientPromise = Promise.resolve(window.LuxuriosaSupabase);
+    }
     if (!clientPromise) {
       clientPromise = import("https://esm.sh/@supabase/supabase-js@2").then(function (mod) {
         var client = mod.createClient(
