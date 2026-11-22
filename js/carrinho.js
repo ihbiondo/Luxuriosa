@@ -1574,8 +1574,8 @@
         "• Frete para retirada: " + formatarPreco(0),
         "• *Total estimado: " + formatarPreco(valorTotal()) + "*",
         "",
-        "📍 *RETIRADA AGENDADA*",
-        "• Local e horário serão combinados com a equipe pelo WhatsApp."
+        "📍 *RETIRADA AGENDADA EM BAURU*",
+        "• Sem cobrança de frete. Local e horário serão combinados com a equipe pelo WhatsApp."
       );
     } else {
       linhas.push("🚚 *ENTREGA*", "• Localidade: " + (resumo.cityLabel || "A confirmar"));
