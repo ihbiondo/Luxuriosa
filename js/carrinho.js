@@ -40,6 +40,8 @@
 
   var carrinho = [];
   var catalogoSincronizado = false;
+  var catalogoAtual = [];
+  var membroClubeAtivo = false;
   var focoAnteriorCarrinho = null;
 
 
@@ -62,6 +64,15 @@
       }
     );
 
+  }
+
+
+  function precoDoCliente(produto) {
+    var precoClube = Number(produto && produto.preco);
+    var precoRegular = Number(produto && produto.precoAntigo);
+    var temPromocaoClube = Number.isFinite(precoRegular) &&
+      Number.isFinite(precoClube) && precoRegular > precoClube;
+    return temPromocaoClube && !membroClubeAtivo ? precoRegular : precoClube;
   }
 
 
@@ -422,7 +433,7 @@
       return;
     }
 
-    var precoOriginal = produto.preco;
+    var precoOriginal = precoDoCliente(produto);
     var precoProduto = Number(precoOriginal);
     if (
       precoOriginal === null ||
@@ -531,9 +542,7 @@
           "Produto Luxuriosa",
 
         preco:
-          Number(
-            produto.preco
-          ) || 0,
+          Number(precoProduto) || 0,
 
         imagem:
           produto.imagem ||
@@ -1816,6 +1825,7 @@
     }
 
     catalogoSincronizado = true;
+    catalogoAtual = listaProdutos.slice();
 
     if (!carrinho.length) {
       return;
@@ -1870,14 +1880,8 @@
         return;
       }
 
-      var precoOriginal = produtoAtual.preco;
-      var precoAtual = Number(precoOriginal);
-      var precoValido =
-        precoOriginal !== null &&
-        precoOriginal !== undefined &&
-        precoOriginal !== "" &&
-        Number.isFinite(precoAtual) &&
-        precoAtual > 0;
+      var precoAtual = precoDoCliente(produtoAtual);
+      var precoValido = Number.isFinite(precoAtual) && precoAtual > 0;
 
       if (!precoValido) {
         var motivoPrecoInvalido = "Não foi possível confirmar o preço deste produto. Remova-o e consulte o atendimento antes de continuar.";
@@ -1927,6 +1931,12 @@
     /* Atualiza o botão mesmo quando os dados do carrinho já estavam corretos. */
     renderizar();
   }
+
+
+  window.addEventListener("lux:club-membership-updated", function (event) {
+    membroClubeAtivo = !!(event && event.detail && event.detail.active === true);
+    if (catalogoAtual.length) sincronizarCatalogo(catalogoAtual);
+  });
 
 
   /* =======================================================
