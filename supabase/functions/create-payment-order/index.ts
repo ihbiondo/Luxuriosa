@@ -110,6 +110,22 @@ function configuredFreightFee(rule: any, isClubMember: boolean, isTibiriçaDeliv
   return Number.isSafeInteger(value) && value >= 0 ? value : null;
 }
 
+async function getClubMembershipIsActive(token: string): Promise<boolean> {
+  if (!token) return false;
+  const anonKey = Deno.env.get("SUPABASE_ANON_KEY");
+  if (!anonKey) throw new Error("Não foi possível validar a participação no Clube. Tente novamente.");
+  const userClient = createClient(SUPABASE_URL, anonKey, {
+    auth: { persistSession: false, autoRefreshToken: false },
+    global: { headers: { Authorization: "Bearer " + token } }
+  });
+  const { data, error } = await userClient.rpc("get_club_membership_state");
+  if (error) {
+    console.error("create-payment-order club membership validation failed:", error);
+    throw new Error("Não foi possível confirmar a participação no Clube. Tente novamente.");
+  }
+  return data?.is_member === true && data?.profile_complete === true;
+}
+
 type CatalogProduct = {
   id: string | number;
   esgotado?: boolean;
@@ -118,6 +134,7 @@ type CatalogProduct = {
   categoria?: unknown;
   tipoProduto?: unknown;
   sku?: unknown;
+  precoAntigo?: unknown;
 };
 
 async function loadCatalog(): Promise<Map<string, CatalogProduct>> {
@@ -464,12 +481,7 @@ Deno.serve(async (req: Request) => {
 
     // Benefícios de entrega são definidos exclusivamente pelo banco.
     const nowIso = new Date().toISOString();
-    const { data: clubMembership, error: clubMembershipError } = await admin.from("club_memberships")
-      .select("active")
-      .eq("user_id", customerId)
-      .maybeSingle();
-    if (clubMembershipError) throw clubMembershipError;
-    const isClubMember = clubMembership?.active === true;
+    const isClubMember = await getClubMembershipIsActive(token);
 
     // O preço promocional do catálogo é reservado a membros ativos do Clube.
     // Visitantes e clientes sem adesão ativa pagam o preço regular (precoAntigo).
@@ -479,8 +491,11 @@ Deno.serve(async (req: Request) => {
       if (!product) throw new Error("Produto indisponível para recalcular o preço.");
       const clubPrice = cents(product.preco);
       const regularPrice = Number(product.precoAntigo);
-      const hasClubPromotion = Number.isFinite(regularPrice) && regularPrice > clubPrice;
-      const unitCents = hasClubPromotion && !isClubMember ? cents(regularPrice) : clubPrice;
+      const regularPriceCents = Number.isFinite(regularPrice) && regularPrice > 0
+        ? cents(regularPrice)
+        : clubPrice;
+      const hasClubPromotion = regularPriceCents > clubPrice;
+      const unitCents = hasClubPromotion && !isClubMember ? regularPriceCents : clubPrice;
       if (unitCents < 1) throw new Error("Um produto está sem preço válido. Fale com a Luxuriosa.");
       item.unit_price = unitCents / 100;
       item.product_snapshot.club_promotion = hasClubPromotion;
