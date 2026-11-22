@@ -51,6 +51,15 @@ function renderState(state) {
   } else {
     status.textContent = "Entre para o Clube gratuitamente para liberar os preços promocionais e as tarifas especiais.";
   }
+  if (!isMember && state?.profile_complete === false) {
+    const link = document.createElement("a");
+    link.href = "/login.html#account-profile-section";
+    link.textContent = "Completar meu cadastro";
+    link.style.display = "inline-block";
+    link.style.marginTop = "7px";
+    link.style.fontWeight = "700";
+    status.append(document.createElement("br"), link);
+  }
   status.classList.add("show");
   $("saveClub").textContent = isMember ? "SALVAR PREFERÊNCIAS" : "ENTRAR NO CLUBE GRATUITAMENTE";
 }
