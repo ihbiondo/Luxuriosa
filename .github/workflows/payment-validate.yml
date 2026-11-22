@@ -22,14 +22,12 @@ on:
       - "tests/consent-ui.test.mjs"
       - "tests/product-css.test.mjs"
       - "tests/checkout-payer.test.mjs"
-      - "tests/freight-kit.test.mjs"
       - "portal/**"
       - "experiencias/**"
       - "educacao/interatividade/**"
       - "js/clientes.js"
       - "js/carrinho.js"
       - "supabase/functions/create-payment-order/index.ts"
-      - "supabase/functions/create-payment-order/freight.mjs"
       - "supabase/functions/infinitepay-webhook/**"
       - "tests/infinitepay-webhook-notification.test.mjs"
       - "supabase/migrations/20261118162000_add_order_payer_identity.sql"
@@ -94,7 +92,6 @@ on:
       - "js/clientes.js"
       - "js/carrinho.js"
       - "supabase/functions/create-payment-order/index.ts"
-      - "supabase/functions/create-payment-order/freight.mjs"
       - "supabase/functions/infinitepay-webhook/**"
       - "tests/infinitepay-webhook-notification.test.mjs"
       - "supabase/migrations/20261118162000_add_order_payer_identity.sql"
@@ -197,7 +194,6 @@ jobs:
           node --test tests/pedido-whatsapp.test.mjs
           node --test tests/checkout-payer.test.mjs
           node --test tests/infinitepay-webhook-notification.test.mjs
-          node --test tests/freight-kit.test.mjs
           node --test tests/product-featured.test.mjs
           node --test tests/consent-ui.test.mjs
           node --test tests/product-css.test.mjs
@@ -394,7 +390,6 @@ jobs:
           cp "$GITHUB_WORKSPACE/supabase/migrations/20261119115544_add_account_privacy_acceptances_user_idx.sql" "$test_root/supabase/migrations/"
           mkdir -p "$test_root/supabase/functions/create-payment-order"
           cp "$GITHUB_WORKSPACE/supabase/functions/create-payment-order/index.ts" "$test_root/supabase/functions/create-payment-order/index.ts"
-          cp "$GITHUB_WORKSPACE/supabase/functions/create-payment-order/freight.mjs" "$test_root/supabase/functions/create-payment-order/freight.mjs"
           # O supabase/config.toml contém a configuração do webhook. Copia a
           # função inteira para a pilha descartável, mesmo sem invocá-la no E2E.
           mkdir -p "$test_root/supabase/functions/infinitepay-webhook/_shared"

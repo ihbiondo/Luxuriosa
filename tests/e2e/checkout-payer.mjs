@@ -149,9 +149,8 @@ try {
 
   await page.locator("#cartFulfillmentMethod").selectOption("delivery");
   await page.locator("#cartDeliveryCity").selectOption("bauru");
-  assert.match(await page.locator("#cartFreightValue").innerText(), /R\$\s*0,00/,
-    "Pedido com kit em Bauru deve receber frete grátis.");
-  assert.match(await page.locator("#cartFulfillmentNote").innerText(), /Frete grátis aplicado/i);
+  assert.match(await page.locator("#cartFreightValue").innerText(), /R\$\s*15,00/,
+    "Pedido com kit em Bauru deve pagar a tarifa normal de entrega.");
 
   await page.locator("#cartCheckout").click();
   await page.waitForFunction(() =>
@@ -184,9 +183,8 @@ try {
   assert.match(message, /Subtotal estimado dos produtos/i);
   assert.ok(message.includes("🛍️"), "A mensagem deve conter emojis.");
   assert.match(message, /ENTREGA/i);
-  assert.match(message, /Frete: R\$\s*0,00/i);
+  assert.match(message, /Frete: R\$\s*15,00/i);
   assert.match(message, /Total estimado/i);
-  assert.match(message, /Frete grátis aplicado por conter kit em pedido com entrega em Bauru/i);
   assert.match(message, /link de pagamento ou a chave PIX/i);
   assert.match(message, /O pedido só será confirmado após a identificação do pagamento/i);
 
