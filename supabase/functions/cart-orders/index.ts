@@ -5,7 +5,21 @@ const SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 const admin = createClient(SUPABASE_URL, SERVICE_ROLE_KEY, {
   auth: { persistSession: false, autoRefreshToken: false }
 });
+function isLocalSupabaseUrl(value: string): boolean {
+  try {
+    const url = new URL(value);
+    return url.protocol === "http:" &&
+      ["kong", "localhost", "127.0.0.1", "host.docker.internal"].includes(url.hostname);
+  } catch {
+    return false;
+  }
+}
+
+// A origem local só é autorizada no ambiente E2E descartável, nunca no projeto hospedado.
+const LOCAL_E2E_MODE =
+  Deno.env.get("LUX_E2E_LOCAL_MODE") === "true" && isLocalSupabaseUrl(SUPABASE_URL);
 const allowedOrigins = new Set(["https://luxuriosa.com.br", "https://www.luxuriosa.com.br"]);
+if (LOCAL_E2E_MODE) allowedOrigins.add("http://127.0.0.1:4173");
 const CATALOG_URL = "https://luxuriosa.com.br/data/produtos.json";
 
 async function sha256Hex(value: string): Promise<string> {
