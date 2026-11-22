@@ -148,6 +148,22 @@ function total(items: ReturnType<typeof cleanItems>) {
   return Math.round(items.reduce((sum, item) => sum + item.quantity * item.unit_price, 0) * 100) / 100;
 }
 
+async function getClubMembershipIsActive(token: string): Promise<boolean> {
+  if (!token) return false;
+  const anonKey = Deno.env.get("SUPABASE_ANON_KEY");
+  if (!anonKey) throw new Error("Não foi possível validar a participação no Clube. Tente novamente.");
+  const userClient = createClient(SUPABASE_URL, anonKey, {
+    auth: { persistSession: false, autoRefreshToken: false },
+    global: { headers: { Authorization: "Bearer " + token } }
+  });
+  const { data, error } = await userClient.rpc("get_club_membership_state");
+  if (error) {
+    console.error("cart-orders club membership validation failed:", error);
+    throw new Error("Não foi possível confirmar a participação no Clube. Tente novamente.");
+  }
+  return data?.is_member === true && data?.profile_complete === true;
+}
+
 async function recordMarketingConsent(cartId: string, userId: string | null, customer: any, now: string) {
   const name = cleanText(customer?.name, 160);
   const phone = cleanText(customer?.phone, 30);
@@ -259,15 +275,7 @@ Deno.serve(async (req: Request) => {
     }
     if (!withinRateLimit) return response({ error: "Muitas solicitações. Aguarde um instante e tente novamente." }, 429, origin);
     const catalog = await loadCatalog();
-    let isClubMember = false;
-    if (userId) {
-      const { data: membership, error: membershipError } = await admin.from("club_memberships")
-        .select("active")
-        .eq("user_id", userId)
-        .maybeSingle();
-      if (membershipError) throw membershipError;
-      isClubMember = membership?.active === true;
-    }
+    const isClubMember = userId ? await getClubMembershipIsActive(token) : false;
     const items = cleanItems(body.items || [], catalog, isClubMember);
     const subtotal = total(items);
     if (subtotal > 1000000) return response({ error: "Valor do carrinho inválido." }, 400, origin);
