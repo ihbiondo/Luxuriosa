@@ -274,20 +274,18 @@ async function auditCartAndCheckout(page) {
 
   assert.ok(Number.isFinite(product.preco) && product.preco > 0,
     "O produto usado no teste deve ter preço válido.");
-  const cartSnapshotPromise = new Promise(resolve => {
-    page.on("request", request => {
-      if (!request.url().includes("/functions/v1/cart-orders")) return;
-      try {
-        const payload = request.postDataJSON();
-        if (payload && payload.action === "cart_snapshot" &&
-            payload.analytics_consent === true &&
-            Array.isArray(payload.items) &&
-            payload.items.some(item => String(item.id) === product.id)) {
-          resolve(payload);
-        }
-      } catch (_) {}
-    });
-  });
+  const cartSnapshotPromise = page.waitForRequest(request => {
+    if (!request.url().includes("/functions/v1/cart-orders")) return false;
+    try {
+      const payload = request.postDataJSON();
+      return Boolean(payload && payload.action === "cart_snapshot" &&
+        payload.analytics_consent === true &&
+        Array.isArray(payload.items) &&
+        payload.items.some(item => String(item.id) === product.id));
+    } catch (_) {
+      return false;
+    }
+  }, { timeout: 15000 }).then(request => request.postDataJSON());
 
   await page.evaluate(item => {
     localStorage.removeItem("luxuriosa_carrinho");
