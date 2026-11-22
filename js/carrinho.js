@@ -1236,19 +1236,13 @@
     }
 
     var finalizar = $("cartCheckout");
-    var temIndisponivel = carrinho.some(function (item) {
-      return item.indisponivel;
-    });
 
     if (finalizar) {
-      var aguardandoCatalogo = !catalogoSincronizado;
-      finalizar.disabled = aguardandoCatalogo || temIndisponivel;
+      finalizar.disabled = carrinho.length === 0;
       finalizar.setAttribute("aria-disabled", finalizar.disabled ? "true" : "false");
-      finalizar.title = aguardandoCatalogo
-        ? "Aguarde a conferência dos preços e da disponibilidade."
-        : temIndisponivel
-          ? "Remova os itens indisponíveis para continuar."
-          : "";
+      finalizar.title = finalizar.disabled
+        ? "Adicione produtos ao carrinho para continuar."
+        : "Enviar o resumo do carrinho pelo WhatsApp e confirmar valores, disponibilidade e entrega.";
     }
 
 
@@ -1428,47 +1422,33 @@
   function montarMensagemPedido() {
 
     var linhas = [
-      "Olá! Quero fazer um pedido na *Luxuriosa*.",
+      "Olá! Quero concluir meu pedido na *Luxuriosa*.",
       "",
-      "*RESUMO DO PEDIDO*"
+      "*RESUMO DO CARRINHO*"
     ];
 
     carrinho.forEach(function (item) {
+      var variacaoKit = item.kit_variant_name ? " (Dado: " + item.kit_variant_name + ")" : "";
+      var observacao = item.indisponivel ? " — *consultar disponibilidade*" : "";
       linhas.push(
-        "• " + item.nome + " — " + item.quantidade + "x — " +
-        formatarPreco(item.preco * item.quantidade)
+        "• " + item.nome + variacaoKit + " — " + item.quantidade + "x — " +
+        formatarPreco(item.preco * item.quantidade) + observacao
       );
     });
 
     linhas.push(
       "",
-      "*Subtotal dos produtos:* " + formatarPreco(valorTotal()),
-      "_Condição do frete conforme o destino e os itens do pedido:_",
+      "*Subtotal estimado dos produtos:* " + formatarPreco(valorTotal()),
       "",
-      "*CONDIÇÕES DE ENTREGA*",
-      "• Sem Clube: Bauru R$ 15,00; Tibiriçá R$ 20,00; Agudos, Piratininga e Pederneiras R$ 25,00; Lençóis Paulista e Borebi R$ 50,00.",
-      "• Clube gratuito: Bauru R$ 10,00; Tibiriçá R$ 15,00; Agudos, Piratininga e Pederneiras R$ 20,00; Lençóis Paulista e Borebi R$ 40,00.",
-      "• Lençóis Paulista e Borebi já incluem pedágio. Demais localidades: frete sob consulta pelo atendimento.",
-      "*PRÓXIMO PASSO*",
-      "Gostaria de confirmar a disponibilidade, os tamanhos e a entrega.",
-      "_O envio desta mensagem não confirma o pedido nem processa pagamento._"
+      "*CONFIRMAÇÃO DO PEDIDO*",
+      "• Confirmar disponibilidade e valores atualizados dos produtos.",
+      "• Informar o frete e o prazo para meu endereço/CEP.",
+      "• Após a confirmação, receber um link de pagamento ou a chave PIX.",
+      "",
+      "_Os valores, a disponibilidade, o frete e o prazo serão confirmados pela equipe. O pedido só será confirmado após a identificação do pagamento._"
     );
 
-    if (carrinho.some(function (item) {
-      return String(item && item.categoria || "").trim().toLowerCase() === "kits";
-    })) {
-      linhas.splice(
-        linhas.indexOf("*PRÓXIMO PASSO*"),
-        0,
-        "• Pedidos com kit têm frete gratuito em Bauru/SP, inclusive quando acompanhados de produtos avulsos. A condição não se aplica a Tibiriçá; nas demais localidades, valem as tarifas da tabela."
-      );
-    }
-
-    var mensagem = linhas.join("\n");
-
-
-    return mensagem;
-
+    return linhas.join("\n");
   }
 
 
@@ -1478,32 +1458,32 @@
       return;
     }
 
-    if (!catalogoSincronizado) {
-      window.alert("Estamos conferindo os preços e a disponibilidade dos produtos. Aguarde alguns segundos e tente novamente.");
-      return;
+    if (window.LuxuriosaMedicao && typeof window.LuxuriosaMedicao.registrar === "function") {
+      window.LuxuriosaMedicao.registrar("begin_checkout", {
+        quantity: quantidadeTotal(),
+        method: "whatsapp"
+      });
     }
 
-    if (carrinho.some(function (item) { return item.indisponivel; })) {
-      window.alert("Há itens indisponíveis no carrinho. Remova-os antes de continuar o pedido.");
-      return;
-    }
-
-    /* Não contorna a revisão dos dados caso o módulo de checkout falhe. */
-    if (
-      window.LuxuriosaClientes &&
-      typeof window.LuxuriosaClientes.iniciarFinalizacao === "function"
-    ) {
-      if (window.LuxuriosaMedicao && typeof window.LuxuriosaMedicao.registrar === "function") {
-        window.LuxuriosaMedicao.registrar("begin_checkout", { quantity: quantidadeTotal() });
+    /* Registra o avanço no funil sem criar pedido nem afirmar que houve venda. */
+    if (window.LuxuriosaInteligencia) {
+      if (typeof window.LuxuriosaInteligencia.registrarEtapa === "function") {
+        window.LuxuriosaInteligencia.registrarEtapa("checkout_started", carrinho)
+          .catch(function (erro) {
+            console.warn("Luxuriosa: não foi possível registrar o início da finalização.", erro);
+          });
       }
-      window.LuxuriosaClientes.iniciarFinalizacao();
-      return;
+      if (typeof window.LuxuriosaInteligencia.registrarEvento === "function") {
+        window.LuxuriosaInteligencia.registrarEvento("whatsapp_opened")
+          .catch(function (erro) {
+            console.warn("Luxuriosa: não foi possível registrar a abertura do WhatsApp.", erro);
+          });
+      }
     }
 
-    window.alert("Não foi possível abrir a etapa de dados do pedido. Atualize a página e tente novamente. Se o problema continuar, fale com a Luxuriosa pelo botão de WhatsApp do site.");
+    abrirWhatsApp(montarMensagemPedido());
 
   }
-
 
   /* =======================================================
      EVENTOS

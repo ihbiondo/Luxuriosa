@@ -277,26 +277,31 @@ async function auditCartAndCheckout(page) {
   await page.evaluate(item => {
     localStorage.removeItem("luxuriosa_carrinho");
     localStorage.setItem("luxuriosa_carrinho", JSON.stringify([item]));
+    localStorage.setItem("lux_cookie_consent_v1", JSON.stringify({
+      version: 2,
+      updatedAt: new Date().toISOString(),
+      necessary: true,
+      analytics: true,
+      marketing: false
+    }));
   }, product);
+
+  const cartSnapshotPromise = page.waitForRequest(request => {
+    if (!request.url().includes("/functions/v1/cart-orders")) return false;
+    try {
+      const payload = request.postDataJSON();
+      return Boolean(payload && payload.action === "cart_snapshot" &&
+        payload.analytics_consent === true &&
+        Array.isArray(payload.items) &&
+        payload.items.some(item => String(item.id) === product.id));
+    } catch (_) {
+      return false;
+    }
+  }, { timeout: 15000 }).then(request => request.postDataJSON());
 
   await page.goto(`${BASE_URL}/loja.html?abrirCarrinho=1#catalogo`, {
     waitUntil: "domcontentloaded"
   });
-
-  const localAuthSession = await page.evaluate(() => {
-    return Object.keys(localStorage)
-      .filter(key => /^sb-.*-auth-token$/.test(key))
-      .some(key => {
-        try {
-          const value = JSON.parse(localStorage.getItem(key) || "null");
-          return Boolean(value && value.access_token);
-        } catch (_) {
-          return false;
-        }
-      });
-  });
-  assert.ok(localAuthSession,
-    "A sessão autenticada da conta E2E deve permanecer disponível no checkout.");
 
   // Aceita o aviso etário somente no navegador descartável do teste.
   const ageButtons = ["#gateYes", "#ageConfirm"];
@@ -381,75 +386,93 @@ async function auditCartAndCheckout(page) {
   assert.equal(await page.locator("#cartItems .cart-qty").innerText(), "2",
     "O controle de quantidade deve atualizar o item na gaveta.");
 
-  // A conta A já está autenticada no Supabase descartável deste E2E.
-  // A etapa registra apenas a abertura do checkout; nenhum dado é enviado.
+  // O checkout novo não exige cadastro: valida o resumo e a abertura do WhatsApp sem enviar mensagem real.
   await page.evaluate(() => {
-    if (window.LuxuriosaInteligencia &&
-        typeof window.LuxuriosaInteligencia.registrarEtapa === "function") {
-      window.LuxuriosaInteligencia.registrarEtapa = () => Promise.resolve();
+    window.__capturedWhatsAppUrl = "";
+    window.open = function (url) {
+      window.__capturedWhatsAppUrl = String(url || "");
+      return null;
+    };
+  });
+
+  // O envio do snapshot é a medição de carrinho já existente; confirma que o conteúdo
+  // do carrinho chega ao endpoint de inteligência quando há consentimento analítico.
+  const cartSnapshot = await cartSnapshotPromise;
+  assert.ok(cartSnapshot.items.some(item => String(item.id) === product.id),
+    "A inteligência deve registrar o produto no snapshot do carrinho.");
+  assert.equal(cartSnapshot.analytics_consent, true,
+    "O snapshot só deve ser enviado com consentimento analítico.");
+
+  const checkoutStartedPromise = page.waitForRequest(request => {
+    if (!request.url().includes("/functions/v1/cart-orders")) return false;
+    try {
+      const payload = request.postDataJSON();
+      return Boolean(payload && payload.action === "checkout_started" &&
+        Array.isArray(payload.items) &&
+        payload.items.some(item => String(item.id) === product.id));
+    } catch (_) {
+      return false;
     }
-  });
+  }, { timeout: 15000 }).then(request => request.postDataJSON());
+
+  const whatsappOpenedPromise = page.waitForRequest(request => {
+    if (!request.url().includes("/functions/v1/cart-orders")) return false;
+    try {
+      const payload = request.postDataJSON();
+      return Boolean(payload && payload.action === "site_event" &&
+        payload.event_name === "whatsapp_opened");
+    } catch (_) {
+      return false;
+    }
+  }, { timeout: 15000 }).then(request => request.postDataJSON());
+
   await page.locator("#cartCheckout").click();
-  await page.locator("#customerOverlay:not([hidden])").waitFor({
-    state: "visible",
-    timeout: 20000
-  });
+  await page.waitForFunction(() =>
+    typeof window.__capturedWhatsAppUrl === "string" &&
+    window.__capturedWhatsAppUrl.length > 0,
+    null,
+    { timeout: 10000 }
+  );
 
-  async function inspectCheckout(label) {
-    const metrics = await page.evaluate(() => {
-      const overlay = document.querySelector("#customerOverlay");
-      const dialog = overlay?.querySelector(".customer-dialog");
-      const rect = dialog?.getBoundingClientRect();
-      const fields = [...(dialog?.querySelectorAll("input, select, textarea, button") || [])]
-        .filter(element => !element.hidden && element.getClientRects().length)
-        .map(element => {
-          const box = element.getBoundingClientRect();
-          return {
-            tag: element.tagName.toLowerCase(),
-            id: element.id,
-            left: Math.round(box.left),
-            right: Math.round(box.right),
-            width: Math.round(box.width)
-          };
-        });
-      return {
-        viewport: document.documentElement.clientWidth,
-        document: document.documentElement.scrollWidth,
-        overlayVisible: Boolean(overlay && !overlay.hidden),
-        dialog: rect ? {
-          left: Math.round(rect.left),
-          right: Math.round(rect.right),
-          width: Math.round(rect.width),
-          height: Math.round(rect.height)
-        } : null,
-        fields
-      };
-    });
-    assert.ok(metrics.overlayVisible, label + ": etapa de dados não abriu.");
-    assert.ok(metrics.document <= metrics.viewport + 1,
-      label + ": página excedeu a largura da tela: " + JSON.stringify(metrics));
-    assert.ok(metrics.dialog && metrics.dialog.left >= -1 &&
-      metrics.dialog.right <= metrics.viewport + 1,
-      label + ": formulário saiu da largura da tela: " + JSON.stringify(metrics));
-    const overflowingFields = metrics.fields.filter(field =>
-      field.left < metrics.dialog.left - 1 || field.right > metrics.dialog.right + 1
-    );
-    assert.equal(overflowingFields.length, 0,
-      label + ": campos ultrapassaram o formulário: " + JSON.stringify(overflowingFields));
-    return metrics;
-  }
+  const [checkoutStarted, whatsappOpened] = await Promise.all([
+    checkoutStartedPromise,
+    whatsappOpenedPromise
+  ]);
+  assert.ok(checkoutStarted.items.some(item => String(item.id) === product.id),
+    "A inteligência deve registrar os itens quando a pessoa inicia a finalização.");
+  assert.equal(whatsappOpened.event_name, "whatsapp_opened",
+    "A inteligência deve registrar o clique que encaminha ao WhatsApp.");
 
+  const whatsappUrl = await page.evaluate(() => window.__capturedWhatsAppUrl);
+  const parsedWhatsAppUrl = new URL(whatsappUrl);
+  assert.equal(parsedWhatsAppUrl.hostname, "wa.me",
+    "O botão de finalizar deve abrir o WhatsApp.");
+  assert.equal(parsedWhatsAppUrl.pathname, "/5514996355924",
+    "O WhatsApp deve usar o número oficial da Luxuriosa.");
+
+  const message = parsedWhatsAppUrl.searchParams.get("text") || "";
+  assert.ok(message.includes("*RESUMO DO CARRINHO*"),
+    "A mensagem deve identificar o resumo do carrinho.");
+  assert.ok(message.includes(product.nome),
+    "A mensagem deve incluir o produto selecionado.");
+  assert.ok(message.includes("2x"),
+    "A mensagem deve preservar a quantidade selecionada.");
+  assert.ok(message.includes("Subtotal estimado dos produtos"),
+    "A mensagem deve identificar o subtotal como estimado.");
+  assert.ok(message.includes("link de pagamento ou a chave PIX"),
+    "A mensagem deve explicar que o pagamento será enviado manualmente.");
+  assert.ok(message.includes("O pedido só será confirmado após a identificação do pagamento"),
+    "A mensagem não deve afirmar que o pedido já está pago ou confirmado.");
+
+  assert.equal(await page.locator("#customerOverlay").evaluate(el => el.hidden), true,
+    "O fluxo de WhatsApp não deve abrir o antigo formulário de cadastro/checkout.");
+
+  await captureScreenshot(page, "checkout-whatsapp-mobile-390");
   await page.setViewportSize({ width: 320, height: 740 });
-  await inspectCheckout("Checkout em 320 px");
-  await captureScreenshot(page, "checkout-dados-mobile-320");
+  await inspectCart("Carrinho com finalização WhatsApp em 320 px");
+  await captureScreenshot(page, "checkout-whatsapp-mobile-320");
 
-  await page.setViewportSize({ width: 390, height: 844 });
-  await inspectCheckout("Checkout em 390 px");
-  await captureScreenshot(page, "checkout-dados-mobile-390");
-
-  // Fecha sem revisar, cadastrar endereço, gerar cobrança ou iniciar pagamento.
-  await page.locator("#customerClose").click();
-  await page.locator("#customerOverlay[hidden]").waitFor({ state: "attached" });
+  // Não há cobrança real nem mensagem enviada: window.open foi interceptado no navegador de teste.
   await page.evaluate(() => localStorage.removeItem("luxuriosa_carrinho"));
 }
 
