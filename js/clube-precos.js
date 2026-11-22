@@ -101,9 +101,11 @@
         state = {
           loaded: true,
           authenticated: true,
-          isMember: membership.is_member === true,
-          profileComplete: true,
-          missingFields: [],
+          isMember: membership.is_member === true && membership.profile_complete === true,
+          profileComplete: membership.profile_complete === true,
+          missingFields: Array.isArray(membership.profile_missing_fields)
+            ? membership.profile_missing_fields.filter(function (field) { return typeof field === "string"; })
+            : [],
           error: false
         };
       } catch (error) {
