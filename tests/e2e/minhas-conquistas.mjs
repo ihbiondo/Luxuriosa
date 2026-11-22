@@ -430,9 +430,12 @@ async function auditCartAndCheckout(page) {
 
   await page.locator("#cartFulfillmentMethod").selectOption("delivery");
   await page.locator("#cartDeliveryCity").selectOption("agudos");
-  await page.locator("#cartClubMember").check();
+  await page.waitForFunction(() => {
+    const control = document.querySelector("#cartClubMember");
+    return control && control.disabled && control.checked;
+  }, null, { timeout: 15000 });
   assert.match(await page.locator("#cartFreightValue").innerText(), /R\$\s*20,00/,
-    "Agudos deve aplicar a tarifa de membro do Clube.");
+    "Agudos deve aplicar automaticamente a tarifa de membro validado pelo servidor.");
   const subtotalText = await page.locator("#cartTotal").innerText();
   const subtotalNumber = Number(subtotalText.replace(/[^0-9,]/g, "").replace(",", ".")) || 0;
   const expectedTotal = "R$ " + (subtotalNumber + 20).toLocaleString("pt-BR", {
@@ -495,6 +498,40 @@ async function auditCartAndCheckout(page) {
 
   // Não há cobrança real nem mensagem enviada: window.open foi interceptado no navegador de teste.
   await page.evaluate(() => localStorage.removeItem("luxuriosa_carrinho"));
+}
+
+async function upsertLocalRow(table, conflictColumn, row) {
+  const url = new URL(SUPABASE_URL + "/rest/v1/" + table);
+  url.searchParams.set("on_conflict", conflictColumn);
+  const response = await fetch(url, {
+    method: "POST",
+    headers: {
+      apikey: SERVICE_ROLE_KEY,
+      Authorization: "Bearer " + SERVICE_ROLE_KEY,
+      "Content-Type": "application/json",
+      Prefer: "resolution=merge-duplicates,return=minimal"
+    },
+    body: JSON.stringify(row)
+  });
+  const detail = await response.text();
+  assert.ok(response.ok, "Não foi possível preparar membro E2E em " + table + ": " + response.status + " " + detail);
+}
+
+async function activateCompleteClubMember(user) {
+  await upsertLocalRow("profiles", "id", {
+    id: user.id,
+    username: "e2e-clube-" + user.id.slice(0, 8),
+    full_name: "Conta E2E Clube",
+    display_name: "Conta E2E Clube",
+    phone: "14988887777",
+    birth_date: "1995-01-01"
+  });
+  await upsertLocalRow("club_memberships", "user_id", {
+    user_id: user.id,
+    active: true,
+    joined_at: new Date().toISOString(),
+    terms_version: "luxuriosa-club-terms-v1-2026-11"
+  });
 }
 
 async function readResultsForUser(userId) {
@@ -633,6 +670,9 @@ try {
   await pageA.setViewportSize({ width: 1440, height: 1000 });
   await assertNoHorizontalOverflow(pageA, "Histórico desktop em 1440 px");
   await captureScreenshot(pageA, "dashboard-historico-desktop-1440");
+
+  // Prepara um membro completo no banco descartável para testar o frete especial.
+  await activateCompleteClubMember(userA);
 
   // 7. Carrinho e formulário de dados responsivos, sem efetuar compra.
   await auditCartAndCheckout(pageA);
