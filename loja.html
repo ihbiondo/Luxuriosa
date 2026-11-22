@@ -556,6 +556,46 @@
       </div>
 
 
+      <section class="cart-fulfillment" aria-labelledby="cartFulfillmentTitle">
+        <h3 id="cartFulfillmentTitle">📦 Como deseja receber?</h3>
+        <label for="cartFulfillmentMethod">Forma de recebimento</label>
+        <select id="cartFulfillmentMethod">
+          <option value="">Selecione uma opção</option>
+          <option value="delivery">🚚 Entrega</option>
+          <option value="pickup">📍 Retirada agendada</option>
+        </select>
+
+        <div class="cart-delivery-fields" id="cartDeliveryFields" hidden>
+          <label for="cartDeliveryCity">Localidade da entrega</label>
+          <select id="cartDeliveryCity">
+            <option value="">Selecione sua cidade</option>
+            <option value="bauru">Bauru (exceto Tibiriçá)</option>
+            <option value="tibirica">Tibiriçá</option>
+            <option value="agudos">Agudos</option>
+            <option value="piratininga">Piratininga</option>
+            <option value="pederneiras">Pederneiras</option>
+            <option value="lencois">Lençóis Paulista</option>
+            <option value="borebi">Borebi</option>
+            <option value="other">Outra localidade</option>
+          </select>
+          <label class="cart-club-row" for="cartClubMember">
+            <input id="cartClubMember" type="checkbox">
+            <span>Tenho cadastro ativo no Clube Luxuriosa</span>
+          </label>
+          <p class="cart-fulfillment-hint">A tarifa especial de membro depende da confirmação do cadastro.</p>
+        </div>
+
+        <div class="cart-total-row cart-fee-row">
+          <span>Frete / retirada</span>
+          <strong id="cartFreightValue" aria-live="polite">—</strong>
+        </div>
+        <div class="cart-total-row cart-grand-total-row">
+          <span>Total estimado</span>
+          <strong id="cartGrandTotal" aria-live="polite">—</strong>
+        </div>
+        <p class="cart-fulfillment-note" id="cartFulfillmentNote" aria-live="polite">Escolha entrega ou retirada para calcular o valor final estimado.</p>
+      </section>
+
       <button
         class="btn primary cart-checkout"
         id="cartCheckout"
@@ -810,7 +850,7 @@
 
   <script src="js/catalogo.js?v=20261119-unified-product-card-v1"></script>
   <script src="js/inteligencia.js?v=20261113-dado-online"></script>
-  <script src="js/carrinho.js?v=20261122-whatsapp-checkout-v1"></script>
+  <script src="js/carrinho.js?v=20261122-fulfillment-v1"></script>
   <script src="js/clientes.js?v=20261120-tibirica-minimum-v1"></script>
   <script src="js/app.js?v=20261120-desktop-backdrop-v1"></script>
 
