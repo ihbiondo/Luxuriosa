@@ -431,7 +431,7 @@
         var avisoClube = criarElemento(
           "span",
           "club-promo-note",
-          "🏷️ Promoção exclusiva do Clube Luxuriosa · Cadastre-se grátis para aproveitar"
+          "🏷️ Promoção exclusiva para membros do Clube Luxuriosa · Cadastre-se grátis para aproveitar"
         );
         avisoClube.style.display = "block";
         avisoClube.style.flexBasis = "100%";
