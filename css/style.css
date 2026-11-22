@@ -2448,7 +2448,7 @@ footer {
   width: 16px;
   height: 16px;
   flex: 0 0 16px;
-  accent-color: var(--burgundy);
+  accent-color: #8b1e3f;
 }
 
 .cart-fulfillment-hint,
