@@ -30,7 +30,7 @@ const ALLOWED_ORIGINS = new Set(["https://luxuriosa.com.br", "https://www.luxuri
 if (LOCAL_E2E_MODE) ALLOWED_ORIGINS.add("http://127.0.0.1:4173");
 const CATALOG_URL = "https://luxuriosa.com.br/data/produtos.json";
 const CHECKOUT_URL = "https://api.checkout.infinitepay.io/links";
-const PAYMENT_CHECKOUT_PAYLOAD_VERSION = 8;
+const PAYMENT_CHECKOUT_PAYLOAD_VERSION = 9;
 const VARIABLE_DICE_KIT_IDS = new Set(["22", "23", "24", "27", "28", "29"]);
 const ALLOWED_DICE_VARIANT_IDS = new Set(["1", "2", "3"]);
 const CLUB_DISCOUNT_THRESHOLD_CENTS = 10000;
