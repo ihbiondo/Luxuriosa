@@ -52,6 +52,9 @@
     var accountLink = document.querySelector("[data-nav-account]");
     var authGroup = document.querySelector("[data-nav-auth-only-group]");
     var authLinks = document.querySelectorAll("[data-nav-auth-only]");
+    var hasPurchaseSurface = !!document.getElementById("cart") ||
+      !!document.querySelector("[data-add-to-cart]");
+    if (!accountLink && !authGroup && !hasPurchaseSurface) return;
     var membershipRequest = 0;
 
     function atualizarNavegacao(session) {
