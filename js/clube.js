@@ -70,7 +70,7 @@ $("clubForm").addEventListener("submit", async (event) => {
 
   await loadState();
   showMessage(data
-    ? "Pronto! Sua participação no Clube e suas preferências foram salvas."
+    ? "Pronto! Sua participação no Clube está ativa. Volte ao catálogo Luxuriosa para aproveitar as promoções exclusivas."
     : "Suas preferências foram salvas. Se quiser entrar no Clube, marque a opção de adesão e salve novamente.");
 });
 
