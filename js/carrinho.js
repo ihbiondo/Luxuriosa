@@ -262,6 +262,19 @@
       preco:
         precoNormalizado,
 
+      precoClube:
+        Number.isFinite(Number(item.precoClube)) && Number(item.precoClube) > 0
+          ? Number(item.precoClube)
+          : null,
+
+      precoRegular:
+        Number.isFinite(Number(item.precoRegular)) && Number(item.precoRegular) > 0
+          ? Number(item.precoRegular)
+          : null,
+
+      promocaoClube:
+        item.promocaoClube === true,
+
       imagem:
         String(
           item.imagem ||
@@ -543,6 +556,16 @@
 
         preco:
           Number(precoProduto) || 0,
+
+        precoClube:
+          Number(produto.preco) || null,
+
+        precoRegular:
+          Number(produto.precoAntigo) || null,
+
+        promocaoClube:
+          Number.isFinite(Number(produto.precoAntigo)) &&
+          Number(produto.precoAntigo) > Number(produto.preco),
 
         imagem:
           produto.imagem ||
@@ -1027,6 +1050,24 @@
             )
           )
         );
+
+        if (item.promocaoClube && Number(item.precoClube) > 0) {
+          var avisoPrecoClube = criarElemento(
+            "a",
+            "cart-item-club-promo",
+            membroClubeAtivo
+              ? "🏷️ Preço exclusivo para membros do Clube"
+              : "🏷️ Cadastre-se grátis no Clube e aproveite " + formatarPreco(item.precoClube)
+          );
+          avisoPrecoClube.href = "/clube/";
+          avisoPrecoClube.style.display = "block";
+          avisoPrecoClube.style.marginTop = "4px";
+          avisoPrecoClube.style.color = "#D4AF7C";
+          avisoPrecoClube.style.fontSize = "11px";
+          avisoPrecoClube.style.fontWeight = "600";
+          avisoPrecoClube.style.lineHeight = "1.4";
+          info.appendChild(avisoPrecoClube);
+        }
 
         if (item.kit_variant_name) {
           info.appendChild(
@@ -1897,6 +1938,10 @@
       item.indisponivel = false;
       item.motivoIndisponibilidade = "";
 
+      var precoClubeAtual = Number(produtoAtual.preco) || null;
+      var precoRegularAtual = Number(produtoAtual.precoAntigo) || null;
+      var promocaoClubeAtual = Number.isFinite(precoRegularAtual) &&
+        Number.isFinite(precoClubeAtual) && precoRegularAtual > precoClubeAtual;
       var nomeAtual = String(produtoAtual.nome || item.nome);
       var imagemAtual = String(produtoAtual.imagem || item.imagem || "");
       var categoriaAtual = String(produtoAtual.categoria || item.categoria || "");
@@ -1912,11 +1957,17 @@
 
       if (item.nome !== nomeAtual ||
           item.preco !== precoAtual ||
+          item.precoClube !== precoClubeAtual ||
+          item.precoRegular !== precoRegularAtual ||
+          item.promocaoClube !== promocaoClubeAtual ||
           item.imagem !== imagemAtual ||
           item.categoria !== categoriaAtual ||
           item.tamanhos !== tamanhosAtual) {
         item.nome = nomeAtual;
         item.preco = precoAtual;
+        item.precoClube = precoClubeAtual;
+        item.precoRegular = precoRegularAtual;
+        item.promocaoClube = promocaoClubeAtual;
         item.imagem = imagemAtual;
         item.categoria = categoriaAtual;
         item.tamanhos = tamanhosAtual;
