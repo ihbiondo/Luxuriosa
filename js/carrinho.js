@@ -1428,9 +1428,10 @@
     ];
 
     carrinho.forEach(function (item) {
+      var variacaoKit = item.kit_variant_name ? " (Dado: " + item.kit_variant_name + ")" : "";
       var observacao = item.indisponivel ? " — *consultar disponibilidade*" : "";
       linhas.push(
-        "• " + item.nome + " — " + item.quantidade + "x — " +
+        "• " + item.nome + variacaoKit + " — " + item.quantidade + "x — " +
         formatarPreco(item.preco * item.quantidade) + observacao
       );
     });
