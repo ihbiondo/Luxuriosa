@@ -22,12 +22,17 @@ on:
       - "tests/consent-ui.test.mjs"
       - "tests/product-css.test.mjs"
       - "tests/checkout-payer.test.mjs"
+      - "tests/club-promotions.test.mjs"
+      - "js/clube-precos.js"
+      - "js/clube.js"
+      - "supabase/migrations/20261122190000_club_membership_requires_complete_profile.sql"
       - "portal/**"
       - "experiencias/**"
       - "educacao/interatividade/**"
       - "js/clientes.js"
       - "js/carrinho.js"
       - "supabase/functions/create-payment-order/index.ts"
+      - "supabase/functions/cart-orders/index.ts"
       - "supabase/functions/infinitepay-webhook/**"
       - "tests/infinitepay-webhook-notification.test.mjs"
       - "supabase/migrations/20261118162000_add_order_payer_identity.sql"
@@ -92,6 +97,7 @@ on:
       - "js/clientes.js"
       - "js/carrinho.js"
       - "supabase/functions/create-payment-order/index.ts"
+      - "supabase/functions/cart-orders/index.ts"
       - "supabase/functions/infinitepay-webhook/**"
       - "tests/infinitepay-webhook-notification.test.mjs"
       - "supabase/migrations/20261118162000_add_order_payer_identity.sql"
@@ -191,6 +197,9 @@ jobs:
         run: |
           node --check js/clientes.js
           node --check js/carrinho.js
+          node --check js/clube-precos.js
+          node --check --input-type=module < js/clube.js
+          node --test tests/club-promotions.test.mjs
           node --test tests/pedido-whatsapp.test.mjs
           node --test tests/checkout-payer.test.mjs
           node --test tests/infinitepay-webhook-notification.test.mjs
@@ -200,6 +209,7 @@ jobs:
           node --test .github/scripts/account-registration.test.cjs
           node --test .github/scripts/google-oauth.test.cjs
           npx --yes esbuild@0.25.0 supabase/functions/create-payment-order/index.ts --format=esm --platform=neutral --outfile=/tmp/create-payment-order.js
+          npx --yes esbuild@0.25.0 supabase/functions/cart-orders/index.ts --format=esm --platform=neutral --outfile=/tmp/cart-orders.js
           npx --yes esbuild@0.25.0 supabase/functions/infinitepay-webhook/index.ts --format=esm --platform=neutral --outfile=/tmp/infinitepay-webhook.js
           npx --yes esbuild@0.25.0 supabase/functions/infinitepay-webhook/_shared/infinitepay-payment.ts --format=esm --platform=neutral --outfile=/tmp/infinitepay-payment.js
           node --input-type=module <<'NODE'
