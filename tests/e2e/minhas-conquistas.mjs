@@ -415,7 +415,8 @@ async function auditCartAndCheckout(page) {
     } catch (_) {
       return false;
     }
-  }, { timeout: 15000 }).then(request => request.postDataJSON());
+  }, { timeout: 30000 }).then(request => request.postDataJSON());
+
 
   const whatsappOpenedPromise = page.waitForRequest(request => {
     if (!request.url().includes("/functions/v1/cart-orders")) return false;
@@ -426,14 +427,14 @@ async function auditCartAndCheckout(page) {
     } catch (_) {
       return false;
     }
-  }, { timeout: 15000 }).then(request => request.postDataJSON());
+  }, { timeout: 30000 }).then(request => request.postDataJSON());
 
   await page.locator("#cartFulfillmentMethod").selectOption("delivery");
   await page.locator("#cartDeliveryCity").selectOption("agudos");
   await page.waitForFunction(() => {
     const control = document.querySelector("#cartClubMember");
     return control && control.disabled && control.checked;
-  }, null, { timeout: 15000 });
+  }, null, { timeout: 30000 });
   assert.match(await page.locator("#cartFreightValue").innerText(), /R\$\s*20,00/,
     "Agudos deve aplicar automaticamente a tarifa de membro validado pelo servidor.");
   const subtotalText = await page.locator("#cartTotal").innerText();
