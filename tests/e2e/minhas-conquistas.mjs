@@ -314,6 +314,8 @@ async function auditCartAndCheckout(page) {
   }
 
   await page.locator("#cart.open").waitFor({ state: "visible", timeout: 15000 });
+  await page.locator("#cartFulfillmentMethod").selectOption("delivery");
+  await page.locator("#cartDeliveryCity").selectOption("agudos");
   await page.waitForFunction(() => {
     const checkout = document.querySelector("#cartCheckout");
     return checkout && !checkout.disabled;
