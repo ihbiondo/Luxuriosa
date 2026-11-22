@@ -83,7 +83,12 @@ alter table public.order_items
 
 create table public.club_memberships (
   user_id uuid primary key references auth.users(id) on delete cascade,
-  active boolean not null default false
+  active boolean not null default false,
+  joined_at timestamptz not null default now(),
+  left_at timestamptz,
+  terms_version text not null default 'luxuriosa-club-terms-v1-2026-11',
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
 );
 
 create table public.management_inventory (
