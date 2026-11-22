@@ -60,6 +60,9 @@ test("cart-orders consulta a adesão real e recalcula preços no servidor", () =
   assert.match(cartOrders, /userClient\.rpc\("get_club_membership_state"\)/);
   assert.match(cartOrders, /data\?\.is_member === true && data\?\.profile_complete === true/);
   assert.match(cartOrders, /cleanItems\(body\.items \|\| \[\], catalog, isClubMember\)/);
+  assert.match(cartOrders, /const clubDiscountCents = 0/);
+  assert.match(cartOrders, /const totalCents = subtotalCents \+ \(shippingCents \|\| 0\)/);
+  assert.match(cartOrders, /club_discount_percent: 0/);
   assert.doesNotMatch(cartOrders, /admin\.from\("club_memberships"\)/);
 });
 
