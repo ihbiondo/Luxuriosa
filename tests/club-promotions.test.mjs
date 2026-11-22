@@ -22,6 +22,21 @@ const clubPromotions = catalog.produtos.filter((product) =>
   Number(product.precoAntigo) > Number(product.preco)
 );
 
+test("o Clube comunica somente os dois benefícios atuais", () => {
+  const planCard = clubPage.match(/<article class="plan-card">([\\s\\S]*?)<\\/article>/)?.[1] || "";
+  const landingBenefits = [...clubLanding.matchAll(/<div class="benefit">([\\s\\S]*?)<\\/div>/g)]
+    .map((match) => match[1]);
+
+  assert.equal((planCard.match(/<li>/g) || []).length, 2);
+  assert.match(planCard, /Promoções exclusivas em produtos selecionados/);
+  assert.match(planCard, /Frete com valores especiais para membros/);
+  assert.equal(landingBenefits.length, 2);
+  assert.match(landingBenefits[0], /Preços promocionais em produtos/);
+  assert.match(landingBenefits[1], /Frete com valor especial/);
+  assert.doesNotMatch(clubPage, /Acesso às vantagens e novidades do Clube|Área de membro para consultar sua participação/);
+  assert.doesNotMatch(clubLanding, /<strong>Área de membro<\\/strong>|<strong>Privacidade e autonomia<\\/strong>/);
+});
+
 test("todas as promoções do catálogo são identificadas como benefícios do Clube", () => {
   assert.equal(clubPromotions.length, 11);
   assert.match(catalogScript, /Promoção exclusiva para membros do Clube Luxuriosa/);
