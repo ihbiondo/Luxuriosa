@@ -147,6 +147,12 @@ try {
     }
   }, { timeout: 15000 }).then(request => request.postDataJSON());
 
+  await page.locator("#cartFulfillmentMethod").selectOption("delivery");
+  await page.locator("#cartDeliveryCity").selectOption("bauru");
+  assert.match(await page.locator("#cartFreightValue").innerText(), /R\$\s*0,00/,
+    "Pedido com kit em Bauru deve receber frete grátis.");
+  assert.match(await page.locator("#cartFulfillmentNote").innerText(), /Frete grátis aplicado/i);
+
   await page.locator("#cartCheckout").click();
   await page.waitForFunction(() =>
     typeof window.__capturedWhatsAppUrl === "string" &&
@@ -176,8 +182,32 @@ try {
   assert.match(message, /Kit Descoberta/i);
   assert.match(message, /Dado:\s*Hétero/i);
   assert.match(message, /Subtotal estimado dos produtos/i);
+  assert.ok(message.includes("🛍️"), "A mensagem deve conter emojis.");
+  assert.match(message, /ENTREGA/i);
+  assert.match(message, /Frete: R\$\s*0,00/i);
+  assert.match(message, /Total estimado/i);
+  assert.match(message, /Frete grátis aplicado por conter kit em pedido com entrega em Bauru/i);
   assert.match(message, /link de pagamento ou a chave PIX/i);
   assert.match(message, /O pedido só será confirmado após a identificação do pagamento/i);
+
+  // Retirada agendada em Bauru não adiciona frete ao pedido.
+  await page.locator("#cartFulfillmentMethod").selectOption("pickup");
+  assert.match(await page.locator("#cartFreightValue").innerText(), /R\$\s*0,00/,
+    "A retirada agendada deve ser gratuita.");
+  await page.evaluate(() => { window.__capturedWhatsAppUrl = ""; });
+  await page.locator("#cartCheckout").click();
+  await page.waitForFunction(() =>
+    typeof window.__capturedWhatsAppUrl === "string" &&
+    window.__capturedWhatsAppUrl.length > 0,
+    null,
+    { timeout: 10000 }
+  );
+  const pickupUrl = new URL(await page.evaluate(() => window.__capturedWhatsAppUrl));
+  const pickupMessage = pickupUrl.searchParams.get("text") || "";
+  assert.match(pickupMessage, /RETIRADA AGENDADA EM BAURU/i);
+  assert.match(pickupMessage, /Frete para retirada: R\$\s*0,00/i);
+  assert.match(pickupMessage, /Total estimado:/i);
+
 
   assert.equal(await page.locator("#customerOverlay").evaluate(element => element.hidden), true,
     "O novo fluxo não deve abrir o formulário antigo de dados de pagamento.");

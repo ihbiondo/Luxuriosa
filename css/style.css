@@ -2382,3 +2382,105 @@ footer {
 .product-pre-venda .product-purchase-row .btn {
   white-space: normal;
 }
+
+
+/* =========================================================
+   CHECKOUT — ENTREGA, RETIRADA E VALORES
+========================================================= */
+
+.cart-fulfillment {
+  display: grid;
+  gap: 9px;
+  margin: 4px 0 15px;
+  padding: 12px;
+  border: 1px solid rgba(212, 175, 124, .24);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, .025);
+}
+
+.cart-fulfillment h3 {
+  margin: 0 0 2px;
+  color: var(--blush);
+  font-family: var(--serif);
+  font-size: 19px;
+  font-weight: 400;
+}
+
+.cart-fulfillment > label,
+.cart-delivery-fields > label:not(.cart-club-row) {
+  color: var(--muted);
+  font-size: 10px;
+  letter-spacing: .04em;
+}
+
+.cart-fulfillment select {
+  width: 100%;
+  min-height: 42px;
+  padding: 9px 11px;
+  border: 1px solid rgba(212, 175, 124, .3);
+  border-radius: 8px;
+  background: #160f12;
+  color: var(--text);
+  font: inherit;
+  font-size: 12px;
+}
+
+.cart-delivery-fields {
+  display: grid;
+  gap: 8px;
+}
+
+.cart-delivery-fields[hidden] {
+  display: none !important;
+}
+
+.cart-club-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 34px;
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+.cart-club-row input {
+  width: 16px;
+  height: 16px;
+  flex: 0 0 16px;
+  accent-color: #8b1e3f;
+}
+
+.cart-fulfillment-hint,
+.cart-fulfillment-note {
+  margin: 0;
+  color: #aa969d;
+  font-size: 10px;
+  line-height: 1.55;
+}
+
+.cart-fulfillment-note {
+  color: var(--gold);
+}
+
+.cart-fee-row,
+.cart-grand-total-row {
+  margin: 2px 0 0;
+  padding-top: 9px;
+  border-top: 1px solid rgba(255, 255, 255, .07);
+}
+
+.cart-fee-row strong {
+  color: var(--text);
+  font-family: inherit;
+  font-size: 13px;
+}
+
+.cart-grand-total-row {
+  margin-top: 0;
+}
+
+.cart-grand-total-row strong {
+  color: var(--gold);
+  font-size: 22px;
+}

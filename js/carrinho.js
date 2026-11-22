@@ -27,6 +27,17 @@
   };
   var DICE_CHOICE_IDS = { "1": "2", "2": "1", "3": "3" };
 
+  /* Tarifas públicas de entrega em Bauru e região, em centavos. */
+  var DELIVERY_RATES = {
+    bauru: { label: "Bauru (exceto Tibiriçá)", standard: 1500, member: 1000, minimum: 2000 },
+    tibirica: { label: "Tibiriçá", standard: 2000, member: 1500, minimum: 5000 },
+    agudos: { label: "Agudos", standard: 2500, member: 2000, minimum: 5000 },
+    piratininga: { label: "Piratininga", standard: 2500, member: 2000, minimum: 5000 },
+    pederneiras: { label: "Pederneiras", standard: 2500, member: 2000, minimum: 5000 },
+    lencois: { label: "Lençóis Paulista", standard: 5000, member: 4000, minimum: 5000 },
+    borebi: { label: "Borebi", standard: 5000, member: 4000, minimum: 5000 }
+  };
+
   var carrinho = [];
   var catalogoSincronizado = false;
   var focoAnteriorCarrinho = null;
@@ -1236,15 +1247,15 @@
     }
 
     var finalizar = $("cartCheckout");
+    var resumoRecebimento = atualizarResumoRecebimento();
 
     if (finalizar) {
-      finalizar.disabled = carrinho.length === 0;
+      finalizar.disabled = carrinho.length === 0 || !resumoRecebimento.valid;
       finalizar.setAttribute("aria-disabled", finalizar.disabled ? "true" : "false");
       finalizar.title = finalizar.disabled
-        ? "Adicione produtos ao carrinho para continuar."
-        : "Enviar o resumo do carrinho pelo WhatsApp e confirmar valores, disponibilidade e entrega.";
+        ? "Adicione produtos e escolha a forma de recebimento para continuar."
+        : "Enviar o resumo do carrinho, frete e total estimado pelo WhatsApp.";
     }
-
 
     if (contador) {
 
@@ -1419,12 +1430,132 @@
      WHATSAPP / PEDIDO
      ======================================================= */
 
-  function montarMensagemPedido() {
+  function pedidoContemKit() {
+    return carrinho.some(function (item) {
+      return String(item.categoria || "")
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .trim()
+        .toLowerCase() === "kits";
+    });
+  }
 
+  function obterResumoRecebimento() {
+    var metodo = $("cartFulfillmentMethod") ? $("cartFulfillmentMethod").value : "";
+    var subtotal = valorTotal();
+
+    if (metodo === "pickup") {
+      return {
+        valid: true, method: "pickup", city: "", cityLabel: "",
+        clubMember: false, freight: 0, total: subtotal,
+        minimum: 0, minimumMet: true, freeBauruKit: false
+      };
+    }
+
+    if (metodo !== "delivery") {
+      return { valid: false, method: "", freight: null, total: null };
+    }
+
+    var cidade = $("cartDeliveryCity") ? $("cartDeliveryCity").value : "";
+    if (!cidade) {
+      return { valid: false, method: "delivery", city: "", freight: null, total: null };
+    }
+
+    var membroClube = Boolean($("cartClubMember") && $("cartClubMember").checked);
+    if (cidade === "other") {
+      return {
+        valid: true, method: "delivery", city: "other",
+        cityLabel: "Outra localidade", clubMember: membroClube,
+        freight: null, total: null, minimum: null, minimumMet: null,
+        freeBauruKit: false
+      };
+    }
+
+    var tarifa = DELIVERY_RATES[cidade];
+    if (!tarifa) {
+      return { valid: false, method: "delivery", city: cidade, freight: null, total: null };
+    }
+
+    var freteGratisKitBauru = cidade === "bauru" && pedidoContemKit();
+    var freteCentavos = freteGratisKitBauru ? 0 : (membroClube ? tarifa.member : tarifa.standard);
+    var minimo = tarifa.minimum;
+
+    return {
+      valid: true,
+      method: "delivery",
+      city: cidade,
+      cityLabel: tarifa.label,
+      clubMember: membroClube,
+      freight: freteCentavos / 100,
+      total: subtotal + (freteCentavos / 100),
+      minimum: minimo / 100,
+      minimumMet: Math.round(subtotal * 100) >= minimo,
+      freeBauruKit: freteGratisKitBauru,
+      tollIncluded: cidade === "lencois" || cidade === "borebi"
+    };
+  }
+
+  function atualizarResumoRecebimento() {
+    var metodo = $("cartFulfillmentMethod") ? $("cartFulfillmentMethod").value : "";
+    var camposEntrega = $("cartDeliveryFields");
+    var valorFrete = $("cartFreightValue");
+    var valorTotalGeral = $("cartGrandTotal");
+    var nota = $("cartFulfillmentNote");
+    var resumo = obterResumoRecebimento();
+
+    if (camposEntrega) camposEntrega.hidden = metodo !== "delivery";
+    if (valorFrete) valorFrete.textContent = "—";
+    if (valorTotalGeral) valorTotalGeral.textContent = "—";
+    if (!nota) return resumo;
+
+    if (metodo === "pickup") {
+      if (valorFrete) valorFrete.textContent = formatarPreco(0);
+      if (valorTotalGeral) valorTotalGeral.textContent = formatarPreco(valorTotal());
+      nota.textContent = "📍 Retirada gratuita em Bauru, mediante agendamento. Local e horário combinados pelo WhatsApp.";
+      return resumo;
+    }
+
+    if (metodo !== "delivery") {
+      nota.textContent = "Escolha entrega ou retirada para calcular o valor final estimado.";
+      return resumo;
+    }
+
+    if (!resumo.city) {
+      nota.textContent = "Selecione a cidade ou região para calcular o frete.";
+      return resumo;
+    }
+
+    if (resumo.freight === null) {
+      if (valorFrete) valorFrete.textContent = "A confirmar";
+      if (valorTotalGeral) valorTotalGeral.textContent = "A confirmar";
+      nota.textContent = "📍 Informe sua cidade e CEP no WhatsApp. A equipe confirmará a disponibilidade e o valor da entrega.";
+      return resumo;
+    }
+
+    if (valorFrete) valorFrete.textContent = formatarPreco(resumo.freight);
+    if (valorTotalGeral) valorTotalGeral.textContent = formatarPreco(resumo.total);
+
+    var notas = [];
+    if (resumo.freeBauruKit) {
+      notas.push("🎁 Frete grátis aplicado: pedido com kit e entrega em Bauru (exceto Tibiriçá).");
+    } else if (resumo.clubMember) {
+      notas.push("🏷️ Tarifa de membro do Clube selecionada; o cadastro ativo será conferido pela equipe.");
+    }
+    if (resumo.minimumMet === false) {
+      notas.push("⚠️ Pedido mínimo nesta localidade: " + formatarPreco(resumo.minimum) + " em produtos.");
+    } else {
+      notas.push("Pedido mínimo: " + formatarPreco(resumo.minimum) + " em produtos.");
+    }
+    if (resumo.tollIncluded) notas.push("🛣️ Pedágio já incluído no valor do frete.");
+    nota.textContent = notas.join(" ");
+    return resumo;
+  }
+
+  function montarMensagemPedido(resumo) {
     var linhas = [
-      "Olá! Quero concluir meu pedido na *Luxuriosa*.",
+      "Olá! Quero concluir meu pedido na *Luxuriosa*. 💗",
       "",
-      "*RESUMO DO CARRINHO*"
+      "🛍️ *RESUMO DO CARRINHO*"
     ];
 
     carrinho.forEach(function (item) {
@@ -1436,16 +1567,51 @@
       );
     });
 
+    linhas.push("", "💰 *RESUMO DOS VALORES*", "• Subtotal estimado dos produtos: " + formatarPreco(valorTotal()));
+
+    if (resumo.method === "pickup") {
+      linhas.push(
+        "• Frete para retirada: " + formatarPreco(0),
+        "• *Total estimado: " + formatarPreco(valorTotal()) + "*",
+        "",
+        "📍 *RETIRADA AGENDADA EM BAURU*",
+        "• Sem cobrança de frete. Local e horário serão combinados com a equipe pelo WhatsApp."
+      );
+    } else {
+      linhas.push("🚚 *ENTREGA*", "• Localidade: " + (resumo.cityLabel || "A confirmar"));
+
+      if (resumo.freight === null) {
+        linhas.push(
+          "• Frete: *a confirmar com a equipe*",
+          "• Total geral: *será informado após consulta da localidade*",
+          "• Informe sua cidade e CEP para verificarmos o atendimento."
+        );
+      } else {
+        linhas.push(
+          "• Frete: " + formatarPreco(resumo.freight),
+          "• *Total estimado: " + formatarPreco(resumo.total) + "*"
+        );
+      }
+
+      if (resumo.freeBauruKit) {
+        linhas.push("🎁 Frete grátis aplicado por conter kit em pedido com entrega em Bauru.");
+      } else if (resumo.clubMember) {
+        linhas.push("🏷️ Tarifa de membro do Clube solicitada (cadastro ativo sujeito à conferência).");
+      }
+      if (resumo.minimumMet === false) {
+        linhas.push("⚠️ Pedido mínimo para esta localidade: " + formatarPreco(resumo.minimum) + " em produtos. O subtotal atual está abaixo desse valor.");
+      } else if (resumo.minimum) {
+        linhas.push("• Pedido mínimo nesta localidade: " + formatarPreco(resumo.minimum) + " em produtos.");
+      }
+      if (resumo.tollIncluded) linhas.push("🛣️ O pedágio já está incluído no frete.");
+    }
+
     linhas.push(
       "",
-      "*Subtotal estimado dos produtos:* " + formatarPreco(valorTotal()),
+      "💳 *PAGAMENTO*",
+      "• Após a confirmação dos itens, valores e recebimento, a equipe enviará um link de pagamento ou a chave PIX.",
       "",
-      "*CONFIRMAÇÃO DO PEDIDO*",
-      "• Confirmar disponibilidade e valores atualizados dos produtos.",
-      "• Informar o frete e o prazo para meu endereço/CEP.",
-      "• Após a confirmação, receber um link de pagamento ou a chave PIX.",
-      "",
-      "_Os valores, a disponibilidade, o frete e o prazo serão confirmados pela equipe. O pedido só será confirmado após a identificação do pagamento._"
+      "🔒 _Disponibilidade, prazo e condições finais serão confirmados pela equipe. O pedido só será confirmado após a identificação do pagamento._"
     );
 
     return linhas.join("\n");
@@ -1458,10 +1624,20 @@
       return;
     }
 
+    var resumoRecebimento = obterResumoRecebimento();
+    if (!resumoRecebimento.valid) {
+      window.alert("Selecione a forma de recebimento e, para entrega, a localidade antes de continuar.");
+      return;
+    }
+
     if (window.LuxuriosaMedicao && typeof window.LuxuriosaMedicao.registrar === "function") {
       window.LuxuriosaMedicao.registrar("begin_checkout", {
         quantity: quantidadeTotal(),
-        method: "whatsapp"
+        method: "whatsapp",
+        fulfillment_method: resumoRecebimento.method,
+        delivery_city: resumoRecebimento.city || null,
+        delivery_fee: resumoRecebimento.freight,
+        club_member_rate: resumoRecebimento.clubMember === true
       });
     }
 
@@ -1481,7 +1657,7 @@
       }
     }
 
-    abrirWhatsApp(montarMensagemPedido());
+    abrirWhatsApp(montarMensagemPedido(resumoRecebimento));
 
   }
 
@@ -1577,6 +1753,13 @@
 
     }
 
+
+    var metodoRecebimento = $("cartFulfillmentMethod");
+    var cidadeEntrega = $("cartDeliveryCity");
+    var membroClube = $("cartClubMember");
+    [metodoRecebimento, cidadeEntrega, membroClube].forEach(function (controle) {
+      if (controle) controle.addEventListener("change", renderizar);
+    });
 
     if (finalizar) {
 
