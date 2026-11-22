@@ -52,59 +52,21 @@
     var accountLink = document.querySelector("[data-nav-account]");
     var authGroup = document.querySelector("[data-nav-auth-only-group]");
     var authLinks = document.querySelectorAll("[data-nav-auth-only]");
-    var hasPurchaseSurface = !!document.getElementById("cart") ||
-      !!document.querySelector("[data-add-to-cart]");
-    if (!accountLink && !authGroup && !hasPurchaseSurface) return;
-    var membershipRequest = 0;
+    if (!accountLink || !authGroup) return;
 
     function atualizarNavegacao(session) {
       var authenticated = !!(session && session.user && session.user.id);
-      if (accountLink && authGroup) {
-        accountLink.href = authenticated ? "/minha-conta/" : "/login.html";
-        accountLink.setAttribute("aria-label", authenticated
-          ? "Minha conta — acessar meu cadastro"
-          : "Minha conta — entrar ou criar conta");
-        authGroup.hidden = !authenticated;
-        authLinks.forEach(function (link) {
-          link.hidden = !authenticated;
-        });
-      }
+      accountLink.href = authenticated ? "/minha-conta/" : "/login.html";
+      accountLink.setAttribute("aria-label", authenticated
+        ? "Minha conta — acessar meu cadastro"
+        : "Minha conta — entrar ou criar conta");
+      authGroup.hidden = !authenticated;
+      authLinks.forEach(function (link) {
+        link.hidden = !authenticated;
+      });
     }
 
-    function publicarStatusClube(active, ready, userId) {
-      window.LuxuriosaClube = { active: active === true, ready: ready === true, userId: userId || null };
-      window.dispatchEvent(new CustomEvent("lux:club-membership-updated", {
-        detail: window.LuxuriosaClube
-      }));
-    }
-
-    function atualizarStatusClube(supabase, session) {
-      var userId = session && session.user && session.user.id
-        ? session.user.id : null;
-      var requestId = ++membershipRequest;
-      if (!userId) {
-        publicarStatusClube(false, true, null);
-        return Promise.resolve();
-      }
-
-      publicarStatusClube(false, false, userId);
-      return supabase.from("club_memberships")
-        .select("active")
-        .eq("user_id", userId)
-        .maybeSingle()
-        .then(function (result) {
-          if (requestId !== membershipRequest) return;
-          if (result.error) throw result.error;
-          publicarStatusClube(!!(result.data && result.data.active === true), true, userId);
-        })
-        .catch(function (error) {
-          if (requestId !== membershipRequest) return;
-          console.warn("Luxuriosa: não foi possível confirmar a adesão ao Clube no navegador.", error);
-          publicarStatusClube(false, true, userId);
-        });
-    }
-
-    publicarStatusClube(false, false, null);
+    atualizarNavegacao(null);
     import("https://esm.sh/@supabase/supabase-js@2")
       .then(function (mod) {
         var supabase = mod.createClient(
@@ -112,22 +74,15 @@
           "sb_publishable_LaMBeWQ1PNANEQ85SD_35Q_wDzswy8y",
           { auth: { autoRefreshToken: true, persistSession: true, detectSessionInUrl: true } }
         );
-        window.LuxuriosaSupabase = supabase;
         supabase.auth.onAuthStateChange(function (_event, session) {
           atualizarNavegacao(session);
-          atualizarStatusClube(supabase, session);
         });
-        return supabase.auth.getSession().then(function (result) {
-          var session = result && result.data ? result.data.session : null;
-          atualizarNavegacao(session);
-          return atualizarStatusClube(supabase, session);
-        });
+        return supabase.auth.getSession();
       })
-      .catch(function (error) {
-        atualizarNavegacao(null);
-        publicarStatusClube(false, true, null);
-        console.warn("Luxuriosa: autenticação indisponível para consultar o Clube.", error);
-      });
+      .then(function (result) {
+        if (result && result.data) atualizarNavegacao(result.data.session);
+      })
+      .catch(function () { atualizarNavegacao(null); });
   }
 
   /* =======================================================
