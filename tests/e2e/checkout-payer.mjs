@@ -149,7 +149,7 @@ try {
 
   await page.locator("#cartFulfillmentMethod").selectOption("delivery");
   await page.locator("#cartDeliveryCity").selectOption("bauru");
-  assert.equal(await page.locator("#cartFreightValue").innerText(), "R$ 0,00",
+  assert.match(await page.locator("#cartFreightValue").innerText(), /R\$\s*0,00/,
     "Pedido com kit em Bauru deve receber frete grátis.");
   assert.match(await page.locator("#cartFulfillmentNote").innerText(), /Frete grátis aplicado/i);
 
