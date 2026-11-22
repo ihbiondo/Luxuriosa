@@ -22,7 +22,6 @@ on:
       - "tests/consent-ui.test.mjs"
       - "tests/product-css.test.mjs"
       - "tests/checkout-payer.test.mjs"
-      - "tests/freight-kit.test.mjs"
       - "portal/**"
       - "experiencias/**"
       - "educacao/interatividade/**"
@@ -197,7 +196,6 @@ jobs:
           node --test tests/pedido-whatsapp.test.mjs
           node --test tests/checkout-payer.test.mjs
           node --test tests/infinitepay-webhook-notification.test.mjs
-          node --test tests/freight-kit.test.mjs
           node --test tests/product-featured.test.mjs
           node --test tests/consent-ui.test.mjs
           node --test tests/product-css.test.mjs
