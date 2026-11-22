@@ -427,6 +427,12 @@
         container.appendChild(
           antigo
         );
+
+        container.appendChild(criarElemento(
+          "span",
+          "club-promo-note",
+          "🏷️ Promoção exclusiva do Clube Luxuriosa · Cadastre-se grátis para aproveitar"
+        ));
       }
 
 
