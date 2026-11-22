@@ -101,9 +101,9 @@ test("checkout de pagamento valida membro, aplica o preço do catálogo e não a
 });
 
 test("uma adesão registrada continua podendo ser encerrada mesmo com perfil incompleto", () => {
-  assert.match(clubPageScript, /const membershipActive = state\\?\\.membership_active === true \\|\\| isMember/);
-  assert.match(clubPageScript, /\\$\\("leaveClub"\\)\\.hidden = !membershipActive/);
-  assert.match(clubPageScript, /supabase\\.rpc\\("leave_luxuriosa_club"\\)/);
+  assert.match(clubPageScript, /const membershipActive = state\?\.membership_active === true \|\| isMember/);
+  assert.match(clubPageScript, /\$\("leaveClub"\)\.hidden = !membershipActive/);
+  assert.match(clubPageScript, /supabase\.rpc\("leave_luxuriosa_club"\)/);
 });
 
 test("a adesão exige nome, usuário, WhatsApp, e-mail e maioridade; endereço não é obrigatório", () => {
