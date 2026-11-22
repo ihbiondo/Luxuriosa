@@ -56,7 +56,7 @@
     }
     return new Promise(function (resolve) {
       var script = document.createElement("script");
-      script.src = "/js/clube-precos.js?v=20261122-club-promotions-v1";
+      script.src = "/js/clube-precos.js?v=20261122-club-profile-v2";
       script.onload = function () {
         var clube = window.LuxuriosaClubePrecos;
         if (clube && typeof clube.pronto === "function") {
@@ -167,7 +167,7 @@
           precoDetalhe.appendChild(precoAntigo);
           var avisoClube = document.createElement("span");
           avisoClube.className = "club-promo-note";
-          avisoClube.textContent = "🏷️ Promoção exclusiva do Clube Luxuriosa · Cadastre-se grátis para aproveitar";
+          avisoClube.textContent = "🏷️ Promoção exclusiva para membros do Clube Luxuriosa · Cadastre-se grátis para aproveitar";
           avisoClube.style.flexBasis = "100%";
           avisoClube.style.display = "block";
           avisoClube.style.marginTop = "8px";
