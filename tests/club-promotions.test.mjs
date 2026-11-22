@@ -79,6 +79,6 @@ test("a adesão exige nome, usuário, WhatsApp, e-mail e maioridade; endereço n
   assert.match(membershipMigration, /phone/);
   assert.match(membershipMigration, /email/);
   assert.match(membershipMigration, /interval '18 years'/);
-  assert.match(membershipMigration, /O endereço não é obrigatório/);
+  assert.match(membershipMigration, /Endereço não é obrigatório/);
   assert.match(membershipMigration, /complete seu nome completo[\s\S]*endereço continua opcional/);
 });
