@@ -63,12 +63,17 @@ test("cart-orders consulta a adesão real e recalcula preços no servidor", () =
   assert.doesNotMatch(cartOrders, /admin\.from\("club_memberships"\)/);
 });
 
-test("checkout de pagamento valida membro e compara preços sempre em centavos", () => {
+test("checkout de pagamento valida membro, aplica o preço do catálogo e não acumula 10%", () => {
   assert.match(paymentOrder, /userClient\.rpc\("get_club_membership_state"\)/);
   assert.match(paymentOrder, /data\?\.is_member === true && data\?\.profile_complete === true/);
   assert.match(paymentOrder, /const regularPriceCents =/);
   assert.match(paymentOrder, /const hasClubPromotion = regularPriceCents > clubPrice/);
   assert.match(paymentOrder, /const unitCents = hasClubPromotion && !isClubMember \? regularPriceCents : clubPrice/);
+  assert.match(paymentOrder, /const clubDiscountCents = 0/);
+  assert.match(paymentOrder, /const totalCents = subtotalCents \+ shippingCents/);
+  assert.match(paymentOrder, /PAYMENT_CHECKOUT_PAYLOAD_VERSION = 10/);
+  assert.match(paymentOrder, /checkoutItems = orderItems\.map\(\(item\) => \(\{/);
+  assert.doesNotMatch(paymentOrder, /CLUB_DISCOUNT_|netLineCents|discountCents/);
   assert.doesNotMatch(paymentOrder, /regularPrice > clubPrice/);
 });
 
