@@ -428,11 +428,19 @@
           antigo
         );
 
-        container.appendChild(criarElemento(
+        var avisoClube = criarElemento(
           "span",
           "club-promo-note",
           "🏷️ Promoção exclusiva do Clube Luxuriosa · Cadastre-se grátis para aproveitar"
-        ));
+        );
+        avisoClube.style.display = "block";
+        avisoClube.style.flexBasis = "100%";
+        avisoClube.style.marginTop = "5px";
+        avisoClube.style.color = "#D4AF7C";
+        avisoClube.style.fontSize = "10px";
+        avisoClube.style.fontWeight = "600";
+        avisoClube.style.lineHeight = "1.4";
+        container.appendChild(avisoClube);
       }
 
 
