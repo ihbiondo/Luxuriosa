@@ -274,6 +274,18 @@ async function auditCartAndCheckout(page) {
 
   assert.ok(Number.isFinite(product.preco) && product.preco > 0,
     "O produto usado no teste deve ter preço válido.");
+  await page.evaluate(item => {
+    localStorage.removeItem("luxuriosa_carrinho");
+    localStorage.setItem("luxuriosa_carrinho", JSON.stringify([item]));
+    localStorage.setItem("lux_cookie_consent_v1", JSON.stringify({
+      version: 2,
+      updatedAt: new Date().toISOString(),
+      necessary: true,
+      analytics: true,
+      marketing: false
+    }));
+  }, product);
+
   const cartSnapshotPromise = page.waitForRequest(request => {
     if (!request.url().includes("/functions/v1/cart-orders")) return false;
     try {
@@ -286,18 +298,6 @@ async function auditCartAndCheckout(page) {
       return false;
     }
   }, { timeout: 15000 }).then(request => request.postDataJSON());
-
-  await page.evaluate(item => {
-    localStorage.removeItem("luxuriosa_carrinho");
-    localStorage.setItem("luxuriosa_carrinho", JSON.stringify([item]));
-    localStorage.setItem("lux_cookie_consent_v1", JSON.stringify({
-      version: 2,
-      updatedAt: new Date().toISOString(),
-      necessary: true,
-      analytics: true,
-      marketing: false
-    }));
-  }, product);
 
   await page.goto(`${BASE_URL}/loja.html?abrirCarrinho=1#catalogo`, {
     waitUntil: "domcontentloaded"
