@@ -319,8 +319,8 @@ try {
           item.unifiedNavigation = audit;
           result.unifiedNavigationChecks.push({ route: normalizedRoute, ...audit });
           if (!audit.burger || !audit.drawer || !audit.brand ||
-              !audit.appScriptVersion.includes("20261120-desktop-backdrop-v1") ||
-              !audit.navigationCssVersion.includes("20261120-desktop-backdrop-v1") ||
+              !audit.appScriptVersion.includes("/js/app.js?v=") ||
+              !audit.navigationCssVersion.includes("/css/navigation.css?v=") ||
               audit.visibleLinks.join("|") !== audit.expectedLinks.join("|") ||
               !audit.accountBeforeShop || !audit.hiddenSubmenus || audit.visibleToggles ||
               audit.categoryGridVisible || audit.firstDivider !== "solid" ||
