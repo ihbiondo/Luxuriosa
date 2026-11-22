@@ -104,7 +104,7 @@ async function loadCatalog(): Promise<Map<string, any>> {
   if (!Array.isArray(data?.produtos)) throw new Error("Catálogo indisponível.");
   return new Map(data.produtos.map((product: any) => [String(product.id), product]));
 }
-function cleanItems(value: unknown, catalog: Map<string, any>) {
+function cleanItems(value: unknown, catalog: Map<string, any>, isClubMember: boolean) {
   if (!Array.isArray(value) || value.length > 80) throw new Error("Carrinho inválido.");
   return value.map((raw: any) => {
     const productId = cleanText(String(raw?.id ?? ""), 100);
@@ -114,7 +114,11 @@ function cleanItems(value: unknown, catalog: Map<string, any>) {
     const product = catalog.get(productId);
     if (!product || product.esgotado === true) throw new Error("Um produto do carrinho está indisponível. Atualize o carrinho.");
     if (!Number.isInteger(quantity) || quantity < 1 || quantity > 999) throw new Error("Quantidade inválida.");
-    const price = Number(product.preco);
+    const clubPrice = Number(product.preco);
+    const regularPrice = Number(product.precoAntigo);
+    const hasClubPromotion = Number.isFinite(regularPrice) && regularPrice > clubPrice &&
+      Number.isFinite(clubPrice) && clubPrice >= 0;
+    const price = hasClubPromotion && !isClubMember ? regularPrice : clubPrice;
     if (!Number.isFinite(price) || price < 0 || price > 100000) throw new Error("Preço inválido no catálogo.");
     const isVariableKit = VARIABLE_DICE_KIT_IDS.has(productId);
     let selectedDiceName: string | null = null;
@@ -132,7 +136,9 @@ function cleanItems(value: unknown, catalog: Map<string, any>) {
       unit_price: Math.round(price * 100) / 100,
       product_snapshot: {
         selected_dice_product_id: isVariableKit ? selectedDiceId : null,
-        selected_dice_product_name: isVariableKit ? selectedDiceName : null
+        selected_dice_product_name: isVariableKit ? selectedDiceName : null,
+        club_promotion: hasClubPromotion,
+        applied_price_tier: hasClubPromotion ? (isClubMember ? "club" : "regular") : "standard"
       }
     };
   });
@@ -253,7 +259,16 @@ Deno.serve(async (req: Request) => {
     }
     if (!withinRateLimit) return response({ error: "Muitas solicitações. Aguarde um instante e tente novamente." }, 429, origin);
     const catalog = await loadCatalog();
-    const items = cleanItems(body.items || [], catalog);
+    let isClubMember = false;
+    if (userId) {
+      const { data: membership, error: membershipError } = await admin.from("club_memberships")
+        .select("active")
+        .eq("user_id", userId)
+        .maybeSingle();
+      if (membershipError) throw membershipError;
+      isClubMember = membership?.active === true;
+    }
+    const items = cleanItems(body.items || [], catalog, isClubMember);
     const subtotal = total(items);
     if (subtotal > 1000000) return response({ error: "Valor do carrinho inválido." }, 400, origin);
 
