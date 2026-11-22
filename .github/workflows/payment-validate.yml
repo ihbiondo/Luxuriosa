@@ -418,6 +418,8 @@ jobs:
           cp "$GITHUB_WORKSPACE/supabase/migrations/20261122190000_club_membership_requires_complete_profile.sql" "$test_root/supabase/migrations/"
           cp "$GITHUB_WORKSPACE/tests/fixtures/club-membership-e2e.sql" "$test_root/supabase/migrations/20261122190100_club_membership_e2e.sql"
           mkdir -p "$test_root/supabase/functions/create-payment-order"
+          mkdir -p "$test_root/supabase/functions/cart-orders"
+          cp "$GITHUB_WORKSPACE/supabase/functions/cart-orders/index.ts" "$test_root/supabase/functions/cart-orders/index.ts"
           cp "$GITHUB_WORKSPACE/supabase/functions/create-payment-order/index.ts" "$test_root/supabase/functions/create-payment-order/index.ts"
           # O supabase/config.toml contém a configuração do webhook. Copia a
           # função inteira para a pilha descartável, mesmo sem invocá-la no E2E.
@@ -519,7 +521,7 @@ jobs:
           # Executa a Edge Function real sobre o banco local. O modo de pagamento
           # sintético só é ativado quando SUPABASE_URL aponta para o container local.
           printf 'LUX_E2E_LOCAL_MODE=true\n' > "$test_root/function.env"
-          (cd "$test_root" && supabase functions serve create-payment-order --no-verify-jwt --env-file "$test_root/function.env") > "$test_root/function-server.log" 2>&1 &
+          (cd "$test_root" && supabase functions serve --no-verify-jwt --env-file "$test_root/function.env") > "$test_root/function-server.log" 2>&1 &
           function_server_pid=$!
           function_ready=false
           function_url=""
