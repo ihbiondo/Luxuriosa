@@ -68,6 +68,10 @@
 
 
   function precoDoCliente(produto) {
+    if (window.LuxuriosaClubePrecos &&
+        typeof window.LuxuriosaClubePrecos.precoParaCliente === "function") {
+      return window.LuxuriosaClubePrecos.precoParaCliente(produto);
+    }
     var precoClube = Number(produto && produto.preco);
     var precoRegular = Number(produto && produto.precoAntigo);
     var temPromocaoClube = Number.isFinite(precoRegular) &&
@@ -1984,8 +1988,8 @@
   }
 
 
-  window.addEventListener("lux:club-membership-updated", function (event) {
-    membroClubeAtivo = !!(event && event.detail && event.detail.active === true);
+  window.addEventListener("luxuriosa:club-state-changed", function (event) {
+    membroClubeAtivo = !!(event && event.detail && event.detail.isMember === true);
     if (catalogoAtual.length) sincronizarCatalogo(catalogoAtual);
   });
 
