@@ -252,6 +252,19 @@ async function auditCartAndCheckout(page) {
   );
 
   // Usa somente um produto real do catálogo local; não cria pedido nem inicia pagamento.
+  const telemetryRequests = [];
+  const telemetryConsole = [];
+  page.on("request", request => {
+    if (!request.url().includes("/functions/v1/cart-orders")) return;
+    try { telemetryRequests.push(request.postDataJSON()); }
+    catch (_) { telemetryRequests.push({ raw: request.postData() || null }); }
+  });
+  page.on("console", message => {
+    if (message.type() === "error" || message.type() === "warning") {
+      telemetryConsole.push(message.text().slice(0, 300));
+    }
+  });
+
   await page.setViewportSize({ width: 320, height: 740 });
   await page.goto(`${BASE_URL}/loja.html`, { waitUntil: "domcontentloaded" });
 
@@ -397,6 +410,29 @@ async function auditCartAndCheckout(page) {
     };
   });
 
+  await page.evaluate(() => {
+    const api = window.LuxuriosaInteligencia;
+    const consentRaw = localStorage.getItem("lux_cookie_consent_v1");
+    window.__e2eTelemetryDiagnostics = {
+      apiExists: Boolean(api),
+      consentRaw,
+      calls: []
+    };
+    ["registrarEtapa", "registrarEvento"].forEach(name => {
+      if (!api || typeof api[name] !== "function") return;
+      const original = api[name];
+      api[name] = function () {
+        const args = Array.from(arguments);
+        const entry = { name, action: args[0] || null, started: Date.now() };
+        window.__e2eTelemetryDiagnostics.calls.push(entry);
+        const result = original.apply(this, args);
+        Promise.resolve(result).then(value => { entry.result = value; })
+          .catch(error => { entry.error = String(error); });
+        return result;
+      };
+    });
+  });
+
   // O envio do snapshot é a medição de carrinho já existente; confirma que o conteúdo
   // do carrinho chega ao endpoint de inteligência quando há consentimento analítico.
   const cartSnapshot = await cartSnapshotPromise;
@@ -404,30 +440,6 @@ async function auditCartAndCheckout(page) {
     "A inteligência deve registrar o produto no snapshot do carrinho.");
   assert.equal(cartSnapshot.analytics_consent, true,
     "O snapshot só deve ser enviado com consentimento analítico.");
-
-  const checkoutStartedPromise = page.waitForRequest(request => {
-    if (!request.url().includes("/functions/v1/cart-orders")) return false;
-    try {
-      const payload = request.postDataJSON();
-      return Boolean(payload && payload.action === "checkout_started" &&
-        Array.isArray(payload.items) &&
-        payload.items.some(item => String(item.id) === product.id));
-    } catch (_) {
-      return false;
-    }
-  }, { timeout: 30000 }).then(request => request.postDataJSON());
-
-
-  const whatsappOpenedPromise = page.waitForRequest(request => {
-    if (!request.url().includes("/functions/v1/cart-orders")) return false;
-    try {
-      const payload = request.postDataJSON();
-      return Boolean(payload && payload.action === "site_event" &&
-        payload.event_name === "whatsapp_opened");
-    } catch (_) {
-      return false;
-    }
-  }, { timeout: 30000 }).then(request => request.postDataJSON());
 
   await page.locator("#cartFulfillmentMethod").selectOption("delivery");
   await page.locator("#cartDeliveryCity").selectOption("agudos");
@@ -453,13 +465,17 @@ async function auditCartAndCheckout(page) {
     { timeout: 10000 }
   );
 
-  const [checkoutStarted, whatsappOpened] = await Promise.all([
-    checkoutStartedPromise,
-    whatsappOpenedPromise
-  ]);
-  assert.ok(checkoutStarted.items.some(item => String(item.id) === product.id),
-    "A inteligência deve registrar os itens quando a pessoa inicia a finalização.");
-  assert.equal(whatsappOpened.event_name, "whatsapp_opened",
+  await page.waitForTimeout(750);
+  const telemetryDiagnostics = await page.evaluate(() => window.__e2eTelemetryDiagnostics || null);
+  const checkoutStarted = telemetryRequests.find(payload => payload && payload.action === "checkout_started" &&
+    Array.isArray(payload.items) && payload.items.some(item => String(item.id) === product.id));
+  const whatsappOpened = telemetryRequests.find(payload => payload && payload.action === "site_event" &&
+    payload.event_name === "whatsapp_opened");
+  assert.ok(checkoutStarted, "A inteligência não enviou checkout_started. Diagnóstico: " +
+    JSON.stringify({ telemetryDiagnostics, telemetryRequests, telemetryConsole }));
+  assert.ok(whatsappOpened, "A inteligência não enviou whatsapp_opened. Diagnóstico: " +
+    JSON.stringify({ telemetryDiagnostics, telemetryRequests, telemetryConsole }));
+  
     "A inteligência deve registrar o clique que encaminha ao WhatsApp.");
 
   const whatsappUrl = await page.evaluate(() => window.__capturedWhatsAppUrl);
