@@ -1,0 +1,821 @@
+ <!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <base href="/">
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+
+  <title>PRÉVIA — Loja Online | Luxuriosa</title>
+
+  <meta
+    name="description"
+    content="Explore a loja online da Luxuriosa: produtos para intimidade, prazer e bem-estar, com atendimento reservado e entrega discreta em Bauru e região."
+  >
+
+  <meta name="robots" content="index,follow">
+  <meta name="author" content="Luxuriosa">
+  <meta name="theme-color" content="#0B0B0B">
+
+  <link rel="canonical" href="https://luxuriosa.com.br/loja.html">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="pt_BR">
+  <meta property="og:title" content="Loja Online Luxuriosa | Produtos para Intimidade e Prazer">
+  <meta
+    property="og:description"
+    content="Explore produtos para intimidade, prazer e bem-estar com atendimento reservado e entrega discreta."
+  >
+  <meta property="og:url" content="https://luxuriosa.com.br/loja.html">
+  <meta property="og:site_name" content="Luxuriosa">
+  <meta property="og:image" content="https://luxuriosa.com.br/img/site/og-luxuriosa.jpg">
+  <meta property="og:image:type" content="image/jpeg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Logo da marca Luxuriosa">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Loja Online Luxuriosa | Produtos para Intimidade e Prazer">
+  <meta name="twitter:description" content="Explore produtos para intimidade, prazer e bem-estar com atendimento reservado e entrega discreta.">
+  <meta name="twitter:image" content="https://luxuriosa.com.br/img/site/og-luxuriosa.jpg">
+  <meta name="twitter:image:alt" content="Logo da marca Luxuriosa">
+
+  <!-- Favicon Luxuriosa -->
+  <link rel="icon" href="img/site/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="img/site/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="img/site/favicon-192.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="img/site/favicon-192.png">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600&family=Playfair+Display:wght@400;500&display=swap"
+    rel="stylesheet"
+  >
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="css/style.css?v=20261114-pre-venda-v1">
+  <link rel="stylesheet" href="css/responsive.css?v=20261119-modal-compact-v3">
+  <link rel="stylesheet" href="css/ajustes.css?v=20261119-checkout-unificado-v1">
+<link rel="stylesheet" href="css/navigation.css?v=20261120-desktop-backdrop-v1">
+  <style>
+    .delivery-fee-note {
+      margin: 0 0 28px;
+      padding: 16px 18px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--surface);
+      color: var(--muted);
+    }
+  </style>
+
+  <!-- Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"CollectionPage",
+    "name":"Loja Luxuriosa",
+    "url":"https://luxuriosa.com.br/loja.html",
+    "description":"Catálogo de produtos para intimidade, prazer e bem-estar da Luxuriosa, em Bauru e região.",
+    "isPartOf":{"@type":"WebSite","name":"Luxuriosa","url":"https://luxuriosa.com.br/"}
+  }
+  </script>
+</head>
+
+<body>
+
+  <a class="skip-link" href="#conteudo-principal">Pular para o conteúdo</a>
+
+  <!-- =========================================================
+       GATE 18+
+  ========================================================== -->
+
+  <div
+    class="overlay"
+    id="gate"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="gateTitle"
+  >
+
+    <div class="gate">
+
+      <div class="gate-icon" aria-hidden="true">
+        ♡
+      </div>
+
+      <div class="kicker">
+        Luxuriosa
+      </div>
+
+      <h3 id="gateTitle">
+        Conteúdo para maiores de 18
+      </h3>
+
+      <p>
+        A Luxuriosa é um sexshop com produtos para intimidade e prazer, além de lingerie selecionada.
+        Nossos produtos são destinados exclusivamente a adultos.
+      </p>
+
+      <p>
+        Você tem 18 anos ou mais?
+      </p>
+
+      <div class="buttons">
+
+        <button
+          class="btn primary"
+          id="gateYes"
+          type="button"
+        >
+          Sim, tenho 18+
+        </button>
+
+        <a
+          class="btn ghost"
+          href="https://www.google.com.br"
+        >
+          Sair
+        </a>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- =========================================================
+       MODAL DO PRODUTO
+  ========================================================== -->
+
+  <div
+    class="overlay"
+    id="modal"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="mNome"
+  >
+
+    <div class="modal">
+
+      <button
+        class="close"
+        id="mClose"
+        type="button"
+        aria-label="Fechar"
+      >
+        ×
+      </button>
+
+      <div
+        class="m-img"
+        id="mImg"
+      ></div>
+
+      <div class="m-body">
+
+        <span
+          class="tag"
+          id="mCat"
+        ></span>
+
+        <h3 id="mNome"></h3>
+
+        <div
+          class="price"
+          id="mPreco"
+        ></div>
+
+        <div
+          class="m-desc"
+          id="mDesc"
+        ></div>
+
+        <div
+          class="m-sizes"
+          id="mSizes"
+        ></div>
+
+        <button
+          class="btn primary"
+          id="mBtn"
+          type="button"
+        >
+          Adicionar ao carrinho
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- =========================================================
+       HEADER
+  ========================================================== -->
+
+  <header>
+
+    <div class="container nav">
+
+      <a
+        class="logo"
+        href="index.html"
+        aria-label="Luxuriosa — início"
+      >
+
+        LUXURIOSA
+
+      </a>
+
+
+      <nav class="navlinks" id="navlinks" aria-label="Menu principal">
+        <div class="nav-drawer-top">
+            <span class="nav-drawer-title">NAVEGUE PELA LUXURIOSA</span>
+            <button class="nav-drawer-close" type="button" aria-label="Fechar menu">×</button>
+          </div>
+          <div class="nav-drawer-account-area"><a class="nav-primary-link nav-account-primary" data-nav-account href="/login.html"><span class="nav-link-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><circle cx="12" cy="8" r="3.2"></circle><path d="M5.5 20a6.5 6.5 0 0 1 13 0"></path></svg></span><span>Minha conta</span></a>
+          <div class="nav-submenu nav-account-submenu" data-nav-auth-only-group hidden>
+            <a data-nav-auth-only href="/minha-conta/">Meu cadastro</a>
+            <a data-nav-auth-only href="/meus-pedidos/">Minhas compras</a>
+          </div></div>
+          <a class="nav-primary-link nav-link-shop" href="/loja.html"><span class="nav-link-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M5 8h14l1 13H4L5 8Z"></path><path d="M9 9V6a3 3 0 0 1 6 0v3"></path></svg></span><span>Loja</span></a>
+          <details class="nav-submenu nav-store-submenu">
+            <summary>Explorar categorias</summary>
+            <a href="/loja.html?categoria=Lingerie">Lingerie</a>
+            <a href="/loja.html?categoria=G%C3%A9is%20e%20estimulantes">Géis e estimulantes</a>
+            <a href="/loja.html?categoria=Vibradores%20e%20masturbadores">Vibradores e masturbadores</a>
+            <a href="/loja.html?categoria=Jogos%20e%20acess%C3%B3rios">Jogos e acessórios</a>
+            <a href="/loja.html?categoria=Perfumes%20e%20higiene">Perfumes e higiene</a>
+            <a href="/loja.html?categoria=%C3%93leos%20para%20massagem">Óleos para massagem</a>
+            <a href="/loja.html?categoria=Kits">Kits</a>
+            <a class="nav-submenu-all" href="/loja.html">Ver todo catálogo</a>
+          </details>
+          <div class="nav-menu-group nav-menu-group--help" role="group" aria-label="Atendimento e Ajuda">
+            <span class="nav-menu-group-title">Atendimento e Ajuda</span>
+            <a href="/atendimento.html"><span class="nav-link-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M4 13v-2a8 8 0 0 1 16 0v2"></path><rect x="3" y="12" width="4" height="7" rx="2"></rect><rect x="17" y="12" width="4" height="7" rx="2"></rect><path d="M19 19a3 3 0 0 1-3 3h-2"></path></svg></span><span>Atendimento</span></a>
+            <a href="/entregas/"><span class="nav-link-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><circle cx="6" cy="17" r="2.5"></circle><circle cx="18" cy="17" r="2.5"></circle><path d="M8.5 17h4l2-6h3l2 6M12.5 17l-3-7H6M14.5 11H11"></path></svg></span><span>Entregas</span></a>
+            <a href="/faq.html"><span class="nav-link-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><circle cx="12" cy="12" r="9"></circle><path d="M9.6 9a2.5 2.5 0 1 1 4.2 1.8c-1.1 1-1.8 1.3-1.8 2.7M12 17.2v.1"></path></svg></span><span>Dúvidas frequentes</span></a>
+            <div class="nav-submenu nav-help-submenu">
+              <a href="/faq.html#faq-pedidos">Pedidos e produtos</a>
+              <a href="/faq.html#faq-entrega">Frete e entrega</a>
+              <a href="/faq.html#faq-pagamento">Pagamento</a>
+              <a href="/faq.html#faq-devolucoes">Trocas e devoluções</a>
+              <a href="/privacidade.html">Privacidade</a>
+            </div>
+          </div>
+          <div class="nav-menu-group nav-menu-group--discover" role="group" aria-label="Conhecer">
+            <span class="nav-menu-group-title">Conhecer</span>
+            <a href="/educacao/"><span class="nav-link-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M3 5.5A2.5 2.5 0 0 1 5.5 3H21v17H5.5A2.5 2.5 0 0 0 3 22V5.5Z"></path><path d="M3 6h14M8 7v10"></path></svg></span><span>Educação</span></a>
+            <div class="nav-submenu">
+              <a href="/educacao/temas/">Temas educativos</a>
+              <a href="/educacao/enciclopedia/">Enciclopédia</a>
+              <a href="/educacao/curiosidades/">Curiosidades</a>
+              <a href="/educacao/guias/">Guias</a>
+              <a href="/educacao/interatividade/">Interatividade</a>
+              <a href="/educacao/duvidas-frequentes/">Dúvidas frequentes</a>
+            </div>
+            <a href="/experiencias/"><span class="nav-link-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="m12 3 2.7 5.5 6.1.9-4.4 4.3 1 6.1-5.4-2.9-5.4 2.9 1-6.1-4.4-4.3 6.1-.9L12 3Z"></path></svg></span><span>Experiências</span></a>
+            <div class="nav-submenu">
+              <a href="/experiencias/?tipo=quiz#experienceGrid">Quizzes</a>
+              <a href="/experiencias/?tipo=couple#experienceGrid">Conexão a dois</a>
+              <a href="/experiencias/?tipo=challenge#experienceGrid">Desafios</a>
+              <a href="/experiencias/?tipo=astrology#experienceGrid">Astrologia</a>
+            </div>
+          </div>
+          <div class="nav-drawer-footer"><p>ATENDIMENTO DISCRETO <span aria-hidden="true">·</span> BAURU E REGIÃO</p></div>
+      </nav>
+
+
+      <div class="nav-right">
+
+        <!-- CARRINHO -->
+
+        <button
+          class="cart-trigger"
+          id="cartOpen"
+          type="button"
+          aria-label="Abrir carrinho"
+        >
+
+          <span class="cart-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="17" height="17" focusable="false">
+              <path d="M3 4h2l2.1 10.1a2 2 0 0 0 2 1.6h8.8a2 2 0 0 0 2-1.6L21 8H6"></path>
+              <circle cx="9.5" cy="19.2" r="1.2"></circle>
+              <circle cx="17.5" cy="19.2" r="1.2"></circle>
+            </svg>
+          </span>
+
+          <span class="cart-label">
+            Carrinho
+          </span>
+
+          <span
+            class="cart-count"
+            id="cartCount"
+            hidden
+          >
+            0
+          </span>
+
+        </button>
+
+
+        <!-- WHATSAPP -->
+
+        <button
+          class="btn ghost small"
+          type="button"
+          data-wa
+        >
+          WhatsApp
+        </button>
+
+
+        <!-- MENU MOBILE -->
+
+        <button
+          class="burger"
+          id="burger"
+          type="button"
+          aria-label="Abrir menu"
+          aria-expanded="false"
+          aria-controls="navlinks"
+        >
+          ☰
+        </button>
+
+      </div>
+
+    </div>
+
+  </header><main id="conteudo-principal" class="shop-page" tabindex="-1">
+    <section
+      class="section alt"
+      id="catalogo"
+    >
+
+      <div class="container">
+
+        <div class="section-head">
+
+          <div>
+
+            <div class="kicker">Explore a seleção</div>
+
+            <h1>Encontre o que combina com você</h1>
+
+          </div>
+
+          <p>
+            Explore nossa seleção e use a busca para encontrar produtos. Abra cada item para conhecer os detalhes e adicionar ao carrinho.
+          </p>
+
+        </div>
+
+
+        <form class="catalog-search" id="catalogSearchForm" role="search">
+          <label class="sr-only" for="catalogSearch">Pesquisar produtos</label>
+          <span class="catalog-search-icon" aria-hidden="true">⌕</span>
+          <input
+            id="catalogSearch"
+            type="search"
+            name="q"
+            placeholder="Buscar produto, tipo ou sensação..."
+            autocomplete="off"
+            aria-controls="grid"
+          >
+          <button type="button" id="clearCatalogSearch" class="catalog-search-clear" aria-label="Limpar pesquisa" hidden>Limpar</button>
+        </form>
+
+        <div class="catalog-filter-panel" aria-label="Filtros do catálogo">
+          <div class="catalog-filter-panel-head">
+            <button class="catalog-filter-toggle" id="toggleCatalogFilters" type="button" aria-expanded="false" aria-controls="chips">
+              <span aria-hidden="true">☷</span>
+              <span class="catalog-filter-toggle-text">Categorias</span>
+              <span class="catalog-filter-toggle-mark" aria-hidden="true">+</span>
+            </button>
+            <label class="catalog-sort-control" for="catalogSort">
+              <span>Ordenar por</span>
+              <select id="catalogSort" name="sort">
+                <option value="relevancia">Mais relevantes</option>
+                <option value="menor-preco">Menor preço</option>
+                <option value="maior-preco">Maior preço</option>
+              </select>
+            </label>
+          </div>
+          <div class="chips catalog-filter-options" id="chips" aria-label="Categorias disponíveis"></div>
+        </div>
+
+        <p class="catalogo-status" id="catalogoStatus" role="status" aria-live="polite" aria-atomic="true"></p>
+
+        <div
+          class="products"
+          id="grid"
+        >
+
+          <div class="empty">
+            Carregando produtos…
+          </div>
+
+        </div>
+
+        <div class="shop-intro-note shop-after-products">
+          <span>COMPRE COM TRANQUILIDADE</span>
+          <strong>Escolha. Conheça. Decida.</strong>
+          <p>Veja os detalhes de cada produto, monte seu carrinho e converse com a gente para finalizar seu pedido.</p>
+        </div>
+
+        <div class="banner">
+
+          <div>
+
+            <h3>
+              Não achou o que procurava?
+            </h3>
+
+            <p>
+              Chame no WhatsApp: consultamos disponibilidade,
+              valores e entrega para você.
+            </p>
+
+          </div>
+
+          <button
+            class="btn primary"
+            type="button"
+            data-wa
+          >
+            Chamar no WhatsApp
+          </button>
+
+        </div>
+
+      </div>
+
+    </section>
+  </main>
+
+
+  <!-- =========================================================
+       CARRINHO
+  ========================================================== -->
+
+  <div
+    class="cart-overlay"
+    id="cartOverlay"
+    aria-hidden="true"
+  ></div>
+
+
+  <aside
+    class="cart"
+    id="cart"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="cartTitle"
+    aria-label="Carrinho de compras"
+    aria-hidden="true"
+  >
+
+    <div class="cart-header">
+
+      <div>
+
+        <span class="cart-kicker">
+          LUXURIOSA
+        </span>
+
+        <h2 id="cartTitle">
+          Seu carrinho
+        </h2>
+
+      </div>
+
+
+      <button
+        class="cart-close"
+        id="cartClose"
+        type="button"
+        aria-label="Fechar carrinho"
+      >
+        ×
+      </button>
+
+    </div>
+
+
+    <div
+      class="cart-items"
+      id="cartItems"
+    ></div>
+
+
+    <div
+      class="cart-empty"
+      id="cartEmpty"
+    >
+
+      <div
+        class="cart-empty-icon"
+        aria-hidden="true"
+      >
+        ♡
+      </div>
+
+      <h3 tabindex="-1">
+        Seu carrinho está vazio
+      </h3>
+
+      <p>
+        Escolha seus favoritos e monte
+        seu pedido.
+      </p>
+
+    </div>
+
+
+    <div
+      class="cart-footer"
+      id="cartFooter"
+      hidden
+    >
+
+      <div class="cart-total-row">
+
+        <span>
+          Subtotal dos produtos
+        </span>
+
+        <strong id="cartTotal">
+          R$ 0,00
+        </strong>
+
+      </div>
+
+
+      <button
+        class="btn primary cart-checkout"
+        id="cartCheckout"
+        type="button"
+      >
+        Finalizar pelo WhatsApp
+      </button>
+
+
+      <button
+        class="cart-clear"
+        id="cartClear"
+        type="button"
+      >
+        Limpar carrinho
+      </button>
+
+
+      <p class="cart-note">
+        O subtotal é estimado. A equipe confirmará disponibilidade, valores, frete e prazo pelo WhatsApp; depois, enviará um link de pagamento ou a chave PIX.
+        <a href="privacidade.html" target="_blank" rel="noopener">Política de Privacidade</a>.
+      </p>
+
+    </div>
+
+  </aside>
+
+
+  <!-- =========================================================
+       DADOS DO CLIENTE / REVISÃO DO PEDIDO
+       Os dados do formulário não são salvos no navegador.
+  ========================================================== -->
+  <div class="customer-overlay" id="customerOverlay" hidden>
+    <section class="customer-dialog" role="dialog" aria-modal="true"
+      aria-labelledby="customerTitle" aria-describedby="customerIntro" tabindex="-1">
+      <div class="customer-dialog-header">
+        <div>
+          <span class="cart-kicker">LUXURIOSA</span>
+          <h2 id="customerTitle">Dados para seu pedido</h2>
+        </div>
+        <button class="cart-close" id="customerClose" type="button" aria-label="Fechar cadastro">×</button>
+      </div>
+
+      <p id="customerIntro" class="customer-intro">Confira os dados e o endereço antes de continuar. Os campos de nome e telefone devem identificar quem receberá o pedido; ajuste-os quando a compra for para outra pessoa. O pedido ficará no histórico da conta usada no login, e o pagamento pode ser feito por outra pessoa. Você poderá revisar tudo antes de gerar o link seguro de pagamento. Para retirada agendada gratuita em Bauru, selecione a modalidade e informe a data e o horário desejados; a equipe confirmará a disponibilidade.</p>
+      <p class="customer-privacy-note">Os dados do pagador indicado, quando houver, serão usados para identificar e conciliar este pedido. <a href="privacidade.html" target="_blank" rel="noopener">Leia a Política de Privacidade</a>.</p>
+      <div id="customerStatus" class="customer-status" role="status" aria-live="polite" hidden></div>
+
+      <div class="customer-account-assist">
+        <div>
+          <strong>Dados da sua conta</strong>
+          <span>Preenchidos automaticamente. Ajuste se o pedido for para outra pessoa.</span>
+        </div>
+        <button class="btn secondary customer-account-load" id="customerAccountLoad" type="button">Atualizar dados da conta</button>
+      </div>
+
+      <form id="customerForm" novalidate>
+        <fieldset class="customer-fieldset customer-essential-fields">
+          <legend>Contato de quem receberá o pedido</legend>
+          <div class="customer-grid">
+            <div class="customer-field customer-span-2">
+              <label for="customerName">Nome de quem receberá o pedido <span aria-hidden="true">*</span></label>
+              <input id="customerName" name="name" autocomplete="name" required maxlength="120">
+            </div>
+            <div class="customer-field customer-span-2">
+              <label for="customerPhone">Telefone/WhatsApp para contato <span aria-hidden="true">*</span></label>
+              <input id="customerPhone" name="phone" type="tel" inputmode="tel" autocomplete="tel" required maxlength="25" placeholder="(14) 99999-9999">
+            </div>
+            <div class="customer-field customer-span-2">
+              <label for="customerEmail">E-mail de contato <span aria-hidden="true">*</span></label>
+              <input id="customerEmail" name="email" type="email" inputmode="email" autocomplete="email" required maxlength="254" placeholder="voce@exemplo.com">
+            </div>
+          </div>
+        </fieldset>
+
+        <fieldset class="customer-fieldset customer-essential-fields">
+          <legend>Quem fará o pagamento?</legend>
+          <div class="customer-grid">
+            <div class="customer-field customer-span-2">
+              <label for="customerPayerType">Responsável pelo pagamento</label>
+              <select id="customerPayerType" name="paymentPayerType">
+                <option value="account_holder">Eu vou pagar</option>
+                <option value="third_party">Outra pessoa vai pagar</option>
+              </select>
+            </div>
+            <div id="customerThirdPartyPayerFields" class="customer-grid customer-span-2" hidden>
+              <div class="customer-field customer-span-2">
+                <label for="customerPayerName">Nome de quem fará o pagamento <span aria-hidden="true">*</span></label>
+                <input id="customerPayerName" name="paymentPayerName" autocomplete="off" maxlength="160">
+              </div>
+              <div class="customer-field customer-span-2">
+                <label for="customerPayerPhone">Telefone/WhatsApp de quem fará o pagamento <span aria-hidden="true">*</span></label>
+                <input id="customerPayerPhone" name="paymentPayerPhone" type="tel" inputmode="tel" autocomplete="off" maxlength="25" placeholder="(14) 99999-9999">
+              </div>
+            </div>
+            <p class="customer-freight-info customer-span-2">Esses dados identificam a pessoa indicada por você. A indicação não comprova quem efetivamente pagou; a confirmação continua dependendo do comprovante ou da verificação do meio de pagamento.</p>
+          </div>
+        </fieldset>
+
+        <div class="customer-consent" style="margin:14px 0;padding:13px 14px;border:1px solid rgba(212,175,124,.18);border-radius:8px;background:rgba(212,175,124,.04)">
+          <label for="customerMarketingWhatsAppOptIn" style="display:flex;gap:10px;align-items:flex-start;color:#e8d9dc;font-size:11px;line-height:1.6;cursor:pointer">
+            <input id="customerMarketingWhatsAppOptIn" type="checkbox" style="width:16px;height:16px;flex:0 0 16px;margin:2px 0 0;accent-color:#8B1E3F">
+            <span>Quero receber pelo WhatsApp novidades e uma mensagem caso eu deixe este carrinho para depois. <strong>Opcional.</strong></span>
+          </label>
+          <small style="display:block;margin:7px 0 0 26px;color:#b9a9ae;font-size:10px">Esta autorização não é necessária para fazer o pedido e pode ser revogada a qualquer momento.</small>
+        </div>
+
+        <fieldset class="customer-fieldset customer-essential-fields">
+          <legend>Como deseja receber?</legend>
+          <div class="customer-grid">
+            <div class="customer-field customer-span-2">
+              <label for="customerFulfillmentMode">Modalidade</label>
+              <select id="customerFulfillmentMode" name="fulfillmentMode">
+                <option value="delivery">Entrega no endereço</option>
+                <option value="pickup">Retirada agendada gratuita em Bauru</option>
+              </select>
+            </div>
+          </div>
+          <div id="customerPickupFields" class="customer-grid" hidden>
+            <div class="customer-field">
+              <label for="customerPickupDate">Data pretendida</label>
+              <input id="customerPickupDate" type="date" autocomplete="off">
+            </div>
+            <div class="customer-field">
+              <label for="customerPickupTime">Horário pretendido</label>
+              <input id="customerPickupTime" type="time" autocomplete="off">
+            </div>
+            <p class="customer-freight-info customer-span-2">Retirada gratuita na Rua Madre Clélia, nº 5-44, Jardim Cruzeiro do Sul, Bauru/SP, CEP 17030-290. Informe sua preferência; a equipe confirmará a disponibilidade pelo WhatsApp. Após a confirmação do pagamento, o pedido será separado em até 30 minutos.</p>
+          </div>
+        </fieldset>
+
+        <fieldset class="customer-fieldset customer-address-fields">
+          <legend>Endereço de entrega</legend>
+          <div class="customer-grid">
+            <div class="customer-field customer-span-2">
+              <label for="customerCep">CEP <span aria-hidden="true">*</span></label>
+              <div class="customer-cep-row">
+                <input id="customerCep" name="postalCode" type="text" inputmode="numeric" autocomplete="postal-code" maxlength="9" placeholder="00000-000" required aria-required="true" aria-describedby="customerCepHelp customerCepStatus">
+                <button class="btn secondary" id="customerCepSearch" type="button">Buscar CEP</button>
+              </div>
+              <small id="customerCepHelp">Obrigatório para entrega. Use Buscar CEP para preencher rua, bairro, cidade e estado. A retirada agendada não exige endereço.</small>
+              <small id="customerCepStatus" class="customer-cep-status" role="status" aria-live="polite" hidden></small>
+              <p id="customerFreightInfo" class="customer-freight-info" role="status" aria-live="polite">Informe a cidade e o estado para consultar as condições de entrega. O frete será confirmado no atendimento.</p>
+            </div>
+            <div class="customer-field customer-span-2">
+              <label for="customerStreet">Rua / Avenida <span aria-hidden="true">*</span></label>
+              <input id="customerStreet" name="street" autocomplete="address-line1" required maxlength="180" placeholder="Nome da rua ou avenida">
+            </div>
+            <div class="customer-field">
+              <label for="customerNumber">Número <span aria-hidden="true">*</span></label>
+              <input id="customerNumber" name="number" autocomplete="address-line2" required maxlength="30" placeholder="Nº ou S/N">
+            </div>
+            <div class="customer-field">
+              <label for="customerComplement">Complemento <span class="optional">(opcional)</span></label>
+              <input id="customerComplement" name="complement" autocomplete="off" maxlength="100" placeholder="Apto, bloco, casa dos fundos...">
+            </div>
+            <div class="customer-field">
+              <label for="customerDistrict">Bairro <span aria-hidden="true">*</span></label>
+              <input id="customerDistrict" name="district" autocomplete="address-level3" required maxlength="100" placeholder="Bairro">
+            </div>
+            <div class="customer-field">
+              <label for="customerCity">Cidade <span aria-hidden="true">*</span></label>
+              <input id="customerCity" name="city" autocomplete="address-level2" required maxlength="100" placeholder="Cidade">
+            </div>
+            <div class="customer-field">
+              <label for="customerState">Estado (UF) <span aria-hidden="true">*</span></label>
+              <input id="customerState" name="state" autocomplete="address-level1" required maxlength="2" pattern="[A-Za-z]{2}" placeholder="SP">
+            </div>
+            <div class="customer-field customer-span-2">
+              <label for="customerReference">Ponto de referência <span class="optional">(opcional)</span></label>
+              <input id="customerReference" name="reference" autocomplete="off" maxlength="180" placeholder="Próximo a..., portão..., cor da casa...">
+              <small>O CEP preenche rua, bairro, cidade e estado quando esses dados estão disponíveis. Confira tudo antes de revisar o pedido.</small>
+            </div>
+          </div>
+        </fieldset>
+
+        <div class="customer-actions">
+          <button class="btn secondary" id="customerCancel" type="button">Voltar ao carrinho</button>
+          <button class="btn primary" id="customerReviewButton" type="submit">Revisar pedido</button>
+        </div>
+      </form>
+
+      <section id="customerReview" class="customer-review" hidden aria-labelledby="customerReviewTitle">
+        <h3 id="customerReviewTitle">Revise seu pedido</h3>
+        <p>Confira os produtos, o endereço e o total. Depois, gere seu link seguro de pagamento.</p>
+        <pre id="customerMessagePreview" class="customer-message-preview" tabindex="0" aria-label="Resumo do pedido"></pre>
+        <div class="customer-actions">
+          <button class="btn secondary" id="customerEditButton" type="button">Editar dados</button>
+          <button class="btn primary" id="customerPaymentButton" type="button">PAGAR COM PIX OU CARTÃO</button>
+        </div>
+        <p class="customer-storage-help">O pagamento é processado com segurança pela InfinitePay. O pedido só é confirmado após a confirmação automática da transação. Falar pelo WhatsApp não gera cobrança.</p>
+      </section>
+    </section>
+  </div>
+
+  <!-- =========================================================
+       FOOTER
+  ========================================================== -->
+
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a class="footer-logo" href="index.html">Luxuriosa</a>
+          <p>Sexshop &amp; Lingerie · Bauru/SP</p>
+          <div class="footer-social-links"><strong>Siga a Luxuriosa</strong><a href="https://www.instagram.com/Luxuriosa014/" target="_blank" rel="noopener noreferrer">Instagram</a><a href="https://www.facebook.com/Luxuriosa014/" target="_blank" rel="noopener noreferrer">Facebook</a></div>
+          <span>© <span id="anoAtual">2026</span> Luxuriosa. Todos os direitos reservados.</span>
+        </div>
+        <div class="footer-navigation">
+          <strong>Explore</strong>
+          <a href="index.html">Início</a>
+          <a href="#catalogo">Loja</a>
+          <a href="sobre.html">Sobre a Luxuriosa</a>
+          <a href="atendimento.html">Atendimento</a>
+        </div>
+        <div class="footer-navigation">
+          <strong>Informações</strong>
+          <a href="faq.html">Dúvidas frequentes</a>
+          <a href="clube/">Clube de Vantagens</a>
+          <a href="privacidade.html">Privacidade</a>
+          <a href="#" data-open-cookie-preferences>Preferências de cookies</a>
+          <button type="button" data-wa>Fale com a gente</button>
+          <a href="atendimento.html#entrega">Entrega</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>luxuriosa.com.br</span>
+        <span class="age">Produtos destinados exclusivamente a maiores de 18 anos.</span>
+      </div>
+    </div>
+  </footer>
+
+
+  <!-- =========================================================
+       WHATSAPP FLUTUANTE
+  ========================================================== -->
+
+  <button
+    class="whatsapp"
+    type="button"
+    data-wa
+    aria-label="Falar com a Luxuriosa pelo WhatsApp"
+  >
+    <svg class="whatsapp-icon" viewBox="0 0 32 32" aria-hidden="true" focusable="false">
+      <path fill="currentColor" d="M16.02 3.2A12.72 12.72 0 0 0 5.1 22.44L3.3 28.8l6.53-1.71A12.78 12.78 0 1 0 16.02 3.2Zm0 23.2a10.4 10.4 0 0 1-5.3-1.45l-.38-.23-3.88 1.02 1.04-3.78-.25-.39a10.38 10.38 0 1 1 8.77 4.83Zm5.7-7.77c-.31-.16-1.84-.91-2.12-1.01-.29-.1-.5-.16-.71.16-.21.31-.81 1.01-.99 1.22-.18.21-.36.23-.67.08-.31-.16-1.3-.48-2.47-1.52-.91-.81-1.53-1.81-1.71-2.12-.18-.31-.02-.48.14-.64.14-.14.31-.36.47-.54.16-.18.21-.31.31-.52.1-.21.05-.39-.03-.54-.08-.16-.71-1.7-.97-2.33-.26-.61-.52-.53-.71-.54h-.6c-.21 0-.54.08-.83.39-.29.31-1.09 1.06-1.09 2.59s1.12 3.01 1.27 3.22c.16.21 2.2 3.36 5.33 4.71.74.32 1.32.51 1.77.65.74.24 1.42.21 1.96.13.6-.09 1.84-.75 2.1-1.48.26-.73.26-1.35.18-1.48-.08-.13-.29-.21-.6-.36Z"/>
+    </svg>
+  </button>
+
+
+  <!-- =========================================================
+       JAVASCRIPT
+  ========================================================== -->
+
+  <script src="js/catalogo.js?v=20261119-unified-product-card-v1"></script>
+  <script src="js/inteligencia.js?v=20261113-dado-online"></script>
+  <script src="/previa/js/carrinho.js?v=20261122-whatsapp-checkout-preview-v1"></script>
+  <script src="js/clientes.js?v=20261120-tibirica-minimum-v1"></script>
+  <script src="js/app.js?v=20261120-desktop-backdrop-v1"></script>
+
+  <script src="js/consentimento.js?v=20261119-sem-convites-automaticos-v1"></script>
+</body>
+</html>
