@@ -537,6 +537,103 @@ try {
   result.catalogCardFrameFailures = result.catalogCards.filter(item => item.frameWidth <= 0 || item.frameHeight <= 0);
   await capture(page, "catalogo-completo-mobile-390");
 
+  // Captura a gaveta real do carrinho após adicionar um produto pelo catálogo.
+  // Mantém a verificação restrita ao navegador descartável da auditoria.
+  await page.locator("#grid .product-cart-button").first().click();
+  await page.locator("#cart.open").waitFor({ state: "visible", timeout: 8000 });
+  await page.waitForFunction(() => {
+    const items = document.querySelectorAll("#cartItems .cart-item").length;
+    const footer = document.querySelector("#cartFooter");
+    const checkout = document.querySelector("#cartCheckout");
+    return items > 0 && footer && !footer.hidden && checkout;
+  }, null, { timeout: 8000 });
+
+  const inspectCartDrawer = async (viewportName) => page.evaluate((name) => {
+    const cart = document.querySelector("#cart");
+    const items = document.querySelector("#cartItems");
+    const footer = document.querySelector("#cartFooter");
+    const close = document.querySelector("#cartClose");
+    const checkout = document.querySelector("#cartCheckout");
+    const rect = element => {
+      if (!element) return null;
+      const box = element.getBoundingClientRect();
+      return {
+        left: Math.round(box.left),
+        right: Math.round(box.right),
+        top: Math.round(box.top),
+        bottom: Math.round(box.bottom),
+        width: Math.round(box.width),
+        height: Math.round(box.height)
+      };
+    };
+    const cartRect = rect(cart);
+    return {
+      viewport: name,
+      viewportWidth: document.documentElement.clientWidth,
+      viewportHeight: document.documentElement.clientHeight,
+      isOpen: Boolean(cart?.classList.contains("open")),
+      ariaHidden: cart?.getAttribute("aria-hidden") || null,
+      bodyScrollLocked: document.body.classList.contains("cart-open"),
+      cart: cartRect,
+      cartWithinViewport: Boolean(cartRect &&
+        cartRect.left >= -1 && cartRect.right <= innerWidth + 1 &&
+        cartRect.top >= -1 && cartRect.bottom <= innerHeight + 1),
+      itemCount: items?.querySelectorAll(".cart-item").length || 0,
+      itemsArea: rect(items),
+      itemsScrollable: Boolean(items && items.scrollHeight > items.clientHeight),
+      footerVisible: Boolean(footer && !footer.hidden &&
+        getComputedStyle(footer).display !== "none"),
+      footer: rect(footer),
+      closeButton: rect(close),
+      checkoutButton: rect(checkout),
+      checkoutVisible: Boolean(checkout && checkout.getClientRects().length)
+    };
+  }, viewportName);
+
+  result.cartDrawerMobile = await inspectCartDrawer("mobile-390");
+  assert.ok(result.cartDrawerMobile.isOpen && result.cartDrawerMobile.ariaHidden === "false",
+    "A gaveta do carrinho não abriu corretamente no mobile.");
+  assert.ok(result.cartDrawerMobile.cartWithinViewport,
+    "A gaveta do carrinho ultrapassa a viewport mobile: " + JSON.stringify(result.cartDrawerMobile.cart));
+  assert.ok(result.cartDrawerMobile.itemCount > 0 &&
+    result.cartDrawerMobile.footerVisible && result.cartDrawerMobile.checkoutVisible,
+    "O resumo ou a ação de continuar não ficou visível no carrinho mobile.");
+  assert.ok(result.cartDrawerMobile.closeButton?.width >= 40 &&
+    result.cartDrawerMobile.closeButton?.height >= 40,
+    "O botão de fechar do carrinho está pequeno no mobile.");
+
+  if (SCREENSHOT_DIR) {
+    fs.mkdirSync(SCREENSHOT_DIR, { recursive: true });
+    await page.screenshot({
+      path: path.join(SCREENSHOT_DIR, "carrinho-com-item-mobile-390.png"),
+      fullPage: false,
+      animations: "disabled",
+      timeout: 20000
+    });
+  }
+
+  // A mesma gaveta deve permanecer contida e utilizável na experiência desktop.
+  await page.setViewportSize({ width: 1366, height: 900 });
+  await page.waitForTimeout(180);
+  result.cartDrawerDesktop = await inspectCartDrawer("desktop-1366");
+  assert.ok(result.cartDrawerDesktop.isOpen && result.cartDrawerDesktop.cartWithinViewport,
+    "A gaveta do carrinho ultrapassa a viewport desktop.");
+  assert.ok(result.cartDrawerDesktop.footerVisible && result.cartDrawerDesktop.checkoutVisible,
+    "O resumo ou a ação de continuar não ficou visível no carrinho desktop.");
+
+  if (SCREENSHOT_DIR) {
+    await page.screenshot({
+      path: path.join(SCREENSHOT_DIR, "carrinho-com-item-desktop-1366.png"),
+      fullPage: false,
+      animations: "disabled",
+      timeout: 20000
+    });
+  }
+
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.locator("#cartClose").click();
+  await page.locator("#cart.open").waitFor({ state: "hidden", timeout: 8000 });
+
   // Todos os cards do catálogo devem apontar para a página individual correspondente.
   const renderedCards = await page.locator("#grid .product").evaluateAll(cards =>
     cards.map(card => {
