@@ -128,6 +128,27 @@
 
       window.LuxuriosaCarrinho.sincronizarCatalogo(dados.produtos);
 
+      var precoDetalhe = document.querySelector(".product-detail-price");
+      var precoRegular = Number(produto.precoAntigo);
+      var precoClube = Number(produto.preco);
+      var temPromocaoClube = Number.isFinite(precoRegular) &&
+        Number.isFinite(precoClube) && precoRegular > precoClube;
+      if (precoDetalhe && Number.isFinite(precoClube) && precoClube > 0) {
+        precoDetalhe.textContent = "";
+        var precoAtual = document.createElement("strong");
+        precoAtual.textContent = precoClube.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+        precoDetalhe.appendChild(precoAtual);
+        if (temPromocaoClube) {
+          var precoAntigo = document.createElement("s");
+          precoAntigo.textContent = precoRegular.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+          precoDetalhe.appendChild(precoAntigo);
+          var avisoClube = document.createElement("span");
+          avisoClube.className = "club-promo-note";
+          avisoClube.textContent = "🏷️ Promoção exclusiva do Clube Luxuriosa · Cadastre-se grátis para aproveitar";
+          precoDetalhe.appendChild(avisoClube);
+        }
+      }
+
       if (produto.esgotado) {
         bloquear("Produto esgotado");
         informar("Este produto está temporariamente indisponível.");
