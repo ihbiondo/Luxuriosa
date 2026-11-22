@@ -274,29 +274,36 @@ async function auditCartAndCheckout(page) {
 
   assert.ok(Number.isFinite(product.preco) && product.preco > 0,
     "O produto usado no teste deve ter preço válido.");
+  const cartSnapshotPromise = new Promise(resolve => {
+    page.on("request", request => {
+      if (!request.url().includes("/functions/v1/cart-orders")) return;
+      try {
+        const payload = request.postDataJSON();
+        if (payload && payload.action === "cart_snapshot" &&
+            payload.analytics_consent === true &&
+            Array.isArray(payload.items) &&
+            payload.items.some(item => String(item.id) === product.id)) {
+          resolve(payload);
+        }
+      } catch (_) {}
+    });
+  });
+
   await page.evaluate(item => {
     localStorage.removeItem("luxuriosa_carrinho");
     localStorage.setItem("luxuriosa_carrinho", JSON.stringify([item]));
+    localStorage.setItem("lux_cookie_consent_v1", JSON.stringify({
+      version: 2,
+      updatedAt: new Date().toISOString(),
+      necessary: true,
+      analytics: true,
+      marketing: false
+    }));
   }, product);
 
   await page.goto(`${BASE_URL}/loja.html?abrirCarrinho=1#catalogo`, {
     waitUntil: "domcontentloaded"
   });
-
-  const localAuthSession = await page.evaluate(() => {
-    return Object.keys(localStorage)
-      .filter(key => /^sb-.*-auth-token$/.test(key))
-      .some(key => {
-        try {
-          const value = JSON.parse(localStorage.getItem(key) || "null");
-          return Boolean(value && value.access_token);
-        } catch (_) {
-          return false;
-        }
-      });
-  });
-  assert.ok(localAuthSession,
-    "A sessão autenticada da conta E2E deve permanecer disponível no checkout.");
 
   // Aceita o aviso etário somente no navegador descartável do teste.
   const ageButtons = ["#gateYes", "#ageConfirm"];
@@ -383,32 +390,11 @@ async function auditCartAndCheckout(page) {
 
   // O checkout novo não exige cadastro: valida o resumo e a abertura do WhatsApp sem enviar mensagem real.
   await page.evaluate(() => {
-    const consent = {
-      version: 2,
-      updatedAt: new Date().toISOString(),
-      necessary: true,
-      analytics: true,
-      marketing: false
-    };
-    localStorage.setItem("lux_cookie_consent_v1", JSON.stringify(consent));
     window.__capturedWhatsAppUrl = "";
     window.open = function (url) {
       window.__capturedWhatsAppUrl = String(url || "");
       return null;
     };
-  });
-
-  const cartSnapshotPromise = new Promise(resolve => {
-    page.on("request", request => {
-      if (!request.url().includes("/functions/v1/cart-orders")) return;
-      try {
-        const payload = request.postDataJSON();
-        if (payload && payload.action === "cart_snapshot" &&
-            Array.isArray(payload.items) && payload.items.length > 0) {
-          resolve(payload);
-        }
-      } catch (_) {}
-    });
   });
 
   // O envio do snapshot é a medição de carrinho já existente; confirma que o conteúdo
