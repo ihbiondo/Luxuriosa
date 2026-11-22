@@ -151,7 +151,7 @@ begin
 
   if p_accept_terms and
      coalesce((v_profile_state ->> 'profile_complete')::boolean, false) = false then
-    raise exception 'Para entrar no Clube, complete seu nome completo, data de nascimento (18+), WhatsApp e e-mail no cadastro. O endereço continua opcional.' using errcode = '22023';
+    raise exception 'Para entrar no Clube, complete seu usuário, nome completo, data de nascimento (18+), WhatsApp e e-mail no cadastro. O endereço continua opcional.' using errcode = '22023';
   end if;
 
   select m.active into v_existing_active
