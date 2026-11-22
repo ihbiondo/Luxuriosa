@@ -1511,7 +1511,7 @@
     if (metodo === "pickup") {
       if (valorFrete) valorFrete.textContent = formatarPreco(0);
       if (valorTotalGeral) valorTotalGeral.textContent = formatarPreco(valorTotal());
-      nota.textContent = "📍 Retirada sem cobrança de frete. Local e horário combinados pelo WhatsApp, mediante agendamento.";
+      nota.textContent = "📍 Retirada gratuita em Bauru, mediante agendamento. Local e horário combinados pelo WhatsApp.";
       return resumo;
     }
 
@@ -1567,7 +1567,7 @@
       );
     });
 
-    linhas.push("", "💰 *RESUMO DOS VALORES*", "• Produtos: " + formatarPreco(valorTotal()));
+    linhas.push("", "💰 *RESUMO DOS VALORES*", "• Subtotal estimado dos produtos: " + formatarPreco(valorTotal()));
 
     if (resumo.method === "pickup") {
       linhas.push(
