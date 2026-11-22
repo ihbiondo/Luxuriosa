@@ -49,7 +49,30 @@
     return;
   }
 
-  fetch("../data/produtos.json", { cache: "no-cache" })
+  function carregarStatusClube() {
+    if (window.LuxuriosaClubePrecos &&
+        typeof window.LuxuriosaClubePrecos.pronto === "function") {
+      return window.LuxuriosaClubePrecos.pronto();
+    }
+    return new Promise(function (resolve) {
+      var script = document.createElement("script");
+      script.src = "/js/clube-precos.js?v=20261122-club-promotions-v1";
+      script.onload = function () {
+        var clube = window.LuxuriosaClubePrecos;
+        if (clube && typeof clube.pronto === "function") {
+          clube.pronto().then(resolve).catch(resolve);
+        } else {
+          resolve();
+        }
+      };
+      script.onerror = resolve;
+      document.head.appendChild(script);
+    });
+  }
+
+  carregarStatusClube().then(function () {
+    return fetch("../data/produtos.json", { cache: "no-cache" });
+  })
     .then(function (resposta) {
       if (!resposta.ok) throw new Error("Não foi possível consultar o catálogo.");
       return resposta.json();
