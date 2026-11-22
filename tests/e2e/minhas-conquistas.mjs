@@ -476,7 +476,6 @@ async function auditCartAndCheckout(page) {
   assert.ok(whatsappOpened, "A inteligência não enviou whatsapp_opened. Diagnóstico: " +
     JSON.stringify({ telemetryDiagnostics, telemetryRequests, telemetryConsole }));
   
-    "A inteligência deve registrar o clique que encaminha ao WhatsApp.");
 
   const whatsappUrl = await page.evaluate(() => window.__capturedWhatsAppUrl);
   const parsedWhatsAppUrl = new URL(whatsappUrl);
