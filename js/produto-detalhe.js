@@ -145,6 +145,13 @@
           var avisoClube = document.createElement("span");
           avisoClube.className = "club-promo-note";
           avisoClube.textContent = "🏷️ Promoção exclusiva do Clube Luxuriosa · Cadastre-se grátis para aproveitar";
+          avisoClube.style.flexBasis = "100%";
+          avisoClube.style.display = "block";
+          avisoClube.style.marginTop = "8px";
+          avisoClube.style.color = "#D4AF7C";
+          avisoClube.style.fontSize = "12px";
+          avisoClube.style.fontWeight = "600";
+          avisoClube.style.lineHeight = "1.45";
           precoDetalhe.appendChild(avisoClube);
         }
       }
