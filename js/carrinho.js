@@ -1992,6 +1992,10 @@
     membroClubeAtivo = !!(event && event.detail && event.detail.isMember === true);
     if (catalogoAtual.length) sincronizarCatalogo(catalogoAtual);
   });
+  if (window.LuxuriosaClubePrecos &&
+      typeof window.LuxuriosaClubePrecos.obterEstado === "function") {
+    membroClubeAtivo = window.LuxuriosaClubePrecos.obterEstado().isMember === true;
+  }
 
 
   /* =======================================================
