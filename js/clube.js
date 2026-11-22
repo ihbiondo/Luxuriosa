@@ -43,13 +43,13 @@ function renderState(state) {
   if (isMember) {
     status.textContent = "Você já faz parte do Clube Luxuriosa. Atualize suas preferências quando quiser.";
   } else if (state?.membership_active === true && state?.profile_complete === false) {
-    status.textContent = "Sua adesão está registrada, mas seu cadastro precisa ser completado para liberar as vantagens: " +
+    status.textContent = "Sua adesão está registrada, mas seu cadastro precisa ser completado para liberar os preços promocionais e o frete com valor especial: " +
       (missing.length ? missing.join(", ") : "revise seus dados pessoais") +
       ". Atualize em Minha conta. O endereço permanece opcional.";
   } else if (state?.profile_complete === false) {
     status.textContent = "Para ativar sua participação, complete seu usuário, nome completo, data de nascimento (18+), WhatsApp e e-mail em Minha conta. O endereço é opcional.";
   } else {
-    status.textContent = "Entre para o Clube gratuitamente para liberar os preços promocionais e as tarifas especiais.";
+    status.textContent = "Entre para o Clube gratuitamente para liberar os preços promocionais e o frete com valor especial.";
   }
   if (!isMember && state?.profile_complete === false) {
     const link = document.createElement("a");
@@ -99,7 +99,7 @@ $("clubForm").addEventListener("submit", async (event) => {
 
   await loadState();
   showMessage(data
-    ? "Pronto! Sua participação no Clube está ativa. Volte ao catálogo Luxuriosa para aproveitar as promoções exclusivas."
+    ? "Pronto! Sua participação no Clube está ativa. Volte ao catálogo para aproveitar os preços promocionais; o frete com valor especial será calculado no carrinho conforme o destino."
     : "Suas preferências foram salvas. Se quiser entrar no Clube, marque a opção de adesão e salve novamente.");
 });
 
