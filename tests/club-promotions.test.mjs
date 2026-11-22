@@ -1,0 +1,84 @@
+import test from "node:test";
+import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
+
+const catalog = JSON.parse(readFileSync("data/produtos.json", "utf8"));
+const catalogScript = readFileSync("js/catalogo.js", "utf8");
+const cart = readFileSync("js/carrinho.js", "utf8");
+const clubPrices = readFileSync("js/clube-precos.js", "utf8");
+const productDetail = readFileSync("js/produto-detalhe.js", "utf8");
+const clubPageScript = readFileSync("js/clube.js", "utf8");
+const clubPage = readFileSync("clube.html", "utf8");
+const clubLanding = readFileSync("clube/index.html", "utf8");
+const home = readFileSync("index.html", "utf8");
+const cartOrders = readFileSync("supabase/functions/cart-orders/index.ts", "utf8");
+const paymentOrder = readFileSync("supabase/functions/create-payment-order/index.ts", "utf8");
+const membershipMigration = readFileSync(
+  "supabase/migrations/20261122190000_club_membership_requires_complete_profile.sql",
+  "utf8"
+);
+
+const clubPromotions = catalog.produtos.filter((product) =>
+  Number(product.precoAntigo) > Number(product.preco)
+);
+
+test("todas as promoções do catálogo são identificadas como benefícios do Clube", () => {
+  assert.equal(clubPromotions.length, 11);
+  assert.match(catalogScript, /Promoção exclusiva para membros do Clube Luxuriosa/);
+  assert.match(catalogScript, /formatarPreco\(produto\.preco\)/);
+  assert.match(catalogScript, /formatarPreco\([\s\S]*?produto\.precoAntigo/);
+  assert.match(productDetail, /Promoção exclusiva para membros do Clube Luxuriosa/);
+  assert.equal((home.match(/home-kit-static-club-label/g) || []).length, 4);
+});
+
+test("as páginas dos 11 produtos exibem preço promocional e identificação do Clube sem depender de JavaScript", () => {
+  for (const product of clubPromotions) {
+    const html = readFileSync(product.pagina, "utf8");
+    assert.match(html, /class="product-detail-price"/, product.pagina);
+    assert.match(html, /club-promo-note/, product.pagina);
+    assert.match(html, /Promoção exclusiva para membros do Clube Luxuriosa/, product.pagina);
+  }
+});
+
+test("a consulta pública de status exige membro ativo e perfil completo", () => {
+  assert.match(clubPrices, /client\.rpc\("get_club_membership_state"\)/);
+  assert.match(clubPrices, /membership\.is_member === true && membership\.profile_complete === true/);
+  assert.match(clubPrices, /profile_missing_fields/);
+  assert.match(clubPageScript, /state\?\.profile_complete === true/);
+  assert.match(clubPage, /O endereço permanece opcional/);
+  assert.match(clubLanding, /data de nascimento \(18\+\)/);
+});
+
+test("o benefício de frete não pode ser ativado manualmente no navegador", () => {
+  assert.match(cart, /controle\.disabled = true/);
+  assert.match(cart, /membroClubeVerificado = detail\.loaded === true/);
+  assert.match(cart, /var membroClube = membroClubeVerificado && membroClubeAtivo/);
+  assert.match(cart, /Tarifa especial do Clube aplicada automaticamente/);
+});
+
+test("cart-orders consulta a adesão real e recalcula preços no servidor", () => {
+  assert.match(cartOrders, /userClient\.rpc\("get_club_membership_state"\)/);
+  assert.match(cartOrders, /data\?\.is_member === true && data\?\.profile_complete === true/);
+  assert.match(cartOrders, /cleanItems\(body\.items \|\| \[\], catalog, isClubMember\)/);
+  assert.doesNotMatch(cartOrders, /admin\.from\("club_memberships"\)/);
+});
+
+test("checkout de pagamento valida membro e compara preços sempre em centavos", () => {
+  assert.match(paymentOrder, /userClient\.rpc\("get_club_membership_state"\)/);
+  assert.match(paymentOrder, /data\?\.is_member === true && data\?\.profile_complete === true/);
+  assert.match(paymentOrder, /const regularPriceCents =/);
+  assert.match(paymentOrder, /const hasClubPromotion = regularPriceCents > clubPrice/);
+  assert.match(paymentOrder, /const unitCents = hasClubPromotion && !isClubMember \? regularPriceCents : clubPrice/);
+  assert.doesNotMatch(paymentOrder, /regularPrice > clubPrice/);
+});
+
+test("a adesão exige nome, usuário, WhatsApp, e-mail e maioridade; endereço não é obrigatório", () => {
+  assert.match(membershipMigration, /username/);
+  assert.match(membershipMigration, /full_name/);
+  assert.match(membershipMigration, /birth_date/);
+  assert.match(membershipMigration, /phone/);
+  assert.match(membershipMigration, /email/);
+  assert.match(membershipMigration, /interval '18 years'/);
+  assert.match(membershipMigration, /O endereço não é obrigatório/);
+  assert.match(membershipMigration, /complete seu nome completo[\s\S]*endereço continua opcional/);
+});
