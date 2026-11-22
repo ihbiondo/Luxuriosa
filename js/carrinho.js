@@ -1442,12 +1442,12 @@
       "*CONFIRMAÇÃO DO PEDIDO*",
       "• Confirmar disponibilidade e valores atualizados dos produtos.",
       "• Informar o frete e o prazo para meu endereço/CEP.",
-      "• Enviar as orientações para pagamento.",
+      "• Após a confirmação, receber um link de pagamento ou a chave PIX.",
       "",
-      "_Os valores e a disponibilidade serão confirmados pela equipe. O envio desta mensagem não confirma o pedido nem comprova pagamento._"
+      "_Os valores, a disponibilidade, o frete e o prazo serão confirmados pela equipe. O pedido só será confirmado após a identificação do pagamento._"
     );
 
-    return linhas.join("\\n");
+    return linhas.join("\n");
   }
 
 
