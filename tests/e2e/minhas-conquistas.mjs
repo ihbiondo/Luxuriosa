@@ -439,7 +439,7 @@ async function auditCartAndCheckout(page) {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2
   });
-  assert.equal((await page.locator("#cartGrandTotal").innerText()).replace(/\\s+/g, " ").trim(), expectedTotal,
+  assert.equal((await page.locator("#cartGrandTotal").innerText()).replace(/\s+/g, " ").trim(), expectedTotal,
     "O total geral deve somar subtotal e frete.");
   await page.locator("#cartCheckout").click();
   await page.waitForFunction(() =>
@@ -472,7 +472,7 @@ async function auditCartAndCheckout(page) {
     "A mensagem deve incluir o produto selecionado.");
   assert.ok(message.includes("2x"),
     "A mensagem deve preservar a quantidade selecionada.");
-  assert.match(message, /Frete: R\\$\\s*20,00/);\n  assert.ok(true,
+  assert.match(message, /Frete: R\$\s*20,00/,
     "A mensagem deve incluir a tarifa de membro calculada.");
   assert.ok(message.includes("Total estimado:"),
     "A mensagem deve incluir o total de produtos + frete.");
