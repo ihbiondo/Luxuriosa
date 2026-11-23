@@ -449,6 +449,9 @@ async function auditCartAndCheckout(page) {
   }, null, { timeout: 30000 });
   assert.match(await page.locator("#cartFreightValue").innerText(), /R\$\s*20,00/,
     "Agudos deve aplicar automaticamente a tarifa de membro validado pelo servidor.");
+  const clubFreightNotice = await page.locator("#cartFulfillmentNote").innerText();
+  assert.match(clubFreightNotice, /Benefício de frete do Clube aplicado automaticamente/i);
+  assert.doesNotMatch(clubFreightNotice, /Tarifa de membro .* selecionada|cadastro ativo será conferido/i);
   const subtotalText = await page.locator("#cartTotal").innerText();
   const subtotalNumber = Number(subtotalText.replace(/[^0-9,]/g, "").replace(",", ".")) || 0;
   const expectedTotal = "R$ " + (subtotalNumber + 20).toLocaleString("pt-BR", {

@@ -1629,7 +1629,7 @@
 
     var notas = [];
     if (resumo.clubMember) {
-      notas.push("🏷️ Tarifa de membro do Clube selecionada; o cadastro ativo será conferido pela equipe.");
+      notas.push("🏷️ Benefício de frete do Clube aplicado automaticamente.");
     }
     if (resumo.minimumMet === false) {
       notas.push("⚠️ Pedido mínimo nesta localidade: " + formatarPreco(resumo.minimum) + " em produtos.");

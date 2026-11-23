@@ -76,6 +76,8 @@ test("o benefício de frete é automático e não oferece seleção manual inert
   assert.match(cart, /detail\.authenticated === true/);
   assert.match(cart, /var membroClube = membroClubeVerificado && membroClubeAtivo/);
   assert.match(cart, /Frete especial do Clube ativo e aplicado automaticamente/);
+  assert.match(cart, /Benefício de frete do Clube aplicado automaticamente/);
+  assert.doesNotMatch(cart, /Tarifa de membro do Clube selecionada|cadastro ativo será conferido pela equipe/);
   assert.match(cart, /cartClubInfo/);
   for (const html of [home, store]) {
     assert.doesNotMatch(html, /id="cartClubMember"/);
