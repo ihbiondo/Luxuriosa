@@ -232,18 +232,19 @@ try {
   assert.equal(parsedWhatsAppUrl.pathname, "/5514996355924");
 
   const message = parsedWhatsAppUrl.searchParams.get("text") || "";
-  assert.match(message, /RESUMO DO CARRINHO/);
-  assert.match(message, /Ducha Higiênica — Preta/i);
-  assert.match(message, /Kit Descoberta/i);
+  assert.match(message, /ITENS DO PEDIDO/);
+  assert.match(message, /\d+x Ducha Higiênica — Preta/i);
+  assert.match(message, /\d+x Kit Descoberta/i);
   assert.match(message, /Dado:\s*Hétero/i);
-  assert.match(message, /Subtotal estimado dos produtos/i);
+  assert.match(message, /Produtos: R\$/i);
   assert.ok(message.includes("🛍️"), "A mensagem deve conter emojis.");
-  assert.match(message, /ENTREGA/i);
-  assert.match(message, /Localidade: Bauru/i, "A região selecionada antes do cadastro deve ser mantida.");
-  assert.match(message, /Frete: R\$\s*15,00/i);
+  assert.match(message, /RECEBIMENTO/i);
+  assert.match(message, /Entrega em .*Bauru/i, "A região escolhida antes do cadastro deve ser mantida.");
+  assert.match(message, /Frete \(.*Bauru.*\): R\$\s*15,00/i);
   assert.match(message, /Total estimado/i);
-  assert.match(message, /link de pagamento ou a chave PIX/i);
-  assert.match(message, /O pedido só será confirmado após a identificação do pagamento/i);
+  assert.match(message, /chave PIX ou o link de pagamento/i);
+  assert.match(message, /pedido é confirmado após a identificação do pagamento/i);
+  assert.doesNotMatch(message, /RESUMO DOS VALORES/);
 
   // Retirada agendada em Bauru não adiciona frete ao pedido.
   await page.locator("#cartFulfillmentMethod").selectOption("pickup");
@@ -259,9 +260,10 @@ try {
   );
   const pickupUrl = new URL(await page.evaluate(() => window.__capturedWhatsAppUrl));
   const pickupMessage = pickupUrl.searchParams.get("text") || "";
-  assert.match(pickupMessage, /RETIRADA AGENDADA EM BAURU/i);
-  assert.match(pickupMessage, /Frete para retirada: R\$\s*0,00/i);
+  assert.match(pickupMessage, /Retirada agendada em Bauru/i);
+  assert.match(pickupMessage, /Frete: grátis/i);
   assert.match(pickupMessage, /Total estimado:/i);
+  assert.match(pickupMessage, /PRÓXIMO PASSO/i);
 
 
   assert.equal(await page.locator("#customerOverlay").evaluate(element => element.hidden), true,
