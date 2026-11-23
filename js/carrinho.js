@@ -1643,9 +1643,9 @@
 
   function montarMensagemPedido(resumo) {
     var linhas = [
-      "Olá! Quero concluir meu pedido na *Luxuriosa*. 💗",
+      "Olá! Quero concluir meu pedido na *Luxuriosa*. \u{1F497}",
       "",
-      "🛍️ *RESUMO DO CARRINHO*"
+      "\u{1F6CD}\u{FE0F} *RESUMO DO CARRINHO*"
     ];
 
     carrinho.forEach(function (item) {
@@ -1657,18 +1657,18 @@
       );
     });
 
-    linhas.push("", "💰 *RESUMO DOS VALORES*", "• Subtotal estimado dos produtos: " + formatarPreco(valorTotal()));
+    linhas.push("", "\u{1F4B0} *RESUMO DOS VALORES*", "• Subtotal estimado dos produtos: " + formatarPreco(valorTotal()));
 
     if (resumo.method === "pickup") {
       linhas.push(
         "• Frete para retirada: " + formatarPreco(0),
         "• *Total estimado: " + formatarPreco(valorTotal()) + "*",
         "",
-        "📍 *RETIRADA AGENDADA EM BAURU*",
+        "\u{1F4CD} *RETIRADA AGENDADA EM BAURU*",
         "• Sem cobrança de frete. Local e horário serão combinados com a equipe pelo WhatsApp."
       );
     } else {
-      linhas.push("🚚 *ENTREGA*", "• Localidade: " + (resumo.cityLabel || "A confirmar"));
+      linhas.push("\u{1F69A} *ENTREGA*", "• Localidade: " + (resumo.cityLabel || "A confirmar"));
 
       if (resumo.freight === null) {
         linhas.push(
@@ -1684,50 +1684,40 @@
       }
 
       if (resumo.clubMember) {
-        linhas.push("🏷️ Tarifa de membro do Clube solicitada (cadastro ativo sujeito à conferência).");
+        linhas.push("\u{1F3F7}\u{FE0F} Tarifa de membro do Clube solicitada (cadastro ativo sujeito à conferência).");
       }
       if (resumo.minimumMet === false) {
-        linhas.push("⚠️ Pedido mínimo para esta localidade: " + formatarPreco(resumo.minimum) + " em produtos. O subtotal atual está abaixo desse valor.");
+        linhas.push("\u{26A0}\u{FE0F} Pedido mínimo para esta localidade: " + formatarPreco(resumo.minimum) + " em produtos. O subtotal atual está abaixo desse valor.");
       } else if (resumo.minimum) {
         linhas.push("• Pedido mínimo nesta localidade: " + formatarPreco(resumo.minimum) + " em produtos.");
       }
-      if (resumo.tollIncluded) linhas.push("🛣️ O pedágio já está incluído no frete.");
+      if (resumo.tollIncluded) linhas.push("\u{1F6E3}\u{FE0F} O pedágio já está incluído no frete.");
     }
 
     linhas.push(
       "",
-      "💳 *PAGAMENTO*",
+      "\u{1F4B3} *PAGAMENTO*",
       "• Após a confirmação dos itens, valores e recebimento, a equipe enviará um link de pagamento ou a chave PIX.",
       "",
-      "🔒 _Disponibilidade, prazo e condições finais serão confirmados pela equipe. O pedido só será confirmado após a identificação do pagamento._"
+      "\u{1F512} _Disponibilidade, prazo e condições finais serão confirmados pela equipe. O pedido só será confirmado após a identificação do pagamento._"
     );
 
     return linhas.join("\n");
   }
 
 
-  function finalizarPedido() {
-
-    if (!carrinho.length) {
-      return;
-    }
-
+  function enviarPedidoWhatsApp() {
+    if (!carrinho.length) return false;
     var resumoRecebimento = obterResumoRecebimento();
     if (!resumoRecebimento.valid) {
       window.alert("Selecione a forma de recebimento e, para entrega, a localidade antes de continuar.");
-      return;
-    }
-
-    var checkout = window.LuxuriosaClientes;
-    if (!checkout || typeof checkout.iniciarFinalizacao !== "function") {
-      window.alert("Não foi possível abrir a etapa de cadastro e pagamento. Atualize a página e tente novamente.");
-      return;
+      return false;
     }
 
     if (window.LuxuriosaMedicao && typeof window.LuxuriosaMedicao.registrar === "function") {
       window.LuxuriosaMedicao.registrar("begin_checkout", {
         quantity: quantidadeTotal(),
-        method: "website_checkout",
+        method: "whatsapp",
         fulfillment_method: resumoRecebimento.method,
         delivery_city: resumoRecebimento.city || null,
         delivery_fee: resumoRecebimento.freight,
@@ -1735,19 +1725,43 @@
       });
     }
 
-    /* O cliente entra ou cria uma conta antes de informar os dados e pagar. */
-    if (window.LuxuriosaInteligencia && typeof window.LuxuriosaInteligencia.registrarEtapa === "function") {
-      window.LuxuriosaInteligencia.registrarEtapa("checkout_started", carrinho)
-        .catch(function (erro) {
-          console.warn("Luxuriosa: não foi possível registrar o início da finalização.", erro);
-        });
+    if (window.LuxuriosaInteligencia) {
+      if (typeof window.LuxuriosaInteligencia.registrarEtapa === "function") {
+        window.LuxuriosaInteligencia.registrarEtapa("checkout_started", carrinho)
+          .catch(function (erro) {
+            console.warn("Luxuriosa: não foi possível registrar o início da finalização.", erro);
+          });
+      }
+      if (typeof window.LuxuriosaInteligencia.registrarEvento === "function") {
+        window.LuxuriosaInteligencia.registrarEvento("whatsapp_opened")
+          .catch(function (erro) {
+            console.warn("Luxuriosa: não foi possível registrar a abertura do WhatsApp.", erro);
+          });
+      }
     }
 
-    Promise.resolve(checkout.iniciarFinalizacao()).catch(function (erro) {
-      console.error("Luxuriosa: falha ao iniciar o checkout.", erro);
-      window.alert("Não foi possível iniciar o checkout. Atualize a página e tente novamente.");
-    });
+    abrirWhatsApp(montarMensagemPedido(resumoRecebimento));
+    return true;
+  }
 
+  function finalizarPedido() {
+    if (!carrinho.length) return;
+    var resumoRecebimento = obterResumoRecebimento();
+    if (!resumoRecebimento.valid) {
+      window.alert("Selecione a forma de recebimento e, para entrega, a localidade antes de continuar.");
+      return;
+    }
+
+    var checkout = window.LuxuriosaClientes;
+    if (!checkout || typeof checkout.iniciarFinalizacaoWhatsApp !== "function") {
+      window.alert("Não foi possível validar sua conta. Atualize a página e tente novamente.");
+      return;
+    }
+
+    Promise.resolve(checkout.iniciarFinalizacaoWhatsApp()).catch(function (erro) {
+      console.error("Luxuriosa: falha ao validar a conta antes do pedido.", erro);
+      window.alert("Não foi possível iniciar o pedido. Atualize a página e tente novamente.");
+    });
   }
 
   /* =======================================================
@@ -2099,6 +2113,9 @@
 
     obterQuantidade:
       quantidadeTotal,
+
+    enviarPedidoWhatsApp:
+      enviarPedidoWhatsApp,
 
     sincronizarCatalogo:
       sincronizarCatalogo
