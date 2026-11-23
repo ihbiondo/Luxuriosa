@@ -948,13 +948,15 @@
 
   function obterClienteSupabase() {
     if (!accountSupabasePromise) {
-      accountSupabasePromise = import("https://esm.sh/@supabase/supabase-js@2").then(function (mod) {
-        return mod.createClient(
-          "https://byiykxfugvxuowueuxca.supabase.co",
-          "sb_publishable_LaMbeWQ1PNANEQ85SD_35Q_wDzswy8y",
-          { auth: { autoRefreshToken: true, persistSession: true, detectSessionInUrl: true } }
-        );
-      });
+      accountSupabasePromise = window.LuxuriosaSupabase
+        ? Promise.resolve(window.LuxuriosaSupabase)
+        : import("https://esm.sh/@supabase/supabase-js@2").then(function (mod) {
+            return mod.createClient(
+              "https://byiykxfugvxuowueuxca.supabase.co",
+              "sb_publishable_LaMbeWQ1PNANEQ85SD_35Q_wDzswy8y",
+              { auth: { autoRefreshToken: true, persistSession: true, detectSessionInUrl: true } }
+            );
+          });
     }
     return accountSupabasePromise;
   }
@@ -1033,8 +1035,10 @@
     }
   }
 
-  async function iniciarFinalizacao() {
-    if (!window.LuxuriosaCarrinho || !window.LuxuriosaCarrinho.obterQuantidade()) return;
+  async function iniciarFinalizacaoWhatsApp() {
+    var carrinho = window.LuxuriosaCarrinho;
+    if (!carrinho || typeof carrinho.obterQuantidade !== "function" || !carrinho.obterQuantidade()) return;
+
     var modoCarrinho = texto("cartFulfillmentMethod");
     var regiaoCarrinho = texto("cartDeliveryCity");
     if (modoCarrinho !== "delivery" && modoCarrinho !== "pickup") {
@@ -1047,6 +1051,35 @@
       window.location.replace("/loja.html?abrirCarrinho=1");
       return;
     }
+
+    try {
+      var supabase = await obterClienteSupabase();
+      var auth = await supabase.auth.getUser();
+      if (auth.error) throw auth.error;
+
+      if (!auth.data || !auth.data.user) {
+        try { localStorage.setItem("luxuriosa_checkout_after_login", "1"); } catch (_) {}
+        window.location.assign("/login.html?cadastro=1");
+        return;
+      }
+
+      /* Atualiza a situação do Clube antes de calcular o frete e o resumo do WhatsApp. */
+      if (window.LuxuriosaClubePrecos && typeof window.LuxuriosaClubePrecos.pronto === "function") {
+        try { await window.LuxuriosaClubePrecos.pronto(); } catch (_) {}
+      }
+
+      if (typeof carrinho.enviarPedidoWhatsApp !== "function") {
+        throw new Error("O envio do pedido pelo WhatsApp não está disponível.");
+      }
+      carrinho.enviarPedidoWhatsApp();
+    } catch (error) {
+      console.error("Não foi possível validar a conta antes do pedido:", error);
+      window.alert("Não conseguimos confirmar seu acesso à Luxuriosa. Verifique sua conexão e tente novamente.");
+    }
+  }
+
+  async function iniciarFinalizacao() {
+    if (!window.LuxuriosaCarrinho || !window.LuxuriosaCarrinho.obterQuantidade()) return;
     try {
       var supabase = await obterClienteSupabase();
       var auth = await supabase.auth.getUser();
@@ -1132,7 +1165,7 @@
     });
     if (new URLSearchParams(window.location.search).get("retomar-checkout") === "1") {
       window.history.replaceState({}, document.title, window.location.pathname);
-      window.setTimeout(function () { iniciarFinalizacao(); }, 350);
+      window.setTimeout(function () { iniciarFinalizacaoWhatsApp(); }, 350);
     }
     var campoEstado = $("customerState");
     if (campoEstado) {
@@ -1162,7 +1195,10 @@
     }
   }
 
-  window.LuxuriosaClientes = { iniciarFinalizacao: iniciarFinalizacao };
+  window.LuxuriosaClientes = {
+    iniciarFinalizacao: iniciarFinalizacao,
+    iniciarFinalizacaoWhatsApp: iniciarFinalizacaoWhatsApp
+  };
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", iniciar);
   else iniciar();
 })();
