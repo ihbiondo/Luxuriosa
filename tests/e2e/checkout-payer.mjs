@@ -218,6 +218,7 @@ try {
   assert.match(message, /Subtotal estimado dos produtos/i);
   assert.ok(message.includes("🛍️"), "A mensagem deve conter emojis.");
   assert.match(message, /ENTREGA/i);
+  assert.match(message, /Localidade: Bauru/i, "A região selecionada antes do cadastro deve ser mantida.");
   assert.match(message, /Frete: R\$\s*15,00/i);
   assert.match(message, /Total estimado/i);
   assert.match(message, /link de pagamento ou a chave PIX/i);
