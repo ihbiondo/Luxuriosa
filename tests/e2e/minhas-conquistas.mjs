@@ -401,7 +401,7 @@ async function auditCartAndCheckout(page) {
   assert.equal(await page.locator("#cartItems .cart-qty").innerText(), "2",
     "O controle de quantidade deve atualizar o item na gaveta.");
 
-  // O checkout novo não exige cadastro: valida o resumo e a abertura do WhatsApp sem enviar mensagem real.
+  // O usuário autenticado valida o resumo e a abertura do WhatsApp sem enviar mensagem real.
   await page.evaluate(() => {
     window.__capturedWhatsAppUrl = "";
     window.open = function (url) {
@@ -444,8 +444,8 @@ async function auditCartAndCheckout(page) {
   await page.locator("#cartFulfillmentMethod").selectOption("delivery");
   await page.locator("#cartDeliveryCity").selectOption("agudos");
   await page.waitForFunction(() => {
-    const control = document.querySelector("#cartClubMember");
-    return control && control.disabled && control.checked;
+    const status = document.querySelector("#cartClubInfo");
+    return status && /Frete especial do Clube ativo e aplicado automaticamente/i.test(status.textContent);
   }, null, { timeout: 30000 });
   assert.match(await page.locator("#cartFreightValue").innerText(), /R\$\s*20,00/,
     "Agudos deve aplicar automaticamente a tarifa de membro validado pelo servidor.");
