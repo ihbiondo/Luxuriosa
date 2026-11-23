@@ -1114,7 +1114,7 @@
               ? "🏷️ Preço exclusivo para membros do Clube"
               : "🏷️ Cadastre-se grátis no Clube e aproveite " + formatarPreco(item.precoClube)
           );
-          avisoPrecoClube.href = "/clube/";
+          avisoPrecoClube.href = "/login.html?cadastro=1&next=clube.html";
           avisoPrecoClube.style.display = "block";
           avisoPrecoClube.style.marginTop = "4px";
           avisoPrecoClube.style.color = "#D4AF7C";
