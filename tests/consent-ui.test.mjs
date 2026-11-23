@@ -7,6 +7,7 @@ const consent = readFileSync("js/consentimento.js", "utf8");
 const app = readFileSync("js/app.js", "utf8");
 const home = readFileSync("index.html", "utf8");
 const shop = readFileSync("loja.html", "utf8");
+const visitorAnalytics = readFileSync("js/inteligencia.js", "utf8");
 
 test("mantém confirmação 18+ e preferências de cookies", () => {
   assert.match(consent, /function ensureAgeGate/);
@@ -55,4 +56,18 @@ test("todas as páginas públicas usam a versão atual do script de privacidade"
     }
   }
   assert.deepEqual(staleReferences, [], "Há páginas públicas carregando versão antiga do script de privacidade.");
+});
+
+test("disponibiliza preferências de privacidade em Educação e Experiências sem duplicar o gate 18+", () => {
+  assert.match(visitorAnalytics, /ensurePrivacyPreferencesLoaded/);
+  assert.match(visitorAnalytics, /data-lux-skip-global-age-gate/);
+  assert.match(visitorAnalytics, /consentimento\\.js\\?v=20261123-analytics-consent-v1/);
+  assert.match(consent, /data-lux-skip-global-age-gate/);
+  assert.match(consent, /if \\(skipGlobalAgeGate\\)/);
+  assert.match(consent, /var gate = document\\.getElementById\\("gate"\\);/);
+});
+
+test("explica a medição interna e usa link absoluto para a política de privacidade", () => {
+  assert.match(consent, /Medição interna de navegação e Google Analytics 4/);
+  assert.match(consent, /\\/privacidade\\.html/);
 });

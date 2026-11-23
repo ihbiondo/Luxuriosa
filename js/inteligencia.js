@@ -436,6 +436,22 @@
     obterSessao: getSessionKey
   };
 
+  function ensurePrivacyPreferencesLoaded() {
+    var path = window.location.pathname || "/";
+    if (!/^\/(?:educacao|experiencias)(?:\/|$)/i.test(path)) return;
+    if (document.querySelector('script[src*="consentimento.js"], script[data-luxuriosa-consent-preferences="true"]')) return;
+
+    // Preserva as confirmações de idade próprias dessas duas áreas.
+    document.documentElement.setAttribute("data-lux-skip-global-age-gate", "true");
+    var script = document.createElement("script");
+    script.src = "/js/consentimento.js?v=20261123-analytics-consent-v1";
+    script.async = true;
+    script.setAttribute("data-luxuriosa-consent-preferences", "true");
+    (document.head || document.documentElement).appendChild(script);
+  }
+
+  ensurePrivacyPreferencesLoaded();
+
   var pageViewRecorded = false;
   function trackPageViewIfAllowed() {
     if (!analyticsConsentGranted()) {
