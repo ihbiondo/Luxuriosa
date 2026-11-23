@@ -1642,64 +1642,65 @@
   }
 
   function montarMensagemPedido(resumo) {
+    var subtotal = valorTotal();
     var linhas = [
-      "Olá! Quero concluir meu pedido na *Luxuriosa*. \u{1F497}",
+      "Olá! Quero finalizar meu pedido na *Luxuriosa*. \u{1F497}",
       "",
-      "\u{1F6CD}\u{FE0F} *RESUMO DO CARRINHO*"
+      "\u{1F6CD}\u{FE0F} *ITENS DO PEDIDO*"
     ];
 
     carrinho.forEach(function (item) {
       var variacaoKit = item.kit_variant_name ? " (Dado: " + item.kit_variant_name + ")" : "";
       var observacao = item.indisponivel ? " — *consultar disponibilidade*" : "";
       linhas.push(
-        "• " + item.nome + variacaoKit + " — " + item.quantidade + "x — " +
+        "• " + item.quantidade + "x " + item.nome + variacaoKit + " — " +
         formatarPreco(item.preco * item.quantidade) + observacao
       );
     });
 
-    linhas.push("", "\u{1F4B0} *RESUMO DOS VALORES*", "• Subtotal estimado dos produtos: " + formatarPreco(valorTotal()));
+    linhas.push("", "\u{1F4B0} *VALORES*", "• Produtos: " + formatarPreco(subtotal));
 
     if (resumo.method === "pickup") {
       linhas.push(
-        "• Frete para retirada: " + formatarPreco(0),
-        "• *Total estimado: " + formatarPreco(valorTotal()) + "*",
+        "• Frete: grátis",
+        "• *Total estimado: " + formatarPreco(subtotal) + "*",
         "",
-        "\u{1F4CD} *RETIRADA AGENDADA EM BAURU*",
-        "• Sem cobrança de frete. Local e horário serão combinados com a equipe pelo WhatsApp."
+        "\u{1F4CD} *RECEBIMENTO*",
+        "Retirada agendada em Bauru. Local e horário serão combinados no atendimento."
       );
     } else {
-      linhas.push("\u{1F69A} *ENTREGA*", "• Localidade: " + (resumo.cityLabel || "A confirmar"));
-
+      linhas.push("\u{1F69A} *RECEBIMENTO*", "Entrega em " + (resumo.cityLabel || "localidade a confirmar") + ".");
       if (resumo.freight === null) {
         linhas.push(
-          "• Frete: *a confirmar com a equipe*",
-          "• Total geral: *será informado após consulta da localidade*",
-          "• Informe sua cidade e CEP para verificarmos o atendimento."
+          "• Frete: a confirmar com a equipe",
+          "• *Total: a confirmar*"
         );
       } else {
         linhas.push(
-          "• Frete: " + formatarPreco(resumo.freight),
+          "• Frete (" + (resumo.cityLabel || "entrega") + "): " + formatarPreco(resumo.freight),
           "• *Total estimado: " + formatarPreco(resumo.total) + "*"
         );
       }
 
       if (resumo.clubMember) {
-        linhas.push("\u{1F3F7}\u{FE0F} Tarifa de membro do Clube solicitada (cadastro ativo sujeito à conferência).");
+        linhas.push("\u{1F3F7} Benefício de frete do Clube aplicado automaticamente.");
       }
       if (resumo.minimumMet === false) {
-        linhas.push("\u{26A0}\u{FE0F} Pedido mínimo para esta localidade: " + formatarPreco(resumo.minimum) + " em produtos. O subtotal atual está abaixo desse valor.");
-      } else if (resumo.minimum) {
-        linhas.push("• Pedido mínimo nesta localidade: " + formatarPreco(resumo.minimum) + " em produtos.");
+        var faltante = Math.max(0, Number(resumo.minimum) - subtotal);
+        linhas.push(
+          "\u{26A0}\u{FE0F} Pedido mínimo: " + formatarPreco(resumo.minimum) +
+          " em produtos. Faltam " + formatarPreco(faltante) + "."
+        );
       }
-      if (resumo.tollIncluded) linhas.push("\u{1F6E3}\u{FE0F} O pedágio já está incluído no frete.");
+      if (resumo.tollIncluded) linhas.push("Pedágio já incluído no frete.");
     }
 
     linhas.push(
       "",
-      "\u{1F4B3} *PAGAMENTO*",
-      "• Após a confirmação dos itens, valores e recebimento, a equipe enviará um link de pagamento ou a chave PIX.",
+      "\u{1F4B3} *PRÓXIMO PASSO*",
+      "A equipe confirma a disponibilidade e o prazo antes de enviar a chave PIX ou o link de pagamento.",
       "",
-      "\u{1F512} _Disponibilidade, prazo e condições finais serão confirmados pela equipe. O pedido só será confirmado após a identificação do pagamento._"
+      "\u{1F512} _O pedido é confirmado após a identificação do pagamento._"
     );
 
     return linhas.join("\n");
