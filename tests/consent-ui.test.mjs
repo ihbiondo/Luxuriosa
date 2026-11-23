@@ -50,7 +50,7 @@ test("todas as páginas públicas usam a versão atual do script de privacidade"
     const html = readFileSync(path, "utf8");
     const scripts = [...html.matchAll(/<script\b[^>]+src=["']([^"']*consentimento\.js[^"']*)["']/gi)];
     for (const [, source] of scripts) {
-      if (!source.includes("v=20261119-sem-convites-automaticos-v1")) {
+      if (!source.includes("v=20261123-analytics-consent-v1")) {
         staleReferences.push(path + " -> " + source);
       }
     }
@@ -59,15 +59,15 @@ test("todas as páginas públicas usam a versão atual do script de privacidade"
 });
 
 test("disponibiliza preferências de privacidade em Educação e Experiências sem duplicar o gate 18+", () => {
-  assert.match(visitorAnalytics, /ensurePrivacyPreferencesLoaded/);
-  assert.match(visitorAnalytics, /data-lux-skip-global-age-gate/);
-  assert.match(visitorAnalytics, /consentimento\\.js\\?v=20261123-analytics-consent-v1/);
-  assert.match(consent, /data-lux-skip-global-age-gate/);
-  assert.match(consent, /if \\(skipGlobalAgeGate\\)/);
-  assert.match(consent, /var gate = document\\.getElementById\\("gate"\\);/);
+  assert.ok(visitorAnalytics.includes("function ensurePrivacyPreferencesLoaded"));
+  assert.ok(visitorAnalytics.includes("data-lux-skip-global-age-gate"));
+  assert.ok(visitorAnalytics.includes("/js/consentimento.js?v=20261123-analytics-consent-v1"));
+  assert.ok(consent.includes("data-lux-skip-global-age-gate"));
+  assert.ok(consent.includes("if (skipGlobalAgeGate)"));
+  assert.ok(consent.includes('var gate = document.getElementById("gate");'));
 });
 
 test("explica a medição interna e usa link absoluto para a política de privacidade", () => {
-  assert.match(consent, /Medição interna de navegação e Google Analytics 4/);
-  assert.match(consent, /\\/privacidade\\.html/);
+  assert.ok(consent.includes("Medição interna de navegação e Google Analytics 4"));
+  assert.ok(consent.includes("/privacidade.html"));
 });
