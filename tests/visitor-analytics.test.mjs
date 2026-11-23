@@ -82,10 +82,28 @@ function createHarness({
     _listeners: windowListeners
   };
 
+  const appendedScripts = [];
+  const rootAttributes = new Map();
+  const documentElement = {
+    setAttribute(name, value) { rootAttributes.set(name, String(value)); },
+    getAttribute(name) { return rootAttributes.has(name) ? rootAttributes.get(name) : null; }
+  };
   const document = {
     title,
     referrer,
     visibilityState: "visible",
+    documentElement,
+    head: { appendChild(element) { appendedScripts.push(element); } },
+    createElement(tagName) {
+      const attributes = new Map();
+      return {
+        tagName: String(tagName).toUpperCase(),
+        src: "",
+        async: false,
+        setAttribute(name, value) { attributes.set(name, String(value)); },
+        getAttribute(name) { return attributes.has(name) ? attributes.get(name) : null; }
+      };
+    },
     addEventListener(name, callback) {
       const callbacks = documentListeners.get(name) || [];
       callbacks.push(callback);
@@ -128,6 +146,8 @@ function createHarness({
   return {
     window,
     document,
+    documentElement,
+    appendedScripts,
     localStorage,
     sessionStorage,
     requests,
@@ -242,6 +262,8 @@ test("Educação e Experiências registram apenas a seção, sem artigo ou resul
   });
   await educationPage.settle();
   const educationView = educationPage.requests.find(request => request.body.event_name === "page_view");
+  assert.ok(educationPage.appendedScripts.some(script => script.src === "/js/consentimento.js?v=20261123-analytics-consent-v1"));
+  assert.equal(educationPage.document.documentElement.getAttribute("data-lux-skip-global-age-gate"), "true");
   assert.ok(educationView);
   assert.equal(educationView.body.page_path, "/educacao/");
   assert.equal(educationView.body.page_title, "Conteúdo educativo | Luxuriosa");
@@ -253,6 +275,8 @@ test("Educação e Experiências registram apenas a seção, sem artigo ou resul
   });
   await experiencePage.settle();
   const experienceView = experiencePage.requests.find(request => request.body.event_name === "page_view");
+  assert.ok(experiencePage.appendedScripts.some(script => script.src === "/js/consentimento.js?v=20261123-analytics-consent-v1"));
+  assert.equal(experiencePage.document.documentElement.getAttribute("data-lux-skip-global-age-gate"), "true");
   assert.ok(experienceView);
   assert.equal(experienceView.body.page_path, "/experiencias/");
   assert.equal(experienceView.body.page_title, "Experiências | Luxuriosa");
