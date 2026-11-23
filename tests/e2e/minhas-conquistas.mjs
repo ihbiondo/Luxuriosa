@@ -491,11 +491,11 @@ async function auditCartAndCheckout(page) {
     "A mensagem deve incluir o produto selecionado.");
   assert.ok(message.includes("2x"),
     "A mensagem deve preservar a quantidade selecionada.");
-  assert.match(message, /Produtos: R\\$\\s*[0-9.]+,[0-9]{2}/,
+  assert.match(message, /Produtos: R\$\s*[0-9.]+,[0-9]{2}/,
     "A mensagem deve identificar o subtotal dos produtos.");
-  assert.match(message, /Frete \\(Agudos\\): R\\$\\s*20,00/i,
+  assert.match(message, /Frete \(Agudos\): R\$\s*20,00/i,
     "A mensagem deve incluir a tarifa de membro calculada.");
-  assert.match(message, /Total estimado: R\\$\\s*[0-9.]+,[0-9]{2}/,
+  assert.match(message, /Total estimado: R\$\s*[0-9.]+,[0-9]{2}/,
     "A mensagem deve incluir o total de produtos + frete.");
   assert.ok(message.includes("Benefício de frete do Clube aplicado automaticamente"),
     "A mensagem deve informar que o benefício de membro foi aplicado automaticamente.");
