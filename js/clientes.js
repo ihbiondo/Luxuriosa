@@ -1054,10 +1054,11 @@
 
     try {
       var supabase = await obterClienteSupabase();
-      var auth = await supabase.auth.getUser();
+      var auth = await supabase.auth.getSession();
       if (auth.error) throw auth.error;
+      var session = auth.data && auth.data.session;
 
-      if (!auth.data || !auth.data.user) {
+      if (!session || !session.user) {
         try { localStorage.setItem("luxuriosa_checkout_after_login", "1"); } catch (_) {}
         window.location.assign("/login.html?cadastro=1");
         return;
