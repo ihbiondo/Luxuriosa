@@ -566,9 +566,9 @@
         </select>
 
         <div class="cart-delivery-fields" id="cartDeliveryFields" hidden>
-          <label for="cartDeliveryCity">Localidade da entrega</label>
-          <select id="cartDeliveryCity">
-            <option value="">Selecione sua cidade</option>
+          <label for="cartDeliveryCity">Cidade ou região da entrega <span aria-hidden="true">*</span></label>
+          <select id="cartDeliveryCity" aria-required="true">
+            <option value="">Selecione sua cidade ou região</option>
             <option value="bauru">Bauru (exceto Tibiriçá)</option>
             <option value="tibirica">Tibiriçá</option>
             <option value="agudos">Agudos</option>
@@ -578,11 +578,8 @@
             <option value="borebi">Borebi</option>
             <option value="other">Outra localidade</option>
           </select>
-          <label class="cart-club-row" for="cartClubMember">
-            <input id="cartClubMember" type="checkbox">
-            <span>Tenho cadastro ativo no Clube Luxuriosa</span>
-          </label>
-          <p class="cart-fulfillment-hint">A tarifa especial de membro depende da confirmação do cadastro.</p>
+          <p class="cart-fulfillment-hint" id="cartClubInfo" role="status" aria-live="polite">Membros ativos do Clube recebem frete com valor especial, aplicado automaticamente.</p>
+          <a class="cart-club-link" id="cartClubJoinLink" href="/clube/">Conheça o Clube e participe gratuitamente</a>
         </div>
 
         <div class="cart-total-row cart-fee-row">
@@ -601,7 +598,7 @@
         id="cartCheckout"
         type="button"
       >
-        Finalizar pelo WhatsApp
+        Continuar para finalizar
       </button>
 
 
@@ -615,7 +612,7 @@
 
 
       <p class="cart-note">
-        O subtotal é estimado. A equipe confirmará disponibilidade, valores, frete e prazo pelo WhatsApp; depois, enviará um link de pagamento ou a chave PIX.
+        Entre ou crie sua conta para informar os dados do pedido, conferir a entrega e gerar o pagamento seguro por PIX ou cartão.
         <a href="privacidade.html" target="_blank" rel="noopener">Política de Privacidade</a>.
       </p>
 
@@ -728,6 +725,7 @@
 
         <fieldset class="customer-fieldset customer-address-fields">
           <legend>Endereço de entrega</legend>
+          <p id="customerSelectedRegionInfo" class="customer-freight-info" role="status" aria-live="polite" hidden></p>
           <div class="customer-grid">
             <div class="customer-field customer-span-2">
               <label for="customerCep">CEP <span aria-hidden="true">*</span></label>
@@ -852,8 +850,8 @@
   <script src="js/app.js?v=20261122-club-profile-v2"></script>
   <script src="js/catalogo.js?v=20261122-club-profile-v2"></script>
   <script src="js/inteligencia.js?v=20261113-dado-online"></script>
-  <script src="js/carrinho.js?v=20261122-club-profile-v2"></script>
-  <script src="js/clientes.js?v=20261120-tibirica-minimum-v1"></script>
+  <script src="js/carrinho.js?v=20261123-checkout-flow-v1"></script>
+  <script src="js/clientes.js?v=20261123-checkout-flow-v1"></script>
 
   <script src="js/consentimento.js?v=20261119-sem-convites-automaticos-v1"></script>
 </body>
