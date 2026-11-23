@@ -47,6 +47,90 @@
     return tarifas[cidade] || null;
   }
 
+  function obterRegiaoSelecionada() {
+    var campo = $("cartDeliveryCity");
+    return campo ? String(campo.value || "").trim() : "";
+  }
+
+  function obterNomeRegiaoSelecionada() {
+    var campo = $("cartDeliveryCity");
+    if (!campo || campo.selectedIndex < 0) return "";
+    return String(campo.options[campo.selectedIndex].textContent || "").trim();
+  }
+
+  function enderecoCorrespondeRegiaoSelecionada(address) {
+    var regiao = obterRegiaoSelecionada();
+    var cidade = normalizarLocalidade(address && address.city);
+    var distrito = normalizarLocalidade(address && address.district);
+    var estado = String(address && address.state || "").trim().toUpperCase();
+    var localidadesConhecidas = [
+      "bauru", "tibirica", "agudos", "piratininga",
+      "pederneiras", "lencois paulista", "borebi"
+    ];
+
+    if (!regiao) return false;
+    if (regiao === "other") {
+      return localidadesConhecidas.indexOf(cidade) === -1 &&
+        distrito !== "tibirica";
+    }
+    if (estado !== "SP") return false;
+
+    if (regiao === "bauru") {
+      return cidade === "bauru" && distrito !== "tibirica";
+    }
+    if (regiao === "tibirica") {
+      return (cidade === "bauru" && distrito === "tibirica") ||
+        cidade === "tibirica";
+    }
+    return cidade === regiao;
+  }
+
+  function obterResumoFretePedido(data, subtotal) {
+    if (data.fulfillmentType === "pickup") {
+      return {
+        fee: 0,
+        total: subtotal,
+        minimum: 0,
+        member: false,
+        tollIncluded: false,
+        locality: "Retirada agendada em Bauru"
+      };
+    }
+
+    var address = data.address || {};
+    var tarifa = obterTarifasOficiais(address);
+    var estado = String(address.state || "").trim().toUpperCase();
+    var memberState = window.LuxuriosaClubePrecos &&
+      typeof window.LuxuriosaClubePrecos.obterEstado === "function"
+      ? window.LuxuriosaClubePrecos.obterEstado()
+      : {};
+    var member = memberState.loaded === true &&
+      memberState.isMember === true &&
+      memberState.profileComplete === true;
+    var minimum = minimoEntregaPorEndereco(address);
+
+    if (!tarifa || estado !== "SP") {
+      return {
+        fee: null,
+        total: null,
+        minimum: minimum,
+        member: false,
+        tollIncluded: false,
+        locality: [address.city, estado].filter(Boolean).join("/")
+      };
+    }
+
+    var fee = member ? tarifa.clube : tarifa.comum;
+    return {
+      fee: fee,
+      total: subtotal + fee,
+      minimum: minimum,
+      member: member,
+      tollIncluded: tarifa.pedagio,
+      locality: tarifa.nome
+    };
+  }
+
   function resumirCondicaoFrete(address, subtotal) {
     var cidade = String(address && address.city || "").trim();
     var estado = String(address && address.state || "").trim().toUpperCase();
@@ -97,6 +181,21 @@
     }
   }
 
+  function atualizarRegiaoSelecionada() {
+    var info = $("customerSelectedRegionInfo");
+    if (!info) return;
+    if (modalidadeRetirada()) {
+      info.hidden = true;
+      info.textContent = "";
+      return;
+    }
+    var nome = obterNomeRegiaoSelecionada();
+    info.hidden = false;
+    info.textContent = nome
+      ? "Região escolhida no carrinho: " + nome + ". O CEP e o endereço serão conferidos para garantir o frete correto."
+      : "Volte ao carrinho e selecione a cidade ou região da entrega antes de continuar.";
+  }
+
   function atualizarModalidade() {
     var pickup = modalidadeRetirada();
     var addressFields = document.querySelector("#customerForm .customer-address-fields");
@@ -108,6 +207,7 @@
       campoCep.required = !pickup;
       campoCep.setAttribute("aria-required", pickup ? "false" : "true");
     }
+    atualizarRegiaoSelecionada();
     atualizarAvisoFrete();
   }
 
@@ -262,20 +362,10 @@
     var estado = texto("customerState").toUpperCase();
     var distrito = texto("customerDistrict");
     var api = window.LuxuriosaCarrinho;
-    var itens = api && typeof api.obterItens === "function" ? api.obterItens() : [];
     var subtotal = api && typeof api.obterTotal === "function" ? Number(api.obterTotal()) : 0;
 
     if (!cidade || !estado) {
-      aviso.textContent = "Informe a cidade e o estado para conferir o valor de entrega.";
-      return;
-    }
-
-    var kitComFreteGratis = pedidoContemKit(itens) &&
-      normalizarLocalidade(cidade) === "bauru" &&
-      estado === "SP" &&
-      normalizarLocalidade(distrito) !== "tibirica";
-    if (kitComFreteGratis) {
-      aviso.textContent = "Frete gratuito para pedidos com kit em Bauru/SP. Pedido mínimo: R$ 20,00 em produtos.";
+      aviso.textContent = "Informe o CEP para preencher a cidade e o bairro e conferir o valor de entrega.";
       return;
     }
 
@@ -285,8 +375,20 @@
       return;
     }
 
-    var textoFrete = "Frete fixo em " + tarifa.nome + ": Sem Clube " + formatarPreco(tarifa.comum) +
-      " | Clube gratuito " + formatarPreco(tarifa.clube) + ".";
+    var memberState = window.LuxuriosaClubePrecos &&
+      typeof window.LuxuriosaClubePrecos.obterEstado === "function"
+      ? window.LuxuriosaClubePrecos.obterEstado()
+      : {};
+    var member = memberState.loaded === true &&
+      memberState.isMember === true &&
+      memberState.profileComplete === true;
+    var fee = member ? tarifa.clube : tarifa.comum;
+    var textoFrete = "Frete estimado em " + tarifa.nome + ": " + formatarPreco(fee) + ".";
+    if (!member) {
+      textoFrete += " Membros ativos do Clube: " + formatarPreco(tarifa.clube) + " (aplicado automaticamente).";
+    } else {
+      textoFrete += " Tarifa especial do Clube aplicada automaticamente.";
+    }
     if (tarifa.pedagio) textoFrete += " Pedágio já incluído.";
     var pedidoMinimo = minimoEntregaPorEndereco({ city: cidade, state: estado });
     var textoMinimo = " Pedido mínimo: " + formatarPreco(pedidoMinimo) + " em produtos.";
@@ -391,6 +493,15 @@
       primeiroErro.focus();
       return false;
     }
+    if (exigirEnderecoEntrega && !enderecoCorrespondeRegiaoSelecionada(data.address)) {
+      avisar(
+        !obterRegiaoSelecionada()
+          ? "Selecione a cidade ou região da entrega no carrinho antes de continuar."
+          : "O endereço informado não corresponde à região escolhida no carrinho. Volte ao carrinho para ajustar a região ou corrija o endereço pelo CEP.",
+        "error"
+      );
+      return false;
+    }
     limparAviso();
     return true;
   }
@@ -431,12 +542,6 @@
     return { valido: true, subtotal: subtotalCalculado };
   }
 
-  function pedidoContemKit(items) {
-    return Array.isArray(items) && items.some(function (item) {
-      return String(item && item.categoria || "").trim().toLowerCase() === "kits";
-    });
-  }
-
   function preencherMensagem(data) {
     var api = window.LuxuriosaCarrinho;
     var items = api && typeof api.obterItens === "function" ? api.obterItens() : [];
@@ -445,21 +550,14 @@
       avisar(integridade.motivo, "error");
       return "";
     }
-
-    var subtotal = integridade.subtotal;
-    var kitComFreteGratis = data.fulfillmentType !== "pickup" &&
-      pedidoContemKit(items) &&
-      normalizarLocalidade(data.address && data.address.city) === "bauru" &&
-      String(data.address && data.address.state || "").trim().toUpperCase() === "SP" &&
-      normalizarLocalidade(data.address && data.address.district) !== "tibirica";
     if (!items.length) return "";
 
-    var totalProdutos = subtotal;
-
+    var subtotal = integridade.subtotal;
+    var freight = obterResumoFretePedido(data, subtotal);
     var lines = [
-      "Olá! Quero fazer um pedido na *Luxuriosa*. ❤️",
+      "\u{1F497} *RESUMO DO PEDIDO | LUXURIOSA*",
       "",
-      "*MEU PEDIDO*"
+      "\u{1F6CD} *ITENS DO CARRINHO*"
     ];
 
     items.forEach(function (item) {
@@ -469,29 +567,40 @@
         (item.kit_variant_name ? " (Dado incluído: " + item.kit_variant_name + ")" : ""));
     });
 
-    lines.push("", "*Subtotal: " + formatarPreco(subtotal) + "*");
-
-    lines.push(data.fulfillmentType === "pickup"
-      ? "Frete: gratuito · retirada agendada em Bauru"
-      : kitComFreteGratis
-        ? "Frete: gratuito · pedido com kit em Bauru/SP (inclui produtos avulsos no mesmo pedido)"
-        : "Frete: valor fixo conforme a localidade e a modalidade do Clube, de acordo com a tabela oficial");
-    lines.push("*Total dos produtos: " + formatarPreco(totalProdutos) + "*");
-
-    lines.push("", "*PAGAMENTO*");
-    if (data.paymentPayerType === "third_party") {
-      lines.push("• Pagador indicado: " + data.paymentPayerName + " — " + data.paymentPayerPhone);
-      lines.push("• Informação declarada no pedido; a confirmação do pagamento será feita separadamente.");
+    lines.push("", "\u{1F4B0} *RESUMO DOS VALORES*", "• Produtos: " + formatarPreco(subtotal));
+    if (data.fulfillmentType === "pickup") {
+      lines.push(
+        "• Modalidade: retirada agendada em Bauru",
+        "• Frete: gratuito",
+        "• *Total estimado: " + formatarPreco(subtotal) + "*"
+      );
+    } else if (freight.fee === null) {
+      lines.push(
+        "• Região: " + (freight.locality || "A confirmar"),
+        "• Frete: a confirmar com a equipe",
+        "• Total: será informado após consulta da localidade"
+      );
     } else {
-      lines.push("• Pagador indicado: você (pessoa responsável pelo pedido).");
+      lines.push(
+        "• Região: " + freight.locality,
+        "• Frete: " + formatarPreco(freight.fee),
+        "• *Total estimado: " + formatarPreco(freight.total) + "*"
+      );
     }
 
-    lines.push("", data.fulfillmentType === "pickup" ? "*RETIRADA AGENDADA*" : "*ENTREGA*");
+    if (freight.member) {
+      lines.push("• \u{1F3F7} Tarifa especial do Clube aplicada automaticamente.");
+    }
+    if (freight.minimum > 0 && subtotal < freight.minimum) {
+      lines.push("• Atenção: pedido mínimo nesta localidade de " + formatarPreco(freight.minimum) + " em produtos.");
+    }
+    if (freight.tollIncluded) lines.push("• Pedágio incluído no frete.");
+
+    lines.push("", "*DADOS DO PEDIDO*");
     lines.push("• " + data.name + " — " + data.phone);
     if (data.fulfillmentType === "pickup") {
       lines.push("• Retirada gratuita · Rua Madre Clélia, nº 5-44, Jardim Cruzeiro do Sul, Bauru/SP · CEP 17030-290");
       lines.push("• Preferência: " + texto("customerPickupDate") + " às " + texto("customerPickupTime"));
-      lines.push("• Aguardando confirmação da disponibilidade pela equipe.");
     } else {
       var endereco = data.address.street + ", " + data.address.number;
       if (data.address.complement) endereco += " — " + data.address.complement;
@@ -500,15 +609,18 @@
       if (data.address.zip) lines.push("• CEP: " + data.address.zip);
       if (data.address.reference) lines.push("• Referência: " + data.address.reference);
     }
-    lines.push("", data.fulfillmentType === "pickup"
-      ? "Gostaria de confirmar a disponibilidade para retirada no dia e horário indicados."
-      : "Gostaria de confirmar a disponibilidade dos produtos e combinar a entrega.",
-      "_Pedido sujeito à confirmação da disponibilidade e das condições da modalidade escolhida._"
-    );
+
+    lines.push("", "\u{1F4B3} *PAGAMENTO*");
+    if (data.paymentPayerType === "third_party") {
+      lines.push("• Pagador indicado: " + data.paymentPayerName + " — " + data.paymentPayerPhone);
+    } else {
+      lines.push("• Pagador: responsável pelo pedido.");
+    }
+    lines.push("• Pagamento seguro por PIX ou cartão após a confirmação dos dados.");
+    lines.push("", "\u{1F512} _Disponibilidade, prazo e condições finais serão confirmados antes da cobrança._");
 
     return lines.join("\n");
   }
-
   function abrir() {
     if (!overlay) return;
     /* Invalida qualquer consulta de CEP pendente de uma etapa anterior. */
@@ -524,6 +636,9 @@
       paymentMinimumInfo.textContent = "";
     }
     preencherFormulario(null);
+    var modoCarrinho = texto("cartFulfillmentMethod");
+    definirValor("customerFulfillmentMode", modoCarrinho === "pickup" ? "pickup" : "delivery");
+    atualizarModalidade();
     var marketingOptIn = $("customerMarketingWhatsAppOptIn");
     if (marketingOptIn) marketingOptIn.checked = false;
     overlay.hidden = false;
