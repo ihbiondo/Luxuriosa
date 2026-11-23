@@ -4,6 +4,14 @@
   var STORAGE_KEY = "luxuriosa_cart_session";
   var sessionKey = null;
   var pendingTimer = null;
+  var VISIT_STORAGE_KEY = "luxuriosa_visit_session_v1";
+  var VISIT_IDLE_MS = 30 * 60 * 1000;
+  var HEARTBEAT_INTERVAL_MS = 30 * 1000;
+  var visitContext = null;
+  var lastPageViewVisitId = "";
+  var heartbeatTimer = null;
+  var heartbeatInFlight = false;
+  var activityListenersInstalled = false;
 
   function uuid() {
     if (window.crypto && typeof window.crypto.randomUUID === "function") return window.crypto.randomUUID();
@@ -134,6 +142,222 @@
       browser_family: browser
     };
   }
+  function isValidUuid(value) {
+    return typeof value === "string" &&
+      /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(value);
+  }
+
+  function normalizeVisitUtm(value) {
+    if (typeof value !== "string") return null;
+    var cleaned = value.normalize("NFKC")
+      .replace(/[\u0000-\u001f\u007f-\u009f]/g, "")
+      .replace(/[^\p{L}\p{N} ._:/+-]/gu, "")
+      .replace(/\s+/g, " ")
+      .trim()
+      .slice(0, 120);
+    return cleaned || null;
+  }
+
+  function visitAnalyticsContext() {
+    var context = analyticsContext();
+    var params = new URLSearchParams(window.location.search || "");
+    var utmSource = normalizeVisitUtm(params.get("utm_source"));
+    var utmMedium = normalizeVisitUtm(params.get("utm_medium"));
+    var utmCampaign = normalizeVisitUtm(params.get("utm_campaign"));
+    var utmContent = normalizeVisitUtm(params.get("utm_content"));
+    var utmTerm = normalizeVisitUtm(params.get("utm_term"));
+    var utmId = normalizeVisitUtm(params.get("utm_id"));
+    var host = "";
+    try {
+      if (document.referrer) host = new URL(document.referrer).hostname.toLowerCase().replace(/^www\./, "");
+    } catch (_) {}
+
+    var isInternalReferrer = host === "luxuriosa.com.br" || /\.luxuriosa\.com\.br$/.test(host);
+    var candidate = utmSource || (isInternalReferrer ? "" : host);
+    var hasAdClick = params.has("gclid") || params.has("gbraid") || params.has("wbraid");
+    if (!candidate && hasAdClick) candidate = "google";
+
+    var source = "direct", detail = "direct", medium = "direct";
+    if (candidate) {
+      if (/google|bing|duckduckgo|yahoo|ecosia|brave/.test(candidate)) {
+        source = "search";
+        detail = /bing/.test(candidate) ? "bing"
+          : /duckduckgo/.test(candidate) ? "duckduckgo"
+          : /yahoo/.test(candidate) ? "yahoo"
+          : /ecosia/.test(candidate) ? "ecosia"
+          : /brave/.test(candidate) ? "brave" : "google";
+        medium = "organic";
+      } else if (/instagram|l\.instagram/.test(candidate)) {
+        source = "instagram"; detail = "instagram"; medium = "social";
+      } else if (/facebook|fb\.com/.test(candidate)) {
+        source = "facebook"; detail = "facebook"; medium = "social";
+      } else if (/tiktok|vm\.tiktok/.test(candidate)) {
+        source = "tiktok"; detail = "tiktok"; medium = "social";
+      } else if (/youtube|youtu\.be/.test(candidate)) {
+        source = "youtube"; detail = "youtube"; medium = "social";
+      } else {
+        source = "referral";
+        detail = candidate.replace(/[^a-z0-9.-]/g, "").slice(0, 120) || "referral";
+        medium = "referral";
+      }
+    }
+    if (hasAdClick || /cpc|ppc|paid|ads/.test(String(utmMedium || "").toLowerCase())) medium = "paid";
+    else if (String(utmMedium || "").toLowerCase() === "email") medium = "email";
+    else if (String(utmMedium || "").toLowerCase() === "social") medium = "social";
+    else if (String(utmMedium || "").toLowerCase() === "organic") medium = "organic";
+    else if (String(utmMedium || "").toLowerCase() === "referral") medium = "referral";
+
+    return Object.assign({}, context, {
+      traffic_source: source,
+      traffic_source_detail: detail,
+      traffic_medium: medium,
+      utm_source: utmSource,
+      utm_medium: utmMedium,
+      utm_campaign: utmCampaign,
+      utm_content: utmContent,
+      utm_term: utmTerm,
+      utm_id: utmId
+    });
+  }
+
+  function readStoredVisit() {
+    try {
+      var raw = sessionStorage.getItem(VISIT_STORAGE_KEY);
+      var visit = raw ? JSON.parse(raw) : null;
+      if (!visit || !isValidUuid(visit.visit_id)) return null;
+      var lastActivity = Number(visit.last_activity_at);
+      if (!Number.isFinite(lastActivity) || lastActivity > Date.now() ||
+          Date.now() - lastActivity > VISIT_IDLE_MS) return null;
+      if (!visit.analytics_context || typeof visit.analytics_context !== "object") return null;
+      return visit;
+    } catch (_) { return null; }
+  }
+
+  function persistVisit(visit) {
+    visitContext = visit;
+    try { sessionStorage.setItem(VISIT_STORAGE_KEY, JSON.stringify(visit)); } catch (_) {}
+    return visit;
+  }
+
+  function getCurrentVisit() {
+    if (visitContext && isValidUuid(visitContext.visit_id) &&
+        Number.isFinite(Number(visitContext.last_activity_at)) &&
+        Date.now() - Number(visitContext.last_activity_at) <= VISIT_IDLE_MS) {
+      return visitContext;
+    }
+    var stored = readStoredVisit();
+    if (stored) return persistVisit(stored);
+    return persistVisit({
+      visit_id: uuid(),
+      last_activity_at: Date.now(),
+      analytics_context: visitAnalyticsContext()
+    });
+  }
+
+  function visitRequestFields(visit) {
+    var path = String(window.location.pathname || "/").replace(/[\u0000-\u001f\u007f-\u009f]/g, "").slice(0, 300);
+    if (!path || path.charAt(0) !== "/" || path.indexOf("//") === 0) path = "/";
+    return {
+      visit_id: visit.visit_id,
+      page_path: path,
+      page_title: String(document.title || "").replace(/[\u0000-\u001f\u007f-\u009f]/g, "").trim().slice(0, 180) || null,
+      analytics_context: visit.analytics_context
+    };
+  }
+
+  function markVisitActivity() {
+    if (!analyticsConsentGranted()) return;
+    var previousId = visitContext && visitContext.visit_id;
+    var visit = getCurrentVisit();
+    if (previousId && previousId !== visit.visit_id) {
+      registrarEvento("page_view");
+      return;
+    }
+    visit.last_activity_at = Date.now();
+    persistVisit(visit);
+  }
+
+  function recordSiteEvent(eventName, options, visit) {
+    options = options || {};
+    var payload = Object.assign({
+      action: "site_event",
+      analytics_consent: true,
+      event_name: eventName,
+      page_type: options.page_type || pageType()
+    }, visitRequestFields(visit));
+    if (options.product_id != null) payload.product_id = String(options.product_id).slice(0, 100);
+    if (Number.isInteger(options.quantity) && options.quantity >= 1 && options.quantity <= 99) payload.quantity = options.quantity;
+    return send(payload).then(function (result) {
+      if (eventName === "page_view") lastPageViewVisitId = visit.visit_id;
+      visit.last_activity_at = Date.now();
+      persistVisit(visit);
+      return result;
+    }).catch(function (error) {
+      console.warn("Luxuriosa: evento analítico não registrado.", error);
+      return { error: true };
+    });
+  }
+
+  function sendHeartbeat(force) {
+    if (!analyticsConsentGranted()) return Promise.resolve({ skipped: true });
+    if (!force && document.visibilityState === "hidden") return Promise.resolve({ skipped: true });
+    if (heartbeatInFlight) return Promise.resolve({ skipped: true });
+    var visit = getCurrentVisit();
+    if (lastPageViewVisitId !== visit.visit_id) {
+      return recordSiteEvent("page_view", {}, visit);
+    }
+    heartbeatInFlight = true;
+    var payload = Object.assign({
+      action: "visitor_heartbeat",
+      page_type: pageType()
+    }, visitRequestFields(visit));
+    return send(payload).then(function (result) {
+      visit.last_activity_at = Date.now();
+      persistVisit(visit);
+      return result;
+    }).catch(function (error) {
+      console.warn("Luxuriosa: presença da visita não atualizada.", error);
+      return { error: true };
+    }).then(function (result) {
+      heartbeatInFlight = false;
+      return result;
+    });
+  }
+
+  function stopHeartbeatAndResetVisit() {
+    if (heartbeatTimer !== null) {
+      window.clearInterval(heartbeatTimer);
+      heartbeatTimer = null;
+    }
+    heartbeatInFlight = false;
+    visitContext = null;
+    lastPageViewVisitId = "";
+    try { sessionStorage.removeItem(VISIT_STORAGE_KEY); } catch (_) {}
+  }
+
+  function startHeartbeat() {
+    if (heartbeatTimer !== null) return;
+    heartbeatTimer = window.setInterval(function () {
+      if (document.visibilityState !== "hidden") sendHeartbeat(false);
+    }, HEARTBEAT_INTERVAL_MS);
+  }
+
+  function installVisitActivityListeners() {
+    if (activityListenersInstalled) return;
+    activityListenersInstalled = true;
+    ["pointerdown", "keydown", "scroll", "touchstart"].forEach(function (eventName) {
+      document.addEventListener(eventName, markVisitActivity, true);
+    });
+    document.addEventListener("visibilitychange", function () {
+      if (!analyticsConsentGranted()) return;
+      if (document.visibilityState === "hidden") sendHeartbeat(true);
+      else sendHeartbeat(false);
+    });
+    window.addEventListener("pagehide", function () {
+      if (analyticsConsentGranted()) sendHeartbeat(true);
+    });
+  }
+
   function pageType() {
     var path = window.location.pathname || "/";
     if (/\/produtos\//i.test(path)) return "product";
@@ -145,17 +369,13 @@
   }
   function registrarEvento(eventName, options) {
     if (!analyticsConsentGranted()) return Promise.resolve({ skipped: true });
-    options = options || {};
-    var payload = {
-      action: "site_event", analytics_consent: true,
-      event_name: eventName, page_type: options.page_type || pageType()
-    };
-    if (options.product_id != null) payload.product_id = String(options.product_id).slice(0, 100);
-    if (Number.isInteger(options.quantity) && options.quantity >= 1 && options.quantity <= 99) payload.quantity = options.quantity;
-    return send(payload).catch(function (error) {
-      console.warn("Luxuriosa: evento analítico não registrado.", error);
-      return { error: true };
-    });
+    var visit = getCurrentVisit();
+    if (eventName !== "page_view" && lastPageViewVisitId !== visit.visit_id) {
+      return recordSiteEvent("page_view", {}, visit).then(function () {
+        return recordSiteEvent(eventName, options || {}, visit);
+      });
+    }
+    return recordSiteEvent(eventName, options || {}, visit);
   }
   function normalizeItems(items) {
     return (Array.isArray(items) ? items : []).slice(0, 80).map(function (item) {
@@ -206,7 +426,14 @@
 
   var pageViewRecorded = false;
   function trackPageViewIfAllowed() {
-    if (pageViewRecorded || !analyticsConsentGranted()) return;
+    if (!analyticsConsentGranted()) {
+      pageViewRecorded = false;
+      stopHeartbeatAndResetVisit();
+      return;
+    }
+    installVisitActivityListeners();
+    startHeartbeat();
+    if (pageViewRecorded) return;
     pageViewRecorded = true;
     registrarEvento("page_view");
     if (pageType() === "product") {

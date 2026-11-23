@@ -36,6 +36,8 @@ on:
       - "experiencias/**"
       - "educacao/interatividade/**"
       - "js/clientes.js"
+      - "js/inteligencia.js"
+      - "tests/visitor-analytics.test.mjs"
       - "js/carrinho.js"
       - "supabase/functions/create-payment-order/index.ts"
       - "supabase/functions/cart-orders/index.ts"
@@ -107,6 +109,8 @@ on:
       - "experiencias/**"
       - "educacao/interatividade/**"
       - "js/clientes.js"
+      - "js/inteligencia.js"
+      - "tests/visitor-analytics.test.mjs"
       - "js/carrinho.js"
       - "supabase/functions/create-payment-order/index.ts"
       - "supabase/functions/cart-orders/index.ts"
@@ -208,6 +212,8 @@ jobs:
       - name: Validar JavaScript do checkout, login e acompanhamento
         run: |
           node --check js/clientes.js
+          node --check js/inteligencia.js
+          node --test tests/visitor-analytics.test.mjs
           node --check js/carrinho.js
           node --check js/clube-precos.js
           node --check --input-type=module < js/clube.js
