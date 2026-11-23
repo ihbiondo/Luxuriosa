@@ -1,9 +1,22 @@
 /* Educação Luxuriosa — camada compartilhada
  * Navegação, acessibilidade e declaração de idade.
- * Sem analytics, anúncios, coleta de respostas ou dependências externas.
+ * Sem anúncios ou coleta de respostas; a medição de visitas é opcional e depende do consentimento analítico.
  */
 (function () {
   "use strict";
+
+  function ensureVisitorAnalyticsLoaded() {
+    if (window.LuxuriosaInteligencia ||
+        document.querySelector('script[data-luxuriosa-visitor-analytics="true"]')) return;
+    var script = document.createElement("script");
+    script.src = "/js/inteligencia.js?v=20261123-visitor-session-v2";
+    script.async = true;
+    script.setAttribute("data-luxuriosa-visitor-analytics", "true");
+    (document.head || document.documentElement).appendChild(script);
+  }
+
+  ensureVisitorAnalyticsLoaded();
+
 
   const AGE_KEY = "lux18";
   const EDUCATION_MODULE_LINKS = [

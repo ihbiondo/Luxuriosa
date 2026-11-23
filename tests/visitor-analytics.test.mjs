@@ -234,3 +234,41 @@ test("sem consentimento analítico não registra eventos nem inicia heartbeat", 
   assert.ok(harness.requests.some(request => request.body.event_name === "page_view"));
   assert.equal(typeof harness.intervalCallback, "function");
 });
+
+test("Educação e Experiências registram apenas a seção, sem artigo ou resultado específico", async () => {
+  const educationPage = createHarness({
+    url: "https://luxuriosa.com.br/educacao/temas/prevencao-de-ist.html",
+    title: "Prevenção de IST: informações e cuidados | Educação Luxuriosa"
+  });
+  await educationPage.settle();
+  const educationView = educationPage.requests.find(request => request.body.event_name === "page_view");
+  assert.ok(educationView);
+  assert.equal(educationView.body.page_path, "/educacao/");
+  assert.equal(educationView.body.page_title, "Conteúdo educativo | Luxuriosa");
+  assert.doesNotMatch(JSON.stringify(educationView.body), /prevencao-de-ist|Prevenção de IST/i);
+
+  const experiencePage = createHarness({
+    url: "https://luxuriosa.com.br/experiencias/signos/aries.html",
+    title: "Áries: perfil e compatibilidade | Experiências Luxuriosa"
+  });
+  await experiencePage.settle();
+  const experienceView = experiencePage.requests.find(request => request.body.event_name === "page_view");
+  assert.ok(experienceView);
+  assert.equal(experienceView.body.page_path, "/experiencias/");
+  assert.equal(experienceView.body.page_title, "Experiências | Luxuriosa");
+  assert.doesNotMatch(JSON.stringify(experienceView.body), /aries|Áries|compatibilidade/i);
+});
+
+test("os quatro scripts compartilhados carregam o rastreador com consentimento", () => {
+  const controllers = [
+    "js/educacao.js",
+    "js/experiencias.js",
+    "js/signos.js",
+    "js/signo-detalhe.js"
+  ];
+  for (const controller of controllers) {
+    const content = fs.readFileSync(controller, "utf8");
+    assert.match(content, /data-luxuriosa-visitor-analytics/);
+    assert.match(content, /js\/inteligencia\.js\?v=20261123-visitor-session-v2/);
+  }
+});

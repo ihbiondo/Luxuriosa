@@ -56,6 +56,10 @@ on:
       - "js/portal.js"
       - "js/conquistas*.js"
       - "js/experiencias*.js"
+      - "js/educacao.js"
+      - "js/experiencias.js"
+      - "js/signos.js"
+      - "js/signo-detalhe.js"
       - "js/signos.js"
       - "js/educacao-interatividade.js"
       - "css/conquistas.css"
@@ -128,6 +132,10 @@ on:
       - "js/portal.js"
       - "js/conquistas*.js"
       - "js/experiencias*.js"
+      - "js/educacao.js"
+      - "js/experiencias.js"
+      - "js/signos.js"
+      - "js/signo-detalhe.js"
       - "js/signos.js"
       - "js/educacao-interatividade.js"
       - "css/conquistas.css"
@@ -212,6 +220,10 @@ jobs:
       - name: Validar JavaScript do checkout, login e acompanhamento
         run: |
           node --check js/clientes.js
+          node --check js/educacao.js
+          node --check js/experiencias.js
+          node --check js/signos.js
+          node --check js/signo-detalhe.js
           node --check js/inteligencia.js
           node --test tests/visitor-analytics.test.mjs
           node --check js/carrinho.js

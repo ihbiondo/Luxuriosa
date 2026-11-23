@@ -1,6 +1,19 @@
 (function () {
   "use strict";
 
+  function ensureVisitorAnalyticsLoaded() {
+    if (window.LuxuriosaInteligencia ||
+        document.querySelector('script[data-luxuriosa-visitor-analytics="true"]')) return;
+    var script = document.createElement("script");
+    script.src = "/js/inteligencia.js?v=20261123-visitor-session-v2";
+    script.async = true;
+    script.setAttribute("data-luxuriosa-visitor-analytics", "true");
+    (document.head || document.documentElement).appendChild(script);
+  }
+
+  ensureVisitorAnalyticsLoaded();
+
+
   const DATA_URL = "/data/astrologia.json";
   const AGE_KEY = "lux18";
   const form = document.getElementById("signForm");

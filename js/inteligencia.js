@@ -257,10 +257,22 @@
   function visitRequestFields(visit) {
     var path = String(window.location.pathname || "/").replace(/[\u0000-\u001f\u007f-\u009f]/g, "").slice(0, 300);
     if (!path || path.charAt(0) !== "/" || path.indexOf("//") === 0) path = "/";
+    var title = String(document.title || "").replace(/[\u0000-\u001f\u007f-\u009f]/g, "").trim().slice(0, 180) || null;
+
+    // Educação sexual e experiências pessoais não devem revelar o artigo,
+    // tema ou resultado individual nos relatórios de navegação.
+    if (/^\/educacao(?:\/|$)/i.test(path)) {
+      path = "/educacao/";
+      title = "Conteúdo educativo | Luxuriosa";
+    } else if (/^\/experiencias(?:\/|$)/i.test(path)) {
+      path = "/experiencias/";
+      title = "Experiências | Luxuriosa";
+    }
+
     return {
       visit_id: visit.visit_id,
       page_path: path,
-      page_title: String(document.title || "").replace(/[\u0000-\u001f\u007f-\u009f]/g, "").trim().slice(0, 180) || null,
+      page_title: title,
       analytics_context: visit.analytics_context
     };
   }
