@@ -20,6 +20,37 @@ try {
   const page = await context.newPage();
   page.setDefaultTimeout(15000);
 
+  /* Cliente Supabase isolado para testar visitante -> cadastro -> retorno autenticado. */
+  await page.addInitScript(() => {
+    function usuarioTeste() {
+      return localStorage.getItem("luxuriosa_test_authenticated") === "1"
+        ? { id: "00000000-0000-4000-8000-000000002932", email: "checkout@example.test" }
+        : null;
+    }
+    window.__capturedWhatsAppUrl = "";
+    window.open = function (url) {
+      window.__capturedWhatsAppUrl = String(url || "");
+      return null;
+    };
+    window.LuxuriosaSupabase = {
+      auth: {
+        getUser: async () => ({ data: { user: usuarioTeste() }, error: null }),
+        getSession: async () => ({
+          data: { session: usuarioTeste() ? {
+            user: usuarioTeste(),
+            access_token: "local-e2e-access-token"
+          } : null },
+          error: null
+        }),
+        onAuthStateChange: () => ({ data: { subscription: { unsubscribe() {} } } })
+      },
+      rpc: async () => ({
+        data: { is_member: false, profile_complete: false, profile_missing_fields: [] },
+        error: null
+      })
+    };
+  });
+
   // Registros de inteligência são capturados localmente; nenhuma chamada chega ao Supabase real.
   await page.route("**/functions/v1/cart-orders", async route => {
     try {
@@ -111,15 +142,7 @@ try {
   assert.equal(cartSnapshot.items.length, 2,
     "A inteligência deve registrar os dois itens no snapshot do carrinho.");
 
-  // Intercepta window.open: o teste valida a URL, mas não abre nem envia mensagem real.
-  await page.evaluate(() => {
-    window.__capturedWhatsAppUrl = "";
-    window.open = function (url) {
-      window.__capturedWhatsAppUrl = String(url || "");
-      return null;
-    };
-  });
-
+  // Os ouvintes observam o envio depois que o cliente retorna do cadastro.
   const checkoutStartedPromise = page.waitForRequest(request => {
     if (!request.url().includes("/functions/v1/cart-orders")) return false;
     try {
@@ -153,11 +176,23 @@ try {
     "Pedido com kit em Bauru deve pagar a tarifa normal de entrega.");
 
   await page.locator("#cartCheckout").click();
+  await page.waitForURL("**/login.html?cadastro=1", { timeout: 15000 });
+  assert.equal(await page.evaluate(() => localStorage.getItem("luxuriosa_checkout_after_login")), "1",
+    "O pedido deve ficar marcado para ser retomado depois do cadastro.");
+  assert.equal(await page.locator("#signupForm").isVisible(), true,
+    "O visitante deve chegar diretamente à tela de criar conta.");
+
+  /* Simula o retorno após a confirmação de cadastro/login; o carrinho e a região continuam salvos. */
+  await page.evaluate(() => {
+    localStorage.setItem("luxuriosa_test_authenticated", "1");
+    localStorage.removeItem("luxuriosa_checkout_after_login");
+  });
+  await page.goto(`${BASE_URL}/loja.html?retomar-checkout=1`, { waitUntil: "domcontentloaded" });
   await page.waitForFunction(() =>
     typeof window.__capturedWhatsAppUrl === "string" &&
     window.__capturedWhatsAppUrl.length > 0,
     null,
-    { timeout: 10000 }
+    { timeout: 15000 }
   );
 
   const [checkoutStarted, whatsappOpened] = await Promise.all([
