@@ -14,6 +14,7 @@
 
   var STORAGE_KEY =
     "luxuriosa_carrinho";
+  var RECEBIMENTO_STORAGE_KEY = "luxuriosa_recebimento";
 
   var FALLBACK_WHATSAPP =
     "5514996355924";
@@ -43,6 +44,8 @@
   var catalogoAtual = [];
   var membroClubeAtivo = false;
   var membroClubeVerificado = false;
+  var membroClubeAutenticado = false;
+  var membroClubeErro = false;
   var focoAnteriorCarrinho = null;
 
 
@@ -81,20 +84,50 @@
   }
 
   function atualizarControlesClube() {
-    var controle = $("cartClubMember");
-    var texto = document.querySelector(".cart-club-row span");
-    if (controle) {
-      controle.checked = membroClubeVerificado && membroClubeAtivo;
-      controle.disabled = true;
-      controle.setAttribute("aria-disabled", "true");
+    var status = $("cartClubInfo");
+    var link = $("cartClubJoinLink");
+    if (status) {
+      status.textContent = !membroClubeVerificado
+        ? "Consultando sua participação no Clube…"
+        : membroClubeErro
+          ? "Não foi possível consultar o Clube agora. A condição será confirmada no checkout."
+          : membroClubeAtivo
+            ? "Frete especial do Clube ativo e aplicado automaticamente. Nenhuma seleção é necessária."
+            : membroClubeAutenticado
+              ? "Sua conta ainda não tem adesão ativa. Participe gratuitamente para receber o frete especial."
+              : "Membros ativos do Clube recebem frete com valor especial, aplicado automaticamente.";
     }
-    if (texto) {
-      texto.textContent = !membroClubeVerificado
-        ? "Verificando sua participação no Clube…"
-        : membroClubeAtivo
-          ? "Tarifa especial do Clube aplicada automaticamente"
-          : "Entre no Clube gratuitamente para acessar a tarifa especial";
-    }
+    if (link) link.hidden = membroClubeVerificado && membroClubeAtivo;
+  }
+
+  function salvarPreferenciaRecebimento() {
+    var metodo = $("cartFulfillmentMethod");
+    var cidade = $("cartDeliveryCity");
+    try {
+      localStorage.setItem(RECEBIMENTO_STORAGE_KEY, JSON.stringify({
+        method: metodo ? metodo.value : "",
+        city: cidade ? cidade.value : ""
+      }));
+    } catch (_) {}
+  }
+
+  function restaurarPreferenciaRecebimento() {
+    try {
+      var raw = localStorage.getItem(RECEBIMENTO_STORAGE_KEY);
+      if (!raw) return;
+      var preference = JSON.parse(raw);
+      var metodo = $("cartFulfillmentMethod");
+      var cidade = $("cartDeliveryCity");
+      if (metodo && ["delivery", "pickup"].indexOf(preference.method) !== -1) {
+        metodo.value = preference.method;
+      }
+      if (cidade && typeof preference.city === "string" &&
+          Array.prototype.some.call(cidade.options, function (option) {
+            return option.value === preference.city;
+          })) {
+        cidade.value = preference.city;
+      }
+    } catch (_) {}
   }
 
 
@@ -1081,7 +1114,7 @@
               ? "🏷️ Preço exclusivo para membros do Clube"
               : "🏷️ Cadastre-se grátis no Clube e aproveite " + formatarPreco(item.precoClube)
           );
-          avisoPrecoClube.href = "/clube/";
+          avisoPrecoClube.href = "/login.html?cadastro=1&next=clube.html";
           avisoPrecoClube.style.display = "block";
           avisoPrecoClube.style.marginTop = "4px";
           avisoPrecoClube.style.color = "#D4AF7C";
@@ -1596,7 +1629,7 @@
 
     var notas = [];
     if (resumo.clubMember) {
-      notas.push("🏷️ Tarifa de membro do Clube selecionada; o cadastro ativo será conferido pela equipe.");
+      notas.push("🏷️ Benefício de frete do Clube aplicado automaticamente.");
     }
     if (resumo.minimumMet === false) {
       notas.push("⚠️ Pedido mínimo nesta localidade: " + formatarPreco(resumo.minimum) + " em produtos.");
@@ -1609,80 +1642,77 @@
   }
 
   function montarMensagemPedido(resumo) {
+    var subtotal = valorTotal();
     var linhas = [
-      "Olá! Quero concluir meu pedido na *Luxuriosa*. 💗",
+      "Olá! Quero finalizar meu pedido na *Luxuriosa*. \u{1F497}",
       "",
-      "🛍️ *RESUMO DO CARRINHO*"
+      "\u{1F6CD}\u{FE0F} *ITENS DO PEDIDO*"
     ];
 
     carrinho.forEach(function (item) {
       var variacaoKit = item.kit_variant_name ? " (Dado: " + item.kit_variant_name + ")" : "";
       var observacao = item.indisponivel ? " — *consultar disponibilidade*" : "";
       linhas.push(
-        "• " + item.nome + variacaoKit + " — " + item.quantidade + "x — " +
+        "• " + item.quantidade + "x " + item.nome + variacaoKit + " — " +
         formatarPreco(item.preco * item.quantidade) + observacao
       );
     });
 
-    linhas.push("", "💰 *RESUMO DOS VALORES*", "• Subtotal estimado dos produtos: " + formatarPreco(valorTotal()));
+    linhas.push("", "\u{1F4B0} *VALORES*", "• Produtos: " + formatarPreco(subtotal));
 
     if (resumo.method === "pickup") {
       linhas.push(
-        "• Frete para retirada: " + formatarPreco(0),
-        "• *Total estimado: " + formatarPreco(valorTotal()) + "*",
+        "• Frete: grátis",
+        "• *Total estimado: " + formatarPreco(subtotal) + "*",
         "",
-        "📍 *RETIRADA AGENDADA EM BAURU*",
-        "• Sem cobrança de frete. Local e horário serão combinados com a equipe pelo WhatsApp."
+        "\u{1F4CD} *RECEBIMENTO*",
+        "Retirada agendada em Bauru. Local e horário serão combinados no atendimento."
       );
     } else {
-      linhas.push("🚚 *ENTREGA*", "• Localidade: " + (resumo.cityLabel || "A confirmar"));
-
+      linhas.push("\u{1F69A} *RECEBIMENTO*", "Entrega em " + (resumo.cityLabel || "localidade a confirmar") + ".");
       if (resumo.freight === null) {
         linhas.push(
-          "• Frete: *a confirmar com a equipe*",
-          "• Total geral: *será informado após consulta da localidade*",
-          "• Informe sua cidade e CEP para verificarmos o atendimento."
+          "• Frete: a confirmar com a equipe",
+          "• *Total: a confirmar*"
         );
       } else {
         linhas.push(
-          "• Frete: " + formatarPreco(resumo.freight),
+          "• Frete (" + (resumo.cityLabel || "entrega") + "): " + formatarPreco(resumo.freight),
           "• *Total estimado: " + formatarPreco(resumo.total) + "*"
         );
       }
 
       if (resumo.clubMember) {
-        linhas.push("🏷️ Tarifa de membro do Clube solicitada (cadastro ativo sujeito à conferência).");
+        linhas.push("\u{1F3F7} Benefício de frete do Clube aplicado automaticamente.");
       }
       if (resumo.minimumMet === false) {
-        linhas.push("⚠️ Pedido mínimo para esta localidade: " + formatarPreco(resumo.minimum) + " em produtos. O subtotal atual está abaixo desse valor.");
-      } else if (resumo.minimum) {
-        linhas.push("• Pedido mínimo nesta localidade: " + formatarPreco(resumo.minimum) + " em produtos.");
+        var faltante = Math.max(0, Number(resumo.minimum) - subtotal);
+        linhas.push(
+          "\u{26A0}\u{FE0F} Pedido mínimo: " + formatarPreco(resumo.minimum) +
+          " em produtos. Faltam " + formatarPreco(faltante) + "."
+        );
       }
-      if (resumo.tollIncluded) linhas.push("🛣️ O pedágio já está incluído no frete.");
+      if (resumo.tollIncluded) linhas.push("Pedágio já incluído no frete.");
     }
 
     linhas.push(
       "",
-      "💳 *PAGAMENTO*",
-      "• Após a confirmação dos itens, valores e recebimento, a equipe enviará um link de pagamento ou a chave PIX.",
+      "\u{1F4B3} *PRÓXIMO PASSO*",
+      "A equipe confirma a disponibilidade e o prazo antes de enviar a chave PIX ou o link de pagamento.",
       "",
-      "🔒 _Disponibilidade, prazo e condições finais serão confirmados pela equipe. O pedido só será confirmado após a identificação do pagamento._"
+      "\u{1F512} _O pedido é confirmado após a identificação do pagamento._"
     );
 
     return linhas.join("\n");
   }
 
 
-  function finalizarPedido() {
-
-    if (!carrinho.length) {
-      return;
-    }
-
+  function enviarPedidoWhatsApp() {
+    if (!carrinho.length) return false;
     var resumoRecebimento = obterResumoRecebimento();
     if (!resumoRecebimento.valid) {
       window.alert("Selecione a forma de recebimento e, para entrega, a localidade antes de continuar.");
-      return;
+      return false;
     }
 
     if (window.LuxuriosaMedicao && typeof window.LuxuriosaMedicao.registrar === "function") {
@@ -1696,7 +1726,6 @@
       });
     }
 
-    /* Registra o avanço no funil sem criar pedido nem afirmar que houve venda. */
     if (window.LuxuriosaInteligencia) {
       if (typeof window.LuxuriosaInteligencia.registrarEtapa === "function") {
         window.LuxuriosaInteligencia.registrarEtapa("checkout_started", carrinho)
@@ -1713,7 +1742,27 @@
     }
 
     abrirWhatsApp(montarMensagemPedido(resumoRecebimento));
+    return true;
+  }
 
+  function finalizarPedido() {
+    if (!carrinho.length) return;
+    var resumoRecebimento = obterResumoRecebimento();
+    if (!resumoRecebimento.valid) {
+      window.alert("Selecione a forma de recebimento e, para entrega, a localidade antes de continuar.");
+      return;
+    }
+
+    var checkout = window.LuxuriosaClientes;
+    if (!checkout || typeof checkout.iniciarFinalizacaoWhatsApp !== "function") {
+      window.alert("Não foi possível validar sua conta. Atualize a página e tente novamente.");
+      return;
+    }
+
+    Promise.resolve(checkout.iniciarFinalizacaoWhatsApp()).catch(function (erro) {
+      console.error("Luxuriosa: falha ao validar a conta antes do pedido.", erro);
+      window.alert("Não foi possível iniciar o pedido. Atualize a página e tente novamente.");
+    });
   }
 
   /* =======================================================
@@ -1811,9 +1860,11 @@
 
     var metodoRecebimento = $("cartFulfillmentMethod");
     var cidadeEntrega = $("cartDeliveryCity");
-    var membroClube = $("cartClubMember");
-    [metodoRecebimento, cidadeEntrega, membroClube].forEach(function (controle) {
-      if (controle) controle.addEventListener("change", renderizar);
+    [metodoRecebimento, cidadeEntrega].forEach(function (controle) {
+      if (controle) controle.addEventListener("change", function () {
+        salvarPreferenciaRecebimento();
+        renderizar();
+      });
     });
 
     if (finalizar) {
@@ -2009,6 +2060,8 @@
   function aplicarEstadoClubeNoCarrinho(detail) {
     if (!detail) return;
     membroClubeVerificado = detail.loaded === true;
+    membroClubeAutenticado = detail.authenticated === true;
+    membroClubeErro = detail.error === true;
     membroClubeAtivo = membroClubeVerificado &&
       detail.isMember === true && detail.profileComplete === true;
     atualizarControlesClube();
@@ -2062,6 +2115,9 @@
     obterQuantidade:
       quantidadeTotal,
 
+    enviarPedidoWhatsApp:
+      enviarPedidoWhatsApp,
+
     sincronizarCatalogo:
       sincronizarCatalogo
 
@@ -2075,6 +2131,7 @@
   function iniciar() {
 
     carregar();
+    restaurarPreferenciaRecebimento();
 
     configurarEventos();
     atualizarControlesClube();

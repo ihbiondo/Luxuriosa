@@ -2407,7 +2407,7 @@ footer {
 }
 
 .cart-fulfillment > label,
-.cart-delivery-fields > label:not(.cart-club-row) {
+.cart-delivery-fields > label {
   color: var(--muted);
   font-size: 10px;
   letter-spacing: .04em;
@@ -2434,21 +2434,20 @@ footer {
   display: none !important;
 }
 
-.cart-club-row {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  min-height: 34px;
-  color: var(--muted);
+.cart-club-link {
+  display: inline-block;
+  width: fit-content;
+  margin-top: -3px;
+  color: var(--gold);
   font-size: 11px;
-  line-height: 1.4;
+  font-weight: 600;
+  line-height: 1.45;
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 
-.cart-club-row input {
-  width: 16px;
-  height: 16px;
-  flex: 0 0 16px;
-  accent-color: #8b1e3f;
+.cart-club-link[hidden] {
+  display: none !important;
 }
 
 .cart-fulfillment-hint,

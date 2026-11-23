@@ -2,7 +2,38 @@ import assert from "node:assert/strict";
 import { chromium } from "playwright";
 
 const BASE_URL = process.env.E2E_BASE_URL || "http://127.0.0.1:4173";
+const SUPABASE_URL = process.env.E2E_SUPABASE_URL;
+const SERVICE_ROLE_KEY = process.env.E2E_SERVICE_ROLE_KEY;
+const TEST_PASSWORD = "E2E-Only-2026!";
 const TEST_CART_SESSION = "00000000-0000-4000-8000-000000002931";
+
+assert.ok(SUPABASE_URL, "E2E_SUPABASE_URL ausente.");
+assert.ok(SERVICE_ROLE_KEY, "E2E_SERVICE_ROLE_KEY ausente.");
+
+async function createTestUser() {
+  const email = "checkout-payer@example.com";
+  const response = await fetch(`${SUPABASE_URL}/auth/v1/admin/users`, {
+    method: "POST",
+    headers: {
+      apikey: SERVICE_ROLE_KEY,
+      Authorization: `Bearer ${SERVICE_ROLE_KEY}`,
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      email,
+      password: TEST_PASSWORD,
+      email_confirm: true,
+      user_metadata: {
+        display_name: "Conta E2E Checkout",
+        account_setup_completed: true
+      }
+    })
+  });
+  const payload = await response.json();
+  assert.ok(response.ok, `Não foi possível criar usuário de checkout: ${JSON.stringify(payload)}`);
+  assert.ok(payload.id, "A API local não retornou o ID do usuário.");
+  return email;
+}
 
 const browser = await chromium.launch({
   headless: true,
@@ -19,6 +50,15 @@ try {
   });
   const page = await context.newPage();
   page.setDefaultTimeout(15000);
+
+  /* Usa autenticação Supabase local real; apenas intercepta a abertura externa do WhatsApp. */
+  await page.addInitScript(() => {
+    window.__capturedWhatsAppUrl = "";
+    window.open = function (url) {
+      window.__capturedWhatsAppUrl = String(url || "");
+      return null;
+    };
+  });
 
   // Registros de inteligência são capturados localmente; nenhuma chamada chega ao Supabase real.
   await page.route("**/functions/v1/cart-orders", async route => {
@@ -111,15 +151,7 @@ try {
   assert.equal(cartSnapshot.items.length, 2,
     "A inteligência deve registrar os dois itens no snapshot do carrinho.");
 
-  // Intercepta window.open: o teste valida a URL, mas não abre nem envia mensagem real.
-  await page.evaluate(() => {
-    window.__capturedWhatsAppUrl = "";
-    window.open = function (url) {
-      window.__capturedWhatsAppUrl = String(url || "");
-      return null;
-    };
-  });
-
+  // Os ouvintes observam o envio depois que o cliente retorna do cadastro.
   const checkoutStartedPromise = page.waitForRequest(request => {
     if (!request.url().includes("/functions/v1/cart-orders")) return false;
     try {
@@ -148,16 +180,40 @@ try {
   }, { timeout: 15000 }).then(request => request.postDataJSON());
 
   await page.locator("#cartFulfillmentMethod").selectOption("delivery");
+  assert.equal(await page.locator("#cartDeliveryFields").isVisible(), true,
+    "A seleção da entrega deve abrir os campos de cidade/região.");
+  assert.equal(await page.locator("#cartDeliveryCity").getAttribute("required"), "",
+    "A cidade/região deve ser obrigatória no formulário.");
+  assert.equal(await page.locator("#cartCheckout").isDisabled(), true,
+    "O checkout não pode avançar enquanto a região não for selecionada.");
   await page.locator("#cartDeliveryCity").selectOption("bauru");
   assert.match(await page.locator("#cartFreightValue").innerText(), /R\$\s*15,00/,
     "Pedido com kit em Bauru deve pagar a tarifa normal de entrega.");
 
   await page.locator("#cartCheckout").click();
+  await page.waitForURL("**/login.html?cadastro=1", { timeout: 15000 });
+  assert.equal(await page.evaluate(() => localStorage.getItem("luxuriosa_checkout_after_login")), "1",
+    "O pedido deve ficar marcado para ser retomado depois da autenticação.");
+  assert.equal(await page.locator("#signupForm").isVisible(), true,
+    "O visitante deve chegar diretamente à tela de criar conta.");
+
+  /* O E2E autentica uma conta criada na base descartável usando a tela real de login. */
+  const checkoutUser = await createTestUser();
+  await page.locator("#loginTab").click();
+  await page.locator("#loginEmail").fill(checkoutUser);
+  await page.locator("#loginPassword").fill(TEST_PASSWORD);
+  await Promise.all([
+    page.waitForURL(url => url.pathname === "/loja.html" &&
+      url.searchParams.get("retomar-checkout") === "1", { timeout: 30000 }),
+    page.locator('#loginForm button[type="submit"]').click()
+  ]);
+  assert.equal(await page.evaluate(() => localStorage.getItem("luxuriosa_checkout_after_login")), null,
+    "A tela de login deve consumir a marcação ao redirecionar de volta para o pedido.");
   await page.waitForFunction(() =>
     typeof window.__capturedWhatsAppUrl === "string" &&
     window.__capturedWhatsAppUrl.length > 0,
     null,
-    { timeout: 10000 }
+    { timeout: 15000 }
   );
 
   const [checkoutStarted, whatsappOpened] = await Promise.all([
@@ -176,17 +232,19 @@ try {
   assert.equal(parsedWhatsAppUrl.pathname, "/5514996355924");
 
   const message = parsedWhatsAppUrl.searchParams.get("text") || "";
-  assert.match(message, /RESUMO DO CARRINHO/);
-  assert.match(message, /Ducha Higiênica — Preta/i);
-  assert.match(message, /Kit Descoberta/i);
+  assert.match(message, /ITENS DO PEDIDO/);
+  assert.match(message, /\d+x Ducha Higiênica — Preta/i);
+  assert.match(message, /\d+x Kit Descoberta/i);
   assert.match(message, /Dado:\s*Hétero/i);
-  assert.match(message, /Subtotal estimado dos produtos/i);
+  assert.match(message, /Produtos: R\$/i);
   assert.ok(message.includes("🛍️"), "A mensagem deve conter emojis.");
-  assert.match(message, /ENTREGA/i);
-  assert.match(message, /Frete: R\$\s*15,00/i);
+  assert.match(message, /RECEBIMENTO/i);
+  assert.match(message, /Entrega em .*Bauru/i, "A região escolhida antes do cadastro deve ser mantida.");
+  assert.match(message, /Frete \(.*Bauru.*\): R\$\s*15,00/i);
   assert.match(message, /Total estimado/i);
-  assert.match(message, /link de pagamento ou a chave PIX/i);
-  assert.match(message, /O pedido só será confirmado após a identificação do pagamento/i);
+  assert.match(message, /chave PIX ou o link de pagamento/i);
+  assert.match(message, /pedido é confirmado após a identificação do pagamento/i);
+  assert.doesNotMatch(message, /RESUMO DOS VALORES/);
 
   // Retirada agendada em Bauru não adiciona frete ao pedido.
   await page.locator("#cartFulfillmentMethod").selectOption("pickup");
@@ -202,9 +260,10 @@ try {
   );
   const pickupUrl = new URL(await page.evaluate(() => window.__capturedWhatsAppUrl));
   const pickupMessage = pickupUrl.searchParams.get("text") || "";
-  assert.match(pickupMessage, /RETIRADA AGENDADA EM BAURU/i);
-  assert.match(pickupMessage, /Frete para retirada: R\$\s*0,00/i);
+  assert.match(pickupMessage, /Retirada agendada em Bauru/i);
+  assert.match(pickupMessage, /Frete: grátis/i);
   assert.match(pickupMessage, /Total estimado:/i);
+  assert.match(pickupMessage, /PRÓXIMO PASSO/i);
 
 
   assert.equal(await page.locator("#customerOverlay").evaluate(element => element.hidden), true,

@@ -401,7 +401,7 @@ async function auditCartAndCheckout(page) {
   assert.equal(await page.locator("#cartItems .cart-qty").innerText(), "2",
     "O controle de quantidade deve atualizar o item na gaveta.");
 
-  // O checkout novo não exige cadastro: valida o resumo e a abertura do WhatsApp sem enviar mensagem real.
+  // O usuário autenticado valida o resumo e a abertura do WhatsApp sem enviar mensagem real.
   await page.evaluate(() => {
     window.__capturedWhatsAppUrl = "";
     window.open = function (url) {
@@ -444,11 +444,14 @@ async function auditCartAndCheckout(page) {
   await page.locator("#cartFulfillmentMethod").selectOption("delivery");
   await page.locator("#cartDeliveryCity").selectOption("agudos");
   await page.waitForFunction(() => {
-    const control = document.querySelector("#cartClubMember");
-    return control && control.disabled && control.checked;
+    const status = document.querySelector("#cartClubInfo");
+    return status && /Frete especial do Clube ativo e aplicado automaticamente/i.test(status.textContent);
   }, null, { timeout: 30000 });
   assert.match(await page.locator("#cartFreightValue").innerText(), /R\$\s*20,00/,
     "Agudos deve aplicar automaticamente a tarifa de membro validado pelo servidor.");
+  const clubFreightNotice = await page.locator("#cartFulfillmentNote").innerText();
+  assert.match(clubFreightNotice, /Benefício de frete do Clube aplicado automaticamente/i);
+  assert.doesNotMatch(clubFreightNotice, /Tarifa de membro .* selecionada|cadastro ativo será conferido/i);
   const subtotalText = await page.locator("#cartTotal").innerText();
   const subtotalNumber = Number(subtotalText.replace(/[^0-9,]/g, "").replace(",", ".")) || 0;
   const expectedTotal = "R$ " + (subtotalNumber + 20).toLocaleString("pt-BR", {
@@ -485,23 +488,23 @@ async function auditCartAndCheckout(page) {
     "O WhatsApp deve usar o número oficial da Luxuriosa.");
 
   const message = parsedWhatsAppUrl.searchParams.get("text") || "";
-  assert.ok(message.includes("*RESUMO DO CARRINHO*"),
-    "A mensagem deve identificar o resumo do carrinho.");
+  assert.match(message, /ITENS DO PEDIDO/i,
+    "A mensagem deve identificar a lista de itens do pedido.");
   assert.ok(message.includes(product.nome),
     "A mensagem deve incluir o produto selecionado.");
   assert.ok(message.includes("2x"),
     "A mensagem deve preservar a quantidade selecionada.");
-  assert.match(message, /Frete: R\$\s*20,00/,
+  assert.match(message, /Produtos: R\$\s*[0-9.]+,[0-9]{2}/,
+    "A mensagem deve identificar o subtotal dos produtos.");
+  assert.match(message, /Frete \(Agudos\): R\$\s*20,00/i,
     "A mensagem deve incluir a tarifa de membro calculada.");
-  assert.ok(message.includes("Total estimado:"),
+  assert.match(message, /Total estimado: R\$\s*[0-9.]+,[0-9]{2}/,
     "A mensagem deve incluir o total de produtos + frete.");
-  assert.ok(message.includes("Tarifa de membro do Clube solicitada"),
-    "A mensagem deve informar que a tarifa de membro depende de confirmação.");
-  assert.ok(message.includes("Subtotal estimado dos produtos"),
-    "A mensagem deve identificar o subtotal como estimado.");
-  assert.ok(message.includes("link de pagamento ou a chave PIX"),
+  assert.ok(message.includes("Benefício de frete do Clube aplicado automaticamente"),
+    "A mensagem deve informar que o benefício de membro foi aplicado automaticamente.");
+  assert.ok(message.includes("chave PIX ou o link de pagamento"),
     "A mensagem deve explicar que o pagamento será enviado manualmente.");
-  assert.ok(message.includes("O pedido só será confirmado após a identificação do pagamento"),
+  assert.ok(message.includes("O pedido é confirmado após a identificação do pagamento"),
     "A mensagem não deve afirmar que o pedido já está pago ou confirmado.");
 
   assert.equal(await page.locator("#customerOverlay").evaluate(el => el.hidden), true,

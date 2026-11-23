@@ -11,6 +11,7 @@ const clubPageScript = readFileSync("js/clube.js", "utf8");
 const clubPage = readFileSync("clube.html", "utf8");
 const clubLanding = readFileSync("clube/index.html", "utf8");
 const home = readFileSync("index.html", "utf8");
+const store = readFileSync("loja.html", "utf8");
 const cartOrders = readFileSync("supabase/functions/cart-orders/index.ts", "utf8");
 const paymentOrder = readFileSync("supabase/functions/create-payment-order/index.ts", "utf8");
 const membershipMigration = readFileSync(
@@ -69,11 +70,19 @@ test("a consulta pública de status exige membro ativo e perfil completo", () =>
   assert.match(clubLanding, /data de nascimento \(18\+\)/);
 });
 
-test("o benefício de frete não pode ser ativado manualmente no navegador", () => {
-  assert.match(cart, /controle\.disabled = true/);
+test("o benefício de frete é automático e não oferece seleção manual inerte", () => {
+  assert.doesNotMatch(cart, /cartClubMember/);
   assert.match(cart, /membroClubeVerificado = detail\.loaded === true/);
+  assert.match(cart, /detail\.authenticated === true/);
   assert.match(cart, /var membroClube = membroClubeVerificado && membroClubeAtivo/);
-  assert.match(cart, /Tarifa especial do Clube aplicada automaticamente/);
+  assert.match(cart, /Frete especial do Clube ativo e aplicado automaticamente/);
+  assert.match(cart, /Benefício de frete do Clube aplicado automaticamente/);
+  assert.doesNotMatch(cart, /Tarifa de membro do Clube selecionada|cadastro ativo será conferido pela equipe/);
+  assert.match(cart, /cartClubInfo/);
+  for (const html of [home, store]) {
+    assert.doesNotMatch(html, /id="cartClubMember"/);
+    assert.match(html, /id="cartClubJoinLink"/);
+  }
 });
 
 test("cart-orders consulta a adesão real e recalcula preços no servidor", () => {

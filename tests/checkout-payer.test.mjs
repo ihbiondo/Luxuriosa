@@ -3,14 +3,57 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 
 const checkoutPages = ["index.html", "loja.html"].map((path) => ({ path, html: readFileSync(path, "utf8") }));
+const cart = readFileSync("js/carrinho.js", "utf8");
 const client = readFileSync("js/clientes.js", "utf8");
 const backend = readFileSync("supabase/functions/create-payment-order/index.ts", "utf8");
 
 test("home e loja invalidam o cache do módulo de checkout atualizado", () => {
   for (const { path, html } of checkoutPages) {
-    assert.ok(html.includes('src="js/clientes.js?v=20261120-tibirica-minimum-v1'), path);
+    assert.ok(html.includes('src="js/clientes.js?v=20261123-checkout-flow-v1'), path);
   }
 });
+
+test("o carrinho exige conta, preserva entrega/retirada e retoma o WhatsApp após cadastro", () => {
+  assert.match(cart, /checkout\.iniciarFinalizacaoWhatsApp\(\)/);
+  assert.match(cart, /function enviarPedidoWhatsApp\(\)/);
+  assert.match(cart, /RECEBIMENTO_STORAGE_KEY/);
+  assert.match(cart, /salvarPreferenciaRecebimento\(\)/);
+  assert.match(cart, /restaurarPreferenciaRecebimento\(\)/);
+  assert.match(client, /function iniciarFinalizacaoWhatsApp\(\)/);
+  assert.match(cart, /avisoPrecoClube\.href = "\/login\.html\?cadastro=1&next=clube\.html"/);
+  assert.match(client, /carrinho\.abrir\(\)/);
+  assert.match(client, /supabase\.auth\.getSession\(\)/);
+  assert.match(client, /window\.location\.assign\("\/login\.html\?cadastro=1"\)/);
+  assert.match(client, /luxuriosa_checkout_after_login/);
+  assert.match(client, /iniciarFinalizacaoWhatsApp\(\);/);
+
+  for (const { path, html } of checkoutPages) {
+    assert.match(html, /Cidade ou região da entrega/ , path);
+    assert.match(html, /id="cartDeliveryCity" required aria-required="true"/, path);
+    assert.match(html, /id="cartClubInfo"/, path);
+    assert.match(html, /id="cartClubJoinLink" href="\/login\.html\?cadastro=1&amp;next=clube\.html"/, path);
+    assert.doesNotMatch(html, /id="cartClubMember"/, path);
+    assert.match(html, /Continuar para finalizar/, path);
+    assert.match(html, /você voltará ao carrinho e seguirá para o WhatsApp/i, path);
+  }
+});
+
+test("mensagem do WhatsApp é objetiva, legível e preserva os valores do pedido", () => {
+  assert.match(cart, /\\u\{1F497\}/);
+  assert.match(cart, /\\u\{1F6CD\}\\u\{FE0F\}/);
+  assert.match(cart, /\\u\{1F4B0\}/);
+  assert.match(cart, /\*ITENS DO PEDIDO\*/);
+  assert.match(cart, /\*VALORES\*/);
+  assert.match(cart, /"• Produtos: "/);
+  assert.match(cart, /Frete \(/);
+  assert.match(cart, /Total estimado/);
+  assert.match(cart, /PRÓXIMO PASSO/);
+  assert.match(cart, /chave PIX ou o link de pagamento/);
+  assert.doesNotMatch(cart, /\*RESUMO DO CARRINHO\*|\*RESUMO DOS VALORES\*/);
+  assert.doesNotMatch(cart, /\\uFFFD/);
+  assert.doesNotMatch(cart, /kitComFreteGratis|Frete gratuito para pedidos com kit/);
+});
+
 
 test("checkout apresenta a escolha do responsável pelo pagamento", () => {
   for (const { path, html } of checkoutPages) {
