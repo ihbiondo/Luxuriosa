@@ -20,6 +20,7 @@ test("o carrinho exige conta, preserva entrega/retirada e retoma o WhatsApp apó
   assert.match(cart, /salvarPreferenciaRecebimento\(\)/);
   assert.match(cart, /restaurarPreferenciaRecebimento\(\)/);
   assert.match(client, /function iniciarFinalizacaoWhatsApp\(\)/);
+  assert.match(client, /supabase\.auth\.getSession\(\)/);
   assert.match(client, /window\.location\.assign\("\/login\.html\?cadastro=1"\)/);
   assert.match(client, /luxuriosa_checkout_after_login/);
   assert.match(client, /iniciarFinalizacaoWhatsApp\(\);/);
