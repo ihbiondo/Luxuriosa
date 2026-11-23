@@ -11,6 +11,7 @@ const clubPageScript = readFileSync("js/clube.js", "utf8");
 const clubPage = readFileSync("clube.html", "utf8");
 const clubLanding = readFileSync("clube/index.html", "utf8");
 const home = readFileSync("index.html", "utf8");
+const store = readFileSync("loja.html", "utf8");
 const cartOrders = readFileSync("supabase/functions/cart-orders/index.ts", "utf8");
 const paymentOrder = readFileSync("supabase/functions/create-payment-order/index.ts", "utf8");
 const membershipMigration = readFileSync(
@@ -76,7 +77,7 @@ test("o benefício de frete é automático e não oferece seleção manual inert
   assert.match(cart, /var membroClube = membroClubeVerificado && membroClubeAtivo/);
   assert.match(cart, /Frete especial do Clube ativo e aplicado automaticamente/);
   assert.match(cart, /cartClubInfo/);
-  for (const { html } of checkoutPages) {
+  for (const html of [home, store]) {
     assert.doesNotMatch(html, /id="cartClubMember"/);
     assert.match(html, /id="cartClubJoinLink"/);
   }
