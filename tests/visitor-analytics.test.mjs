@@ -6,6 +6,7 @@ import vm from "node:vm";
 const source = fs.readFileSync("js/inteligencia.js", "utf8");
 const CONSENT_KEY = "lux_cookie_consent_v1";
 const BASE_TIME = Date.parse("2026-11-23T14:00:00-03:00");
+let harnessUuidCount = 0;
 
 function createStorage(initial = {}) {
   const values = new Map(Object.entries(initial));
@@ -38,7 +39,6 @@ function createHarness({
   sessionStorage = createStorage()
 } = {}) {
   let currentTime = now;
-  let uuidCount = 0;
   const requests = [];
   const windowListeners = new Map();
   const documentListeners = new Map();
@@ -58,8 +58,8 @@ function createHarness({
     location: new URL(url),
     crypto: {
       randomUUID() {
-        uuidCount += 1;
-        return "00000000-0000-4000-8000-" + String(uuidCount).padStart(12, "0");
+        harnessUuidCount += 1;
+        return "00000000-0000-4000-8000-" + String(harnessUuidCount).padStart(12, "0");
       }
     },
     addEventListener(name, callback) {
