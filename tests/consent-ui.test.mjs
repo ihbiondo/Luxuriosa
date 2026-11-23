@@ -8,6 +8,7 @@ const app = readFileSync("js/app.js", "utf8");
 const home = readFileSync("index.html", "utf8");
 const shop = readFileSync("loja.html", "utf8");
 const visitorAnalytics = readFileSync("js/inteligencia.js", "utf8");
+const areaConsent = readFileSync("js/consentimento-area.js", "utf8");
 
 test("mantém confirmação 18+ e preferências de cookies", () => {
   assert.match(consent, /function ensureAgeGate/);
@@ -50,7 +51,7 @@ test("todas as páginas públicas usam a versão atual do script de privacidade"
     const html = readFileSync(path, "utf8");
     const scripts = [...html.matchAll(/<script\b[^>]+src=["']([^"']*consentimento\.js[^"']*)["']/gi)];
     for (const [, source] of scripts) {
-      if (!source.includes("v=20261123-analytics-consent-v1")) {
+      if (!source.includes("v=20261119-sem-convites-automaticos-v1")) {
         staleReferences.push(path + " -> " + source);
       }
     }
@@ -61,13 +62,13 @@ test("todas as páginas públicas usam a versão atual do script de privacidade"
 test("disponibiliza preferências de privacidade em Educação e Experiências sem duplicar o gate 18+", () => {
   assert.ok(visitorAnalytics.includes("function ensurePrivacyPreferencesLoaded"));
   assert.ok(visitorAnalytics.includes("data-lux-skip-global-age-gate"));
-  assert.ok(visitorAnalytics.includes("/js/consentimento.js?v=20261123-analytics-consent-v1"));
-  assert.ok(consent.includes("data-lux-skip-global-age-gate"));
-  assert.ok(consent.includes("if (skipGlobalAgeGate)"));
-  assert.ok(consent.includes('var gate = document.getElementById("gate");'));
+  assert.ok(visitorAnalytics.includes("/js/consentimento-area.js?v=20261123-area-consent-v1"));
+  assert.ok(areaConsent.includes("data-lux-skip-global-age-gate"));
+  assert.ok(areaConsent.includes("if (skipGlobalAgeGate)"));
+  assert.ok(areaConsent.includes('var gate = document.getElementById("gate");'));
 });
 
 test("explica a medição interna e usa link absoluto para a política de privacidade", () => {
-  assert.ok(consent.includes("Medição interna de navegação e Google Analytics 4"));
-  assert.ok(consent.includes("/privacidade.html"));
+  assert.ok(areaConsent.includes("Medição interna de navegação e Google Analytics 4"));
+  assert.ok(areaConsent.includes("/privacidade.html"));
 });

@@ -262,7 +262,7 @@ test("Educação e Experiências registram apenas a seção, sem artigo ou resul
   });
   await educationPage.settle();
   const educationView = educationPage.requests.find(request => request.body.event_name === "page_view");
-  assert.ok(educationPage.appendedScripts.some(script => script.src === "/js/consentimento.js?v=20261123-analytics-consent-v1"));
+  assert.ok(educationPage.appendedScripts.some(script => script.src === "/js/consentimento-area.js?v=20261123-area-consent-v1"));
   assert.equal(educationPage.document.documentElement.getAttribute("data-lux-skip-global-age-gate"), "true");
   assert.ok(educationView);
   assert.equal(educationView.body.page_path, "/educacao/");
@@ -275,7 +275,7 @@ test("Educação e Experiências registram apenas a seção, sem artigo ou resul
   });
   await experiencePage.settle();
   const experienceView = experiencePage.requests.find(request => request.body.event_name === "page_view");
-  assert.ok(experiencePage.appendedScripts.some(script => script.src === "/js/consentimento.js?v=20261123-analytics-consent-v1"));
+  assert.ok(experiencePage.appendedScripts.some(script => script.src === "/js/consentimento-area.js?v=20261123-area-consent-v1"));
   assert.equal(experiencePage.document.documentElement.getAttribute("data-lux-skip-global-age-gate"), "true");
   assert.ok(experienceView);
   assert.equal(experienceView.body.page_path, "/experiencias/");

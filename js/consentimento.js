@@ -163,7 +163,7 @@
     overlay.setAttribute("role", "dialog");
     overlay.setAttribute("aria-modal", "true");
     overlay.setAttribute("aria-labelledby", "luxCookieTitle");
-    overlay.innerHTML = '<section id="lux-cookie-panel"><button class="lux-cookie-close" type="button" aria-label="Fechar preferências e rejeitar estatísticas opcionais" data-cookie-close>×</button><h2 id="luxCookieTitle">Sua privacidade importa</h2><p>Usamos armazenamento local para recursos essenciais, como carrinho e confirmação de maioridade. Estatísticas opcionais só são ativadas com sua autorização. Marketing e autorizações do Clube são tratados separadamente.</p><div class="lux-cookie-option"><div><strong>Tecnologias necessárias</strong><small>Armazenamento local para carrinho, confirmação de maioridade e registro das preferências.</small></div><span class="lux-cookie-pill">Sempre ativas</span></div><div class="lux-cookie-option"><div><strong>Estatísticas e análise</strong><small>Medição interna de navegação e Google Analytics 4. Só é ativada com sua autorização.</small></div><label class="lux-switch"><input id="luxAnalytics" type="checkbox" aria-label="Autorizar estatísticas e análise"><span></span></label></div><p><a href="' + "/privacidade.html" + '">Leia nossa Política de Privacidade</a></p><div class="lux-cookie-actions"><button type="button" class="lux-primary" data-cookie-accept>Aceitar estatísticas</button><button type="button" data-cookie-reject>Rejeitar opcionais</button><button type="button" data-cookie-custom>Personalizar</button></div><div class="lux-cookie-actions" id="lux-cookie-save-row" hidden><button type="button" class="lux-primary" data-cookie-save>Salvar minhas preferências</button></div></section>';
+    overlay.innerHTML = '<section id="lux-cookie-panel"><button class="lux-cookie-close" type="button" aria-label="Fechar preferências e rejeitar estatísticas opcionais" data-cookie-close>×</button><h2 id="luxCookieTitle">Sua privacidade importa</h2><p>Usamos armazenamento local para recursos essenciais, como carrinho e confirmação de maioridade. Estatísticas opcionais só são ativadas com sua autorização. Marketing e autorizações do Clube são tratados separadamente.</p><div class="lux-cookie-option"><div><strong>Tecnologias necessárias</strong><small>Armazenamento local para carrinho, confirmação de maioridade e registro das preferências.</small></div><span class="lux-cookie-pill">Sempre ativas</span></div><div class="lux-cookie-option"><div><strong>Estatísticas e análise</strong><small>Medição de navegação por meio do Google Analytics 4. Só é ativada com sua autorização.</small></div><label class="lux-switch"><input id="luxAnalytics" type="checkbox" aria-label="Autorizar estatísticas e análise"><span></span></label></div><p><a href="' + (location.pathname.indexOf("/produtos/") !== -1 ? "../privacidade.html" : "privacidade.html") + '">Leia nossa Política de Privacidade</a></p><div class="lux-cookie-actions"><button type="button" class="lux-primary" data-cookie-accept>Aceitar estatísticas</button><button type="button" data-cookie-reject>Rejeitar opcionais</button><button type="button" data-cookie-custom>Personalizar</button></div><div class="lux-cookie-actions" id="lux-cookie-save-row" hidden><button type="button" class="lux-primary" data-cookie-save>Salvar minhas preferências</button></div></section>';
     document.body.appendChild(overlay);
     overlay.querySelector("[data-cookie-reject]").addEventListener("click", function () { saveConsent(false); });
     overlay.querySelector("[data-cookie-accept]").addEventListener("click", function () { saveConsent(true); });
@@ -204,8 +204,7 @@
   }
 
   function openPreferences() {
-    var gate = document.getElementById("gate");
-    if (gate && gate.classList.contains("open")) return;
+    if (document.getElementById("gate").classList.contains("open")) return;
     openConsent();
   }
 
@@ -231,18 +230,9 @@
 
   function start() {
     addStyles();
+    var gate = ensureAgeGate();
     consent = readConsent();
     addPreferencesLink();
-
-    // Educação e Experiências já controlam sua própria confirmação de idade.
-    // Nessas seções, este script disponibiliza apenas as preferências de cookies.
-    var skipGlobalAgeGate = document.documentElement.getAttribute("data-lux-skip-global-age-gate") === "true";
-    if (skipGlobalAgeGate) {
-      if (consent) applyConsent();
-      return;
-    }
-
-    var gate = ensureAgeGate();
     var authorized = false;
     try { authorized = localStorage.getItem("lux18") === "1"; } catch (e) {}
     var yes = document.getElementById("gateYes");

@@ -38,6 +38,7 @@ on:
       - "js/clientes.js"
       - "js/inteligencia.js"
       - "js/consentimento.js"
+      - "js/consentimento-area.js"
       - "tests/visitor-analytics.test.mjs"
       - "js/carrinho.js"
       - "supabase/functions/create-payment-order/index.ts"
@@ -116,6 +117,7 @@ on:
       - "js/clientes.js"
       - "js/inteligencia.js"
       - "js/consentimento.js"
+      - "js/consentimento-area.js"
       - "tests/visitor-analytics.test.mjs"
       - "js/carrinho.js"
       - "supabase/functions/create-payment-order/index.ts"
@@ -228,6 +230,7 @@ jobs:
           node --check js/signo-detalhe.js
           node --check js/inteligencia.js
           node --check js/consentimento.js
+          node --check js/consentimento-area.js
           node --test tests/visitor-analytics.test.mjs
           node --check js/carrinho.js
           node --check js/clube-precos.js
