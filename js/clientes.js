@@ -82,7 +82,8 @@
       return (cidade === "bauru" && distrito === "tibirica") ||
         cidade === "tibirica";
     }
-    return cidade === regiao;
+    var aliases = { lencois: "lencois paulista" };
+    return cidade === (aliases[regiao] || regiao);
   }
 
   function obterResumoFretePedido(data, subtotal) {
@@ -1034,6 +1035,18 @@
 
   async function iniciarFinalizacao() {
     if (!window.LuxuriosaCarrinho || !window.LuxuriosaCarrinho.obterQuantidade()) return;
+    var modoCarrinho = texto("cartFulfillmentMethod");
+    var regiaoCarrinho = texto("cartDeliveryCity");
+    if (modoCarrinho !== "delivery" && modoCarrinho !== "pickup") {
+      window.alert("Escolha entrega ou retirada no carrinho antes de continuar.");
+      window.location.replace("/loja.html?abrirCarrinho=1");
+      return;
+    }
+    if (modoCarrinho === "delivery" && !regiaoCarrinho) {
+      window.alert("Selecione a cidade ou região da entrega no carrinho antes de continuar.");
+      window.location.replace("/loja.html?abrirCarrinho=1");
+      return;
+    }
     try {
       var supabase = await obterClienteSupabase();
       var auth = await supabase.auth.getUser();
@@ -1066,6 +1079,9 @@
     if (payerType) payerType.addEventListener("change", atualizarCamposPagador);
     var fulfillmentMode = $("customerFulfillmentMode");
     if (fulfillmentMode) fulfillmentMode.addEventListener("change", atualizarModalidade);
+    window.addEventListener("luxuriosa:club-state-changed", function () {
+      if (overlay && !overlay.hidden) atualizarAvisoFrete();
+    });
     form.addEventListener("submit", revisarPedido);
     $("customerClose").addEventListener("click", fechar);
     var accountLoadButton = $("customerAccountLoad");
