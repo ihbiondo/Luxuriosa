@@ -20,6 +20,7 @@ test("o carrinho exige conta, preserva entrega/retirada e retoma o WhatsApp apó
   assert.match(cart, /salvarPreferenciaRecebimento\(\)/);
   assert.match(cart, /restaurarPreferenciaRecebimento\(\)/);
   assert.match(client, /function iniciarFinalizacaoWhatsApp\(\)/);
+  assert.match(cart, /avisoPrecoClube\.href = "\/login\.html\?cadastro=1&next=clube\.html"/);
   assert.match(client, /carrinho\.abrir\(\)/);
   assert.match(client, /supabase\.auth\.getSession\(\)/);
   assert.match(client, /window\.location\.assign\("\/login\.html\?cadastro=1"\)/);
@@ -28,9 +29,9 @@ test("o carrinho exige conta, preserva entrega/retirada e retoma o WhatsApp apó
 
   for (const { path, html } of checkoutPages) {
     assert.match(html, /Cidade ou região da entrega/ , path);
-    assert.match(html, /id="cartDeliveryCity"/, path);
+    assert.match(html, /id="cartDeliveryCity" required aria-required="true"/, path);
     assert.match(html, /id="cartClubInfo"/, path);
-    assert.match(html, /id="cartClubJoinLink"/, path);
+    assert.match(html, /id="cartClubJoinLink" href="\/login\.html\?cadastro=1&amp;next=clube\.html"/, path);
     assert.doesNotMatch(html, /id="cartClubMember"/, path);
     assert.match(html, /Continuar para finalizar/, path);
     assert.match(html, /você voltará ao carrinho e seguirá para o WhatsApp/i, path);
