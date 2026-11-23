@@ -2,7 +2,38 @@ import assert from "node:assert/strict";
 import { chromium } from "playwright";
 
 const BASE_URL = process.env.E2E_BASE_URL || "http://127.0.0.1:4173";
+const SUPABASE_URL = process.env.E2E_SUPABASE_URL;
+const SERVICE_ROLE_KEY = process.env.E2E_SERVICE_ROLE_KEY;
+const TEST_PASSWORD = "E2E-Only-2026!";
 const TEST_CART_SESSION = "00000000-0000-4000-8000-000000002931";
+
+assert.ok(SUPABASE_URL, "E2E_SUPABASE_URL ausente.");
+assert.ok(SERVICE_ROLE_KEY, "E2E_SERVICE_ROLE_KEY ausente.");
+
+async function createTestUser() {
+  const email = "checkout-payer@example.com";
+  const response = await fetch(`${SUPABASE_URL}/auth/v1/admin/users`, {
+    method: "POST",
+    headers: {
+      apikey: SERVICE_ROLE_KEY,
+      Authorization: `Bearer ${SERVICE_ROLE_KEY}`,
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      email,
+      password: TEST_PASSWORD,
+      email_confirm: true,
+      user_metadata: {
+        display_name: "Conta E2E Checkout",
+        account_setup_completed: true
+      }
+    })
+  });
+  const payload = await response.json();
+  assert.ok(response.ok, `Não foi possível criar usuário de checkout: ${JSON.stringify(payload)}`);
+  assert.ok(payload.id, "A API local não retornou o ID do usuário.");
+  return email;
+}
 
 const browser = await chromium.launch({
   headless: true,
@@ -20,34 +51,12 @@ try {
   const page = await context.newPage();
   page.setDefaultTimeout(15000);
 
-  /* Cliente Supabase isolado para testar visitante -> cadastro -> retorno autenticado. */
+  /* Usa autenticação Supabase local real; apenas intercepta a abertura externa do WhatsApp. */
   await page.addInitScript(() => {
-    function usuarioTeste() {
-      return localStorage.getItem("luxuriosa_test_authenticated") === "1"
-        ? { id: "00000000-0000-4000-8000-000000002932", email: "checkout@example.test" }
-        : null;
-    }
     window.__capturedWhatsAppUrl = "";
     window.open = function (url) {
       window.__capturedWhatsAppUrl = String(url || "");
       return null;
-    };
-    window.LuxuriosaSupabase = {
-      auth: {
-        getUser: async () => ({ data: { user: usuarioTeste() }, error: null }),
-        getSession: async () => ({
-          data: { session: usuarioTeste() ? {
-            user: usuarioTeste(),
-            access_token: "local-e2e-access-token"
-          } : null },
-          error: null
-        }),
-        onAuthStateChange: () => ({ data: { subscription: { unsubscribe() {} } } })
-      },
-      rpc: async () => ({
-        data: { is_member: false, profile_complete: false, profile_missing_fields: [] },
-        error: null
-      })
     };
   });
 
@@ -178,16 +187,22 @@ try {
   await page.locator("#cartCheckout").click();
   await page.waitForURL("**/login.html?cadastro=1", { timeout: 15000 });
   assert.equal(await page.evaluate(() => localStorage.getItem("luxuriosa_checkout_after_login")), "1",
-    "O pedido deve ficar marcado para ser retomado depois do cadastro.");
+    "O pedido deve ficar marcado para ser retomado depois da autenticação.");
   assert.equal(await page.locator("#signupForm").isVisible(), true,
     "O visitante deve chegar diretamente à tela de criar conta.");
 
-  /* Simula o retorno após a confirmação de cadastro/login; o carrinho e a região continuam salvos. */
-  await page.evaluate(() => {
-    localStorage.setItem("luxuriosa_test_authenticated", "1");
-    localStorage.removeItem("luxuriosa_checkout_after_login");
-  });
-  await page.goto(`${BASE_URL}/loja.html?retomar-checkout=1`, { waitUntil: "domcontentloaded" });
+  /* O E2E autentica uma conta criada na base descartável usando a tela real de login. */
+  const checkoutUser = await createTestUser();
+  await page.locator("#loginTab").click();
+  await page.locator("#loginEmail").fill(checkoutUser);
+  await page.locator("#loginPassword").fill(TEST_PASSWORD);
+  await Promise.all([
+    page.waitForURL(url => url.pathname === "/loja.html" &&
+      url.searchParams.get("retomar-checkout") === "1", { timeout: 30000 }),
+    page.locator('#loginForm button[type="submit"]').click()
+  ]);
+  assert.equal(await page.evaluate(() => localStorage.getItem("luxuriosa_checkout_after_login")), null,
+    "A tela de login deve consumir a marcação ao redirecionar de volta para o pedido.");
   await page.waitForFunction(() =>
     typeof window.__capturedWhatsAppUrl === "string" &&
     window.__capturedWhatsAppUrl.length > 0,
