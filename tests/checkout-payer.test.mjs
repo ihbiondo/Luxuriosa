@@ -8,8 +8,43 @@ const backend = readFileSync("supabase/functions/create-payment-order/index.ts",
 
 test("home e loja invalidam o cache do módulo de checkout atualizado", () => {
   for (const { path, html } of checkoutPages) {
-    assert.ok(html.includes('src="js/clientes.js?v=20261120-tibirica-minimum-v1'), path);
+    assert.ok(html.includes('src="js/clientes.js?v=20261123-checkout-flow-v1'), path);
   }
+});
+
+test("o carrinho abre o checkout autenticado e preserva modalidade e região", () => {
+  const cart = readFileSync("js/carrinho.js", "utf8");
+  assert.match(cart, /checkout\.iniciarFinalizacao\(\)/);
+  assert.doesNotMatch(cart, /abrirWhatsApp\(montarMensagemPedido/);
+  assert.match(cart, /RECEBIMENTO_STORAGE_KEY/);
+  assert.match(cart, /salvarPreferenciaRecebimento\(\)/);
+  assert.match(cart, /restaurarPreferenciaRecebimento\(\)/);
+  assert.match(client, /window\.location\.assign\("\/login\.html\?cadastro=1"\)/);
+  assert.match(client, /luxuriosa_checkout_after_login/);
+  assert.match(client, /definirValor\("customerFulfillmentMode", modoCarrinho === "pickup" \? "pickup" : "delivery"\)/);
+
+  for (const { path, html } of checkoutPages) {
+    assert.match(html, /Cidade ou região da entrega/ , path);
+    assert.match(html, /id="cartDeliveryCity"/, path);
+    assert.match(html, /id="cartClubInfo"/, path);
+    assert.match(html, /id="cartClubJoinLink"/, path);
+    assert.doesNotMatch(html, /id="cartClubMember"/, path);
+    assert.match(html, /id="customerSelectedRegionInfo"/, path);
+    assert.match(html, /Continuar para finalizar/, path);
+  }
+
+  assert.match(client, /function enderecoCorrespondeRegiaoSelecionada\(address\)/);
+  assert.match(client, /Região escolhida no carrinho/);
+});
+
+test("resumo do checkout preserva emojis e apresenta frete e total estimados", () => {
+  assert.match(client, /\\u\{1F497\}/);
+  assert.match(client, /\\u\{1F6CD\}/);
+  assert.match(client, /\\u\{1F4B0\}/);
+  assert.match(client, /function obterResumoFretePedido\(data, subtotal\)/);
+  assert.match(client, /\*Total estimado:/);
+  assert.doesNotMatch(client, /\uFFFD/);
+  assert.doesNotMatch(client, /kitComFreteGratis|Frete gratuito para pedidos com kit/);
 });
 
 test("checkout apresenta a escolha do responsável pelo pagamento", () => {
