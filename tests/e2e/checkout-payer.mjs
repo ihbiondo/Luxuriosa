@@ -180,6 +180,12 @@ try {
   }, { timeout: 15000 }).then(request => request.postDataJSON());
 
   await page.locator("#cartFulfillmentMethod").selectOption("delivery");
+  assert.equal(await page.locator("#cartDeliveryFields").isVisible(), true,
+    "A seleção da entrega deve abrir os campos de cidade/região.");
+  assert.equal(await page.locator("#cartDeliveryCity").getAttribute("required"), "",
+    "A cidade/região deve ser obrigatória no formulário.");
+  assert.equal(await page.locator("#cartCheckout").isDisabled(), true,
+    "O checkout não pode avançar enquanto a região não for selecionada.");
   await page.locator("#cartDeliveryCity").selectOption("bauru");
   assert.match(await page.locator("#cartFreightValue").innerText(), /R\$\s*15,00/,
     "Pedido com kit em Bauru deve pagar a tarifa normal de entrega.");
