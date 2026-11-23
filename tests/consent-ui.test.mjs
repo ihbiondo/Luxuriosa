@@ -71,4 +71,6 @@ test("disponibiliza preferências de privacidade em Educação e Experiências s
 test("explica a medição interna e usa link absoluto para a política de privacidade", () => {
   assert.ok(areaConsent.includes("Medição interna de navegação e Google Analytics 4"));
   assert.ok(areaConsent.includes("/privacidade.html"));
+  assert.ok(areaConsent.includes(".footer{flex-wrap:wrap;max-width:100%;box-sizing:border-box}"));
+  assert.ok(areaConsent.includes(".footer>.lux-cookie-preferences-link{flex:0 0 100%"));
 });
