@@ -1072,6 +1072,8 @@
       if (typeof carrinho.enviarPedidoWhatsApp !== "function") {
         throw new Error("O envio do pedido pelo WhatsApp não está disponível.");
       }
+      /* No retorno do cadastro, mantém o carrinho visível para conferir/trocar o recebimento. */
+      if (typeof carrinho.abrir === "function") carrinho.abrir();
       carrinho.enviarPedidoWhatsApp();
     } catch (error) {
       console.error("Não foi possível validar a conta antes do pedido:", error);
