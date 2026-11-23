@@ -35,7 +35,7 @@ test("o carrinho abre o checkout autenticado e preserva modalidade e região", (
 
   assert.match(client, /function enderecoCorrespondeRegiaoSelecionada\(address\)/);
   assert.match(client, /Região escolhida no carrinho/);
-  assert.match(client, /var aliases = \\{ lencois: "lencois paulista" \\}/);
+  assert.match(client, /var aliases = \{ lencois: "lencois paulista" \}/);
   assert.match(client, /Escolha entrega ou retirada no carrinho antes de continuar/);
   assert.match(client, /window.addEventListener\("luxuriosa:club-state-changed"/);
 });
