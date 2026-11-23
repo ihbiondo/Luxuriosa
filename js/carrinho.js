@@ -14,6 +14,7 @@
 
   var STORAGE_KEY =
     "luxuriosa_carrinho";
+  var RECEBIMENTO_STORAGE_KEY = "luxuriosa_recebimento";
 
   var FALLBACK_WHATSAPP =
     "5514996355924";
@@ -43,6 +44,8 @@
   var catalogoAtual = [];
   var membroClubeAtivo = false;
   var membroClubeVerificado = false;
+  var membroClubeAutenticado = false;
+  var membroClubeErro = false;
   var focoAnteriorCarrinho = null;
 
 
@@ -81,20 +84,50 @@
   }
 
   function atualizarControlesClube() {
-    var controle = $("cartClubMember");
-    var texto = document.querySelector(".cart-club-row span");
-    if (controle) {
-      controle.checked = membroClubeVerificado && membroClubeAtivo;
-      controle.disabled = true;
-      controle.setAttribute("aria-disabled", "true");
+    var status = $("cartClubInfo");
+    var link = $("cartClubJoinLink");
+    if (status) {
+      status.textContent = !membroClubeVerificado
+        ? "Consultando sua participação no Clube…"
+        : membroClubeErro
+          ? "Não foi possível consultar o Clube agora. A condição será confirmada no checkout."
+          : membroClubeAtivo
+            ? "Frete especial do Clube ativo e aplicado automaticamente. Nenhuma seleção é necessária."
+            : membroClubeAutenticado
+              ? "Sua conta ainda não tem adesão ativa. Participe gratuitamente para receber o frete especial."
+              : "Membros ativos do Clube recebem frete com valor especial, aplicado automaticamente.";
     }
-    if (texto) {
-      texto.textContent = !membroClubeVerificado
-        ? "Verificando sua participação no Clube…"
-        : membroClubeAtivo
-          ? "Tarifa especial do Clube aplicada automaticamente"
-          : "Entre no Clube gratuitamente para acessar a tarifa especial";
-    }
+    if (link) link.hidden = membroClubeVerificado && membroClubeAtivo;
+  }
+
+  function salvarPreferenciaRecebimento() {
+    var metodo = $("cartFulfillmentMethod");
+    var cidade = $("cartDeliveryCity");
+    try {
+      localStorage.setItem(RECEBIMENTO_STORAGE_KEY, JSON.stringify({
+        method: metodo ? metodo.value : "",
+        city: cidade ? cidade.value : ""
+      }));
+    } catch (_) {}
+  }
+
+  function restaurarPreferenciaRecebimento() {
+    try {
+      var raw = localStorage.getItem(RECEBIMENTO_STORAGE_KEY);
+      if (!raw) return;
+      var preference = JSON.parse(raw);
+      var metodo = $("cartFulfillmentMethod");
+      var cidade = $("cartDeliveryCity");
+      if (metodo && ["delivery", "pickup"].indexOf(preference.method) !== -1) {
+        metodo.value = preference.method;
+      }
+      if (cidade && typeof preference.city === "string" &&
+          Array.prototype.some.call(cidade.options, function (option) {
+            return option.value === preference.city;
+          })) {
+        cidade.value = preference.city;
+      }
+    } catch (_) {}
   }
 
 
@@ -1685,10 +1718,16 @@
       return;
     }
 
+    var checkout = window.LuxuriosaClientes;
+    if (!checkout || typeof checkout.iniciarFinalizacao !== "function") {
+      window.alert("Não foi possível abrir a etapa de cadastro e pagamento. Atualize a página e tente novamente.");
+      return;
+    }
+
     if (window.LuxuriosaMedicao && typeof window.LuxuriosaMedicao.registrar === "function") {
       window.LuxuriosaMedicao.registrar("begin_checkout", {
         quantity: quantidadeTotal(),
-        method: "whatsapp",
+        method: "website_checkout",
         fulfillment_method: resumoRecebimento.method,
         delivery_city: resumoRecebimento.city || null,
         delivery_fee: resumoRecebimento.freight,
@@ -1696,23 +1735,18 @@
       });
     }
 
-    /* Registra o avanço no funil sem criar pedido nem afirmar que houve venda. */
-    if (window.LuxuriosaInteligencia) {
-      if (typeof window.LuxuriosaInteligencia.registrarEtapa === "function") {
-        window.LuxuriosaInteligencia.registrarEtapa("checkout_started", carrinho)
-          .catch(function (erro) {
-            console.warn("Luxuriosa: não foi possível registrar o início da finalização.", erro);
-          });
-      }
-      if (typeof window.LuxuriosaInteligencia.registrarEvento === "function") {
-        window.LuxuriosaInteligencia.registrarEvento("whatsapp_opened")
-          .catch(function (erro) {
-            console.warn("Luxuriosa: não foi possível registrar a abertura do WhatsApp.", erro);
-          });
-      }
+    /* O cliente entra ou cria uma conta antes de informar os dados e pagar. */
+    if (window.LuxuriosaInteligencia && typeof window.LuxuriosaInteligencia.registrarEtapa === "function") {
+      window.LuxuriosaInteligencia.registrarEtapa("checkout_started", carrinho)
+        .catch(function (erro) {
+          console.warn("Luxuriosa: não foi possível registrar o início da finalização.", erro);
+        });
     }
 
-    abrirWhatsApp(montarMensagemPedido(resumoRecebimento));
+    Promise.resolve(checkout.iniciarFinalizacao()).catch(function (erro) {
+      console.error("Luxuriosa: falha ao iniciar o checkout.", erro);
+      window.alert("Não foi possível iniciar o checkout. Atualize a página e tente novamente.");
+    });
 
   }
 
@@ -1811,9 +1845,11 @@
 
     var metodoRecebimento = $("cartFulfillmentMethod");
     var cidadeEntrega = $("cartDeliveryCity");
-    var membroClube = $("cartClubMember");
-    [metodoRecebimento, cidadeEntrega, membroClube].forEach(function (controle) {
-      if (controle) controle.addEventListener("change", renderizar);
+    [metodoRecebimento, cidadeEntrega].forEach(function (controle) {
+      if (controle) controle.addEventListener("change", function () {
+        salvarPreferenciaRecebimento();
+        renderizar();
+      });
     });
 
     if (finalizar) {
@@ -2075,6 +2111,7 @@
   function iniciar() {
 
     carregar();
+    restaurarPreferenciaRecebimento();
 
     configurarEventos();
     atualizarControlesClube();
