@@ -38,16 +38,19 @@ test("o carrinho exige conta, preserva entrega/retirada e retoma o WhatsApp apó
   }
 });
 
-test("mensagem do WhatsApp preserva emojis, itens, frete e total estimado", () => {
+test("mensagem do WhatsApp é objetiva, legível e preserva os valores do pedido", () => {
   assert.match(cart, /\\u\{1F497\}/);
   assert.match(cart, /\\u\{1F6CD\}\\u\{FE0F\}/);
   assert.match(cart, /\\u\{1F4B0\}/);
-  assert.match(cart, /\*RESUMO DO CARRINHO\*/);
-  assert.match(cart, /Subtotal estimado dos produtos/);
-  assert.match(cart, /Frete para retirada/);
-  assert.match(cart, /link de pagamento ou a chave PIX/);
-  assert.match(cart, /O pedido só será confirmado após a identificação do pagamento/);
-  assert.doesNotMatch(cart, /\uFFFD/);
+  assert.match(cart, /\*ITENS DO PEDIDO\*/);
+  assert.match(cart, /\*VALORES\*/);
+  assert.match(cart, /"• Produtos: "/);
+  assert.match(cart, /Frete \(/);
+  assert.match(cart, /Total estimado/);
+  assert.match(cart, /PRÓXIMO PASSO/);
+  assert.match(cart, /chave PIX ou o link de pagamento/);
+  assert.doesNotMatch(cart, /\*RESUMO DO CARRINHO\*|\*RESUMO DOS VALORES\*/);
+  assert.doesNotMatch(cart, /\\uFFFD/);
   assert.doesNotMatch(cart, /kitComFreteGratis|Frete gratuito para pedidos com kit/);
 });
 
