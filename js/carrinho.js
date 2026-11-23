@@ -2045,6 +2045,8 @@
   function aplicarEstadoClubeNoCarrinho(detail) {
     if (!detail) return;
     membroClubeVerificado = detail.loaded === true;
+    membroClubeAutenticado = detail.authenticated === true;
+    membroClubeErro = detail.error === true;
     membroClubeAtivo = membroClubeVerificado &&
       detail.isMember === true && detail.profileComplete === true;
     atualizarControlesClube();
