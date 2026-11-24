@@ -5,7 +5,8 @@ insert into auth.users (id, email)
 values ('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa', 'account-cleanup-test@example.invalid');
 
 insert into public.profiles (id)
-values ('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa');
+values ('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa')
+on conflict (id) do nothing;
 
 insert into public.account_data_consents values ('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa');
 insert into public.account_privacy_acceptances values ('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa');
