@@ -73,13 +73,13 @@ test("o benefício de frete é automático e não oferece seleção manual inert
   assert.match(cart, /membroClubeVerificado = detail\.loaded === true/);
   assert.match(cart, /detail\.authenticated === true/);
   assert.match(cart, /var membroClube = membroClubeVerificado && membroClubeAtivo/);
-  assert.match(cart, /Frete especial do Clube aplicado automaticamente/);
-  assert.match(cart, /Benefício de frete do Clube aplicado automaticamente/);
+  assert.match(cart, /Condição especial de frete aplicada automaticamente/);
+  assert.match(cart, /O frete é calculado conforme a localidade e confirmado no atendimento/);
   assert.doesNotMatch(cart, /Tarifa de membro do Clube selecionada|cadastro ativo será conferido pela equipe/);
   assert.match(cart, /cartClubInfo/);
   for (const html of [home, store]) {
     assert.doesNotMatch(html, /id="cartClubMember"/);
-    assert.match(html, /id="cartClubJoinLink"/);
+    assert.doesNotMatch(html, /id="cartClubJoinLink"/);
   }
 });
 
