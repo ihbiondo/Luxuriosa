@@ -134,8 +134,9 @@ try {
     zip: "17030-290", street: "Estrada de Tibiriçá", district: "Tibiriçá",
     city: "Bauru", state: "SP"
   });
-  assert.ok(tibiricaPreview.includes("Frete: R$ 20,00"), "Tibiriçá deve usar a tarifa específica.");
-  assert.ok(tibiricaPreview.includes("Pedido mínimo: R$ 50,00 em produtos."),
+  const tibiricaText = tibiricaPreview.replace(/\u00A0/g, " ");
+  assert.match(tibiricaText, /Frete: R\$ 20,00/, "Tibiriçá deve usar a tarifa específica.");
+  assert.match(tibiricaText, /Pedido mínimo: R\$ 50,00 em produtos\./,
     "O pedido mínimo de Tibiriçá deve ser R$ 50,00, mesmo quando o município informado é Bauru.");
 
   const otherPreview = await revisarRegiao("other", {
