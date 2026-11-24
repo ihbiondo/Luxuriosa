@@ -248,7 +248,7 @@ jobs:
           npx --yes esbuild@0.25.0 supabase/functions/cart-orders/index.ts --format=esm --platform=neutral --outfile=/tmp/cart-orders.js
           npx --yes esbuild@0.25.0 supabase/functions/infinitepay-webhook/index.ts --format=esm --platform=neutral --outfile=/tmp/infinitepay-webhook.js
           npx --yes esbuild@0.25.0 supabase/functions/infinitepay-webhook/_shared/infinitepay-payment.ts --format=esm --platform=neutral --outfile=/tmp/infinitepay-payment.js
-          npx --yes esbuild@0.25.0 supabase/functions/delete-account/index.ts --format=esm --platform=neutral --external:npm:* --outfile=/tmp/delete-account.js
+          npx --yes esbuild@0.25.0 supabase/functions/delete-account/index.ts --bundle --format=esm --platform=neutral --external:npm:* --outfile=/tmp/delete-account.js
           node --input-type=module <<'NODE'
           import fs from "node:fs";
           import { execFileSync } from "node:child_process";
