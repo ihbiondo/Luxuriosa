@@ -905,7 +905,8 @@ input:focus,select:focus{border-color:#d4af7c;box-shadow:0 0 0 3px rgba(212,175,
               <div class="section-label">Encerrar conta</div>
               <p class="danger-help">A exclusão remove seu acesso e os dados pessoais do perfil, endereço e preferências. Essa ação é permanente. Registros que venham a ser necessários para obrigações legais poderão receber tratamento de retenção ou anonimização, conforme a legislação aplicável.</p>
               <div class="grid">
-                <div class="field full"><label for="deleteAccountPassword">Confirme sua senha atual</label><input id="deleteAccountPassword" type="password" autocomplete="current-password" minlength="8" required></div>
+                <div class="field full" id="deleteAccountPasswordField"><label for="deleteAccountPassword">Confirme sua senha atual</label><input id="deleteAccountPassword" type="password" autocomplete="current-password" minlength="8"></div>
+                <p class="email-change-help field full" id="deleteAccountIdentityHelp" aria-live="polite">A confirmação de identidade será solicitada conforme o método usado para entrar.</p>
                 <div class="field full"><label for="deleteAccountConfirmation">Digite EXCLUIR para confirmar</label><input id="deleteAccountConfirmation" type="text" autocomplete="off" maxlength="7" required></div>
               </div>
               <div class="actions"><button class="secondary danger-button" id="deleteAccountButton" type="submit">EXCLUIR MINHA CONTA</button></div>
@@ -1414,9 +1415,26 @@ input:focus,select:focus{border-color:#d4af7c;box-shadow:0 0 0 3px rgba(212,175,
       } catch (_) {}
     }
 
+    function configureAccountDeletion(user) {
+      const identities = Array.isArray(user?.identities) ? user.identities : [];
+      const hasGoogleIdentity = user?.app_metadata?.provider === "google" ||
+        identities.some(identity => identity.provider === "google");
+      const passwordField = $("deleteAccountPasswordField");
+      const passwordInput = $("deleteAccountPassword");
+      const help = $("deleteAccountIdentityHelp");
+      if (!passwordField || !passwordInput || !help) return;
+      passwordField.classList.toggle("hidden", hasGoogleIdentity);
+      passwordInput.required = !hasGoogleIdentity;
+      passwordInput.value = "";
+      help.textContent = hasGoogleIdentity
+        ? "Sua conta usa o Google. Para excluir, será exigida uma sessão Google recente e a confirmação EXCLUIR."
+        : "Informe sua senha atual e digite EXCLUIR para confirmar.";
+    }
+
     let loadingUserId = null;
 
     async function showSignedIn(user) {
+      configureAccountDeletion(user);
       organizeAccountSections();
       if (activeUserId === user.id) {
         $("accountEmail").textContent = user.email || "";
@@ -1961,19 +1979,26 @@ input:focus,select:focus{border-color:#d4af7c;box-shadow:0 0 0 3px rgba(212,175,
         return message("Digite EXCLUIR exatamente como aparece para confirmar a exclusão.", true);
       }
       const password = $("deleteAccountPassword").value;
-      if (!password) return message("Informe sua senha atual para confirmar sua identidade.", true);
       const button = $("deleteAccountButton");
       button.disabled = true;
       button.textContent = "EXCLUINDO CONTA...";
       try {
         const { data: current, error: currentError } = await supabase.auth.getUser();
         if (currentError) throw currentError;
-        if (!current.user?.email) throw new Error("Sua sessão expirou. Entre novamente.");
+        if (!current.user?.id) throw new Error("Sua sessão expirou. Entre novamente.");
+        const hasGoogleIdentity = current.user.app_metadata?.provider === "google" ||
+          (Array.isArray(current.user.identities) && current.user.identities.some(identity => identity.provider === "google"));
+        if (!hasGoogleIdentity && !password) {
+          throw new Error("Informe sua senha atual para confirmar sua identidade.");
+        }
         const { data, error } = await supabase.functions.invoke("delete-account", {
-          body: { password }
+          body: { confirmation: "EXCLUIR", ...(password ? { password } : {}) }
         });
-        if (error) throw error;
-        if (!data?.success) throw new Error("A exclusão não foi confirmada pelo servidor.");
+        if (error) {
+          const details = error.context?.body?.error || error.message;
+          throw new Error(details || "Não foi possível concluir a exclusão.");
+        }
+        if (!data?.success) throw new Error(data?.error || "A exclusão não foi confirmada pelo servidor.");
         try {
           await supabase.auth.signOut({ scope: "local" });
         } catch (signOutError) {
