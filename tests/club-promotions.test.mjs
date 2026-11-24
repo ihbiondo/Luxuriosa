@@ -23,7 +23,7 @@ const clubPromotions = catalog.produtos.filter((product) =>
   Number(product.precoAntigo) > Number(product.preco)
 );
 
-test("o Clube comunica somente os dois benefícios atuais", () => {
+test("o Clube comunica somente o benefício de frete", () => {
   const planStart = clubPage.indexOf('<article class="plan-card">');
   const planEnd = clubPage.indexOf("</article>", planStart);
   const planCard = planStart >= 0 && planEnd > planStart
@@ -33,31 +33,29 @@ test("o Clube comunica somente os dois benefícios atuais", () => {
     .slice(1)
     .map((item) => item.split("</div>")[0]);
 
-  assert.equal((planCard.match(/<li>/g) || []).length, 2);
-  assert.match(planCard, /Promoções exclusivas em produtos selecionados/);
+  assert.equal((planCard.match(/<li>/g) || []).length, 1);
   assert.match(planCard, /Frete com valores especiais para membros/);
-  assert.equal(landingBenefits.length, 2);
-  assert.match(landingBenefits[0], /Preços promocionais em produtos/);
-  assert.match(landingBenefits[1], /Frete com valor especial/);
+  assert.equal(landingBenefits.length, 1);
+  assert.match(landingBenefits[0], /Frete com valor especial/);
   assert.doesNotMatch(clubPage, /Acesso às vantagens e novidades do Clube|Área de membro para consultar sua participação/);
   assert.equal(landingBenefits.some((item) => item.includes("Área de membro") || item.includes("Privacidade e autonomia")), false);
 });
 
-test("todas as promoções do catálogo são identificadas como benefícios do Clube", () => {
+test("todas as promoções do catálogo são públicas", () => {
   assert.equal(clubPromotions.length, 11);
-  assert.match(catalogScript, /Promoção exclusiva para membros do Clube Luxuriosa/);
+  assert.match(catalogScript, /Oferta disponível para todos/);
   assert.match(catalogScript, /formatarPreco\(produto\.preco\)/);
   assert.match(catalogScript, /formatarPreco\([\s\S]*?produto\.precoAntigo/);
-  assert.match(productDetail, /Promoção exclusiva para membros do Clube Luxuriosa/);
+  assert.match(productDetail, /Oferta disponível para todos/);
   assert.equal((home.match(/home-kit-static-club-label/g) || []).length, 4);
 });
 
-test("as páginas dos 11 produtos exibem preço promocional e identificação do Clube sem depender de JavaScript", () => {
+test("as páginas dos produtos exibem preço promocional sem exigir Clube", () => {
   for (const product of clubPromotions) {
     const html = readFileSync(product.pagina, "utf8");
     assert.match(html, /class="product-detail-price"/, product.pagina);
     assert.match(html, /club-promo-note/, product.pagina);
-    assert.match(html, /Promoção exclusiva para membros do Clube Luxuriosa/, product.pagina);
+    assert.match(html, /Oferta disponível para todos/, product.pagina);
   }
 });
 
@@ -75,7 +73,7 @@ test("o benefício de frete é automático e não oferece seleção manual inert
   assert.match(cart, /membroClubeVerificado = detail\.loaded === true/);
   assert.match(cart, /detail\.authenticated === true/);
   assert.match(cart, /var membroClube = membroClubeVerificado && membroClubeAtivo/);
-  assert.match(cart, /Frete especial do Clube ativo e aplicado automaticamente/);
+  assert.match(cart, /Frete especial do Clube aplicado automaticamente/);
   assert.match(cart, /Benefício de frete do Clube aplicado automaticamente/);
   assert.doesNotMatch(cart, /Tarifa de membro do Clube selecionada|cadastro ativo será conferido pela equipe/);
   assert.match(cart, /cartClubInfo/);
@@ -85,10 +83,10 @@ test("o benefício de frete é automático e não oferece seleção manual inert
   }
 });
 
-test("cart-orders consulta a adesão real e recalcula preços no servidor", () => {
-  assert.match(cartOrders, /userClient\.rpc\("get_club_membership_state"\)/);
-  assert.match(cartOrders, /data\?\.is_member === true && data\?\.profile_complete === true/);
-  assert.match(cartOrders, /cleanItems\(body\.items \|\| \[\], catalog, isClubMember\)/);
+test("cart-orders recalcula preços promocionais públicos no servidor", () => {
+  assert.doesNotMatch(cartOrders, /cleanItems\(body\.items \|\| \[\], catalog, isClubMember\)/);
+  assert.match(cartOrders, /const price = clubPrice/);
+  assert.match(cartOrders, /applied_price_tier: hasClubPromotion \? "promotional" : "standard"/);
   assert.match(cartOrders, /const clubDiscountCents = 0/);
   assert.match(cartOrders, /const totalCents = subtotalCents \+ \(shippingCents \|\| 0\)/);
   assert.match(cartOrders, /club_discount_percent: 0/);
