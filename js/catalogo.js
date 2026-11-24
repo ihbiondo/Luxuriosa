@@ -141,9 +141,9 @@
       "Olá! Conheci a Luxuriosa pelo site e gostaria de saber mais.";
 
     var url =
-      "https://wa.me/" +
+      "https://api.whatsapp.com/send?phone=" +
       numero +
-      "?text=" +
+      "&text=" +
       encodeURIComponent(texto);
 
     if (window.LuxuriosaMedicao && typeof window.LuxuriosaMedicao.registrar === "function") {
