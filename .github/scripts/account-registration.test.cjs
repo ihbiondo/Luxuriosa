@@ -38,6 +38,9 @@ for (const page of pages) {
     const handler = html.slice(start, end);
     assert.doesNotMatch(handler, /\$\("fullName"\)|\$\("birthDate"\)|firstName|full_name:|birth_date:/);
     assert.match(handler, /display_name: username/);
+    assert.match(handler, /const phoneDigits = phone\\.replace\\(/);
+    assert.match(handler, /55\\[1-9\\]/);
+    assert.match(handler, /Informe um número de WhatsApp válido com DDD/);
     assert.match(handler, /phone/);
     assert.match(handler, /username/);
   });
