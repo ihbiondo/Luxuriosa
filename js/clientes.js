@@ -420,8 +420,8 @@
     var primeiroErro = null;
     var exigirEnderecoEntrega = exigirEndereco && !modalidadeRetirada();
     var required = exigirEnderecoEntrega
-      ? ["customerName", "customerPhone", "customerEmail", "customerCep", "customerStreet", "customerNumber", "customerDistrict", "customerCity", "customerState"]
-      : ["customerName", "customerPhone", "customerEmail"];
+      ? ["customerName", "customerPhone", "customerCep", "customerStreet", "customerNumber", "customerDistrict", "customerCity", "customerState"]
+      : ["customerName", "customerPhone"];
     if (data.paymentPayerType === "third_party") {
       required.push("customerPayerName", "customerPayerPhone");
     }
@@ -854,163 +854,6 @@
   }
 
 
-  var accountSupabasePromise = null;
-
-  function obterClienteSupabase() {
-    if (!accountSupabasePromise) {
-      accountSupabasePromise = window.LuxuriosaSupabase
-        ? Promise.resolve(window.LuxuriosaSupabase)
-        : import("https://esm.sh/@supabase/supabase-js@2").then(function (mod) {
-            return mod.createClient(
-              "https://byiykxfugvxuowueuxca.supabase.co",
-              "sb_publishable_LaMbeWQ1PNANEQ85SD_35Q_wDzswy8y",
-              { auth: { autoRefreshToken: true, persistSession: true, detectSessionInUrl: true } }
-            );
-          });
-    }
-    return accountSupabasePromise;
-  }
-
-  async function carregarDadosDaConta() {
-    var button = $("customerAccountLoad");
-    if (!button) return;
-    var requestId = ++accountLoadId;
-    button.disabled = true;
-    button.textContent = "Carregando seus dados…";
-    try {
-      var supabase = await obterClienteSupabase();
-      var authResult = await supabase.auth.getUser();
-      if (requestId !== accountLoadId) return;
-      if (authResult.error || !authResult.data || !authResult.data.user) {
-        avisar("Entre na sua conta Luxuriosa para carregar seus dados. Você também pode preencher tudo manualmente.", "error");
-        return;
-      }
-
-      var userId = authResult.data.user.id;
-      var results = await Promise.all([
-        supabase.from("profiles").select("full_name, phone").eq("id", userId).maybeSingle(),
-        supabase.from("addresses")
-          .select("postal_code, street, number, complement, neighborhood, city, state")
-          .eq("user_id", userId)
-          .eq("is_default", true)
-          .limit(1)
-          .maybeSingle()
-      ]);
-      if (requestId !== accountLoadId) return;
-      if (results[0].error) throw results[0].error;
-      if (results[1].error) throw results[1].error;
-
-      var profile = results[0].data || {};
-      var address = results[1].data || {};
-      if (!profile.full_name && !profile.phone && !address.street) {
-        avisar("Ainda não encontramos dados pessoais ou endereço na sua conta. Preencha nome, WhatsApp e e-mail; o endereço só é necessário para entrega.", "info");
-        return;
-      }
-
-      var hasCheckoutData = [
-        "customerName", "customerPhone", "customerEmail", "customerCep", "customerStreet",
-        "customerNumber", "customerComplement", "customerDistrict",
-        "customerCity", "customerState", "customerReference"
-      ].some(function (id) { return texto(id); });
-      if (hasCheckoutData && !window.confirm("Deseja substituir os dados já preenchidos pelos dados da sua conta? Você poderá editar tudo antes de enviar o pedido.")) {
-        avisar("Seus dados atuais foram mantidos.", "info");
-        return;
-      }
-
-      preencherFormulario({
-        name: profile.full_name || "",
-        phone: profile.phone || "",
-        email: authResult.data.user.email || "",
-        address: {
-          zip: address.postal_code || "",
-          street: address.street || "",
-          number: address.number || "",
-          complement: address.complement || "",
-          district: address.neighborhood || "",
-          city: address.city || "",
-          state: address.state || ""
-        }
-      });
-      atualizarAvisoFrete();
-      avisar("Dados carregados. Para entrega, complete o endereço; para retirada agendada, escolha a modalidade sem preencher endereço.", "success");
-      $("customerName").focus();
-    } catch (error) {
-      if (requestId !== accountLoadId) return;
-      avisar("Não foi possível carregar seus dados agora. Você pode preencher o pedido manualmente.", "error");
-    } finally {
-      if (requestId === accountLoadId) {
-        button.disabled = false;
-        button.textContent = "Atualizar dados da conta";
-      }
-    }
-  }
-
-  async function iniciarFinalizacaoWhatsApp() {
-    var carrinho = window.LuxuriosaCarrinho;
-    if (!carrinho || typeof carrinho.obterQuantidade !== "function" || !carrinho.obterQuantidade()) return;
-
-    var modoCarrinho = texto("cartFulfillmentMethod");
-    var regiaoCarrinho = texto("cartDeliveryCity");
-    if (modoCarrinho !== "delivery" && modoCarrinho !== "pickup") {
-      window.alert("Escolha entrega ou retirada no carrinho antes de continuar.");
-      window.location.replace("/loja.html?abrirCarrinho=1");
-      return;
-    }
-    if (modoCarrinho === "delivery" && !regiaoCarrinho) {
-      window.alert("Selecione a cidade ou região da entrega no carrinho antes de continuar.");
-      window.location.replace("/loja.html?abrirCarrinho=1");
-      return;
-    }
-
-    try {
-      var supabase = await obterClienteSupabase();
-      var auth = await supabase.auth.getSession();
-      if (auth.error) throw auth.error;
-      var session = auth.data && auth.data.session;
-
-      if (!session || !session.user) {
-        try { localStorage.setItem("luxuriosa_checkout_after_login", "1"); } catch (_) {}
-        window.location.assign("/login.html?cadastro=1");
-        return;
-      }
-
-      /* Atualiza a situação do Clube antes de calcular o frete e o resumo do WhatsApp. */
-      if (window.LuxuriosaClubePrecos && typeof window.LuxuriosaClubePrecos.pronto === "function") {
-        try { await window.LuxuriosaClubePrecos.pronto(); } catch (_) {}
-      }
-
-      if (typeof carrinho.enviarPedidoWhatsApp !== "function") {
-        throw new Error("O envio do pedido pelo WhatsApp não está disponível.");
-      }
-      /* No retorno do cadastro, mantém o carrinho visível para conferir/trocar o recebimento. */
-      if (typeof carrinho.abrir === "function") carrinho.abrir();
-      carrinho.enviarPedidoWhatsApp();
-    } catch (error) {
-      console.error("Não foi possível validar a conta antes do pedido:", error);
-      window.alert("Não conseguimos confirmar seu acesso à Luxuriosa. Verifique sua conexão e tente novamente.");
-    }
-  }
-
-  async function iniciarFinalizacao() {
-    if (!window.LuxuriosaCarrinho || !window.LuxuriosaCarrinho.obterQuantidade()) return;
-    try {
-      var supabase = await obterClienteSupabase();
-      var auth = await supabase.auth.getUser();
-      if (auth.error) throw auth.error;
-      if (!auth.data || !auth.data.user) {
-        try { localStorage.setItem("luxuriosa_checkout_after_login", "1"); } catch (_) {}
-        window.location.assign("/login.html?cadastro=1");
-        return;
-      }
-      abrir();
-      await carregarDadosDaConta();
-    } catch (error) {
-      console.error("Não foi possível validar a conta antes do checkout:", error);
-      avisar("Entre na sua conta Luxuriosa para finalizar o pedido.", "error");
-      window.location.assign("/login.html");
-    }
-  }
-
   function iniciar() {
     overlay = $("customerOverlay");
     dialog = overlay && overlay.querySelector(".customer-dialog");
@@ -1072,10 +915,6 @@
         atualizarAvisoFrete();
           });
     });
-    if (new URLSearchParams(window.location.search).get("retomar-checkout") === "1") {
-      window.history.replaceState({}, document.title, window.location.pathname);
-      window.setTimeout(function () { iniciarFinalizacaoWhatsApp(); }, 350);
-    }
     var campoEstado = $("customerState");
     if (campoEstado) {
       campoEstado.addEventListener("input", function () {
