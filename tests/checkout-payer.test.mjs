@@ -10,6 +10,8 @@ const cart = readFileSync("js/carrinho.js", "utf8");
 const client = readFileSync("js/clientes.js", "utf8");
 const app = readFileSync("js/app.js", "utf8");
 const login = readFileSync("login.html", "utf8");
+const clubLegacy = readFileSync("clube.html", "utf8");
+const clubRoute = readFileSync("clube/index.html", "utf8");
 
 test("home e loja carregam a versão atual do checkout sem conta", () => {
   for (const { path, html } of checkoutPages) {
@@ -55,6 +57,17 @@ test("a antiga área de conta e os convites de cadastro não aparecem na navega�
   for (const { path, html } of checkoutPages) {
     assert.doesNotMatch(html, /data-nav-account|account-trigger|cartClubJoinLink[^>]*login\.html/, path);
   }
+});
+
+
+test("o Clube informa a suspensão de novas adesões e não oferece formulários de conta", () => {
+  for (const [path, html] of [["clube.html", clubLegacy], ["clube/index.html", clubRoute]]) {
+    assert.match(html, /novas adesões[^.]*suspensas/i, path);
+    assert.match(html, /comprar sem criar conta|comprar sem cadastro|sem cadastro prévio/i, path);
+    assert.doesNotMatch(html, /<form|type=["']password["']|signupForm|signupEmail|createAccount/i, path);
+    assert.doesNotMatch(html, /Entre gratuitamente|Faça seu cadastro gratuito|Cadastre-se para comprar/i, path);
+  }
+  assert.doesNotMatch(clubLegacy, /<\\/section>ion>/);
 });
 
 test("o WhatsApp recebe resumo completo com emojis, indentação e quebras de linha", () => {
