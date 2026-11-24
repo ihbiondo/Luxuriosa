@@ -564,7 +564,7 @@
     var subtotal = integridade.subtotal;
     var freight = obterResumoFretePedido(data, subtotal);
     var lines = [
-      "\u{1F497} *PEDIDO | LUXURIOSA*",
+      "\u{2764}\u{FE0F} *PEDIDO | LUXURIOSA*",
       "",
       "\u{1F6CD} *ITENS DO PEDIDO*"
     ];
@@ -633,7 +633,7 @@
       if (address.complement) street += " — " + address.complement;
       lines.push(
         "",
-        "\u{1F4CD} *ENDEREÇO DE ENTREGA*",
+        "\u{1F3CD}\u{FE0F} *ENDEREÇO DE ENTREGA*",
         "   " + street,
         "   " + [address.district, address.city].filter(Boolean).join(" — ") + (address.state ? "/" + address.state : "")
       );
