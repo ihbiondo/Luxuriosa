@@ -27,6 +27,9 @@ on:
       - "js/clube-precos.js"
       - "tests/club-promotions.test.mjs"
       - "supabase/migrations/20261122190000_club_membership_requires_complete_profile.sql"
+      - "supabase/migrations/20261124150000_cleanup_profile_after_auth_deletion.sql"
+      - "tests/fixtures/account-deletion-schema.sql"
+      - "supabase/tests/database/account_deletion_cleanup.test.sql"
       - "tests/checkout-payer.test.mjs"
       - "tests/club-promotions.test.mjs"
       - "js/clube-precos.js"
@@ -111,6 +114,9 @@ on:
       - "js/clube-precos.js"
       - "tests/club-promotions.test.mjs"
       - "supabase/migrations/20261122190000_club_membership_requires_complete_profile.sql"
+      - "supabase/migrations/20261124150000_cleanup_profile_after_auth_deletion.sql"
+      - "tests/fixtures/account-deletion-schema.sql"
+      - "supabase/tests/database/account_deletion_cleanup.test.sql"
       - "portal/**"
       - "experiencias/**"
       - "educacao/interatividade/**"
@@ -353,6 +359,8 @@ jobs:
           parse_sql(freight_migration)
           parse_sql(club_membership_migration)
           parse_sql(account_deletion_migration)
+          parse_sql(Path("tests/fixtures/account-deletion-schema.sql").read_text())
+          parse_sql(Path("supabase/tests/database/account_deletion_cleanup.test.sql").read_text())
           print("Sintaxe SQL das migrações de frete e adesão ao Clube validada.")
           assert "club_delivery_fee_cents" in freight_migration
           assert "profile_complete" in club_membership_migration
@@ -443,6 +451,9 @@ jobs:
           cp "$GITHUB_WORKSPACE/supabase/migrations/20261118190000_add_account_whatsapp_marketing_consent.sql" "$test_root/supabase/migrations/"
           cp "$GITHUB_WORKSPACE/supabase/migrations/20261119115544_add_account_privacy_acceptances_user_idx.sql" "$test_root/supabase/migrations/"
           cp "$GITHUB_WORKSPACE/supabase/migrations/20261122190000_club_membership_requires_complete_profile.sql" "$test_root/supabase/migrations/"
+          cp "$GITHUB_WORKSPACE/tests/fixtures/account-deletion-schema.sql" "$test_root/supabase/migrations/20261124145900_account_deletion_schema_fixture.sql"
+          cp "$GITHUB_WORKSPACE/supabase/migrations/20261124150000_cleanup_profile_after_auth_deletion.sql" "$test_root/supabase/migrations/"
+          cp "$GITHUB_WORKSPACE/supabase/tests/database/account_deletion_cleanup.test.sql" "$test_root/supabase/tests/database/"
           cp "$GITHUB_WORKSPACE/tests/fixtures/club-membership-e2e.sql" "$test_root/supabase/migrations/20261122190100_club_membership_e2e.sql"
           mkdir -p "$test_root/supabase/functions/create-payment-order"
           mkdir -p "$test_root/supabase/functions/cart-orders"
