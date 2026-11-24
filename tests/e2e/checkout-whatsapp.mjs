@@ -71,7 +71,7 @@ try {
 
   assert.ok(preview.includes("PEDIDO | LUXURIOSA"));
   assert.ok(preview.includes("❤️ *PEDIDO | LUXURIOSA*"), "O título deve usar o coração vermelho.");
-  assert.ok(preview.includes("🏍️ *ENDEREÇO DE ENTREGA*"), "A entrega deve usar o ícone de motocicleta.");
+  assert.ok(preview.includes("🛵 *ENDEREÇO DE ENTREGA*"), "A entrega deve usar o ícone de motocicleta.");
   assert.ok(!preview.includes("📍 *ENDEREÇO DE ENTREGA*"), "O ícone de localização fica reservado à retirada.");
   assert.ok(preview.includes(product.nome));
   assert.ok(preview.includes("Cliente de Teste"));
@@ -81,7 +81,7 @@ try {
   assert.ok(preview.includes("15,00"), "Frete de Bauru precisa constar no resumo.");
   assert.ok(preview.includes((Number(product.preco) + 15).toFixed(2).replace(".", ",")),
     "Total estimado precisa somar produto e frete.");
-  for (const emoji of ["❤️", "🏍️", "🛍", "💰", "👤", "💬", "🔒"]) {
+  for (const emoji of ["❤️", "🛵", "🛍", "💰", "👤", "💬", "🔒"]) {
     assert.ok(preview.includes(emoji), "Emoji ausente na mensagem: " + emoji);
   }
   const firstItemLine = preview.split("\n").find(line => line.includes("01."));
@@ -101,10 +101,10 @@ try {
   const message = whatsapp.searchParams.get("text");
   assert.ok(message && message.includes("PEDIDO | LUXURIOSA"));
   assert.ok(message.includes("❤️ *PEDIDO | LUXURIOSA*"));
-  assert.ok(message.includes("🏍️ *ENDEREÇO DE ENTREGA*"));
+  assert.ok(message.includes("🛵 *ENDEREÇO DE ENTREGA*"));
   assert.ok(!message.includes("💗"), "O coração antigo não deve aparecer no pedido.");
   assert.ok(message.includes("Cliente de Teste"));
-  for (const emoji of ["❤️", "🏍️", "🛍", "💰", "👤", "💬", "🔒"]) {
+  for (const emoji of ["❤️", "🛵", "🛍", "💰", "👤", "💬", "🔒"]) {
     assert.ok(message.includes(emoji), "Emoji corrompido ou ausente no link do WhatsApp: " + emoji);
   }
   assert.ok(!message.includes("\uFFFD"), "A mensagem do WhatsApp não pode conter o caractere de substituição.");
