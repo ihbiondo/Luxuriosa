@@ -24,7 +24,7 @@ test("não agenda convites em tela cheia para Clube ou autorizações", () => {
   assert.doesNotMatch(consent, /lux-data-invite|lux-club-invite/);
 });
 
-test("remove o convite de cadastro não utilizado e mantém o Clube acessível no rodapé", () => {
+test("remove convites de cadastro e mantém o Clube fora da navegação pública", () => {
   assert.doesNotMatch(home, /accountPromo/);
   assert.doesNotMatch(app, /configurarConviteCadastro|accountPromo/);
   assert.doesNotMatch(home, /href="clube\//);
