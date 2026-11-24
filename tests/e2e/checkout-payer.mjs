@@ -194,7 +194,8 @@ try {
     } catch (_) {
       return false;
     }
-  }, { timeout: 15000 }).then(request => request.postDataJSON());
+  }, { timeout: 15000 }).then(request => request.postDataJSON())
+    .catch(error => ({ __waitError: error.message }));
 
   await page.locator("#cartFulfillmentMethod").selectOption("delivery");
   assert.equal(await page.locator("#cartDeliveryFields").isVisible(), true,
