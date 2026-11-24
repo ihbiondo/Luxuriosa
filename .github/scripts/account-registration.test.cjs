@@ -12,7 +12,7 @@ for (const page of pages) {
     const end = html.indexOf('<form id="resetForm"', start);
     assert.ok(start >= 0 && end > start, "Formulário de cadastro não encontrado");
     const form = html.slice(start, end);
-    const ids = [...form.matchAll(/<input\\b[^>]*\\bid="([^"]+)"/g)].map(match => match[1]);
+    const ids = [...form.matchAll(/<input\b[^>]*\bid="([^"]+)"/g)].map(match => match[1]);
     assert.deepEqual(ids, [
       "username",
       "signupEmail",
@@ -24,7 +24,7 @@ for (const page of pages) {
     assert.doesNotMatch(form, /postalCode|addressNumber|addressStreet|addressNeighborhood|favoriteColor|favoriteCategory|PreferredPrice|PreferredOffer|Consent/);
     assert.match(form, /confirma que tem 18 anos ou mais/);
     assert.match(form, /Para aderir ao Clube gratuito, será necessário informar nome completo e data de nascimento/);
-    assert.match(html, /requestUsernameIdentity\\("availability", username\\)/);
+    assert.match(html, /requestUsernameIdentity\("availability", username\)/);
   });
 
   test(page + ": cadastro inicial envia somente os dados básicos ao Supabase", () => {
@@ -33,10 +33,10 @@ for (const page of pages) {
     const marker = 'message("Cadastro recebido! Enviamos um link de confirmação para seu e-mail. Abra a mensagem para ativar sua conta e concluir o acesso.");';
     const markerPosition = html.indexOf(marker, start);
     assert.ok(start >= 0 && markerPosition > start, "Handler de cadastro não encontrado");
-    const end = html.indexOf("\\n    });", markerPosition);
+    const end = html.indexOf("\n    });", markerPosition);
     assert.ok(end > markerPosition, "Final do handler de cadastro não encontrado");
     const handler = html.slice(start, end);
-    assert.doesNotMatch(handler, /\\$\\("fullName"\\)|\\$\\("birthDate"\\)|firstName|full_name:|birth_date:/);
+    assert.doesNotMatch(handler, /\$\("fullName"\)|\$\("birthDate"\)|firstName|full_name:|birth_date:/);
     assert.match(handler, /display_name: username/);
     assert.match(handler, /phone/);
     assert.match(handler, /username/);
