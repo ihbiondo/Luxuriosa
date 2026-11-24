@@ -27,13 +27,14 @@ insert into public.account_privacy_acceptances (
   'ffffffff-ffff-4fff-8fff-ffffffffffff'
 );
 insert into public.contact_consents (
-  user_id, channel, purpose, granted, source
+  user_id, channel, purpose, granted, source, granted_at
 ) values (
   'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa',
   'whatsapp',
   'marketing',
   true,
-  'account'
+  'account',
+  now()
 );
 insert into public.delivery_plan_memberships (user_id, plan_code)
 values ('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa', 'vip');
