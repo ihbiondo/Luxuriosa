@@ -8,12 +8,48 @@ insert into public.profiles (id)
 values ('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa')
 on conflict (id) do nothing;
 
-insert into public.account_data_consents (user_id) values ('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa');
-insert into public.account_privacy_acceptances (user_id) values ('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa');
-insert into public.contact_consents (user_id) values ('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa');
-insert into public.delivery_plan_memberships (user_id) values ('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa');
-insert into public.experience_results (user_id) values ('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa');
-insert into public.experience_terms_acceptances (user_id) values ('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa');
+insert into public.account_data_consents (
+  user_id, purpose, granted, source, consent_text_version, event_key
+) values (
+  'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa',
+  'account_data_processing',
+  true,
+  'account',
+  'account-data-v1-test',
+  'eeeeeeee-eeee-4eee-8eee-eeeeeeeeeeee'
+);
+insert into public.account_privacy_acceptances (
+  user_id, notice_version, source, event_key
+) values (
+  'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa',
+  'privacy-notice-v1-test',
+  'account',
+  'ffffffff-ffff-4fff-8fff-ffffffffffff'
+);
+insert into public.contact_consents (
+  user_id, channel, purpose, granted, source
+) values (
+  'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa',
+  'whatsapp',
+  'marketing',
+  true,
+  'account'
+);
+insert into public.delivery_plan_memberships (user_id, plan_code)
+values ('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa', 'test-plan');
+insert into public.experience_results (
+  user_id, attempt_id, activity_id, activity_title, category, result_title, result_summary
+) values (
+  'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa',
+  '11111111-1111-4111-8111-111111111111',
+  'account-cleanup-test',
+  'Teste de exclusão',
+  'test',
+  'Resultado de teste',
+  'Registro descartável para validar a limpeza da conta'
+);
+insert into public.experience_terms_acceptances (user_id, terms_version)
+values ('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa', 'terms-v1-test');
 
 insert into public.cart_instances (id, user_id)
 values ('bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb', 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa');
@@ -53,7 +89,7 @@ select is((select count(*)::int from public.preferences), 0, 'cascade remove pre
 select is((select count(*)::int from public.user_permissions), 0, 'cascade remove permissões');
 select is((select count(*)::int from public.orders), 1, 'preserva pedido histórico');
 select is((select cart_instance_id is null from public.orders where id = 'dddddddd-dddd-4ddd-8ddd-dddddddddddd'), true, 'desvincula carrinho do pedido');
-select is((select cart_session_id is null from public.orders where id = 'dddddddd-dddd-4ddd-8ddd-dddddddddddd'), true, 'desvincula sessão do pedido');
+select is((select cart_session_id is null from public.orders where id = 'dddddddd-dddd-4ddd-8ddd-dddddddddddd'), true, 'desvincula sessão de carrinho');
 
 select * from finish();
 rollback;
