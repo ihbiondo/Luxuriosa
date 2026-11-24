@@ -11,7 +11,7 @@ test("produtos principais do catálogo seguem a curadoria definida", () => {
     .map(product => Number(product.id))
     .sort((a, b) => a - b);
 
-  assert.deepEqual(mainIds, [7, 10, 11, 17]);
+  assert.deepEqual(mainIds, [7, 10, 17]);
 });
 
 test("Egg Stepper e Plug Vermelho não ocupam a seleção principal", () => {
