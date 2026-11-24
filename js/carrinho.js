@@ -82,19 +82,17 @@
 
   function atualizarControlesClube() {
     var status = $("cartClubInfo");
-    var link = $("cartClubJoinLink");
     if (status) {
       status.textContent = !membroClubeVerificado
-        ? "Consultando sua participação no Clube…"
+        ? "Verificando as condições de frete…"
         : membroClubeErro
-          ? "Não foi possível consultar o Clube agora. A condição será confirmada no checkout."
+          ? "Não foi possível validar uma condição especial. O valor será confirmado no atendimento."
           : membroClubeAtivo
-            ? "Frete especial do Clube aplicado automaticamente."
+            ? "Condição especial de frete aplicada automaticamente."
             : membroClubeAutenticado
-              ? "Sua conta não tem adesão ativa. Será aplicado o frete padrão."
-              : "O Clube oferece frete especial aos membros ativos. As promoções dos produtos valem para todos.";
+              ? "O frete será calculado conforme a localidade e confirmado no atendimento."
+              : "O frete é calculado conforme a localidade e confirmado no atendimento.";
     }
-    if (link) link.hidden = membroClubeVerificado && membroClubeAtivo;
   }
 
   function salvarPreferenciaRecebimento() {
