@@ -23,8 +23,10 @@ values ('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa');
 
 insert into public.cart_instances (id, user_id)
 values ('bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb', 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa');
-insert into public.cart_sessions (id, user_id)
-values ('cccccccc-cccc-4ccc-8ccc-cccccccccccc', 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa');
+insert into public.cart_sessions (id, session_key, user_id)
+values ('cccccccc-cccc-4ccc-8ccc-cccccccccccc',
+        '99999999-9999-4999-8999-999999999999',
+        'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa');
 insert into public.orders (id, cart_instance_id, cart_session_id)
 values ('dddddddd-dddd-4ddd-8ddd-dddddddddddd',
         'bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb',
