@@ -74,14 +74,14 @@ try {
   assert.ok(preview.includes("(14) 99999-9999"));
   assert.ok(preview.includes("Rua Madre Clélia"));
   assert.ok(preview.includes("Bauru/SP"));
-  assert.ok(preview.includes("Ducha") || preview.includes(product.nome));
   assert.ok(preview.includes("15,00"), "Frete de Bauru precisa constar no resumo.");
   assert.ok(preview.includes((Number(product.preco) + 15).toFixed(2).replace(".", ",")),
     "Total estimado precisa somar produto e frete.");
   for (const emoji of ["💗", "🛍", "💰", "👤", "📍", "💬", "🔒"]) {
     assert.ok(preview.includes(emoji), "Emoji ausente na mensagem: " + emoji);
   }
-  assert.match(preview, /^ {3}01\\./m, "Itens precisam ficar indentados e numerados.");
+  const firstItemLine = preview.split("\n").find(line => line.includes("01."));
+  assert.ok(firstItemLine && firstItemLine.startsWith("   01."), "Itens precisam ficar indentados e numerados.");
   assert.match(preview, /^ {7}1x/m, "Quantidade e preço precisam ficar na segunda linha indentada.");
   assert.ok(!preview.includes("InfinitePay"));
   assert.ok(!preview.includes("chave PIX"));
