@@ -1819,6 +1819,11 @@ input:focus,select:focus{border-color:#d4af7c;box-shadow:0 0 0 3px rgba(212,175,
       if (!/(?=.*[A-Za-z])(?=.*[0-9]).{8,}/.test($("signupPassword").value)) return message("Use uma senha com pelo menos 8 caracteres, incluindo letras e números.", true);
       if ($("signupPassword").value !== $("confirmPassword").value) return message("As senhas não coincidem.", true);
       const phone = $("phone").value.trim();
+      const phoneDigits = phone.replace(/\D/g, "");
+      if (!/^(?:[1-9][0-9]{9,10}|55[1-9][0-9]{9,10})$/.test(phoneDigits)) {
+        $("phone").focus();
+        return message("Informe um número de WhatsApp válido com DDD.", true);
+      }
       try {
         $("usernameStatus").textContent = "Verificando disponibilidade…";
         const availability = await requestUsernameIdentity("availability", username);
