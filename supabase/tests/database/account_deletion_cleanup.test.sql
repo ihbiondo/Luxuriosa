@@ -46,8 +46,9 @@ insert into public.cart_sessions (id, session_key, user_id)
 values ('cccccccc-cccc-4ccc-8ccc-cccccccccccc',
         '99999999-9999-4999-8999-999999999999',
         'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa');
-insert into public.orders (id, cart_session_id)
+insert into public.orders (id, customer_id, cart_session_id)
 values ('dddddddd-dddd-4ddd-8ddd-dddddddddddd',
+        'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa',
         'cccccccc-cccc-4ccc-8ccc-cccccccccccc');
 
 insert into public.addresses (user_id) values ('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa');
