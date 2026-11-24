@@ -72,7 +72,7 @@ test("o Clube informa a suspensão de novas adesões e não oferece formulários
 
 test("o WhatsApp recebe resumo completo com emojis, indentação e quebras de linha", () => {
   for (const emoji of [
-    "\\u{2764}\\u{FE0F}", "\\u{1F3CD}\\u{FE0F}", "\\u{1F6CD}", "\\u{1F4B0}", "\\u{1F464}",
+    "\\u{2764}\\u{FE0F}", "\\u{1F6F5}", "\\u{1F6CD}", "\\u{1F4B0}", "\\u{1F464}",
     "\\u{1F4CD}", "\\u{1F4AC}", "\\u{1F512}"
   ]) assert.ok(client.includes(emoji), "Emoji ausente: " + emoji);
 
