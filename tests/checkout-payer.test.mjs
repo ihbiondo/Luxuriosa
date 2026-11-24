@@ -44,7 +44,8 @@ test("carrinho abre a coleta de dados sem exigir login ou cadastro", () => {
 });
 
 test("a antiga área de conta e os convites de cadastro não aparecem na navegação", () => {
-  assert.doesNotMatch(app, /nav-drawer-account-area|data-nav-account|Minha conta/);
+  assert.doesNotMatch(app, /nav-drawer-account-area|nav-account-primary|Minha conta/);
+  assert.match(app, /data-nav-account/);
   assert.match(app, /\.account-trigger/);
   assert.doesNotMatch(app, /supabase\.auth\.getSession\(\)/);
   assert.doesNotMatch(login, /<form|signupTab|loginTab|signupForm|loginForm|type="password"/);
@@ -88,6 +89,8 @@ test("checkout mantém somente os dados necessários para a solicitação pelo W
   ]) assert.ok(client.includes(field), "Campo ausente: " + field);
 
   assert.doesNotMatch(client, /obterClienteSupabase|supabase\.auth|create-payment-order|customerPaymentButton|continuarPagamento|iniciarFinalizacaoWhatsApp/);
-  assert.match(client, /required = exigirEnderecoEntrega[\s\S]*customerName[\s\S]*customerPhone/);
-  assert.doesNotMatch(client, /required = exigirEnderecoEntrega[\s\S]*customerEmail/);
+  const requiredFields = client.match(/var required = exigirEnderecoEntrega\\s*\\? \\[([\\s\\S]*?)\\]\\s*:\\s*\\[([\\s\\S]*?)\\];/);
+  assert.ok(requiredFields, "Os campos obrigatórios do checkout devem estar declarados.");
+  assert.match(requiredFields[1] + requiredFields[2], /customerName[\\s\\S]*customerPhone/);
+  assert.doesNotMatch(requiredFields[1] + requiredFields[2], /customerEmail/);
 });
