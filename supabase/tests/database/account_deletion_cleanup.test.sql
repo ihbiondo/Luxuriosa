@@ -8,49 +8,18 @@ insert into public.profiles (id)
 values ('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa')
 on conflict (id) do nothing;
 
-insert into public.account_data_consents (
-  user_id, purpose, granted, source, consent_text_version, event_key
-) values (
-  'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa',
-  'experience_personalization',
-  true,
-  'account_settings',
-  'luxuriosa-account-data-v1-2026-11',
-  'eeeeeeee-eeee-4eee-8eee-eeeeeeeeeeee'
-);
-insert into public.account_privacy_acceptances (
-  user_id, notice_version, source, event_key
-) values (
-  'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa',
-  'luxuriosa-privacidade-v1-2026-11',
-  'google_onboarding',
-  'ffffffff-ffff-4fff-8fff-ffffffffffff'
-);
-insert into public.contact_consents (
-  user_id, channel, purpose, granted, source, granted_at
-) values (
-  'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa',
-  'whatsapp',
-  'marketing',
-  true,
-  'account',
-  now()
-);
-insert into public.delivery_plan_memberships (user_id, plan_code)
-values ('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa', 'vip');
-insert into public.experience_results (
-  user_id, attempt_id, activity_id, activity_title, category, result_title, result_summary
-) values (
-  'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa',
-  '11111111-1111-4111-8111-111111111111',
-  'discovery',
-  'Descubra seu estilo',
-  'ferramentas',
-  'Resultado de teste',
-  'Registro descartável para validar a limpeza da conta'
-);
-insert into public.experience_terms_acceptances (user_id, terms_version, accepted_at)
-values ('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa', 'luxuriosa-experiencias-v1-2026-11', now());
+insert into public.account_data_consents (user_id)
+values ('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa');
+insert into public.account_privacy_acceptances (user_id)
+values ('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa');
+insert into public.contact_consents (user_id)
+values ('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa');
+insert into public.delivery_plan_memberships (user_id)
+values ('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa');
+insert into public.experience_results (user_id)
+values ('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa');
+insert into public.experience_terms_acceptances (user_id)
+values ('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa');
 
 insert into public.cart_instances (id, user_id)
 values ('bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb', 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa');
