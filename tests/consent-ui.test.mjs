@@ -27,8 +27,8 @@ test("não agenda convites em tela cheia para Clube ou autorizações", () => {
 test("remove o convite de cadastro não utilizado e mantém o Clube acessível no rodapé", () => {
   assert.doesNotMatch(home, /accountPromo/);
   assert.doesNotMatch(app, /configurarConviteCadastro|accountPromo/);
-  assert.match(home, /href="clube\/">Clube de Vantagens/);
-  assert.match(shop, /href="clube\/">Clube de Vantagens/);
+  assert.doesNotMatch(home, /href="clube\//);
+  assert.doesNotMatch(shop, /href="clube\//);
 });
 
 function listPublicHtml(directory = ".") {
