@@ -649,7 +649,6 @@
     if (!overlay) return;
     /* Invalida qualquer consulta de CEP pendente de uma etapa anterior. */
     cepConsultaId += 1;
-    accountLoadId += 1;
     focusBeforeOpen = document.activeElement;
     limparAviso();
     review.hidden = true;
@@ -679,7 +678,6 @@
     if (!overlay) return;
     /* Uma resposta atrasada do ViaCEP não deve preencher um checkout futuro. */
     cepConsultaId += 1;
-    accountLoadId += 1;
     overlay.hidden = true;
     document.body.classList.remove("customer-open");
 
