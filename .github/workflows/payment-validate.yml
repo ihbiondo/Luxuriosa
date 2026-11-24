@@ -580,18 +580,8 @@ jobs:
           E2E_SCREENSHOT_DIR="$GITHUB_WORKSPACE/e2e-screenshots" \
           node "$site/tests/e2e/minhas-conquistas.mjs"
 
-          # Checkout de teste: sessão local, dados fictícios e interceptação antes da criação de pedido/pagamento.
-          E2E_BASE_URL="http://127.0.0.1:4173" \
-          E2E_SUPABASE_URL="$API_URL" \
-          E2E_SERVICE_ROLE_KEY="$SERVICE_ROLE_KEY" \
-          E2E_SCREENSHOT_DIR="$GITHUB_WORKSPACE/e2e-screenshots" \
-          node "$site/tests/e2e/checkout-payer.mjs"
-
-          E2E_SUPABASE_URL="$API_URL" \
-          E2E_SERVICE_ROLE_KEY="$SERVICE_ROLE_KEY" \
-          E2E_ANON_KEY="$ANON_KEY" \
-          E2E_PAYMENT_FUNCTION_URL="$function_url" \
-          node "$site/tests/e2e/checkout-payer-persistence.mjs"
+          # O checkout público atual é validado em checkout-whatsapp.mjs:
+          # não exige sessão, não cria pedido e intercepta window.open antes do WhatsApp.
 
       - name: Publicar evidências visuais do E2E
         if: always()
