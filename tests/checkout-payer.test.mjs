@@ -16,7 +16,7 @@ const clubRoute = readFileSync("clube/index.html", "utf8");
 test("home e loja carregam a versão atual do checkout sem conta", () => {
   for (const { path, html } of checkoutPages) {
     assert.ok(html.includes('src="js/carrinho.js?v=20261124-whatsapp-icons-v1'), path);
-    assert.ok(html.includes('src="js/clientes.js?v=20261124-whatsapp-icons-v1'), path);
+    assert.ok(html.includes('src="js/clientes.js?v=20261124-whatsapp-order-persistence-v1'), path);
   }
 });
 
@@ -68,6 +68,28 @@ test("o Clube informa a suspensão de novas adesões e não oferece formulários
     assert.doesNotMatch(html, /Entre gratuitamente|Faça seu cadastro gratuito|Cadastre-se para comprar/i, path);
   }
   assert.ok(clubLegacy.includes("</section>"), "Página antiga do Clube deve permanecer com estrutura HTML válida.");
+});
+
+test("o checkout envia os dados completos do pedido ao registro comercial, sem depender do consentimento analítico", () => {
+  assert.match(client, /LuxuriosaInteligencia\.registrarPedido\(itensAtuais, dadosAtuais, resumoFrete\.fee\)/);
+  assert.doesNotMatch(client, /registrarEtapa\("whatsapp_opened", itensAtuais, dadosAtuais\)/);
+  assert.match(client, /fulfillmentType: pickup \? "pickup" : "express"/);
+  assert.match(client, /pickupRequestedAt:/);
+  assert.match(readFileSync("js/inteligencia.js", "utf8"), /function registrarPedido\(items, customer, shippingAmount\)/);
+});
+
+test("campos de preferências pessoais não aparecem no checkout", () => {
+  const removedLabels = [
+    "Cores favoritas",
+    "Preferências de categorias de produtos",
+    "Faixa de preço de interesse",
+    "Preferências de lingerie",
+    "Interesses declarados pelo visitante"
+  ];
+  for (const label of removedLabels) {
+    assert.doesNotMatch(client, new RegExp(label, "i"));
+    for (const { path, html } of checkoutPages) assert.doesNotMatch(html, new RegExp(label, "i"), path);
+  }
 });
 
 test("o WhatsApp recebe resumo completo com emojis, indentação e quebras de linha", () => {
