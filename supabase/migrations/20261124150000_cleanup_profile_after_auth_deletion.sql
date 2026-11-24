@@ -52,6 +52,6 @@ revoke all on function private.handle_auth_user_deleted_cleanup() from public, a
 drop trigger if exists on_auth_user_deleted_cleanup on auth.users;
 
 create trigger on_auth_user_deleted_cleanup
-after delete on auth.users
+before delete on auth.users
 for each row
 execute function private.handle_auth_user_deleted_cleanup();
