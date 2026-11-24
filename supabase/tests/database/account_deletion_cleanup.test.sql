@@ -1,5 +1,5 @@
 begin;
-select plan(18);
+select plan(19);
 
 insert into auth.users (id, email)
 values ('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa', 'account-cleanup-test@example.invalid');
@@ -81,6 +81,7 @@ select is((select count(*)::int from public.preferences), 0, 'cascade remove pre
 select is((select count(*)::int from public.user_permissions), 0, 'cascade remove permissões');
 select is((select count(*)::int from public.orders), 1, 'preserva pedido histórico');
 select is((select cart_session_id is null from public.orders where id = 'dddddddd-dddd-4ddd-8ddd-dddddddddddd'), true, 'desvincula sessão de carrinho');
+select is((select customer_id is null from public.orders where id = 'dddddddd-dddd-4ddd-8ddd-dddddddddddd'), true, 'remove vínculo identificável com o perfil');
 
 select * from finish();
 rollback;
