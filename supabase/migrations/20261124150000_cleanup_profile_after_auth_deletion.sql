@@ -28,6 +28,9 @@ begin
 
   -- A exclusão do carrinho remove dados de navegação e snapshots não convertidos.
   -- Referências em orders são preservadas como NULL pelas constraints existentes.
+  delete from public.cart_instances
+  where user_id = old.id;
+
   delete from public.cart_sessions
   where user_id = old.id;
 
