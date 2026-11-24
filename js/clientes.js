@@ -556,9 +556,9 @@
     var subtotal = integridade.subtotal;
     var freight = obterResumoFretePedido(data, subtotal);
     var lines = [
-      "\\u{1F497} *PEDIDO | LUXURIOSA*",
+      "\u{1F497} *PEDIDO | LUXURIOSA*",
       "",
-      "\\u{1F6CD} *ITENS DO PEDIDO*"
+      "\u{1F6CD} *ITENS DO PEDIDO*"
     ];
 
     items.forEach(function (item, index) {
@@ -572,7 +572,7 @@
       }
     });
 
-    lines.push("", "\\u{1F4B0} *RESUMO DOS VALORES*");
+    lines.push("", "\u{1F4B0} *RESUMO DOS VALORES*");
     lines.push("   Produtos: " + formatarPreco(subtotal));
 
     if (data.fulfillmentType === "pickup") {
@@ -596,16 +596,16 @@
     }
 
     if (freight.member) {
-      lines.push("   \\u{1F3F7} Benefício de frete do Clube aplicado.");
+      lines.push("   \u{1F3F7} Benefício de frete do Clube aplicado.");
     }
     if (freight.minimum > 0 && subtotal < freight.minimum) {
-      lines.push("   \\u{26A0}\\u{FE0F} Pedido mínimo: " + formatarPreco(freight.minimum) + " em produtos.");
+      lines.push("   \u{26A0}\u{FE0F} Pedido mínimo: " + formatarPreco(freight.minimum) + " em produtos.");
     }
     if (freight.tollIncluded) {
       lines.push("   Pedágio incluído no valor do frete.");
     }
 
-    lines.push("", "\\u{1F464} *DADOS DE CONTATO*");
+    lines.push("", "\u{1F464} *DADOS DE CONTATO*");
     lines.push("   Nome: " + data.name);
     lines.push("   WhatsApp: " + data.phone);
     if (data.email) lines.push("   E-mail: " + data.email);
@@ -613,7 +613,7 @@
     if (data.fulfillmentType === "pickup") {
       lines.push(
         "",
-        "\\u{1F4CD} *RETIRADA*",
+        "\u{1F4CD} *RETIRADA*",
         "   Retirada agendada em Bauru.",
         "   Local: Rua Madre Clélia, nº 5-44, Jardim Cruzeiro do Sul, Bauru/SP.",
         "   Data pretendida: " + texto("customerPickupDate"),
@@ -625,7 +625,7 @@
       if (address.complement) street += " — " + address.complement;
       lines.push(
         "",
-        "\\u{1F4CD} *ENDEREÇO DE ENTREGA*",
+        "\u{1F4CD} *ENDEREÇO DE ENTREGA*",
         "   " + street,
         "   " + [address.district, address.city].filter(Boolean).join(" — ") + (address.state ? "/" + address.state : "")
       );
@@ -635,14 +635,14 @@
 
     lines.push(
       "",
-      "\\u{1F4AC} *PRÓXIMOS PASSOS*",
+      "\u{1F4AC} *PRÓXIMOS PASSOS*",
       "   A equipe confirmará a disponibilidade, o prazo e o valor final.",
       "   As instruções de pagamento serão enviadas após essa confirmação.",
       "",
-      "\\u{1F512} _O pedido será confirmado após a identificação do pagamento._"
+      "\u{1F512} _O pedido será confirmado após a identificação do pagamento._"
     );
 
-    return lines.join("\\n");
+    return lines.join("\n");
   }
 
   function abrir() {
@@ -819,7 +819,7 @@
     copiarComSelecao();
   }
 
-  function continuarWhatsApp() {  function continuarWhatsApp() {
+  function continuarWhatsApp() {
     if (!mensagemAtual || !dadosAtuais) {
       avisar("Revise o pedido antes de abrir o WhatsApp.", "error");
       return;
