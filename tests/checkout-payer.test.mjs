@@ -89,8 +89,10 @@ test("checkout mantém somente os dados necessários para a solicitação pelo W
   ]) assert.ok(client.includes(field), "Campo ausente: " + field);
 
   assert.doesNotMatch(client, /obterClienteSupabase|supabase\.auth|create-payment-order|customerPaymentButton|continuarPagamento|iniciarFinalizacaoWhatsApp/);
-  const requiredFields = client.match(/var required = exigirEnderecoEntrega\\s*\\? \\[([\\s\\S]*?)\\]\\s*:\\s*\\[([\\s\\S]*?)\\];/);
-  assert.ok(requiredFields, "Os campos obrigatórios do checkout devem estar declarados.");
-  assert.match(requiredFields[1] + requiredFields[2], /customerName[\\s\\S]*customerPhone/);
-  assert.doesNotMatch(requiredFields[1] + requiredFields[2], /customerEmail/);
+  const requiredStart = client.indexOf("var required = exigirEnderecoEntrega");
+  const requiredEnd = client.indexOf("document.querySelectorAll", requiredStart);
+  const requiredBlock = client.slice(requiredStart, requiredEnd);
+  assert.ok(requiredStart >= 0 && requiredEnd > requiredStart, "A lista de campos obrigatórios deve existir.");
+  assert.ok(requiredBlock.includes("customerName") && requiredBlock.includes("customerPhone"));
+  assert.ok(!requiredBlock.includes("customerEmail"), "E-mail deve ser opcional.");
 });
