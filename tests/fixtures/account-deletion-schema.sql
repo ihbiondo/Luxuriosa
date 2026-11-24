@@ -19,9 +19,16 @@ create table if not exists public.cart_sessions (
 );
 create table if not exists public.orders (
   id uuid primary key,
+  customer_id uuid,
   cart_instance_id uuid references public.cart_instances(id) on delete set null,
   cart_session_id uuid references public.cart_sessions(id) on delete set null
 );
+
+-- O schema base usado pelo CI declara customer_id como NOT NULL, mas o
+-- banco hospedado permite NULL e usa ON DELETE SET NULL para preservar pedidos.
+-- Alinhar somente o banco descartável do teste ao comportamento de produção.
+alter table public.orders
+  alter column customer_id drop not null;
 
 create table if not exists public.profiles (id uuid primary key);
 create table if not exists public.addresses (
