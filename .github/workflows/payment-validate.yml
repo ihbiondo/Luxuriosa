@@ -473,6 +473,7 @@ jobs:
           cp "$GITHUB_WORKSPACE/supabase/tests/database/contact_consents.test.sql" "$test_root/supabase/tests/database/"
           cp "$GITHUB_WORKSPACE/tests/fixtures/freight_rules_fixture.sql" "$test_root/supabase/migrations/20261115120000_freight_rules_fixture.sql"
           cp "$GITHUB_WORKSPACE/supabase/migrations/20261116181752_standardize_delivery_fees.sql" "$test_root/supabase/migrations/"
+          cp "$GITHUB_WORKSPACE/supabase/migrations/20261115010000_delivery_plan_memberships.sql" "$test_root/supabase/migrations/"
           cp "$GITHUB_WORKSPACE/supabase/tests/database/freight_rules.test.sql" "$test_root/supabase/tests/database/"
 
           cd "$test_root"
