@@ -52,7 +52,7 @@ values ('dddddddd-dddd-4ddd-8ddd-dddddddddddd',
         'cccccccc-cccc-4ccc-8ccc-cccccccccccc');
 
 insert into public.addresses (user_id) values ('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa');
-insert into public.club_intimate_consent_events (user_id) values ('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa');
+insert into public.club_intimate_consent_events (user_id, granted) values ('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa', true);
 insert into public.club_intimate_preferences (user_id) values ('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa');
 insert into public.club_memberships (user_id) values ('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa');
 insert into public.club_profile_preferences (user_id) values ('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa');
