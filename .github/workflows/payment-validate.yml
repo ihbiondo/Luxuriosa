@@ -108,6 +108,7 @@ on:
       - "tests/pedido-whatsapp.test.mjs"
       - "tests/consent-ui.test.mjs"
       - "tests/product-css.test.mjs"
+      - "tests/checkout-payer.test.mjs"
       - "clube.html"
       - "clube/index.html"
       - "js/clube.js"
