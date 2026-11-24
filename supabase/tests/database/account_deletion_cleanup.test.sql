@@ -1,5 +1,5 @@
 begin;
-select plan(19);
+select plan(18);
 
 insert into auth.users (id, email)
 values ('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa', 'account-cleanup-test@example.invalid');
@@ -46,9 +46,8 @@ insert into public.cart_sessions (id, session_key, user_id)
 values ('cccccccc-cccc-4ccc-8ccc-cccccccccccc',
         '99999999-9999-4999-8999-999999999999',
         'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa');
-insert into public.orders (id, cart_instance_id, cart_session_id)
+insert into public.orders (id, cart_session_id)
 values ('dddddddd-dddd-4ddd-8ddd-dddddddddddd',
-        'bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb',
         'cccccccc-cccc-4ccc-8ccc-cccccccccccc');
 
 insert into public.addresses (user_id) values ('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa');
@@ -79,7 +78,6 @@ select is((select count(*)::int from public.club_profile_preferences), 0, 'casca
 select is((select count(*)::int from public.preferences), 0, 'cascade remove preferências');
 select is((select count(*)::int from public.user_permissions), 0, 'cascade remove permissões');
 select is((select count(*)::int from public.orders), 1, 'preserva pedido histórico');
-select is((select cart_instance_id is null from public.orders where id = 'dddddddd-dddd-4ddd-8ddd-dddddddddddd'), true, 'desvincula carrinho do pedido');
 select is((select cart_session_id is null from public.orders where id = 'dddddddd-dddd-4ddd-8ddd-dddddddddddd'), true, 'desvincula sessão de carrinho');
 
 select * from finish();
