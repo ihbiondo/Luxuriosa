@@ -700,20 +700,16 @@ input:focus,select:focus{border-color:#d4af7c;box-shadow:0 0 0 3px rgba(212,175,
 
           <form id="signupForm" class="hidden">
             <h2>Crie sua conta.</h2>
-            <p class="lead">É gratuito. Escolha seu usuário e preencha apenas os dados essenciais.</p>
+            <p class="lead">É gratuito. Informe os dados básicos para acessar sua conta e fazer seus pedidos.</p>
             <div class="grid">
               <div class="field full"><label for="username">Usuário</label><input id="username" type="text" autocomplete="username" autocapitalize="none" spellcheck="false" minlength="3" maxlength="24" pattern="[a-z0-9][a-z0-9._]{2,23}" placeholder="seu.usuario" aria-describedby="usernameStatus" required><small id="usernameStatus" aria-live="polite">De 3 a 24 caracteres: letras minúsculas, números, ponto ou sublinhado.</small></div>
-              <div class="field full"><label for="fullName">Nome completo</label><input id="fullName" autocomplete="name" maxlength="160" required></div>
-              <div class="field"><label for="birthDate">Data de nascimento</label><input id="birthDate" type="date" autocomplete="bday" required></div>
-              <div class="field"><label for="phone">WhatsApp</label><input id="phone" type="tel" autocomplete="tel" placeholder="(14) 99999-9999" maxlength="30" required></div>
               <div class="field full"><label for="signupEmail">E-mail</label><input id="signupEmail" type="email" autocomplete="email" placeholder="voce@exemplo.com.br" required></div>
+              <div class="field full"><label for="phone">WhatsApp</label><input id="phone" type="tel" autocomplete="tel" placeholder="(14) 99999-9999" maxlength="30" required></div>
               <div class="field"><label for="signupPassword">Senha (mínimo 8 caracteres)</label><input id="signupPassword" type="password" autocomplete="new-password" minlength="8" pattern="(?=.*[A-Za-z])(?=.*[0-9]).{8,}" title="Use pelo menos 8 caracteres, incluindo letras e números." required></div>
               <div class="field"><label for="confirmPassword">Confirme a senha</label><input id="confirmPassword" type="password" autocomplete="new-password" minlength="8" required></div>
-
-
             </div>
             <div class="actions"><button class="primary" type="submit">CRIAR MINHA CONTA</button></div>
-            <p class="legal">Ao criar sua conta, você confirma que tem 18 anos ou mais. Os dados informados serão usados para administrar sua conta e atender pedidos. Você poderá completar suas preferências e escolher autorizações opcionais depois, na sua conta. Consulte a <a href="privacidade.html" target="_blank" rel="noopener">Política de Privacidade</a>.</p>
+            <p class="legal">Ao criar sua conta, você confirma que tem 18 anos ou mais. Para aderir ao Clube gratuito, será necessário informar nome completo e data de nascimento para validar a maioridade. Consulte a <a href="privacidade.html" target="_blank" rel="noopener">Política de Privacidade</a>.</p>
           </form>
 
           <form id="resetForm" class="hidden">
@@ -1777,17 +1773,6 @@ input:focus,select:focus{border-color:#d4af7c;box-shadow:0 0 0 3px rgba(212,175,
       }
       if (!/(?=.*[A-Za-z])(?=.*[0-9]).{8,}/.test($("signupPassword").value)) return message("Use uma senha com pelo menos 8 caracteres, incluindo letras e números.", true);
       if ($("signupPassword").value !== $("confirmPassword").value) return message("As senhas não coincidem.", true);
-      const birth = $("birthDate").value;
-      if (!birth || new Date(birth + "T00:00:00") >= new Date()) return message("Informe uma data de nascimento válida.", true);
-      const birthDate = new Date(birth + "T00:00:00");
-      const today = new Date();
-      let age = today.getFullYear() - birthDate.getFullYear();
-      const birthdayPending = today.getMonth() < birthDate.getMonth() || (today.getMonth() === birthDate.getMonth() && today.getDate() < birthDate.getDate());
-      if (birthdayPending) age--;
-      if (age < 18) return message("O cadastro na Luxuriosa é permitido somente para maiores de 18 anos.", true);
-
-      const fullName = $("fullName").value.trim();
-      const firstName = fullName.split(/\s+/)[0];
       const phone = $("phone").value.trim();
       try {
         $("usernameStatus").textContent = "Verificando disponibilidade…";
@@ -1821,10 +1806,8 @@ input:focus,select:focus{border-color:#d4af7c;box-shadow:0 0 0 3px rgba(212,175,
                 new URLSearchParams(window.location.search).get("next") === "portal/" ? "?next=portal%2F" : ""),
             data: {
               username,
-              display_name: firstName,
-              full_name: fullName,
-              phone,
-              birth_date: birth
+              display_name: username,
+              phone
             }
           }
         });
