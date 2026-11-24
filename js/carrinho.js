@@ -1638,107 +1638,13 @@
     return resumo;
   }
 
-  function montarMensagemPedido(resumo) {
-    var subtotal = valorTotal();
-    var linhas = [
-      "Olá! Quero finalizar meu pedido na *Luxuriosa*. \u{1F497}",
-      "",
-      "\u{1F6CD}\u{FE0F} *ITENS DO PEDIDO*"
-    ];
-
-    carrinho.forEach(function (item) {
-      var variacaoKit = item.kit_variant_name ? " (Dado: " + item.kit_variant_name + ")" : "";
-      var observacao = item.indisponivel ? " — *consultar disponibilidade*" : "";
-      linhas.push(
-        "• " + item.quantidade + "x " + item.nome + variacaoKit + " — " +
-        formatarPreco(item.preco * item.quantidade) + observacao
-      );
-    });
-
-    linhas.push("", "\u{1F4B0} *VALORES*", "• Produtos: " + formatarPreco(subtotal));
-
-    if (resumo.method === "pickup") {
-      linhas.push(
-        "• Frete: grátis",
-        "• *Total estimado: " + formatarPreco(subtotal) + "*",
-        "",
-        "\u{1F4CD} *RECEBIMENTO*",
-        "Retirada agendada em Bauru. Local e horário serão combinados no atendimento."
-      );
-    } else {
-      linhas.push("\u{1F69A} *RECEBIMENTO*", "Entrega em " + (resumo.cityLabel || "localidade a confirmar") + ".");
-      if (resumo.freight === null) {
-        linhas.push(
-          "• Frete: a confirmar com a equipe",
-          "• *Total: a confirmar*"
-        );
-      } else {
-        linhas.push(
-          "• Frete (" + (resumo.cityLabel || "entrega") + "): " + formatarPreco(resumo.freight),
-          "• *Total estimado: " + formatarPreco(resumo.total) + "*"
-        );
-      }
-
-      if (resumo.clubMember) {
-        linhas.push("\u{1F3F7} Benefício de frete do Clube aplicado automaticamente.");
-      }
-      if (resumo.minimumMet === false) {
-        var faltante = Math.max(0, Number(resumo.minimum) - subtotal);
-        linhas.push(
-          "\u{26A0}\u{FE0F} Pedido mínimo: " + formatarPreco(resumo.minimum) +
-          " em produtos. Faltam " + formatarPreco(faltante) + "."
-        );
-      }
-      if (resumo.tollIncluded) linhas.push("Pedágio já incluído no frete.");
-    }
-
-    linhas.push(
-      "",
-      "\u{1F4B3} *PRÓXIMO PASSO*",
-      "A equipe confirma a disponibilidade e o prazo antes de enviar a chave PIX ou o link de pagamento.",
-      "",
-      "\u{1F512} _O pedido é confirmado após a identificação do pagamento._"
-    );
-
-    return linhas.join("\n");
-  }
-
-
   function enviarPedidoWhatsApp() {
-    if (!carrinho.length) return false;
-    var resumoRecebimento = obterResumoRecebimento();
-    if (!resumoRecebimento.valid) {
-      window.alert("Selecione a forma de recebimento e, para entrega, a localidade antes de continuar.");
+    var checkout = window.LuxuriosaClientes;
+    if (!checkout || typeof checkout.iniciarFinalizacao !== "function") {
+      window.alert("Não foi possível abrir os dados do pedido. Atualize a página e tente novamente.");
       return false;
     }
-
-    if (window.LuxuriosaMedicao && typeof window.LuxuriosaMedicao.registrar === "function") {
-      window.LuxuriosaMedicao.registrar("begin_checkout", {
-        quantity: quantidadeTotal(),
-        method: "whatsapp",
-        fulfillment_method: resumoRecebimento.method,
-        delivery_city: resumoRecebimento.city || null,
-        delivery_fee: resumoRecebimento.freight,
-        club_member_rate: resumoRecebimento.clubMember === true
-      });
-    }
-
-    if (window.LuxuriosaInteligencia) {
-      if (typeof window.LuxuriosaInteligencia.registrarEtapa === "function") {
-        window.LuxuriosaInteligencia.registrarEtapa("checkout_started", carrinho)
-          .catch(function (erro) {
-            console.warn("Luxuriosa: não foi possível registrar o início da finalização.", erro);
-          });
-      }
-      if (typeof window.LuxuriosaInteligencia.registrarEvento === "function") {
-        window.LuxuriosaInteligencia.registrarEvento("whatsapp_opened")
-          .catch(function (erro) {
-            console.warn("Luxuriosa: não foi possível registrar a abertura do WhatsApp.", erro);
-          });
-      }
-    }
-
-    abrirWhatsApp(montarMensagemPedido(resumoRecebimento));
+    checkout.iniciarFinalizacao();
     return true;
   }
 
@@ -1749,17 +1655,7 @@
       window.alert("Selecione a forma de recebimento e, para entrega, a localidade antes de continuar.");
       return;
     }
-
-    var checkout = window.LuxuriosaClientes;
-    if (!checkout || typeof checkout.iniciarFinalizacaoWhatsApp !== "function") {
-      window.alert("Não foi possível validar sua conta. Atualize a página e tente novamente.");
-      return;
-    }
-
-    Promise.resolve(checkout.iniciarFinalizacaoWhatsApp()).catch(function (erro) {
-      console.error("Luxuriosa: falha ao validar a conta antes do pedido.", erro);
-      window.alert("Não foi possível iniciar o pedido. Atualize a página e tente novamente.");
-    });
+    enviarPedidoWhatsApp();
   }
 
   /* =======================================================
