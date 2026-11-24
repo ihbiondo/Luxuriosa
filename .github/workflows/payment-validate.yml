@@ -508,7 +508,6 @@ jobs:
               "sb_publishable_LaMBeWQ1PNANEQ85SD_35Q_wDzswy8y",
           ]
           files = [
-              "login.html",
               "js/app.js",
               "js/clientes.js",
               "js/clube-precos.js",
