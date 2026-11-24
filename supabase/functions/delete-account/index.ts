@@ -51,12 +51,12 @@ Deno.serve(async (req: Request) => {
 
   if (req.method !== "POST") return json({ error: "Método não permitido." }, 405, origin);
   if (!origin || !allowedOrigins.has(origin)) return json({ error: "Origem não autorizada." }, 403, origin);
-  if (!/^application\\/json(?:\\s*;|$)/i.test(req.headers.get("Content-Type") || "")) {
+  if (!/^application\/json(?:\s*;|$)/i.test(req.headers.get("Content-Type") || "")) {
     return json({ error: "Formato de requisição inválido." }, 415, origin);
   }
 
   const authorization = req.headers.get("Authorization") || "";
-  const tokenMatch = authorization.match(/^Bearer\\s+(.+)$/i);
+  const tokenMatch = authorization.match(/^Bearer\s+(.+)$/i);
   if (!tokenMatch) return json({ error: "Sessão não identificada. Entre novamente." }, 401, origin);
 
   let body: Record<string, unknown>;
