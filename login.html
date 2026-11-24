@@ -1419,15 +1419,21 @@ input:focus,select:focus{border-color:#d4af7c;box-shadow:0 0 0 3px rgba(212,175,
       const identities = Array.isArray(user?.identities) ? user.identities : [];
       const hasGoogleIdentity = user?.app_metadata?.provider === "google" ||
         identities.some(identity => identity.provider === "google");
+      const providers = Array.isArray(user?.app_metadata?.providers) ? user.app_metadata.providers : [];
+      const hasEmailIdentity = providers.includes("email") ||
+        identities.some(identity => identity.provider === "email");
       const passwordField = $("deleteAccountPasswordField");
       const passwordInput = $("deleteAccountPassword");
       const help = $("deleteAccountIdentityHelp");
       if (!passwordField || !passwordInput || !help) return;
-      passwordField.classList.toggle("hidden", hasGoogleIdentity);
+      const googleOnly = hasGoogleIdentity && !hasEmailIdentity;
+      passwordField.classList.toggle("hidden", googleOnly);
       passwordInput.required = !hasGoogleIdentity;
       passwordInput.value = "";
       help.textContent = hasGoogleIdentity
-        ? "Sua conta usa o Google. Para excluir, será exigida uma sessão Google recente e a confirmação EXCLUIR."
+        ? (hasEmailIdentity
+          ? "Confirme com sua senha atual ou entre novamente com Google antes de excluir."
+          : "Sua conta usa o Google. Para excluir, será exigido um login Google recente e a confirmação EXCLUIR.")
         : "Informe sua senha atual e digite EXCLUIR para confirmar.";
     }
 
