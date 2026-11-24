@@ -33,7 +33,7 @@ test("carrinho abre a coleta de dados sem exigir login ou cadastro", () => {
     assert.match(html, /Cidade ou região da entrega/, path);
     assert.match(html, /id="cartDeliveryCity" required aria-required="true"/, path);
     assert.match(html, /id="cartClubInfo"/, path);
-    assert.match(html, /id="cartClubJoinLink" href="\/clube\/"/, path);
+    assert.doesNotMatch(html, /id="cartClubJoinLink"/, path);
     assert.match(html, /id="customerForm"/, path);
     assert.match(html, /id="customerWhatsAppButton"/, path);
     assert.doesNotMatch(html, /id="customerAccountLoad"|id="customerPaymentButton"|id="customerPayerType"/, path);
