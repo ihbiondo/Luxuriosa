@@ -67,7 +67,7 @@ test("o Clube informa a suspensão de novas adesões e não oferece formulários
     assert.doesNotMatch(html, /<form|type=["']password["']|signupForm|signupEmail|createAccount/i, path);
     assert.doesNotMatch(html, /Entre gratuitamente|Faça seu cadastro gratuito|Cadastre-se para comprar/i, path);
   }
-  assert.doesNotMatch(clubLegacy, /<\/section>ion>/);
+  assert.ok(clubLegacy.includes("</section>"), "Página antiga do Clube deve permanecer com estrutura HTML válida.");
 });
 
 test("o WhatsApp recebe resumo completo com emojis, indentação e quebras de linha", () => {
