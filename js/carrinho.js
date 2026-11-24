@@ -76,11 +76,8 @@
         typeof window.LuxuriosaClubePrecos.precoParaCliente === "function") {
       return window.LuxuriosaClubePrecos.precoParaCliente(produto);
     }
-    var precoClube = Number(produto && produto.preco);
-    var precoRegular = Number(produto && produto.precoAntigo);
-    var temPromocaoClube = Number.isFinite(precoRegular) &&
-      Number.isFinite(precoClube) && precoRegular > precoClube;
-    return temPromocaoClube && !membroClubeAtivo ? precoRegular : precoClube;
+    // Promoções de produtos são válidas para todos os clientes.
+    return Number(produto && produto.preco);
   }
 
   function atualizarControlesClube() {
@@ -92,10 +89,10 @@
         : membroClubeErro
           ? "Não foi possível consultar o Clube agora. A condição será confirmada no checkout."
           : membroClubeAtivo
-            ? "Frete especial do Clube ativo e aplicado automaticamente. Nenhuma seleção é necessária."
+            ? "Frete especial do Clube aplicado automaticamente."
             : membroClubeAutenticado
-              ? "Sua conta ainda não tem adesão ativa. Participe gratuitamente para receber o frete especial."
-              : "Membros ativos do Clube recebem frete com valor especial, aplicado automaticamente.";
+              ? "Sua conta não tem adesão ativa. Será aplicado o frete padrão."
+              : "O Clube oferece frete especial aos membros ativos. As promoções dos produtos valem para todos.";
     }
     if (link) link.hidden = membroClubeVerificado && membroClubeAtivo;
   }
@@ -1111,10 +1108,10 @@
             "a",
             "cart-item-club-promo",
             membroClubeAtivo
-              ? "🏷️ Preço exclusivo para membros do Clube"
-              : "🏷️ Cadastre-se grátis no Clube e aproveite " + formatarPreco(item.precoClube)
+              ? "🏷️ Oferta disponível para todos"
+              : "🏷️ Oferta disponível para todos"
           );
-          avisoPrecoClube.href = "/login.html?cadastro=1&next=clube.html";
+          avisoPrecoClube.removeAttribute("href");
           avisoPrecoClube.style.display = "block";
           avisoPrecoClube.style.marginTop = "4px";
           avisoPrecoClube.style.color = "#D4AF7C";
