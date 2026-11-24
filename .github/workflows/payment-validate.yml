@@ -369,8 +369,9 @@ jobs:
           assert "interval '18 years'" in club_membership_migration
           assert "Endereço não é obrigatório" in club_membership_migration
           assert "tibirica" in freight_backend and "freight_quote_required" in freight_backend
-          assert "R$ 15,00" in delivery_page and "R$ 10,00" in delivery_page
-          assert "R$ 50,00" in delivery_page and "R$ 40,00" in delivery_page
+          assert "R$ 15,00" in delivery_page and "R$ 10,00" not in delivery_page
+          assert "R$ 50,00" in delivery_page and "R$ 40,00" not in delivery_page
+          assert "Membro do Clube" not in delivery_page
           assert "o pedágio já está incluído" in delivery_page
           assert "cotado pelo atendimento" in delivery_faq
           assert "55 km pela rota" not in delivery_page
