@@ -8,18 +8,37 @@ insert into public.profiles (id)
 values ('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa')
 on conflict (id) do nothing;
 
-insert into public.account_data_consents (user_id)
-values ('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa');
-insert into public.account_privacy_acceptances (user_id)
-values ('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa');
-insert into public.contact_consents (user_id)
-values ('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa');
-insert into public.delivery_plan_memberships (user_id)
-values ('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa');
-insert into public.experience_results (user_id)
-values ('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa');
-insert into public.experience_terms_acceptances (user_id)
-values ('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa');
+insert into public.account_data_consents
+  (user_id, purpose, granted, consent_text_version, source, event_key)
+values
+  ('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa', 'experience_personalization', true,
+   'luxuriosa-account-data-v2-2026-11', 'account_settings',
+   'eeeeeeee-eeee-4eee-8eee-eeeeeeeeeeee');
+insert into public.account_privacy_acceptances
+  (user_id, notice_version, source, event_key)
+values
+  ('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa', 'luxuriosa-privacy-v1-2026-11',
+   'account_settings', 'ffffffff-ffff-4fff-8fff-ffffffffffff');
+insert into public.contact_consents
+  (user_id, channel, purpose, granted, source, consent_text_version, event_key)
+values
+  ('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa', 'whatsapp', 'marketing', true,
+   'account', 'luxuriosa-contact-marketing-v1-2026-11',
+   'eeeeeeee-eeee-4eee-8eee-eeeeeeeeeeef');
+insert into public.delivery_plan_memberships (user_id, plan_code)
+values ('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa', 'supporter');
+insert into public.experience_results
+  (user_id, attempt_id, activity_id, activity_title, category, result_title, result_summary)
+values
+  ('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa',
+   '11111111-1111-4111-8111-111111111111',
+   'discovery', 'Descubra seu estilo', 'ferramentas',
+   'Resultado fictício', 'Resumo fictício usado apenas no teste de exclusão.');
+insert into public.experience_terms_acceptances
+  (user_id, terms_version, accepted_at, revoked_at)
+values
+  ('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa',
+   'luxuriosa-experiencias-v1-2026-11', now(), null);
 
 insert into public.cart_instances (id, user_id)
 values ('bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb', 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa');
