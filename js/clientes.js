@@ -26,8 +26,14 @@
 
   function minimoEntregaPorEndereco(address) {
     var cidade = normalizarLocalidade(address && address.city);
+    var distrito = normalizarLocalidade(address && address.district);
     var estado = String(address && address.state || "").trim().toUpperCase();
-    return estado === "SP" && (cidade === "bauru" || cidade === "tibirica") ? 20 : 50;
+
+    if (estado !== "SP") return 0;
+    if ((cidade === "bauru" && distrito === "tibirica") || cidade === "tibirica") return 50;
+    if (cidade === "bauru") return 20;
+    if (["agudos", "piratininga", "pederneiras", "lencois paulista", "borebi"].indexOf(cidade) !== -1) return 50;
+    return 0;
   }
 
   function obterTarifasOficiais(address) {
@@ -391,9 +397,11 @@
       textoFrete += " Tarifa especial do Clube aplicada automaticamente.";
     }
     if (tarifa.pedagio) textoFrete += " Pedágio já incluído.";
-    var pedidoMinimo = minimoEntregaPorEndereco({ city: cidade, state: estado });
-    var textoMinimo = " Pedido mínimo: " + formatarPreco(pedidoMinimo) + " em produtos.";
-    if (subtotal > 0 && subtotal < pedidoMinimo) {
+    var pedidoMinimo = minimoEntregaPorEndereco({ city: cidade, district: distrito, state: estado });
+    var textoMinimo = pedidoMinimo > 0
+      ? " Pedido mínimo: " + formatarPreco(pedidoMinimo) + " em produtos."
+      : "";
+    if (pedidoMinimo > 0 && subtotal > 0 && subtotal < pedidoMinimo) {
       textoMinimo += " Faltam " + formatarPreco(pedidoMinimo - subtotal) + " para atingir o mínimo.";
     }
     aviso.textContent = textoFrete + textoMinimo;
@@ -488,7 +496,7 @@
       avisar(
         exigirEnderecoEntrega
           ? "Preencha nome, telefone/WhatsApp, CEP, rua, número, bairro, cidade e estado para entrega."
-          : "Preencha nome, telefone/WhatsApp e e-mail.",
+          : "Preencha nome e telefone/WhatsApp.",
         "error"
       );
       primeiroErro.focus();
