@@ -118,7 +118,7 @@ async function loadCatalog(): Promise<Map<string, any>> {
   if (!Array.isArray(data?.produtos)) throw new Error("Catálogo indisponível.");
   return new Map(data.produtos.map((product: any) => [String(product.id), product]));
 }
-function cleanItems(value: unknown, catalog: Map<string, any>, isClubMember: boolean) {
+function cleanItems(value: unknown, catalog: Map<string, any>) {
   if (!Array.isArray(value) || value.length > 80) throw new Error("Carrinho inválido.");
   return value.map((raw: any) => {
     const productId = cleanText(String(raw?.id ?? ""), 100);
@@ -132,7 +132,8 @@ function cleanItems(value: unknown, catalog: Map<string, any>, isClubMember: boo
     const regularPrice = Number(product.precoAntigo);
     const hasClubPromotion = Number.isFinite(regularPrice) && regularPrice > clubPrice &&
       Number.isFinite(clubPrice) && clubPrice >= 0;
-    const price = hasClubPromotion && !isClubMember ? regularPrice : clubPrice;
+    // O preço promocional é público; o Clube afeta somente o frete.
+    const price = clubPrice;
     if (!Number.isFinite(price) || price < 0 || price > 100000) throw new Error("Preço inválido no catálogo.");
     const isVariableKit = VARIABLE_DICE_KIT_IDS.has(productId);
     let selectedDiceName: string | null = null;
@@ -152,7 +153,7 @@ function cleanItems(value: unknown, catalog: Map<string, any>, isClubMember: boo
         selected_dice_product_id: isVariableKit ? selectedDiceId : null,
         selected_dice_product_name: isVariableKit ? selectedDiceName : null,
         club_promotion: hasClubPromotion,
-        applied_price_tier: hasClubPromotion ? (isClubMember ? "club" : "regular") : "standard"
+        applied_price_tier: hasClubPromotion ? "promotional" : "standard"
       }
     };
   });
@@ -289,8 +290,7 @@ Deno.serve(async (req: Request) => {
     }
     if (!withinRateLimit) return response({ error: "Muitas solicitações. Aguarde um instante e tente novamente." }, 429, origin);
     const catalog = await loadCatalog();
-    const isClubMember = userId ? await getClubMembershipIsActive(token) : false;
-    const items = cleanItems(body.items || [], catalog, isClubMember);
+    const items = cleanItems(body.items || [], catalog);
     const subtotal = total(items);
     if (subtotal > 1000000) return response({ error: "Valor do carrinho inválido." }, 400, origin);
 
