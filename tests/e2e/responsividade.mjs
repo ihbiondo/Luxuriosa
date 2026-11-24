@@ -225,98 +225,41 @@ page.on("pageerror", error => {
 });
 
 try {
-  // Verifica o cadastro após abrir a aba, como uma pessoa faria.
-  const signupViewports = [
+  // Verifica que a antiga tela de login não oferece criação de conta.
+  const accountFreeViewports = [
     { name: "mobile-320", width: 320, height: 740 },
     { name: "mobile-390", width: 390, height: 844 },
     { name: "desktop-1366", width: 1366, height: 900 }
   ];
-  const expectedSignupFieldIds = [
-    "username", "signupEmail", "phone", "signupPassword", "confirmPassword"
-  ];
 
-  for (const viewport of signupViewports) {
+  for (const viewport of accountFreeViewports) {
     await openPage(page, "/login.html", viewport);
-    await page.locator("#signupTab").click();
-    await page.locator("#signupForm:not(.hidden)").waitFor({ state: "visible" });
-    await page.waitForFunction(() =>
-      [...document.querySelectorAll('link[rel~="stylesheet"]')].every(link => Boolean(link.sheet)),
-      null,
-      { timeout: 10000 }
-    );
-
+    await page.locator("h1").waitFor({ state: "visible" });
     const audit = await page.evaluate(() => {
-      const form = document.querySelector("#signupForm");
-      const loginForm = document.querySelector("#loginForm");
-      const loginTab = document.querySelector("#loginTab");
-      const signupTab = document.querySelector("#signupTab");
-      const primary = form?.querySelector('button[type="submit"]');
-      const fields = [...(form?.querySelectorAll("input") || [])].filter(input =>
-        getComputedStyle(input).display !== "none" &&
-        getComputedStyle(input).visibility !== "hidden" &&
-        input.getClientRects().length > 0
+      const heading = document.querySelector("h1")?.textContent.replace(/\\s+/g, " ").trim() || "";
+      const storeLink = document.querySelector('a[href="/loja.html"]');
+      const bodyText = document.body.innerText.replace(/\\s+/g, " ").trim();
+      const accountControls = document.querySelectorAll(
+        "#signupTab, #loginTab, #signupForm, #loginForm, form, input[type='password']"
       );
-      const bounds = element => {
-        if (!element) return null;
-        const rect = element.getBoundingClientRect();
-        return {
-          left: Number(rect.left.toFixed(1)),
-          right: Number(rect.right.toFixed(1)),
-          width: Number(rect.width.toFixed(1)),
-          height: Number(rect.height.toFixed(1))
-        };
-      };
-      const fieldMetrics = fields.map(input => {
-        const label = form.querySelector('label[for="' + input.id + '"]');
-        return {
-          id: input.id,
-          type: input.type,
-          required: input.required,
-          hasLabel: Boolean(label),
-          input: bounds(input),
-          label: bounds(label)
-        };
-      });
-      const legalText = form?.querySelector(".legal")?.textContent.replace(/\s+/g, " ").trim() || "";
       return {
         viewport: window.innerWidth,
         documentWidth: document.documentElement.scrollWidth,
         horizontalOverflow: document.documentElement.scrollWidth > document.documentElement.clientWidth + 1,
-        formVisible: Boolean(form && getComputedStyle(form).display !== "none"),
-        loginHidden: Boolean(loginForm && getComputedStyle(loginForm).display === "none"),
-        signupTabSelected: signupTab?.getAttribute("aria-selected") === "true",
-        loginTabUnselected: loginTab?.getAttribute("aria-selected") === "false",
-        panel: bounds(document.querySelector(".panel")),
-        fieldIds: fields.map(input => input.id),
-        fields: fieldMetrics,
-        allFieldsFit: fieldMetrics.every(item =>
-          item.input && item.label &&
-          item.input.left >= 0 &&
-          item.input.right <= document.documentElement.clientWidth + 1 &&
-          item.input.height >= 44 &&
-          item.required &&
-          item.hasLabel
-        ),
-        submitButton: bounds(primary),
-        submitButtonAccessible: Boolean(primary && bounds(primary).height >= 48 && !primary.disabled),
-        confirmsAdult: /18 anos ou mais/.test(legalText),
-        explainsClubRequirements: /Clube gratuito/.test(legalText) &&
-          /nome completo/.test(legalText) &&
-          /data de nascimento/.test(legalText),
-        noExtraProfileFields: !form?.querySelector("#fullName, #birthDate")
+        heading,
+        explainsNoAccount: /não precisa criar uma conta/i.test(bodyText),
+        storeLinkVisible: Boolean(storeLink && storeLink.getClientRects().length),
+        accountControls: accountControls.length
       };
     });
 
     result.simpleSignup.checks.push({ name: viewport.name, ...audit });
-    const valid = audit.formVisible && audit.loginHidden &&
-      audit.signupTabSelected && audit.loginTabUnselected &&
-      !audit.horizontalOverflow && audit.allFieldsFit &&
-      audit.submitButtonAccessible && audit.confirmsAdult &&
-      audit.explainsClubRequirements && audit.noExtraProfileFields &&
-      audit.fieldIds.join("|") === expectedSignupFieldIds.join("|");
+    const valid = /não precisa criar uma conta/i.test(audit.heading) &&
+      audit.explainsNoAccount && audit.storeLinkVisible &&
+      audit.accountControls === 0 && !audit.horizontalOverflow;
     if (!valid) result.simpleSignup.failures.push({ name: viewport.name, ...audit });
 
-    await capture(page, "cadastro-simples-" + viewport.name);
+    await capture(page, "compra-sem-conta-" + viewport.name);
   }
 
   // Cobertura ampla: todas as rotas públicas indexadas no sitemap, em 360 px.
@@ -813,7 +756,6 @@ try {
   await page.waitForTimeout(250);
   result.mobileMenu = await page.evaluate(() => {
     const menu = document.querySelector("#navlinks");
-    const account = menu?.querySelector(".nav-drawer-account-area > .nav-account-primary");
     const shop = menu?.querySelector(":scope > .nav-link-shop");
     const help = menu?.querySelector(".nav-menu-group--help");
     const discover = menu?.querySelector(".nav-menu-group--discover");
@@ -827,14 +769,14 @@ try {
       getComputedStyle(link).display !== "none" && link.getClientRects().length
     ).map(link => link.textContent.trim());
     const hiddenSubmenus = [...menu.querySelectorAll(
-      ".nav-account-submenu, .nav-store-submenu, .nav-menu-group > .nav-submenu"
+      ".nav-store-submenu, .nav-menu-group > .nav-submenu"
     )].every(item => getComputedStyle(item).display === "none");
     const visibleToggles = [...menu.querySelectorAll(
       ".nav-menu-group-toggle, .nav-store-submenu > summary"
     )].some(item => getComputedStyle(item).display !== "none");
     const firstDivider = help ? getComputedStyle(help).borderTopStyle : "none";
     const secondDivider = discover ? getComputedStyle(discover).borderTopStyle : "none";
-    const links = [account, shop, ...[...(help?.querySelectorAll(":scope > a") || [])],
+    const links = [shop, ...[...(help?.querySelectorAll(":scope > a") || [])],
       ...[...(discover?.querySelectorAll(":scope > a") || [])]].filter(Boolean);
     const heights = links.map(item => Math.round(item.getBoundingClientRect().height));
     const fontSizes = links.map(item => getComputedStyle(item).fontSize);
@@ -843,12 +785,10 @@ try {
       viewport: document.documentElement.clientWidth,
       document: document.documentElement.scrollWidth,
       visibleLinks,
-      expectedLinks: ["Minha conta", "Loja", "Atendimento", "Entregas",
+      expectedLinks: ["Loja", "Atendimento", "Entregas",
         "Dúvidas frequentes", "Educação", "Experiências"],
-      account: rect(account),
       shop: rect(shop),
-      accountBeforeShop: Boolean(account && shop &&
-        (account.closest(".nav-drawer-account-area").compareDocumentPosition(shop) & Node.DOCUMENT_POSITION_FOLLOWING)),
+      noAccountLinks: !menu.querySelector("[data-nav-account], .nav-account-primary, .nav-drawer-account-area"),
       hiddenSubmenus,
       visibleToggles,
       categoryGridVisible: (() => {
@@ -857,19 +797,19 @@ try {
       })(),
       firstDivider,
       secondDivider,
-      uniformHeights: heights.length === 7 && heights.every(value => value === heights[0]),
+      uniformHeights: heights.length === 6 && heights.every(value => value === heights[0]),
       uniformTypography: fontSizes.every(value => value === "14px") &&
         fontWeights.every(value => value === "500")
     };
   });
-  result.mobileMenu.accountRowAligned = Boolean(
-    result.mobileMenu.account && result.mobileMenu.shop &&
-    result.mobileMenu.accountBeforeShop &&
-    result.mobileMenu.account.height === result.mobileMenu.shop.height &&
+  result.mobileMenu.shopRowAligned = Boolean(
+    result.mobileMenu.shop &&
+    result.mobileMenu.shop.height >= 44 &&
     result.mobileMenu.document <= result.mobileMenu.viewport + 1
   );
   result.mobileMenu.navigationHierarchyCorrect =
     result.mobileMenu.visibleLinks.join("|") === result.mobileMenu.expectedLinks.join("|") &&
+    result.mobileMenu.noAccountLinks &&
     result.mobileMenu.hiddenSubmenus &&
     !result.mobileMenu.visibleToggles &&
     !result.mobileMenu.categoryGridVisible &&
@@ -877,7 +817,7 @@ try {
     result.mobileMenu.secondDivider === "solid" &&
     result.mobileMenu.uniformHeights &&
     result.mobileMenu.uniformTypography;
-  await capture(page, "menu-mobile-simplificado-390");
+  await capture(page, "menu-mobile-sem-conta-390");
 
   // Confere abertura, dimensões, rolagem, conteúdo e fechamento do menu em páginas representativas.
   const unifiedMenuSamples = [
@@ -1299,7 +1239,7 @@ console.log(JSON.stringify({
     wrongImageFit: (result.imageFitFailures || []).length,
     portraitCardFailures: (result.portraitCardFailures || []).length,
     lingerieCropWarnings: (result.lingerieCropWarnings || []).length,
-    mobileMenuAccountAligned: result.mobileMenu?.accountRowAligned ?? false,
+    mobileMenuShopAligned: result.mobileMenu?.shopRowAligned ?? false,
     mobileMenuNavigationHierarchyCorrect: result.mobileMenu?.navigationHierarchyCorrect ?? false,
     experiencesPresentationOrder: result.experiencesPresentationOrder,
     productPagesChecked: result.productGalleries.length,
@@ -1348,7 +1288,7 @@ if (REPORT_PATH) {
 assert.equal(result.simpleSignup.checks.length, 3,
   "O cadastro simplificado deve ser verificado em 320 px, 390 px e desktop.");
 assert.equal(result.simpleSignup.failures.length, 0,
-  "O cadastro simplificado apresentou problemas de preenchimento ou layout: " +
+  "A tela sem cadastro apresentou problemas de acesso ou layout: " +
   JSON.stringify(result.simpleSignup.failures));
 assert.equal(result.routeFailures.length, 0, "Uma ou mais rotas públicas falharam.");
 assert.equal(result.overflowFailures.length, 0, "Foram encontrados casos de rolagem horizontal.");
@@ -1381,8 +1321,8 @@ assert.equal((result.imageFailures || []).length, 0, "Uma ou mais imagens de lin
 assert.equal((result.imageFitFailures || []).length, 0, "Há imagens de cards que não usam object-fit: cover.");
 assert.equal((result.portraitCardFailures || []).length, 0, "Cards de lingerie não receberam o formato vertical.");
 assert.equal(result.lingerieCards.length, 14, "A auditoria deve conferir as 14 lingeries do catálogo.");
-assert.ok(result.mobileMenu?.accountRowAligned,
-  "Minha conta deve alinhar-se como item comum do menu mobile: " + JSON.stringify(result.mobileMenu));
+assert.ok(result.mobileMenu?.shopRowAligned,
+  "O link Loja deve ser o primeiro item alinhado do menu mobile: " + JSON.stringify(result.mobileMenu));
 assert.ok(result.mobileMenu?.navigationHierarchyCorrect,
   "O menu mobile deve exibir somente os sete links aprovados, em lista plana e sem destaques ou submenus: " +
   JSON.stringify(result.mobileMenu));
