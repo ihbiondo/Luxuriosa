@@ -236,11 +236,6 @@
             <span class="nav-drawer-title">NAVEGUE PELA LUXURIOSA</span>
             <button class="nav-drawer-close" type="button" aria-label="Fechar menu">×</button>
           </div>
-          <div class="nav-drawer-account-area"><a class="nav-primary-link nav-account-primary" data-nav-account href="/login.html"><span class="nav-link-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><circle cx="12" cy="8" r="3.2"></circle><path d="M5.5 20a6.5 6.5 0 0 1 13 0"></path></svg></span><span>Minha conta</span></a>
-          <div class="nav-submenu nav-account-submenu" data-nav-auth-only-group hidden>
-            <a data-nav-auth-only href="/minha-conta/">Meu cadastro</a>
-            <a data-nav-auth-only href="/meus-pedidos/">Minhas compras</a>
-          </div></div>
           <a class="nav-primary-link nav-link-shop" href="/loja.html"><span class="nav-link-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M5 8h14l1 13H4L5 8Z"></path><path d="M9 9V6a3 3 0 0 1 6 0v3"></path></svg></span><span>Loja</span></a>
           <details class="nav-submenu nav-store-submenu">
             <summary>Explorar categorias</summary>
@@ -579,8 +574,8 @@
             <option value="other">Outra localidade</option>
           </select>
           <p class="cart-fulfillment-hint" id="cartClubInfo" role="status" aria-live="polite">Membros ativos do Clube recebem frete com valor especial. As promoções dos produtos valem para todos.</p>
-          <a class="cart-club-link" id="cartClubJoinLink" href="/login.html?cadastro=1&amp;next=clube.html">Criar conta para ter frete especial do Clube</a>
-        </div>
+          <a class="cart-club-link" id="cartClubJoinLink" href="/clube/">Conheça o benefício de frete do Clube</a>
+          </div>
 
         <div class="cart-total-row cart-fee-row">
           <span>Frete / retirada</span>
@@ -611,10 +606,7 @@
       </button>
 
 
-      <p class="cart-note">
-        Entre ou crie sua conta para concluir o pedido. Após o cadastro, você voltará ao carrinho e seguirá para o WhatsApp com os itens, a região, o frete e o total estimado.
-        <a href="privacidade.html" target="_blank" rel="noopener">Política de Privacidade</a>.
-      </p>
+      <p class="cart-note">Para concluir, informe os dados do pedido, confira o resumo e envie a solicitação pelo WhatsApp. Nenhuma cobrança é feita nesta etapa. <a href="privacidade.html" target="_blank" rel="noopener">Política de Privacidade</a>.</p>
 
     </div>
 
@@ -633,20 +625,12 @@
           <span class="cart-kicker">LUXURIOSA</span>
           <h2 id="customerTitle">Dados para seu pedido</h2>
         </div>
-        <button class="cart-close" id="customerClose" type="button" aria-label="Fechar cadastro">×</button>
+        <button class="cart-close" id="customerClose" type="button" aria-label="Fechar dados do pedido">×</button>
       </div>
 
-      <p id="customerIntro" class="customer-intro">Confira os dados e o endereço antes de continuar. Os campos de nome e telefone devem identificar quem receberá o pedido; ajuste-os quando a compra for para outra pessoa. O pedido ficará no histórico da conta usada no login, e o pagamento pode ser feito por outra pessoa. Você poderá revisar tudo antes de gerar o link seguro de pagamento. Para retirada agendada gratuita em Bauru, selecione a modalidade e informe a data e o horário desejados; a equipe confirmará a disponibilidade.</p>
-      <p class="customer-privacy-note">Os dados do pagador indicado, quando houver, serão usados para identificar e conciliar este pedido. <a href="privacidade.html" target="_blank" rel="noopener">Leia a Política de Privacidade</a>.</p>
+      <p id="customerIntro" class="customer-intro">Preencha os dados de contato e, para entrega, o endereço de recebimento. Depois você poderá revisar todos os itens e valores antes de enviar o pedido pelo WhatsApp. Não é necessário criar uma conta. A equipe confirmará a disponibilidade, o prazo e as condições de pagamento pelo atendimento.</p>
+      <p class="customer-privacy-note">Os dados informados serão usados para organizar e atender esta solicitação de compra. <a href="privacidade.html" target="_blank" rel="noopener">Leia a Política de Privacidade</a>.</p>
       <div id="customerStatus" class="customer-status" role="status" aria-live="polite" hidden></div>
-
-      <div class="customer-account-assist">
-        <div>
-          <strong>Dados da sua conta</strong>
-          <span>Preenchidos automaticamente. Ajuste se o pedido for para outra pessoa.</span>
-        </div>
-        <button class="btn secondary customer-account-load" id="customerAccountLoad" type="button">Atualizar dados da conta</button>
-      </div>
 
       <form id="customerForm" novalidate>
         <fieldset class="customer-fieldset customer-essential-fields">
@@ -661,33 +645,9 @@
               <input id="customerPhone" name="phone" type="tel" inputmode="tel" autocomplete="tel" required maxlength="25" placeholder="(14) 99999-9999">
             </div>
             <div class="customer-field customer-span-2">
-              <label for="customerEmail">E-mail de contato <span aria-hidden="true">*</span></label>
-              <input id="customerEmail" name="email" type="email" inputmode="email" autocomplete="email" required maxlength="254" placeholder="voce@exemplo.com">
+              <label for="customerEmail">E-mail de contato <span class="optional">(opcional)</span></label>
+              <input id="customerEmail" name="email" type="email" inputmode="email" autocomplete="email" maxlength="254" placeholder="voce@exemplo.com">
             </div>
-          </div>
-        </fieldset>
-
-        <fieldset class="customer-fieldset customer-essential-fields">
-          <legend>Quem fará o pagamento?</legend>
-          <div class="customer-grid">
-            <div class="customer-field customer-span-2">
-              <label for="customerPayerType">Responsável pelo pagamento</label>
-              <select id="customerPayerType" name="paymentPayerType">
-                <option value="account_holder">Eu vou pagar</option>
-                <option value="third_party">Outra pessoa vai pagar</option>
-              </select>
-            </div>
-            <div id="customerThirdPartyPayerFields" class="customer-grid customer-span-2" hidden>
-              <div class="customer-field customer-span-2">
-                <label for="customerPayerName">Nome de quem fará o pagamento <span aria-hidden="true">*</span></label>
-                <input id="customerPayerName" name="paymentPayerName" autocomplete="off" maxlength="160">
-              </div>
-              <div class="customer-field customer-span-2">
-                <label for="customerPayerPhone">Telefone/WhatsApp de quem fará o pagamento <span aria-hidden="true">*</span></label>
-                <input id="customerPayerPhone" name="paymentPayerPhone" type="tel" inputmode="tel" autocomplete="off" maxlength="25" placeholder="(14) 99999-9999">
-              </div>
-            </div>
-            <p class="customer-freight-info customer-span-2">Esses dados identificam a pessoa indicada por você. A indicação não comprova quem efetivamente pagou; a confirmação continua dependendo do comprovante ou da verificação do meio de pagamento.</p>
           </div>
         </fieldset>
 
@@ -777,13 +737,13 @@
 
       <section id="customerReview" class="customer-review" hidden aria-labelledby="customerReviewTitle">
         <h3 id="customerReviewTitle">Revise seu pedido</h3>
-        <p>Confira os produtos, o endereço e o total. Depois, gere seu link seguro de pagamento.</p>
+        <p>Confira os produtos, os dados de contato, o recebimento e o total. Depois, envie a solicitação pelo WhatsApp.</p>
         <pre id="customerMessagePreview" class="customer-message-preview" tabindex="0" aria-label="Resumo do pedido"></pre>
         <div class="customer-actions">
           <button class="btn secondary" id="customerEditButton" type="button">Editar dados</button>
-          <button class="btn primary" id="customerPaymentButton" type="button">PAGAR COM PIX OU CARTÃO</button>
+          <button class="btn primary" id="customerWhatsAppButton" type="button">ENVIAR PEDIDO PELO WHATSAPP</button>
         </div>
-        <p class="customer-storage-help">O pagamento é processado com segurança pela InfinitePay. O pedido só é confirmado após a confirmação automática da transação. Falar pelo WhatsApp não gera cobrança.</p>
+        <p class="customer-storage-help">A mensagem será aberta no WhatsApp para você conferir e enviar. A equipe confirmará a disponibilidade e o prazo; o pagamento será combinado somente depois.</p>
       </section>
     </section>
   </div>
@@ -847,11 +807,11 @@
   ========================================================== -->
 
   <script src="js/clube-precos.js?v=20261122-club-profile-v2"></script>
-  <script src="js/app.js?v=20261122-club-profile-v2"></script>
+  <script src="js/app.js?v=20261124-whatsapp-no-account-v1"></script>
   <script src="js/catalogo.js?v=20261122-club-profile-v2"></script>
   <script src="js/inteligencia.js?v=20261123-visitor-session-v1"></script>
-  <script src="js/carrinho.js?v=20261123-checkout-flow-v1"></script>
-  <script src="js/clientes.js?v=20261123-checkout-flow-v1"></script>
+  <script src="js/carrinho.js?v=20261124-whatsapp-sem-conta-v1"></script>
+  <script src="js/clientes.js?v=20261124-whatsapp-sem-conta-v1"></script>
 
   <script src="js/consentimento.js?v=20261119-sem-convites-automaticos-v1"></script>
 </body>

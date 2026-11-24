@@ -108,6 +108,7 @@ on:
       - "tests/pedido-whatsapp.test.mjs"
       - "tests/consent-ui.test.mjs"
       - "tests/product-css.test.mjs"
+      - "tests/checkout-payer.test.mjs"
       - "clube.html"
       - "clube/index.html"
       - "js/clube.js"
@@ -205,6 +206,7 @@ jobs:
           RESPONSIVE_REPORT_PATH="$GITHUB_WORKSPACE/e2e-screenshots/responsividade/report.json" \
           E2E_BASE_URL="http://127.0.0.1:4173" \
           node tests/e2e/responsividade.mjs
+          E2E_BASE_URL="http://127.0.0.1:4173" node tests/e2e/checkout-whatsapp.mjs
           DESKTOP_SCREENSHOT_DIR="$GITHUB_WORKSPACE/e2e-screenshots/desktop" \
           DESKTOP_REPORT_PATH="$GITHUB_WORKSPACE/e2e-screenshots/desktop/report.json" \
           E2E_BASE_URL="http://127.0.0.1:4173" \
@@ -507,9 +509,6 @@ jobs:
               "sb_publishable_LaMBeWQ1PNANEQ85SD_35Q_wDzswy8y",
           ]
           files = [
-              "login.html",
-              "js/app.js",
-              "js/clientes.js",
               "js/clube-precos.js",
               "js/portal.js",
               "js/conquistas.js",
@@ -544,62 +543,18 @@ jobs:
           done
           curl --fail --silent http://127.0.0.1:4173/login.html >/dev/null
 
-          # Inicializa todas as Edge Functions locais antes dos testes de navegador,
-          # incluindo cart-orders (telemetria e finalização WhatsApp) e create-payment-order.
-          # Executa a Edge Function real sobre o banco local. O modo de pagamento
-          # sintético só é ativado quando SUPABASE_URL aponta para o container local.
-          printf 'LUX_E2E_LOCAL_MODE=true\n' > "$test_root/function.env"
-          (cd "$test_root" && supabase functions serve --no-verify-jwt --env-file "$test_root/function.env") > "$test_root/function-server.log" 2>&1 &
-          function_server_pid=$!
-          function_ready=false
-          function_url=""
-          for attempt in $(seq 1 60); do
-            # O runtime de Functions usa uma porta própria, diferente da API REST.
-            function_url="$(grep -Eo 'http://127\.0\.0\.1:[0-9]+/functions/v1/create-payment-order' "$test_root/function-server.log" | tail -n 1 || true)"
-            if [[ -n "$function_url" ]]; then
-              # GET não cria pedido: a resposta 405 confirma que a função respondeu.
-              status_code="$(curl --silent --output /dev/null --write-out '%{http_code}' \
-                --request GET "$function_url" || true)"
-              if [[ "$status_code" == "405" ]]; then
-                function_ready=true
-                break
-              fi
-            fi
-            sleep 1
-          done
-          if [[ "$function_ready" != "true" ]]; then
-            cat "$test_root/function-server.log"
-            echo "A Edge Function local não respondeu ao GET de prontidão esperado (405)."
-            exit 1
-          fi
-
-
+          # Checkout público sem conta: coleta dados apenas para preparar a mensagem.
+          # O teste intercepta window.open e confirma o texto; não envia WhatsApp,
+          # não cria pedido e não inicia cobrança.
           mkdir -p "$GITHUB_WORKSPACE/e2e-screenshots"
-          # Este E2E também registra diagnóstico do consentimento e das chamadas de telemetria.
           E2E_BASE_URL="http://127.0.0.1:4173" \
-          E2E_SUPABASE_URL="$API_URL" \
-          E2E_SERVICE_ROLE_KEY="$SERVICE_ROLE_KEY" \
-          E2E_SCREENSHOT_DIR="$GITHUB_WORKSPACE/e2e-screenshots" \
-          node "$site/tests/e2e/minhas-conquistas.mjs"
-
-          # Checkout de teste: sessão local, dados fictícios e interceptação antes da criação de pedido/pagamento.
-          E2E_BASE_URL="http://127.0.0.1:4173" \
-          E2E_SUPABASE_URL="$API_URL" \
-          E2E_SERVICE_ROLE_KEY="$SERVICE_ROLE_KEY" \
-          E2E_SCREENSHOT_DIR="$GITHUB_WORKSPACE/e2e-screenshots" \
-          node "$site/tests/e2e/checkout-payer.mjs"
-
-          E2E_SUPABASE_URL="$API_URL" \
-          E2E_SERVICE_ROLE_KEY="$SERVICE_ROLE_KEY" \
-          E2E_ANON_KEY="$ANON_KEY" \
-          E2E_PAYMENT_FUNCTION_URL="$function_url" \
-          node "$site/tests/e2e/checkout-payer-persistence.mjs"
+          node "$site/tests/e2e/checkout-whatsapp.mjs"
 
       - name: Publicar evidências visuais do E2E
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: minhas-conquistas-visual-${{ github.run_id }}
+          name: checkout-whatsapp-e2e-${{ github.run_id }}
           path: e2e-screenshots/
           if-no-files-found: warn
           retention-days: 7

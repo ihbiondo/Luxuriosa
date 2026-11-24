@@ -420,8 +420,8 @@
     var primeiroErro = null;
     var exigirEnderecoEntrega = exigirEndereco && !modalidadeRetirada();
     var required = exigirEnderecoEntrega
-      ? ["customerName", "customerPhone", "customerEmail", "customerCep", "customerStreet", "customerNumber", "customerDistrict", "customerCity", "customerState"]
-      : ["customerName", "customerPhone", "customerEmail"];
+      ? ["customerName", "customerPhone", "customerCep", "customerStreet", "customerNumber", "customerDistrict", "customerCity", "customerState"]
+      : ["customerName", "customerPhone"];
     if (data.paymentPayerType === "third_party") {
       required.push("customerPayerName", "customerPayerPhone");
     }
@@ -556,77 +556,99 @@
     var subtotal = integridade.subtotal;
     var freight = obterResumoFretePedido(data, subtotal);
     var lines = [
-      "\u{1F497} *RESUMO DO PEDIDO | LUXURIOSA*",
+      "\u{1F497} *PEDIDO | LUXURIOSA*",
       "",
-      "\u{1F6CD} *ITENS DO CARRINHO*"
+      "\u{1F6CD} *ITENS DO PEDIDO*"
     ];
 
-    items.forEach(function (item) {
+    items.forEach(function (item, index) {
       var quantity = Number(item.quantidade) || 0;
       var price = Number(item.preco) || 0;
-      lines.push("• " + item.nome + " — " + quantity + "x — " + formatarPreco(price * quantity) +
-        (item.kit_variant_name ? " (Dado incluído: " + item.kit_variant_name + ")" : ""));
+      var number = String(index + 1).padStart(2, "0");
+      lines.push("   " + number + ". " + item.nome);
+      lines.push("       " + quantity + "x — " + formatarPreco(price * quantity));
+      if (item.kit_variant_name) {
+        lines.push("       Variação: " + item.kit_variant_name);
+      }
     });
 
-    lines.push("", "\u{1F4B0} *RESUMO DOS VALORES*", "• Produtos: " + formatarPreco(subtotal));
+    lines.push("", "\u{1F4B0} *RESUMO DOS VALORES*");
+    lines.push("   Produtos: " + formatarPreco(subtotal));
+
     if (data.fulfillmentType === "pickup") {
       lines.push(
-        "• Modalidade: retirada agendada em Bauru",
-        "• Frete: gratuito",
-        "• *Total estimado: " + formatarPreco(subtotal) + "*"
+        "   Recebimento: retirada agendada",
+        "   Frete: grátis",
+        "   *TOTAL ESTIMADO: " + formatarPreco(subtotal) + "*"
       );
     } else if (freight.fee === null) {
       lines.push(
-        "• Região: " + (freight.locality || "A confirmar"),
-        "• Frete: a confirmar com a equipe",
-        "• Total: será informado após consulta da localidade"
+        "   Região: " + (freight.locality || "A confirmar"),
+        "   Frete: a confirmar com a equipe",
+        "   *TOTAL ESTIMADO: a confirmar*"
       );
     } else {
       lines.push(
-        "• Região: " + freight.locality,
-        "• Frete: " + formatarPreco(freight.fee),
-        "• *Total estimado: " + formatarPreco(freight.total) + "*"
+        "   Região: " + freight.locality,
+        "   Frete: " + formatarPreco(freight.fee),
+        "   *TOTAL ESTIMADO: " + formatarPreco(freight.total) + "*"
       );
     }
 
     if (freight.member) {
-      lines.push("• \u{1F3F7} Tarifa especial do Clube aplicada automaticamente.");
+      lines.push("   \u{1F3F7} Benefício de frete do Clube aplicado.");
     }
     if (freight.minimum > 0 && subtotal < freight.minimum) {
-      lines.push("• Atenção: pedido mínimo nesta localidade de " + formatarPreco(freight.minimum) + " em produtos.");
+      lines.push("   \u{26A0}\u{FE0F} Pedido mínimo: " + formatarPreco(freight.minimum) + " em produtos.");
     }
-    if (freight.tollIncluded) lines.push("• Pedágio incluído no frete.");
+    if (freight.tollIncluded) {
+      lines.push("   Pedágio incluído no valor do frete.");
+    }
 
-    lines.push("", "*DADOS DO PEDIDO*");
-    lines.push("• " + data.name + " — " + data.phone);
+    lines.push("", "\u{1F464} *DADOS DE CONTATO*");
+    lines.push("   Nome: " + data.name);
+    lines.push("   WhatsApp: " + data.phone);
+    if (data.email) lines.push("   E-mail: " + data.email);
+
     if (data.fulfillmentType === "pickup") {
-      lines.push("• Retirada gratuita · Rua Madre Clélia, nº 5-44, Jardim Cruzeiro do Sul, Bauru/SP · CEP 17030-290");
-      lines.push("• Preferência: " + texto("customerPickupDate") + " às " + texto("customerPickupTime"));
+      lines.push(
+        "",
+        "\u{1F4CD} *RETIRADA*",
+        "   Retirada agendada em Bauru.",
+        "   Local: Rua Madre Clélia, nº 5-44, Jardim Cruzeiro do Sul, Bauru/SP.",
+        "   Data pretendida: " + texto("customerPickupDate"),
+        "   Horário pretendido: " + texto("customerPickupTime")
+      );
     } else {
-      var endereco = data.address.street + ", " + data.address.number;
-      if (data.address.complement) endereco += " — " + data.address.complement;
-      lines.push("• " + endereco);
-      lines.push("• " + data.address.district + " — " + data.address.city + "/" + data.address.state);
-      if (data.address.zip) lines.push("• CEP: " + data.address.zip);
-      if (data.address.reference) lines.push("• Referência: " + data.address.reference);
+      var address = data.address || {};
+      var street = [address.street, address.number].filter(Boolean).join(", ");
+      if (address.complement) street += " — " + address.complement;
+      lines.push(
+        "",
+        "\u{1F4CD} *ENDEREÇO DE ENTREGA*",
+        "   " + street,
+        "   " + [address.district, address.city].filter(Boolean).join(" — ") + (address.state ? "/" + address.state : "")
+      );
+      if (address.zip) lines.push("   CEP: " + address.zip);
+      if (address.reference) lines.push("   Referência: " + address.reference);
     }
 
-    lines.push("", "\u{1F4B3} *PAGAMENTO*");
-    if (data.paymentPayerType === "third_party") {
-      lines.push("• Pagador indicado: " + data.paymentPayerName + " — " + data.paymentPayerPhone);
-    } else {
-      lines.push("• Pagador: responsável pelo pedido.");
-    }
-    lines.push("• Pagamento seguro por PIX ou cartão após a confirmação dos dados.");
-    lines.push("", "\u{1F512} _Disponibilidade, prazo e condições finais serão confirmados antes da cobrança._");
+    lines.push(
+      "",
+      "\u{1F4AC} *PRÓXIMOS PASSOS*",
+      "   A equipe confirmará a disponibilidade, o prazo e o valor final.",
+      "   As instruções de pagamento serão enviadas após essa confirmação.",
+      "",
+      "\u{1F512} _O pedido será confirmado após a identificação do pagamento._"
+    );
 
     return lines.join("\n");
   }
+
   function abrir() {
     if (!overlay) return;
     /* Invalida qualquer consulta de CEP pendente de uma etapa anterior. */
     cepConsultaId += 1;
-    accountLoadId += 1;
     focusBeforeOpen = document.activeElement;
     limparAviso();
     review.hidden = true;
@@ -656,7 +678,6 @@
     if (!overlay) return;
     /* Uma resposta atrasada do ViaCEP não deve preencher um checkout futuro. */
     cepConsultaId += 1;
-    accountLoadId += 1;
     overlay.hidden = true;
     document.body.classList.remove("customer-open");
 
@@ -798,125 +819,6 @@
     copiarComSelecao();
   }
 
-  async function continuarPagamento() {
-    if (!mensagemAtual || !dadosAtuais) return;
-    var apiCarrinho = window.LuxuriosaCarrinho;
-    var itensAtuais = apiCarrinho && typeof apiCarrinho.obterItens === "function" ? apiCarrinho.obterItens() : [];
-    if (!itensAtuais.length) {
-      avisar("Seu carrinho está vazio. Adicione um produto antes de continuar.", "error");
-      return;
-    }
-    var integridade = validarIntegridadePedido(itensAtuais);
-    if (!integridade.valido) {
-      avisar(integridade.motivo, "error");
-      return;
-    }
-    if (!validarDados({ exigirEndereco: true })) return;
-    var formData = dadosDoFormulario();
-    if (modalidadeRetirada() && !formData.pickupRequestedAt) {
-      avisar("Informe a data e o horário pretendidos para a retirada.", "error");
-      $("customerPickupDate").focus();
-      return;
-    }
-    dadosAtuais = formData;
-
-    var minimoProdutos = minimoEntregaPorEndereco(dadosAtuais.address);
-    if (!modalidadeRetirada() && integridade.subtotal < minimoProdutos) {
-      avisar("O pedido deve ter no mínimo R$ " + minimoProdutos.toFixed(2).replace(".", ",") + " em produtos para entrega nesse destino. Abaixo desse valor, acrescente produtos ao carrinho.", "error");
-      return;
-    }
-
-    var button = $("customerPaymentButton");
-    if (button) {
-      button.disabled = true;
-      button.textContent = "PREPARANDO PAGAMENTO...";
-    }
-    avisar("Estamos validando os produtos, o frete e preparando seu pagamento.", "info");
-
-    var etapaPagamento = "identificação da sessão";
-    var controller = null;
-    var paymentTimeout = null;
-    var paymentResponseStatus = null;
-
-    try {
-      var sessionKey = window.LuxuriosaInteligencia &&
-        typeof window.LuxuriosaInteligencia.obterSessao === "function"
-        ? window.LuxuriosaInteligencia.obterSessao()
-        : "";
-      if (!sessionKey) throw new Error("Não foi possível identificar seu carrinho. Atualize a página e tente novamente.");
-
-      var headers = {
-        "content-type": "application/json",
-        "apikey": "sb_publishable_LaMbeWQ1PNANEQ85SD_35Q_wDzswy8y"
-      };
-      var supabase = await obterClienteSupabase();
-      var sessionResult = await supabase.auth.getSession();
-      var accessToken = sessionResult && sessionResult.data && sessionResult.data.session
-        ? sessionResult.data.session.access_token
-        : "";
-      if (sessionResult && sessionResult.error) throw sessionResult.error;
-      if (!accessToken) {
-        throw new Error("Sua sessão expirou. Entre novamente na sua conta antes de continuar.");
-      }
-      headers.authorization = "Bearer " + accessToken;
-
-      etapaPagamento = "comunicação com o servidor de pagamentos";
-      if (typeof AbortController === "function") {
-        controller = new AbortController();
-        paymentTimeout = window.setTimeout(function () {
-          controller.abort();
-        }, 30000);
-      }
-
-      var response = await fetch("https://byiykxfugvxuowueuxca.supabase.co/functions/v1/create-payment-order", {
-        method: "POST",
-        headers: headers,
-        body: JSON.stringify({
-          session_key: sessionKey,
-          items: itensAtuais,
-          customer: dadosAtuais,
-          fulfillment_type: dadosAtuais.fulfillmentType,
-          pickup_requested_at: dadosAtuais.pickupRequestedAt
-        }),
-        signal: controller ? controller.signal : undefined
-      });
-      paymentResponseStatus = response.status;
-
-      etapaPagamento = "leitura da resposta do servidor";
-      var result = await response.json().catch(function () { return {}; });
-      if (!response.ok || !result.ok || !result.checkout_url) {
-        throw new Error(result.error || "Não foi possível preparar o pagamento. Tente novamente.");
-      }
-
-      etapaPagamento = "redirecionamento para a InfinitePay";
-      messagePreview.textContent =
-        "Pedido Luxuriosa #" + result.order_number + "\n" +
-        "Total para pagamento: " + formatarPreco(result.total_amount) + "\n\n" +
-        "Você será direcionado à InfinitePay para pagar com Pix ou cartão. " +
-        "A expedição só começa depois da confirmação do pagamento.";
-      avisar("Pedido criado. Abrindo o checkout seguro da InfinitePay...", "success");
-
-      window.location.assign(result.checkout_url);
-    } catch (error) {
-      var mensagemErro = error && error.name === "AbortError"
-        ? "A preparação do pagamento demorou mais que o esperado. Verifique sua conexão e tente novamente."
-        : (error && error.message ? error.message : "Não foi possível iniciar o pagamento. Tente novamente.");
-      console.error("Luxuriosa: falha ao preparar pagamento.", {
-        etapa: etapaPagamento,
-        statusHttp: paymentResponseStatus,
-        tipoErro: error && error.name ? error.name : "Error"
-      });
-      avisar(mensagemErro, "error");
-      if (button) {
-        button.disabled = false;
-        button.textContent = "PAGAR COM PIX OU CARTÃO";
-      }
-    } finally {
-      if (paymentTimeout !== null) window.clearTimeout(paymentTimeout);
-    }
-  }
-
-
   function continuarWhatsApp() {
     if (!mensagemAtual || !dadosAtuais) {
       avisar("Revise o pedido antes de abrir o WhatsApp.", "error");
@@ -940,166 +842,15 @@
       window.LuxuriosaInteligencia.registrarEtapa("whatsapp_opened", itensAtuais, dadosAtuais).catch(function () {});
     }
     window.open(url, "_blank", "noopener,noreferrer");
+    avisar("O WhatsApp foi acionado com a mensagem pronta. Revise o pedido e toque em Enviar para encaminhar sua solicitação.", "success");
   }
 
 
-  var accountLoadId = 0;
-  var accountSupabasePromise = null;
-
-  function obterClienteSupabase() {
-    if (!accountSupabasePromise) {
-      accountSupabasePromise = window.LuxuriosaSupabase
-        ? Promise.resolve(window.LuxuriosaSupabase)
-        : import("https://esm.sh/@supabase/supabase-js@2").then(function (mod) {
-            return mod.createClient(
-              "https://byiykxfugvxuowueuxca.supabase.co",
-              "sb_publishable_LaMbeWQ1PNANEQ85SD_35Q_wDzswy8y",
-              { auth: { autoRefreshToken: true, persistSession: true, detectSessionInUrl: true } }
-            );
-          });
-    }
-    return accountSupabasePromise;
-  }
-
-  async function carregarDadosDaConta() {
-    var button = $("customerAccountLoad");
-    if (!button) return;
-    var requestId = ++accountLoadId;
-    button.disabled = true;
-    button.textContent = "Carregando seus dados…";
-    try {
-      var supabase = await obterClienteSupabase();
-      var authResult = await supabase.auth.getUser();
-      if (requestId !== accountLoadId) return;
-      if (authResult.error || !authResult.data || !authResult.data.user) {
-        avisar("Entre na sua conta Luxuriosa para carregar seus dados. Você também pode preencher tudo manualmente.", "error");
-        return;
-      }
-
-      var userId = authResult.data.user.id;
-      var results = await Promise.all([
-        supabase.from("profiles").select("full_name, phone").eq("id", userId).maybeSingle(),
-        supabase.from("addresses")
-          .select("postal_code, street, number, complement, neighborhood, city, state")
-          .eq("user_id", userId)
-          .eq("is_default", true)
-          .limit(1)
-          .maybeSingle()
-      ]);
-      if (requestId !== accountLoadId) return;
-      if (results[0].error) throw results[0].error;
-      if (results[1].error) throw results[1].error;
-
-      var profile = results[0].data || {};
-      var address = results[1].data || {};
-      if (!profile.full_name && !profile.phone && !address.street) {
-        avisar("Ainda não encontramos dados pessoais ou endereço na sua conta. Preencha nome, WhatsApp e e-mail; o endereço só é necessário para entrega.", "info");
-        return;
-      }
-
-      var hasCheckoutData = [
-        "customerName", "customerPhone", "customerEmail", "customerCep", "customerStreet",
-        "customerNumber", "customerComplement", "customerDistrict",
-        "customerCity", "customerState", "customerReference"
-      ].some(function (id) { return texto(id); });
-      if (hasCheckoutData && !window.confirm("Deseja substituir os dados já preenchidos pelos dados da sua conta? Você poderá editar tudo antes de enviar o pedido.")) {
-        avisar("Seus dados atuais foram mantidos.", "info");
-        return;
-      }
-
-      preencherFormulario({
-        name: profile.full_name || "",
-        phone: profile.phone || "",
-        email: authResult.data.user.email || "",
-        address: {
-          zip: address.postal_code || "",
-          street: address.street || "",
-          number: address.number || "",
-          complement: address.complement || "",
-          district: address.neighborhood || "",
-          city: address.city || "",
-          state: address.state || ""
-        }
-      });
-      atualizarAvisoFrete();
-      avisar("Dados carregados. Para entrega, complete o endereço; para retirada agendada, escolha a modalidade sem preencher endereço.", "success");
-      $("customerName").focus();
-    } catch (error) {
-      if (requestId !== accountLoadId) return;
-      avisar("Não foi possível carregar seus dados agora. Você pode preencher o pedido manualmente.", "error");
-    } finally {
-      if (requestId === accountLoadId) {
-        button.disabled = false;
-        button.textContent = "Atualizar dados da conta";
-      }
-    }
-  }
-
-  async function iniciarFinalizacaoWhatsApp() {
-    var carrinho = window.LuxuriosaCarrinho;
-    if (!carrinho || typeof carrinho.obterQuantidade !== "function" || !carrinho.obterQuantidade()) return;
-
-    var modoCarrinho = texto("cartFulfillmentMethod");
-    var regiaoCarrinho = texto("cartDeliveryCity");
-    if (modoCarrinho !== "delivery" && modoCarrinho !== "pickup") {
-      window.alert("Escolha entrega ou retirada no carrinho antes de continuar.");
-      window.location.replace("/loja.html?abrirCarrinho=1");
-      return;
-    }
-    if (modoCarrinho === "delivery" && !regiaoCarrinho) {
-      window.alert("Selecione a cidade ou região da entrega no carrinho antes de continuar.");
-      window.location.replace("/loja.html?abrirCarrinho=1");
-      return;
-    }
-
-    try {
-      var supabase = await obterClienteSupabase();
-      var auth = await supabase.auth.getSession();
-      if (auth.error) throw auth.error;
-      var session = auth.data && auth.data.session;
-
-      if (!session || !session.user) {
-        try { localStorage.setItem("luxuriosa_checkout_after_login", "1"); } catch (_) {}
-        window.location.assign("/login.html?cadastro=1");
-        return;
-      }
-
-      /* Atualiza a situação do Clube antes de calcular o frete e o resumo do WhatsApp. */
-      if (window.LuxuriosaClubePrecos && typeof window.LuxuriosaClubePrecos.pronto === "function") {
-        try { await window.LuxuriosaClubePrecos.pronto(); } catch (_) {}
-      }
-
-      if (typeof carrinho.enviarPedidoWhatsApp !== "function") {
-        throw new Error("O envio do pedido pelo WhatsApp não está disponível.");
-      }
-      /* No retorno do cadastro, mantém o carrinho visível para conferir/trocar o recebimento. */
-      if (typeof carrinho.abrir === "function") carrinho.abrir();
-      carrinho.enviarPedidoWhatsApp();
-    } catch (error) {
-      console.error("Não foi possível validar a conta antes do pedido:", error);
-      window.alert("Não conseguimos confirmar seu acesso à Luxuriosa. Verifique sua conexão e tente novamente.");
-    }
-  }
-
-  async function iniciarFinalizacao() {
+  function iniciarFinalizacao() {
     if (!window.LuxuriosaCarrinho || !window.LuxuriosaCarrinho.obterQuantidade()) return;
-    try {
-      var supabase = await obterClienteSupabase();
-      var auth = await supabase.auth.getUser();
-      if (auth.error) throw auth.error;
-      if (!auth.data || !auth.data.user) {
-        try { localStorage.setItem("luxuriosa_checkout_after_login", "1"); } catch (_) {}
-        window.location.assign("/login.html?cadastro=1");
-        return;
-      }
-      abrir();
-      await carregarDadosDaConta();
-    } catch (error) {
-      console.error("Não foi possível validar a conta antes do checkout:", error);
-      avisar("Entre na sua conta Luxuriosa para finalizar o pedido.", "error");
-      window.location.assign("/login.html");
-    }
+    abrir();
   }
+
 
   function iniciar() {
     overlay = $("customerOverlay");
@@ -1120,12 +871,8 @@
     });
     form.addEventListener("submit", revisarPedido);
     $("customerClose").addEventListener("click", fechar);
-    var accountLoadButton = $("customerAccountLoad");
-    if (accountLoadButton) accountLoadButton.addEventListener("click", carregarDadosDaConta);
     $("customerCancel").addEventListener("click", fechar);
     $("customerEditButton").addEventListener("click", function () { review.hidden = true; form.hidden = false; $("customerName").focus(); });
-    var paymentButton = $("customerPaymentButton");
-    if (paymentButton) paymentButton.addEventListener("click", continuarPagamento);
     var whatsappButton = $("customerWhatsAppButton");
     if (whatsappButton) whatsappButton.addEventListener("click", continuarWhatsApp);
     var copyButton = $("customerCopyButton");
@@ -1166,10 +913,6 @@
         atualizarAvisoFrete();
           });
     });
-    if (new URLSearchParams(window.location.search).get("retomar-checkout") === "1") {
-      window.history.replaceState({}, document.title, window.location.pathname);
-      window.setTimeout(function () { iniciarFinalizacaoWhatsApp(); }, 350);
-    }
     var campoEstado = $("customerState");
     if (campoEstado) {
       campoEstado.addEventListener("input", function () {
@@ -1199,8 +942,7 @@
   }
 
   window.LuxuriosaClientes = {
-    iniciarFinalizacao: iniciarFinalizacao,
-    iniciarFinalizacaoWhatsApp: iniciarFinalizacaoWhatsApp
+    iniciarFinalizacao: iniciarFinalizacao
   };
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", iniciar);
   else iniciar();

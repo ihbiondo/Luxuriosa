@@ -2,142 +2,110 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 
-const checkoutPages = ["index.html", "loja.html"].map((path) => ({ path, html: readFileSync(path, "utf8") }));
+const checkoutPages = ["index.html", "loja.html"].map((path) => ({
+  path,
+  html: readFileSync(path, "utf8")
+}));
 const cart = readFileSync("js/carrinho.js", "utf8");
 const client = readFileSync("js/clientes.js", "utf8");
-const backend = readFileSync("supabase/functions/create-payment-order/index.ts", "utf8");
+const app = readFileSync("js/app.js", "utf8");
+const login = readFileSync("login.html", "utf8");
+const clubLegacy = readFileSync("clube.html", "utf8");
+const clubRoute = readFileSync("clube/index.html", "utf8");
 
-test("home e loja invalidam o cache do módulo de checkout atualizado", () => {
+test("home e loja carregam a versão atual do checkout sem conta", () => {
   for (const { path, html } of checkoutPages) {
-    assert.ok(html.includes('src="js/clientes.js?v=20261123-checkout-flow-v1'), path);
+    assert.ok(html.includes('src="js/carrinho.js?v=20261124-whatsapp-sem-conta-v1'), path);
+    assert.ok(html.includes('src="js/clientes.js?v=20261124-whatsapp-sem-conta-v1'), path);
   }
 });
 
-test("o carrinho exige conta, preserva entrega/retirada e retoma o WhatsApp após cadastro", () => {
-  assert.match(cart, /checkout\.iniciarFinalizacaoWhatsApp\(\)/);
+test("carrinho abre a coleta de dados sem exigir login ou cadastro", () => {
   assert.match(cart, /function enviarPedidoWhatsApp\(\)/);
+  assert.match(cart, /checkout\.iniciarFinalizacao\(\)/);
+  assert.match(cart, /function finalizarPedido\(\)/);
   assert.match(cart, /RECEBIMENTO_STORAGE_KEY/);
   assert.match(cart, /salvarPreferenciaRecebimento\(\)/);
   assert.match(cart, /restaurarPreferenciaRecebimento\(\)/);
-  assert.match(client, /function iniciarFinalizacaoWhatsApp\(\)/);
-  assert.match(cart, /Oferta disponível para todos/);
-  assert.match(client, /carrinho\.abrir\(\)/);
-  assert.match(client, /supabase\.auth\.getSession\(\)/);
-  assert.match(client, /window\.location\.assign\("\/login\.html\?cadastro=1"\)/);
-  assert.match(client, /luxuriosa_checkout_after_login/);
-  assert.match(client, /iniciarFinalizacaoWhatsApp\(\);/);
+  assert.doesNotMatch(cart, /iniciarFinalizacaoWhatsApp|Entre ou crie sua conta|validar sua conta/);
 
   for (const { path, html } of checkoutPages) {
-    assert.match(html, /Cidade ou região da entrega/ , path);
+    assert.match(html, /Cidade ou região da entrega/, path);
     assert.match(html, /id="cartDeliveryCity" required aria-required="true"/, path);
     assert.match(html, /id="cartClubInfo"/, path);
-    assert.match(html, /id="cartClubJoinLink" href="\/login\.html\?cadastro=1&amp;next=clube\.html"/, path);
-    assert.doesNotMatch(html, /id="cartClubMember"/, path);
-    assert.match(html, /Continuar para finalizar/, path);
-    assert.match(html, /você voltará ao carrinho e seguirá para o WhatsApp/i, path);
+    assert.match(html, /id="cartClubJoinLink" href="\/clube\/"/, path);
+    assert.match(html, /id="customerForm"/, path);
+    assert.match(html, /id="customerWhatsAppButton"/, path);
+    assert.doesNotMatch(html, /id="customerAccountLoad"|id="customerPaymentButton"|id="customerPayerType"/, path);
+    assert.doesNotMatch(html, /Entre ou crie sua conta|Cadastre-se para comprar|PAGAR COM PIX OU CARTÃO/, path);
+    assert.match(html, /id="customerEmail"[^>]*maxlength="254"/, path);
+    assert.doesNotMatch(html, /id="customerEmail"[^>]*required/, path);
+    assert.match(html, /id="customerName"[^>]*required/, path);
+    assert.match(html, /id="customerPhone"[^>]*required/, path);
   }
 });
 
-test("mensagem do WhatsApp é objetiva, legível e preserva os valores do pedido", () => {
-  assert.match(cart, /\\u\{1F497\}/);
-  assert.match(cart, /\\u\{1F6CD\}\\u\{FE0F\}/);
-  assert.match(cart, /\\u\{1F4B0\}/);
-  assert.match(cart, /\*ITENS DO PEDIDO\*/);
-  assert.match(cart, /\*VALORES\*/);
-  assert.match(cart, /"• Produtos: "/);
-  assert.match(cart, /Frete \(/);
-  assert.match(cart, /Total estimado/);
-  assert.match(cart, /PRÓXIMO PASSO/);
-  assert.match(cart, /chave PIX ou o link de pagamento/);
-  assert.doesNotMatch(cart, /\*RESUMO DO CARRINHO\*|\*RESUMO DOS VALORES\*/);
-  assert.doesNotMatch(cart, /\\uFFFD/);
-  assert.doesNotMatch(cart, /kitComFreteGratis|Frete gratuito para pedidos com kit/);
-});
-
-
-test("checkout apresenta a escolha do responsável pelo pagamento", () => {
+test("a antiga área de conta e os convites de cadastro não aparecem na navegação", () => {
+  assert.doesNotMatch(app, /nav-drawer-account-area|nav-account-primary|Minha conta/);
+  assert.match(app, /data-nav-account/);
+  assert.match(app, /\.account-trigger/);
+  assert.doesNotMatch(app, /supabase\.auth\.getSession\(\)/);
+  assert.doesNotMatch(login, /<form|signupTab|loginTab|signupForm|loginForm|type="password"/);
+  assert.match(login, /Você não precisa criar uma conta/);
+  assert.match(login, /href="\/loja.html"/);
+  assert.doesNotMatch(login, /Criar conta|Cadastre-se|Minha conta/);
   for (const { path, html } of checkoutPages) {
-    assert.match(html, /id="customerPayerType"[\s\S]*?value="account_holder"/, path);
-    assert.match(html, /value="third_party"/, path);
-    assert.match(html, /id="customerPayerName"/, path);
-    assert.match(html, /id="customerPayerPhone"/, path);
-    assert.match(html, /id="customerMarketingWhatsAppOptIn"/, path);
+    assert.doesNotMatch(html, /data-nav-account|account-trigger|cartClubJoinLink[^>]*login\.html/, path);
   }
-  const customerIds = (html) => [...html.matchAll(/\bid="(customer[^"]+)"/g)].map((match) => match[1]).sort();
-  assert.deepEqual(customerIds(checkoutPages[0].html), customerIds(checkoutPages[1].html), "A home e a loja devem manter os mesmos controles de checkout.");
 });
 
-test("frontend valida, preserva e envia os dados do pagador dentro de customer", () => {
-  assert.match(client, /paymentPayerType:\s*texto\("customerPayerType"\)/);
-  assert.match(client, /paymentPayerName:\s*texto\("customerPayerName"\)/);
-  assert.match(client, /paymentPayerPhone:\s*texto\("customerPayerPhone"\)/);
-  assert.match(client, /customer:\s*dadosAtuais/);
-  assert.match(client, /supabase\.auth\.getSession\(\)/);
-  assert.match(client, /headers\.authorization = "Bearer " \+ accessToken/);
-  assert.doesNotMatch(client, /sb-byiykxfugvxuowueuxca-auth-token/);
-  assert.match(client, /data\.paymentPayerType === "third_party"/);
-  assert.match(client, /validarTelefone\(data\.paymentPayerPhone\)/);
+
+test("o Clube informa a suspensão de novas adesões e não oferece formulários de conta", () => {
+  for (const [path, html] of [["clube.html", clubLegacy], ["clube/index.html", clubRoute]]) {
+    assert.match(html, /novas adesões[^.]*suspensas/i, path);
+    assert.match(html, /não é necessário criar uma conta|não é necessário cadastro prévio|comprar sem cadastro|sem cadastro prévio/i, path);
+    assert.doesNotMatch(html, /<form|type=["']password["']|signupForm|signupEmail|createAccount/i, path);
+    assert.doesNotMatch(html, /Entre gratuitamente|Faça seu cadastro gratuito|Cadastre-se para comprar/i, path);
+  }
+  assert.ok(clubLegacy.includes("</section>"), "Página antiga do Clube deve permanecer com estrutura HTML válida.");
 });
 
-test("backend exige nome e telefone válidos para pagador terceiro", () => {
-  assert.match(backend, /customer\.paymentPayerType === "third_party"/);
-  assert.match(backend, /textValue\(customer\.paymentPayerName, 160\)/);
-  assert.match(backend, /brazilPhone\(textValue\(customer\.paymentPayerPhone, 30\)\)/);
-  assert.match(backend, /code:\s*"invalid_payer_data"/);
-  assert.match(backend, /!\/\^\\\+55\[1-9\]\\d\{9,10\}\$\//);
+test("o WhatsApp recebe resumo completo com emojis, indentação e quebras de linha", () => {
+  for (const emoji of [
+    "\\u{1F497}", "\\u{1F6CD}", "\\u{1F4B0}", "\\u{1F464}",
+    "\\u{1F4CD}", "\\u{1F4AC}", "\\u{1F512}"
+  ]) assert.ok(client.includes(emoji), "Emoji ausente: " + emoji);
+
+  for (const section of [
+    "*PEDIDO | LUXURIOSA*", "*ITENS DO PEDIDO*", "*RESUMO DOS VALORES*",
+    "*DADOS DE CONTATO*", "*ENDEREÇO DE ENTREGA*", "*PRÓXIMOS PASSOS*"
+  ]) assert.ok(client.includes(section), "Seção ausente: " + section);
+
+  assert.match(client, /lines\.push\("   " \+ number \+ "\. " \+ item\.nome\)/);
+  assert.match(client, /lines\.push\("       " \+ quantity \+ "x/);
+  assert.ok(client.includes('return lines.join("\\n");'));
+  assert.match(client, /function continuarWhatsApp\(\)/);
+  assert.match(client, /https:\/\/wa\.me\/5514996355924\?text=/);
+  assert.match(client, /window\.open\(url, "_blank", "noopener,noreferrer"\)/);
+  assert.doesNotMatch(client, /\\uFFFD|�/);
 });
 
-test("backend grava o pagador declarado e compara os dados em pedidos pendentes", () => {
-  assert.match(backend, /payment_payer_type:\s*paymentPayerType/);
-  assert.match(backend, /payment_payer_name:\s*paymentPayerName/);
-  assert.match(backend, /payment_payer_phone:\s*paymentPayerPhone/);
-  assert.match(backend, /payment_payer_source:\s*"website_checkout"/);
-  assert.match(backend, /pendingOrder\.payment_payer_type === paymentPayerType/);
-  assert.match(backend, /pendingOrder\.payment_payer_name/);
-  assert.match(backend, /pendingOrder\.payment_payer_phone/);
-});
+test("checkout mantém somente os dados necessários para a solicitação pelo WhatsApp", () => {
+  assert.match(client, /function iniciarFinalizacao\(\)/);
+  assert.match(client, /function abrir\(\)/);
+  assert.match(client, /form\.addEventListener\("submit", revisarPedido\)/);
+  assert.match(client, /customerWhatsAppButton/);
+  for (const field of [
+    "customerName", "customerPhone", "customerEmail", "customerCep",
+    "customerStreet", "customerNumber", "customerDistrict",
+    "customerCity", "customerState"
+  ]) assert.ok(client.includes(field), "Campo ausente: " + field);
 
-test("checkout limita a espera da preparação do pagamento e libera o botão em caso de timeout", () => {
-  assert.match(client, /var etapaPagamento = "identificação da sessão"/);
-  assert.match(client, /etapaPagamento = "comunicação com o servidor de pagamentos"/);
-  assert.match(client, /controller = new AbortController\(\)/);
-  assert.match(client, /controller\.abort\(\)/);
-  assert.match(client, /\}, 30000\)/);
-  assert.match(client, /signal: controller \? controller\.signal : undefined/);
-  assert.match(client, /paymentResponseStatus = response\.status/);
-  assert.match(client, /error && error\.name === "AbortError"/);
-  assert.match(client, /demorou mais que o esperado/);
-  assert.match(client, /finally \{\s*if \(paymentTimeout !== null\) window\.clearTimeout\(paymentTimeout\);\s*\}/);
-  assert.match(client, /button\.disabled = false/);
-});
-
-test("frontend aplica pedido mínimo de Bauru também quando a cidade vem como Tibiriçá", () => {
-  const helper = client.match(/function minimoEntregaPorEndereco\(address\)\s*\{[\s\S]*?\n  \}/)?.[0];
-  assert.ok(helper, "A regra de pedido mínimo deve ficar centralizada no helper.");
-  assert.match(helper, /estado === "SP"/);
-  assert.match(helper, /cidade === "bauru" \|\| cidade === "tibirica"/);
-  assert.match(helper, /\? 20 : 50/);
-  assert.match(client, /pedido para essa localidade deve ter mínimo de R\$ 20,00/);
-  assert.match(client, /minimoEntregaPorEndereco\(\{ city: cidade, state: estado \}\)/);
-  assert.equal((client.match(/minimoEntregaPorEndereco\(dadosAtuais\.address\)/g) || []).length, 2);
-  assert.match(backend, /const isTibiriçaDelivery = !isPickup/);
-  assert.match(backend, /const minimum = isPickup \? 0 : Number\(isBauruDelivery/);
-});
-
-test("backend diferencia retirada de entrega e valida CEP no servidor", () => {
-  assert.match(backend, /const fulfillmentType = suppliedFulfillmentType \|\| "express"/);
-  assert.match(backend, /const isPickup = fulfillmentType === "pickup"/);
-  assert.match(backend, /code: "invalid_pickup_schedule"/);
-  assert.match(backend, /code: "invalid_delivery_cep"/);
-  assert.match(backend, /if \(!isPickup && !\/\^\\d\{8\}\$\//);
-  assert.match(backend, /if \(!isPickup\) \{/);
-});
-
-test("backend persiste a retirada e não envia endereço de entrega à InfinitePay", () => {
-  assert.match(backend, /const PICKUP_PREPARATION_MINUTES = 30/);
-  assert.match(backend, /pickup_requested_at: pickupRequestedAt\?\.toISOString\(\) \|\| null/);
-  assert.match(backend, /pendingOrder\.pickup_requested_at/);
-  assert.match(backend, /const baseFeeCents = isPickup \? 0/);
-  assert.match(backend, /const shippingCents = baseFeeCents/);
-  assert.match(backend, /\.\.\.\(isPickup \? \{\} : \{/);
+  assert.doesNotMatch(client, /obterClienteSupabase|supabase\.auth|create-payment-order|customerPaymentButton|continuarPagamento|iniciarFinalizacaoWhatsApp/);
+  const requiredStart = client.indexOf("var required = exigirEnderecoEntrega");
+  const requiredEnd = client.indexOf("document.querySelectorAll", requiredStart);
+  const requiredBlock = client.slice(requiredStart, requiredEnd);
+  assert.ok(requiredStart >= 0 && requiredEnd > requiredStart, "A lista de campos obrigatórios deve existir.");
+  assert.ok(requiredBlock.includes("customerName") && requiredBlock.includes("customerPhone"));
+  assert.ok(!requiredBlock.includes("customerEmail"), "E-mail deve ser opcional.");
 });

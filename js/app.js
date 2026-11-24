@@ -49,45 +49,12 @@
      ======================================================= */
 
   function configurarNavegacaoDaConta() {
-    var accountLink = document.querySelector("[data-nav-account]");
-    var authGroup = document.querySelector("[data-nav-auth-only-group]");
-    var authLinks = document.querySelectorAll("[data-nav-auth-only]");
-    if (!accountLink || !authGroup) return;
-
-    function atualizarNavegacao(session) {
-      var authenticated = !!(session && session.user && session.user.id);
-      accountLink.href = authenticated ? "/minha-conta/" : "/login.html";
-      accountLink.setAttribute("aria-label", authenticated
-        ? "Minha conta — acessar meu cadastro"
-        : "Minha conta — entrar ou criar conta");
-      authGroup.hidden = !authenticated;
-      authLinks.forEach(function (link) {
-        link.hidden = !authenticated;
-      });
-    }
-
-    atualizarNavegacao(null);
-    var clienteSupabase = window.LuxuriosaClubePrecos &&
-      typeof window.LuxuriosaClubePrecos.obterCliente === "function"
-        ? window.LuxuriosaClubePrecos.obterCliente()
-        : import("https://esm.sh/@supabase/supabase-js@2").then(function (mod) {
-            return mod.createClient(
-              "https://byiykxfugvxuowueuxca.supabase.co",
-              "sb_publishable_LaMBeWQ1PNANEQ85SD_35Q_wDzswy8y",
-              { auth: { autoRefreshToken: true, persistSession: true, detectSessionInUrl: true } }
-            );
-          });
-    clienteSupabase.then(function (supabase) {
-        window.LuxuriosaSupabase = supabase;
-        supabase.auth.onAuthStateChange(function (_event, session) {
-          atualizarNavegacao(session);
-        });
-        return supabase.auth.getSession();
-      })
-      .then(function (result) {
-        if (result && result.data) atualizarNavegacao(result.data.session);
-      })
-      .catch(function () { atualizarNavegacao(null); });
+    /* A loja não exige conta: remove atalhos antigos de login e área de membro. */
+    document.querySelectorAll(
+      ".account-trigger, [data-nav-account], [data-nav-auth-only-group], [data-nav-auth-only]"
+    ).forEach(function (element) {
+      element.remove();
+    });
   }
 
   /* =======================================================
@@ -138,17 +105,6 @@
           '<span class="nav-drawer-subtitle">Sinta-se ainda mais você</span>',
         '</div>',
         '<button class="nav-drawer-close" type="button" aria-label="Fechar menu">×</button>',
-      '</div>',
-      '<div class="nav-drawer-account-area">',
-        '<a class="nav-primary-link nav-account-primary" data-nav-account href="/login.html">',
-          '<span class="nav-link-icon" aria-hidden="true">',
-            '<svg viewBox="0 0 24 24" focusable="false"><circle cx="12" cy="8" r="3.2"></circle><path d="M5.5 20a6.5 6.5 0 0 1 13 0"></path></svg>',
-          '</span><span>Minha conta</span>',
-        '</a>',
-        '<div class="nav-submenu nav-account-submenu" data-nav-auth-only-group hidden>',
-          '<a data-nav-auth-only href="/minha-conta/">Meu cadastro</a>',
-          '<a data-nav-auth-only href="/meus-pedidos/">Minhas compras</a>',
-        '</div>',
       '</div>',
       '<a class="nav-primary-link nav-link-shop" href="/loja.html"' + (loja ? ' aria-current="page"' : '') + '>',
         '<span class="nav-link-icon" aria-hidden="true">',
