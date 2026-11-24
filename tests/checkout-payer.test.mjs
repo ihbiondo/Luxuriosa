@@ -15,8 +15,8 @@ const clubRoute = readFileSync("clube/index.html", "utf8");
 
 test("home e loja carregam a versão atual do checkout sem conta", () => {
   for (const { path, html } of checkoutPages) {
-    assert.ok(html.includes('src="js/carrinho.js?v=20261124-whatsapp-sem-conta-v1'), path);
-    assert.ok(html.includes('src="js/clientes.js?v=20261124-whatsapp-sem-conta-v1'), path);
+    assert.ok(html.includes('src="js/carrinho.js?v=20261124-whatsapp-icons-v1'), path);
+    assert.ok(html.includes('src="js/clientes.js?v=20261124-whatsapp-icons-v1'), path);
   }
 });
 
@@ -72,7 +72,7 @@ test("o Clube informa a suspensão de novas adesões e não oferece formulários
 
 test("o WhatsApp recebe resumo completo com emojis, indentação e quebras de linha", () => {
   for (const emoji of [
-    "\\u{1F497}", "\\u{1F6CD}", "\\u{1F4B0}", "\\u{1F464}",
+    "\\u{2764}\\u{FE0F}", "\\u{1F3CD}\\u{FE0F}", "\\u{1F6CD}", "\\u{1F4B0}", "\\u{1F464}",
     "\\u{1F4CD}", "\\u{1F4AC}", "\\u{1F512}"
   ]) assert.ok(client.includes(emoji), "Emoji ausente: " + emoji);
 
