@@ -177,9 +177,9 @@
 
 
     var url =
-      "https://wa.me/" +
+      "https://api.whatsapp.com/send?phone=" +
       numero +
-      "?text=" +
+      "&text=" +
       encodeURIComponent(
         mensagem
       );
