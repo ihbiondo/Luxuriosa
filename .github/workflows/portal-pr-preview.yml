@@ -20,7 +20,7 @@ jobs:
         run: |
           git archive --format=zip --output=portal-luxuriosa-preview.zip HEAD
       - name: Upload preview artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: portal-luxuriosa-pr-${{ github.event.pull_request.number }}
           path: portal-luxuriosa-preview.zip
