@@ -108,12 +108,23 @@ alter table public.user_permissions enable row level security;
 grant select on public.profiles, public.preferences, public.addresses,
   public.account_data_consents, public.contact_consents, public.orders,
   public.order_items, public.user_permissions to authenticated;
+grant update on public.profiles, public.preferences to authenticated;
 
 create policy e2e_profiles_select_own on public.profiles
   for select to authenticated using ((select auth.uid()) = id);
 
+create policy e2e_profiles_update_own on public.profiles
+  for update to authenticated
+  using ((select auth.uid()) = id)
+  with check ((select auth.uid()) = id);
+
 create policy e2e_preferences_select_own on public.preferences
   for select to authenticated using ((select auth.uid()) = user_id);
+
+create policy e2e_preferences_update_own on public.preferences
+  for update to authenticated
+  using ((select auth.uid()) = user_id)
+  with check ((select auth.uid()) = user_id);
 
 create policy e2e_addresses_select_own on public.addresses
   for select to authenticated using ((select auth.uid()) = user_id);
@@ -138,3 +149,45 @@ create policy e2e_order_items_select_own on public.order_items
 
 create policy e2e_permissions_select_own on public.user_permissions
   for select to authenticated using ((select auth.uid()) = user_id);
+
+-- Reproduz o trigger de criação de usuário do projeto hospedado.
+-- A função fica no schema private e só é invocada pelo trigger do Auth local.
+create or replace function private.handle_new_user()
+returns trigger
+language plpgsql
+security definer
+set search_path = ''
+as $function$
+declare
+  v_metadata jsonb := coalesce(new.raw_user_meta_data, '{}'::jsonb);
+  v_username text;
+  v_full_name text;
+  v_display_name text;
+begin
+  v_username := lower(nullif(btrim(v_metadata ->> 'username'), ''));
+  if v_username is null or v_username !~ '^[a-z0-9][a-z0-9._]{2,29}$' then
+    v_username := 'cliente_' || left(replace(new.id::text, '-', ''), 12);
+  end if;
+
+  v_full_name := nullif(btrim(coalesce(v_metadata ->> 'full_name', v_metadata ->> 'name')), '');
+  v_display_name := left(coalesce(
+    nullif(btrim(v_metadata ->> 'display_name'), ''),
+    nullif(split_part(coalesce(v_full_name, ''), ' ', 1), ''),
+    nullif(split_part(coalesce(new.email, ''), '@', 1), ''),
+    'Cliente'
+  ), 80);
+
+  insert into public.profiles (id, username, display_name, full_name)
+  values (new.id, v_username, v_display_name, v_full_name);
+
+  insert into public.preferences (user_id) values (new.id);
+  insert into public.user_permissions (user_id, role) values (new.id, 'customer');
+
+  return new;
+end;
+$function$;
+revoke all on function private.handle_new_user() from public, anon, authenticated;
+
+create trigger on_auth_user_created
+  after insert on auth.users
+  for each row execute function private.handle_new_user();
