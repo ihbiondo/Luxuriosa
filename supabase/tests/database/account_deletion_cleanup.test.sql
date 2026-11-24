@@ -58,9 +58,7 @@ values ('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa', true, 'luxuriosa-intimate-profil
 insert into public.club_intimate_preferences (user_id) values ('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa');
 insert into public.club_memberships (user_id) values ('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa');
 insert into public.club_profile_preferences (user_id) values ('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa');
--- A criação do perfil já provisiona preferences automaticamente.
-insert into public.user_permissions (user_id, role)
-values ('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa', 'customer');
+-- A criação do perfil já provisiona preferences e user_permissions automaticamente.
 
 delete from auth.users
 where id = 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa';
