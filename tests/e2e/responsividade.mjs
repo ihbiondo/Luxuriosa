@@ -207,7 +207,11 @@ const result = {
   productGalleryLayout: null,
   pageErrors: [],
   productGalleries: [],
-  productGalleryFailures: []
+  productGalleryFailures: [],
+  simpleSignup: {
+    checks: [],
+    failures: []
+  }
 };
 
 const browser = await chromium.launch({
@@ -221,6 +225,100 @@ page.on("pageerror", error => {
 });
 
 try {
+  // Verifica o cadastro após abrir a aba, como uma pessoa faria.
+  const signupViewports = [
+    { name: "mobile-320", width: 320, height: 740 },
+    { name: "mobile-390", width: 390, height: 844 },
+    { name: "desktop-1366", width: 1366, height: 900 }
+  ];
+  const expectedSignupFieldIds = [
+    "username", "signupEmail", "phone", "signupPassword", "confirmPassword"
+  ];
+
+  for (const viewport of signupViewports) {
+    await openPage(page, "/login.html", viewport);
+    await page.locator("#signupTab").click();
+    await page.locator("#signupForm:not(.hidden)").waitFor({ state: "visible" });
+    await page.waitForFunction(() =>
+      [...document.querySelectorAll('link[rel~="stylesheet"]')].every(link => Boolean(link.sheet)),
+      null,
+      { timeout: 10000 }
+    );
+
+    const audit = await page.evaluate(() => {
+      const form = document.querySelector("#signupForm");
+      const loginForm = document.querySelector("#loginForm");
+      const loginTab = document.querySelector("#loginTab");
+      const signupTab = document.querySelector("#signupTab");
+      const primary = form?.querySelector('button[type="submit"]');
+      const fields = [...(form?.querySelectorAll("input") || [])].filter(input =>
+        getComputedStyle(input).display !== "none" &&
+        getComputedStyle(input).visibility !== "hidden" &&
+        input.getClientRects().length > 0
+      );
+      const bounds = element => {
+        if (!element) return null;
+        const rect = element.getBoundingClientRect();
+        return {
+          left: Number(rect.left.toFixed(1)),
+          right: Number(rect.right.toFixed(1)),
+          width: Number(rect.width.toFixed(1)),
+          height: Number(rect.height.toFixed(1))
+        };
+      };
+      const fieldMetrics = fields.map(input => {
+        const label = form.querySelector('label[for="' + input.id + '"]');
+        return {
+          id: input.id,
+          type: input.type,
+          required: input.required,
+          hasLabel: Boolean(label),
+          input: bounds(input),
+          label: bounds(label)
+        };
+      });
+      const legalText = form?.querySelector(".legal")?.textContent.replace(/\s+/g, " ").trim() || "";
+      return {
+        viewport: window.innerWidth,
+        documentWidth: document.documentElement.scrollWidth,
+        horizontalOverflow: document.documentElement.scrollWidth > document.documentElement.clientWidth + 1,
+        formVisible: Boolean(form && getComputedStyle(form).display !== "none"),
+        loginHidden: Boolean(loginForm && getComputedStyle(loginForm).display === "none"),
+        signupTabSelected: signupTab?.getAttribute("aria-selected") === "true",
+        loginTabUnselected: loginTab?.getAttribute("aria-selected") === "false",
+        panel: bounds(document.querySelector(".panel")),
+        fieldIds: fields.map(input => input.id),
+        fields: fieldMetrics,
+        allFieldsFit: fieldMetrics.every(item =>
+          item.input && item.label &&
+          item.input.left >= 0 &&
+          item.input.right <= document.documentElement.clientWidth + 1 &&
+          item.input.height >= 44 &&
+          item.required &&
+          item.hasLabel
+        ),
+        submitButton: bounds(primary),
+        submitButtonAccessible: Boolean(primary && bounds(primary).height >= 48 && !primary.disabled),
+        confirmsAdult: /18 anos ou mais/.test(legalText),
+        explainsClubRequirements: /Clube gratuito/.test(legalText) &&
+          /nome completo/.test(legalText) &&
+          /data de nascimento/.test(legalText),
+        noExtraProfileFields: !form?.querySelector("#fullName, #birthDate")
+      };
+    });
+
+    result.simpleSignup.checks.push({ name: viewport.name, ...audit });
+    const valid = audit.formVisible && audit.loginHidden &&
+      audit.signupTabSelected && audit.loginTabUnselected &&
+      !audit.horizontalOverflow && audit.allFieldsFit &&
+      audit.submitButtonAccessible && audit.confirmsAdult &&
+      audit.explainsClubRequirements && audit.noExtraProfileFields &&
+      audit.fieldIds.join("|") === expectedSignupFieldIds.join("|");
+    if (!valid) result.simpleSignup.failures.push({ name: viewport.name, ...audit });
+
+    await capture(page, "cadastro-simples-" + viewport.name);
+  }
+
   // Cobertura ampla: todas as rotas públicas indexadas no sitemap, em 360 px.
   const baseline = { name: "mobile-360", width: 360, height: 800 };
   for (const route of routes) {
@@ -1142,6 +1240,7 @@ try {
 
 const failed = result.routeFailures.length > 0 ||
   result.overflowFailures.length > 0 ||
+  result.simpleSignup.failures.length > 0 ||
   (result.imageFailures || []).length > 0 ||
   (result.imageFitFailures || []).length > 0 ||
   (result.portraitCardFailures || []).length > 0 ||
@@ -1205,6 +1304,8 @@ console.log(JSON.stringify({
     experiencesPresentationOrder: result.experiencesPresentationOrder,
     productPagesChecked: result.productGalleries.length,
     productGalleryFailures: result.productGalleryFailures.length,
+    simpleSignupViewportsChecked: result.simpleSignup.checks.length,
+    simpleSignupFailures: result.simpleSignup.failures.length,
     catalogGridNavigation: result.catalogGridNavigation,
     catalogImageNavigation: result.catalogImageNavigation,
     catalogBodyNavigation: result.catalogBodyNavigation,
@@ -1235,7 +1336,8 @@ console.log(JSON.stringify({
   homeFeaturedImageFailures: result.homeFeaturedImageFailures,
   experiencesPresentationOrder: result.experiencesPresentationOrder,
   missingViewportMeta: result.missingViewportMeta,
-  pageErrors: result.pageErrors.slice(0, 30)
+  pageErrors: result.pageErrors.slice(0, 30),
+  simpleSignup: result.simpleSignup
 }, null, 2));
 
 if (REPORT_PATH) {
@@ -1243,6 +1345,11 @@ if (REPORT_PATH) {
   fs.writeFileSync(REPORT_PATH, JSON.stringify(result, null, 2));
 }
 
+assert.equal(result.simpleSignup.checks.length, 3,
+  "O cadastro simplificado deve ser verificado em 320 px, 390 px e desktop.");
+assert.equal(result.simpleSignup.failures.length, 0,
+  "O cadastro simplificado apresentou problemas de preenchimento ou layout: " +
+  JSON.stringify(result.simpleSignup.failures));
 assert.equal(result.routeFailures.length, 0, "Uma ou mais rotas públicas falharam.");
 assert.equal(result.overflowFailures.length, 0, "Foram encontrados casos de rolagem horizontal.");
 assert.equal(result.publicMobileViewportFailures.length, 0,

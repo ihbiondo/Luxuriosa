@@ -72,10 +72,12 @@ select extensions.ok(
 );
 
 -- Contas descartáveis criadas somente dentro desta transação de teste.
-insert into auth.users (id, email)
+insert into auth.users (id, email, raw_user_meta_data)
 values
-  ('10000000-0000-4000-8000-000000000001', 'conquistas-a@test.invalid'),
-  ('10000000-0000-4000-8000-000000000002', 'conquistas-b@test.invalid');
+  ('10000000-0000-4000-8000-000000000001', 'conquistas-a@test.invalid',
+    jsonb_build_object('username', 'conquistas.a', 'display_name', 'Conta A')),
+  ('10000000-0000-4000-8000-000000000002', 'conquistas-b@test.invalid',
+    jsonb_build_object('username', 'conquistas.b', 'display_name', 'Conta B'));
 
 -- Pessoa A: sem aceite, não pode abrir o histórico nem gravar resultados.
 set local role authenticated;
