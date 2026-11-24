@@ -105,6 +105,47 @@ try {
   assert.equal(paymentRequests.length, 0, "O fluxo WhatsApp não pode iniciar checkout de pagamento.");
   assert.ok(!page.url().includes("login.html"), "A compra não deve redirecionar para login.");
   assert.ok(!page.url().includes("pagamento"), "A compra não deve abrir pagamento no site.");
+
+  // Confere a tarifa mínima de Tibiriçá pelo distrito real retornado no endereço.
+  async function revisarRegiao(regiao, address) {
+    await page.goto(BASE_URL + "/loja.html", { waitUntil: "domcontentloaded" });
+    await page.waitForFunction(() => Boolean(window.LuxuriosaCarrinho && window.LuxuriosaClientes));
+    await page.evaluate(() => window.LuxuriosaCarrinho.limpar());
+    await page.evaluate(item => window.LuxuriosaCarrinho.adicionar(item, 1), product);
+    await page.locator("#cart.open").waitFor({ state: "visible" });
+    await page.locator("#cartFulfillmentMethod").selectOption("delivery");
+    await page.locator("#cartDeliveryCity").selectOption(regiao);
+    await page.locator("#cartCheckout").click();
+    await page.locator("#customerOverlay:not([hidden])").waitFor({ state: "visible" });
+    await page.locator("#customerName").fill("Cliente de Teste");
+    await page.locator("#customerPhone").fill("(14) 99999-9999");
+    await page.locator("#customerCep").fill(address.zip);
+    await page.locator("#customerStreet").fill(address.street);
+    await page.locator("#customerNumber").fill("100");
+    await page.locator("#customerDistrict").fill(address.district);
+    await page.locator("#customerCity").fill(address.city);
+    await page.locator("#customerState").fill(address.state);
+    await page.locator("#customerReviewButton").click();
+    await page.locator("#customerReview:not([hidden])").waitFor({ state: "visible" });
+    return page.locator("#customerMessagePreview").textContent();
+  }
+
+  const tibiricaPreview = await revisarRegiao("tibirica", {
+    zip: "17030-290", street: "Estrada de Tibiriçá", district: "Tibiriçá",
+    city: "Bauru", state: "SP"
+  });
+  assert.ok(tibiricaPreview.includes("Frete: R$ 20,00"), "Tibiriçá deve usar a tarifa específica.");
+  assert.ok(tibiricaPreview.includes("Pedido mínimo: R$ 50,00 em produtos."),
+    "O pedido mínimo de Tibiriçá deve ser R$ 50,00, mesmo quando o município informado é Bauru.");
+
+  const otherPreview = await revisarRegiao("other", {
+    zip: "17500-000", street: "Rua de Teste", district: "Centro",
+    city: "Marília", state: "SP"
+  });
+  assert.ok(otherPreview.includes("Frete: a confirmar com a equipe"));
+  assert.ok(!otherPreview.includes("Pedido mínimo:"),
+    "Localidades sob consulta não devem receber um pedido mínimo inventado.");
+
   console.log("Checkout WhatsApp sem conta: PASS. Mensagem aberta foi interceptada; nada foi enviado.");
 } finally {
   await browser.close();
