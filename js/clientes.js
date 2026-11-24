@@ -846,8 +846,16 @@
     if (window.LuxuriosaMedicao && typeof window.LuxuriosaMedicao.registrar === "function") {
       window.LuxuriosaMedicao.registrar("checkout_whatsapp", { method: "whatsapp", step: "pedido_encaminhado" });
     }
-    if (window.LuxuriosaInteligencia && typeof window.LuxuriosaInteligencia.registrarEtapa === "function") {
-      window.LuxuriosaInteligencia.registrarEtapa("whatsapp_opened", itensAtuais, dadosAtuais).catch(function () {});
+    if (window.LuxuriosaInteligencia && typeof window.LuxuriosaInteligencia.registrarPedido === "function") {
+      var resumoFrete = obterResumoFretePedido(dadosAtuais, integridade.subtotal);
+      window.LuxuriosaInteligencia.registrarPedido(itensAtuais, dadosAtuais, resumoFrete.fee)
+        .catch(function (error) {
+          console.error("Luxuriosa: não foi possível registrar o pedido no sistema.", error);
+          avisar("A mensagem foi aberta, mas não foi possível registrar a prévia do pedido no sistema. Envie a mensagem no WhatsApp para a equipe confirmar os dados.", "error");
+        });
+    } else {
+      console.error("Luxuriosa: módulo de registro de pedidos indisponível.");
+      avisar("A mensagem foi aberta, mas o sistema não conseguiu registrar a prévia do pedido. Envie a mensagem no WhatsApp para a equipe confirmar os dados.", "error");
     }
     window.open(url, "_blank", "noopener,noreferrer");
     avisar("O WhatsApp foi acionado com a mensagem pronta. Revise o pedido e toque em Enviar para encaminhar sua solicitação.", "success");
