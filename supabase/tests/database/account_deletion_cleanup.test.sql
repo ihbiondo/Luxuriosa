@@ -53,7 +53,7 @@ values ('dddddddd-dddd-4ddd-8ddd-dddddddddddd',
 
 insert into public.addresses (user_id) values ('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa');
 insert into public.club_intimate_consent_events (user_id, granted, consent_version, event_key)
-values ('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa', true, 'luxuriosa-club-intimate-v1-2026-11',
+values ('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa', true, 'luxuriosa-intimate-profile-v1-2026-11',
         'abababab-abab-4bab-8bab-abababababab');
 insert into public.club_intimate_preferences (user_id) values ('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa');
 insert into public.club_memberships (user_id) values ('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa');
