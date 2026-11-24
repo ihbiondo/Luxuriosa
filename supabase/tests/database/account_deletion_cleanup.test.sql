@@ -24,8 +24,8 @@ insert into public.contact_consents
 values
   ('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa', 'whatsapp', 'marketing', true,
    'account', 'luxuriosa-contact-marketing-v1-2026-11');
-insert into public.delivery_plan_memberships (user_id, plan_code)
-values ('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa', 'supporter');
+insert into public.delivery_plan_memberships (user_id)
+values ('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa');
 insert into public.experience_results
   (user_id, attempt_id, activity_id, activity_title, category, result_title, result_summary)
 values
