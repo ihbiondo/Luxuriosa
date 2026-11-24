@@ -1,6 +1,6 @@
 -- Remove dados pessoais ligados à conta quando a identidade Auth é excluída.
--- Pedidos e registros financeiros são preservados; seus vínculos com carrinhos
--- são definidos como NULL pelas FKs existentes (ON DELETE SET NULL).
+-- Pedidos e registros financeiros são preservados; referências à identidade e
+-- aos carrinhos são anuladas antes da remoção dos registros relacionados.
 create or replace function private.handle_auth_user_deleted_cleanup()
 returns trigger
 language plpgsql
@@ -26,8 +26,12 @@ begin
   delete from public.experience_terms_acceptances
   where user_id = old.id;
 
-  -- A exclusão do carrinho remove dados de navegação e snapshots não convertidos.
-  -- Referências em orders são preservadas como NULL pelas constraints existentes.
+  -- Preserva o histórico transacional, removendo o vínculo identificável com o perfil.
+  update public.orders
+  set customer_id = null
+  where customer_id = old.id;
+
+  -- Referências a carrinhos são anuladas pelas FKs ON DELETE SET NULL.
   delete from public.cart_instances
   where user_id = old.id;
 
