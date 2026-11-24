@@ -556,72 +556,95 @@
     var subtotal = integridade.subtotal;
     var freight = obterResumoFretePedido(data, subtotal);
     var lines = [
-      "\u{1F497} *RESUMO DO PEDIDO | LUXURIOSA*",
+      "\\u{1F497} *PEDIDO | LUXURIOSA*",
       "",
-      "\u{1F6CD} *ITENS DO CARRINHO*"
+      "\\u{1F6CD} *ITENS DO PEDIDO*"
     ];
 
-    items.forEach(function (item) {
+    items.forEach(function (item, index) {
       var quantity = Number(item.quantidade) || 0;
       var price = Number(item.preco) || 0;
-      lines.push("• " + item.nome + " — " + quantity + "x — " + formatarPreco(price * quantity) +
-        (item.kit_variant_name ? " (Dado incluído: " + item.kit_variant_name + ")" : ""));
+      var number = String(index + 1).padStart(2, "0");
+      lines.push("   " + number + ". " + item.nome);
+      lines.push("       " + quantity + "x — " + formatarPreco(price * quantity));
+      if (item.kit_variant_name) {
+        lines.push("       Variação: " + item.kit_variant_name);
+      }
     });
 
-    lines.push("", "\u{1F4B0} *RESUMO DOS VALORES*", "• Produtos: " + formatarPreco(subtotal));
+    lines.push("", "\\u{1F4B0} *RESUMO DOS VALORES*");
+    lines.push("   Produtos: " + formatarPreco(subtotal));
+
     if (data.fulfillmentType === "pickup") {
       lines.push(
-        "• Modalidade: retirada agendada em Bauru",
-        "• Frete: gratuito",
-        "• *Total estimado: " + formatarPreco(subtotal) + "*"
+        "   Recebimento: retirada agendada",
+        "   Frete: grátis",
+        "   *TOTAL ESTIMADO: " + formatarPreco(subtotal) + "*"
       );
     } else if (freight.fee === null) {
       lines.push(
-        "• Região: " + (freight.locality || "A confirmar"),
-        "• Frete: a confirmar com a equipe",
-        "• Total: será informado após consulta da localidade"
+        "   Região: " + (freight.locality || "A confirmar"),
+        "   Frete: a confirmar com a equipe",
+        "   *TOTAL ESTIMADO: a confirmar*"
       );
     } else {
       lines.push(
-        "• Região: " + freight.locality,
-        "• Frete: " + formatarPreco(freight.fee),
-        "• *Total estimado: " + formatarPreco(freight.total) + "*"
+        "   Região: " + freight.locality,
+        "   Frete: " + formatarPreco(freight.fee),
+        "   *TOTAL ESTIMADO: " + formatarPreco(freight.total) + "*"
       );
     }
 
     if (freight.member) {
-      lines.push("• \u{1F3F7} Tarifa especial do Clube aplicada automaticamente.");
+      lines.push("   \\u{1F3F7} Benefício de frete do Clube aplicado.");
     }
     if (freight.minimum > 0 && subtotal < freight.minimum) {
-      lines.push("• Atenção: pedido mínimo nesta localidade de " + formatarPreco(freight.minimum) + " em produtos.");
+      lines.push("   \\u{26A0}\\u{FE0F} Pedido mínimo: " + formatarPreco(freight.minimum) + " em produtos.");
     }
-    if (freight.tollIncluded) lines.push("• Pedágio incluído no frete.");
+    if (freight.tollIncluded) {
+      lines.push("   Pedágio incluído no valor do frete.");
+    }
 
-    lines.push("", "*DADOS DO PEDIDO*");
-    lines.push("• " + data.name + " — " + data.phone);
+    lines.push("", "\\u{1F464} *DADOS DE CONTATO*");
+    lines.push("   Nome: " + data.name);
+    lines.push("   WhatsApp: " + data.phone);
+    if (data.email) lines.push("   E-mail: " + data.email);
+
     if (data.fulfillmentType === "pickup") {
-      lines.push("• Retirada gratuita · Rua Madre Clélia, nº 5-44, Jardim Cruzeiro do Sul, Bauru/SP · CEP 17030-290");
-      lines.push("• Preferência: " + texto("customerPickupDate") + " às " + texto("customerPickupTime"));
+      lines.push(
+        "",
+        "\\u{1F4CD} *RETIRADA*",
+        "   Retirada agendada em Bauru.",
+        "   Local: Rua Madre Clélia, nº 5-44, Jardim Cruzeiro do Sul, Bauru/SP.",
+        "   Data pretendida: " + texto("customerPickupDate"),
+        "   Horário pretendido: " + texto("customerPickupTime")
+      );
     } else {
-      var endereco = data.address.street + ", " + data.address.number;
-      if (data.address.complement) endereco += " — " + data.address.complement;
-      lines.push("• " + endereco);
-      lines.push("• " + data.address.district + " — " + data.address.city + "/" + data.address.state);
-      if (data.address.zip) lines.push("• CEP: " + data.address.zip);
-      if (data.address.reference) lines.push("• Referência: " + data.address.reference);
+      var address = data.address || {};
+      var street = [address.street, address.number].filter(Boolean).join(", ");
+      if (address.complement) street += " — " + address.complement;
+      lines.push(
+        "",
+        "\\u{1F4CD} *ENDEREÇO DE ENTREGA*",
+        "   " + street,
+        "   " + [address.district, address.city].filter(Boolean).join(" — ") + (address.state ? "/" + address.state : "")
+      );
+      if (address.zip) lines.push("   CEP: " + address.zip);
+      if (address.reference) lines.push("   Referência: " + address.reference);
     }
 
-    lines.push("", "\u{1F4B3} *PAGAMENTO*");
-    if (data.paymentPayerType === "third_party") {
-      lines.push("• Pagador indicado: " + data.paymentPayerName + " — " + data.paymentPayerPhone);
-    } else {
-      lines.push("• Pagador: responsável pelo pedido.");
-    }
-    lines.push("• Pagamento seguro por PIX ou cartão após a confirmação dos dados.");
-    lines.push("", "\u{1F512} _Disponibilidade, prazo e condições finais serão confirmados antes da cobrança._");
+    lines.push(
+      "",
+      "\\u{1F4AC} *PRÓXIMOS PASSOS*",
+      "   A equipe confirmará a disponibilidade, o prazo e o valor final.",
+      "   As instruções de pagamento serão enviadas após essa confirmação.",
+      "",
+      "\\u{1F512} _O pedido será confirmado após a identificação do pagamento._"
+    );
 
-    return lines.join("\n");
+    return lines.join("\\n");
   }
+
   function abrir() {
     if (!overlay) return;
     /* Invalida qualquer consulta de CEP pendente de uma etapa anterior. */
@@ -798,126 +821,7 @@
     copiarComSelecao();
   }
 
-  async function continuarPagamento() {
-    if (!mensagemAtual || !dadosAtuais) return;
-    var apiCarrinho = window.LuxuriosaCarrinho;
-    var itensAtuais = apiCarrinho && typeof apiCarrinho.obterItens === "function" ? apiCarrinho.obterItens() : [];
-    if (!itensAtuais.length) {
-      avisar("Seu carrinho está vazio. Adicione um produto antes de continuar.", "error");
-      return;
-    }
-    var integridade = validarIntegridadePedido(itensAtuais);
-    if (!integridade.valido) {
-      avisar(integridade.motivo, "error");
-      return;
-    }
-    if (!validarDados({ exigirEndereco: true })) return;
-    var formData = dadosDoFormulario();
-    if (modalidadeRetirada() && !formData.pickupRequestedAt) {
-      avisar("Informe a data e o horário pretendidos para a retirada.", "error");
-      $("customerPickupDate").focus();
-      return;
-    }
-    dadosAtuais = formData;
-
-    var minimoProdutos = minimoEntregaPorEndereco(dadosAtuais.address);
-    if (!modalidadeRetirada() && integridade.subtotal < minimoProdutos) {
-      avisar("O pedido deve ter no mínimo R$ " + minimoProdutos.toFixed(2).replace(".", ",") + " em produtos para entrega nesse destino. Abaixo desse valor, acrescente produtos ao carrinho.", "error");
-      return;
-    }
-
-    var button = $("customerPaymentButton");
-    if (button) {
-      button.disabled = true;
-      button.textContent = "PREPARANDO PAGAMENTO...";
-    }
-    avisar("Estamos validando os produtos, o frete e preparando seu pagamento.", "info");
-
-    var etapaPagamento = "identificação da sessão";
-    var controller = null;
-    var paymentTimeout = null;
-    var paymentResponseStatus = null;
-
-    try {
-      var sessionKey = window.LuxuriosaInteligencia &&
-        typeof window.LuxuriosaInteligencia.obterSessao === "function"
-        ? window.LuxuriosaInteligencia.obterSessao()
-        : "";
-      if (!sessionKey) throw new Error("Não foi possível identificar seu carrinho. Atualize a página e tente novamente.");
-
-      var headers = {
-        "content-type": "application/json",
-        "apikey": "sb_publishable_LaMbeWQ1PNANEQ85SD_35Q_wDzswy8y"
-      };
-      var supabase = await obterClienteSupabase();
-      var sessionResult = await supabase.auth.getSession();
-      var accessToken = sessionResult && sessionResult.data && sessionResult.data.session
-        ? sessionResult.data.session.access_token
-        : "";
-      if (sessionResult && sessionResult.error) throw sessionResult.error;
-      if (!accessToken) {
-        throw new Error("Sua sessão expirou. Entre novamente na sua conta antes de continuar.");
-      }
-      headers.authorization = "Bearer " + accessToken;
-
-      etapaPagamento = "comunicação com o servidor de pagamentos";
-      if (typeof AbortController === "function") {
-        controller = new AbortController();
-        paymentTimeout = window.setTimeout(function () {
-          controller.abort();
-        }, 30000);
-      }
-
-      var response = await fetch("https://byiykxfugvxuowueuxca.supabase.co/functions/v1/create-payment-order", {
-        method: "POST",
-        headers: headers,
-        body: JSON.stringify({
-          session_key: sessionKey,
-          items: itensAtuais,
-          customer: dadosAtuais,
-          fulfillment_type: dadosAtuais.fulfillmentType,
-          pickup_requested_at: dadosAtuais.pickupRequestedAt
-        }),
-        signal: controller ? controller.signal : undefined
-      });
-      paymentResponseStatus = response.status;
-
-      etapaPagamento = "leitura da resposta do servidor";
-      var result = await response.json().catch(function () { return {}; });
-      if (!response.ok || !result.ok || !result.checkout_url) {
-        throw new Error(result.error || "Não foi possível preparar o pagamento. Tente novamente.");
-      }
-
-      etapaPagamento = "redirecionamento para a InfinitePay";
-      messagePreview.textContent =
-        "Pedido Luxuriosa #" + result.order_number + "\n" +
-        "Total para pagamento: " + formatarPreco(result.total_amount) + "\n\n" +
-        "Você será direcionado à InfinitePay para pagar com Pix ou cartão. " +
-        "A expedição só começa depois da confirmação do pagamento.";
-      avisar("Pedido criado. Abrindo o checkout seguro da InfinitePay...", "success");
-
-      window.location.assign(result.checkout_url);
-    } catch (error) {
-      var mensagemErro = error && error.name === "AbortError"
-        ? "A preparação do pagamento demorou mais que o esperado. Verifique sua conexão e tente novamente."
-        : (error && error.message ? error.message : "Não foi possível iniciar o pagamento. Tente novamente.");
-      console.error("Luxuriosa: falha ao preparar pagamento.", {
-        etapa: etapaPagamento,
-        statusHttp: paymentResponseStatus,
-        tipoErro: error && error.name ? error.name : "Error"
-      });
-      avisar(mensagemErro, "error");
-      if (button) {
-        button.disabled = false;
-        button.textContent = "PAGAR COM PIX OU CARTÃO";
-      }
-    } finally {
-      if (paymentTimeout !== null) window.clearTimeout(paymentTimeout);
-    }
-  }
-
-
-  function continuarWhatsApp() {
+  function continuarWhatsApp() {  function continuarWhatsApp() {
     if (!mensagemAtual || !dadosAtuais) {
       avisar("Revise o pedido antes de abrir o WhatsApp.", "error");
       return;
@@ -940,10 +844,16 @@
       window.LuxuriosaInteligencia.registrarEtapa("whatsapp_opened", itensAtuais, dadosAtuais).catch(function () {});
     }
     window.open(url, "_blank", "noopener,noreferrer");
+    avisar("O WhatsApp foi acionado com a mensagem pronta. Revise o pedido e toque em Enviar para encaminhar sua solicitação.", "success");
   }
 
 
-  var accountLoadId = 0;
+  function iniciarFinalizacao() {
+    if (!window.LuxuriosaCarrinho || !window.LuxuriosaCarrinho.obterQuantidade()) return;
+    abrir();
+  }
+
+
   var accountSupabasePromise = null;
 
   function obterClienteSupabase() {
@@ -1120,12 +1030,8 @@
     });
     form.addEventListener("submit", revisarPedido);
     $("customerClose").addEventListener("click", fechar);
-    var accountLoadButton = $("customerAccountLoad");
-    if (accountLoadButton) accountLoadButton.addEventListener("click", carregarDadosDaConta);
-    $("customerCancel").addEventListener("click", fechar);
+    $("customerCancel").addEventListener("click", fechar);    $("customerCancel").addEventListener("click", fechar);
     $("customerEditButton").addEventListener("click", function () { review.hidden = true; form.hidden = false; $("customerName").focus(); });
-    var paymentButton = $("customerPaymentButton");
-    if (paymentButton) paymentButton.addEventListener("click", continuarPagamento);
     var whatsappButton = $("customerWhatsAppButton");
     if (whatsappButton) whatsappButton.addEventListener("click", continuarWhatsApp);
     var copyButton = $("customerCopyButton");
@@ -1199,8 +1105,7 @@
   }
 
   window.LuxuriosaClientes = {
-    iniciarFinalizacao: iniciarFinalizacao,
-    iniciarFinalizacaoWhatsApp: iniciarFinalizacaoWhatsApp
+    iniciarFinalizacao: iniciarFinalizacao
   };
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", iniciar);
   else iniciar();
