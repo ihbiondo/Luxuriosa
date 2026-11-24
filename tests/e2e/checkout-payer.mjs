@@ -247,6 +247,7 @@ try {
   // Quando o Auth local exige confirmação de e-mail, liberamos apenas a conta de teste.
   if (!signupPayload.session) {
     await confirmTestUser(signupPayload.user.id);
+    await page.locator("#loginTab").click();
     await page.locator("#loginForm").waitFor({ state: "visible" });
     await page.locator("#loginEmail").fill(checkoutUser.email);
     await page.locator("#loginPassword").fill(TEST_PASSWORD);
