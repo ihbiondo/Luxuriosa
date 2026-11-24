@@ -7,6 +7,9 @@ security definer
 set search_path = ''
 as $$
 begin
+  delete from public.account_privacy_acceptances
+  where user_id = old.id;
+
   delete from public.profiles
   where id = old.id;
 
