@@ -248,6 +248,7 @@ jobs:
           npx --yes esbuild@0.25.0 supabase/functions/cart-orders/index.ts --format=esm --platform=neutral --outfile=/tmp/cart-orders.js
           npx --yes esbuild@0.25.0 supabase/functions/infinitepay-webhook/index.ts --format=esm --platform=neutral --outfile=/tmp/infinitepay-webhook.js
           npx --yes esbuild@0.25.0 supabase/functions/infinitepay-webhook/_shared/infinitepay-payment.ts --format=esm --platform=neutral --outfile=/tmp/infinitepay-payment.js
+          npx --yes esbuild@0.25.0 supabase/functions/delete-account/index.ts --format=esm --platform=neutral --external:npm:* --outfile=/tmp/delete-account.js
           node --input-type=module <<'NODE'
           import fs from "node:fs";
           import { execFileSync } from "node:child_process";
@@ -292,6 +293,7 @@ jobs:
           consent_timestamp_test = Path("supabase/tests/database/consent_timestamps.test.sql").read_text()
           freight_migration = Path("supabase/migrations/20261116181752_standardize_delivery_fees.sql").read_text()
           club_membership_migration = Path("supabase/migrations/20261122190000_club_membership_requires_complete_profile.sql").read_text()
+          account_deletion_migration = Path("supabase/migrations/20261124150000_cleanup_profile_after_auth_deletion.sql").read_text()
           freight_backend = Path("supabase/functions/create-payment-order/index.ts").read_text()
           delivery_page = Path("entregas/index.html").read_text()
           delivery_faq = Path("faq.html").read_text()
@@ -350,6 +352,7 @@ jobs:
           print("Sintaxe e regras de integridade dos timestamps de consentimento verificadas.")
           parse_sql(freight_migration)
           parse_sql(club_membership_migration)
+          parse_sql(account_deletion_migration)
           print("Sintaxe SQL das migrações de frete e adesão ao Clube validada.")
           assert "club_delivery_fee_cents" in freight_migration
           assert "profile_complete" in club_membership_migration
