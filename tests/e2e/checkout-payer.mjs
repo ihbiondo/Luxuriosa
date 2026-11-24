@@ -244,11 +244,22 @@ try {
     request.username === checkoutUser.username),
     "A interface deve verificar a disponibilidade do usuário antes de criar a conta.");
 
-  // Quando o Auth local exige confirmação de e-mail, liberamos apenas a conta de teste.
-  if (!signupPayload.session) {
-    await confirmTestUser(signupPayload.user.id);
-    await page.locator("#loginTab").click();
-    await page.locator("#loginForm").waitFor({ state: "visible" });
+  // Se o Auth local exigir confirmação, confirmamos apenas a conta descartável.
+  if (!signupPayload.session) await confirmTestUser(signupPayload.user.id);
+
+  const returnedAutomatically = await page.waitForURL(url =>
+    url.pathname === "/loja.html" && url.searchParams.get("retomar-checkout") === "1",
+    { timeout: 10000 }
+  ).then(() => true).catch(() => false);
+
+  // Sem sessão automática, seguimos pela aba de login da própria interface.
+  if (!returnedAutomatically) {
+    const loginForm = page.locator("#loginForm");
+    if (!await loginForm.isVisible()) {
+      const loginTab = page.locator("#loginTab");
+      if (await loginTab.isVisible()) await loginTab.click();
+    }
+    await loginForm.waitFor({ state: "visible", timeout: 10000 });
     await page.locator("#loginEmail").fill(checkoutUser.email);
     await page.locator("#loginPassword").fill(TEST_PASSWORD);
     await Promise.all([
@@ -256,9 +267,6 @@ try {
         url.searchParams.get("retomar-checkout") === "1", { timeout: 30000 }),
       page.locator('#loginForm button[type="submit"]').click()
     ]);
-  } else {
-    await page.waitForURL(url => url.pathname === "/loja.html" &&
-      url.searchParams.get("retomar-checkout") === "1", { timeout: 30000 });
   }
 
   const createdProfile = await readTestProfile(signupPayload.user.id);
