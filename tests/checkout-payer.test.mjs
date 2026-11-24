@@ -63,11 +63,11 @@ test("a antiga área de conta e os convites de cadastro não aparecem na navega�
 test("o Clube informa a suspensão de novas adesões e não oferece formulários de conta", () => {
   for (const [path, html] of [["clube.html", clubLegacy], ["clube/index.html", clubRoute]]) {
     assert.match(html, /novas adesões[^.]*suspensas/i, path);
-    assert.match(html, /comprar sem criar conta|comprar sem cadastro|sem cadastro prévio/i, path);
+    assert.match(html, /não é necessário criar uma conta|não é necessário cadastro prévio|comprar sem cadastro|sem cadastro prévio/i, path);
     assert.doesNotMatch(html, /<form|type=["']password["']|signupForm|signupEmail|createAccount/i, path);
     assert.doesNotMatch(html, /Entre gratuitamente|Faça seu cadastro gratuito|Cadastre-se para comprar/i, path);
   }
-  assert.doesNotMatch(clubLegacy, /<\\/section>ion>/);
+  assert.doesNotMatch(clubLegacy, /<\/section>ion>/);
 });
 
 test("o WhatsApp recebe resumo completo com emojis, indentação e quebras de linha", () => {
