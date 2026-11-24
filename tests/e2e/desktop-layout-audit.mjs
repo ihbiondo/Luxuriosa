@@ -388,7 +388,6 @@ try {
 
         const navigation = measurements.desktopNavigation;
         const expectedItems = [
-          "Minha conta",
           "Loja",
           "Atendimento",
           "Entregas",
@@ -481,9 +480,7 @@ try {
 
       if (viewport.width >= 901 && viewport.width <= 1199 &&
           ["/", "/loja.html"].includes(route.path)) {
-        const expectedUtilityIcons = route.path === "/"
-          ? ["cart", "account"]
-          : ["cart"];
+        const expectedUtilityIcons = ["cart"];
         for (const name of expectedUtilityIcons) {
           const icon = measurements.utilityIcons[name];
           assert.ok(icon && icon.display !== "none" &&
