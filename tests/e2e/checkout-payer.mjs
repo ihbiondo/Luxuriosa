@@ -134,7 +134,8 @@ try {
     } catch (_) {
       return false;
     }
-  }, { timeout: 20000 }).then(request => request.postDataJSON());
+  }, { timeout: 20000 }).then(request => request.postDataJSON())
+    .catch(error => ({ __waitError: error.message }));
 
   // Primeiro produto avulso.
   const regularProduct = page.locator("#grid article.product")
@@ -162,6 +163,7 @@ try {
     "O carrinho deve manter o produto avulso e o kit selecionados.");
 
   const cartSnapshot = await bothProductsSnapshotPromise;
+  assert.ok(!cartSnapshot.__waitError, "Falha ao observar o snapshot do carrinho: " + cartSnapshot.__waitError);
   assert.equal(cartSnapshot.items.length, 2,
     "A inteligência deve registrar os dois itens no snapshot do carrinho.");
 
@@ -178,7 +180,8 @@ try {
     } catch (_) {
       return false;
     }
-  }, { timeout: 15000 }).then(request => request.postDataJSON());
+  }, { timeout: 15000 }).then(request => request.postDataJSON())
+    .catch(error => ({ __waitError: error.message }));
 
   const whatsappOpenedPromise = page.waitForRequest(request => {
     if (!request.url().includes("/functions/v1/cart-orders")) return false;
@@ -287,6 +290,8 @@ try {
     checkoutStartedPromise,
     whatsappOpenedPromise
   ]);
+  assert.ok(!checkoutStarted.__waitError, "Não foi observado o início do checkout: " + checkoutStarted.__waitError);
+  assert.ok(!whatsappOpened.__waitError, "Não foi observado o evento de abertura do WhatsApp: " + whatsappOpened.__waitError);
   assert.equal(checkoutStarted.items.length, 2,
     "O início da finalização deve registrar os dois itens.");
   assert.equal(whatsappOpened.event_name, "whatsapp_opened",
