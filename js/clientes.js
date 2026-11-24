@@ -871,7 +871,7 @@
     });
     form.addEventListener("submit", revisarPedido);
     $("customerClose").addEventListener("click", fechar);
-    $("customerCancel").addEventListener("click", fechar);    $("customerCancel").addEventListener("click", fechar);
+    $("customerCancel").addEventListener("click", fechar);
     $("customerEditButton").addEventListener("click", function () { review.hidden = true; form.hidden = false; $("customerName").focus(); });
     var whatsappButton = $("customerWhatsAppButton");
     if (whatsappButton) whatsappButton.addEventListener("click", continuarWhatsApp);
