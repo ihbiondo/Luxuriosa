@@ -85,7 +85,7 @@ test("o WhatsApp recebe resumo completo com emojis, indentação e quebras de li
   assert.match(client, /lines\.push\("       " \+ quantity \+ "x/);
   assert.ok(client.includes('return lines.join("\\n");'));
   assert.match(client, /function continuarWhatsApp\(\)/);
-  assert.match(client, /https:\/\/wa\.me\/5514996355924\?text=/);
+  assert.match(client, /https:\/\/api\.whatsapp\.com\/send\?phone=5514996355924&text=/);
   assert.match(client, /window\.open\(url, "_blank", "noopener,noreferrer"\)/);
   assert.doesNotMatch(client, /\\uFFFD|�/);
 });

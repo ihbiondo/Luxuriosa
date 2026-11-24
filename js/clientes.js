@@ -834,7 +834,7 @@
     mensagemAtual = preencherMensagem(dadosAtuais);
     if (!mensagemAtual) return;
     messagePreview.textContent = mensagemAtual;
-    var url = "https://wa.me/5514996355924?text=" + encodeURIComponent(mensagemAtual);
+    var url = "https://api.whatsapp.com/send?phone=5514996355924&text=" + encodeURIComponent(mensagemAtual);
     if (window.LuxuriosaMedicao && typeof window.LuxuriosaMedicao.registrar === "function") {
       window.LuxuriosaMedicao.registrar("checkout_whatsapp", { method: "whatsapp", step: "pedido_encaminhado" });
     }

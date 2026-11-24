@@ -92,11 +92,16 @@ try {
   const finalUrls = await page.evaluate(() => window.__luxuriosaOpenedUrls.slice());
   openedUrls.push(...finalUrls);
   const whatsapp = new URL(finalUrls[0]);
-  assert.equal(whatsapp.hostname, "wa.me");
-  assert.equal(whatsapp.pathname, "/5514996355924");
+  assert.equal(whatsapp.hostname, "api.whatsapp.com");
+  assert.equal(whatsapp.pathname, "/send");
+  assert.equal(whatsapp.searchParams.get("phone"), "5514996355924");
   const message = whatsapp.searchParams.get("text");
   assert.ok(message && message.includes("PEDIDO | LUXURIOSA"));
   assert.ok(message.includes("Cliente de Teste"));
+  for (const emoji of ["💗", "🛍", "💰", "👤", "📍", "💬", "🔒"]) {
+    assert.ok(message.includes(emoji), "Emoji corrompido ou ausente no link do WhatsApp: " + emoji);
+  }
+  assert.ok(!message.includes("\uFFFD"), "A mensagem do WhatsApp não pode conter o caractere de substituição.");
   assert.equal(paymentRequests.length, 0, "O fluxo WhatsApp não pode iniciar checkout de pagamento.");
   assert.ok(!page.url().includes("login.html"), "A compra não deve redirecionar para login.");
   assert.ok(!page.url().includes("pagamento"), "A compra não deve abrir pagamento no site.");
