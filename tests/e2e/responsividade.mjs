@@ -872,7 +872,7 @@ try {
         backgroundLocked: document.body.classList.contains("mobile-menu-open"),
         visibleLinks,
         approvedLinksOnly: visibleLinks.join("|") === [
-          "Minha conta", "Loja", "Atendimento", "Entregas",
+          "Loja", "Atendimento", "Entregas",
           "Dúvidas frequentes", "Educação", "Experiências"
         ].join("|"),
         hiddenSubmenus,
