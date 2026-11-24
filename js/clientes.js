@@ -633,7 +633,7 @@
       if (address.complement) street += " — " + address.complement;
       lines.push(
         "",
-        "\u{1F3CD}\u{FE0F} *ENDEREÇO DE ENTREGA*",
+        "\u{1F6F5} *ENDEREÇO DE ENTREGA*",
         "   " + street,
         "   " + [address.district, address.city].filter(Boolean).join(" — ") + (address.state ? "/" + address.state : "")
       );
