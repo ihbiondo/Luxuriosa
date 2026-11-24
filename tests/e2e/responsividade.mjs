@@ -315,7 +315,6 @@ try {
           const audit = await page.evaluate(() => {
             const nav = document.querySelector("#navlinks");
             const account = nav?.querySelector(".nav-drawer-account-area > .nav-account-primary");
-            const shop = nav?.querySelector(":scope > .nav-link-shop");
             const help = nav?.querySelector(".nav-menu-group--help");
             const discover = nav?.querySelector(".nav-menu-group--discover");
             const links = [...(nav?.querySelectorAll("a") || [])].filter(link =>
@@ -341,18 +340,16 @@ try {
               navigationCssVersion: [...document.querySelectorAll('link[rel="stylesheet"]')]
                 .find(link => (link.href || "").includes("navigation.css"))?.href || "",
               visibleLinks: links.map(link => link.textContent.trim()),
-              expectedLinks: ["Minha conta", "Loja", "Atendimento", "Entregas",
+              expectedLinks: ["Loja", "Atendimento", "Entregas",
                 "Dúvidas frequentes", "Educação", "Experiências"],
-              accountBeforeShop: Boolean(account && shop &&
-                (account.closest(".nav-drawer-account-area").compareDocumentPosition(shop) &
-                  Node.DOCUMENT_POSITION_FOLLOWING)),
+              accountRemoved: !account,
               hiddenSubmenus,
               visibleToggles,
               categoryGridVisible: Boolean(categoryGrid && getComputedStyle(categoryGrid).display !== "none"),
               firstDivider: help ? getComputedStyle(help).borderTopStyle : "none",
               secondDivider: discover ? getComputedStyle(discover).borderTopStyle : "none",
-              uniformHeights: heights.length === 7 && heights.every(value => value === heights[0]),
-              uniformTypography: fontSizes.length === 7 &&
+              uniformHeights: heights.length === 6 && heights.every(value => value === heights[0]),
+              uniformTypography: fontSizes.length === 6 &&
                 fontSizes.every(value => value === "14px") &&
                 fontWeights.every(value => value === "500")
             };
@@ -363,7 +360,7 @@ try {
               !audit.appScriptVersion.includes("/js/app.js?v=") ||
               !audit.navigationCssVersion.includes("/css/navigation.css?v=") ||
               audit.visibleLinks.join("|") !== audit.expectedLinks.join("|") ||
-              !audit.accountBeforeShop || !audit.hiddenSubmenus || audit.visibleToggles ||
+              !audit.accountRemoved || !audit.hiddenSubmenus || audit.visibleToggles ||
               audit.categoryGridVisible || audit.firstDivider !== "solid" ||
               audit.secondDivider !== "solid" || !audit.uniformHeights ||
               !audit.uniformTypography) {
