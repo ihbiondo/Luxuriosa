@@ -8,12 +8,12 @@ insert into public.profiles (id)
 values ('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa')
 on conflict (id) do nothing;
 
-insert into public.account_data_consents values ('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa');
-insert into public.account_privacy_acceptances values ('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa');
-insert into public.contact_consents values ('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa');
-insert into public.delivery_plan_memberships values ('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa');
-insert into public.experience_results values ('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa');
-insert into public.experience_terms_acceptances values ('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa');
+insert into public.account_data_consents (user_id) values ('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa');
+insert into public.account_privacy_acceptances (user_id) values ('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa');
+insert into public.contact_consents (user_id) values ('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa');
+insert into public.delivery_plan_memberships (user_id) values ('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa');
+insert into public.experience_results (user_id) values ('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa');
+insert into public.experience_terms_acceptances (user_id) values ('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa');
 
 insert into public.cart_instances (id, user_id)
 values ('bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb', 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa');
@@ -24,13 +24,13 @@ values ('dddddddd-dddd-4ddd-8ddd-dddddddddddd',
         'bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb',
         'cccccccc-cccc-4ccc-8ccc-cccccccccccc');
 
-insert into public.addresses values ('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa');
-insert into public.club_intimate_consent_events values ('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa');
-insert into public.club_intimate_preferences values ('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa');
-insert into public.club_memberships values ('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa');
-insert into public.club_profile_preferences values ('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa');
-insert into public.preferences values ('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa');
-insert into public.user_permissions values ('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa');
+insert into public.addresses (user_id) values ('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa');
+insert into public.club_intimate_consent_events (user_id) values ('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa');
+insert into public.club_intimate_preferences (user_id) values ('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa');
+insert into public.club_memberships (user_id) values ('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa');
+insert into public.club_profile_preferences (user_id) values ('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa');
+insert into public.preferences (user_id) values ('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa');
+insert into public.user_permissions (user_id) values ('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa');
 
 delete from auth.users
 where id = 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa';
