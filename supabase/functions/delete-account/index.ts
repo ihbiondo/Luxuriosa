@@ -109,7 +109,15 @@ Deno.serve(async (req: Request) => {
   } else if (hasGoogleIdentity) {
     // JWT validado pelo Auth; exige autenticação recente para contas Google sem senha.
     const claims = readJwtClaims(tokenMatch[1]);
-    const authTime = Number(claims?.auth_time);
+    const authenticationMethods = Array.isArray(claims?.amr) ? claims.amr : [];
+    const oauthAuthTime = authenticationMethods.reduce((latest, entry) => {
+      if (!entry || typeof entry !== "object") return latest;
+      const method = entry as Record<string, unknown>;
+      if (typeof method.method !== "string" || !method.method.startsWith("oauth")) return latest;
+      const timestamp = Number(method.timestamp);
+      return Number.isFinite(timestamp) ? Math.max(latest, timestamp) : latest;
+    }, 0);
+    const authTime = oauthAuthTime || Number(claims?.auth_time);
     const now = Math.floor(Date.now() / 1000);
     if (!Number.isFinite(authTime) || authTime > now + 60 || now - authTime > 600) {
       return json({
