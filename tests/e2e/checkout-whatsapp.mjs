@@ -48,7 +48,8 @@ try {
   await page.waitForFunction(() => Boolean(window.LuxuriosaCarrinho && window.LuxuriosaClientes));
   await page.evaluate(item => window.LuxuriosaCarrinho.adicionar(item, 1), product);
   await page.locator("#cartCount").waitFor({ state: "visible" });
-  await page.locator("#cartOpen").click();
+  // adicionar() já abre o carrinho; aguarda o painel em vez de clicar novamente no gatilho encoberto.
+  await page.locator("#cart.open").waitFor({ state: "visible" });
 
   await page.locator("#cartFulfillmentMethod").selectOption("delivery");
   await page.locator("#cartDeliveryCity").selectOption("bauru");
