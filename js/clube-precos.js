@@ -128,9 +128,7 @@
   function precoParaCliente(produto) {
     var club = Number(produto && produto.preco);
     var regular = Number(produto && produto.precoAntigo);
-    if (temPromocaoClube(produto)) {
-      return state.isMember ? club : regular;
-    }
+    // O preço promocional é público; o Clube altera somente o frete.
     return club;
   }
 

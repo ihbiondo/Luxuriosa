@@ -445,7 +445,7 @@ async function auditCartAndCheckout(page) {
   await page.locator("#cartDeliveryCity").selectOption("agudos");
   await page.waitForFunction(() => {
     const status = document.querySelector("#cartClubInfo");
-    return status && /Frete especial do Clube ativo e aplicado automaticamente/i.test(status.textContent);
+    return status && /Frete especial do Clube aplicado automaticamente/i.test(status.textContent);
   }, null, { timeout: 30000 });
   assert.match(await page.locator("#cartFreightValue").innerText(), /R\$\s*20,00/,
     "Agudos deve aplicar automaticamente a tarifa de membro validado pelo servidor.");

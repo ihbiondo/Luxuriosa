@@ -20,7 +20,7 @@ test("o carrinho exige conta, preserva entrega/retirada e retoma o WhatsApp apó
   assert.match(cart, /salvarPreferenciaRecebimento\(\)/);
   assert.match(cart, /restaurarPreferenciaRecebimento\(\)/);
   assert.match(client, /function iniciarFinalizacaoWhatsApp\(\)/);
-  assert.match(cart, /avisoPrecoClube\.href = "\/login\.html\?cadastro=1&next=clube\.html"/);
+  assert.match(cart, /Oferta disponível para todos/);
   assert.match(client, /carrinho\.abrir\(\)/);
   assert.match(client, /supabase\.auth\.getSession\(\)/);
   assert.match(client, /window\.location\.assign\("\/login\.html\?cadastro=1"\)/);

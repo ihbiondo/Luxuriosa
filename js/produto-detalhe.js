@@ -167,7 +167,7 @@
           precoDetalhe.appendChild(precoAntigo);
           var avisoClube = document.createElement("span");
           avisoClube.className = "club-promo-note";
-          avisoClube.textContent = "🏷️ Promoção exclusiva para membros do Clube Luxuriosa · Cadastre-se grátis para aproveitar";
+          avisoClube.textContent = "🏷️ Oferta disponível para todos";
           avisoClube.style.flexBasis = "100%";
           avisoClube.style.display = "block";
           avisoClube.style.marginTop = "8px";
