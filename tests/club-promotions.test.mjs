@@ -49,6 +49,7 @@ test("todas as promoções do catálogo são públicas", () => {
   assert.match(catalogScript, /formatarPreco\(produto\.preco\)/);
   assert.match(catalogScript, /formatarPreco\([\s\S]*?produto\.precoAntigo/);
   assert.match(productDetail, /Oferta disponível para todos/);
+  assert.doesNotMatch(productDetail, /LuxuriosaClubePrecos|clube-precos\.js|carregarStatusClube/);
   assert.equal((home.match(/home-kit-static-club-label/g) || []).length, 4);
 });
 
@@ -56,7 +57,7 @@ test("as páginas dos produtos exibem preço promocional sem exigir Clube", () =
   for (const product of clubPromotions) {
     const html = readFileSync(product.pagina, "utf8");
     assert.match(html, /class="product-detail-price"/, product.pagina);
-    assert.match(html, /club-promo-note/, product.pagina);
+    assert.match(html, /public-promo-note/, product.pagina);
     assert.match(html, /Oferta disponível para todos/, product.pagina);
   }
 });
