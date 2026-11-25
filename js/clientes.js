@@ -48,6 +48,15 @@
       return { nome: "Tibiriçá", comum: 20, pedagio: false };
     }
     if (cidade === "bauru" && !distrito) return null;
+
+    // Distritos fora da área urbana precisam de cotação, conforme as páginas locais.
+    var distritosSobConsulta = {
+      "agudos": ["domelia"],
+      "pederneiras": ["santelmo"],
+      "lencois paulista": ["alfredo guedes"]
+    };
+    if ((distritosSobConsulta[cidade] || []).indexOf(distrito) !== -1) return null;
+
     var tarifas = {
       "bauru": { nome: "Bauru", comum: 15, pedagio: false },
       "agudos": { nome: "Agudos", comum: 25, pedagio: false },
