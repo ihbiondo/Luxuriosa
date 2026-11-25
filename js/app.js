@@ -296,8 +296,6 @@
       }
       if (obterBotaoFechar()) {
         focarFechar();
-        window.requestAnimationFrame(focarFechar);
-        window.setTimeout(focarFechar, 0);
       } else {
         var first = menu.querySelector("a[href], button:not([disabled])");
         if (first) first.focus();
