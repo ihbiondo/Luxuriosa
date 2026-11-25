@@ -2,7 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 
-const checkoutPages = ["index.html", "loja.html"].map((path) => ({
+const checkoutPages = ["index.html", "loja.html", "loja/lingerie/index.html"].map((path) => ({
   path,
   html: readFileSync(path, "utf8")
 }));
