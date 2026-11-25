@@ -84,6 +84,18 @@ await page.route("https://viacep.com.br/ws/**", route => {
     "17500000": {
       cep: "17500-000", logradouro: "Rua de Teste",
       bairro: "Centro", localidade: "Marília", uf: "SP"
+    },
+    "17120000": {
+      cep: "17120-000", logradouro: "Rua de Teste",
+      bairro: "Domélia", localidade: "Agudos", uf: "SP"
+    },
+    "17200001": {
+      cep: "17200-001", logradouro: "Rua de Teste",
+      bairro: "Santelmo", localidade: "Pederneiras", uf: "SP"
+    },
+    "18682000": {
+      cep: "18682-000", logradouro: "Rua de Teste",
+      bairro: "Alfredo Guedes", localidade: "Lençóis Paulista", uf: "SP"
     }
   };
   return route.fulfill({
@@ -206,6 +218,16 @@ try {
   assert.ok(otherPreview.includes("Frete: a confirmar com a equipe"));
   assert.ok(!otherPreview.includes("Pedido mínimo:"),
     "Localidades sob consulta não devem receber um pedido mínimo inventado.");
+
+  for (const address of [
+    { zip: "17120-000", city: "Agudos" },
+    { zip: "17200-001", city: "Pederneiras" },
+    { zip: "18682-000", city: "Lençóis Paulista" }
+  ]) {
+    const preview = await revisarRegiao(address);
+    assert.ok(preview.includes("Frete: a confirmar com a equipe"),
+      "O distrito " + address.zip + " deve exigir confirmação de frete.");
+  }
 
   // Retirada deve descartar qualquer endereço e não exigir CEP.
   await page.goto(BASE_URL + "/loja.html", { waitUntil: "domcontentloaded" });
