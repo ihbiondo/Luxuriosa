@@ -902,6 +902,93 @@ try {
     await capture(page, "menu-mobile-" + sample.name + "-390");
     await page.locator("#navlinks .nav-drawer-close").click();
     await page.locator("#navlinks.open").waitFor({ state: "hidden", timeout: 8000 });
+
+    // Acessibilidade por teclado: foco inicial, contenção bidirecional, Escape e restauração.
+    await page.locator("#burger").click();
+    await page.locator("#navlinks.open").waitFor({ state: "visible", timeout: 8000 });
+    await page.waitForFunction(() =>
+      document.activeElement === document.querySelector("#navlinks .nav-drawer-close"),
+      null,
+      { timeout: 3000 }
+    );
+    const initialFocus = await page.evaluate(() => ({
+      active: document.activeElement?.className || "",
+      close: document.querySelector("#navlinks .nav-drawer-close") === document.activeElement
+    }));
+    assert.ok(initialFocus.close,
+      "Ao abrir, o foco não foi transferido para Fechar menu em " + sample.route);
+
+    const keyboardFocusables = await page.locator(
+      '#navlinks a[href], #navlinks button:not([disabled]), #navlinks [tabindex]:not([tabindex="-1"])'
+    ).evaluateAll(elements => elements.filter(element =>
+      element.getClientRects().length && getComputedStyle(element).visibility !== "hidden"
+    ).map(element => ({
+      tag: element.tagName.toLowerCase(),
+      label: (element.getAttribute("aria-label") || element.textContent || "").trim()
+    })));
+    assert.ok(keyboardFocusables.length >= 2,
+      "O menu não possui controles suficientes para validar o ciclo de foco em " + sample.route);
+
+    await page.keyboard.press("Shift+Tab");
+    const shiftTabWrapped = await page.evaluate(() => {
+      const visible = [...document.querySelectorAll(
+        '#navlinks a[href], #navlinks button:not([disabled]), #navlinks [tabindex]:not([tabindex="-1"])'
+      )].filter(element => element.getClientRects().length &&
+        getComputedStyle(element).visibility !== "hidden");
+      return document.activeElement === visible[visible.length - 1];
+    });
+    assert.ok(shiftTabWrapped,
+      "Shift+Tab não circulou para o último controle do menu em " + sample.route);
+
+    await page.keyboard.press("Tab");
+    const tabReturnedToClose = await page.evaluate(() =>
+      document.activeElement === document.querySelector("#navlinks .nav-drawer-close")
+    );
+    assert.ok(tabReturnedToClose,
+      "Tab não circulou do último para o primeiro controle do menu em " + sample.route);
+
+    await page.keyboard.press("Tab");
+    const tabEnteredMenu = await page.evaluate(() => {
+      const menu = document.querySelector("#navlinks");
+      return Boolean(menu && menu.contains(document.activeElement) &&
+        document.activeElement !== menu.querySelector(".nav-drawer-close"));
+    });
+    assert.ok(tabEnteredMenu,
+      "Tab não avançou do botão Fechar para o primeiro link em " + sample.route);
+
+    await page.keyboard.press("Escape");
+    await page.locator("#navlinks.open").waitFor({ state: "hidden", timeout: 8000 });
+    const closedKeyboardState = await page.evaluate(() => {
+      const menu = document.querySelector("#navlinks");
+      const burger = document.querySelector("#burger");
+      const candidates = [...menu.querySelectorAll(
+        'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])'
+      )];
+      return {
+        focusReturned: document.activeElement === burger,
+        inert: menu.hasAttribute("inert") && menu.inert,
+        ariaHidden: menu.getAttribute("aria-hidden") === "true",
+        expandedFalse: burger.getAttribute("aria-expanded") === "false",
+        noFocusableMenuDescendant: candidates.every(element =>
+          element.tabIndex < 0 || element.closest("[inert]")
+        )
+      };
+    });
+    assert.ok(closedKeyboardState.focusReturned && closedKeyboardState.inert &&
+      closedKeyboardState.ariaHidden && closedKeyboardState.expandedFalse &&
+      closedKeyboardState.noFocusableMenuDescendant,
+      "Estado de foco/ocultação incorreto após Escape em " + sample.route + ": " +
+      JSON.stringify(closedKeyboardState));
+    result.unifiedNavigationInteractions.push({
+      route: sample.route,
+      keyboard: {
+        initialFocus,
+        shiftTabWrapped,
+        tabReturnedToClose,
+        tabEnteredMenu,
+        closedKeyboardState
+      }
+    });
   }
 
   // A página Experiências deve destacar Conexão a dois e Astrologia antes das demais opções.
