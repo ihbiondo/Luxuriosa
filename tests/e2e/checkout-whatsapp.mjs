@@ -176,6 +176,22 @@ try {
   assert.ok(!pickupPreview.includes("CEP:"));
   // O endereço fixo da loja é informado como local de retirada; nenhum endereço do cliente é enviado.
 
+  // A página secundária de lingerie deve usar o mesmo checkout atualizado.
+  await page.goto(BASE_URL + "/loja/lingerie/", { waitUntil: "domcontentloaded" });
+  await page.waitForFunction(() => Boolean(window.LuxuriosaCarrinho && window.LuxuriosaClientes));
+  await page.evaluate(() => window.LuxuriosaCarrinho.limpar());
+  await page.evaluate(item => window.LuxuriosaCarrinho.adicionar(item, 1), product);
+  await page.locator("#cart.open").waitFor({ state: "visible" });
+  assert.equal(await page.locator("#cartDeliveryCity").count(), 0);
+  await page.locator("#cartCheckout").click();
+  await page.locator("#customerOverlay:not([hidden])").waitFor({ state: "visible" });
+  await page.locator("#customerCep").fill("17030-290");
+  await page.waitForFunction(() => document.getElementById("customerCity").value === "Bauru");
+  assert.equal(await page.locator("#customerCity").isEditable(), false);
+  assert.equal(await page.locator("#customerState").isEditable(), false);
+  assert.equal(await page.locator("#customerWhatsAppButton").count(), 1);
+  assert.equal(await page.locator("#customerAccountLoad").count(), 0);
+
   console.log("Checkout WhatsApp sem conta: PASS. Mensagem aberta foi interceptada; nada foi enviado.");
 } finally {
   await browser.close();
