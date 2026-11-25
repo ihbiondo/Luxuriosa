@@ -88,6 +88,7 @@ on:
       - "produtos/**"
       - "**/*.html"
       - "sitemap.xml"
+      - "tests/sitemap-indexing.test.mjs"
       - ".github/workflows/payment-validate.yml"
   pull_request:
     branches: [main]
@@ -171,6 +172,7 @@ on:
       - "produtos/**"
       - "**/*.html"
       - "sitemap.xml"
+      - "tests/sitemap-indexing.test.mjs"
       - ".github/workflows/payment-validate.yml"
 
 permissions:
@@ -248,6 +250,7 @@ jobs:
           node --test tests/club-promotions.test.mjs
           node --test tests/pedido-whatsapp.test.mjs
           node --test tests/checkout-payer.test.mjs
+          node --test tests/sitemap-indexing.test.mjs
           node --test tests/infinitepay-webhook-notification.test.mjs
           node --test tests/product-featured.test.mjs
           node --test tests/consent-ui.test.mjs
