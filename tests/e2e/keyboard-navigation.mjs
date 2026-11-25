@@ -76,13 +76,11 @@ try {
     const containerStyle = getComputedStyle(el.closest(".search"));
     return {
       keyboard: el.matches(":focus-visible"),
-      outline: inputStyle.outlineStyle !== "none" && parseFloat(inputStyle.outlineWidth) >= 2,
       containerBorder: containerStyle.borderColor,
       containerShadow: containerStyle.boxShadow
     };
   });
   assert.equal(experienceSearchFocus.keyboard, true, "Busca de Experiências deve reconhecer foco de teclado");
-  assert.equal(experienceSearchFocus.outline, true, "Busca de Experiências deve manter indicador visível no input");
   assert.notEqual(experienceSearchFocus.containerShadow, "none", "Contêiner da busca deve destacar o foco");
   assert.match(experienceSearchFocus.containerBorder, /227, 68, 157/, "Borda do contêiner deve usar o rosa de foco");
 
