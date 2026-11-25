@@ -14,7 +14,7 @@ const login = readFileSync("login.html", "utf8");
 const clubLegacy = readFileSync("clube.html", "utf8");
 const clubRoute = readFileSync("clube/index.html", "utf8");
 
-test("home e loja carregam a versão atual do checkout sem conta", () => {
+test("home, loja e lingerie carregam a versão atual do checkout sem conta", () => {
   for (const { path, html } of checkoutPages) {
     assert.ok(html.includes('src="js/carrinho.js?v=20261125-cep-auto-checkout-v3'), path);
     assert.ok(html.includes('src="js/clientes.js?v=20261125-cep-auto-checkout-v3'), path);
@@ -34,6 +34,8 @@ test("carrinho abre a coleta de dados sem exigir login ou cadastro", () => {
   for (const { path, html } of checkoutPages) {
     assert.doesNotMatch(html, /Cidade ou região da entrega|id="cartDeliveryCity"/, path);
     assert.match(html, /id="cartDeliveryInfo"/, path);
+    assert.match(html, /id="cartFulfillmentMethod"/, path);
+    assert.match(html, /id="customerFulfillmentMode"/, path);
     assert.match(html, /id="customerCity"[^>]*readonly/, path);
     assert.match(html, /id="customerState"[^>]*readonly/, path);
     assert.doesNotMatch(html, /id="cartClubJoinLink"/, path);
