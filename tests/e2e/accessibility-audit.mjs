@@ -112,6 +112,24 @@ try {
 
   try {
     await openEducationRoute("/educacao/duvidas-frequentes/");
+    const firstFaqItem = page.locator(".ed-faq-item").first();
+    const faqSummary = firstFaqItem.locator("summary");
+    await faqSummary.focus();
+    const faqSummaryFocus = await faqSummary.evaluate(el => {
+      const style = getComputedStyle(el);
+      return style.outlineStyle !== "none" && parseFloat(style.outlineWidth) >= 2;
+    });
+    await faqSummary.press("Enter");
+    const faqOpenedByKeyboard = await firstFaqItem.evaluate(el => el.open);
+    await page.keyboard.press("Tab");
+    const faqRelatedLinkFocused = await firstFaqItem.locator(".ed-faq-related-link").first().evaluate(el => el === document.activeElement);
+    await faqSummary.focus();
+    await faqSummary.press("Space");
+    const faqClosedByKeyboard = !(await firstFaqItem.evaluate(el => el.open));
+    if (!faqSummaryFocus || !faqOpenedByKeyboard || !faqRelatedLinkFocused || !faqClosedByKeyboard) {
+      report.interactionFailures.push({ route: "/educacao/duvidas-frequentes/", faqSummaryFocus, faqOpenedByKeyboard, faqRelatedLinkFocused, faqClosedByKeyboard });
+    }
+
     const faqInput = page.locator("#faqSearch");
     await faqInput.focus();
     const faqFocus = await page.locator(".ed-faq-search-control").evaluate(el => {
@@ -152,6 +170,37 @@ try {
     }
 
     await openEducationRoute("/educacao/interatividade/");
+    const interactivitySemantics = await page.evaluate(() => {
+      const questions = Array.from(document.querySelectorAll("#knowledgeQuiz fieldset"));
+      const radios = Array.from(document.querySelectorAll("#knowledgeQuiz input[type=radio]"));
+      const ids = Array.from(document.querySelectorAll("[id]")).map(element => element.id);
+      const quizResult = document.querySelector("#quizResult");
+      const progress = document.querySelector("#checkProgressBar");
+      const topicOutput = document.querySelector("#topicOutput");
+      return {
+        questionCount: questions.length,
+        missingLegends: questions.filter(question => !question.querySelector(":scope > legend")?.textContent.trim()).length,
+        radiosWithoutLabels: radios.filter(input => !input.labels || input.labels.length === 0).length,
+        missingFeedbackReferences: questions.filter(question => {
+          const describedBy = question.getAttribute("aria-describedby");
+          return !describedBy || !document.getElementById(describedBy);
+        }).length,
+        duplicateIds: ids.filter((id, index) => ids.indexOf(id) !== index).length,
+        topicFinderLabelled: Boolean(document.querySelector('label[for="topicFinder"]')),
+        quizResultLive: quizResult?.getAttribute("role") === "status" && quizResult?.getAttribute("aria-live") === "polite",
+        progressSemantics: progress?.getAttribute("role") === "progressbar" &&
+          progress?.getAttribute("aria-valuemin") === "0" && progress?.getAttribute("aria-valuemax") === "10",
+        topicOutputLive: topicOutput?.getAttribute("aria-live") === "polite"
+      };
+    });
+    if (interactivitySemantics.questionCount !== 21 || interactivitySemantics.missingLegends !== 0 ||
+        interactivitySemantics.radiosWithoutLabels !== 0 || interactivitySemantics.missingFeedbackReferences !== 0 ||
+        interactivitySemantics.duplicateIds !== 0 || !interactivitySemantics.topicFinderLabelled ||
+        !interactivitySemantics.quizResultLive || !interactivitySemantics.progressSemantics ||
+        !interactivitySemantics.topicOutputLive) {
+      report.interactionFailures.push({ route: "/educacao/interatividade/", interactivitySemantics });
+    }
+
     await page.locator("#quizCheck").click();
     const partialQuiz = await page.locator("#quizResult").innerText();
     const feedbackCount = await page.locator("#knowledgeQuiz .ed-feedback:not([hidden])").count();
