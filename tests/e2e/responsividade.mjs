@@ -921,7 +921,7 @@ try {
     const keyboardFocusables = await page.locator(
       '#navlinks a[href], #navlinks button:not([disabled]), #navlinks [tabindex]:not([tabindex="-1"])'
     ).evaluateAll(elements => elements.filter(element =>
-      element.getClientRects().length && getComputedStyle(element).visibility !== "hidden"
+      element.offsetParent !== null
     ).map(element => ({
       tag: element.tagName.toLowerCase(),
       label: (element.getAttribute("aria-label") || element.textContent || "").trim()
@@ -933,8 +933,7 @@ try {
     const shiftTabWrapped = await page.evaluate(() => {
       const visible = [...document.querySelectorAll(
         '#navlinks a[href], #navlinks button:not([disabled]), #navlinks [tabindex]:not([tabindex="-1"])'
-      )].filter(element => element.getClientRects().length &&
-        getComputedStyle(element).visibility !== "hidden");
+      )].filter(element => element.offsetParent !== null);
       return document.activeElement === visible[visible.length - 1];
     });
     assert.ok(shiftTabWrapped,
