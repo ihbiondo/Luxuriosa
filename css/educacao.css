@@ -344,6 +344,12 @@ body{background:radial-gradient(ellipse at 10% 5%,rgba(113,69,132,.38),transpare
 .ed-card:hover{border-color:#e3449d;box-shadow:0 15px 34px rgba(0,0,0,.2)}
 .ed-card-index{color:#80602f;font-size:11px}
 .ed-card h2,.ed-card h3{color:#493451}
+.ed-resource-grid .ed-card h2 {
+  margin: 0 0 8px;
+  color: #493451;
+  font: 400 clamp(21px, 2vw, 25px)/1.22 var(--serif);
+  text-wrap: balance;
+}
 .ed-card p{color:#665b70;font-size:14px;line-height:1.7}
 .ed-arrow,.ed-card--feature .ed-arrow{color:#b52e78;font-size:11px}
 .ed-breadcrumb{color:#d0c1d8;font-size:12px}
