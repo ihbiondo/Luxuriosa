@@ -117,11 +117,25 @@
     var pickupFields = $("customerPickupFields");
     if (addressFields) addressFields.hidden = pickup;
     if (pickupFields) pickupFields.hidden = !pickup;
+
     var campoCep = $("customerCep");
     if (campoCep) {
       campoCep.required = !pickup;
       campoCep.setAttribute("aria-required", pickup ? "false" : "true");
     }
+    ["customerStreet", "customerNumber", "customerDistrict", "customerCity", "customerState"].forEach(function (id) {
+      var field = $(id);
+      if (!field) return;
+      field.required = !pickup;
+      field.setAttribute("aria-required", pickup ? "false" : "true");
+    });
+    ["customerPickupDate", "customerPickupTime"].forEach(function (id) {
+      var field = $(id);
+      if (!field) return;
+      field.required = pickup;
+      field.setAttribute("aria-required", pickup ? "true" : "false");
+    });
+
     if (pickup) {
       // Retirada não coleta nem envia endereço, mesmo que o cliente tenha consultado um CEP antes.
       cepConsultaId += 1;
