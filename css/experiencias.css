@@ -512,3 +512,10 @@ body{background:radial-gradient(ellipse at 10% 5%,rgba(113,69,132,.4),transparen
   .header { align-items: flex-start; flex-wrap: wrap; }
   .header nav { width: 100%; max-width: 100%; justify-content: flex-start; }
 }
+
+
+/* A busca remove o outline do input; o contêiner precisa sinalizar o foco do teclado. */
+.search:focus-within {
+  border-color: #e3449d;
+  box-shadow: 0 0 0 3px rgba(227, 68, 157, .2);
+}
