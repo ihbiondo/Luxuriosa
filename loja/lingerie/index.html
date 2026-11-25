@@ -255,11 +255,12 @@
           aria-label="Abrir carrinho"
         >
 
-          <span
-            class="cart-icon"
-            aria-hidden="true"
-          >
-            🛒
+          <span class="cart-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="17" height="17" focusable="false">
+              <path d="M3 4h2l2.1 10.1a2 2 0 0 0 2 1.6h8.8a2 2 0 0 0 2-1.6L21 8H6"></path>
+              <circle cx="9.5" cy="19.2" r="1.2"></circle>
+              <circle cx="17.5" cy="19.2" r="1.2"></circle>
+            </svg>
           </span>
 
           <span class="cart-label">
@@ -306,23 +307,6 @@
     </div>
 
   </header><main id="conteudo-principal" class="shop-page" tabindex="-1">
-    <section class="shop-intro">
-      <div class="container">
-        <nav class="shop-breadcrumb" aria-label="Caminho de navegação"><a href="index.html">Início</a><span aria-hidden="true">/</span><a href="/loja.html">Loja</a><span aria-hidden="true">/</span><span aria-current="page">Lingerie</span></nav>
-        <div class="shop-intro-grid">
-          <div>
-            <div class="kicker">Lingerie Luxuriosa · Bauru e região</div>
-            <h1>Encontre a lingerie que valoriza <em class="gold">você.</em></h1>
-            <p>Conjuntos, bodies e peças selecionadas para diferentes estilos e momentos. Explore com liberdade, no seu tempo e com discrição.</p>
-          </div>
-          <div class="shop-intro-note">
-            <span>COMPRE COM TRANQUILIDADE</span>
-            <strong>Escolha. Conheça. Decida.</strong>
-            <p>Veja os detalhes de cada produto, monte seu carrinho e converse com a gente para finalizar seu pedido.</p>
-          </div>
-        </div>
-      </div>
-    </section>
     <section
       class="section alt"
       id="catalogo"
@@ -336,12 +320,12 @@
 
             <div class="kicker">Explore a seleção</div>
 
-            <h2>Lingerie para expressar seu estilo</h2>
+            <h1>Encontre o que combina com você</h1>
 
           </div>
 
           <p>
-            Veja nossa seleção de lingeries, refine a busca e abra cada peça para conhecer os detalhes.
+            Explore nossa seleção e use a busca para encontrar produtos. Abra cada item para conhecer os detalhes e adicionar ao carrinho.
           </p>
 
         </div>
@@ -361,6 +345,25 @@
           <button type="button" id="clearCatalogSearch" class="catalog-search-clear" aria-label="Limpar pesquisa" hidden>Limpar</button>
         </form>
 
+        <div class="catalog-filter-panel" aria-label="Filtros do catálogo">
+          <div class="catalog-filter-panel-head">
+            <button class="catalog-filter-toggle" id="toggleCatalogFilters" type="button" aria-expanded="false" aria-controls="chips">
+              <span aria-hidden="true">☷</span>
+              <span class="catalog-filter-toggle-text">Categorias</span>
+              <span class="catalog-filter-toggle-mark" aria-hidden="true">+</span>
+            </button>
+            <label class="catalog-sort-control" for="catalogSort">
+              <span>Ordenar por</span>
+              <select id="catalogSort" name="sort">
+                <option value="relevancia">Mais relevantes</option>
+                <option value="menor-preco">Menor preço</option>
+                <option value="maior-preco">Maior preço</option>
+              </select>
+            </label>
+          </div>
+          <div class="chips catalog-filter-options" id="chips" aria-label="Categorias disponíveis"></div>
+        </div>
+
         <p class="catalogo-status" id="catalogoStatus" role="status" aria-live="polite" aria-atomic="true"></p>
 
         <div
@@ -374,6 +377,11 @@
 
         </div>
 
+        <div class="shop-intro-note shop-after-products">
+          <span>COMPRE COM TRANQUILIDADE</span>
+          <strong>Escolha. Conheça. Decida.</strong>
+          <p>Veja os detalhes de cada produto, monte seu carrinho e converse com a gente para finalizar seu pedido.</p>
+        </div>
 
         <div class="banner">
 
@@ -503,12 +511,36 @@
       </div>
 
 
+      <section class="cart-fulfillment" aria-labelledby="cartFulfillmentTitle">
+        <h3 id="cartFulfillmentTitle">📦 Como deseja receber?</h3>
+        <label for="cartFulfillmentMethod">Forma de recebimento</label>
+        <select id="cartFulfillmentMethod">
+          <option value="">Selecione uma opção</option>
+          <option value="delivery">🚚 Entrega</option>
+          <option value="pickup">📍 Retirada agendada</option>
+        </select>
+
+        <div class="cart-delivery-fields" id="cartDeliveryFields" hidden>
+          <p class="cart-fulfillment-hint" id="cartDeliveryInfo" role="status" aria-live="polite">Informe o CEP na próxima etapa. A cidade será identificada automaticamente e as condições de entrega serão apresentadas.</p>
+        </div>
+
+        <div class="cart-total-row cart-fee-row">
+          <span>Frete / retirada</span>
+          <strong id="cartFreightValue" aria-live="polite">—</strong>
+        </div>
+        <div class="cart-total-row cart-grand-total-row">
+          <span>Total estimado</span>
+          <strong id="cartGrandTotal" aria-live="polite">—</strong>
+        </div>
+        <p class="cart-fulfillment-note" id="cartFulfillmentNote" aria-live="polite">Escolha entrega ou retirada para calcular o valor final estimado.</p>
+      </section>
+
       <button
         class="btn primary cart-checkout"
         id="cartCheckout"
         type="button"
       >
-        Continuar para entrega
+        Continuar para finalizar
       </button>
 
 
@@ -521,10 +553,7 @@
       </button>
 
 
-      <p class="cart-note">
-        O subtotal inclui apenas os produtos. O frete segue a tabela fixa por localidade. Demais regiões: cotação pelo atendimento. Consulte as condições de entrega.
-        <a href="/privacidade.html" target="_blank" rel="noopener">Política de Privacidade</a>.
-      </p>
+      <p class="cart-note">Para concluir, informe os dados do pedido, confira o resumo e envie a solicitação pelo WhatsApp. Nenhuma cobrança é feita nesta etapa. <a href="privacidade.html" target="_blank" rel="noopener">Política de Privacidade</a>.</p>
 
     </div>
 
@@ -543,36 +572,28 @@
           <span class="cart-kicker">LUXURIOSA</span>
           <h2 id="customerTitle">Dados para seu pedido</h2>
         </div>
-        <button class="cart-close" id="customerClose" type="button" aria-label="Fechar cadastro">×</button>
+        <button class="cart-close" id="customerClose" type="button" aria-label="Fechar dados do pedido">×</button>
       </div>
 
-      <p id="customerIntro" class="customer-intro">Confira os dados da sua conta e o endereço de entrega. Você poderá ajustar qualquer informação antes de gerar o link seguro de pagamento. Para retirada presencial em Bauru, combine pelo <a href="https://wa.me/5514996355924?text=Ol%C3%A1%21%20Gostaria%20de%20combinar%20a%20retirada%20presencial%20de%20um%20pedido%20em%20Bauru." target="_blank" rel="noopener noreferrer">WhatsApp da Luxuriosa</a>.</p>
-      <p class="customer-privacy-note">Seus dados serão usados para atender este pedido. <a href="privacidade.html" target="_blank" rel="noopener">Leia a Política de Privacidade</a>.</p>
+      <p id="customerIntro" class="customer-intro">Preencha os dados de contato e, para entrega, o endereço de recebimento. Depois você poderá revisar todos os itens e valores antes de enviar o pedido pelo WhatsApp. Não é necessário criar uma conta. A equipe confirmará a disponibilidade, o prazo e as condições de pagamento pelo atendimento.</p>
+      <p class="customer-privacy-note">Os dados informados serão usados para organizar e atender esta solicitação de compra. <a href="privacidade.html" target="_blank" rel="noopener">Leia a Política de Privacidade</a>.</p>
       <div id="customerStatus" class="customer-status" role="status" aria-live="polite" hidden></div>
-
-      <div class="customer-account-assist">
-        <div>
-          <strong>Dados da sua conta</strong>
-          <span>Preenchidos automaticamente. Confira e ajuste se necessário.</span>
-        </div>
-        <button class="btn secondary customer-account-load" id="customerAccountLoad" type="button">Atualizar dados da conta</button>
-      </div>
 
       <form id="customerForm" novalidate>
         <fieldset class="customer-fieldset customer-essential-fields">
-          <legend>Para começar</legend>
+          <legend>Contato de quem receberá o pedido</legend>
           <div class="customer-grid">
             <div class="customer-field customer-span-2">
-              <label for="customerName">Nome ou apelido <span aria-hidden="true">*</span></label>
+              <label for="customerName">Nome de quem receberá o pedido <span aria-hidden="true">*</span></label>
               <input id="customerName" name="name" autocomplete="name" required maxlength="120">
             </div>
             <div class="customer-field customer-span-2">
-              <label for="customerPhone">Telefone/WhatsApp <span aria-hidden="true">*</span></label>
+              <label for="customerPhone">Telefone/WhatsApp para contato <span aria-hidden="true">*</span></label>
               <input id="customerPhone" name="phone" type="tel" inputmode="tel" autocomplete="tel" required maxlength="25" placeholder="(14) 99999-9999">
             </div>
             <div class="customer-field customer-span-2">
-              <label for="customerEmail">E-mail <span aria-hidden="true">*</span></label>
-              <input id="customerEmail" name="email" type="email" inputmode="email" autocomplete="email" required maxlength="254" placeholder="voce@exemplo.com">
+              <label for="customerEmail">E-mail de contato <span class="optional">(opcional)</span></label>
+              <input id="customerEmail" name="email" type="email" inputmode="email" autocomplete="email" maxlength="254" placeholder="voce@exemplo.com">
             </div>
           </div>
         </fieldset>
@@ -585,18 +606,42 @@
           <small style="display:block;margin:7px 0 0 26px;color:#b9a9ae;font-size:10px">Esta autorização não é necessária para fazer o pedido e pode ser revogada a qualquer momento.</small>
         </div>
 
+        <fieldset class="customer-fieldset customer-essential-fields">
+          <legend>Como deseja receber?</legend>
+          <div class="customer-grid">
+            <div class="customer-field customer-span-2">
+              <label for="customerFulfillmentMode">Modalidade</label>
+              <select id="customerFulfillmentMode" name="fulfillmentMode">
+                <option value="delivery">Entrega no endereço</option>
+                <option value="pickup">Retirada agendada gratuita em Bauru</option>
+              </select>
+            </div>
+          </div>
+          <div id="customerPickupFields" class="customer-grid" hidden>
+            <div class="customer-field">
+              <label for="customerPickupDate">Data pretendida</label>
+              <input id="customerPickupDate" type="date" autocomplete="off">
+            </div>
+            <div class="customer-field">
+              <label for="customerPickupTime">Horário pretendido</label>
+              <input id="customerPickupTime" type="time" autocomplete="off">
+            </div>
+            <p class="customer-freight-info customer-span-2">Retirada gratuita na Rua Madre Clélia, nº 5-44, Jardim Cruzeiro do Sul, Bauru/SP, CEP 17030-290. Informe sua preferência; a equipe confirmará a disponibilidade pelo WhatsApp. Após a confirmação do pagamento, o pedido será separado em até 30 minutos.</p>
+          </div>
+        </fieldset>
+
         <fieldset class="customer-fieldset customer-address-fields">
           <legend>Endereço de entrega</legend>
           <div class="customer-grid">
             <div class="customer-field customer-span-2">
-              <label for="customerCep">CEP</label>
+              <label for="customerCep">CEP <span aria-hidden="true">*</span></label>
               <div class="customer-cep-row">
-                <input id="customerCep" name="postalCode" type="text" inputmode="numeric" autocomplete="postal-code" maxlength="9" placeholder="00000-000" aria-describedby="customerCepHelp customerCepStatus">
+                <input id="customerCep" name="postalCode" type="text" inputmode="numeric" autocomplete="postal-code" maxlength="9" placeholder="00000-000" required aria-required="true" aria-describedby="customerCepHelp customerCepStatus">
                 <button class="btn secondary" id="customerCepSearch" type="button">Buscar CEP</button>
               </div>
-              <small id="customerCepHelp">Consulte o CEP para preencher rua, bairro, cidade e estado automaticamente.</small>
+              <small id="customerCepHelp">Obrigatório para entrega. Digite os 8 números do CEP; rua, bairro, cidade e estado serão preenchidos automaticamente quando disponíveis. A retirada agendada não exige endereço.</small>
               <small id="customerCepStatus" class="customer-cep-status" role="status" aria-live="polite" hidden></small>
-              <p id="customerFreightInfo" class="customer-freight-info" role="status" aria-live="polite">Informe a cidade e o estado para consultar as condições de entrega. O frete será confirmado no atendimento.</p>
+              <p id="customerFreightInfo" class="customer-freight-info" role="status" aria-live="polite">Informe o CEP para identificar automaticamente a cidade e calcular a estimativa de frete. O valor final será confirmado no atendimento.</p>
             </div>
             <div class="customer-field customer-span-2">
               <label for="customerStreet">Rua / Avenida <span aria-hidden="true">*</span></label>
@@ -616,16 +661,16 @@
             </div>
             <div class="customer-field">
               <label for="customerCity">Cidade <span aria-hidden="true">*</span></label>
-              <input id="customerCity" name="city" autocomplete="address-level2" required maxlength="100" placeholder="Cidade">
+              <input id="customerCity" name="city" autocomplete="address-level2" required maxlength="100" placeholder="Identificada pelo CEP" readonly aria-readonly="true">
             </div>
             <div class="customer-field">
               <label for="customerState">Estado (UF) <span aria-hidden="true">*</span></label>
-              <input id="customerState" name="state" autocomplete="address-level1" required maxlength="2" pattern="[A-Za-z]{2}" placeholder="SP">
+              <input id="customerState" name="state" autocomplete="address-level1" required maxlength="2" pattern="[A-Za-z]{2}" placeholder="Identificado pelo CEP" readonly aria-readonly="true">
             </div>
             <div class="customer-field customer-span-2">
               <label for="customerReference">Ponto de referência <span class="optional">(opcional)</span></label>
               <input id="customerReference" name="reference" autocomplete="off" maxlength="180" placeholder="Próximo a..., portão..., cor da casa...">
-              <small>O CEP preenche rua, bairro, cidade e estado quando esses dados estão disponíveis. Confira tudo antes de revisar o pedido.</small>
+              <small>A cidade e o estado são identificados automaticamente pelo CEP e não podem ser escolhidos manualmente. Confira o endereço e complete os campos que não forem retornados.</small>
             </div>
           </div>
         </fieldset>
@@ -638,13 +683,13 @@
 
       <section id="customerReview" class="customer-review" hidden aria-labelledby="customerReviewTitle">
         <h3 id="customerReviewTitle">Revise seu pedido</h3>
-        <p>Confira os produtos, o endereço e o total. Depois, gere seu link seguro de pagamento.</p>
+        <p>Confira os produtos, os dados de contato, o recebimento e o total. Depois, envie a solicitação pelo WhatsApp.</p>
         <pre id="customerMessagePreview" class="customer-message-preview" tabindex="0" aria-label="Resumo do pedido"></pre>
         <div class="customer-actions">
           <button class="btn secondary" id="customerEditButton" type="button">Editar dados</button>
-          <button class="btn primary" id="customerPaymentButton" type="button">PAGAR COM PIX OU CARTÃO</button>
+          <button class="btn primary" id="customerWhatsAppButton" type="button">ENVIAR PEDIDO PELO WHATSAPP</button>
         </div>
-        <p class="customer-storage-help">O pagamento é processado com segurança pela InfinitePay. O pedido só é confirmado após a confirmação automática da transação. Falar pelo WhatsApp não gera cobrança.</p>
+        <p class="customer-storage-help">A mensagem será aberta no WhatsApp para você conferir e enviar. A equipe confirmará a disponibilidade e o prazo; o pagamento será combinado somente depois.</p>
       </section>
     </section>
   </div>
@@ -665,17 +710,17 @@
         <div class="footer-navigation">
           <strong>Explore</strong>
           <a href="index.html">Início</a>
-          <a href="/loja/lingerie/#catalogo">Loja</a>
+          <a href="#catalogo">Loja</a>
           <a href="sobre.html">Sobre a Luxuriosa</a>
           <a href="atendimento.html">Atendimento</a>
         </div>
         <div class="footer-navigation">
           <strong>Informações</strong>
-          <a href="/faq.html">Dúvidas frequentes</a>
-          <a href="privacidade.html">Privacidade</a>
-          <a href="/loja/lingerie/" data-open-cookie-preferences>Preferências de cookies</a>
+          <a href="faq.html">Dúvidas frequentes</a>
+              <a href="privacidade.html">Privacidade</a>
+          <a href="#" data-open-cookie-preferences>Preferências de cookies</a>
           <button type="button" data-wa>Fale com a gente</button>
-          <a href="/atendimento.html#entrega">Entrega</a>
+          <a href="atendimento.html#entrega">Entrega</a>
         </div>
       </div>
       <div class="footer-bottom">
@@ -706,9 +751,9 @@
        JAVASCRIPT
   ========================================================== -->
 
-  <script src="../../js/clube-precos.js?v=20261122-club-profile-v2"></script>
+  <script src="../../js/clube-precos.js?v=20261125-cep-auto-checkout-v3"></script>
   <script src="js/catalogo.js?v=20261122-club-profile-v2"></script>
-  <script src="js/inteligencia.js?v=20261113-dado-online"></script>
+  <script src="js/inteligencia.js?v=20261125-cep-auto-checkout-v3"></script>
   <script src="js/carrinho.js?v=20261122-club-profile-v2"></script>
   <script src="js/clientes.js?v=20261113-dado-online"></script>
   <script src="js/app.js?v=20261122-club-profile-v2"></script>
