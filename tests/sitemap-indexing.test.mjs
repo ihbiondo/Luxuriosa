@@ -54,6 +54,15 @@ test("sitemap contém URLs públicas únicas, canônicas e existentes", () => {
       "Canonical do produto não corresponde ao catálogo: " + product.pagina);
     assert.ok(robotsDirective(html, product.pagina).includes("index"),
       "Páginas de produto precisam estar disponíveis para indexação: " + product.pagina);
+
+    const productImages = [
+      product.imagem,
+      ...(Array.isArray(product.imagens) ? product.imagens : [])
+    ].filter((image) => typeof image === "string" && image.trim() && !/^https?:\\/\\//i.test(image));
+    for (const image of productImages) {
+      const imagePath = image.replace(/^\\.\\//, "");
+      assert.ok(existsSync(imagePath), "Imagem cadastrada não existe: " + imagePath);
+    }
   }
 });
 
