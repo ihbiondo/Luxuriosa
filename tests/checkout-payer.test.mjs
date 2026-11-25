@@ -27,12 +27,14 @@ test("carrinho abre a coleta de dados sem exigir login ou cadastro", () => {
   assert.match(cart, /RECEBIMENTO_STORAGE_KEY/);
   assert.match(cart, /salvarPreferenciaRecebimento\(\)/);
   assert.match(cart, /restaurarPreferenciaRecebimento\(\)/);
-  assert.doesNotMatch(cart, /iniciarFinalizacaoWhatsApp|Entre ou crie sua conta|validar sua conta/);
+  assert.match(cart, /A calcular pelo CEP/);
+  assert.doesNotMatch(cart, /cartDeliveryCity|iniciarFinalizacaoWhatsApp|Entre ou crie sua conta|validar sua conta/);
 
   for (const { path, html } of checkoutPages) {
-    assert.match(html, /Cidade ou região da entrega/, path);
-    assert.match(html, /id="cartDeliveryCity" required aria-required="true"/, path);
-    assert.match(html, /id="cartClubInfo"/, path);
+    assert.doesNotMatch(html, /Cidade ou região da entrega|id="cartDeliveryCity"/, path);
+    assert.match(html, /id="cartDeliveryInfo"/, path);
+    assert.match(html, /id="customerCity"[^>]*readonly/, path);
+    assert.match(html, /id="customerState"[^>]*readonly/, path);
     assert.doesNotMatch(html, /id="cartClubJoinLink"/, path);
     assert.match(html, /id="customerForm"/, path);
     assert.match(html, /id="customerWhatsAppButton"/, path);
@@ -43,6 +45,17 @@ test("carrinho abre a coleta de dados sem exigir login ou cadastro", () => {
     assert.match(html, /id="customerName"[^>]*required/, path);
     assert.match(html, /id="customerPhone"[^>]*required/, path);
   }
+});
+
+
+test("cidade e estado são identificados pelo CEP, sem escolha manual", () => {
+  assert.doesNotMatch(cart, /cartDeliveryCity/);
+  assert.match(client, /fetch\("https:\/\/viacep\.com\.br\/ws\//);
+  assert.match(client, /cepValidado !== cepDigits/);
+  assert.match(client, /customerCity\)\) \$\("customerCity"\)\.readOnly = true/);
+  assert.match(client, /customerState\)\) \$\("customerState"\)\.readOnly = true/);
+  assert.match(client, /address: pickup \? \{\} :/);
+  assert.match(client, /Retirada não coleta nem envia endereço/);
 });
 
 test("a antiga área de conta e os convites de cadastro não aparecem na navegação", () => {
