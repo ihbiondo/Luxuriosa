@@ -167,7 +167,8 @@ try {
   await page.locator("#customerOverlay:not([hidden])").waitFor({ state: "visible" });
   await page.locator("#customerName").fill("Cliente Retirada");
   await page.locator("#customerPhone").fill("(14) 99999-9999");
-  await page.locator("#customerPickupDate").fill("2026-11-26");
+  const tomorrow = await page.evaluate(() => new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString().slice(0, 10));
+  await page.locator("#customerPickupDate").fill(tomorrow);
   await page.locator("#customerPickupTime").fill("15:00");
   await page.locator("#customerReviewButton").click();
   await page.locator("#customerReview:not([hidden])").waitFor({ state: "visible" });
