@@ -13,7 +13,7 @@ const routes = [...new Set([...xml.matchAll(/<loc>\s*(.*?)\s*<\/loc>/gis)].map(m
 const browser = await chromium.launch({ headless: true, args: ["--no-sandbox", "--disable-dev-shm-usage"] });
 const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
 await page.addInitScript(() => { try { localStorage.removeItem("lux18"); } catch (error) {} });
-const report = { routeFailures: [], missingLanguage: [], missingTitle: [], imagesWithoutAlt: [], controlsWithoutName: [], fieldsWithoutLabel: [], framesWithoutTitle: [], ageGateFailures: [] };
+const report = { routeFailures: [], missingLanguage: [], missingTitle: [], imagesWithoutAlt: [], controlsWithoutName: [], fieldsWithoutLabel: [], framesWithoutTitle: [], ageGateFailures: [], interactionFailures: [] };
 
 try {
   for (const route of routes) {
@@ -101,6 +101,86 @@ try {
         report[key].push(...issues[key].map(item => ({ route, item })));
       }
     } catch (e) { report.routeFailures.push({ route, error: String(e).slice(0,200) }); }
+  }
+
+  async function openEducationRoute(route) {
+    await page.goto(new URL(route, base).href, { waitUntil: "domcontentloaded", timeout: 20000 });
+    const dialog = page.locator('.ed-age-dialog[role="dialog"][aria-modal="true"]');
+    if (await dialog.count()) await page.locator(".ed-age-confirm").click();
+    await page.waitForLoadState("domcontentloaded");
+  }
+
+  try {
+    await openEducationRoute("/educacao/duvidas-frequentes/");
+    const faqInput = page.locator("#faqSearch");
+    await faqInput.focus();
+    const faqFocus = await page.locator(".ed-faq-search-control").evaluate(el => {
+      const style = getComputedStyle(el);
+      return style.borderColor !== "rgb(187, 163, 206)" || style.boxShadow !== "none";
+    });
+    await faqInput.fill("termo-inexistente-luxuriosa");
+    const noFaqResults = await page.locator("#faqSearchStatus").innerText();
+    const noVisibleFaqItems = await page.locator(".ed-faq-item:not([hidden])").count();
+    await faqInput.fill("lubrificante");
+    const matchingFaqItems = await page.locator(".ed-faq-item:not([hidden])").count();
+    await faqInput.fill("");
+    const restoredFaqItems = await page.locator(".ed-faq-item:not([hidden])").count();
+    if (!faqFocus || !noFaqResults.includes("Nenhuma pergunta encontrada") ||
+        noVisibleFaqItems !== 0 || matchingFaqItems === 0 || restoredFaqItems === 0) {
+      report.interactionFailures.push({ route: "/educacao/duvidas-frequentes/", faqFocus, noFaqResults, noVisibleFaqItems, matchingFaqItems, restoredFaqItems });
+    }
+
+    await openEducationRoute("/educacao/");
+    await page.locator('[data-discovery="materials"]').click();
+    const discovery = await page.evaluate(() => ({
+      pressed: document.querySelector('[data-discovery="materials"]')?.getAttribute("aria-pressed"),
+      result: document.querySelector("#edDiscoveryResult")?.innerText || "",
+      link: document.querySelector("#edDiscoveryResult a")?.getAttribute("href") || ""
+    }));
+    if (discovery.pressed !== "true" || !discovery.result.includes("Entenda os materiais") ||
+        discovery.link !== "/educacao/curiosidades/materiais-dos-acessorios.html") {
+      report.interactionFailures.push({ route: "/educacao/", discovery });
+    }
+
+    await openEducationRoute("/educacao/interatividade/");
+    await page.locator("#quizCheck").click();
+    const partialQuiz = await page.locator("#quizResult").innerText();
+    const feedbackCount = await page.locator("#knowledgeQuiz .ed-feedback:not([hidden])").count();
+    await page.locator("#quizReset").click();
+    await page.locator("#knowledgeQuiz .ed-question").evaluateAll(questions => {
+      questions.forEach(question => {
+        const answer = question.querySelector('input[type="radio"][value="' + question.dataset.answer + '"]');
+        if (answer) answer.checked = true;
+      });
+    });
+    await page.locator("#quizCheck").click();
+    const completeQuiz = await page.locator("#quizResult").innerText();
+    const completedFeedbackCount = await page.locator("#knowledgeQuiz .ed-feedback:not([hidden])").count();
+    await page.locator("#quizReset").click();
+    const resetQuiz = await page.locator("#quizResult").innerText();
+    if (!partialQuiz.includes("Você respondeu 0 de 21") || feedbackCount !== 21 ||
+        !completeQuiz.includes("21 de 21") || completedFeedbackCount !== 21 || resetQuiz !== "") {
+      report.interactionFailures.push({ route: "/educacao/interatividade/", partialQuiz, feedbackCount, completeQuiz, completedFeedbackCount, resetQuiz });
+    }
+
+    await page.locator("[data-check]").nth(0).check();
+    await page.locator("[data-check]").nth(1).check();
+    await page.locator("[data-check]").nth(2).check();
+    const checklist = await page.evaluate(() => ({
+      count: document.querySelector("#checkCount")?.textContent || "",
+      value: document.querySelector("#checkProgressBar")?.getAttribute("aria-valuenow"),
+      text: document.querySelector("#checkProgressBar")?.getAttribute("aria-valuetext")
+    }));
+    await page.locator("#topicFinder").selectOption("lube");
+    await page.locator("#topicGo").click();
+    const topicLink = await page.locator("#topicOutput a").getAttribute("href");
+    if (!checklist.count.includes("3 de 10") || checklist.value !== "3" ||
+        checklist.text !== "3 de 10 itens conferidos" ||
+        topicLink !== "/educacao/guias/escolher-lubrificante.html") {
+      report.interactionFailures.push({ route: "/educacao/interatividade/", checklist, topicLink });
+    }
+  } catch (error) {
+    report.interactionFailures.push({ route: "education-interactions", error: String(error).slice(0, 300) });
   }
 } finally { await browser.close(); }
 
