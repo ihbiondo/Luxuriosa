@@ -13,6 +13,7 @@ const clubPage = readFileSync("clube.html", "utf8");
 const clubLanding = readFileSync("clube/index.html", "utf8");
 const home = readFileSync("index.html", "utf8");
 const store = readFileSync("loja.html", "utf8");
+const lingerie = readFileSync("loja/lingerie/index.html", "utf8");
 const cartOrders = readFileSync("supabase/functions/cart-orders/index.ts", "utf8");
 const paymentOrder = readFileSync("supabase/functions/create-payment-order/index.ts", "utf8");
 const membershipMigration = readFileSync(
@@ -75,7 +76,7 @@ test("o checkout não consulta o Clube nem aplica tarifa especial de frete", () 
   assert.doesNotMatch(checkoutClient, /LuxuriosaClubePrecos|membroClube|Clube gratuito|tarifa\.clube/);
   assert.match(checkoutClient, /fee: tarifa\.comum/);
   assert.match(checkoutClient, /bairroViaCep/);
-  for (const html of [home, store]) {
+  for (const html of [home, store, lingerie]) {
     assert.doesNotMatch(html, /id="cartClubMember"|id="cartClubJoinLink"|id="cartClubInfo"/);
     assert.match(html, /id="cartDeliveryInfo"/);
   }
