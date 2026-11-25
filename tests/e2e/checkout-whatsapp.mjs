@@ -259,6 +259,24 @@ try {
   assert.equal(await page.locator("#customerWhatsAppButton").count(), 1);
   assert.equal(await page.locator("#customerAccountLoad").count(), 0);
 
+  // Compra iniciada em uma página individual deve chegar ao mesmo carrinho atualizado.
+  await page.goto(BASE_URL + "/produtos/6-ducha-higienica-unissex.html", { waitUntil: "domcontentloaded" });
+  await page.waitForFunction(() => Boolean(
+    window.LuxuriosaCarrinho &&
+    document.querySelector("[data-add-to-cart]") &&
+    !document.querySelector("[data-add-to-cart]").disabled
+  ));
+  await page.evaluate(() => window.LuxuriosaCarrinho.limpar());
+  await Promise.all([
+    page.waitForURL(url => url.pathname === "/loja.html" && url.searchParams.get("abrirCarrinho") === "1"),
+    page.locator("[data-add-to-cart]").click()
+  ]);
+  await page.locator("#cart.open").waitFor({ state: "visible" });
+  assert.equal(await page.locator("#cartFulfillmentMethod").count(), 1);
+  assert.equal(await page.locator("#cartDeliveryCity").count(), 0);
+  assert.ok(await page.locator(".cart-item").count() > 0, "O produto deve chegar ao carrinho.");
+  assert.equal(await page.locator("#customerAccountLoad").count(), 0);
+
   console.log("Checkout WhatsApp sem conta: PASS. WhatsApp e Supabase foram interceptados; nenhum pedido real foi criado.");
 } finally {
   await browser.close();
