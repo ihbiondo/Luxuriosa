@@ -196,6 +196,7 @@ try {
       const ghostButton = document.querySelector("#quizReset");
       const primaryButtonStyle = primaryButton ? getComputedStyle(primaryButton) : null;
       const ghostButtonStyle = ghostButton ? getComputedStyle(ghostButton) : null;
+      const saveEyebrow = document.querySelector("#experienceSavePanel small");
       return {
         questionCount: questions.length,
         missingLegends: questions.filter(question => !question.querySelector(":scope > legend")?.textContent.trim()).length,
@@ -217,7 +218,9 @@ try {
         progressSemantics: progress?.getAttribute("role") === "progressbar" &&
           progress?.getAttribute("aria-valuemin") === "0" && progress?.getAttribute("aria-valuemax") === "10",
         topicOutputLive: topicOutput?.getAttribute("aria-live") === "polite",
-        topicOutputContrast: getComputedStyle(topicOutput).color === "rgb(102, 91, 112)"
+        topicOutputContrast: getComputedStyle(topicOutput).color === "rgb(102, 91, 112)",
+        savePanelNamed: document.querySelector("#experienceSavePanel")?.getAttribute("aria-labelledby") === "experienceSaveTitle",
+        saveEyebrowContrast: getComputedStyle(saveEyebrow).color === "rgb(128, 96, 47)"
       };
     });
     if (interactivitySemantics.questionCount !== 21 || interactivitySemantics.missingLegends !== 0 ||
@@ -225,7 +228,8 @@ try {
         interactivitySemantics.duplicateIds !== 0 || !interactivitySemantics.topicFinderLabelled ||
         !interactivitySemantics.primaryButtonContrast || !interactivitySemantics.primaryButtonFocusVisible ||
         !interactivitySemantics.ghostButtonContrast || !interactivitySemantics.quizResultLive || !interactivitySemantics.progressSemantics ||
-        !interactivitySemantics.topicOutputLive || !interactivitySemantics.topicOutputContrast) {
+        !interactivitySemantics.topicOutputLive || !interactivitySemantics.topicOutputContrast ||
+        !interactivitySemantics.savePanelNamed || !interactivitySemantics.saveEyebrowContrast) {
       report.interactionFailures.push({ route: "/educacao/interatividade/", interactivitySemantics });
     }
 
@@ -242,11 +246,37 @@ try {
     await page.locator("#quizCheck").click();
     const completeQuiz = await page.locator("#quizResult").innerText();
     const completedFeedbackCount = await page.locator("#knowledgeQuiz .ed-feedback:not([hidden])").count();
+    const journeyState = await page.evaluate(() => {
+      const panel = document.querySelector(".ed-next-step");
+      const eyebrow = panel?.querySelector(":scope > small");
+      const primary = panel?.querySelector(".ed-next-step-actions > a:first-child");
+      const secondary = panel?.querySelector(".ed-next-step-portal");
+      return {
+        visible: Boolean(panel && !panel.hidden),
+        named: panel?.getAttribute("aria-labelledby") === "edNextStepTitle" &&
+          Boolean(document.getElementById("edNextStepTitle")?.textContent.trim()),
+        eyebrowColor: eyebrow ? getComputedStyle(eyebrow).color : "",
+        primaryColor: primary ? getComputedStyle(primary).color : "",
+        primaryBackground: primary ? getComputedStyle(primary).backgroundColor : "",
+        secondaryColor: secondary ? getComputedStyle(secondary).color : ""
+      };
+    });
+    await page.locator(".ed-next-step-actions > a:first-child").focus();
+    const journeyFocusVisible = await page.locator(".ed-next-step-actions > a:first-child").evaluate(el => {
+      const style = getComputedStyle(el);
+      return style.outlineStyle === "solid" && style.outlineColor === "rgb(227, 68, 157)" &&
+        parseFloat(style.outlineWidth) >= 3;
+    });
     await page.locator("#quizReset").click();
     const resetQuiz = await page.locator("#quizResult").innerText();
     if (!partialQuiz.includes("Você respondeu 0 de 21") || feedbackCount !== 21 ||
-        !completeQuiz.includes("21 de 21") || completedFeedbackCount !== 21 || resetQuiz !== "") {
-      report.interactionFailures.push({ route: "/educacao/interatividade/", partialQuiz, feedbackCount, completeQuiz, completedFeedbackCount, resetQuiz });
+        !completeQuiz.includes("21 de 21") || completedFeedbackCount !== 21 || resetQuiz !== "" ||
+        !journeyState.visible || !journeyState.named ||
+        journeyState.eyebrowColor !== "rgb(128, 96, 47)" ||
+        journeyState.primaryColor !== "rgb(27, 18, 32)" ||
+        journeyState.primaryBackground !== "rgb(227, 68, 157)" ||
+        journeyState.secondaryColor !== "rgb(102, 91, 112)" || !journeyFocusVisible) {
+      report.interactionFailures.push({ route: "/educacao/interatividade/", partialQuiz, feedbackCount, completeQuiz, completedFeedbackCount, journeyState, journeyFocusVisible, resetQuiz });
     }
 
     await page.locator("[data-check]").nth(0).check();
