@@ -116,7 +116,7 @@ try {
     await faqInput.focus();
     const faqFocus = await page.locator(".ed-faq-search-control").evaluate(el => {
       const style = getComputedStyle(el);
-      return style.borderColor !== "rgb(187, 163, 206)" || style.boxShadow !== "none";
+      return style.borderColor === "rgb(255, 138, 199)" && style.boxShadow.includes("0px 0px 0px 3px");
     });
     await faqInput.fill("termo-inexistente-luxuriosa");
     const noFaqResults = await page.locator("#faqSearchStatus").innerText();
