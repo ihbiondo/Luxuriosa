@@ -984,3 +984,29 @@ body{background:radial-gradient(ellipse at 10% 5%,rgba(113,69,132,.38),transpare
 @media(max-width:820px){.ed-discovery-options{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:540px){.ed-discovery-panel{padding:16px}.ed-discovery-options{grid-template-columns:1fr;gap:9px}.ed-discovery-option{min-height:0;padding:14px 15px}.ed-discovery-result{padding:16px}.ed-discovery-result h3{font-size:21px}}
 @media(prefers-reduced-motion:reduce){.ed-discovery-option{transition:none}}
+
+
+/* Acessibilidade: contraste dos botões sobre os cartões claros da Educação. */
+.ed-button,
+.ed-age-confirm {
+  color: #1b1220;
+}
+.ed-button:hover,
+.ed-age-confirm:hover {
+  color: #fff;
+}
+.ed-button--ghost {
+  border-color: #775f82;
+  background: transparent;
+  color: #493451;
+}
+.ed-button--ghost:hover {
+  border-color: #665b70;
+  background: #f0e9f5;
+  color: #493451;
+}
+.ed-age-confirm:focus-visible,
+.ed-age-exit:focus-visible {
+  outline: 3px solid #e3449d;
+  outline-offset: 3px;
+}
