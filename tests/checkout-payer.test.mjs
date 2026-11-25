@@ -16,8 +16,8 @@ const clubRoute = readFileSync("clube/index.html", "utf8");
 
 test("home e loja carregam a versão atual do checkout sem conta", () => {
   for (const { path, html } of checkoutPages) {
-    assert.ok(html.includes('src="js/carrinho.js?v=20261125-cep-auto-checkout-v2'), path);
-    assert.ok(html.includes('src="js/clientes.js?v=20261125-cep-auto-checkout-v2'), path);
+    assert.ok(html.includes('src="js/carrinho.js?v=20261125-cep-auto-checkout-v3'), path);
+    assert.ok(html.includes('src="js/clientes.js?v=20261125-cep-auto-checkout-v3'), path);
   }
 });
 
@@ -53,6 +53,7 @@ test("cidade e estado são identificados pelo CEP, sem escolha manual", () => {
   assert.doesNotMatch(cart, /cartDeliveryCity/);
   assert.match(client, /fetch\("https:\/\/viacep\.com\.br\/ws\//);
   assert.match(client, /cepValidado !== cepDigits/);
+  assert.match(client, /if \(digits\.length === 8\) consultarCep\(\)/);
   assert.match(client, /\$\("customerCity"\)\.readOnly = true/);
   assert.match(client, /\$\("customerState"\)\.readOnly = true/);
   assert.match(client, /address: pickup \? \{\} :/);
