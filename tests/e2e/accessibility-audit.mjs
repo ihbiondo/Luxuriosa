@@ -13,7 +13,7 @@ const routes = [...new Set([...xml.matchAll(/<loc>\s*(.*?)\s*<\/loc>/gis)].map(m
 const browser = await chromium.launch({ headless: true, args: ["--no-sandbox", "--disable-dev-shm-usage"] });
 const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
 await page.addInitScript(() => { try { localStorage.removeItem("lux18"); } catch (error) {} });
-const report = { routeFailures: [], missingLanguage: [], missingTitle: [], imagesWithoutAlt: [], controlsWithoutName: [], fieldsWithoutLabel: [], framesWithoutTitle: [], ageGateFailures: [], interactionFailures: [] };
+const report = { routeFailures: [], missingLanguage: [], missingTitle: [], imagesWithoutAlt: [], controlsWithoutName: [], fieldsWithoutLabel: [], framesWithoutTitle: [], navigationWithoutName: [], headingStructureFailures: [], duplicateIds: [], ageGateFailures: [], interactionFailures: [] };
 
 try {
   for (const route of routes) {
@@ -97,12 +97,26 @@ try {
           imagesWithoutAlt: [...document.images].filter(x => !hidden(x) && x.getAttribute("alt") === null).map(x => x.getAttribute("src") || ""),
           controlsWithoutName: [...document.querySelectorAll("a[href],button,summary,[role='button'],[role='link']")].filter(x => !hidden(x) && x.getClientRects().length && !name(x)).map(x => x.outerHTML.slice(0,160)),
           fieldsWithoutLabel: [...document.querySelectorAll("input:not([type='hidden']),select,textarea")].filter(x => !hidden(x) && x.getClientRects().length && !name(x)).map(x => x.outerHTML.slice(0,160)),
-          framesWithoutTitle: [...document.querySelectorAll("iframe")].filter(x => !hidden(x) && !x.getAttribute("title")?.trim()).map(x => x.getAttribute("src") || "")
+          framesWithoutTitle: [...document.querySelectorAll("iframe")].filter(x => !hidden(x) && !x.getAttribute("title")?.trim()).map(x => x.getAttribute("src") || ""),
+          navigationWithoutName: location.pathname.startsWith("/educacao/")
+            ? [...document.querySelectorAll("nav")].filter(nav => !nav.getAttribute("aria-label")?.trim() && !nav.getAttribute("aria-labelledby")?.trim()).map(nav => nav.outerHTML.slice(0,180))
+            : [],
+          headingStructureFailures: (() => {
+            if (!location.pathname.startsWith("/educacao/")) return [];
+            const headings = [...(document.querySelector("main")?.querySelectorAll("h1,h2,h3,h4,h5,h6") || [])]
+              .map(el => ({ level: Number(el.tagName.slice(1)), text: (el.innerText || el.textContent || "").trim().slice(0,100) }));
+            const h1Count = headings.filter(item => item.level === 1).length;
+            const headingJump = headings.some((item,index) => index > 0 && item.level > headings[index - 1].level + 1);
+            return h1Count === 1 && !headingJump ? [] : [{ h1Count, headingJump, headings }];
+          })(),
+          duplicateIds: location.pathname.startsWith("/educacao/")
+            ? [...document.querySelectorAll("[id]")].map(el => el.id).filter((id,index,all) => all.indexOf(id) !== index)
+            : []
         };
       });
       if (!issues.language) report.missingLanguage.push(route);
       if (!issues.title) report.missingTitle.push(route);
-      for (const key of ["imagesWithoutAlt","controlsWithoutName","fieldsWithoutLabel","framesWithoutTitle"]) {
+      for (const key of ["imagesWithoutAlt","controlsWithoutName","fieldsWithoutLabel","framesWithoutTitle","navigationWithoutName","headingStructureFailures","duplicateIds"]) {
         report[key].push(...issues[key].map(item => ({ route, item })));
       }
     } catch (e) { report.routeFailures.push({ route, error: String(e).slice(0,200) }); }
