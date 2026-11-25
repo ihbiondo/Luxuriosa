@@ -290,15 +290,14 @@
       botao.setAttribute("aria-expanded", "true");
       botao.setAttribute("aria-label", "Menu aberto");
 
-      var target = obterBotaoFechar();
-      if (target) {
-        target.focus();
-        if (document.activeElement !== target) {
-          window.requestAnimationFrame(function () {
-            var currentTarget = obterBotaoFechar();
-            if (currentTarget) currentTarget.focus();
-          });
-        }
+      function focarFechar() {
+        var currentTarget = obterBotaoFechar();
+        if (currentTarget && !currentTarget.disabled) currentTarget.focus();
+      }
+      if (obterBotaoFechar()) {
+        focarFechar();
+        window.requestAnimationFrame(focarFechar);
+        window.setTimeout(focarFechar, 0);
       } else {
         var first = menu.querySelector("a[href], button:not([disabled])");
         if (first) first.focus();
