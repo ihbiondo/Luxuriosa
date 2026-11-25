@@ -58,7 +58,13 @@ for (const canonical of pages) {
       continue;
     }
 
-    if (target.origin !== base.origin) continue;
+    // Links absolutos do próprio domínio também devem ser testados contra
+    // a cópia local, sem acessar a versão de produção durante o workflow.
+    if (target.hostname === "luxuriosa.com.br" || target.hostname === "www.luxuriosa.com.br") {
+      target = new URL(target.pathname + target.search, base);
+    } else if (target.origin !== base.origin) {
+      continue;
+    }
     target.search = "";
     target.hash = "";
     const key = target.href;
