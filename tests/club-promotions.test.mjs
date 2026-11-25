@@ -52,7 +52,7 @@ test("todas as promoções do catálogo são públicas", () => {
   assert.doesNotMatch(productDetail, /LuxuriosaClubePrecos|clube-precos\.js|carregarStatusClube/);
   assert.equal((home.match(/home-kit-static-promo-label/g) || []).length, 4);
   for (const [path, html] of [["index.html", home], ["loja.html", store], ["loja/lingerie/index.html", lingerie]]) {
-    assert.doesNotMatch(html, /clube-precos\\.js|LuxuriosaClubePrecos/, path);
+    assert.doesNotMatch(html, /clube-precos\.js|LuxuriosaClubePrecos/, path);
   }
 });
 
