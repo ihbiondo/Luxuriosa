@@ -182,6 +182,7 @@ try {
   await page.evaluate(() => window.LuxuriosaCarrinho.limpar());
   await page.evaluate(item => window.LuxuriosaCarrinho.adicionar(item, 1), product);
   await page.locator("#cart.open").waitFor({ state: "visible" });
+  await page.locator("#cartFulfillmentMethod").selectOption("delivery");
   assert.equal(await page.locator("#cartDeliveryCity").count(), 0);
   await page.locator("#cartCheckout").click();
   await page.locator("#customerOverlay:not([hidden])").waitFor({ state: "visible" });
