@@ -946,7 +946,20 @@ try {
         activeClass: typeof active?.className === "string" ? active.className : "",
         activeText: (active?.textContent || "").trim().slice(0, 80),
         first: visible[0] ? { tag: visible[0].tagName, className: visible[0].className, text: visible[0].textContent.trim().slice(0, 80) } : null,
-        last: visible.length ? { tag: visible.at(-1).tagName, className: visible.at(-1).className, text: visible.at(-1).textContent.trim().slice(0, 80) } : null,
+        last: visible.length ? (() => {
+          const element = visible.at(-1);
+          const style = getComputedStyle(element);
+          return {
+            tag: element.tagName,
+            className: element.className,
+            text: element.textContent.trim().slice(0, 80),
+            display: style.display,
+            visibility: style.visibility,
+            rects: element.getClientRects().length,
+            checkVisibility: typeof element.checkVisibility === "function" ? element.checkVisibility() : null,
+            hiddenAncestor: element.closest("[hidden], [inert], details:not([open])")?.outerHTML.slice(0, 180) || null
+          };
+        })() : null,
         count: visible.length,
         menuOpen: menu.classList.contains("open"),
         ariaHidden: menu.getAttribute("aria-hidden"),
