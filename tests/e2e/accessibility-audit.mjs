@@ -32,7 +32,7 @@ try {
             return {
               initialFocus: document.activeElement?.matches(".ed-age-confirm") === true,
               named: !!titleId && !!document.getElementById(titleId) && !!descriptionId && !!document.getElementById(descriptionId),
-              backgroundInert: [".ed-header", ".ed-adult", ".ed-main", ".ed-footer"]
+              backgroundInert: [".ed-header", ".ed-adult", ".ed-main", ".ed-footer", ".ed-skip-link"]
                 .filter(selector => document.querySelector(selector))
                 .every(selector => document.querySelector(selector).hasAttribute("inert"))
             };
@@ -53,7 +53,7 @@ try {
           await dialog.waitFor({ state: "detached", timeout: 5000 });
           const restored = await page.evaluate(() => ({
             focusReturned: document.activeElement === document.querySelector(".ed-main"),
-            backgroundReleased: [".ed-header", ".ed-adult", ".ed-main", ".ed-footer"]
+            backgroundReleased: [".ed-header", ".ed-adult", ".ed-main", ".ed-footer", ".ed-skip-link"]
               .filter(selector => document.querySelector(selector))
               .every(selector => !document.querySelector(selector).hasAttribute("inert"))
           }));
