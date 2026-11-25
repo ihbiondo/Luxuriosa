@@ -121,14 +121,16 @@ try {
     await faqInput.fill("termo-inexistente-luxuriosa");
     const noFaqResults = await page.locator("#faqSearchStatus").innerText();
     const noVisibleFaqItems = await page.locator(".ed-faq-item:not([hidden])").count();
+    await faqInput.fill("Biblioteca de produtos");
+    const relatedOnlyFaqItems = await page.locator(".ed-faq-item:not([hidden])").count();
     await faqInput.fill("lubrificante");
     const matchingFaqItems = await page.locator(".ed-faq-item:not([hidden])").count();
     await page.locator('.ed-faq-jump a[href^="#faq-"]').first().click();
     const restoredFaqItems = await page.locator(".ed-faq-item:not([hidden])").count();
     const faqStatusHidden = await page.locator("#faqSearchStatus").isHidden();
     if (!faqFocus || !noFaqResults.includes("Nenhuma pergunta encontrada") ||
-        noVisibleFaqItems !== 0 || matchingFaqItems === 0 || restoredFaqItems === 0 || !faqStatusHidden) {
-      report.interactionFailures.push({ route: "/educacao/duvidas-frequentes/", faqFocus, noFaqResults, noVisibleFaqItems, matchingFaqItems, restoredFaqItems, faqStatusHidden });
+        noVisibleFaqItems !== 0 || relatedOnlyFaqItems !== 0 || matchingFaqItems === 0 || restoredFaqItems === 0 || !faqStatusHidden) {
+      report.interactionFailures.push({ route: "/educacao/duvidas-frequentes/", faqFocus, noFaqResults, noVisibleFaqItems, relatedOnlyFaqItems, matchingFaqItems, restoredFaqItems, faqStatusHidden });
     }
 
     await openEducationRoute("/educacao/");
