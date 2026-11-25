@@ -106,7 +106,16 @@ try {
   async function openEducationRoute(route) {
     await page.goto(new URL(route, base).href, { waitUntil: "domcontentloaded", timeout: 20000 });
     const dialog = page.locator('.ed-age-dialog[role="dialog"][aria-modal="true"]');
-    if (await dialog.count()) await page.locator(".ed-age-confirm").click();
+    if (await dialog.count()) {
+      const ageButtonStyle = await page.locator(".ed-age-confirm").evaluate(el => {
+        const style = getComputedStyle(el);
+        return { color: style.color, background: style.backgroundColor };
+      });
+      if (ageButtonStyle.color !== "rgb(27, 18, 32)" || ageButtonStyle.background !== "rgb(227, 68, 157)") {
+        report.interactionFailures.push({ route, ageButtonStyle });
+      }
+      await page.locator(".ed-age-confirm").click();
+    }
     await page.waitForLoadState("domcontentloaded");
   }
 
@@ -177,6 +186,10 @@ try {
       const quizResult = document.querySelector("#quizResult");
       const progress = document.querySelector("#checkProgressBar");
       const topicOutput = document.querySelector("#topicOutput");
+      const primaryButton = document.querySelector("#quizCheck");
+      const ghostButton = document.querySelector("#quizReset");
+      const primaryButtonStyle = primaryButton ? getComputedStyle(primaryButton) : null;
+      const ghostButtonStyle = ghostButton ? getComputedStyle(ghostButton) : null;
       return {
         questionCount: questions.length,
         missingLegends: questions.filter(question => !question.querySelector(":scope > legend")?.textContent.trim()).length,
@@ -187,6 +200,10 @@ try {
         }).length,
         duplicateIds: ids.filter((id, index) => ids.indexOf(id) !== index).length,
         topicFinderLabelled: Boolean(document.querySelector('label[for="topicFinder"]')),
+        primaryButtonContrast: primaryButtonStyle?.color === "rgb(27, 18, 32)" &&
+          primaryButtonStyle?.backgroundColor === "rgb(227, 68, 157)",
+        ghostButtonContrast: ghostButtonStyle?.color === "rgb(73, 52, 81)" &&
+          ghostButtonStyle?.borderColor === "rgb(119, 95, 130)",
         quizResultLive: quizResult?.getAttribute("role") === "status" && quizResult?.getAttribute("aria-live") === "polite",
         progressSemantics: progress?.getAttribute("role") === "progressbar" &&
           progress?.getAttribute("aria-valuemin") === "0" && progress?.getAttribute("aria-valuemax") === "10",
@@ -196,6 +213,7 @@ try {
     if (interactivitySemantics.questionCount !== 21 || interactivitySemantics.missingLegends !== 0 ||
         interactivitySemantics.radiosWithoutLabels !== 0 || interactivitySemantics.missingFeedbackReferences !== 0 ||
         interactivitySemantics.duplicateIds !== 0 || !interactivitySemantics.topicFinderLabelled ||
+        !interactivitySemantics.primaryButtonContrast || !interactivitySemantics.ghostButtonContrast ||
         !interactivitySemantics.quizResultLive || !interactivitySemantics.progressSemantics ||
         !interactivitySemantics.topicOutputLive) {
       report.interactionFailures.push({ route: "/educacao/interatividade/", interactivitySemantics });
