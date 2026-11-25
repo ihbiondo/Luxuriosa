@@ -155,3 +155,41 @@ test("checkout mantém somente os dados necessários para a solicitação pelo W
   assert.ok(requiredBlock.includes("customerName") && requiredBlock.includes("customerPhone"));
   assert.ok(!requiredBlock.includes("customerEmail"), "E-mail deve ser opcional.");
 });
+
+
+test("entregas, FAQ e páginas locais publicam tarifas, prazos e retirada consistentes", () => {
+  const deliveries = readFileSync("entregas/index.html", "utf8");
+  const faq = readFileSync("faq.html", "utf8");
+  const service = readFileSync("atendimento.html", "utf8");
+
+  assert.match(deliveries, /Bauru<\/th><td data-label="Entrega">R\$ 15,00/);
+  assert.match(deliveries, /Tibiriçá<\/th><td data-label="Entrega">R\$ 20,00/);
+  assert.match(deliveries, /Agudos<\/th><td data-label="Entrega">R\$ 25,00/);
+  assert.match(deliveries, /Piratininga<\/th><td data-label="Entrega">R\$ 25,00/);
+  assert.match(deliveries, /Pederneiras<\/th><td data-label="Entrega">R\$ 25,00/);
+  assert.match(deliveries, /Lençóis Paulista<\/th><td data-label="Entrega">R\$ 50,00/);
+  assert.match(deliveries, /Borebi<\/th><td data-label="Entrega">R\$ 50,00/);
+  assert.match(deliveries, /R\$ 20,00 em Bauru e R\$ 50,00 nas demais cidades atendidas/);
+  assert.match(deliveries, /até 30 minutos em Bauru, exceto Tibiriçá/);
+  assert.match(deliveries, /até 2 horas em Agudos, Piratininga, Pederneiras e Lençóis Paulista/);
+  assert.match(deliveries, /Retirada gratuita em Bauru, mediante agendamento prévio/);
+  assert.match(deliveries, /identificar automaticamente a cidade e o estado/);
+
+  assert.match(faq, /até 30 minutos em Bauru, exceto Tibiriçá/);
+  assert.match(faq, /até 2 horas em Agudos, Piratininga, Pederneiras e Lençóis Paulista/);
+  assert.match(faq, /a cidade e o estado são identificados automaticamente/);
+  assert.match(faq, /A retirada é gratuita em Bauru e precisa ser agendada previamente/);
+  assert.match(service, /Retirada e atendimento presencial somente mediante agendamento prévio/);
+
+  const localPages = [
+    ["cidades/sex-shop-agudos.html", /frete fixo de R\$ 25,00/, /até 2 horas após a confirmação do pagamento/],
+    ["cidades/sex-shop-piratininga.html", /frete fixo de R\$ 25,00/, /até 2 horas após a confirmação do pagamento/],
+    ["cidades/sex-shop-pederneiras.html", /frete fixo de R\$ 25,00/, /até 2 horas após a confirmação do pagamento/],
+    ["cidades/sex-shop-lencois-paulista.html", /frete fixo de R\$ 50,00/, /até 2 horas após a confirmação do pagamento/]
+  ];
+  for (const [path, fee, deadline] of localPages) {
+    const html = readFileSync(path, "utf8");
+    assert.match(html, fee, path);
+    assert.match(html, deadline, path);
+  }
+});
