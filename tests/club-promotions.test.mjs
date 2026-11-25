@@ -53,6 +53,17 @@ test("todas as promoções do catálogo são públicas", () => {
   assert.equal((home.match(/home-kit-static-club-label/g) || []).length, 4);
 });
 
+test("todas as páginas de produto carregam os scripts atuais sem consultar o Clube", () => {
+  for (const product of catalog.produtos) {
+    const html = readFileSync(product.pagina, "utf8");
+    assert.match(html, /\.\.\/js\/carrinho\.js\?v=20261125-public-checkout-v1/, product.pagina);
+    assert.match(html, /\.\.\/js\/produto-detalhe\.js\?v=20261125-public-checkout-v1/, product.pagina);
+    assert.doesNotMatch(html, /clube-precos\.js|LuxuriosaClubePrecos/, product.pagina);
+    assert.match(html, /data-add-to-cart/, product.pagina);
+  }
+  assert.doesNotMatch(productDetail, /LuxuriosaClubePrecos|clube-precos\.js|carregarStatusClube/);
+});
+
 test("as páginas dos produtos exibem preço promocional sem exigir Clube", () => {
   for (const product of clubPromotions) {
     const html = readFileSync(product.pagina, "utf8");
