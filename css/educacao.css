@@ -1026,3 +1026,22 @@ body{background:radial-gradient(ellipse at 10% 5%,rgba(113,69,132,.38),transpare
   outline-color: #e3449d;
   outline-offset: 3px;
 }
+
+/* Próximo passo e salvamento opcional: contraste em painéis claros. */
+.ed-next-step > small,
+.ed-save-result > div > small {
+  color: #80602f;
+}
+.ed-next-step-actions > a:first-child {
+  color: #1b1220;
+}
+.ed-next-step-actions > a:first-child:hover {
+  color: #fff;
+}
+.ed-next-step-portal {
+  color: #665b70;
+}
+.ed-next-step a:focus-visible {
+  outline-color: #e3449d;
+  outline-offset: 3px;
+}
