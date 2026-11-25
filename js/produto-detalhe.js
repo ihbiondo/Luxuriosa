@@ -14,7 +14,7 @@
     if (jaCarregado || document.getElementById("luxuriosa-app-menu-loader")) return;
     var script = document.createElement("script");
     script.id = "luxuriosa-app-menu-loader";
-    script.src = "/js/app.js?v=20261122-club-promotions-v1";
+    script.src = "/js/app.js?v=20261125-public-checkout-v1";
     script.async = false;
     (document.head || document.body).appendChild(script);
   }
@@ -49,30 +49,8 @@
     return;
   }
 
-  function carregarStatusClube() {
-    if (window.LuxuriosaClubePrecos &&
-        typeof window.LuxuriosaClubePrecos.pronto === "function") {
-      return window.LuxuriosaClubePrecos.pronto();
-    }
-    return new Promise(function (resolve) {
-      var script = document.createElement("script");
-      script.src = "/js/clube-precos.js?v=20261122-club-profile-v2";
-      script.onload = function () {
-        var clube = window.LuxuriosaClubePrecos;
-        if (clube && typeof clube.pronto === "function") {
-          clube.pronto().then(resolve).catch(resolve);
-        } else {
-          resolve();
-        }
-      };
-      script.onerror = resolve;
-      document.head.appendChild(script);
-    });
-  }
-
-  carregarStatusClube().then(function () {
-    return fetch("../data/produtos.json", { cache: "no-cache" });
-  })
+  // O preço do catálogo já é público. A página do produto não consulta nem carrega o Clube.
+  fetch("../data/produtos.json", { cache: "no-cache" })
     .then(function (resposta) {
       if (!resposta.ok) throw new Error("Não foi possível consultar o catálogo.");
       return resposta.json();
@@ -153,21 +131,21 @@
 
       var precoDetalhe = document.querySelector(".product-detail-price");
       var precoRegular = Number(produto.precoAntigo);
-      var precoClube = Number(produto.preco);
-      var temPromocaoClube = Number.isFinite(precoRegular) &&
-        Number.isFinite(precoClube) && precoRegular > precoClube;
-      if (precoDetalhe && Number.isFinite(precoClube) && precoClube > 0) {
+      var precoCatalogo = Number(produto.preco);
+      var temPromocaoPublica = Number.isFinite(precoRegular) &&
+        Number.isFinite(precoCatalogo) && precoRegular > precoCatalogo;
+      if (precoDetalhe && Number.isFinite(precoCatalogo) && precoCatalogo > 0) {
         precoDetalhe.textContent = "";
         var precoAtual = document.createElement("strong");
-        precoAtual.textContent = precoClube.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+        precoAtual.textContent = precoCatalogo.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
         precoDetalhe.appendChild(precoAtual);
-        if (temPromocaoClube) {
+        if (temPromocaoPublica) {
           var precoAntigo = document.createElement("s");
           precoAntigo.textContent = precoRegular.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
           precoDetalhe.appendChild(precoAntigo);
           var avisoClube = document.createElement("span");
-          avisoClube.className = "club-promo-note";
-          avisoClube.textContent = "🏷️ Oferta disponível para todos";
+          avisoClube.className = "public-promo-note";
+          avisoClube.textContent = "🏷️ Preço promocional disponível para todos";
           avisoClube.style.flexBasis = "100%";
           avisoClube.style.display = "block";
           avisoClube.style.marginTop = "8px";
