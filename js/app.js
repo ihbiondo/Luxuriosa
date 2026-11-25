@@ -488,33 +488,28 @@
      ======================================================= */
 
   function configurarAcessibilidade() {
-
-    var botao = $("burger");
-
-    if (!botao) {
-      return;
+    var main = document.querySelector("main");
+    if (main) {
+      if (!main.id) main.id = "conteudo-principal";
+      if (!main.hasAttribute("tabindex")) main.setAttribute("tabindex", "-1");
+      var skipLink = document.querySelector("a.skip-link");
+      if (!skipLink) {
+        skipLink = document.createElement("a");
+        skipLink.className = "skip-link";
+        skipLink.href = "#" + main.id;
+        skipLink.textContent = "Pular para o conteúdo";
+        document.body.insertBefore(skipLink, document.body.firstChild);
+      } else {
+        skipLink.href = "#" + main.id;
+      }
     }
 
-
-    botao.setAttribute(
-      "aria-label",
-      "Abrir menu"
-    );
-
-
-    botao.setAttribute(
-      "aria-expanded",
-      "false"
-    );
-
-
-    botao.setAttribute(
-      "aria-controls",
-      "navlinks"
-    );
-
+    var botao = $("burger");
+    if (!botao) return;
+    botao.setAttribute("aria-label", "Abrir menu");
+    botao.setAttribute("aria-expanded", "false");
+    botao.setAttribute("aria-controls", "navlinks");
   }
-
 
   /* =======================================================
      ROLAGEM SUAVE
