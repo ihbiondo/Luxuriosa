@@ -140,6 +140,7 @@
     if (pickup) {
       // Retirada não coleta nem envia endereço, mesmo que o cliente tenha consultado um CEP antes.
       cepConsultaId += 1;
+      cepConsultaEmAndamento = "";
       cepValidado = "";
       bairroViaCep = "";
       ultimoEnderecoViaCep = "";
@@ -269,6 +270,7 @@
           String(dados.uf || "").trim().toUpperCase()
         ];
         if (!valoresCep[2] || !/^[A-Z]{2}$/.test(valoresCep[3])) {
+          cepConsultaEmAndamento = "";
           cepValidado = "";
           bairroViaCep = "";
           mostrarStatusCep("O CEP foi localizado, mas não retornou cidade e estado. Fale com a equipe para validar o endereço.", "error");
@@ -327,7 +329,7 @@
     var api = window.LuxuriosaCarrinho;
     var subtotal = api && typeof api.obterTotal === "function" ? Number(api.obterTotal()) : 0;
     if (!cepValidado || !cidade || !estado) {
-      aviso.textContent = "Informe o CEP e toque em Buscar CEP. A cidade e o estado serão identificados automaticamente.";
+      aviso.textContent = "Digite os 8 números do CEP. A cidade e o estado serão identificados automaticamente.";
       return;
     }
     var tarifa = obterTarifasOficiais({ city: cidade, state: estado });
@@ -632,6 +634,7 @@
     dadosAtuais = null;
     mensagemAtual = "";
     ultimoEnderecoViaCep = "";
+    cepConsultaEmAndamento = "";
     cepValidado = "";
     bairroViaCep = "";
     if (form) form.reset();
@@ -882,6 +885,7 @@
         mostrarStatusCep("", "info");
         if (digits !== cepValidado) {
           cepConsultaId += 1;
+          cepConsultaEmAndamento = "";
           cepValidado = "";
           bairroViaCep = "";
           ultimoEnderecoViaCep = "";
