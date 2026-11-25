@@ -15,6 +15,7 @@ const page = await browser.newPage();
 page.setDefaultTimeout(10000);
 const openedUrls = [];
 const paymentRequests = [];
+const cartOrderRequests = [];
 page.on("request", request => {
   if (request.url().includes("/functions/v1/create-payment-order")) {
     paymentRequests.push(request.url());
@@ -31,6 +32,33 @@ await page.addInitScript(() => {
     return null;
   };
 });
+await page.route("https://byiykxfugvxuowueuxca.supabase.co/functions/v1/cart-orders**", async route => {
+  const request = route.request();
+  if (request.method() === "OPTIONS") {
+    const requestedHeaders = request.headers()["access-control-request-headers"] || "apikey,content-type";
+    await route.fulfill({
+      status: 204,
+      headers: {
+        "access-control-allow-origin": "*",
+        "access-control-allow-methods": "POST, OPTIONS",
+        "access-control-allow-headers": requestedHeaders
+      }
+    });
+    return;
+  }
+  if (request.method() !== "POST") {
+    await route.fulfill({ status: 405, contentType: "application/json", body: JSON.stringify({ error: "Método não permitido no teste." }) });
+    return;
+  }
+  cartOrderRequests.push(request.postDataJSON());
+  await route.fulfill({
+    status: 200,
+    headers: { "access-control-allow-origin": "*" },
+    contentType: "application/json",
+    body: JSON.stringify({ ok: true, order_id: "e2e-order", order_number: 900001 })
+  });
+});
+
 await page.route("https://viacep.com.br/ws/**", route => {
   const cep = new URL(route.request().url()).pathname.split("/").filter(Boolean).at(-2);
   const addresses = {
@@ -97,7 +125,21 @@ try {
   assert.ok(!preview.includes("InfinitePay"));
   assert.ok(!preview.includes("chave PIX"));
 
+  const deliveryResponsePromise = page.waitForResponse(response => {
+    const request = response.request();
+    if (!request.url().includes("/functions/v1/cart-orders") || request.method() !== "POST") return false;
+    try { return request.postDataJSON().action === "whatsapp_opened"; } catch (_) { return false; }
+  });
   await page.locator("#customerWhatsAppButton").click();
+  const deliveryResponse = await deliveryResponsePromise;
+  assert.equal(deliveryResponse.status(), 200);
+  const deliveryPayload = cartOrderRequests.find(payload => payload.action === "whatsapp_opened");
+  assert.ok(deliveryPayload, "O pedido deve ser encaminhado ao endpoint de pedidos.");
+  assert.equal(deliveryPayload.customer.fulfillmentType, "express");
+  assert.equal(deliveryPayload.customer.address.zip, "17030-290");
+  assert.equal(deliveryPayload.customer.address.city, "Bauru");
+  assert.equal(deliveryPayload.customer.address.state, "SP");
+  assert.equal(deliveryPayload.shipping_amount, 15);
   await page.waitForFunction(() => window.__luxuriosaOpenedUrls.length === 1);
   const finalUrls = await page.evaluate(() => window.__luxuriosaOpenedUrls.slice());
   openedUrls.push(...finalUrls);
@@ -175,6 +217,19 @@ try {
   assert.ok(!pickupPreview.includes("ENDEREÇO DE ENTREGA"));
   assert.ok(!pickupPreview.includes("CEP:"));
   // O endereço fixo da loja é informado como local de retirada; nenhum endereço do cliente é enviado.
+  const pickupResponsePromise = page.waitForResponse(response => {
+    const request = response.request();
+    if (!request.url().includes("/functions/v1/cart-orders") || request.method() !== "POST") return false;
+    try { return request.postDataJSON().action === "whatsapp_opened"; } catch (_) { return false; }
+  });
+  await page.locator("#customerWhatsAppButton").click();
+  const pickupResponse = await pickupResponsePromise;
+  assert.equal(pickupResponse.status(), 200);
+  const pickupPayload = cartOrderRequests.filter(payload => payload.action === "whatsapp_opened").at(-1);
+  assert.equal(pickupPayload.customer.fulfillmentType, "pickup");
+  assert.deepEqual(pickupPayload.customer.address, {});
+  assert.equal(pickupPayload.shipping_amount, 0);
+  assert.ok(pickupPayload.customer.pickupRequestedAt, "Retirada deve enviar a data e o horário combinados.");
 
   // A página secundária de lingerie deve usar o mesmo checkout atualizado.
   await page.goto(BASE_URL + "/loja/lingerie/", { waitUntil: "domcontentloaded" });
@@ -193,7 +248,7 @@ try {
   assert.equal(await page.locator("#customerWhatsAppButton").count(), 1);
   assert.equal(await page.locator("#customerAccountLoad").count(), 0);
 
-  console.log("Checkout WhatsApp sem conta: PASS. Mensagem aberta foi interceptada; nada foi enviado.");
+  console.log("Checkout WhatsApp sem conta: PASS. WhatsApp e Supabase foram interceptados; nenhum pedido real foi criado.");
 } finally {
   await browser.close();
 }
