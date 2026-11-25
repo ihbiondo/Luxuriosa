@@ -145,7 +145,7 @@
           precoDetalhe.appendChild(precoAntigo);
           var avisoClube = document.createElement("span");
           avisoClube.className = "public-promo-note";
-          avisoClube.textContent = "🏷️ Preço promocional disponível para todos";
+          avisoClube.textContent = "🏷️ Oferta disponível para todos";
           avisoClube.style.flexBasis = "100%";
           avisoClube.style.display = "block";
           avisoClube.style.marginTop = "8px";
