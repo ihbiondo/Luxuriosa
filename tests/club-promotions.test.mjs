@@ -56,6 +56,29 @@ test("todas as promoções do catálogo são públicas", () => {
   }
 });
 
+test("os quatro kits da home exibem os mesmos preços do catálogo", () => {
+  const formatter = new Intl.NumberFormat("pt-BR", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  });
+  for (const id of [25, 26, 24, 27]) {
+    const product = catalog.produtos.find((item) => Number(item.id) === id);
+    assert.ok(product, "Kit de destaque ausente do catálogo: " + id);
+    const href = 'href="' + product.pagina + '"';
+    const hrefIndex = home.indexOf(href);
+    assert.ok(hrefIndex >= 0, "Kit não está destacado na home: " + product.nome);
+    const start = home.lastIndexOf('<a class="home-kit-static-card"', hrefIndex);
+    const end = home.indexOf("</a>", hrefIndex);
+    assert.ok(start >= 0 && end > start, "Card do kit não foi encontrado: " + product.nome);
+    const card = home.slice(start, end);
+    assert.ok(card.includes("R$ " + formatter.format(product.preco)),
+      "Preço atual da home diverge do catálogo: " + product.nome);
+    assert.ok(card.includes("De R$ " + formatter.format(product.precoAntigo)),
+      "Preço anterior da home diverge do catálogo: " + product.nome);
+  }
+  assert.equal((home.match(/home-kit-static-promo-label/g) || []).length, 4);
+});
+
 test("todas as páginas de produto carregam os scripts atuais sem consultar o Clube", () => {
   for (const product of catalog.produtos) {
     const html = readFileSync(product.pagina, "utf8");
