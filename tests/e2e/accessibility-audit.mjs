@@ -216,7 +216,8 @@ try {
         quizResultLive: quizResult?.getAttribute("role") === "status" && quizResult?.getAttribute("aria-live") === "polite",
         progressSemantics: progress?.getAttribute("role") === "progressbar" &&
           progress?.getAttribute("aria-valuemin") === "0" && progress?.getAttribute("aria-valuemax") === "10",
-        topicOutputLive: topicOutput?.getAttribute("aria-live") === "polite"
+        topicOutputLive: topicOutput?.getAttribute("aria-live") === "polite",
+        topicOutputContrast: getComputedStyle(topicOutput).color === "rgb(102, 91, 112)"
       };
     });
     if (interactivitySemantics.questionCount !== 21 || interactivitySemantics.missingLegends !== 0 ||
@@ -224,7 +225,7 @@ try {
         interactivitySemantics.duplicateIds !== 0 || !interactivitySemantics.topicFinderLabelled ||
         !interactivitySemantics.primaryButtonContrast || !interactivitySemantics.primaryButtonFocusVisible ||
         !interactivitySemantics.ghostButtonContrast || !interactivitySemantics.quizResultLive || !interactivitySemantics.progressSemantics ||
-        !interactivitySemantics.topicOutputLive) {
+        !interactivitySemantics.topicOutputLive || !interactivitySemantics.topicOutputContrast) {
       report.interactionFailures.push({ route: "/educacao/interatividade/", interactivitySemantics });
     }
 
@@ -259,10 +260,19 @@ try {
     await page.locator("#topicFinder").selectOption("lube");
     await page.locator("#topicGo").click();
     const topicLink = await page.locator("#topicOutput a").getAttribute("href");
+    const topicLinkColor = await page.locator("#topicOutput a").evaluate(el => getComputedStyle(el).color);
+    await page.locator("#topicGo").focus();
+    await page.keyboard.press("Tab");
+    const topicLinkFocusVisible = await page.locator("#topicOutput a").evaluate(el => {
+      const style = getComputedStyle(el);
+      return el === document.activeElement && style.outlineStyle === "solid" &&
+        style.outlineColor === "rgb(227, 68, 157)" && parseFloat(style.outlineWidth) >= 3;
+    });
     if (!checklist.count.includes("3 de 10") || checklist.value !== "3" ||
         checklist.text !== "3 de 10 itens conferidos" ||
-        topicLink !== "/educacao/guias/escolher-lubrificante.html") {
-      report.interactionFailures.push({ route: "/educacao/interatividade/", checklist, topicLink });
+        topicLink !== "/educacao/guias/escolher-lubrificante.html" ||
+        topicLinkColor !== "rgb(128, 96, 47)" || !topicLinkFocusVisible) {
+      report.interactionFailures.push({ route: "/educacao/interatividade/", checklist, topicLink, topicLinkColor, topicLinkFocusVisible });
     }
   } catch (error) {
     report.interactionFailures.push({ route: "education-interactions", error: String(error).slice(0, 300) });
