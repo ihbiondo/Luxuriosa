@@ -179,6 +179,7 @@ try {
     }
 
     await openEducationRoute("/educacao/interatividade/");
+    await page.locator("#quizCheck").focus();
     const interactivitySemantics = await page.evaluate(() => {
       const questions = Array.from(document.querySelectorAll("#knowledgeQuiz fieldset"));
       const radios = Array.from(document.querySelectorAll("#knowledgeQuiz input[type=radio]"));
@@ -202,6 +203,9 @@ try {
         topicFinderLabelled: Boolean(document.querySelector('label[for="topicFinder"]')),
         primaryButtonContrast: primaryButtonStyle?.color === "rgb(27, 18, 32)" &&
           primaryButtonStyle?.backgroundColor === "rgb(227, 68, 157)",
+        primaryButtonFocusVisible: primaryButtonStyle?.outlineStyle === "solid" &&
+          primaryButtonStyle?.outlineColor === "rgb(227, 68, 157)" &&
+          parseFloat(primaryButtonStyle?.outlineWidth || "0") >= 3,
         ghostButtonContrast: ghostButtonStyle?.color === "rgb(73, 52, 81)" &&
           ghostButtonStyle?.borderColor === "rgb(119, 95, 130)",
         quizResultLive: quizResult?.getAttribute("role") === "status" && quizResult?.getAttribute("aria-live") === "polite",
@@ -213,8 +217,8 @@ try {
     if (interactivitySemantics.questionCount !== 21 || interactivitySemantics.missingLegends !== 0 ||
         interactivitySemantics.radiosWithoutLabels !== 0 || interactivitySemantics.missingFeedbackReferences !== 0 ||
         interactivitySemantics.duplicateIds !== 0 || !interactivitySemantics.topicFinderLabelled ||
-        !interactivitySemantics.primaryButtonContrast || !interactivitySemantics.ghostButtonContrast ||
-        !interactivitySemantics.quizResultLive || !interactivitySemantics.progressSemantics ||
+        !interactivitySemantics.primaryButtonContrast || !interactivitySemantics.primaryButtonFocusVisible ||
+        !interactivitySemantics.ghostButtonContrast || !interactivitySemantics.quizResultLive || !interactivitySemantics.progressSemantics ||
         !interactivitySemantics.topicOutputLive) {
       report.interactionFailures.push({ route: "/educacao/interatividade/", interactivitySemantics });
     }
