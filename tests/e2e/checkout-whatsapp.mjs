@@ -32,7 +32,7 @@ await page.addInitScript(() => {
     return null;
   };
 });
-await page.route("https://byiykxfugvxuowueuxca.supabase.co/functions/v1/cart-orders**", async route => {
+await page.route(/https:\/\/byiykxfugvxuowueuxca\.supabase\.co\/functions\/v1\/cart-orders(?:\?.*)?$/, async route => {
   const request = route.request();
   if (request.method() === "OPTIONS") {
     const requestedHeaders = request.headers()["access-control-request-headers"] || "apikey,content-type";
