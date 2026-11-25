@@ -12,6 +12,7 @@ const routes = [...new Set([...xml.matchAll(/<loc>\s*(.*?)\s*<\/loc>/gis)].map(m
 
 const browser = await chromium.launch({ headless: true, args: ["--no-sandbox", "--disable-dev-shm-usage"] });
 const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
+await page.addInitScript(() => { try { localStorage.removeItem("lux18"); } catch (error) {} });
 const report = { routeFailures: [], missingLanguage: [], missingTitle: [], imagesWithoutAlt: [], controlsWithoutName: [], fieldsWithoutLabel: [], framesWithoutTitle: [], ageGateFailures: [] };
 
 try {
