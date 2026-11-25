@@ -49,7 +49,7 @@
     return;
   }
 
-  // O preço do catálogo já é público. A página do produto não consulta nem carrega o Clube.
+  // O preço do catálogo já é público; a página usa somente os dados do catálogo.
   fetch("../data/produtos.json", { cache: "no-cache" })
     .then(function (resposta) {
       if (!resposta.ok) throw new Error("Não foi possível consultar o catálogo.");
@@ -143,17 +143,17 @@
           var precoAntigo = document.createElement("s");
           precoAntigo.textContent = precoRegular.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
           precoDetalhe.appendChild(precoAntigo);
-          var avisoClube = document.createElement("span");
-          avisoClube.className = "public-promo-note";
-          avisoClube.textContent = "🏷️ Oferta disponível para todos";
-          avisoClube.style.flexBasis = "100%";
-          avisoClube.style.display = "block";
-          avisoClube.style.marginTop = "8px";
-          avisoClube.style.color = "#D4AF7C";
-          avisoClube.style.fontSize = "12px";
-          avisoClube.style.fontWeight = "600";
-          avisoClube.style.lineHeight = "1.45";
-          precoDetalhe.appendChild(avisoClube);
+          var avisoPromocao = document.createElement("span");
+          avisoPromocao.className = "public-promo-note";
+          avisoPromocao.textContent = "🏷️ Oferta disponível para todos";
+          avisoPromocao.style.flexBasis = "100%";
+          avisoPromocao.style.display = "block";
+          avisoPromocao.style.marginTop = "8px";
+          avisoPromocao.style.color = "#D4AF7C";
+          avisoPromocao.style.fontSize = "12px";
+          avisoPromocao.style.fontWeight = "600";
+          avisoPromocao.style.lineHeight = "1.45";
+          precoDetalhe.appendChild(avisoPromocao);
         }
       }
 
