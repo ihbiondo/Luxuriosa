@@ -5,6 +5,7 @@ import { readFileSync } from "node:fs";
 const catalog = JSON.parse(readFileSync("data/produtos.json", "utf8"));
 const catalogScript = readFileSync("js/catalogo.js", "utf8");
 const cart = readFileSync("js/carrinho.js", "utf8");
+const checkoutClient = readFileSync("js/clientes.js", "utf8");
 const clubPrices = readFileSync("js/clube-precos.js", "utf8");
 const productDetail = readFileSync("js/produto-detalhe.js", "utf8");
 const clubPageScript = readFileSync("js/clube.js", "utf8");
@@ -68,18 +69,15 @@ test("a consulta pública de status exige membro ativo e perfil completo", () =>
   assert.match(clubLanding, /data de nascimento \(18\+\)/);
 });
 
-test("o benefício de frete é automático e não oferece seleção manual inerte", () => {
-  assert.doesNotMatch(cart, /cartClubMember/);
-  assert.match(cart, /membroClubeVerificado = detail\.loaded === true/);
-  assert.match(cart, /detail\.authenticated === true/);
-  assert.match(cart, /var membroClube = membroClubeVerificado && membroClubeAtivo/);
-  assert.match(cart, /Condição especial de frete aplicada automaticamente/);
-  assert.match(cart, /O frete é calculado conforme a localidade e confirmado no atendimento/);
-  assert.doesNotMatch(cart, /Tarifa de membro do Clube selecionada|cadastro ativo será conferido pela equipe/);
-  assert.match(cart, /cartClubInfo/);
+test("o checkout não consulta o Clube nem aplica tarifa especial de frete", () => {
+  assert.doesNotMatch(cart, /membroClube|cartDeliveryCity|DELIVERY_RATES|cartClubInfo/);
+  assert.match(cart, /A calcular pelo CEP/);
+  assert.doesNotMatch(checkoutClient, /LuxuriosaClubePrecos|membroClube|Clube gratuito|tarifa\.clube/);
+  assert.match(checkoutClient, /fee: tarifa\.comum/);
+  assert.match(checkoutClient, /bairroViaCep/);
   for (const html of [home, store]) {
-    assert.doesNotMatch(html, /id="cartClubMember"/);
-    assert.doesNotMatch(html, /id="cartClubJoinLink"/);
+    assert.doesNotMatch(html, /id="cartClubMember"|id="cartClubJoinLink"|id="cartClubInfo"/);
+    assert.match(html, /id="cartDeliveryInfo"/);
   }
 });
 
