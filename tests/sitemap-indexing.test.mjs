@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import { existsSync, readFileSync } from "node:fs";
 
 const sitemap = readFileSync("sitemap.xml", "utf8");
+const catalog = JSON.parse(readFileSync("data/produtos.json", "utf8"));
 const robots = readFileSync("robots.txt", "utf8");
 const urls = [...sitemap.matchAll(/<loc>\s*(.*?)\s*<\/loc>/gi)].map((match) => match[1]);
 
@@ -39,6 +40,20 @@ test("sitemap contém URLs públicas únicas, canônicas e existentes", () => {
     "https://luxuriosa.com.br/faq.html"
   ]) {
     assert.ok(urls.includes(path), "Página pública importante ausente do sitemap: " + path);
+  }
+
+  assert.equal(catalog.produtos.length, 47);
+  for (const product of catalog.produtos) {
+    assert.ok(product.pagina, "Produto sem página individual: " + product.id);
+    const canonical = "https://luxuriosa.com.br/" + product.pagina;
+    assert.ok(urls.includes(canonical), "Página de produto ausente do sitemap: " + canonical);
+    const html = readFileSync(product.pagina, "utf8");
+    const canonicalTags = [...html.matchAll(/<link\\b[^>]*rel=["']canonical["'][^>]*>/gi)];
+    assert.equal(canonicalTags.length, 1, "Cada produto deve ter exatamente um canonical: " + product.pagina);
+    assert.ok(canonicalTags[0][0].includes('href="' + canonical + '"'),
+      "Canonical do produto não corresponde ao catálogo: " + product.pagina);
+    assert.ok(robotsDirective(html, product.pagina).includes("index"),
+      "Páginas de produto precisam estar disponíveis para indexação: " + product.pagina);
   }
 });
 
