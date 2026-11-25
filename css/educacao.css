@@ -1014,3 +1014,15 @@ body{background:radial-gradient(ellipse at 10% 5%,rgba(113,69,132,.38),transpare
 .ed-button:focus-visible {
   outline-color: #e3449d;
 }
+
+/* Orientador de conteúdo: texto e link legíveis no cartão claro da Interatividade. */
+.ed-tool .ed-tool-output {
+  color: #665b70;
+}
+.ed-tool .ed-tool-output a {
+  color: #80602f;
+}
+.ed-tool .ed-tool-output a:focus-visible {
+  outline-color: #e3449d;
+  outline-offset: 3px;
+}
