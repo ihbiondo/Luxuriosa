@@ -44,10 +44,15 @@ try {
           const tabToExit = await page.evaluate(() => document.activeElement?.matches(".ed-age-exit") === true);
           await page.keyboard.press("Tab");
           const tabToConfirm = await page.evaluate(() => document.activeElement?.matches(".ed-age-confirm") === true);
+          const ageConfirmFocusVisible = await page.locator(".ed-age-confirm").evaluate(el => {
+            const style = getComputedStyle(el);
+            return style.outlineStyle === "solid" && style.outlineColor === "rgb(227, 68, 157)" &&
+              parseFloat(style.outlineWidth) >= 3;
+          });
           await page.keyboard.press("Shift+Tab");
           const reverseToExit = await page.evaluate(() => document.activeElement?.matches(".ed-age-exit") === true);
-          if (!tabToExit || !tabToConfirm || !reverseToExit) {
-            report.ageGateFailures.push({ route, stage: "keyboard-trap", tabToExit, tabToConfirm, reverseToExit });
+          if (!tabToExit || !tabToConfirm || !ageConfirmFocusVisible || !reverseToExit) {
+            report.ageGateFailures.push({ route, stage: "keyboard-trap", tabToExit, tabToConfirm, ageConfirmFocusVisible, reverseToExit });
           }
           await page.locator(".ed-age-confirm").click();
           await dialog.waitFor({ state: "detached", timeout: 5000 });
