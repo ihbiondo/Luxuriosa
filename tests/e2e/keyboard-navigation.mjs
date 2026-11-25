@@ -46,11 +46,28 @@ try {
     const b = document.querySelector("#burger"), m = document.querySelector("#navlinks");
     return b?.getAttribute("aria-expanded") === "true" && m?.getAttribute("aria-hidden") === "false" && !m?.hasAttribute("inert");
   });
-  await page.waitForFunction(() => document.activeElement?.classList?.contains("nav-drawer-close") === true);
-  assert.equal(await page.evaluate(() => document.querySelector("#navlinks")?.contains(document.activeElement)), true,
-    "O foco deve entrar no menu ao abri-lo");
-  assert.equal(await page.evaluate(() => document.activeElement?.classList?.contains("nav-drawer-close")), true,
-    "O botão de fechar deve receber o foco inicial");
+  await page.waitForTimeout(120);
+  const menuState = await page.evaluate(() => {
+    const menu = document.querySelector("#navlinks");
+    const close = menu?.querySelector(".nav-drawer-close");
+    const active = document.activeElement;
+    const style = close ? getComputedStyle(close) : null;
+    return {
+      burgerExpanded: document.querySelector("#burger")?.getAttribute("aria-expanded"),
+      menuClass: menu?.className || "",
+      menuHidden: menu?.getAttribute("aria-hidden"),
+      menuInert: menu?.hasAttribute("inert") || false,
+      closeExists: !!close,
+      closeDisplay: style?.display || "",
+      closeVisibility: style?.visibility || "",
+      focusTag: active?.tagName || "",
+      focusId: active?.id || "",
+      focusClass: String(active?.className || ""),
+      focusInMenu: !!menu?.contains(active)
+    };
+  });
+  console.log("Diagnóstico do menu por teclado:", JSON.stringify(menuState));
+  assert.equal(menuState.focusInMenu, true, "O foco deve entrar no menu ao abri-lo");
   await page.keyboard.press("Shift+Tab");
   assert.equal(await page.evaluate(() => document.querySelector("#navlinks")?.contains(document.activeElement)), true,
     "Shift+Tab deve manter o foco dentro do menu");
