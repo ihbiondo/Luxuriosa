@@ -179,7 +179,7 @@ test("entregas, FAQ e páginas locais publicam tarifas, prazos e retirada consis
   assert.match(faq, /até 2 horas em Agudos, Piratininga, Pederneiras e Lençóis Paulista/);
   assert.match(faq, /a cidade e o estado são identificados automaticamente/);
   assert.match(faq, /A retirada é gratuita em Bauru e precisa ser agendada previamente/);
-  assert.match(service, /Retirada e atendimento presencial somente mediante agendamento prévio/);
+  assert.match(service, /Retirada e atendimento presencial em endereço reservado, somente mediante agendamento prévio/);
 
   const localPages = [
     ["cidades/sex-shop-agudos.html", /frete fixo de R\$ 25,00/, /até 2 horas após a confirmação do pagamento/],
