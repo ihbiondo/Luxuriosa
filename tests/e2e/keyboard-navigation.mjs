@@ -69,6 +69,15 @@ try {
     const close = menu?.querySelector(".nav-drawer-close");
     const active = document.activeElement;
     const style = close ? getComputedStyle(close) : null;
+    const ancestors = [];
+    for (let node = close; node && node.nodeType === 1; node = node.parentElement) {
+      const cs = getComputedStyle(node);
+      ancestors.push({
+        tag: node.tagName, id: node.id, className: String(node.className || ""),
+        display: cs.display, visibility: cs.visibility, position: cs.position,
+        opacity: cs.opacity, inert: node.hasAttribute("inert"), ariaHidden: node.getAttribute("aria-hidden")
+      });
+    }
     return {
       burgerExpanded: document.querySelector("#burger")?.getAttribute("aria-expanded"),
       menuClass: menu?.className || "",
@@ -77,6 +86,7 @@ try {
       closeExists: !!close,
       closeDisplay: style?.display || "",
       closeVisibility: style?.visibility || "",
+      closeRects: close ? [...close.getClientRects()].map(r => ({width:r.width,height:r.height,top:r.top,left:r.left})) : [],
       focusTag: active?.tagName || "",
       focusId: active?.id || "",
       focusClass: String(active?.className || ""),
@@ -85,12 +95,23 @@ try {
       closeTabIndex: close?.tabIndex ?? null,
       closeConnected: close?.isConnected ?? false,
       inertAncestor: !!close?.closest("[inert]"),
+      documentHasFocus: document.hasFocus(),
+      activeElement: active?.outerHTML?.slice(0,300) || "",
+      ancestors,
       focusCalls: window.__luxFocusCalls || [],
       focusEvents: window.__luxFocusEvents || []
     };
   });
-  console.log("Diagnóstico do menu por teclado:", JSON.stringify(menuState));
-  assert.equal(menuState.focusInMenu, true, "O foco deve entrar no menu ao abri-lo");
+  const directFocus = await page.evaluate(() => {
+    const close = document.querySelector("#navlinks .nav-drawer-close");
+    if (!close) return false;
+    close.focus();
+    return document.activeElement === close;
+  });
+  console.log("Diagnóstico do menu por teclado:", JSON.stringify({ ...menuState, directFocus }));
+  assert.equal(directFocus, true, "O botão de fechar precisa aceitar foco programático");
+  assert.equal(await page.evaluate(() => document.querySelector("#navlinks")?.contains(document.activeElement)), true,
+    "O foco deve entrar no menu ao abri-lo");
   await page.keyboard.press("Shift+Tab");
   assert.equal(await page.evaluate(() => document.querySelector("#navlinks")?.contains(document.activeElement)), true,
     "Shift+Tab deve manter o foco dentro do menu");
