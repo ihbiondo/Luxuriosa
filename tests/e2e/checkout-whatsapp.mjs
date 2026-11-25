@@ -32,6 +32,14 @@ await page.addInitScript(() => {
     return null;
   };
 });
+await page.route(/https:\/\/byiykxfugvxuowueuxca\.supabase\.co\/functions\/v1\/create-payment-order(?:\?.*)?$/, async route => {
+  await route.fulfill({
+    status: 403,
+    headers: { "access-control-allow-origin": "*" },
+    contentType: "application/json",
+    body: JSON.stringify({ error: "Pagamentos reais estão bloqueados no E2E." })
+  });
+});
 await page.route(/https:\/\/byiykxfugvxuowueuxca\.supabase\.co\/functions\/v1\/cart-orders(?:\?.*)?$/, async route => {
   const request = route.request();
   if (request.method() === "OPTIONS") {
