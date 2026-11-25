@@ -8,6 +8,7 @@ const checkoutPages = ["index.html", "loja.html"].map((path) => ({
 }));
 const cart = readFileSync("js/carrinho.js", "utf8");
 const client = readFileSync("js/clientes.js", "utf8");
+const cartOrders = readFileSync("supabase/functions/cart-orders/index.ts", "utf8");
 const app = readFileSync("js/app.js", "utf8");
 const login = readFileSync("login.html", "utf8");
 const clubLegacy = readFileSync("clube.html", "utf8");
@@ -88,6 +89,11 @@ test("o checkout envia os dados completos do pedido ao registro comercial, sem d
   assert.doesNotMatch(client, /registrarEtapa\("whatsapp_opened", itensAtuais, dadosAtuais\)/);
   assert.match(client, /fulfillmentType: pickup \? "pickup" : "express"/);
   assert.match(client, /pickupRequestedAt:/);
+  assert.match(cartOrders, /const fulfillmentType = fulfillmentInput === "pickup" \? "pickup" : "express"/);
+  assert.match(cartOrders, /const address = fulfillmentType === "pickup" \? \{\} : submittedAddress/);
+  assert.match(cartOrders, /const shippingCents = fulfillmentType === "pickup" \? 0 : null/);
+  assert.match(cartOrders, /fulfillment_type: fulfillmentType/);
+  assert.match(cartOrders, /pickup_requested_at: pickupRequestedAt/);
   assert.match(readFileSync("js/inteligencia.js", "utf8"), /function registrarPedido\(items, customer, shippingAmount\)/);
 });
 
