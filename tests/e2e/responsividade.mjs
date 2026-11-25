@@ -1422,8 +1422,12 @@ const expectedProductNavigationPages = catalogData.produtos.filter(product => pr
 const checkedProductNavigationPages = result.unifiedNavigationChecks.filter(item => item.route.startsWith("/produtos/")).length;
 assert.equal(checkedProductNavigationPages, expectedProductNavigationPages,
   "Nem todas as páginas individuais foram verificadas quanto ao menu unificado.");
-assert.equal(result.unifiedNavigationInteractions.length, 5,
+const navigationOpenChecks = result.unifiedNavigationInteractions.filter(item => !item.keyboard).length;
+const navigationKeyboardChecks = result.unifiedNavigationInteractions.filter(item => item.keyboard).length;
+assert.equal(navigationOpenChecks, 5,
   "Nem todas as páginas representativas tiveram a abertura do menu testada.");
+assert.equal(navigationKeyboardChecks, 5,
+  "Nem todas as páginas representativas tiveram a navegação por teclado testada.");
 assert.equal(result.homeFeaturedImageFailures.length, 0,
   "Uma ou mais imagens dos kits em destaque da home não carregaram: " +
   JSON.stringify(result.homeFeaturedImageFailures));
