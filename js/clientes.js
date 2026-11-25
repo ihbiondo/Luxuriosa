@@ -10,6 +10,7 @@
   var dadosAtuais = null;
   var mensagemAtual = "";
   var cepConsultaId = 0;
+  var cepConsultaEmAndamento = "";
   var cepValidado = "";
   var bairroViaCep = "";
   var ultimoEnderecoViaCep = "";
@@ -206,6 +207,7 @@
     definirValor("customerState", address.state || "");
     definirValor("customerReference", address.reference || "");
     ultimoEnderecoViaCep = "";
+    cepConsultaEmAndamento = "";
     cepValidado = "";
     bairroViaCep = "";
     if ($("customerCity")) $("customerCity").readOnly = true;
@@ -240,7 +242,9 @@
       campoCep.focus();
       return;
     }
+    if (cepValidado === cep || cepConsultaEmAndamento === cep) return;
     campoCep.removeAttribute("aria-invalid");
+    cepConsultaEmAndamento = cep;
     var consultaAtual = ++cepConsultaId;
     mostrarStatusCep("Consultando CEP…", "info");
     fetch("https://viacep.com.br/ws/" + cep + "/json/")
@@ -251,6 +255,7 @@
       .then(function (dados) {
         if (consultaAtual !== cepConsultaId || $("customerCep").value.replace(/\D/g, "") !== cep) return;
         if (!dados || dados.erro) {
+          cepConsultaEmAndamento = "";
           cepValidado = "";
           bairroViaCep = "";
           $("customerCep").setAttribute("aria-invalid", "true");
@@ -275,6 +280,7 @@
         if (valoresAtuais.some(Boolean) && enderecoAtual !== ultimoEnderecoViaCep) {
           var substituir = window.confirm("A consulta vai substituir rua, bairro, cidade e estado pelos dados encontrados. Deseja continuar?");
           if (!substituir) {
+            cepConsultaEmAndamento = "";
             cepValidado = "";
             bairroViaCep = "";
             mostrarStatusCep("Consulta concluída. Os campos digitados foram mantidos, mas o CEP precisa ser confirmado para continuar.", "info");
@@ -294,6 +300,7 @@
           if (campo) campo.removeAttribute("aria-invalid");
         });
         bairroViaCep = valoresCep[1];
+        cepConsultaEmAndamento = "";
         cepValidado = cep;
         ultimoEnderecoViaCep = JSON.stringify(valoresCep);
         mostrarStatusCep("Endereço identificado pelo CEP. Complete o número e confira os dados antes de continuar.", "success");
@@ -301,6 +308,7 @@
       })
       .catch(function () {
         if (consultaAtual !== cepConsultaId) return;
+        cepConsultaEmAndamento = "";
         cepValidado = "";
         bairroViaCep = "";
         mostrarStatusCep("Não foi possível consultar o CEP agora. Tente novamente em instantes.", "error");
@@ -886,10 +894,8 @@
           if ($("customerState")) $("customerState").readOnly = true;
           if ($("customerDistrict")) $("customerDistrict").readOnly = false;
           atualizarAvisoFrete();
+          if (digits.length === 8) consultarCep();
         }
-      });
-      campoCep.addEventListener("blur", function () {
-        if (this.value.replace(/\D/g, "").length === 8) consultarCep();
       });
       campoCep.addEventListener("keydown", function (event) {
         if (event.key === "Enter") {
