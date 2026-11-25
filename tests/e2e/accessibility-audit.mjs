@@ -12,13 +12,58 @@ const routes = [...new Set([...xml.matchAll(/<loc>\s*(.*?)\s*<\/loc>/gis)].map(m
 
 const browser = await chromium.launch({ headless: true, args: ["--no-sandbox", "--disable-dev-shm-usage"] });
 const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
-const report = { routeFailures: [], missingLanguage: [], missingTitle: [], imagesWithoutAlt: [], controlsWithoutName: [], fieldsWithoutLabel: [], framesWithoutTitle: [] };
+const report = { routeFailures: [], missingLanguage: [], missingTitle: [], imagesWithoutAlt: [], controlsWithoutName: [], fieldsWithoutLabel: [], framesWithoutTitle: [], ageGateFailures: [] };
 
 try {
   for (const route of routes) {
     try {
       const response = await page.goto(new URL(route, base).href, { waitUntil: "domcontentloaded", timeout: 20000 });
       if (response && response.status() >= 400) { report.routeFailures.push({ route, status: response.status() }); continue; }
+      const ageRequired = await page.locator("html").getAttribute("data-ed-age-required") === "true";
+      if (ageRequired) {
+        try {
+          const dialog = page.locator('.ed-age-dialog[role="dialog"][aria-modal="true"]');
+          await dialog.waitFor({ state: "visible", timeout: 5000 });
+          const initialState = await page.evaluate(() => {
+            const dialog = document.querySelector(".ed-age-dialog");
+            const titleId = dialog?.getAttribute("aria-labelledby");
+            const descriptionId = dialog?.getAttribute("aria-describedby");
+            return {
+              initialFocus: document.activeElement?.matches(".ed-age-confirm") === true,
+              named: !!titleId && !!document.getElementById(titleId) && !!descriptionId && !!document.getElementById(descriptionId),
+              backgroundInert: [".ed-header", ".ed-adult", ".ed-main", ".ed-footer"]
+                .filter(selector => document.querySelector(selector))
+                .every(selector => document.querySelector(selector).hasAttribute("inert"))
+            };
+          });
+          if (!initialState.initialFocus || !initialState.named || !initialState.backgroundInert) {
+            report.ageGateFailures.push({ route, stage: "initial", state: initialState });
+          }
+          await page.keyboard.press("Tab");
+          const tabToExit = await page.evaluate(() => document.activeElement?.matches(".ed-age-exit") === true);
+          await page.keyboard.press("Tab");
+          const tabToConfirm = await page.evaluate(() => document.activeElement?.matches(".ed-age-confirm") === true);
+          await page.keyboard.press("Shift+Tab");
+          const reverseToExit = await page.evaluate(() => document.activeElement?.matches(".ed-age-exit") === true);
+          if (!tabToExit || !tabToConfirm || !reverseToExit) {
+            report.ageGateFailures.push({ route, stage: "keyboard-trap", tabToExit, tabToConfirm, reverseToExit });
+          }
+          await page.locator(".ed-age-confirm").click();
+          await dialog.waitFor({ state: "detached", timeout: 5000 });
+          const restored = await page.evaluate(() => ({
+            focusReturned: document.activeElement === document.querySelector(".ed-main"),
+            backgroundReleased: [".ed-header", ".ed-adult", ".ed-main", ".ed-footer"]
+              .filter(selector => document.querySelector(selector))
+              .every(selector => !document.querySelector(selector).hasAttribute("inert"))
+          }));
+          if (!restored.focusReturned || !restored.backgroundReleased) {
+            report.ageGateFailures.push({ route, stage: "close", state: restored });
+          }
+        } catch (error) {
+          report.ageGateFailures.push({ route, stage: "exception", error: String(error).slice(0, 240) });
+        }
+      }
+
       const issues = await page.evaluate(() => {
         const hidden = el => {
           if (el.closest("[hidden], [aria-hidden='true']")) return true;
