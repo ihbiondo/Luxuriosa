@@ -378,7 +378,7 @@ body{background:radial-gradient(ellipse at 10% 5%,rgba(113,69,132,.38),transpare
 .ed-related h2{color:#493451}
 .ed-related a{color:#a72f78;font-weight:600}
 .ed-tool{border-color:#e1d4e9;background:linear-gradient(145deg,#faf7fc,#eee5f4);color:#493451;box-shadow:0 12px 30px rgba(0,0,0,.16)}
-.ed-tool h2,.ed-tool h3{color:#493451}
+.ed-tool h2,.ed-tool h3{color:#493451}.ed-tool .ed-kicker{color:#80602f}.ed-tool .ed-small{color:#665b70}
 .ed-tool>p{color:#665b70;font-size:14px;line-height:1.75}
 .ed-question,.ed-check{border:1px solid #dfd4e7;background:#fff;color:#493451}
 .ed-question legend{color:#493451}
