@@ -122,6 +122,23 @@
       campoCep.required = !pickup;
       campoCep.setAttribute("aria-required", pickup ? "false" : "true");
     }
+    if (pickup) {
+      // Retirada não coleta nem envia endereço, mesmo que o cliente tenha consultado um CEP antes.
+      cepConsultaId += 1;
+      cepValidado = "";
+      bairroViaCep = "";
+      ultimoEnderecoViaCep = "";
+      ["customerCep", "customerStreet", "customerNumber", "customerComplement",
+        "customerDistrict", "customerCity", "customerState", "customerReference"].forEach(function (id) {
+        definirValor(id, "");
+        var field = $(id);
+        if (field) field.removeAttribute("aria-invalid");
+      });
+      if ($("customerCity")) $("customerCity").readOnly = true;
+      if ($("customerState")) $("customerState").readOnly = true;
+      if ($("customerDistrict")) $("customerDistrict").readOnly = false;
+      mostrarStatusCep("", "info");
+    }
     atualizarAvisoFrete();
   }
 
@@ -138,7 +155,7 @@
       paymentPayerType: texto("customerPayerType") === "third_party" ? "third_party" : "account_holder",
       paymentPayerName: texto("customerPayerName"),
       paymentPayerPhone: texto("customerPayerPhone"),
-      address: {
+      address: pickup ? {} : {
         zip: texto("customerCep"),
         street: texto("customerStreet"),
         number: texto("customerNumber"),
@@ -293,7 +310,7 @@
     }
     var tarifa = obterTarifasOficiais({ city: cidade, state: estado });
     var pedidoMinimo = minimoEntregaPorEndereco({ city: cidade, state: estado });
-    if (!tarifa) {
+    if (!tarifa || estado !== "SP") {
       aviso.textContent = normalizarLocalidade(cidade) === "bauru" && !bairroViaCep
         ? "O CEP não retornou o bairro. A equipe confirmará se o endereço pertence a Tibiriçá, o frete e o pedido mínimo."
         : "Entrega para " + cidade + "/" + estado + ": frete e pedido mínimo sob confirmação pelo atendimento.";
