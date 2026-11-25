@@ -50,7 +50,10 @@ test("todas as promoções do catálogo são públicas", () => {
   assert.match(catalogScript, /formatarPreco\([\s\S]*?produto\.precoAntigo/);
   assert.match(productDetail, /Oferta disponível para todos/);
   assert.doesNotMatch(productDetail, /LuxuriosaClubePrecos|clube-precos\.js|carregarStatusClube/);
-  assert.equal((home.match(/home-kit-static-club-label/g) || []).length, 4);
+  assert.equal((home.match(/home-kit-static-promo-label/g) || []).length, 4);
+  for (const [path, html] of [["index.html", home], ["loja.html", store], ["loja/lingerie/index.html", lingerie]]) {
+    assert.doesNotMatch(html, /clube-precos\\.js|LuxuriosaClubePrecos/, path);
+  }
 });
 
 test("todas as páginas de produto carregam os scripts atuais sem consultar o Clube", () => {
