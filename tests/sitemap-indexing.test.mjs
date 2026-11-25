@@ -58,9 +58,10 @@ test("sitemap contém URLs públicas únicas, canônicas e existentes", () => {
     const productImages = [
       product.imagem,
       ...(Array.isArray(product.imagens) ? product.imagens : [])
-    ].filter((image) => typeof image === "string" && image.trim() && !/^https?:\\/\\//i.test(image));
+    ].filter((image) => typeof image === "string" && image.trim() &&
+      !image.startsWith("http://") && !image.startsWith("https://"));
     for (const image of productImages) {
-      const imagePath = image.replace(/^\\.\\//, "");
+      const imagePath = image.startsWith("./") ? image.slice(2) : image;
       assert.ok(existsSync(imagePath), "Imagem cadastrada não existe: " + imagePath);
     }
   }
