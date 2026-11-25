@@ -46,6 +46,7 @@ try {
     const b = document.querySelector("#burger"), m = document.querySelector("#navlinks");
     return b?.getAttribute("aria-expanded") === "true" && m?.getAttribute("aria-hidden") === "false" && !m?.hasAttribute("inert");
   });
+  await page.waitForFunction(() => document.activeElement?.classList?.contains("nav-drawer-close") === true);
   assert.equal(await page.evaluate(() => document.querySelector("#navlinks")?.contains(document.activeElement)), true,
     "O foco deve entrar no menu ao abri-lo");
   assert.equal(await page.evaluate(() => document.activeElement?.classList?.contains("nav-drawer-close")), true,
