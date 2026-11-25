@@ -261,7 +261,8 @@ try {
         secondaryColor: secondary ? getComputedStyle(secondary).color : ""
       };
     });
-    await page.locator(".ed-next-step-actions > a:first-child").focus();
+    await page.locator("#quizReset").focus();
+    await page.keyboard.press("Tab");
     const journeyFocusVisible = await page.locator(".ed-next-step-actions > a:first-child").evaluate(el => {
       const style = getComputedStyle(el);
       return style.outlineStyle === "solid" && style.outlineColor === "rgb(227, 68, 157)" &&
