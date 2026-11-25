@@ -17,9 +17,11 @@ const openedUrls = [];
 const paymentRequests = [];
 const cartOrderRequests = [];
 page.on("request", request => {
-  if (request.url().includes("/functions/v1/create-payment-order")) {
-    paymentRequests.push(request.url());
-  }
+  if (request.url().includes("/functions/v1/create-payment-order")) paymentRequests.push(request.url());
+  if (request.url().includes("cart-orders")) console.log("[E2E] request", request.method(), request.url());
+});
+page.on("response", response => {
+  if (response.url().includes("cart-orders")) console.log("[E2E] response", response.status(), response.request().method(), response.url());
 });
 await page.addInitScript(() => {
   try {
@@ -40,8 +42,9 @@ await page.route(/https:\/\/byiykxfugvxuowueuxca\.supabase\.co\/functions\/v1\/c
     body: JSON.stringify({ error: "Pagamentos reais estão bloqueados no E2E." })
   });
 });
-await page.route(/https:\/\/byiykxfugvxuowueuxca\.supabase\.co\/functions\/v1\/cart-orders(?:\?.*)?$/, async route => {
+await page.route(/cart-orders/, async route => {
   const request = route.request();
+  console.log("[E2E] intercepted cart-orders", request.method(), request.url());
   if (request.method() === "OPTIONS") {
     const requestedHeaders = request.headers()["access-control-request-headers"] || "apikey,content-type";
     await route.fulfill({
