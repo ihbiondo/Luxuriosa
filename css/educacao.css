@@ -342,7 +342,7 @@ body{background:radial-gradient(ellipse at 10% 5%,rgba(113,69,132,.38),transpare
  box-shadow:0 12px 30px rgba(0,0,0,.16)
 }
 .ed-card:hover{border-color:#e3449d;box-shadow:0 15px 34px rgba(0,0,0,.2)}
-.ed-card-index{color:#96713d;font-size:11px}
+.ed-card-index{color:#80602f;font-size:11px}
 .ed-card h2,.ed-card h3{color:#493451}
 .ed-card p{color:#665b70;font-size:14px;line-height:1.7}
 .ed-arrow,.ed-card--feature .ed-arrow{color:#b52e78;font-size:11px}
@@ -734,7 +734,7 @@ body{background:radial-gradient(ellipse at 10% 5%,rgba(113,69,132,.38),transpare
 .ed-category-icon { width: 48px; height: 48px; display: grid; place-items: center; border: 1px solid #e4d4ec; border-radius: 13px; background: #fff; color: #a8327b; }
 .ed-category-icon svg { width: 25px; height: 25px; fill: none; stroke: currentColor; stroke-width: 1.55; stroke-linecap: round; stroke-linejoin: round; }
 .ed-category-copy { min-width: 0; display: grid; gap: 3px; }
-.ed-category-index { color: #9a713b; font-size: 9px; font-weight: 700; letter-spacing: .14em; }
+.ed-category-index { color: #80602f; font-size: 9px; font-weight: 700; letter-spacing: .14em; }
 .ed-category-copy strong { color: #493451; font: 500 19px/1.2 Georgia, "Times New Roman", serif; }
 .ed-category-copy small { color: #6c6175; font-size: 12px; line-height: 1.5; }
 .ed-category-arrow { color: #b52e78; font-size: 18px; }
