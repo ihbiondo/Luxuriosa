@@ -83,6 +83,7 @@ try {
   assert.notEqual(experienceSearchFocus.containerShadow, "none", "Contêiner da busca deve destacar o foco");
   assert.match(experienceSearchFocus.containerBorder, /227, 68, 157/, "Borda do contêiner deve usar o rosa de foco");
 
+  await page.goto(new URL("/", BASE_URL).href, { waitUntil: "domcontentloaded" });
   const burger = page.locator("#burger");
   await burger.waitFor({ state: "visible" });
   await page.waitForFunction(() => !!document.querySelector("#burger") && !document.querySelector("#burger").disabled);
