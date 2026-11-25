@@ -729,20 +729,8 @@
         </select>
 
         <div class="cart-delivery-fields" id="cartDeliveryFields" hidden>
-          <label for="cartDeliveryCity">Cidade ou região da entrega <span aria-hidden="true">*</span></label>
-          <select id="cartDeliveryCity" required aria-required="true">
-            <option value="">Selecione sua cidade ou região</option>
-            <option value="bauru">Bauru (exceto Tibiriçá)</option>
-            <option value="tibirica">Tibiriçá</option>
-            <option value="agudos">Agudos</option>
-            <option value="piratininga">Piratininga</option>
-            <option value="pederneiras">Pederneiras</option>
-            <option value="lencois">Lençóis Paulista</option>
-            <option value="borebi">Borebi</option>
-            <option value="other">Outra localidade</option>
-          </select>
-          <p class="cart-fulfillment-hint" id="cartClubInfo" role="status" aria-live="polite">O frete é calculado conforme a localidade e confirmado no atendimento.</p>
-          </div>
+          <p class="cart-fulfillment-hint" id="cartDeliveryInfo" role="status" aria-live="polite">Informe o CEP na próxima etapa. A cidade será identificada automaticamente e as condições de entrega serão apresentadas.</p>
+        </div>
 
         <div class="cart-total-row cart-fee-row">
           <span>Frete / retirada</span>
@@ -882,16 +870,16 @@
             </div>
             <div class="customer-field">
               <label for="customerCity">Cidade <span aria-hidden="true">*</span></label>
-              <input id="customerCity" name="city" autocomplete="address-level2" required maxlength="100" placeholder="Cidade">
+              <input id="customerCity" name="city" autocomplete="address-level2" required maxlength="100" placeholder="Identificada pelo CEP" readonly aria-readonly="true">
             </div>
             <div class="customer-field">
               <label for="customerState">Estado (UF) <span aria-hidden="true">*</span></label>
-              <input id="customerState" name="state" autocomplete="address-level1" required maxlength="2" pattern="[A-Za-z]{2}" placeholder="SP">
+              <input id="customerState" name="state" autocomplete="address-level1" required maxlength="2" pattern="[A-Za-z]{2}" placeholder="Identificado pelo CEP" readonly aria-readonly="true">
             </div>
             <div class="customer-field customer-span-2">
               <label for="customerReference">Ponto de referência <span class="optional">(opcional)</span></label>
               <input id="customerReference" name="reference" autocomplete="off" maxlength="180" placeholder="Próximo a..., portão..., cor da casa...">
-              <small>O CEP preenche rua, bairro, cidade e estado quando esses dados estão disponíveis. Confira tudo antes de revisar o pedido.</small>
+              <small>A cidade e o estado são identificados automaticamente pelo CEP e não podem ser escolhidos manualmente. Confira o endereço e complete os campos que não forem retornados.</small>
             </div>
           </div>
         </fieldset>
