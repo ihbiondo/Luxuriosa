@@ -460,7 +460,12 @@ jobs:
           cp "$GITHUB_WORKSPACE/tests/fixtures/club-membership-e2e.sql" "$test_root/supabase/migrations/20261122190100_club_membership_e2e.sql"
           mkdir -p "$test_root/supabase/functions/create-payment-order"
           mkdir -p "$test_root/supabase/functions/cart-orders"
+          mkdir -p "$test_root/supabase/functions/_shared"
           cp "$GITHUB_WORKSPACE/supabase/functions/cart-orders/index.ts" "$test_root/supabase/functions/cart-orders/index.ts"
+          cp "$GITHUB_WORKSPACE/supabase/functions/_shared/cart-session-state.mjs" "$test_root/supabase/functions/_shared/"
+          cp "$GITHUB_WORKSPACE/supabase/functions/_shared/cart-instance-state.mjs" "$test_root/supabase/functions/_shared/"
+          cp "$GITHUB_WORKSPACE/supabase/functions/_shared/visitor-analytics.mjs" "$test_root/supabase/functions/_shared/"
+          cp "$GITHUB_WORKSPACE/supabase/functions/_shared/cart-request-guards.mjs" "$test_root/supabase/functions/_shared/"
           cp "$GITHUB_WORKSPACE/supabase/functions/create-payment-order/index.ts" "$test_root/supabase/functions/create-payment-order/index.ts"
           # O supabase/config.toml contém a configuração do webhook. Copia a
           # função inteira para a pilha descartável, mesmo sem invocá-la no E2E.
