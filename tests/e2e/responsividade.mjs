@@ -936,8 +936,26 @@ try {
       )].filter(element => element.offsetParent !== null);
       return document.activeElement === visible[visible.length - 1];
     });
+    const shiftTabDiagnostic = await page.evaluate(() => {
+      const menu = document.querySelector("#navlinks");
+      const visible = [...menu.querySelectorAll('a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])')]
+        .filter(element => element.offsetParent !== null);
+      const active = document.activeElement;
+      return {
+        activeTag: active?.tagName || "",
+        activeClass: typeof active?.className === "string" ? active.className : "",
+        activeText: (active?.textContent || "").trim().slice(0, 80),
+        first: visible[0] ? { tag: visible[0].tagName, className: visible[0].className, text: visible[0].textContent.trim().slice(0, 80) } : null,
+        last: visible.length ? { tag: visible.at(-1).tagName, className: visible.at(-1).className, text: visible.at(-1).textContent.trim().slice(0, 80) } : null,
+        count: visible.length,
+        menuOpen: menu.classList.contains("open"),
+        ariaHidden: menu.getAttribute("aria-hidden"),
+        inert: menu.inert
+      };
+    });
     assert.ok(shiftTabWrapped,
-      "Shift+Tab não circulou para o último controle do menu em " + sample.route);
+      "Shift+Tab não circulou para o último controle do menu em " + sample.route + ": " +
+      JSON.stringify(shiftTabDiagnostic));
 
     await page.keyboard.press("Tab");
     const tabReturnedToClose = await page.evaluate(() =>
