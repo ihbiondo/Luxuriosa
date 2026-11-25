@@ -9,6 +9,23 @@ const page = await context.newPage();
 
 try {
   await page.addInitScript(() => {
+    window.__luxFocusCalls = [];
+    window.__luxFocusEvents = [];
+    const nativeFocus = HTMLElement.prototype.focus;
+    HTMLElement.prototype.focus = function (options) {
+      if (this.classList?.contains("nav-drawer-close")) {
+        window.__luxFocusCalls.push({
+          tag: this.tagName,
+          disabled: this.disabled,
+          connected: this.isConnected,
+          inert: !!this.closest("[inert]")
+        });
+      }
+      return nativeFocus.call(this, options);
+    };
+    document.addEventListener("focusin", event => {
+      if (event.target?.classList?.contains("nav-drawer-close")) window.__luxFocusEvents.push("close-focused");
+    }, true);
     localStorage.setItem("lux18", "1");
     localStorage.setItem("lux_cookie_consent_v1", JSON.stringify({
       version: 2, updatedAt: new Date().toISOString(), necessary: true, analytics: false
@@ -63,7 +80,13 @@ try {
       focusTag: active?.tagName || "",
       focusId: active?.id || "",
       focusClass: String(active?.className || ""),
-      focusInMenu: !!menu?.contains(active)
+      focusInMenu: !!menu?.contains(active),
+      closeDisabled: close?.disabled ?? null,
+      closeTabIndex: close?.tabIndex ?? null,
+      closeConnected: close?.isConnected ?? false,
+      inertAncestor: !!close?.closest("[inert]"),
+      focusCalls: window.__luxFocusCalls || [],
+      focusEvents: window.__luxFocusEvents || []
     };
   });
   console.log("Diagnóstico do menu por teclado:", JSON.stringify(menuState));
