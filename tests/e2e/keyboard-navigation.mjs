@@ -72,7 +72,6 @@ try {
   await experienceSearch.waitFor({ state: "visible" });
   await experienceSearch.focus();
   const experienceSearchFocus = await experienceSearch.evaluate(el => {
-    const inputStyle = getComputedStyle(el);
     const containerStyle = getComputedStyle(el.closest(".search"));
     return {
       keyboard: el.matches(":focus-visible"),
