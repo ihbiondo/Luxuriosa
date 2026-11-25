@@ -80,7 +80,16 @@ test("páginas de conta, Clube e gestão não são listadas e declaram noindex",
     "lux-gestao/index.html",
     "lux-gestao-pedidos/index.html",
     "lux-central/index.html",
-    "acompanhar-pedido/index.html"
+    "acompanhar-pedido/index.html",
+    "gestao-privada-8f2c6d.html",
+    "avaliar/index.html",
+    "previa/index.html",
+    "previa/checkout.html",
+    "previa/login.html",
+    "previa/pagamento-retorno.html",
+    "previa/lux-central/index.html",
+    "previa/lux-gestao/index.html",
+    "previa/lux-gestao-pedidos/index.html"
   ];
 
   for (const page of privatePages) {
