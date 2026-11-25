@@ -82,9 +82,8 @@ test("o checkout não consulta o Clube nem aplica tarifa especial de frete", () 
 });
 
 test("cart-orders recalcula preços promocionais públicos no servidor", () => {
-  assert.doesNotMatch(cartOrders, /cleanItems\(body\.items \|\| \[\], catalog, isClubMember\)/);
-  assert.match(cartOrders, /const price = clubPrice/);
-  assert.match(cartOrders, /applied_price_tier: hasClubPromotion \? "promotional" : "standard"/);
+  assert.match(cartOrders, /const price = Number\(product\?\.preco\)/);
+  assert.doesNotMatch(cartOrders, /loadClubMembership|resolveCatalogUnitPrice|isClubMember|ClubMembershipValidationError/);
   assert.match(cartOrders, /const clubDiscountCents = 0/);
   assert.match(cartOrders, /const totalCents = subtotalCents \+ \(shippingCents \|\| 0\)/);
   assert.match(cartOrders, /club_discount_percent: 0/);
