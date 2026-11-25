@@ -300,7 +300,12 @@
       Array.from(group.querySelectorAll(".ed-faq-item")).map(item => ({
         item,
         group,
-        searchText: normalizeFaqQuery(item.textContent)
+        searchText: (() => {
+          // A busca considera a pergunta e a resposta, não os cartões de conteúdos relacionados.
+          const searchable = item.cloneNode(true);
+          searchable.querySelectorAll(".ed-faq-related").forEach(related => related.remove());
+          return normalizeFaqQuery(searchable.textContent);
+        })()
       }))
     );
 
