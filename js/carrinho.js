@@ -28,25 +28,10 @@
   };
   var DICE_CHOICE_IDS = { "1": "2", "2": "1", "3": "3" };
 
-  /* Tarifas públicas de entrega em Bauru e região, em centavos. */
-  var DELIVERY_RATES = {
-    bauru: { label: "Bauru (exceto Tibiriçá)", standard: 1500, member: 1000, minimum: 2000 },
-    tibirica: { label: "Tibiriçá", standard: 2000, member: 1500, minimum: 5000 },
-    agudos: { label: "Agudos", standard: 2500, member: 2000, minimum: 5000 },
-    piratininga: { label: "Piratininga", standard: 2500, member: 2000, minimum: 5000 },
-    pederneiras: { label: "Pederneiras", standard: 2500, member: 2000, minimum: 5000 },
-    lencois: { label: "Lençóis Paulista", standard: 5000, member: 4000, minimum: 5000 },
-    borebi: { label: "Borebi", standard: 5000, member: 4000, minimum: 5000 }
-  };
-
   var carrinho = [];
   var catalogoSincronizado = false;
   var catalogoAtual = [];
-  var membroClubeAtivo = false;
-  var membroClubeVerificado = false;
-  var membroClubeAutenticado = false;
-  var membroClubeErro = false;
-  var focoAnteriorCarrinho = null;
+  var focoAnteriorCarrinho = null;  var focoAnteriorCarrinho = null;
 
 
   /* =======================================================
@@ -80,30 +65,11 @@
     return Number(produto && produto.preco);
   }
 
-  function atualizarControlesClube() {
-    var status = $("cartClubInfo");
-    var link = $("cartClubJoinLink");
-    if (status) {
-      status.textContent = !membroClubeVerificado
-        ? "Consultando sua participação no Clube…"
-        : membroClubeErro
-          ? "Não foi possível consultar o Clube agora. A condição será confirmada no checkout."
-          : membroClubeAtivo
-            ? "Frete especial do Clube aplicado automaticamente."
-            : membroClubeAutenticado
-              ? "Sua conta não tem adesão ativa. Será aplicado o frete padrão."
-              : "O Clube oferece frete especial aos membros ativos. As promoções dos produtos valem para todos.";
-    }
-    if (link) link.hidden = membroClubeVerificado && membroClubeAtivo;
-  }
-
   function salvarPreferenciaRecebimento() {
     var metodo = $("cartFulfillmentMethod");
-    var cidade = $("cartDeliveryCity");
     try {
       localStorage.setItem(RECEBIMENTO_STORAGE_KEY, JSON.stringify({
-        method: metodo ? metodo.value : "",
-        city: cidade ? cidade.value : ""
+        method: metodo ? metodo.value : ""
       }));
     } catch (_) {}
   }
@@ -114,19 +80,11 @@
       if (!raw) return;
       var preference = JSON.parse(raw);
       var metodo = $("cartFulfillmentMethod");
-      var cidade = $("cartDeliveryCity");
       if (metodo && ["delivery", "pickup"].indexOf(preference.method) !== -1) {
         metodo.value = preference.method;
       }
-      if (cidade && typeof preference.city === "string" &&
-          Array.prototype.some.call(cidade.options, function (option) {
-            return option.value === preference.city;
-          })) {
-        cidade.value = preference.city;
-      }
     } catch (_) {}
   }
-
 
   function obterWhatsApp() {
 
@@ -1107,9 +1065,7 @@
           var avisoPrecoClube = criarElemento(
             "a",
             "cart-item-club-promo",
-            membroClubeAtivo
-              ? "🏷️ Oferta disponível para todos"
-              : "🏷️ Oferta disponível para todos"
+            "🏷️ Oferta disponível para todos"
           );
           avisoPrecoClube.removeAttribute("href");
           avisoPrecoClube.style.display = "block";
@@ -1356,7 +1312,7 @@
       finalizar.setAttribute("aria-disabled", finalizar.disabled ? "true" : "false");
       finalizar.title = finalizar.disabled
         ? "Adicione produtos e escolha a forma de recebimento para continuar."
-        : "Enviar o resumo do carrinho, frete e total estimado pelo WhatsApp.";
+        : "Informar os dados do pedido e calcular o frete pelo CEP.";
     }
 
     if (contador) {
@@ -1539,49 +1495,19 @@
     if (metodo === "pickup") {
       return {
         valid: true, method: "pickup", city: "", cityLabel: "",
-        clubMember: false, freight: 0, total: subtotal,
-        minimum: 0, minimumMet: true
+        freight: 0, total: subtotal, minimum: 0, minimumMet: true
       };
     }
 
-    if (metodo !== "delivery") {
-      return { valid: false, method: "", freight: null, total: null };
-    }
-
-    var cidade = $("cartDeliveryCity") ? $("cartDeliveryCity").value : "";
-    if (!cidade) {
-      return { valid: false, method: "delivery", city: "", freight: null, total: null };
-    }
-
-    var membroClube = membroClubeVerificado && membroClubeAtivo;
-    if (cidade === "other") {
+    if (metodo === "delivery") {
+      // A localidade e o frete só são conhecidos depois da consulta do CEP.
       return {
-        valid: true, method: "delivery", city: "other",
-        cityLabel: "Outra localidade", clubMember: membroClube,
+        valid: true, method: "delivery", city: "",
         freight: null, total: null, minimum: null, minimumMet: null
       };
     }
 
-    var tarifa = DELIVERY_RATES[cidade];
-    if (!tarifa) {
-      return { valid: false, method: "delivery", city: cidade, freight: null, total: null };
-    }
-
-    var freteCentavos = membroClube ? tarifa.member : tarifa.standard;
-    var minimo = tarifa.minimum;
-
-    return {
-      valid: true,
-      method: "delivery",
-      city: cidade,
-      cityLabel: tarifa.label,
-      clubMember: membroClube,
-      freight: freteCentavos / 100,
-      total: subtotal + (freteCentavos / 100),
-      minimum: minimo / 100,
-      minimumMet: Math.round(subtotal * 100) >= minimo,
-      tollIncluded: cidade === "lencois" || cidade === "borebi"
-    };
+    return { valid: false, method: "", freight: null, total: null };
   }
 
   function atualizarResumoRecebimento() {
@@ -1604,37 +1530,14 @@
       return resumo;
     }
 
-    if (metodo !== "delivery") {
-      nota.textContent = "Escolha entrega ou retirada para calcular o valor final estimado.";
+    if (metodo === "delivery") {
+      if (valorFrete) valorFrete.textContent = "A calcular pelo CEP";
+      if (valorTotalGeral) valorTotalGeral.textContent = "A calcular";
+      nota.textContent = "Informe o CEP na próxima etapa. A cidade será identificada automaticamente e o frete será apresentado antes de revisar o pedido.";
       return resumo;
     }
 
-    if (!resumo.city) {
-      nota.textContent = "Selecione a cidade ou região para calcular o frete.";
-      return resumo;
-    }
-
-    if (resumo.freight === null) {
-      if (valorFrete) valorFrete.textContent = "A confirmar";
-      if (valorTotalGeral) valorTotalGeral.textContent = "A confirmar";
-      nota.textContent = "📍 Informe sua cidade e CEP no WhatsApp. A equipe confirmará a disponibilidade e o valor da entrega.";
-      return resumo;
-    }
-
-    if (valorFrete) valorFrete.textContent = formatarPreco(resumo.freight);
-    if (valorTotalGeral) valorTotalGeral.textContent = formatarPreco(resumo.total);
-
-    var notas = [];
-    if (resumo.clubMember) {
-      notas.push("🏷️ Benefício de frete do Clube aplicado automaticamente.");
-    }
-    if (resumo.minimumMet === false) {
-      notas.push("⚠️ Pedido mínimo nesta localidade: " + formatarPreco(resumo.minimum) + " em produtos.");
-    } else {
-      notas.push("Pedido mínimo: " + formatarPreco(resumo.minimum) + " em produtos.");
-    }
-    if (resumo.tollIncluded) notas.push("🛣️ Pedágio já incluído no valor do frete.");
-    nota.textContent = notas.join(" ");
+    nota.textContent = "Escolha entrega ou retirada para continuar.";
     return resumo;
   }
 
@@ -1652,7 +1555,7 @@
     if (!carrinho.length) return;
     var resumoRecebimento = obterResumoRecebimento();
     if (!resumoRecebimento.valid) {
-      window.alert("Selecione a forma de recebimento e, para entrega, a localidade antes de continuar.");
+      window.alert("Selecione a forma de recebimento antes de continuar. A cidade será identificada pelo CEP na próxima etapa.");
       return;
     }
     enviarPedidoWhatsApp();
@@ -1752,12 +1655,9 @@
 
 
     var metodoRecebimento = $("cartFulfillmentMethod");
-    var cidadeEntrega = $("cartDeliveryCity");
-    [metodoRecebimento, cidadeEntrega].forEach(function (controle) {
-      if (controle) controle.addEventListener("change", function () {
-        salvarPreferenciaRecebimento();
-        renderizar();
-      });
+    if (metodoRecebimento) metodoRecebimento.addEventListener("change", function () {
+      salvarPreferenciaRecebimento();
+      renderizar();
     });
 
     if (finalizar) {
@@ -1950,27 +1850,6 @@
   }
 
 
-  function aplicarEstadoClubeNoCarrinho(detail) {
-    if (!detail) return;
-    membroClubeVerificado = detail.loaded === true;
-    membroClubeAutenticado = detail.authenticated === true;
-    membroClubeErro = detail.error === true;
-    membroClubeAtivo = membroClubeVerificado &&
-      detail.isMember === true && detail.profileComplete === true;
-    atualizarControlesClube();
-    if (catalogoAtual.length) sincronizarCatalogo(catalogoAtual);
-    else renderizar();
-  }
-
-  window.addEventListener("luxuriosa:club-state-changed", function (event) {
-    aplicarEstadoClubeNoCarrinho(event && event.detail);
-  });
-  if (window.LuxuriosaClubePrecos &&
-      typeof window.LuxuriosaClubePrecos.obterEstado === "function") {
-    aplicarEstadoClubeNoCarrinho(window.LuxuriosaClubePrecos.obterEstado());
-  }
-
-
   /* =======================================================
      EXPOSIÇÃO PÚBLICA
      ======================================================= */
@@ -2027,7 +1906,6 @@
     restaurarPreferenciaRecebimento();
 
     configurarEventos();
-    atualizarControlesClube();
 
     renderizar();
     if (window.LuxuriosaInteligencia && typeof window.LuxuriosaInteligencia.registrarCarrinho === "function") {

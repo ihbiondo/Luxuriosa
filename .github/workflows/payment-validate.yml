@@ -46,6 +46,7 @@ on:
       - "js/carrinho.js"
       - "supabase/functions/create-payment-order/index.ts"
       - "supabase/functions/cart-orders/index.ts"
+      - "supabase/functions/_shared/**"
       - "supabase/functions/infinitepay-webhook/**"
       - "tests/infinitepay-webhook-notification.test.mjs"
       - "supabase/migrations/20261118162000_add_order_payer_identity.sql"
@@ -87,6 +88,7 @@ on:
       - "produtos/**"
       - "**/*.html"
       - "sitemap.xml"
+      - "tests/sitemap-indexing.test.mjs"
       - ".github/workflows/payment-validate.yml"
   pull_request:
     branches: [main]
@@ -129,6 +131,7 @@ on:
       - "js/carrinho.js"
       - "supabase/functions/create-payment-order/index.ts"
       - "supabase/functions/cart-orders/index.ts"
+      - "supabase/functions/_shared/**"
       - "supabase/functions/infinitepay-webhook/**"
       - "tests/infinitepay-webhook-notification.test.mjs"
       - "supabase/migrations/20261118162000_add_order_payer_identity.sql"
@@ -169,6 +172,7 @@ on:
       - "produtos/**"
       - "**/*.html"
       - "sitemap.xml"
+      - "tests/sitemap-indexing.test.mjs"
       - ".github/workflows/payment-validate.yml"
 
 permissions:
@@ -201,6 +205,11 @@ jobs:
             sleep 1
           done
           curl --fail --silent http://127.0.0.1:4173/login.html >/dev/null
+
+          E2E_BASE_URL="http://127.0.0.1:4173" node tests/e2e/sitemap-link-integrity.mjs
+          ACCESSIBILITY_REPORT_PATH="$GITHUB_WORKSPACE/e2e-screenshots/acessibilidade/report.json" \
+          E2E_BASE_URL="http://127.0.0.1:4173" node tests/e2e/accessibility-audit.mjs
+          E2E_BASE_URL="http://127.0.0.1:4173" node tests/e2e/keyboard-navigation.mjs
 
           RESPONSIVE_SCREENSHOT_DIR="$GITHUB_WORKSPACE/e2e-screenshots/responsividade" \
           RESPONSIVE_REPORT_PATH="$GITHUB_WORKSPACE/e2e-screenshots/responsividade/report.json" \
@@ -246,6 +255,7 @@ jobs:
           node --test tests/club-promotions.test.mjs
           node --test tests/pedido-whatsapp.test.mjs
           node --test tests/checkout-payer.test.mjs
+          node --test tests/sitemap-indexing.test.mjs
           node --test tests/infinitepay-webhook-notification.test.mjs
           node --test tests/product-featured.test.mjs
           node --test tests/consent-ui.test.mjs
@@ -369,8 +379,9 @@ jobs:
           assert "interval '18 years'" in club_membership_migration
           assert "Endereço não é obrigatório" in club_membership_migration
           assert "tibirica" in freight_backend and "freight_quote_required" in freight_backend
-          assert "R$ 15,00" in delivery_page and "R$ 10,00" in delivery_page
-          assert "R$ 50,00" in delivery_page and "R$ 40,00" in delivery_page
+          assert "R$ 15,00" in delivery_page and "R$ 10,00" not in delivery_page
+          assert "R$ 50,00" in delivery_page and "R$ 40,00" not in delivery_page
+          assert "Membro do Clube" not in delivery_page
           assert "o pedágio já está incluído" in delivery_page
           assert "cotado pelo atendimento" in delivery_faq
           assert "55 km pela rota" not in delivery_page
@@ -459,7 +470,12 @@ jobs:
           cp "$GITHUB_WORKSPACE/tests/fixtures/club-membership-e2e.sql" "$test_root/supabase/migrations/20261122190100_club_membership_e2e.sql"
           mkdir -p "$test_root/supabase/functions/create-payment-order"
           mkdir -p "$test_root/supabase/functions/cart-orders"
+          mkdir -p "$test_root/supabase/functions/_shared"
           cp "$GITHUB_WORKSPACE/supabase/functions/cart-orders/index.ts" "$test_root/supabase/functions/cart-orders/index.ts"
+          cp "$GITHUB_WORKSPACE/supabase/functions/_shared/cart-session-state.mjs" "$test_root/supabase/functions/_shared/"
+          cp "$GITHUB_WORKSPACE/supabase/functions/_shared/cart-instance-state.mjs" "$test_root/supabase/functions/_shared/"
+          cp "$GITHUB_WORKSPACE/supabase/functions/_shared/visitor-analytics.mjs" "$test_root/supabase/functions/_shared/"
+          cp "$GITHUB_WORKSPACE/supabase/functions/_shared/cart-request-guards.mjs" "$test_root/supabase/functions/_shared/"
           cp "$GITHUB_WORKSPACE/supabase/functions/create-payment-order/index.ts" "$test_root/supabase/functions/create-payment-order/index.ts"
           # O supabase/config.toml contém a configuração do webhook. Copia a
           # função inteira para a pilha descartável, mesmo sem invocá-la no E2E.

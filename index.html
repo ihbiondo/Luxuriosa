@@ -444,7 +444,7 @@
             <span class="home-kit-static-pricing" aria-label="Preço promocional: R$ 119,90; preço anterior: R$ 144,60">
               <span class="home-kit-static-old">De R$ 144,60</span>
               <span class="home-kit-static-current">R$ 119,90</span>
-              <span class="home-kit-static-club-label">🏷️ Oferta disponível para todos</span>
+              <span class="home-kit-static-promo-label">🏷️ Oferta disponível para todos</span>
             </span>
             <span class="home-kit-static-cta" aria-hidden="true">
               Conhecer kit
@@ -459,7 +459,7 @@
             <span class="home-kit-static-pricing" aria-label="Preço promocional: R$ 119,90; preço anterior: R$ 134,60">
               <span class="home-kit-static-old">De R$ 134,60</span>
               <span class="home-kit-static-current">R$ 119,90</span>
-              <span class="home-kit-static-club-label">🏷️ Oferta disponível para todos</span>
+              <span class="home-kit-static-promo-label">🏷️ Oferta disponível para todos</span>
             </span>
             <span class="home-kit-static-cta" aria-hidden="true">
               Conhecer kit
@@ -474,7 +474,7 @@
             <span class="home-kit-static-pricing" aria-label="Preço promocional: R$ 199,90; preço anterior: R$ 221,20">
               <span class="home-kit-static-old">De R$ 221,20</span>
               <span class="home-kit-static-current">R$ 199,90</span>
-              <span class="home-kit-static-club-label">🏷️ Oferta disponível para todos</span>
+              <span class="home-kit-static-promo-label">🏷️ Oferta disponível para todos</span>
             </span>
             <span class="home-kit-static-cta" aria-hidden="true">
               Conhecer kit
@@ -489,7 +489,7 @@
             <span class="home-kit-static-pricing" aria-label="Preço promocional: R$ 249,90; preço anterior: R$ 296,00">
               <span class="home-kit-static-old">De R$ 296,00</span>
               <span class="home-kit-static-current">R$ 249,90</span>
-              <span class="home-kit-static-club-label">🏷️ Oferta disponível para todos</span>
+              <span class="home-kit-static-promo-label">🏷️ Oferta disponível para todos</span>
             </span>
             <span class="home-kit-static-cta" aria-hidden="true">
               Conhecer kit
@@ -729,21 +729,8 @@
         </select>
 
         <div class="cart-delivery-fields" id="cartDeliveryFields" hidden>
-          <label for="cartDeliveryCity">Cidade ou região da entrega <span aria-hidden="true">*</span></label>
-          <select id="cartDeliveryCity" required aria-required="true">
-            <option value="">Selecione sua cidade ou região</option>
-            <option value="bauru">Bauru (exceto Tibiriçá)</option>
-            <option value="tibirica">Tibiriçá</option>
-            <option value="agudos">Agudos</option>
-            <option value="piratininga">Piratininga</option>
-            <option value="pederneiras">Pederneiras</option>
-            <option value="lencois">Lençóis Paulista</option>
-            <option value="borebi">Borebi</option>
-            <option value="other">Outra localidade</option>
-          </select>
-          <p class="cart-fulfillment-hint" id="cartClubInfo" role="status" aria-live="polite">Membros ativos do Clube recebem frete com valor especial. As promoções dos produtos valem para todos.</p>
-          <a class="cart-club-link" id="cartClubJoinLink" href="/clube/">Conheça o benefício de frete do Clube</a>
-          </div>
+          <p class="cart-fulfillment-hint" id="cartDeliveryInfo" role="status" aria-live="polite">Informe o CEP na próxima etapa. A cidade será identificada automaticamente e as condições de entrega serão apresentadas.</p>
+        </div>
 
         <div class="cart-total-row cart-fee-row">
           <span>Frete / retirada</span>
@@ -853,7 +840,6 @@
 
         <fieldset class="customer-fieldset customer-address-fields">
           <legend>Endereço de entrega</legend>
-          <p id="customerSelectedRegionInfo" class="customer-freight-info" role="status" aria-live="polite" hidden></p>
           <div class="customer-grid">
             <div class="customer-field customer-span-2">
               <label for="customerCep">CEP <span aria-hidden="true">*</span></label>
@@ -861,9 +847,9 @@
                 <input id="customerCep" name="postalCode" type="text" inputmode="numeric" autocomplete="postal-code" maxlength="9" placeholder="00000-000" required aria-required="true" aria-describedby="customerCepHelp customerCepStatus">
                 <button class="btn secondary" id="customerCepSearch" type="button">Buscar CEP</button>
               </div>
-              <small id="customerCepHelp">Obrigatório para entrega. Use Buscar CEP para preencher rua, bairro, cidade e estado. A retirada agendada não exige endereço.</small>
+              <small id="customerCepHelp">Obrigatório para entrega. Digite os 8 números do CEP; rua, bairro, cidade e estado serão preenchidos automaticamente quando disponíveis. A retirada agendada não exige endereço.</small>
               <small id="customerCepStatus" class="customer-cep-status" role="status" aria-live="polite" hidden></small>
-              <p id="customerFreightInfo" class="customer-freight-info" role="status" aria-live="polite">Informe a cidade e o estado para consultar as condições de entrega. O frete será confirmado no atendimento.</p>
+              <p id="customerFreightInfo" class="customer-freight-info" role="status" aria-live="polite">Informe o CEP para identificar automaticamente a cidade e calcular a estimativa de frete. O valor final será confirmado no atendimento.</p>
             </div>
             <div class="customer-field customer-span-2">
               <label for="customerStreet">Rua / Avenida <span aria-hidden="true">*</span></label>
@@ -883,16 +869,16 @@
             </div>
             <div class="customer-field">
               <label for="customerCity">Cidade <span aria-hidden="true">*</span></label>
-              <input id="customerCity" name="city" autocomplete="address-level2" required maxlength="100" placeholder="Cidade">
+              <input id="customerCity" name="city" autocomplete="address-level2" required maxlength="100" placeholder="Identificada pelo CEP" readonly aria-readonly="true">
             </div>
             <div class="customer-field">
               <label for="customerState">Estado (UF) <span aria-hidden="true">*</span></label>
-              <input id="customerState" name="state" autocomplete="address-level1" required maxlength="2" pattern="[A-Za-z]{2}" placeholder="SP">
+              <input id="customerState" name="state" autocomplete="address-level1" required maxlength="2" pattern="[A-Za-z]{2}" placeholder="Identificado pelo CEP" readonly aria-readonly="true">
             </div>
             <div class="customer-field customer-span-2">
               <label for="customerReference">Ponto de referência <span class="optional">(opcional)</span></label>
               <input id="customerReference" name="reference" autocomplete="off" maxlength="180" placeholder="Próximo a..., portão..., cor da casa...">
-              <small>O CEP preenche rua, bairro, cidade e estado quando esses dados estão disponíveis. Confira tudo antes de revisar o pedido.</small>
+              <small>A cidade e o estado são identificados automaticamente pelo CEP e não podem ser escolhidos manualmente. Confira o endereço e complete os campos que não forem retornados.</small>
             </div>
           </div>
         </fieldset>
@@ -956,8 +942,7 @@
           <a href="sobre.html">Sobre a Luxuriosa</a>
           <a href="atendimento.html">Contato</a>
           <a href="faq.html">Dúvidas frequentes</a>
-          <a href="clube/">Clube de Vantagens</a>
-          <a href="privacidade.html">Privacidade</a>
+              <a href="privacidade.html">Privacidade</a>
           <a href="#" data-open-cookie-preferences>Preferências de cookies</a>
         </nav>
       </div>
@@ -990,9 +975,8 @@
   ========================================================== -->
 
   <script defer src="js/inteligencia.js?v=20261123-visitor-session-v1"></script>
-  <script defer src="js/clube-precos.js?v=20261122-club-profile-v2"></script>
-  <script defer src="js/carrinho.js?v=20261124-whatsapp-icons-v1"></script>
-  <script defer src="js/clientes.js?v=20261124-whatsapp-icons-v1"></script>
+  <script defer src="js/carrinho.js?v=20261125-cep-auto-checkout-v3"></script>
+  <script defer src="js/clientes.js?v=20261125-cep-auto-checkout-v3"></script>
   <script defer src="js/app.js?v=20261124-whatsapp-no-account-v1"></script>
 
   <script defer src="js/consentimento.js?v=20261119-sem-convites-automaticos-v1"></script>

@@ -113,13 +113,13 @@ body{background:radial-gradient(ellipse at 10% 5%,rgba(113,69,132,.4),transparen
  box-shadow:0 12px 30px rgba(0,0,0,.17)
 }
 .card:hover{border-color:#e3449d;box-shadow:0 15px 34px rgba(0,0,0,.23)}
-.card-top>small,.type{color:#866b91;font-size:10px}
+.card-top>small,.type{color:#775f82;font-size:10px}
 .favorite{width:40px;height:40px;border-color:#dfcfe8;background:#fff;color:#9b6fa4}
 .favorite:hover,.favorite[aria-pressed=true]{border-color:#e3449d;background:#fff0f7;color:#c72d82}
 .card h3{color:#493451;font-size:clamp(25px,3vw,29px)}
 .card p{color:#675d70;font-size:13px;line-height:1.75}
 .card-bottom{border-top:1px solid #e4d9eb;margin-top:20px;padding-top:16px}
-.card-bottom small{color:#817388;font-size:9px}
+.card-bottom small{color:#775f82;font-size:9px}
 .card-bottom button,.card-bottom a{color:#b52e78;font-size:11px}
 .card-bottom button:hover,.card-bottom a:hover{color:#7d315f}
 .empty{border-color:#cbb8d8;color:#675d70;background:#f7f2fa;font-size:13px}
@@ -463,7 +463,7 @@ body{background:radial-gradient(ellipse at 10% 5%,rgba(113,69,132,.4),transparen
 .experience-category-icon { width: 48px; height: 48px; display: grid; place-items: center; border: 1px solid #e4d4ec; border-radius: 13px; background: #fff; color: #a8327b; }
 .experience-category-icon svg { width: 25px; height: 25px; fill: none; stroke: currentColor; stroke-width: 1.55; stroke-linecap: round; stroke-linejoin: round; }
 .experience-category-copy { min-width: 0; display: grid; gap: 3px; }
-.experience-category-index { color: #9a713b; font-size: 9px; font-weight: 700; letter-spacing: .14em; }
+.experience-category-index { color: #80602f; font-size: 9px; font-weight: 700; letter-spacing: .14em; }
 .experience-category-copy strong { color: #493451; font: 500 19px/1.2 var(--serif); }
 .experience-category-copy small { color: #6c6175; font-size: 12px; line-height: 1.5; }
 .experience-category-arrow { color: #b52e78; font-size: 18px; }
@@ -511,4 +511,11 @@ body{background:radial-gradient(ellipse at 10% 5%,rgba(113,69,132,.4),transparen
 @media(max-width:390px) {
   .header { align-items: flex-start; flex-wrap: wrap; }
   .header nav { width: 100%; max-width: 100%; justify-content: flex-start; }
+}
+
+
+/* A busca remove o outline do input; o contêiner precisa sinalizar o foco do teclado. */
+.search:focus-within {
+  border-color: #e3449d;
+  box-shadow: 0 0 0 3px rgba(227, 68, 157, .2);
 }

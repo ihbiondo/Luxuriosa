@@ -1,3 +1,22 @@
 # Arquivos originais da pré-venda não devem ser versionados.
 # Adicione somente imagens finais tratadas com git add -f.
 img/pré venda/
+
+# Credenciais e configurações locais — nunca versionar segredos.
+.env
+.env.*
+!.env.example
+!.env.*.example
+*.pem
+*.key
+*.p12
+*.pfx
+secrets/
+
+# Dependências, estado local e artefatos de teste.
+node_modules/
+.supabase/
+supabase/.temp/
+playwright-report/
+test-results/
+artifacts/

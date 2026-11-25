@@ -5,6 +5,7 @@ import { readFileSync } from "node:fs";
 const catalog = JSON.parse(readFileSync("data/produtos.json", "utf8"));
 const catalogScript = readFileSync("js/catalogo.js", "utf8");
 const cart = readFileSync("js/carrinho.js", "utf8");
+const checkoutClient = readFileSync("js/clientes.js", "utf8");
 const clubPrices = readFileSync("js/clube-precos.js", "utf8");
 const productDetail = readFileSync("js/produto-detalhe.js", "utf8");
 const clubPageScript = readFileSync("js/clube.js", "utf8");
@@ -12,6 +13,7 @@ const clubPage = readFileSync("clube.html", "utf8");
 const clubLanding = readFileSync("clube/index.html", "utf8");
 const home = readFileSync("index.html", "utf8");
 const store = readFileSync("loja.html", "utf8");
+const lingerie = readFileSync("loja/lingerie/index.html", "utf8");
 const cartOrders = readFileSync("supabase/functions/cart-orders/index.ts", "utf8");
 const paymentOrder = readFileSync("supabase/functions/create-payment-order/index.ts", "utf8");
 const membershipMigration = readFileSync(
@@ -47,14 +49,52 @@ test("todas as promoções do catálogo são públicas", () => {
   assert.match(catalogScript, /formatarPreco\(produto\.preco\)/);
   assert.match(catalogScript, /formatarPreco\([\s\S]*?produto\.precoAntigo/);
   assert.match(productDetail, /Oferta disponível para todos/);
-  assert.equal((home.match(/home-kit-static-club-label/g) || []).length, 4);
+  assert.doesNotMatch(productDetail, /LuxuriosaClubePrecos|clube-precos\.js|carregarStatusClube/);
+  assert.equal((home.match(/home-kit-static-promo-label/g) || []).length, 4);
+  for (const [path, html] of [["index.html", home], ["loja.html", store], ["loja/lingerie/index.html", lingerie]]) {
+    assert.doesNotMatch(html, /clube-precos\.js|LuxuriosaClubePrecos/, path);
+  }
+});
+
+test("os quatro kits da home exibem os mesmos preços do catálogo", () => {
+  const formatter = new Intl.NumberFormat("pt-BR", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  });
+  for (const id of [25, 26, 24, 27]) {
+    const product = catalog.produtos.find((item) => Number(item.id) === id);
+    assert.ok(product, "Kit de destaque ausente do catálogo: " + id);
+    const href = 'href="' + product.pagina + '"';
+    const hrefIndex = home.indexOf(href);
+    assert.ok(hrefIndex >= 0, "Kit não está destacado na home: " + product.nome);
+    const start = home.lastIndexOf('<a class="home-kit-static-card"', hrefIndex);
+    const end = home.indexOf("</a>", hrefIndex);
+    assert.ok(start >= 0 && end > start, "Card do kit não foi encontrado: " + product.nome);
+    const card = home.slice(start, end);
+    assert.ok(card.includes("R$ " + formatter.format(product.preco)),
+      "Preço atual da home diverge do catálogo: " + product.nome);
+    assert.ok(card.includes("De R$ " + formatter.format(product.precoAntigo)),
+      "Preço anterior da home diverge do catálogo: " + product.nome);
+  }
+  assert.equal((home.match(/home-kit-static-promo-label/g) || []).length, 4);
+});
+
+test("todas as páginas de produto carregam os scripts atuais sem consultar o Clube", () => {
+  for (const product of catalog.produtos) {
+    const html = readFileSync(product.pagina, "utf8");
+    assert.match(html, /\.\.\/js\/carrinho\.js\?v=20261125-public-checkout-v1/, product.pagina);
+    assert.match(html, /\.\.\/js\/produto-detalhe\.js\?v=20261125-public-checkout-v1/, product.pagina);
+    assert.doesNotMatch(html, /clube-precos\.js|LuxuriosaClubePrecos/, product.pagina);
+    assert.match(html, /data-add-to-cart/, product.pagina);
+  }
+  assert.doesNotMatch(productDetail, /LuxuriosaClubePrecos|clube-precos\.js|carregarStatusClube/);
 });
 
 test("as páginas dos produtos exibem preço promocional sem exigir Clube", () => {
   for (const product of clubPromotions) {
     const html = readFileSync(product.pagina, "utf8");
     assert.match(html, /class="product-detail-price"/, product.pagina);
-    assert.match(html, /club-promo-note/, product.pagina);
+    assert.match(html, /public-promo-note/, product.pagina);
     assert.match(html, /Oferta disponível para todos/, product.pagina);
   }
 });
@@ -68,25 +108,21 @@ test("a consulta pública de status exige membro ativo e perfil completo", () =>
   assert.match(clubLanding, /data de nascimento \(18\+\)/);
 });
 
-test("o benefício de frete é automático e não oferece seleção manual inerte", () => {
-  assert.doesNotMatch(cart, /cartClubMember/);
-  assert.match(cart, /membroClubeVerificado = detail\.loaded === true/);
-  assert.match(cart, /detail\.authenticated === true/);
-  assert.match(cart, /var membroClube = membroClubeVerificado && membroClubeAtivo/);
-  assert.match(cart, /Frete especial do Clube aplicado automaticamente/);
-  assert.match(cart, /Benefício de frete do Clube aplicado automaticamente/);
-  assert.doesNotMatch(cart, /Tarifa de membro do Clube selecionada|cadastro ativo será conferido pela equipe/);
-  assert.match(cart, /cartClubInfo/);
-  for (const html of [home, store]) {
-    assert.doesNotMatch(html, /id="cartClubMember"/);
-    assert.match(html, /id="cartClubJoinLink"/);
+test("o checkout não consulta o Clube nem aplica tarifa especial de frete", () => {
+  assert.doesNotMatch(cart, /membroClube|cartDeliveryCity|DELIVERY_RATES|cartClubInfo/);
+  assert.match(cart, /A calcular pelo CEP/);
+  assert.doesNotMatch(checkoutClient, /LuxuriosaClubePrecos|membroClube|Clube gratuito|tarifa\.clube/);
+  assert.match(checkoutClient, /fee: tarifa\.comum/);
+  assert.match(checkoutClient, /bairroViaCep/);
+  for (const html of [home, store, lingerie]) {
+    assert.doesNotMatch(html, /id="cartClubMember"|id="cartClubJoinLink"|id="cartClubInfo"/);
+    assert.match(html, /id="cartDeliveryInfo"/);
   }
 });
 
 test("cart-orders recalcula preços promocionais públicos no servidor", () => {
-  assert.doesNotMatch(cartOrders, /cleanItems\(body\.items \|\| \[\], catalog, isClubMember\)/);
-  assert.match(cartOrders, /const price = clubPrice/);
-  assert.match(cartOrders, /applied_price_tier: hasClubPromotion \? "promotional" : "standard"/);
+  assert.match(cartOrders, /const price = Number\(product\?\.preco\)/);
+  assert.doesNotMatch(cartOrders, /loadClubMembership|resolveCatalogUnitPrice|isClubMember|ClubMembershipValidationError/);
   assert.match(cartOrders, /const clubDiscountCents = 0/);
   assert.match(cartOrders, /const totalCents = subtotalCents \+ \(shippingCents \|\| 0\)/);
   assert.match(cartOrders, /club_discount_percent: 0/);

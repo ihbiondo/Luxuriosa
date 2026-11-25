@@ -300,7 +300,12 @@
       Array.from(group.querySelectorAll(".ed-faq-item")).map(item => ({
         item,
         group,
-        searchText: normalizeFaqQuery(item.textContent)
+        searchText: (() => {
+          // A busca considera a pergunta e a resposta, não os cartões de conteúdos relacionados.
+          const searchable = item.cloneNode(true);
+          searchable.querySelectorAll(".ed-faq-related").forEach(related => related.remove());
+          return normalizeFaqQuery(searchable.textContent);
+        })()
       }))
     );
 
@@ -365,7 +370,7 @@
   }
 
   function setBackgroundHidden(hidden) {
-    document.querySelectorAll(".ed-header, .ed-adult, .ed-main, .ed-footer").forEach(element => {
+    document.querySelectorAll(".ed-header, .ed-adult, .ed-main, .ed-footer, .ed-skip-link").forEach(element => {
       // Mantém o conteúdo no DOM e no fluxo de leitura dos rastreadores.
       // O atributo inert impede foco e interação enquanto a declaração 18+ está aberta.
       if (hidden) element.setAttribute("inert", "");

@@ -10,6 +10,9 @@
   var dadosAtuais = null;
   var mensagemAtual = "";
   var cepConsultaId = 0;
+  var cepConsultaEmAndamento = "";
+  var cepValidado = "";
+  var bairroViaCep = "";
   var ultimoEnderecoViaCep = "";
 
   function $(id) { return document.getElementById(id); }
@@ -26,133 +29,63 @@
 
   function minimoEntregaPorEndereco(address) {
     var cidade = normalizarLocalidade(address && address.city);
-    var distrito = normalizarLocalidade(address && address.district);
+    var distrito = normalizarLocalidade(bairroViaCep);
     var estado = String(address && address.state || "").trim().toUpperCase();
-
-    if (estado !== "SP") return 0;
-    if ((cidade === "bauru" && distrito === "tibirica") || cidade === "tibirica") return 50;
-    if (cidade === "bauru") return 20;
+    if (estado !== "SP") return null;
+    if (cidade === "bauru") {
+      if (!distrito) return null;
+      return distrito === "tibirica" ? 50 : 20;
+    }
+    if (cidade === "tibirica") return 50;
     if (["agudos", "piratininga", "pederneiras", "lencois paulista", "borebi"].indexOf(cidade) !== -1) return 50;
-    return 0;
+    return null;
   }
 
   function obterTarifasOficiais(address) {
     var cidade = normalizarLocalidade(address && address.city);
-    var distrito = normalizarLocalidade(address && address.district);
-    if ((cidade === "bauru" && distrito === "tibirica") || cidade === "tibirica") {
-      return { nome: "Tibiriçá", comum: 20, clube: 15, pedagio: false };
+    var distrito = normalizarLocalidade(bairroViaCep);
+    if (cidade === "tibirica" || (cidade === "bauru" && distrito === "tibirica")) {
+      return { nome: "Tibiriçá", comum: 20, pedagio: false };
     }
+    if (cidade === "bauru" && !distrito) return null;
+
+    // Distritos fora da área urbana precisam de cotação, conforme as páginas locais.
+    var distritosSobConsulta = {
+      "agudos": ["domelia"],
+      "pederneiras": ["santelmo"],
+      "lencois paulista": ["alfredo guedes"]
+    };
+    if ((distritosSobConsulta[cidade] || []).indexOf(distrito) !== -1) return null;
+
     var tarifas = {
-      "bauru": { nome: "Bauru", comum: 15, clube: 10, pedagio: false },
-      "agudos": { nome: "Agudos", comum: 25, clube: 20, pedagio: false },
-      "piratininga": { nome: "Piratininga", comum: 25, clube: 20, pedagio: false },
-      "pederneiras": { nome: "Pederneiras", comum: 25, clube: 20, pedagio: false },
-      "lencois paulista": { nome: "Lençóis Paulista", comum: 50, clube: 40, pedagio: true },
-      "borebi": { nome: "Borebi", comum: 50, clube: 40, pedagio: true }
+      "bauru": { nome: "Bauru", comum: 15, pedagio: false },
+      "agudos": { nome: "Agudos", comum: 25, pedagio: false },
+      "piratininga": { nome: "Piratininga", comum: 25, pedagio: false },
+      "pederneiras": { nome: "Pederneiras", comum: 25, pedagio: false },
+      "lencois paulista": { nome: "Lençóis Paulista", comum: 50, pedagio: true },
+      "borebi": { nome: "Borebi", comum: 50, pedagio: true }
     };
     return tarifas[cidade] || null;
   }
 
-  function obterRegiaoSelecionada() {
-    var campo = $("cartDeliveryCity");
-    return campo ? String(campo.value || "").trim() : "";
-  }
-
-  function obterNomeRegiaoSelecionada() {
-    var campo = $("cartDeliveryCity");
-    if (!campo || campo.selectedIndex < 0) return "";
-    return String(campo.options[campo.selectedIndex].textContent || "").trim();
-  }
-
-  function enderecoCorrespondeRegiaoSelecionada(address) {
-    var regiao = obterRegiaoSelecionada();
-    var cidade = normalizarLocalidade(address && address.city);
-    var distrito = normalizarLocalidade(address && address.district);
-    var estado = String(address && address.state || "").trim().toUpperCase();
-    var localidadesConhecidas = [
-      "bauru", "tibirica", "agudos", "piratininga",
-      "pederneiras", "lencois paulista", "borebi"
-    ];
-
-    if (!regiao) return false;
-    if (regiao === "other") {
-      return localidadesConhecidas.indexOf(cidade) === -1 &&
-        distrito !== "tibirica";
-    }
-    if (estado !== "SP") return false;
-
-    if (regiao === "bauru") {
-      return cidade === "bauru" && distrito !== "tibirica";
-    }
-    if (regiao === "tibirica") {
-      return (cidade === "bauru" && distrito === "tibirica") ||
-        cidade === "tibirica";
-    }
-    var aliases = { lencois: "lencois paulista" };
-    return cidade === (aliases[regiao] || regiao);
-  }
-
   function obterResumoFretePedido(data, subtotal) {
     if (data.fulfillmentType === "pickup") {
-      return {
-        fee: 0,
-        total: subtotal,
-        minimum: 0,
-        member: false,
-        tollIncluded: false,
-        locality: "Retirada agendada em Bauru"
-      };
+      return { fee: 0, total: subtotal, minimum: 0, tollIncluded: false, locality: "Retirada agendada em Bauru" };
     }
-
     var address = data.address || {};
-    var tarifa = obterTarifasOficiais(address);
     var estado = String(address.state || "").trim().toUpperCase();
-    var memberState = window.LuxuriosaClubePrecos &&
-      typeof window.LuxuriosaClubePrecos.obterEstado === "function"
-      ? window.LuxuriosaClubePrecos.obterEstado()
-      : {};
-    var member = memberState.loaded === true &&
-      memberState.isMember === true &&
-      memberState.profileComplete === true;
+    var tarifa = obterTarifasOficiais(address);
     var minimum = minimoEntregaPorEndereco(address);
-
     if (!tarifa || estado !== "SP") {
       return {
-        fee: null,
-        total: null,
-        minimum: minimum,
-        member: false,
-        tollIncluded: false,
+        fee: null, total: null, minimum: minimum, tollIncluded: false,
         locality: [address.city, estado].filter(Boolean).join("/")
       };
     }
-
-    var fee = member ? tarifa.clube : tarifa.comum;
     return {
-      fee: fee,
-      total: subtotal + fee,
-      minimum: minimum,
-      member: member,
-      tollIncluded: tarifa.pedagio,
-      locality: tarifa.nome
+      fee: tarifa.comum, total: subtotal + tarifa.comum, minimum: minimum,
+      tollIncluded: tarifa.pedagio, locality: tarifa.nome
     };
-  }
-
-  function resumirCondicaoFrete(address, subtotal) {
-    var cidade = String(address && address.city || "").trim();
-    var estado = String(address && address.state || "").trim().toUpperCase();
-    var tarifa = obterTarifasOficiais(address);
-    if (!tarifa || estado !== "SP") {
-      return [
-        "Destino: " + (cidade || "cidade não informada") + (estado ? "/" + estado : ""),
-        "Frete sob consulta pelo atendimento."
-      ];
-    }
-    return [
-      "Destino: " + tarifa.nome + (estado ? "/" + estado : ""),
-      "Sem Clube: " + formatarPreco(tarifa.comum) + " | Clube gratuito: " + formatarPreco(tarifa.clube),
-      tarifa.pedagio ? "Pedágio incluído no valor." : "Valores fixos nas localidades listadas; demais regiões sob consulta pelo atendimento."
-    ];
   }
 
   function avisar(message, kind) {
@@ -188,33 +121,49 @@
     }
   }
 
-  function atualizarRegiaoSelecionada() {
-    var info = $("customerSelectedRegionInfo");
-    if (!info) return;
-    if (modalidadeRetirada()) {
-      info.hidden = true;
-      info.textContent = "";
-      return;
-    }
-    var nome = obterNomeRegiaoSelecionada();
-    info.hidden = false;
-    info.textContent = nome
-      ? "Região escolhida no carrinho: " + nome + ". O CEP e o endereço serão conferidos para garantir o frete correto."
-      : "Volte ao carrinho e selecione a cidade ou região da entrega antes de continuar.";
-  }
-
   function atualizarModalidade() {
     var pickup = modalidadeRetirada();
     var addressFields = document.querySelector("#customerForm .customer-address-fields");
     var pickupFields = $("customerPickupFields");
     if (addressFields) addressFields.hidden = pickup;
     if (pickupFields) pickupFields.hidden = !pickup;
+
     var campoCep = $("customerCep");
     if (campoCep) {
       campoCep.required = !pickup;
       campoCep.setAttribute("aria-required", pickup ? "false" : "true");
     }
-    atualizarRegiaoSelecionada();
+    ["customerStreet", "customerNumber", "customerDistrict", "customerCity", "customerState"].forEach(function (id) {
+      var field = $(id);
+      if (!field) return;
+      field.required = !pickup;
+      field.setAttribute("aria-required", pickup ? "false" : "true");
+    });
+    ["customerPickupDate", "customerPickupTime"].forEach(function (id) {
+      var field = $(id);
+      if (!field) return;
+      field.required = pickup;
+      field.setAttribute("aria-required", pickup ? "true" : "false");
+    });
+
+    if (pickup) {
+      // Retirada não coleta nem envia endereço, mesmo que o cliente tenha consultado um CEP antes.
+      cepConsultaId += 1;
+      cepConsultaEmAndamento = "";
+      cepValidado = "";
+      bairroViaCep = "";
+      ultimoEnderecoViaCep = "";
+      ["customerCep", "customerStreet", "customerNumber", "customerComplement",
+        "customerDistrict", "customerCity", "customerState", "customerReference"].forEach(function (id) {
+        definirValor(id, "");
+        var field = $(id);
+        if (field) field.removeAttribute("aria-invalid");
+      });
+      if ($("customerCity")) $("customerCity").readOnly = true;
+      if ($("customerState")) $("customerState").readOnly = true;
+      if ($("customerDistrict")) $("customerDistrict").readOnly = false;
+      mostrarStatusCep("", "info");
+    }
     atualizarAvisoFrete();
   }
 
@@ -231,7 +180,7 @@
       paymentPayerType: texto("customerPayerType") === "third_party" ? "third_party" : "account_holder",
       paymentPayerName: texto("customerPayerName"),
       paymentPayerPhone: texto("customerPayerPhone"),
-      address: {
+      address: pickup ? {} : {
         zip: texto("customerCep"),
         street: texto("customerStreet"),
         number: texto("customerNumber"),
@@ -268,6 +217,12 @@
     definirValor("customerState", address.state || "");
     definirValor("customerReference", address.reference || "");
     ultimoEnderecoViaCep = "";
+    cepConsultaEmAndamento = "";
+    cepValidado = "";
+    bairroViaCep = "";
+    if ($("customerCity")) $("customerCity").readOnly = true;
+    if ($("customerState")) $("customerState").readOnly = true;
+    if ($("customerDistrict")) $("customerDistrict").readOnly = false;
     mostrarStatusCep("", "info");
   }
 
@@ -290,7 +245,6 @@
   function consultarCep() {
     var campoCep = $("customerCep");
     if (!campoCep) return;
-
     var cep = campoCep.value.replace(/\D/g, "");
     if (cep.length !== 8) {
       campoCep.setAttribute("aria-invalid", "true");
@@ -298,11 +252,11 @@
       campoCep.focus();
       return;
     }
-
+    if (cepValidado === cep || cepConsultaEmAndamento === cep) return;
     campoCep.removeAttribute("aria-invalid");
+    cepConsultaEmAndamento = cep;
     var consultaAtual = ++cepConsultaId;
     mostrarStatusCep("Consultando CEP…", "info");
-
     fetch("https://viacep.com.br/ws/" + cep + "/json/")
       .then(function (response) {
         if (!response.ok) throw new Error("Falha na consulta de CEP.");
@@ -311,49 +265,64 @@
       .then(function (dados) {
         if (consultaAtual !== cepConsultaId || $("customerCep").value.replace(/\D/g, "") !== cep) return;
         if (!dados || dados.erro) {
+          cepConsultaEmAndamento = "";
+          cepValidado = "";
+          bairroViaCep = "";
           $("customerCep").setAttribute("aria-invalid", "true");
-          mostrarStatusCep("CEP não encontrado. Confira os números ou preencha o endereço manualmente.", "error");
+          mostrarStatusCep("CEP não encontrado. Confira os números ou fale com a equipe para validar o endereço.", "error");
           return;
         }
-
         var valoresCep = [
           String(dados.logradouro || "").trim(),
           String(dados.bairro || "").trim(),
           String(dados.localidade || "").trim(),
           String(dados.uf || "").trim().toUpperCase()
         ];
-        if (!valoresCep.some(Boolean)) {
-          mostrarStatusCep("O CEP foi localizado, mas não retornou endereço completo. Preencha os dados manualmente.", "error");
+        if (!valoresCep[2] || !/^[A-Z]{2}$/.test(valoresCep[3])) {
+          cepConsultaEmAndamento = "";
+          cepValidado = "";
+          bairroViaCep = "";
+          mostrarStatusCep("O CEP foi localizado, mas não retornou cidade e estado. Fale com a equipe para validar o endereço.", "error");
           return;
         }
-
         var idsEndereco = ["customerStreet", "customerDistrict", "customerCity", "customerState"];
         var valoresAtuais = idsEndereco.map(function (id) { return texto(id); });
         var enderecoAtual = JSON.stringify(valoresAtuais);
         if (valoresAtuais.some(Boolean) && enderecoAtual !== ultimoEnderecoViaCep) {
           var substituir = window.confirm("A consulta vai substituir rua, bairro, cidade e estado pelos dados encontrados. Deseja continuar?");
           if (!substituir) {
-            mostrarStatusCep("Consulta concluída. Os campos digitados foram mantidos.", "info");
+            cepConsultaEmAndamento = "";
+            cepValidado = "";
+            bairroViaCep = "";
+            mostrarStatusCep("Consulta concluída. Os campos digitados foram mantidos, mas o CEP precisa ser confirmado para continuar.", "info");
             return;
           }
         }
-
         $("customerCep").removeAttribute("aria-invalid");
         definirValor("customerStreet", valoresCep[0]);
         definirValor("customerDistrict", valoresCep[1]);
         definirValor("customerCity", valoresCep[2]);
         definirValor("customerState", valoresCep[3]);
+        if ($("customerCity")) $("customerCity").readOnly = true;
+        if ($("customerState")) $("customerState").readOnly = true;
+        if ($("customerDistrict")) $("customerDistrict").readOnly = !!valoresCep[1];
         idsEndereco.forEach(function (id) {
           var campo = $(id);
           if (campo) campo.removeAttribute("aria-invalid");
         });
+        bairroViaCep = valoresCep[1];
+        cepConsultaEmAndamento = "";
+        cepValidado = cep;
         ultimoEnderecoViaCep = JSON.stringify(valoresCep);
-        mostrarStatusCep("Endereço localizado. Confira os campos e complete o número antes de continuar.", "success");
+        mostrarStatusCep("Endereço identificado pelo CEP. Complete o número e confira os dados antes de continuar.", "success");
         atualizarAvisoFrete();
-          })
+      })
       .catch(function () {
         if (consultaAtual !== cepConsultaId) return;
-        mostrarStatusCep("Não foi possível consultar o CEP agora. Verifique sua conexão ou preencha o endereço manualmente.", "error");
+        cepConsultaEmAndamento = "";
+        cepValidado = "";
+        bairroViaCep = "";
+        mostrarStatusCep("Não foi possível consultar o CEP agora. Tente novamente em instantes.", "error");
       });
   }
 
@@ -364,47 +333,31 @@
       aviso.textContent = "Retirada gratuita em Bauru. Sem cobrança de frete.";
       return;
     }
-
     var cidade = texto("customerCity");
     var estado = texto("customerState").toUpperCase();
-    var distrito = texto("customerDistrict");
     var api = window.LuxuriosaCarrinho;
     var subtotal = api && typeof api.obterTotal === "function" ? Number(api.obterTotal()) : 0;
-
-    if (!cidade || !estado) {
-      aviso.textContent = "Informe o CEP para preencher a cidade e o bairro e conferir o valor de entrega.";
+    if (!cepValidado || !cidade || !estado) {
+      aviso.textContent = "Digite os 8 números do CEP. A cidade e o estado serão identificados automaticamente.";
       return;
     }
-
-    var tarifa = obterTarifasOficiais({ city: cidade, district: distrito });
+    var tarifa = obterTarifasOficiais({ city: cidade, state: estado });
+    var pedidoMinimo = minimoEntregaPorEndereco({ city: cidade, state: estado });
     if (!tarifa || estado !== "SP") {
-      aviso.textContent = "Entrega para " + cidade + "/" + estado + ": frete sob consulta pelo atendimento.";
+      aviso.textContent = normalizarLocalidade(cidade) === "bauru" && !bairroViaCep
+        ? "O CEP não retornou o bairro. A equipe confirmará se o endereço pertence a Tibiriçá, o frete e o pedido mínimo."
+        : "Entrega para " + cidade + "/" + estado + ": frete e pedido mínimo sob confirmação pelo atendimento.";
       return;
     }
-
-    var memberState = window.LuxuriosaClubePrecos &&
-      typeof window.LuxuriosaClubePrecos.obterEstado === "function"
-      ? window.LuxuriosaClubePrecos.obterEstado()
-      : {};
-    var member = memberState.loaded === true &&
-      memberState.isMember === true &&
-      memberState.profileComplete === true;
-    var fee = member ? tarifa.clube : tarifa.comum;
-    var textoFrete = "Frete estimado em " + tarifa.nome + ": " + formatarPreco(fee) + ".";
-    if (!member) {
-      textoFrete += " Membros ativos do Clube: " + formatarPreco(tarifa.clube) + " (aplicado automaticamente).";
-    } else {
-      textoFrete += " Tarifa especial do Clube aplicada automaticamente.";
-    }
+    var textoFrete = "Frete estimado em " + tarifa.nome + ": " + formatarPreco(tarifa.comum) + ".";
     if (tarifa.pedagio) textoFrete += " Pedágio já incluído.";
-    var pedidoMinimo = minimoEntregaPorEndereco({ city: cidade, district: distrito, state: estado });
-    var textoMinimo = pedidoMinimo > 0
-      ? " Pedido mínimo: " + formatarPreco(pedidoMinimo) + " em produtos."
-      : "";
-    if (pedidoMinimo > 0 && subtotal > 0 && subtotal < pedidoMinimo) {
-      textoMinimo += " Faltam " + formatarPreco(pedidoMinimo - subtotal) + " para atingir o mínimo.";
+    if (pedidoMinimo !== null) {
+      textoFrete += " Pedido mínimo: " + formatarPreco(pedidoMinimo) + " em produtos.";
+      if (subtotal > 0 && subtotal < pedidoMinimo) {
+        textoFrete += " Faltam " + formatarPreco(pedidoMinimo - subtotal) + " para atingir o mínimo.";
+      }
     }
-    aviso.textContent = textoFrete + textoMinimo;
+    aviso.textContent = textoFrete;
   }
 
   function formatarTelefone(value) {
@@ -450,8 +403,17 @@
         campoCep.setAttribute("aria-invalid", "true");
         primeiroErro = primeiroErro || campoCep;
       }
-      mostrarStatusCep("Informe um CEP válido com 8 números para entrega.", "error");
+      mostrarStatusCep("Informe um CEP válido com 8 números.", "error");
       if (campoCep) campoCep.focus();
+      return false;
+    }
+
+    if (exigirEnderecoEntrega && cepValidado !== cepDigits) {
+      if (campoCep) {
+        campoCep.setAttribute("aria-invalid", "true");
+        campoCep.focus();
+      }
+      mostrarStatusCep("Busque o CEP para identificar automaticamente a cidade e o estado antes de continuar.", "error");
       return false;
     }
 
@@ -500,15 +462,6 @@
         "error"
       );
       primeiroErro.focus();
-      return false;
-    }
-    if (exigirEnderecoEntrega && !enderecoCorrespondeRegiaoSelecionada(data.address)) {
-      avisar(
-        !obterRegiaoSelecionada()
-          ? "Selecione a cidade ou região da entrega no carrinho antes de continuar."
-          : "O endereço informado não corresponde à região escolhida no carrinho. Volte ao carrinho para ajustar a região ou corrija o endereço pelo CEP.",
-        "error"
-      );
       return false;
     }
     limparAviso();
@@ -603,9 +556,6 @@
       );
     }
 
-    if (freight.member) {
-      lines.push("   \u{1F3F7} Benefício de frete do Clube aplicado.");
-    }
     if (freight.minimum > 0 && subtotal < freight.minimum) {
       lines.push("   \u{26A0}\u{FE0F} Pedido mínimo: " + formatarPreco(freight.minimum) + " em produtos.");
     }
@@ -693,6 +643,9 @@
     dadosAtuais = null;
     mensagemAtual = "";
     ultimoEnderecoViaCep = "";
+    cepConsultaEmAndamento = "";
+    cepValidado = "";
+    bairroViaCep = "";
     if (form) form.reset();
     if (messagePreview) messagePreview.textContent = "";
     var paymentMinimumInfo = $("customerPaymentMinimumInfo");
@@ -744,14 +697,12 @@
         paymentMinimumInfo.textContent = "Retirada gratuita em Bauru. Não há frete nem pedido mínimo de entrega.";
       } else {
         var minimoLocalidade = minimoEntregaPorEndereco(dadosAtuais.address);
-        if (minimoLocalidade === 20) {
-          paymentMinimumInfo.textContent = integridade.subtotal < 20
-            ? "Atenção: o pedido para essa localidade deve ter mínimo de R$ 20,00 em produtos. Seu pedido está em " + formatarPreco(integridade.subtotal) + "; acrescente pelo menos " + formatarPreco(20 - integridade.subtotal) + "."
-            : "Pedido mínimo nesta localidade: R$ 20,00 em produtos.";
+        if (minimoLocalidade === 20 || minimoLocalidade === 50) {
+          paymentMinimumInfo.textContent = integridade.subtotal < minimoLocalidade
+            ? "Atenção: o pedido para essa localidade deve ter mínimo de " + formatarPreco(minimoLocalidade) + " em produtos. Seu pedido está em " + formatarPreco(integridade.subtotal) + "; acrescente pelo menos " + formatarPreco(minimoLocalidade - integridade.subtotal) + "."
+            : "Pedido mínimo nesta localidade: " + formatarPreco(minimoLocalidade) + " em produtos.";
         } else {
-          paymentMinimumInfo.textContent = integridade.subtotal < 50
-            ? "Atenção: para entregas fora de Bauru, o pedido deve ter mínimo de R$ 50,00 em produtos. Seu pedido está em " + formatarPreco(integridade.subtotal) + "; acrescente pelo menos " + formatarPreco(50 - integridade.subtotal) + "."
-            : "Pedido mínimo fora de Bauru: mínimo de R$ 50,00 em produtos.";
+          paymentMinimumInfo.textContent = "O frete e o pedido mínimo serão confirmados pela equipe após validar o CEP e o endereço.";
         }
       }
     }
@@ -846,8 +797,16 @@
     if (window.LuxuriosaMedicao && typeof window.LuxuriosaMedicao.registrar === "function") {
       window.LuxuriosaMedicao.registrar("checkout_whatsapp", { method: "whatsapp", step: "pedido_encaminhado" });
     }
-    if (window.LuxuriosaInteligencia && typeof window.LuxuriosaInteligencia.registrarEtapa === "function") {
-      window.LuxuriosaInteligencia.registrarEtapa("whatsapp_opened", itensAtuais, dadosAtuais).catch(function () {});
+    if (window.LuxuriosaInteligencia && typeof window.LuxuriosaInteligencia.registrarPedido === "function") {
+      var resumoFrete = obterResumoFretePedido(dadosAtuais, integridade.subtotal);
+      window.LuxuriosaInteligencia.registrarPedido(itensAtuais, dadosAtuais, resumoFrete.fee)
+        .catch(function (error) {
+          console.error("Luxuriosa: não foi possível registrar o pedido no sistema.", error);
+          avisar("A mensagem foi aberta, mas não foi possível registrar a prévia do pedido no sistema. Envie a mensagem no WhatsApp para a equipe confirmar os dados.", "error");
+        });
+    } else {
+      console.error("Luxuriosa: módulo de registro de pedidos indisponível.");
+      avisar("A mensagem foi aberta, mas o sistema não conseguiu registrar a prévia do pedido. Envie a mensagem no WhatsApp para a equipe confirmar os dados.", "error");
     }
     window.open(url, "_blank", "noopener,noreferrer");
     avisar("O WhatsApp foi acionado com a mensagem pronta. Revise o pedido e toque em Enviar para encaminhar sua solicitação.", "success");
@@ -874,9 +833,6 @@
     if (payerType) payerType.addEventListener("change", atualizarCamposPagador);
     var fulfillmentMode = $("customerFulfillmentMode");
     if (fulfillmentMode) fulfillmentMode.addEventListener("change", atualizarModalidade);
-    window.addEventListener("luxuriosa:club-state-changed", function () {
-      if (overlay && !overlay.hidden) atualizarAvisoFrete();
-    });
     form.addEventListener("submit", revisarPedido);
     $("customerClose").addEventListener("click", fechar);
     $("customerCancel").addEventListener("click", fechar);
@@ -933,11 +889,26 @@
     if (campoCep && botaoCep) {
       campoCep.addEventListener("input", function () {
         this.value = formatarCep(this.value);
+        var digits = this.value.replace(/\D/g, "");
         this.removeAttribute("aria-invalid");
         mostrarStatusCep("", "info");
-      });
-      campoCep.addEventListener("blur", function () {
-        if (this.value.replace(/\D/g, "").length === 8) consultarCep();
+        if (digits !== cepValidado) {
+          cepConsultaId += 1;
+          cepConsultaEmAndamento = "";
+          cepValidado = "";
+          bairroViaCep = "";
+          ultimoEnderecoViaCep = "";
+          ["customerStreet", "customerDistrict", "customerCity", "customerState"].forEach(function (id) {
+            definirValor(id, "");
+            var field = $(id);
+            if (field) field.removeAttribute("aria-invalid");
+          });
+          if ($("customerCity")) $("customerCity").readOnly = true;
+          if ($("customerState")) $("customerState").readOnly = true;
+          if ($("customerDistrict")) $("customerDistrict").readOnly = false;
+          atualizarAvisoFrete();
+          if (digits.length === 8) consultarCep();
+        }
       });
       campoCep.addEventListener("keydown", function (event) {
         if (event.key === "Enter") {
