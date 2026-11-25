@@ -123,23 +123,30 @@ try {
     const noVisibleFaqItems = await page.locator(".ed-faq-item:not([hidden])").count();
     await faqInput.fill("lubrificante");
     const matchingFaqItems = await page.locator(".ed-faq-item:not([hidden])").count();
-    await faqInput.fill("");
+    await page.locator('.ed-faq-jump a[href^="#faq-"]').first().click();
     const restoredFaqItems = await page.locator(".ed-faq-item:not([hidden])").count();
+    const faqStatusHidden = await page.locator("#faqSearchStatus").isHidden();
     if (!faqFocus || !noFaqResults.includes("Nenhuma pergunta encontrada") ||
-        noVisibleFaqItems !== 0 || matchingFaqItems === 0 || restoredFaqItems === 0) {
-      report.interactionFailures.push({ route: "/educacao/duvidas-frequentes/", faqFocus, noFaqResults, noVisibleFaqItems, matchingFaqItems, restoredFaqItems });
+        noVisibleFaqItems !== 0 || matchingFaqItems === 0 || restoredFaqItems === 0 || !faqStatusHidden) {
+      report.interactionFailures.push({ route: "/educacao/duvidas-frequentes/", faqFocus, noFaqResults, noVisibleFaqItems, matchingFaqItems, restoredFaqItems, faqStatusHidden });
     }
 
     await openEducationRoute("/educacao/");
-    await page.locator('[data-discovery="materials"]').click();
+    const discoveryButton = page.locator('[data-discovery="materials"]');
+    await discoveryButton.focus();
+    const discoveryFocus = await discoveryButton.evaluate(el => {
+      const style = getComputedStyle(el);
+      return style.outlineStyle !== "none" && parseFloat(style.outlineWidth) >= 2;
+    });
+    await discoveryButton.press("Enter");
     const discovery = await page.evaluate(() => ({
       pressed: document.querySelector('[data-discovery="materials"]')?.getAttribute("aria-pressed"),
       result: document.querySelector("#edDiscoveryResult")?.innerText || "",
       link: document.querySelector("#edDiscoveryResult a")?.getAttribute("href") || ""
     }));
-    if (discovery.pressed !== "true" || !discovery.result.includes("Entenda os materiais") ||
+    if (!discoveryFocus || discovery.pressed !== "true" || !discovery.result.includes("Entenda os materiais") ||
         discovery.link !== "/educacao/curiosidades/materiais-dos-acessorios.html") {
-      report.interactionFailures.push({ route: "/educacao/", discovery });
+      report.interactionFailures.push({ route: "/educacao/", discoveryFocus, discovery });
     }
 
     await openEducationRoute("/educacao/interatividade/");
