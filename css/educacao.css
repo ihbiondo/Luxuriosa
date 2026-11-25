@@ -1010,3 +1010,7 @@ body{background:radial-gradient(ellipse at 10% 5%,rgba(113,69,132,.38),transpare
   outline: 3px solid #e3449d;
   outline-offset: 3px;
 }
+
+.ed-button:focus-visible {
+  outline-color: #e3449d;
+}
