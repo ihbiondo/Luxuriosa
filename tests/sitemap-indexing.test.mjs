@@ -48,7 +48,7 @@ test("sitemap contém URLs públicas únicas, canônicas e existentes", () => {
     const canonical = "https://luxuriosa.com.br/" + product.pagina;
     assert.ok(urls.includes(canonical), "Página de produto ausente do sitemap: " + canonical);
     const html = readFileSync(product.pagina, "utf8");
-    const canonicalTags = [...html.matchAll(/<link\\b[^>]*rel=["']canonical["'][^>]*>/gi)];
+    const canonicalTags = [...html.matchAll(/<link\b[^>]*rel=["']canonical["'][^>]*>/gi)];
     assert.equal(canonicalTags.length, 1, "Cada produto deve ter exatamente um canonical: " + product.pagina);
     assert.ok(canonicalTags[0][0].includes('href="' + canonical + '"'),
       "Canonical do produto não corresponde ao catálogo: " + product.pagina);
