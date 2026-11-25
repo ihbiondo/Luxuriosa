@@ -69,7 +69,6 @@ try {
   await page.locator("#customerName").fill("Cliente de Teste");
   await page.locator("#customerPhone").fill("(14) 99999-9999");
   await page.locator("#customerCep").fill("17030-290");
-  await page.locator("#customerCepSearch").click();
   await page.waitForFunction(() => document.getElementById("customerCity").value === "Bauru");
   await page.locator("#customerNumber").fill("5-44");
 
@@ -133,7 +132,6 @@ try {
     await page.locator("#customerName").fill("Cliente de Teste");
     await page.locator("#customerPhone").fill("(14) 99999-9999");
     await page.locator("#customerCep").fill(address.zip);
-    await page.locator("#customerCepSearch").click();
     await page.waitForFunction(city => document.getElementById("customerCity").value === city, address.city);
     await page.locator("#customerNumber").fill("100");
     await page.locator("#customerReviewButton").click();
