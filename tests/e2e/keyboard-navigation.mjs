@@ -54,6 +54,19 @@ try {
   }
 
   await page.goto(new URL("/", BASE_URL).href, { waitUntil: "domcontentloaded" });
+  const firstCategory = page.locator(".cat").first();
+  if (await firstCategory.count()) {
+    await firstCategory.focus();
+    const categoryFocus = await firstCategory.evaluate(el => {
+      const style = getComputedStyle(el);
+      return { visible: el.matches(":focus-visible"), outlineWidth: style.outlineWidth,
+        outlineStyle: style.outlineStyle, outlineColor: style.outlineColor };
+    });
+    assert.equal(categoryFocus.visible, true, "Cards de categoria devem reconhecer foco de teclado");
+    assert.equal(categoryFocus.outlineStyle, "solid", "Cards de categoria devem exibir contorno de foco");
+    assert.ok(parseFloat(categoryFocus.outlineWidth) >= 2, "Contorno de foco dos cards deve ter pelo menos 2 px");
+  }
+
   const burger = page.locator("#burger");
   await burger.waitFor({ state: "visible" });
   await page.waitForFunction(() => !!document.querySelector("#burger") && !document.querySelector("#burger").disabled);
