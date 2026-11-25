@@ -67,6 +67,25 @@ try {
     assert.ok(parseFloat(categoryFocus.outlineWidth) >= 2, "Contorno de foco dos cards deve ter pelo menos 2 px");
   }
 
+  await page.goto(new URL("/experiencias/", BASE_URL).href, { waitUntil: "domcontentloaded" });
+  const experienceSearch = page.locator("#experienceSearch");
+  await experienceSearch.waitFor({ state: "visible" });
+  await experienceSearch.focus();
+  const experienceSearchFocus = await experienceSearch.evaluate(el => {
+    const inputStyle = getComputedStyle(el);
+    const containerStyle = getComputedStyle(el.closest(".search"));
+    return {
+      keyboard: el.matches(":focus-visible"),
+      outline: inputStyle.outlineStyle !== "none" && parseFloat(inputStyle.outlineWidth) >= 2,
+      containerBorder: containerStyle.borderColor,
+      containerShadow: containerStyle.boxShadow
+    };
+  });
+  assert.equal(experienceSearchFocus.keyboard, true, "Busca de Experiências deve reconhecer foco de teclado");
+  assert.equal(experienceSearchFocus.outline, true, "Busca de Experiências deve manter indicador visível no input");
+  assert.notEqual(experienceSearchFocus.containerShadow, "none", "Contêiner da busca deve destacar o foco");
+  assert.match(experienceSearchFocus.containerBorder, /227, 68, 157/, "Borda do contêiner deve usar o rosa de foco");
+
   const burger = page.locator("#burger");
   await burger.waitFor({ state: "visible" });
   await page.waitForFunction(() => !!document.querySelector("#burger") && !document.querySelector("#burger").disabled);
