@@ -1,25 +1,15 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { buildCartActivityStatePatch, statusAfterVisitorActivity } from "../_shared/cart-session-state.mjs";
+import { canReuseCartInstance, cartInstanceStatusForAction, resolveCartInstanceId } from "../_shared/cart-instance-state.mjs";
+import { applyAnalyticsContext, buildVisitSessionActivityPatch, buildVisitSessionCreatePatch, normalizeAnalyticsPagePath, normalizeAnalyticsPageTitle } from "../_shared/visitor-analytics.mjs";
+import { RateLimitUnavailableError, runCartRequestGuards } from "../_shared/cart-request-guards.mjs";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 const admin = createClient(SUPABASE_URL, SERVICE_ROLE_KEY, {
   auth: { persistSession: false, autoRefreshToken: false }
 });
-function isLocalSupabaseUrl(value: string): boolean {
-  try {
-    const url = new URL(value);
-    return url.protocol === "http:" &&
-      ["kong", "localhost", "127.0.0.1", "host.docker.internal"].includes(url.hostname);
-  } catch {
-    return false;
-  }
-}
-
-// A origem local só é autorizada no ambiente E2E descartável, nunca no projeto hospedado.
-const LOCAL_E2E_MODE =
-  Deno.env.get("LUX_E2E_LOCAL_MODE") === "true" && isLocalSupabaseUrl(SUPABASE_URL);
 const allowedOrigins = new Set(["https://luxuriosa.com.br", "https://www.luxuriosa.com.br"]);
-if (LOCAL_E2E_MODE) allowedOrigins.add("http://127.0.0.1:4173");
 const CATALOG_URL = "https://luxuriosa.com.br/data/produtos.json";
 
 async function sha256Hex(value: string): Promise<string> {
@@ -46,6 +36,37 @@ async function rateLimitRequest(req: Request, sessionKey: string, eventsOnly: bo
     req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "";
   if (ip && !(await consumeRateLimit("cart_ip", ip, eventsOnly ? 180 : 90))) return false;
   return await consumeRateLimit("cart_session", sessionKey, eventsOnly ? 120 : 30);
+}
+
+async function resolveCartUserId(token: string): Promise<string | null> {
+  if (!token) return null;
+  const { data, error } = await admin.auth.getUser(token);
+  return !error ? data.user?.id || null : null;
+}
+
+async function rateLimitAndResolveUser(
+  req: Request,
+  sessionKey: string,
+  eventsOnly: boolean,
+  token: string
+) {
+  return runCartRequestGuards(
+    () => rateLimitRequest(req, sessionKey, eventsOnly),
+    () => resolveCartUserId(token)
+  );
+}
+
+async function measure<T>(
+  timings: Record<string, number>,
+  name: string,
+  operation: () => Promise<T>
+): Promise<T> {
+  const startedAt = performance.now();
+  try {
+    return await operation();
+  } finally {
+    timings[name] = Math.round(performance.now() - startedAt);
+  }
 }
 const VARIABLE_DICE_KIT_IDS = new Set(["22", "23", "24", "27", "28", "29"]);
 const DICE_VARIANT_NAMES = new Map([
@@ -76,39 +97,55 @@ function cleanText(value: unknown, max = 160): string | null {
   const result = value.trim().slice(0, max);
   return result || null;
 }
-function normalizeBrazilPhone(value: unknown): string | null {
-  const raw = typeof value === "string" ? value.replace(/\D/g, "") : "";
-  const digits = raw.length >= 12 && raw.startsWith("55") ? raw.slice(2) : raw;
-  if (digits.length !== 10 && digits.length !== 11) return null;
-  if (!/^[1-9]\d{9,10}$/.test(digits)) return null;
-  return "+55" + digits;
-}
 
-function normalizeAnalyticsContext(value: unknown) {
-  if (!value || typeof value !== "object" || Array.isArray(value)) return null;
-  const raw = value as Record<string, unknown>;
-  const allowed = {
-    traffic_source: ["direct","search","instagram","facebook","tiktok","youtube","referral","unknown"],
-    traffic_medium: ["direct","organic","paid","social","referral","email","unknown"],
-    device_category: ["mobile","desktop","tablet","unknown"],
-    operating_system: ["android","ios","windows","macos","linux","chromeos","other","unknown"],
-    browser_family: ["chrome","safari","firefox","edge","samsung_internet","opera","other","unknown"]
-  } as const;
-  const normalized: Record<string, string | null> = {};
-  for (const [key, values] of Object.entries(allowed)) {
-    const candidate = typeof raw[key] === "string" ? (raw[key] as string).toLowerCase() : "";
-    normalized[key] = (values as readonly string[]).includes(candidate) ? candidate : "unknown";
+async function upsertVisitSession(
+  visitId: string,
+  sessionKey: string,
+  now: string,
+  pagePath: string,
+  pageTitle: string | null,
+  analyticsContext: unknown
+) {
+  const { data: existing, error: lookupError } = await admin.from("site_visit_sessions")
+    .select("session_key").eq("visit_id", visitId).maybeSingle();
+  if (lookupError) throw lookupError;
+
+  const updateActivity = async () => {
+    const { error } = await admin.from("site_visit_sessions")
+      .update(buildVisitSessionActivityPatch(now, pagePath, pageTitle))
+      .eq("visit_id", visitId)
+      .eq("session_key", sessionKey)
+      // Requests can arrive out of order; never let delayed activity move
+      // last_activity_at or the last-page snapshot backwards.
+      .lt("last_activity_at", now);
+    if (error) throw error;
+  };
+
+  if (existing) {
+    if (String(existing.session_key) !== sessionKey) {
+      throw new Error("Identificador de visita inválido.");
+    }
+    await updateActivity();
+    return;
   }
-  const detail = typeof raw.traffic_source_detail === "string"
-    ? raw.traffic_source_detail.toLowerCase().trim().slice(0, 120) : "";
-  normalized.traffic_source_detail = /^[a-z0-9.-]{1,120}$/.test(detail) ? detail : null;
-  return normalized;
-}
-function applyAnalyticsContext(target: Record<string, unknown>, value: unknown) {
-  const context = normalizeAnalyticsContext(value);
-  if (!context) return target;
-  Object.assign(target, context);
-  return target;
+
+  const visit = buildVisitSessionCreatePatch(
+    visitId, sessionKey, now, pagePath, pageTitle, analyticsContext
+  );
+  const { error: insertError } = await admin.from("site_visit_sessions").insert(visit);
+  if (!insertError) return;
+
+  // Another request may have created the visit after the initial lookup.
+  // In that case, accept the race only for the same browser and update
+  // activity without replacing the original start time or acquisition data.
+  if (insertError.code !== "23505") throw insertError;
+  const { data: racedVisit, error: raceLookupError } = await admin.from("site_visit_sessions")
+    .select("session_key").eq("visit_id", visitId).maybeSingle();
+  if (raceLookupError) throw raceLookupError;
+  if (!racedVisit || String(racedVisit.session_key) !== sessionKey) {
+    throw new Error("Identificador de visita inválido.");
+  }
+  await updateActivity();
 }
 
 async function loadCatalog(): Promise<Map<string, any>> {
@@ -128,12 +165,7 @@ function cleanItems(value: unknown, catalog: Map<string, any>) {
     const product = catalog.get(productId);
     if (!product || product.esgotado === true) throw new Error("Um produto do carrinho está indisponível. Atualize o carrinho.");
     if (!Number.isInteger(quantity) || quantity < 1 || quantity > 999) throw new Error("Quantidade inválida.");
-    const clubPrice = Number(product.preco);
-    const regularPrice = Number(product.precoAntigo);
-    const hasClubPromotion = Number.isFinite(regularPrice) && regularPrice > clubPrice &&
-      Number.isFinite(clubPrice) && clubPrice >= 0;
-    // O preço promocional é público; o Clube afeta somente o frete.
-    const price = clubPrice;
+    const price = Number(product?.preco);
     if (!Number.isFinite(price) || price < 0 || price > 100000) throw new Error("Preço inválido no catálogo.");
     const isVariableKit = VARIABLE_DICE_KIT_IDS.has(productId);
     let selectedDiceName: string | null = null;
@@ -151,9 +183,7 @@ function cleanItems(value: unknown, catalog: Map<string, any>) {
       unit_price: Math.round(price * 100) / 100,
       product_snapshot: {
         selected_dice_product_id: isVariableKit ? selectedDiceId : null,
-        selected_dice_product_name: isVariableKit ? selectedDiceName : null,
-        club_promotion: hasClubPromotion,
-        applied_price_tier: hasClubPromotion ? "promotional" : "standard"
+        selected_dice_product_name: isVariableKit ? selectedDiceName : null
       }
     };
   });
@@ -163,47 +193,191 @@ function total(items: ReturnType<typeof cleanItems>) {
   return Math.round(items.reduce((sum, item) => sum + item.quantity * item.unit_price, 0) * 100) / 100;
 }
 
-async function getClubMembershipIsActive(token: string): Promise<boolean> {
-  if (!token) return false;
-  const anonKey = Deno.env.get("SUPABASE_ANON_KEY");
-  if (!anonKey) throw new Error("Não foi possível validar a participação no Clube. Tente novamente.");
-  const userClient = createClient(SUPABASE_URL, anonKey, {
-    auth: { persistSession: false, autoRefreshToken: false },
-    global: { headers: { Authorization: "Bearer " + token } }
-  });
-  const { data, error } = await userClient.rpc("get_club_membership_state");
-  if (error) {
-    console.error("cart-orders club membership validation failed:", error);
-    throw new Error("Não foi possível confirmar a participação no Clube. Tente novamente.");
+class CartInstanceConflictError extends Error {}
+
+async function loadCartInstance(cartInstanceId: string, sessionKey: string, userId: string | null) {
+  const { data, error } = await admin.from("cart_instances")
+    .select("id, session_key, status, user_id")
+    .eq("id", cartInstanceId)
+    .maybeSingle();
+  if (error) throw error;
+  if (data && String(data.session_key) !== sessionKey) {
+    throw new CartInstanceConflictError("Este carrinho não pertence à sessão atual. Inicie uma nova tentativa.");
   }
-  return data?.is_member === true && data?.profile_complete === true;
+  if (data?.user_id && userId && String(data.user_id) !== userId) {
+    throw new CartInstanceConflictError("Este carrinho pertence a outra conta. Inicie uma nova tentativa.");
+  }
+  return data;
 }
 
-async function recordMarketingConsent(cartId: string, userId: string | null, customer: any, now: string) {
+async function ensureCartInstance(
+  cartInstanceId: string,
+  sessionKey: string,
+  userId: string | null,
+  now: string,
+  isLegacy: boolean
+) {
+  let existing = await loadCartInstance(cartInstanceId, sessionKey, userId);
+  if (existing) return existing;
+
+  const row: Record<string, unknown> = {
+    id: cartInstanceId,
+    session_key: sessionKey,
+    user_id: userId,
+    status: "active",
+    last_activity_at: now,
+    created_at: now,
+    updated_at: now
+  };
+  if (isLegacy) row.legacy_cart_session_id = cartInstanceId;
+
+  const { error } = await admin.from("cart_instances").insert(row);
+  if (!error) return { id: cartInstanceId, session_key: sessionKey, status: "active" };
+  if (error.code !== "23505") throw error;
+
+  // Same-cart concurrent requests are safe; a different browser cannot take ownership.
+  existing = await loadCartInstance(cartInstanceId, sessionKey, userId);
+  if (!existing) throw error;
+  return existing;
+}
+
+async function updateCartInstanceActivity(
+  cartInstanceId: string,
+  sessionKey: string,
+  userId: string | null,
+  now: string,
+  eventName: string,
+  pageType: string,
+  analyticsContext: unknown
+) {
+  const existing = await ensureCartInstance(cartInstanceId, sessionKey, userId, now, false);
+  if (!canReuseCartInstance(existing.status, eventName, 0, false)) {
+    throw new CartInstanceConflictError("Este carrinho já foi encerrado. Inicie uma nova tentativa de compra.");
+  }
+  const nextStatus = statusAfterVisitorActivity(existing.status);
+  const patch: Record<string, unknown> = {
+    ...buildCartActivityStatePatch(now, nextStatus),
+    session_key: sessionKey,
+    last_activity_at: now,
+    last_page_type: pageType,
+    last_event_name: eventName,
+    analytics_consent: true
+  };
+  if (userId) patch.user_id = userId;
+  applyAnalyticsContext(patch, analyticsContext);
+  const { error } = await admin.from("cart_instances").update(patch)
+    .eq("id", cartInstanceId).eq("session_key", sessionKey);
+  if (error) throw error;
+}
+
+async function persistCartInstanceSnapshot(
+  cartInstanceId: string,
+  sessionKey: string,
+  legacyCartSessionId: string,
+  isLegacy: boolean,
+  userId: string | null,
+  action: string,
+  items: ReturnType<typeof cleanItems>,
+  subtotal: number,
+  now: string,
+  analyticsConsent: boolean,
+  pageType: string | null,
+  analyticsContext: unknown
+) {
+  const existing = await ensureCartInstance(cartInstanceId, sessionKey, userId, now, isLegacy);
+  const itemCount = items.reduce((n, item) => n + item.quantity, 0);
+  if (!canReuseCartInstance(existing.status, action, itemCount, isLegacy)) {
+    throw new CartInstanceConflictError("Este carrinho já foi encerrado. Inicie uma nova tentativa de compra.");
+  }
+
+  if (!isLegacy && action === "cart_snapshot" && itemCount === 0) {
+    const clearPatch: Record<string, unknown> = {
+      status: "cleared",
+      cleared_at: now,
+      abandoned_at: null,
+      last_activity_at: now,
+      last_event_name: action,
+      updated_at: now,
+      analytics_consent: analyticsConsent
+    };
+    if (userId) clearPatch.user_id = userId;
+    if (analyticsConsent && analyticsContext) applyAnalyticsContext(clearPatch, analyticsContext);
+    const { error } = await admin.from("cart_instances").update(clearPatch)
+      .eq("id", cartInstanceId).eq("session_key", sessionKey);
+    if (error) throw error;
+    return { cleared: true, item_count: 0, subtotal: 0 };
+  }
+
+  const instanceStatus = cartInstanceStatusForAction(action, itemCount, isLegacy, existing.status) || "active";
+  const patch: Record<string, unknown> = {
+    ...buildCartActivityStatePatch(now, instanceStatus),
+    id: cartInstanceId,
+    session_key: sessionKey,
+    status: instanceStatus,
+    items_snapshot: items,
+    item_count: itemCount,
+    subtotal,
+    last_activity_at: now,
+    last_event_name: action,
+    analytics_consent: analyticsConsent,
+    cleared_at: null
+  };
+  if (isLegacy) patch.legacy_cart_session_id = legacyCartSessionId;
+  if (userId) patch.user_id = userId;
+  if (pageType) patch.last_page_type = pageType;
+  else if (action === "checkout_started" || action === "checkout_reviewed" || action === "whatsapp_opened") {
+    patch.last_page_type = "checkout";
+  }
+  if (analyticsConsent) applyAnalyticsContext(patch, analyticsContext);
+  else Object.assign(patch, {
+    traffic_source: "unknown", traffic_source_detail: null, traffic_medium: "unknown",
+    device_category: "unknown", operating_system: "unknown", browser_family: "unknown",
+    utm_source: null, utm_medium: null, utm_campaign: null,
+    utm_content: null, utm_term: null, utm_id: null
+  });
+  if (action === "checkout_started") patch.checkout_started_at = now;
+  if (action === "whatsapp_opened") patch.whatsapp_opened_at = now;
+  const { error } = await admin.from("cart_instances").update(patch)
+    .eq("id", cartInstanceId).eq("session_key", sessionKey);
+  if (error) throw error;
+  return { cleared: false, item_count: itemCount, subtotal };
+}
+
+async function recordMarketingConsent(cartSessionId: string, cartInstanceId: string, userId: string | null, customer: any, now: string) {
   const name = cleanText(customer?.name, 160);
   const phone = cleanText(customer?.phone, 30);
   if (!name || !phone || customer?.marketingWhatsappOptIn !== true) return false;
-  const { data: existing, error: lookupError } = await admin.from("contact_consents")
-    .select("id").eq("cart_session_id", cartId).eq("channel", "whatsapp")
-    .eq("purpose", "marketing").eq("granted", true).is("revoked_at", null)
+  const { data: latestConsent, error: lookupError } = await admin.from("contact_consents")
+    .select("id, granted, granted_at, revoked_at")
+    .eq("cart_instance_id", cartInstanceId).eq("channel", "whatsapp")
+    .eq("purpose", "marketing")
+    .order("created_at", { ascending: false })
+    .order("id", { ascending: false })
     .limit(1).maybeSingle();
   if (lookupError) throw lookupError;
-  if (!existing) {
+  const alreadyGranted = latestConsent?.granted === true &&
+    Boolean(latestConsent?.granted_at) && !latestConsent?.revoked_at;
+  if (!alreadyGranted) {
     const { error } = await admin.from("contact_consents").insert({
-      user_id: userId, cart_session_id: cartId, channel: "whatsapp",
-      purpose: "marketing", granted: true, source: "checkout",
+      user_id: userId, cart_session_id: cartSessionId, cart_instance_id: cartInstanceId,
+      channel: "whatsapp", purpose: "marketing", granted: true, source: "checkout",
       consent_text_version: "whatsapp-marketing-v1", granted_at: now
     });
     if (error) throw error;
   }
   const address = customer?.address && typeof customer.address === "object" ? customer.address : {};
-  const { error: updateError } = await admin.from("cart_sessions").update({
+  const consentPatch = {
     customer_name: name, customer_phone: phone,
     city: cleanText(address.city, 100), state: cleanText(address.state, 2),
     marketing_whatsapp_opt_in: true, marketing_whatsapp_opt_in_at: now,
     updated_at: now
-  }).eq("id", cartId);
-  if (updateError) throw updateError;
+  };
+  const [sessionUpdate, instanceUpdate] = await Promise.all([
+    admin.from("cart_sessions").update(consentPatch).eq("id", cartSessionId),
+    admin.from("cart_instances").update(consentPatch).eq("id", cartInstanceId)
+  ]);
+  if (sessionUpdate.error) throw sessionUpdate.error;
+  if (instanceUpdate.error) throw instanceUpdate.error;
   return true;
 }
 
@@ -224,6 +398,10 @@ Deno.serve(async (req: Request) => {
   if (!/^application\/json(?:\s*;|$)/i.test(req.headers.get("content-type") || "")) return response({ error: "Formato de requisição inválido." }, 415, origin);
   if (Number(req.headers.get("content-length") || 0) > 16 * 1024) return response({ error: "Solicitação muito grande." }, 413, origin);
 
+  const requestStartedAt = performance.now();
+  const performanceTimings: Record<string, number> = {};
+  let actionName = "unknown";
+
   try {
     const rawBody = await req.text();
     if (new TextEncoder().encode(rawBody).byteLength > 16 * 1024) return response({ error: "Solicitação muito grande." }, 413, origin);
@@ -231,11 +409,87 @@ Deno.serve(async (req: Request) => {
     try { body = JSON.parse(rawBody); } catch { return response({ error: "Corpo da solicitação inválido." }, 400, origin); }
     if (!body || typeof body !== "object" || Array.isArray(body)) return response({ error: "Corpo da solicitação inválido." }, 400, origin);
     const action = body?.action;
-    const token = (req.headers.get("authorization") || "").replace(/^Bearer\s+/i, "");
+    actionName = typeof action === "string" ? action : "unknown";
+    const token = (req.headers.get("authorization") || "").replace(/^Bearer\\s+/i, "");
     let userId: string | null = null;
-    if (token) {
-      const { data, error } = await admin.auth.getUser(token);
-      if (!error) userId = data.user?.id || null;
+
+    if (action === "visitor_heartbeat") {
+      if (body.analytics_consent !== true) return response({ ok: true, skipped: true }, 200, origin);
+      const sessionKey = body.session_key;
+      const requestedCartInstanceId = body.cart_instance_id == null ? null : body.cart_instance_id;
+      if (requestedCartInstanceId !== null && !isUuid(requestedCartInstanceId)) {
+        return response({ error: "Identificador do carrinho inválido." }, 400, origin);
+      }
+      const pageType = body.page_type;
+      const visitId = body.visit_id == null ? null : body.visit_id;
+      const pagePath = visitId ? normalizeAnalyticsPagePath(body.page_path) : null;
+      const pageTitle = normalizeAnalyticsPageTitle(body.page_title);
+      const allowedPages = ["home", "catalog", "product", "checkout", "institutional", "other"];
+      if (!isUuid(sessionKey) || !allowedPages.includes(pageType) ||
+          (visitId !== null && (!isUuid(visitId) || !pagePath))) {
+        return response({ error: "Sessão, visita ou página inválida." }, 400, origin);
+      }
+      let guards;
+      try {
+        guards = await measure(performanceTimings, "guards_ms", () =>
+          rateLimitAndResolveUser(req, sessionKey, true, token)
+        );
+      } catch (guardError) {
+        if (!(guardError instanceof RateLimitUnavailableError)) throw guardError;
+        console.error("cart-orders heartbeat rate limiter unavailable:", guardError.cause);
+        return response({ error: "Proteção contra abuso temporariamente indisponível. Tente novamente." }, 503, origin);
+      }
+      userId = guards.userId;
+      performanceTimings.rate_limit_ms = guards.rateLimitMs;
+      performanceTimings.auth_ms = guards.authMs;
+      if (!guards.withinRateLimit) return response({ error: "Muitas atualizações de presença. Aguarde um instante." }, 429, origin);
+
+      const now = new Date().toISOString();
+      const { data: currentSession, error: currentSessionError } = await measure(
+        performanceTimings,
+        "cart_session_lookup_ms",
+        async () => await admin.from("cart_sessions")
+          .select("status")
+          .eq("session_key", sessionKey)
+          .maybeSingle()
+      );
+      if (currentSessionError) throw currentSessionError;
+
+      const heartbeatUpdate: Record<string, unknown> = {
+        ...buildCartActivityStatePatch(now, statusAfterVisitorActivity(currentSession?.status)),
+        session_key: sessionKey,
+        analytics_consent: true,
+        last_activity_at: now,
+        last_page_type: pageType,
+        last_event_name: "heartbeat"
+      };
+      if (userId) heartbeatUpdate.user_id = userId;
+      applyAnalyticsContext(heartbeatUpdate, body.analytics_context);
+      const { error: heartbeatError } = await measure(
+        performanceTimings,
+        "cart_session_upsert_ms",
+        async () => await admin.from("cart_sessions").upsert(
+          heartbeatUpdate, { onConflict: "session_key" }
+        )
+      );
+      if (heartbeatError) throw heartbeatError;
+      if (visitId && pagePath) {
+        await measure(
+          performanceTimings,
+          "visit_session_upsert_ms",
+          () => upsertVisitSession(visitId, sessionKey, now, pagePath, pageTitle, body.analytics_context)
+        );
+      }
+      if (requestedCartInstanceId) {
+        await measure(
+          performanceTimings,
+          "cart_instance_activity_ms",
+          () => updateCartInstanceActivity(
+            requestedCartInstanceId, sessionKey, userId, now, "heartbeat", pageType, body.analytics_context
+          )
+        );
+      }
+      return response({ ok: true, cart_instance_id: requestedCartInstanceId }, 200, origin);
     }
 
     if (action === "site_event") {
@@ -243,18 +497,33 @@ Deno.serve(async (req: Request) => {
       const sessionKey = body.session_key;
       const eventName = body.event_name;
       const pageType = body.page_type;
+      const requestedCartInstanceId = body.cart_instance_id == null ? null : body.cart_instance_id;
+      if (requestedCartInstanceId !== null && !isUuid(requestedCartInstanceId)) {
+        return response({ error: "Identificador do carrinho inválido." }, 400, origin);
+      }
+      const visitId = body.visit_id == null ? null : body.visit_id;
+      const pagePath = visitId ? normalizeAnalyticsPagePath(body.page_path) : null;
+      const pageTitle = normalizeAnalyticsPageTitle(body.page_title);
       const allowedEvents = ["page_view", "product_view", "add_to_cart", "checkout_started", "checkout_reviewed", "whatsapp_opened"];
       const allowedPages = ["home", "catalog", "product", "checkout", "institutional", "other"];
-      if (!isUuid(sessionKey) || !allowedEvents.includes(eventName) || !allowedPages.includes(pageType)) {
+      if (!isUuid(sessionKey) || !allowedEvents.includes(eventName) || !allowedPages.includes(pageType) ||
+          (visitId !== null && (!isUuid(visitId) || !pagePath))) {
         return response({ error: "Evento inválido." }, 400, origin);
       }
-      let withinRateLimit = false;
-      try { withinRateLimit = await rateLimitRequest(req, sessionKey, true); }
-      catch (rateError) {
-        console.error("cart-orders rate limiter unavailable:", rateError);
+      let guards;
+      try {
+        guards = await measure(performanceTimings, "guards_ms", () =>
+          rateLimitAndResolveUser(req, sessionKey, true, token)
+        );
+      } catch (guardError) {
+        if (!(guardError instanceof RateLimitUnavailableError)) throw guardError;
+        console.error("cart-orders rate limiter unavailable:", guardError.cause);
         return response({ error: "Proteção contra abuso temporariamente indisponível. Tente novamente." }, 503, origin);
       }
-      if (!withinRateLimit) return response({ error: "Muitas solicitações. Aguarde um instante e tente novamente." }, 429, origin);
+      userId = guards.userId;
+      performanceTimings.rate_limit_ms = guards.rateLimitMs;
+      performanceTimings.auth_ms = guards.authMs;
+      if (!guards.withinRateLimit) return response({ error: "Muitas solicitações. Aguarde um instante e tente novamente." }, 429, origin);
       const productId = eventName === "product_view" || eventName === "add_to_cart"
         ? cleanText(body.product_id, 100) : null;
       if ((eventName === "product_view" || eventName === "add_to_cart") && !productId) {
@@ -262,103 +531,201 @@ Deno.serve(async (req: Request) => {
       }
       const quantity = Math.max(1, Math.min(99, Math.trunc(Number(body.quantity) || 1)));
       const now = new Date().toISOString();
+      const { data: currentSession, error: currentSessionError } = await measure(
+        performanceTimings,
+        "cart_session_lookup_ms",
+        async () => await admin.from("cart_sessions")
+          .select("status")
+          .eq("session_key", sessionKey)
+          .maybeSingle()
+      );
+      if (currentSessionError) throw currentSessionError;
+
       const sessionUpdate: Record<string, unknown> = {
-        session_key: sessionKey, user_id: userId, status: "active",
-        last_activity_at: now, updated_at: now
+        ...buildCartActivityStatePatch(now, statusAfterVisitorActivity(currentSession?.status)),
+        session_key: sessionKey,
+        analytics_consent: true,
+        last_activity_at: now, last_page_type: pageType, last_event_name: eventName
       };
+      if (userId) sessionUpdate.user_id = userId;
       applyAnalyticsContext(sessionUpdate, body.analytics_context);
-      const { error: sessionError } = await admin.from("cart_sessions").upsert(
-        sessionUpdate, { onConflict: "session_key" }
+      const { error: sessionError } = await measure(
+        performanceTimings,
+        "cart_session_upsert_ms",
+        async () => await admin.from("cart_sessions").upsert(
+          sessionUpdate, { onConflict: "session_key" }
+        )
       );
       if (sessionError) throw sessionError;
-      const { error } = await admin.from("site_events").insert({
-        session_key: sessionKey, event_name: eventName, page_type: pageType,
-        product_id: productId, quantity
-      });
+      if (visitId && pagePath) {
+        await measure(
+          performanceTimings,
+          "visit_session_upsert_ms",
+          () => upsertVisitSession(visitId, sessionKey, now, pagePath, pageTitle, body.analytics_context)
+        );
+      }
+      if (requestedCartInstanceId) {
+        await measure(
+          performanceTimings,
+          "cart_instance_activity_ms",
+          () => updateCartInstanceActivity(
+            requestedCartInstanceId, sessionKey, userId, now, eventName, pageType, body.analytics_context
+          )
+        );
+      }
+      const { error } = await measure(
+        performanceTimings,
+        "site_event_insert_ms",
+        async () => await admin.from("site_events").insert({
+          session_key: sessionKey, cart_instance_id: requestedCartInstanceId,
+          visit_id: visitId, event_name: eventName, page_type: pageType,
+          page_path: pagePath, page_title: pageTitle,
+          product_id: productId, quantity
+        })
+      );
       if (error) throw error;
       return response({ ok: true }, 200, origin);
     }
 
     if (!["cart_snapshot", "checkout_started", "checkout_reviewed", "whatsapp_opened"].includes(action)) return response({ error: "Ação inválida." }, 400, origin);
     const sessionKey = body?.session_key;
+    const requestedCartInstanceId = body.cart_instance_id == null ? null : body.cart_instance_id;
     if (!isUuid(sessionKey)) return response({ error: "Sessão inválida." }, 400, origin);
-    let withinRateLimit = false;
-    try { withinRateLimit = await rateLimitRequest(req, sessionKey, false); }
-    catch (rateError) {
-      console.error("cart-orders rate limiter unavailable:", rateError);
+    if (requestedCartInstanceId !== null && !isUuid(requestedCartInstanceId)) {
+      return response({ error: "Identificador do carrinho inválido." }, 400, origin);
+    }
+    let guards;
+    try {
+      guards = await measure(performanceTimings, "guards_ms", () =>
+        rateLimitAndResolveUser(req, sessionKey, false, token)
+      );
+    } catch (guardError) {
+      if (!(guardError instanceof RateLimitUnavailableError)) throw guardError;
+      console.error("cart-orders rate limiter unavailable:", guardError.cause);
       return response({ error: "Proteção contra abuso temporariamente indisponível. Tente novamente." }, 503, origin);
     }
-    if (!withinRateLimit) return response({ error: "Muitas solicitações. Aguarde um instante e tente novamente." }, 429, origin);
-    const catalog = await loadCatalog();
+    userId = guards.userId;
+    performanceTimings.rate_limit_ms = guards.rateLimitMs;
+    performanceTimings.auth_ms = guards.authMs;
+    if (!guards.withinRateLimit) return response({ error: "Muitas solicitações. Aguarde um instante e tente novamente." }, 429, origin);
+
+    // O preço do campo "preco" do catálogo é público; não consultar associação ao Clube.
+    const catalog = await measure(performanceTimings, "catalog_ms", () => loadCatalog());
     const items = cleanItems(body.items || [], catalog);
     const subtotal = total(items);
     if (subtotal > 1000000) return response({ error: "Valor do carrinho inválido." }, 400, origin);
-
-    if (token && !userId) {
-      const { data } = await admin.auth.getUser(token);
-      userId = data.user?.id || null;
+    const requestedItemCount = items.reduce((n, item) => n + item.quantity, 0);
+    if (requestedCartInstanceId) {
+      const currentInstance = await measure(
+        performanceTimings,
+        "cart_instance_precheck_ms",
+        () => loadCartInstance(requestedCartInstanceId, sessionKey, userId)
+      );
+      if (currentInstance && !canReuseCartInstance(currentInstance.status, action, requestedItemCount, false)) {
+        throw new CartInstanceConflictError("Este carrinho já foi encerrado. Inicie uma nova tentativa de compra.");
+      }
     }
 
     const now = new Date().toISOString();
+    const snapshotStatus = action === "checkout_started" ? "checkout_started" :
+      action === "checkout_reviewed" ? "checkout_reviewed" :
+      action === "whatsapp_opened" ? "whatsapp_opened" : "active";
     const snapshot: Record<string, unknown> = {
+      ...buildCartActivityStatePatch(now, snapshotStatus),
       session_key: sessionKey,
-      user_id: userId,
-      status: action === "checkout_started" ? "checkout_started" :
-        action === "checkout_reviewed" ? "checkout_reviewed" :
-        action === "whatsapp_opened" ? "whatsapp_opened" : "active",
       items_snapshot: items,
       item_count: items.reduce((n, item) => n + item.quantity, 0),
       subtotal,
       last_activity_at: now,
-      updated_at: now
+      analytics_consent: body.analytics_consent === true
     };
+    const allowedPages = ["home", "catalog", "product", "checkout", "institutional", "other"];
+    const requestedPageType = cleanText(body.page_type, 40);
+    if (requestedPageType && allowedPages.includes(requestedPageType)) snapshot.last_page_type = requestedPageType;
+    else if (action === "checkout_started" || action === "checkout_reviewed" || action === "whatsapp_opened") snapshot.last_page_type = "checkout";
+    snapshot.last_event_name = action;
     if (body.analytics_consent === true) applyAnalyticsContext(snapshot, body.analytics_context);
+    else Object.assign(snapshot, {
+      traffic_source: "unknown", traffic_source_detail: null, traffic_medium: "unknown",
+      device_category: "unknown", operating_system: "unknown", browser_family: "unknown",
+      utm_source: null, utm_medium: null, utm_campaign: null,
+      utm_content: null, utm_term: null, utm_id: null
+    });
     if (action === "checkout_started") snapshot.checkout_started_at = now;
     if (action === "whatsapp_opened") snapshot.whatsapp_opened_at = now;
     if (userId) snapshot.user_id = userId;
 
-    const { data: cart, error: cartError } = await admin.from("cart_sessions")
-      .upsert(snapshot, { onConflict: "session_key" })
-      .select("id")
-      .single();
+    const { data: cart, error: cartError } = await measure(
+      performanceTimings,
+      "cart_session_upsert_ms",
+      async () => await admin.from("cart_sessions")
+        .upsert(snapshot, { onConflict: "session_key" })
+        .select("id")
+        .single()
+    );
     if (cartError) throw cartError;
+
+    const resolvedCart = resolveCartInstanceId(requestedCartInstanceId, cart.id);
+    const cartInstanceId = resolvedCart.id;
+    const pageTypeForInstance = typeof snapshot.last_page_type === "string" ? snapshot.last_page_type : null;
+    const instanceSnapshot = await measure(
+      performanceTimings,
+      "cart_instance_snapshot_ms",
+      () => persistCartInstanceSnapshot(
+        cartInstanceId, sessionKey, cart.id, resolvedCart.isLegacy, userId,
+        action, items, subtotal, now, body.analytics_consent === true,
+        pageTypeForInstance, body.analytics_context
+      )
+    );
 
     if (action === "checkout_reviewed") {
       let marketingOptIn = false;
       if (body.customer?.marketingWhatsappOptIn === true) {
-        try { marketingOptIn = await recordMarketingConsent(cart.id, userId, body.customer, now); }
+        try { marketingOptIn = await recordMarketingConsent(cart.id, cartInstanceId, userId, body.customer, now); }
         catch (consentError) { console.error("Luxuriosa: falha ao registrar consentimento:", consentError); }
       }
-      return response({ ok: true, marketing_opt_in: marketingOptIn }, 200, origin);
+      return response({ ok: true, cart_instance_id: cartInstanceId, cart_cleared: instanceSnapshot.cleared, marketing_opt_in: marketingOptIn }, 200, origin);
     }
-    if (action !== "whatsapp_opened") return response({ ok: true }, 200, origin);
+    if (action !== "whatsapp_opened") {
+      return response({
+        ok: true, cart_instance_id: cartInstanceId,
+        cart_cleared: instanceSnapshot.cleared
+      }, 200, origin);
+    }
 
     const customerName = cleanText(body.customer?.name, 160);
     const customerPhone = cleanText(body.customer?.phone, 30);
-    const paymentPayerType = body.customer?.paymentPayerType === "third_party" ? "third_party" : "account_holder";
-    const paymentPayerName = paymentPayerType === "third_party"
-      ? cleanText(body.customer?.paymentPayerName, 160) : null;
-    const paymentPayerPhone = paymentPayerType === "third_party"
-      ? normalizeBrazilPhone(body.customer?.paymentPayerPhone) : null;
     if (!customerName || !customerPhone || items.length === 0) {
       return response({ error: "Dados do pedido incompletos." }, 400, origin);
     }
-    if (paymentPayerType === "third_party" && (!paymentPayerName || !paymentPayerPhone)) {
-      return response({ error: "Informe o nome e um telefone brasileiro com DDD de quem fará o pagamento." }, 400, origin);
+    const fulfillmentInput = cleanText(body.customer?.fulfillmentType, 20);
+    if (fulfillmentInput && !["express", "pickup"].includes(fulfillmentInput)) {
+      return response({ error: "Modalidade de recebimento inválida." }, 400, origin);
     }
-    const address = body.customer?.address && typeof body.customer.address === "object"
+    const fulfillmentType = fulfillmentInput === "pickup" ? "pickup" : "express";
+    let pickupRequestedAt: string | null = null;
+    if (fulfillmentType === "pickup") {
+      const requestedAtInput = body.customer?.pickupRequestedAt;
+      const requestedAtDate = typeof requestedAtInput === "string" ? new Date(requestedAtInput) : null;
+      if (!requestedAtDate || !Number.isFinite(requestedAtDate.getTime())) {
+        return response({ error: "Informe uma data e um horário válidos para a retirada." }, 400, origin);
+      }
+      pickupRequestedAt = requestedAtDate.toISOString();
+    }
+    const submittedAddress = body.customer?.address && typeof body.customer.address === "object"
       ? body.customer.address : {};
+    const address = fulfillmentType === "pickup" ? {} : submittedAddress;
     // WhatsApp is a request for human confirmation, not a final checkout.
     // Never persist a shipping amount supplied by the browser as an authoritative quote.
     const subtotalCents = Math.round(subtotal * 100);
-    const shippingCents = null;
-    // O Clube mantém apenas o benefício de frete; produtos e kits não recebem desconto.
+    const shippingCents = fulfillmentType === "pickup" ? 0 : null;
+    // As promoções do catálogo são públicas; o pedido não aplica desconto adicional.
     const clubDiscountCents = 0;
     const totalCents = subtotalCents + (shippingCents || 0);
 
     const { data: previousOrder, error: previousOrderError } = await admin.from("orders")
-      .select("id, order_number, customer_id, customer_name, customer_phone, delivery_address, subtotal, shipping_amount, total_amount, club_discount_amount_cents, club_discount_percent, payment_payer_type, payment_payer_name, payment_payer_phone")
-      .eq("cart_session_id", cart.id)
+      .select("id, order_number, customer_id, customer_name, customer_phone, delivery_address, subtotal, shipping_amount, total_amount, club_discount_amount_cents, club_discount_percent, fulfillment_type, pickup_requested_at")
+      .eq("cart_instance_id", cartInstanceId)
       .eq("status", "awaiting_confirmation")
       .gte("created_at", new Date(Date.now() - 5 * 60 * 1000).toISOString())
       .order("created_at", { ascending: false })
@@ -392,13 +759,18 @@ Deno.serve(async (req: Request) => {
       const sameAddress = addressKeys.every(key =>
         String(previousAddress[key] || "") === String(address[key] || "")
       );
+      const previousPickupRequestedAt = previousOrder.pickup_requested_at
+        ? new Date(previousOrder.pickup_requested_at).getTime()
+        : null;
+      const currentPickupRequestedAt = pickupRequestedAt
+        ? new Date(pickupRequestedAt).getTime()
+        : null;
       const sameOrder =
+        previousOrder.fulfillment_type === fulfillmentType &&
+        previousPickupRequestedAt === currentPickupRequestedAt &&
         previousOrder.customer_id === userId &&
         previousOrder.customer_name === customerName &&
         previousOrder.customer_phone === customerPhone &&
-        previousOrder.payment_payer_type === paymentPayerType &&
-        (previousOrder.payment_payer_name || null) === paymentPayerName &&
-        (previousOrder.payment_payer_phone || null) === paymentPayerPhone &&
         Math.round(Number(previousOrder.subtotal || 0) * 100) === subtotalCents &&
         (previousOrder.shipping_amount == null ? null : Math.round(Number(previousOrder.shipping_amount) * 100)) === shippingCents &&
         Number(previousOrder.club_discount_amount_cents || 0) === clubDiscountCents &&
@@ -408,13 +780,15 @@ Deno.serve(async (req: Request) => {
       if (sameOrder) {
         let marketingOptIn = false;
         if (body.customer?.marketingWhatsappOptIn === true) {
-          try { marketingOptIn = await recordMarketingConsent(cart.id, userId, body.customer, now); }
+          try { marketingOptIn = await recordMarketingConsent(cart.id, cartInstanceId, userId, body.customer, now); }
           catch (consentError) { console.error("Luxuriosa: falha ao registrar consentimento:", consentError); }
         }
         return response({
           ok: true,
           order_number: previousOrder.order_number,
           total_amount: Number(previousOrder.total_amount) || 0,
+          fulfillment_type: previousOrder.fulfillment_type,
+          pickup_requested_at: previousOrder.pickup_requested_at,
           club_discount_amount: Number(previousOrder.club_discount_amount_cents || 0) / 100,
           club_discount_percent: Number(previousOrder.club_discount_percent || 0),
           duplicate: true,
@@ -430,17 +804,15 @@ Deno.serve(async (req: Request) => {
 
     const { data: order, error: orderError } = await admin.from("orders").insert({
       cart_session_id: cart.id,
+      cart_instance_id: cartInstanceId,
       customer_id: userId,
       status: "awaiting_confirmation",
       source: "whatsapp",
       customer_name: customerName,
       customer_phone: customerPhone,
-      payment_payer_type: paymentPayerType,
-      payment_payer_name: paymentPayerName,
-      payment_payer_phone: paymentPayerPhone,
-      payment_payer_source: "whatsapp_checkout",
-      payment_payer_declared_at: now,
       delivery_address: address,
+      fulfillment_type: fulfillmentType,
+      pickup_requested_at: pickupRequestedAt,
       subtotal: subtotalCents / 100,
       shipping_amount: shippingCents === null ? null : shippingCents / 100,
       total_amount: totalCents / 100,
@@ -460,22 +832,35 @@ Deno.serve(async (req: Request) => {
 
     let marketingOptIn = false;
     if (body.customer?.marketingWhatsappOptIn === true) {
-      try { marketingOptIn = await recordMarketingConsent(cart.id, userId, body.customer, now); }
+      try { marketingOptIn = await recordMarketingConsent(cart.id, cartInstanceId, userId, body.customer, now); }
       catch (consentError) { console.error("Luxuriosa: falha ao registrar consentimento:", consentError); }
     }
 
     return response({
       ok: true,
+      cart_instance_id: cartInstanceId,
       order_number: order.order_number,
       subtotal_amount: subtotalCents / 100,
       club_discount_amount: clubDiscountCents / 100,
       club_discount_percent: 0,
       shipping_amount: shippingCents === null ? null : shippingCents / 100,
       total_amount: totalCents / 100,
+      fulfillment_type: fulfillmentType,
+      pickup_requested_at: pickupRequestedAt,
       marketing_opt_in: marketingOptIn
     }, 200, origin);
   } catch (error) {
     console.error("cart-orders:", error);
-    return response({ error: error instanceof Error ? error.message : "Não foi possível registrar." }, 400, origin);
+    const status = error instanceof CartInstanceConflictError ? 409 : 400;
+    return response({ error: error instanceof Error ? error.message : "Não foi possível registrar." }, status, origin);
+  } finally {
+    const totalMs = Math.round(performance.now() - requestStartedAt);
+    if (totalMs >= 250) {
+      console.info("cart-orders:performance", JSON.stringify({
+        action: actionName,
+        total_ms: totalMs,
+        ...performanceTimings
+      }));
+    }
   }
 });
