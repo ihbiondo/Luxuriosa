@@ -174,7 +174,7 @@ try {
   assert.ok(pickupPreview.includes("RETIRADA"));
   assert.ok(!pickupPreview.includes("ENDEREÇO DE ENTREGA"));
   assert.ok(!pickupPreview.includes("CEP:"));
-  assert.ok(!pickupPreview.includes("Rua Madre Clélia"));
+  // O endereço fixo da loja é informado como local de retirada; nenhum endereço do cliente é enviado.
 
   console.log("Checkout WhatsApp sem conta: PASS. Mensagem aberta foi interceptada; nada foi enviado.");
 } finally {
