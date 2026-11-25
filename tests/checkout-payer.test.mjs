@@ -53,8 +53,8 @@ test("cidade e estado são identificados pelo CEP, sem escolha manual", () => {
   assert.doesNotMatch(cart, /cartDeliveryCity/);
   assert.match(client, /fetch\("https:\/\/viacep\.com\.br\/ws\//);
   assert.match(client, /cepValidado !== cepDigits/);
-  assert.match(client, /customerCity\)\) \$\("customerCity"\)\.readOnly = true/);
-  assert.match(client, /customerState\)\) \$\("customerState"\)\.readOnly = true/);
+  assert.match(client, /\$\("customerCity"\)\.readOnly = true/);
+  assert.match(client, /\$\("customerState"\)\.readOnly = true/);
   assert.match(client, /address: pickup \? \{\} :/);
   assert.match(client, /Retirada não coleta nem envia endereço/);
 });
