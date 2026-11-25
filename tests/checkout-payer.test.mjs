@@ -16,8 +16,8 @@ const clubRoute = readFileSync("clube/index.html", "utf8");
 
 test("home e loja carregam a versão atual do checkout sem conta", () => {
   for (const { path, html } of checkoutPages) {
-    assert.ok(html.includes('src="js/carrinho.js?v=20261125-cep-auto-checkout-v1'), path);
-    assert.ok(html.includes('src="js/clientes.js?v=20261125-cep-auto-checkout-v1'), path);
+    assert.ok(html.includes('src="js/carrinho.js?v=20261125-cep-auto-checkout-v2'), path);
+    assert.ok(html.includes('src="js/clientes.js?v=20261125-cep-auto-checkout-v2'), path);
   }
 });
 
@@ -57,6 +57,8 @@ test("cidade e estado são identificados pelo CEP, sem escolha manual", () => {
   assert.match(client, /\$\("customerState"\)\.readOnly = true/);
   assert.match(client, /address: pickup \? \{\} :/);
   assert.match(client, /Retirada não coleta nem envia endereço/);
+  assert.match(client, /field\.required = !pickup/);
+  assert.match(client, /field\.required = pickup/);
 });
 
 test("a antiga área de conta e os convites de cadastro não aparecem na navegação", () => {
